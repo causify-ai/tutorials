@@ -6,8 +6,8 @@
 
 set -e
 
-# IS_SUPER_REPO=1
-IS_SUPER_REPO=0
+IS_SUPER_REPO=1
+# IS_SUPER_REPO=0
 echo "IS_SUPER_REPO=$IS_SUPER_REPO"
 
 SCRIPT_PATH="devops/docker_run/docker_setenv.sh"
@@ -18,7 +18,7 @@ echo "##> $SCRIPT_PATH"
 GIT_ROOT_DIR=$(pwd)
 echo "GIT_ROOT_DIR=$GIT_ROOT_DIR"
 
-if [[ $IS_SUPER_ROOT == 1 ]]; then
+if [[ $IS_SUPER_REPO == 1 ]]; then
     HELPERS_ROOT="${GIT_ROOT_DIR}/helpers_root"
 else
     HELPERS_ROOT=$GIT_ROOT_DIR

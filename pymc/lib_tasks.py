@@ -123,11 +123,14 @@ def opt_docker_release_dev_image(  # type: ignore
 
 
 @task
-def opt_docker_pull(ctx, stage="dev", version=None):  # type: ignore
+def opt_docker_pull(ctx, stage="dev", version=None, skip_pull=False):  # type: ignore
     """
     Pull the latest dev `opt` image from the Docker registry.
     """
     hlitauti.report_task()
+    if skip_pull:
+        _LOG.warning("Skipping pulling docker image as per user request")
+        return
     #
     base_image = ""
     hlitadoc._docker_pull(ctx, base_image, stage, version)
@@ -139,8 +142,9 @@ def opt_docker_bash(  # type: ignore
     base_image="",
     stage="dev",
     version="",
-    entrypoint=True,
+    use_entrypoint=True,
     as_user=True,
+    skip_pull=False,
 ):
     """
     Start a bash shell inside the `opt` container corresponding to a stage.
@@ -152,9 +156,10 @@ def opt_docker_bash(  # type: ignore
         base_image=base_image,
         stage=stage,
         version=version,
-        entrypoint=entrypoint,
+        use_entrypoint=use_entrypoint,
         as_user=as_user,
         container_dir_name=_CURRENT_DIR,
+        skip_pull=skip_pull,
     )
 
 
@@ -167,6 +172,7 @@ def opt_docker_jupyter(  # type: ignore
     auto_assign_port=True,
     port=9999,
     self_test=False,
+    skip_pull=False,
 ):
     """
     Run Jupyter notebook server in the `opt` container.
@@ -182,6 +188,7 @@ def opt_docker_jupyter(  # type: ignore
         port=port,
         self_test=self_test,
         container_dir_name=_CURRENT_DIR,
+        skip_pull=skip_pull,
     )
 
 

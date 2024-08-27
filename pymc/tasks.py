@@ -1,7 +1,10 @@
 import logging
 import os
 
-import helpers.lib_tasks_utils as hlitauti
+from helpers.lib_tasks import (  # This is not an invoke target.
+    parse_command_line,
+    set_default_params,
+)
 
 # Expose the pytest targets.
 # Extract with:
@@ -42,4 +45,5 @@ default_params = {
 }
 
 
-hlitauti.set_default_params(default_params)
+set_default_params(default_params)
+parse_command_line()
