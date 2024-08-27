@@ -6,7 +6,7 @@ import helpers.lib_tasks_utils as hlitauti
 # Expose the pytest targets.
 # Extract with:
 # > i print_tasks --as-code
-from optimizer.opt_lib_tasks import (  # noqa: F401  # pylint: disable=unused-import
+from lib_tasks import (  # noqa: F401  # pylint: disable=unused-import
     opt_docker_bash,
     opt_docker_build_local_image,
     opt_docker_cmd,

@@ -8,7 +8,7 @@ import logging
 
 _LOG = logging.getLogger(__name__)
 # We can't use `__file__` since this file is imported with an exec.
-_LOG.debug("Importing //amp/optimizer/repo_config.py")
+_LOG.debug("Importing //tutorials/pymc/repo_config.py")
 
 from typing import Dict
 

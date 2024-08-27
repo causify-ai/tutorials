@@ -21,7 +21,7 @@ _LOG = logging.getLogger(__name__)
 # pylint: disable=protected-access
 
 
-_OPTIMIZER_DIR = os.path.join(hgit.get_amp_abs_path(), "optimizer")
+_CURRENT_DIR = os.path.join(hgit.git_root_dir(super_module=False), "pymc")
 
 
 # #############################################################################
@@ -35,20 +35,20 @@ def opt_docker_build_local_image(  # type: ignore
     version,
     cache=True,
     base_image="",
-    update_poetry=False,
+    poetry_mode="update",
 ):
     """
     Build a local `opt` image (i.e., a release candidate "dev" image).
 
-    See corresponding invoke target for the main container.
+    See the corresponding invoke target for the main container.
     """
     hltadore.docker_build_local_image(
         ctx,
         version,
         cache=cache,
         base_image=base_image,
-        update_poetry=update_poetry,
-        container_dir_name=_OPTIMIZER_DIR,
+        poetry_mode=poetry_mode,
+        container_dir_name=_CURRENT_DIR,
     )
 
 
@@ -61,13 +61,13 @@ def opt_docker_tag_local_image_as_dev(  # type: ignore
     """
     (ONLY CI/CD) Mark the `opt:local` image as `dev`.
 
-    See corresponding invoke target for the main container.
+    See the corresponding invoke target for the main container.
     """
     hltadore.docker_tag_local_image_as_dev(
         ctx,
         version,
         base_image=base_image,
-        container_dir_name=_OPTIMIZER_DIR,
+        container_dir_name=_CURRENT_DIR,
     )
 
 
@@ -80,10 +80,10 @@ def opt_docker_push_dev_image(  # type: ignore
     """
     (ONLY CI/CD) Push the `opt:dev` image to ECR.
 
-    See corresponding invoke target for the main container.
+    See the corresponding invoke target for the main container.
     """
     hltadore.docker_push_dev_image(
-        ctx, version, base_image=base_image, container_dir_name=_OPTIMIZER_DIR
+        ctx, version, base_image=base_image, container_dir_name=_CURRENT_DIR
     )
 
 
@@ -98,7 +98,7 @@ def opt_docker_release_dev_image(  # type: ignore
     """
     (ONLY CI/CD) Build, test, and release to ECR the latest `opt:dev` image.
 
-    See corresponding invoke target for the main container.
+    See the corresponding invoke target for the main container.
     """
     hltadore.docker_release_dev_image(
         ctx,
@@ -113,7 +113,7 @@ def opt_docker_release_dev_image(  # type: ignore
         qa_tests=False,
         push_to_repo=push_to_repo,
         update_poetry=update_poetry,
-        container_dir_name=_OPTIMIZER_DIR,
+        container_dir_name=_CURRENT_DIR,
     )
 
 
@@ -145,7 +145,7 @@ def opt_docker_bash(  # type: ignore
     """
     Start a bash shell inside the `opt` container corresponding to a stage.
 
-    See corresponding invoke target for the main container.
+    See the corresponding invoke target for the main container.
     """
     hlitadoc.docker_bash(
         ctx,
@@ -154,7 +154,7 @@ def opt_docker_bash(  # type: ignore
         version=version,
         entrypoint=entrypoint,
         as_user=as_user,
-        container_dir_name=_OPTIMIZER_DIR,
+        container_dir_name=_CURRENT_DIR,
     )
 
 
@@ -171,7 +171,7 @@ def opt_docker_jupyter(  # type: ignore
     """
     Run Jupyter notebook server in the `opt` container.
 
-    See corresponding invoke target for the main container.
+    See the corresponding invoke target for the main container.
     """
     hlitadoc.docker_jupyter(
         ctx,
@@ -181,7 +181,7 @@ def opt_docker_jupyter(  # type: ignore
         auto_assign_port=auto_assign_port,
         port=port,
         self_test=self_test,
-        container_dir_name=_OPTIMIZER_DIR,
+        container_dir_name=_CURRENT_DIR,
     )
 
 
@@ -198,7 +198,7 @@ def opt_docker_cmd(  # type: ignore
     """
     Run a command inside the `opt` container corresponding to a stage.
 
-    See corresponding invoke target for the main container.
+    See the corresponding invoke target for the main container.
     """
     hlitadoc.docker_cmd(
         ctx,
@@ -208,7 +208,7 @@ def opt_docker_cmd(  # type: ignore
         cmd=cmd,
         as_user=as_user,
         use_bash=use_bash,
-        container_dir_name=_OPTIMIZER_DIR,
+        container_dir_name=_CURRENT_DIR,
     )
 
 
@@ -236,7 +236,7 @@ def opt_run_fast_tests(
     Run fast tests from the `optimizer` dir inside the `opt` container
     corresponding to a stage.
 
-    See corresponding invoke target for the main container.
+    See the corresponding invoke target for the main container.
 
     :param use_opt_test_marker: whether to run only the tests marked as
         `optimizer` tests
@@ -288,7 +288,7 @@ def opt_run_slow_tests(
     Run slow tests from the `optimizer` dir inside the `opt` container
     corresponding to a stage.
 
-    See corresponding invoke target for the main container.
+    See the corresponding invoke target for the main container.
 
     :param use_opt_test_marker: whether to run only the tests marked as
         `optimizer` tests
