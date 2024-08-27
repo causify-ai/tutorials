@@ -36,8 +36,8 @@ default_params = {
     "CK_ECR_BASE_PATH": CK_ECR_BASE_PATH,
     # When testing a change to the build system in a branch you can use a
     # different image, e.g., `XYZ_tmp` to not interfere with the prod system.
-    # "BASE_IMAGE": "opt_tmp",
-    "BASE_IMAGE": "opt",
+    # "BASE_IMAGE": "xyz",
+    "BASE_IMAGE": "pymc",
     "DEV_TOOLS_IMAGE_PROD": f"{CK_ECR_BASE_PATH}/dev_tools:prod",
 }
 

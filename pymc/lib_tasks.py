@@ -21,7 +21,7 @@ _LOG = logging.getLogger(__name__)
 # pylint: disable=protected-access
 
 
-_CURRENT_DIR = os.path.join(hgit.git_root_dir(super_module=False), "pymc")
+_CURRENT_DIR = os.path.join(hgit.get_client_root(super_module=False), "pymc")
 
 
 # #############################################################################
