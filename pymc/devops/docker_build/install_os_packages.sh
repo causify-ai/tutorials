@@ -26,6 +26,9 @@ apt-get $APT_GET_OPTS install python3 python3-pip python3-venv
 echo "PYTHON VERSION="$(python3 --version)
 echo "PIP VERSION="$(pip3 --version)
 
+# - Install gcc toolchain.
+apt-get $APT_GET_OPTS install pkg-config python3-dev build-essential
+
 # - Install poetry.
 pip3 install poetry --break-system-packages
 echo "POETRY VERSION="$(poetry --version)
@@ -53,12 +56,6 @@ if [[ 1 == 1 ]]; then
   apt-get install $APT_GET_OPTS vim
 fi;
 
-## This is needed to compile ujson.
-## See https://github.com/alphamatic/lm/issues/155.
-#apt-get install $APT_GET_OPTS build-essential autoconf libtool python3.9-dev python3.9-distutils
-#update-alternatives --install /usr/local/bin/python python /usr/bin/python3.9 40
-#update-alternatives --install /usr/local/bin/python3 python3 /usr/bin/python3.9 40
-
 # - Install AWS CLI V2.
 if [[ 1 == 1 ]]; then
   # For more info see https://docs.aws.amazon.com/cli/latest/userguide/getting-started-version.html.
@@ -82,9 +79,6 @@ if [[ 1 == 1 ]]; then
   ./aws/install
   echo "AWS_CLI VERSION="$(aws --version)
 fi;
-
-# Install homebrew.
-#apt-get install $APT_GET_OPTS build-essential procps curl file git
 
 ## - Install Github CLI.
 apt-get install $APT_GET_OPTS wget

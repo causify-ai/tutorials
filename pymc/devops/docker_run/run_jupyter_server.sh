@@ -6,6 +6,7 @@ FILE_NAME="devops/docker_run/run_jupyter_server.sh"
 echo "##> $FILE_NAME"
 
 #cd /
+pwd
 
 # Use the old notebook interface.
 #jupyter_cmd="jupyter notebook"
@@ -22,6 +23,7 @@ jupyter labextension enable jupytext
 
 cmd="$jupyter_cmd --ip=* --port=${PORT} \
     --allow-root \
-    --NotebookApp.token=''"
+    --NotebookApp.token='' \
+    --NotebookApp.notebook_dir='/'"
 echo "> cmd=$cmd"
 eval $cmd

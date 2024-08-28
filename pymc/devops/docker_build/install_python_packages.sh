@@ -14,6 +14,8 @@ source utils.sh
 echo "# Disk space before $0"
 report_disk_usage
 
+sudo apt-get install -y libhdf5-dev
+
 echo "PYTHON VERSION="$(python3 --version)
 echo "PIP VERSION="$(pip3 --version)
 echo "POETRY VERSION="$(poetry --version)
@@ -76,16 +78,20 @@ else
   fi;
 fi;
 
-# Clean up.
-if [[ $CLEAN_UP_INSTALLATION ]]; then
-  echo "Cleaning up installation..."
-  DIRS="/usr/lib/gcc /app/tmp.pypoetry /tmp/*"
-  echo "Cleaning up installation... done"
-  du -hs $DIRS | sort -h
-  rm -rf $DIRS
-else
-  echo "WARNING: Skipping clean up installation"
-fi;
-
-echo "# Disk space before $0"
-report_disk_usage
+# Install pymc.
+sudo /bin/bash -c "(source /venv/bin/activate; pip install h5py)"
+sudo /bin/bash -c "(source /venv/bin/activate; pip install pymc)"
+#
+## Clean up.
+#if [[ $CLEAN_UP_INSTALLATION ]]; then
+#  echo "Cleaning up installation..."
+#  DIRS="/app/tmp.pypoetry /tmp/*"
+#  echo "Cleaning up installation... done"
+#  du -hs $DIRS | sort -h
+#  rm -rf $DIRS
+#else
+#  echo "WARNING: Skipping clean up installation"
+#fi;
+#
+#echo "# Disk space before $0"
+#report_disk_usage

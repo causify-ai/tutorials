@@ -63,7 +63,7 @@ COPY devops/docker_run/bashrc $HOME/.bashrc
 ENV AM_CONTAINER_VERSION=$AM_CONTAINER_VERSION
 RUN echo "AM_CONTAINER_VERSION=$AM_CONTAINER_VERSION"
 
-# TODO(gp): Is this needed?
+# TODO(gp): Is this needed? Since we set the work dir also in the Docker compose.
 WORKDIR $APP_DIR
 
 ENTRYPOINT ["devops/docker_run/entrypoint.sh"]

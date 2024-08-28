@@ -29,6 +29,8 @@ _CURRENT_DIR = os.path.join(hgit.get_client_root(super_module=False), "pymc")
 # #############################################################################
 
 
+# TODO(gp): Since this is just a wrapper maybe we should just use *,
+#  ** to forward the parameters.
 @task
 def opt_docker_build_local_image(  # type: ignore
     ctx,
@@ -40,7 +42,7 @@ def opt_docker_build_local_image(  # type: ignore
     """
     Build a local `opt` image (i.e., a release candidate "dev" image).
 
-    See the corresponding invoke target for the main container.
+    See the corresponding `invoke` target for the main container.
     """
     hltadore.docker_build_local_image(
         ctx,
@@ -61,7 +63,7 @@ def opt_docker_tag_local_image_as_dev(  # type: ignore
     """
     (ONLY CI/CD) Mark the `opt:local` image as `dev`.
 
-    See the corresponding invoke target for the main container.
+    See the corresponding `invoke` target for the main container.
     """
     hltadore.docker_tag_local_image_as_dev(
         ctx,
@@ -80,7 +82,7 @@ def opt_docker_push_dev_image(  # type: ignore
     """
     (ONLY CI/CD) Push the `opt:dev` image to ECR.
 
-    See the corresponding invoke target for the main container.
+    See the corresponding `invoke` target for the main container.
     """
     hltadore.docker_push_dev_image(
         ctx, version, base_image=base_image, container_dir_name=_CURRENT_DIR
@@ -98,7 +100,7 @@ def opt_docker_release_dev_image(  # type: ignore
     """
     (ONLY CI/CD) Build, test, and release to ECR the latest `opt:dev` image.
 
-    See the corresponding invoke target for the main container.
+    See the corresponding `invoke` target for the main container.
     """
     hltadore.docker_release_dev_image(
         ctx,
@@ -149,7 +151,7 @@ def opt_docker_bash(  # type: ignore
     """
     Start a bash shell inside the `opt` container corresponding to a stage.
 
-    See the corresponding invoke target for the main container.
+    See the corresponding `invoke` target for the main container.
     """
     hlitadoc.docker_bash(
         ctx,
@@ -178,7 +180,7 @@ def opt_docker_jupyter(  # type: ignore
     """
     Run Jupyter notebook server in the `opt` container.
 
-    See the corresponding invoke target for the main container.
+    See the corresponding `invoke` target for the main container.
     """
     hlitadoc.docker_jupyter(
         ctx,
@@ -207,7 +209,7 @@ def opt_docker_cmd(  # type: ignore
     """
     Run a command inside the `opt` container corresponding to a stage.
 
-    See the corresponding invoke target for the main container.
+    See the corresponding `invoke` target for the main container.
     """
     hlitadoc.docker_cmd(
         ctx,
@@ -245,7 +247,7 @@ def opt_run_fast_tests(
     Run fast tests from the `optimizer` dir inside the `opt` container
     corresponding to a stage.
 
-    See the corresponding invoke target for the main container.
+    See the corresponding `invoke` target for the main container.
 
     :param use_opt_test_marker: whether to run only the tests marked as
         `optimizer` tests
@@ -297,7 +299,7 @@ def opt_run_slow_tests(
     Run slow tests from the `optimizer` dir inside the `opt` container
     corresponding to a stage.
 
-    See the corresponding invoke target for the main container.
+    See the corresponding `invoke` target for the main container.
 
     :param use_opt_test_marker: whether to run only the tests marked as
         `optimizer` tests
