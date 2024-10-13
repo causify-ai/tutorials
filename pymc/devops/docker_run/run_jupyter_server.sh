@@ -18,6 +18,10 @@ jupyter_cmd="jupyter lab"
 
 #sudo /bin/bash -c "(source /venv/bin/activate; pip install jupytext)"
 
+sudo /bin/bash -c "(source /venv/bin/activate; pip install jupyterlab-code-formatter)"
+
+sudo /bin/bash -c "(source /venv/bin/activate; pip install black isort)"
+
 jupyter labextension list
 jupyter labextension enable jupytext
 
