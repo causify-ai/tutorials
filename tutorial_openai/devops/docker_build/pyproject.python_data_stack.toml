@@ -5,35 +5,24 @@ description = ""
 authors = ["GP Saggese <gp@kaizen-tech.io>"]
 
 [tool.poetry.dependencies]
-async_solipsism = ">= 0.3"
-boto3 = "*"
-invoke = "*"
-joblib = "*"
-jsonpickle = "*"
 jupyter = "*"
-# By default we install and enable `Jupytext` plugin in `Jupyter` notebook
-# to get automatically `.py` paired with `.ipynb`.
 jupytext = "*"
 matplotlib = "*"
-moto = "*"
-networkx = "*"
 numpy = "*"
-openai = "*"
 pandas = ">= 2.1.1"
-psutil = "*"
-psycopg2-binary = "*"
+psutil = "*"                        # Is this needed?
 pyarrow = "*"
-python = ">= 3.12"
 pytest = "*"
 pytest-cov = "*"
 pytest-instafail = "*"
 pytest-rerunfailures = "*"
 pytest-timeout = "*"
 pytest-xdist = "*"
-python-dotenv = "*"
-requests = "*"
-seaborn = "*"
+python = ">= 3.12"
+python-dotenv = "*"                 # Is this needed?
+requests = "*"                      # Is this needed?
 scikit-learn = "*"
+seaborn = "*"
 statsmodels = "*"
 tqdm = "*"
 
