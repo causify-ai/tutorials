@@ -1,4 +1,4 @@
-# Tutorials “Learn X in 60 minutes”
+# Tutorials "Learn X in 60 minutes"
 
 The goal is to give everything needed for one person to become familiar with a Big data / AI / LLM / data science technology in 60 minutes.
 
@@ -25,7 +25,7 @@ Jupyter notebooks
 
 - Each Jupyter notebook should
   - be unit tested so that you are guaranteed that it works  
-    - It’s super frustrating when a tutorial doesn’t work because the version of the library is not compatible with the code anymore  
+    - It's super frustrating when a tutorial doesn't work because the version of the library is not compatible with the code anymore  
   - be self-contained and linear: each example is explained thoroughly without having to jump from tutorial to tutorial  
     - Each cell and its output is commented and explained  
   - run end-to-end after a restart (we can add a unit test for it)  
