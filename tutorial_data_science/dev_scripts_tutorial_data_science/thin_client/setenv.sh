@@ -36,6 +36,19 @@ umask 002
 
 ## - Source `utils.sh`.
 ## NOTE: we can't use $0 to find the path since we are sourcing this file.
+SOURCE_PATH="${HELPERS_ROOT_DIR}/dev_scripts_helpers/thin_client/thin_client_utils.sh"
+echo "> source $SOURCE_PATH ..."
+if [[ ! -f $SOURCE_PATH ]]; then
+    echo -e "ERROR: Can't find $SOURCE_PATH"
+    kill -INT $$
+fi
+source $SOURCE_PATH
+
+# - Activate environment
+activate_venv $VENV_TAG
+
+## - Source `utils.sh`.
+## NOTE: we can't use $0 to find the path since we are sourcing this file.
 #if [[ $IS_SUB_DIR == 1 ]]; then
 #    GIT_ROOT_DIR=$(dirname "$(pwd)")
 #else
@@ -50,33 +63,26 @@ umask 002
 #    HELPERS_ROOT_DIR="${GIT_ROOT_DIR}"
 #fi;
 GIT_ROOT_DIR="/Users/saggese/src/tutorials1"
+dassert_dir_exists $GIT_ROOT_DIR
 HELPERS_ROOT_DIR="/Users/saggese/src/tutorials1/helpers_root"
+dassert_dir_exists $HELPERS_ROOT_DIR
+SUBREPO_ROOT_DIR="/Users/saggese/src/tutorials1/tutorial_data_science"
+dassert_dir_exists $SUBREPO_ROOT_DIR
 
-SOURCE_PATH="${HELPERS_ROOT_DIR}/dev_scripts_helpers/thin_client/thin_client_utils.sh"
-echo "> source $SOURCE_PATH ..."
-if [[ ! -f $SOURCE_PATH ]]; then
-    echo -e "ERROR: Can't find $SOURCE_PATH"
-    kill -INT $$
-fi
-source $SOURCE_PATH
 
-# - Activate environment
-activate_venv $VENV_TAG
-
-if [[ $IS_SUPER_REPO == 1 ]]; then
-    HELPERS_ROOT_DIR="${GIT_ROOT_DIR}/helpers_root"
-    echo "HELPERS_ROOT_DIR=$HELPERS_ROOT_DIR"
-    dassert_dir_exists $HELPERS_ROOT_DIR
-fi;
+#if [[ $IS_SUPER_REPO == 1 ]]; then
+#    HELPERS_ROOT_DIR="${GIT_ROOT_DIR}/helpers_root"
+#    echo "HELPERS_ROOT_DIR=$HELPERS_ROOT_DIR"
+#    dassert_dir_exists $HELPERS_ROOT_DIR
+#fi;
 
 # - PATH
+# TODO(gp): Set PATH and PYTHONPATH for all the sub-repos and not only GIT_ROOT and HELPERS_ROOT.
 
 # Set vars for this dir.
-DEV_SCRIPT_DIR="${GIT_ROOT_DIR}/dev_scripts_${DIR_TAG}"
+DEV_SCRIPT_DIR="${SUBREPO_ROOT_DIR}/dev_scripts_${DIR_TAG}"
 echo "DEV_SCRIPT_DIR=$DEV_SCRIPT_DIR"
 dassert_dir_exists $DEV_SCRIPT_DIR
-
-# Set basic vars.
 set_path $DEV_SCRIPT_DIR
 
 if [[ $IS_SUPER_REPO == 1 ]]; then
