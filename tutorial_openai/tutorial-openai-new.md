@@ -93,7 +93,7 @@ messages = [
 response = get_assistant_response(model="gpt-4o-mini", messages=messages)
 print(response)
 ```
-# Assistant's Response:
+#### Assistant's Response:
 
     Of course! The return process can vary depending on the retailer, but here are some general steps you can follow:
     
@@ -114,7 +114,7 @@ follow_up = [
 response = get_assistant_response(model="gpt-4o-mini", messages=follow_up, temperature=0.6)
 print(response)
 ```
-# Assistant's Response:
+#### Assistant's Response:
 
     Escalation Scenario:
     I'm sorry to hear that you received a damaged product. I understand how frustrating that can be. To help you with the replacement process, could you please provide me with the following details?
@@ -183,7 +183,7 @@ task_description = "Write a Python function to calculate the factorial of a numb
 response = query_coding_agent(task_description)
 print(response)
 ```
-# Response from Coding Agent:
+#### Response from Coding Agent:
     
     Certainly! Below is a Python function that calculates the factorial of a number using recursion:
     
@@ -247,7 +247,7 @@ def generate_image(prompt: str):
 prompt = "A futuristic cyberpunk cityscape at night with neon lights."
 generate_image(prompt)
 ```
-
+#### Generated Image
 
     
 ![png](tutorial-openai_new_files/tutorial-openai_new_24_0.png)
@@ -275,7 +275,7 @@ To ensure a reproducible and isolated environment for the tutorial, use the prov
    i docker_jupyter --skip-pull --stage local --version 1.0.0 -d
    ```
 
-## OpenAI Architecture
+## OpenAI API Architecture
 
 ```mermaid
 graph TD
