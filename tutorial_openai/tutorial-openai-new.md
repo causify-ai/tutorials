@@ -14,17 +14,17 @@ The OpenAI API allows developers to harness the power of advanced AI models like
    - Mistral AI models 
      - Advantages: Free, highly efficient due to its "Mixture of Experts(MoE)" architecture.
      - Disadvantages: Requires deeper knowledge of MoE for training and fine-tuning.
-   - Meta’s LLaMA
-     - Advantages: Best open source model currently, efficient for various NLP tasks.
+   - Meta’s LLaMA models
+     - Advantages: Best open source models currently, efficient for various NLP tasks.
      - Disadvantages: Relatively uncensored and vulnerable to security exploits.
 
 2. **Commercial APIs:**
-   - Google’s Gemini API
+   - Google’s Gemini models
      - Advantages: Advanced AI capabilities with strong multimodal support.
      - Disadvantages: Quite unreliable relative to other models.
-   - Anthropic’s Claude API
+   - Anthropic’s Claude models
      - Advantages: Best price performance, Claude Sonnet 3.5 is extremely good at coding and reasoning tasks.
-     - Disadvantages: Lack of continuous updates, unlike ChatGPT..
+     - Disadvantages: Lack of continuous updates, unlike ChatGPT.
 
 ## Getting Started
 
@@ -258,7 +258,7 @@ generate_image(prompt)
 To ensure a reproducible and isolated environment for the tutorial, use the provided Docker container.
 
 ### Building and Running the Docker Container
-1. **Set Environment Variables:**
+1. **Activate virtual environment:**
    ```bash
    source dev_scripts_tutorial_data/thin_client/setenv.sh
    ```
