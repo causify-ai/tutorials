@@ -32,10 +32,16 @@ def _print(msg: str) -> None:
 # #############################################################################
 
 
-_REPO_NAME = "tutorials"
+# To customize: xyz
+#_REPO_NAME = "xyz"
+_REPO_NAME = "tutorial_data_science"
+
+# To customize: xyz
 _GITHUB_REPO_ACCOUNT = "causify-ai"
-# TODO(gp): Create and use helpers Docker image.
-_DOCKER_IMAGE_NAME = "tutorials_pymc"
+
+# To customize: xyz
+#_DOCKER_IMAGE_NAME = "xyz"
+_DOCKER_IMAGE_NAME = _REPO_NAME
 
 def get_name() -> str:
     return f"//{_REPO_NAME}"
@@ -201,24 +207,25 @@ def has_dind_support() -> bool:
     _print("cmd=%s -> rc=%s" % (cmd, rc))
     # dind is supported on both Mac and GH Actions.
     check_repo = os.environ.get("AM_REPO_CONFIG_CHECK", "True") != "False"
-    if check_repo:
-        if hserver.is_inside_ci():
-            # Docker-in-docker is needed for GH actions. For all other builds is optional.
-            assert has_dind, (
-                f"Expected privileged mode: has_dind={has_dind}\n"
-                + hserver.setup_to_str()
-            )
-        else:
-            only_warning = True
-            _raise_invalid_host(only_warning)
-            return False
-    else:
-        am_repo_config = os.environ.get("AM_REPO_CONFIG_CHECK", "True")
-        print(
-            _WARNING
-            + ": Skip checking since AM_REPO_CONFIG_CHECK="
-            + f"'{am_repo_config}'"
-        )
+    #TODO(Juraj): HelpersTask16.
+    #if check_repo:
+    #    if hserver.is_inside_ci():
+    #        # Docker-in-docker is needed for GH actions. For all other builds is optional.
+    #        assert has_dind, (
+    #            f"Expected privileged mode: has_dind={has_dind}\n"
+    #            + hserver.setup_to_str()
+    #        )
+    #    else:
+    #        only_warning = True
+    #        _raise_invalid_host(only_warning)
+    #        return False
+    #else:
+    #    am_repo_config = os.environ.get("AM_REPO_CONFIG_CHECK", "True")
+    #    print(
+    #        _WARNING
+    #        + ": Skip checking since AM_REPO_CONFIG_CHECK="
+    #        + f"'{am_repo_config}'"
+    #    )
     return has_dind
 
 
