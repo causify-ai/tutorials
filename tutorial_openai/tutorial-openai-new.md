@@ -93,7 +93,8 @@ messages = [
 response = get_assistant_response(model="gpt-4o-mini", messages=messages)
 print(response)
 ```
-    Assistant's Response:
+# Assistant's Response:
+
     Of course! The return process can vary depending on the retailer, but here are some general steps you can follow:
     
     1. **Check the Return Policy**: Review the return policy of the store where you made the purchase. This information is usually found on their website or on your receipt.
@@ -110,9 +111,11 @@ follow_up = [
     {"role": "system", "content": "You are a customer support assistant. If the issue is complex, escalate to a human agent."},
     {"role": "user", "content": "The product I received is damaged, and I need it replaced immediately."}
 ]
-response = get_assistant_response(model="gpt-4", messages=follow_up, temperature=0.6)
+response = get_assistant_response(model="gpt-4o-mini", messages=follow_up, temperature=0.6)
 print(response)
-``` 
+```
+# Assistant's Response:
+
     Escalation Scenario:
     I'm sorry to hear that you received a damaged product. I understand how frustrating that can be. To help you with the replacement process, could you please provide me with the following details?
     
@@ -127,28 +130,51 @@ print(response)
 
 #### Coding Assistant
 ```python
-def query_coding_agent(task: str, model_name: str = "gpt-4") -> str:
+def query_coding_agent(task: str, model_name: str = "gpt-4o-mini") -> str:
+    """
+    Interacts with the coding assistant to complete a given task.
+    
+    param task: detailed description of the coding task or question.
+    param model_name: name of the model to use.
+
+    Returns: assistant's response.
+    """
     try:
+        # Step 1: Create the coding assistant
         coding_agent = agent.beta.assistants.create(
             model=model_name,
             name="Coding Assistant",
-            description="An AI assistant skilled in programming and debugging."
+            description="An AI assistant skilled in programming, debugging, and code documentation.",
+            instructions="You are a helpful coding assistant. You are an expert in Python, JavaScript, and debugging common errors. Assist the user by generating code snippets, fixing errors, and explaining concepts in simple terms."
         )
+    
+        # Step 2: Create a thread for the task (conversation with the assistant)
         thread = agent.beta.threads.create()
+
+        # Step 3: Send the coding task to the assistant
         message = agent.beta.threads.messages.create(
             thread_id=thread.id,
             role="user",
             content=task
         )
+
+        # Step 4: Run the assistant to execute the task and get the response
         run = agent.beta.threads.runs.create_and_poll(
             thread_id=thread.id,
-            assistant_id=coding_agent.id
+            assistant_id=coding_agent.id,
+            instructions="Please respond with the solution to the user's coding problem."
         )
+
+        # Step 5: Check if the task was completed and retrieve the assistant's response
         if run.status == 'completed':
-            messages = agent.beta.threads.messages.list(thread_id=thread.id)
+            messages = agent.beta.threads.messages.list(
+                thread_id=thread.id
+            )
+            # Return the first message from the assistant's response
             return messages.data[0].content[0].text.value
         else:
             return f"Task not completed. Status: {run.status}"
+
     except Exception as e:
         return f"An error occurred: {str(e)}"
 
@@ -157,8 +183,8 @@ task_description = "Write a Python function to calculate the factorial of a numb
 response = query_coding_agent(task_description)
 print(response)
 ```
-
-    Response from Coding Agent:
+# Response from Coding Agent:
+    
     Certainly! Below is a Python function that calculates the factorial of a number using recursion:
     
     ```python
@@ -249,9 +275,7 @@ To ensure a reproducible and isolated environment for the tutorial, use the prov
    i docker_jupyter --skip-pull --stage local --version 1.0.0 -d
    ```
 
-## Visual Aids
-
-Use **Mermaid** diagrams to visualize workflows and data transformations.
+## OpenAI Architecture
 
 ```mermaid
 graph TD
