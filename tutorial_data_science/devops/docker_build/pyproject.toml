@@ -9,6 +9,7 @@ jupyter = "*"
 jupytext = "*"
 matplotlib = "*"
 numpy = "*"
+openai = "*"
 pandas = ">= 2.1.1"
 psutil = "*"                        # Is this needed?
 pyarrow = "*"
