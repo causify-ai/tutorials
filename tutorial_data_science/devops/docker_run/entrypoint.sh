@@ -12,17 +12,21 @@ echo "##> $FILE_NAME"
 echo "UID="$(id -u)
 echo "GID="$(id -g)
 
-# - Source `utils.sh`.
-# NOTE: we can't use $0 to find the path since we are sourcing this file.
-GIT_ROOT_DIR=$(pwd)
-echo "GIT_ROOT_DIR=$GIT_ROOT_DIR"
-
-if [[ $IS_SUPER_ROOT == 1 ]]; then
-    HELPERS_ROOT="${GIT_ROOT_DIR}/helpers_root"
-else
-    HELPERS_ROOT=$GIT_ROOT_DIR
-fi;
-SOURCE_PATH="${HELPERS_ROOT}/dev_scripts_helpers/thin_client/thin_client_utils.sh"
+## - Source `utils.sh`.
+## NOTE: we can't use $0 to find the path since we are sourcing this file.
+#GIT_ROOT_DIR=$(pwd)
+#echo "GIT_ROOT_DIR=$GIT_ROOT_DIR"
+#
+#if [[ $IS_SUPER_ROOT == 1 ]]; then
+#    HELPERS_ROOT="${GIT_ROOT_DIR}/helpers_root"
+#else
+#    HELPERS_ROOT=$GIT_ROOT_DIR
+#fi;
+#GIT_ROOT_DIR="/src"
+#HELPERS_ROOT_DIR="/src/helpers_root"
+GIT_ROOT_DIR="/app"
+HELPERS_ROOT_DIR="/app/helpers_root"
+SOURCE_PATH="${HELPERS_ROOT_DIR}/dev_scripts_helpers/thin_client/thin_client_utils.sh"
 echo "> source $SOURCE_PATH ..."
 if [[ ! -f $SOURCE_PATH ]]; then
     echo -e "ERROR: Can't find $SOURCE_PATH"
