@@ -1,0 +1,2 @@
+02:19:10 - [36mINFO [0m hdbg.py init_logger:1010                               02:19:10 - [36mINFO [0m hdbg.py init_logger:1010                               Saving log to file '{'tmp.pytest.log'}'
+02:19:10 - [36mINFO [0m hdbg.py init_logger:1015                               02:19:10 - [36mINFO [0m hdbg.py init_logger:1015                               > cmd='/data/krishnap/src/venv/client_venv.helpers/bin/pytest'
