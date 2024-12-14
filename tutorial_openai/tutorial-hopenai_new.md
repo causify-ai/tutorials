@@ -1,80 +1,77 @@
-# OpenAI Assistant API Helper (`hopenai.py`) Tutorial
+This tutorial demonstrates how to use the `hopenai.py` helper file to create
+various AI-powered applications using Python and Jupyter Notebook.
 
-This tutorial demonstrates how to use the `hopenai.py` helper file to create various AI-powered applications using Python and Jupyter Notebook.
+# Setup and Initialization
+Before starting, ensure you are using our Docker environment.
 
-## Table of Contents
-- [Setup and Initialization](#setup-and-initialization)
-- [Travel Agent Chat Assistant](#travel-agent-chat-assistant)
-- [Coding Assistant](#coding-assistant)
-- [File Management](#file-management)
-- [Vector Store Operations](#vector-store-operations)
-- [Code Generation with Testing](#code-generation-with-testing)
-- [Assistant Management](#assistant-management)
-
-## Setup and Initialization
-Before starting, ensure you are using docker environment.
-
-### Prerequisites
+## Prerequisites
 1. **Sign up:** Create an OpenAI account at [OpenAI](https://www.openai.com/).
 2. **API Key:** Obtain an API key from the "View API Keys" section.
 3. **Set Environment Variable:** Store the key securely as an environment variable.
    ```bash
-   export OPENAI_API_KEY="<your_api_key_here>"
+   > export OPENAI_API_KEY="<your_api_key_here>"
    ```
 
-#### Import required libraries
-```python
-import helpers.hopenai as hopenai
-import logging
-import os
-from typing import List
+### Import required libraries
 
-# Set up logging
-logging.basicConfig(level=logging.INFO)
+- Import required libraries in the notebook:
+  ```python
+  import helpers.hopenai as hopenai
+  import logging
+  import os
+  from typing import List
 
-# Set OpenAI API key
-os.environ["OPENAI_API_KEY"] = "<your_openai_api_key>"
-```
+  # Set up logging
+  logging.basicConfig(level=logging.INFO)
 
-## Travel Agent Chat Assistant
+  # Set OpenAI API key
+  os.environ["OPENAI_API_KEY"] = "<your_openai_api_key>"
+  ```
 
-Create an AI travel assistant using the `hopenai.py` helper file that generates personalized trip itineraries.
+# Travel Agent Chat Assistant
 
-### Features
-- Generates detailed day-by-day itineraries
-- Considers budget constraints
-- Accounts for transportation preferences
-- Includes popular attractions and food recommendations
-- Factors in seasonal timing and tourist traffic
+Create an AI travel assistant using the `hopenai.py` helper file that generates
+personalized trip itineraries.
 
-### Example Usage
+## Features
+- Generate detailed day-by-day itineraries
+- Consider budget constraints
+- Account for transportation preferences
+- Include popular attractions and food recommendations
+- Factor in seasonal timing and tourist traffic
 
-```python
-# Define prompts and instructions
-user_prompt = """
-I am visiting New York City for 3 days. Please create a detailed itinerary, 
-including popular attractions, food recommendations, and evening activities.
-Constraints:
-- Dates: December 24-27
-- Budget: $400 (excluding hotel and flight)
-- Transportation: Subway and walking
-- Location: Hotel near Newark Penn station
-"""
+## Example Usage
 
-system_instructions = """
-You are a travel assistant specializing in creating personalized travel itineraries.
-Your recommendations should balance sightseeing, food, and leisure activities.
-"""
+- Example usage
+  ```python
+  # Define prompts and instructions
+  user_prompt = """
+  I am visiting New York City for 3 days. Please create a detailed itinerary, 
+  including popular attractions, food recommendations, and evening activities.
+  Constraints:
+  - Dates: December 24-27
+  - Budget: $400 (excluding hotel and flight)
+  - Transportation: Subway and walking
+  - Location: Hotel near Newark Penn station
+  """
 
-# Generate itinerary
-trip_plan = hopenai.get_completion(
-    user=user_prompt,
-    system=system_instructions,
-    model="gpt-4o-mini",
-    temperature=0.7
-)
-```
-#### Assistant's Response:
+  system_instructions = """
+  You are a travel assistant specializing in creating personalized travel itineraries.
+  Your recommendations should balance sightseeing, food, and leisure activities.
+  """
+
+  # Generate itinerary
+  trip_plan = hopenai.get_completion(
+      user=user_prompt,
+      system=system_instructions,
+      model="gpt-4o-mini",
+      temperature=0.7
+  )
+  ```
+
+- The assistant response is
+
+  ```
     3-Day New York City Trip Itinerary:
     Here’s a detailed 3-day itinerary for your trip to New York City from December 24th to 27th. This itinerary balances sightseeing, food, and leisure activities while considering your budget and travel preferences.
     
@@ -98,38 +95,7 @@ trip_plan = hopenai.get_completion(
     
     ### Day 2: December 25th (Christmas Day)
     
-    **Morning:**
-    - **Breakfast:** Grab pastries and coffee from **Balthazar Bakery** in SoHo (approx. $10).
-    - **Visit the Rockefeller Center:** Enjoy the iconic Christmas tree and ice skating rink. Ice skating costs about $20, plus rental ($10). (1-2 hours)
-    
-    **Afternoon:**
-    - **Lunch:** Enjoy a festive meal at **Ellen’s Stardust Diner**, known for its singing waitstaff (approx. $15-20).
-    - **Explore Fifth Avenue:** Walk along Fifth Avenue to see holiday window displays at stores like Macy's and Saks Fifth Avenue. (2-3 hours)
-    
-    **Evening:**
-    - **Dinner:** Head to **Katz’s Delicatessen** for a classic pastrami sandwich (approx. $20).
-    - **Evening Activity:** Take a stroll on the **Brooklyn Bridge** for stunning views of the Manhattan skyline. (1-2 hours, free)
-    
-    **Estimated Day 2 Total:** $85 + subway fares = approximately $95
-    
-    ---
-    
-    ### Day 3: December 26th (Boxing Day)
-    
-    **Morning:**
-    - **Breakfast:** Visit **Sarabeth's** for a delicious brunch (approx. $20).
-    - **Visit the American Museum of Natural History:** Take the subway to **81st St – Museum of Natural History** (approx. $2.75). Admission is “pay what you wish,” so you can choose to donate. Explore for about 3 hours.
-    
-    **Afternoon:**
-    - **Lunch:** Grab a bite at **Shake Shack** in the Upper West Side (approx. $15).
-    - **Stroll through the West Side:** Walk down the **High Line** park, an elevated park built on a former railway track. Enjoy the views and art installations. (1-2 hours, free)
-    
-    **Evening:**
-    - **Dinner:** Visit **The Meatball Shop** for a casual dinner (approx. $15-20).
-    - **Evening Activity:** Check out a comedy show at **Upright Citizens Brigade** (tickets around $10), or enjoy live music at a nearby venue.
-    
-    **Estimated Day 3 Total:** $70 + subway fares = approximately $80
-    
+    ... 
     ---
     
     ### Summary of Estimated Costs
@@ -149,34 +115,37 @@ trip_plan = hopenai.get_completion(
     - Be prepared for colder weather; dress warmly!
     
     Enjoy your trip to New York City!
+    ```
 
-## Coding Assistant
+# Coding Assistant
 
-Create an AI assistant using the `hopenai.py` helper file that helps with coding questions and follows best practices.
+Create an AI assistant using the `hopenai.py` helper file that helps with coding
+questions and follows best practices.
 
-### Features
+## Features
 - Answers technical questions
 - Provides code examples
 - Follows coding style guides
 - References documentation
 
-### Example Usage
+## Example Usage
 
-```python
-assistant = hopenai.get_coding_style_assistant(
-    assistant_name="CodingAssistant",
-    instructions="You are a helpful coding assistant. Answer technical questions clearly and concisely.",
-    vector_store_name="coding_help_vector_store",
-    file_paths=["../helpers_root/docs/coding/all.coding_style.how_to_guide.md"]
-)
+- Example
+  ```python
+  assistant = hopenai.get_coding_style_assistant(
+      assistant_name="CodingAssistant",
+      instructions="You are a helpful coding assistant. Answer technical questions clearly and concisely.",
+      vector_store_name="coding_help_vector_store",
+      file_paths=["../helpers_root/docs/coding/all.coding_style.how_to_guide.md"]
+  )
 
-# Query the assistant
-question = "What are common python mistakes that I should keep in mind while writing code?"
-response_messages = hopenai.get_query_assistant(assistant, question)
-```
+  # Query the assistant
+  question = "What are common python mistakes that I should keep in mind while writing code?"
+  response_messages = hopenai.get_query_assistant(assistant, question)
+  ```
 
-#### Assistant's Response:
-
+- Assistant's Response:
+  ```
     assistant: Here are some common mistakes to avoid when writing Python code:
     
     1. **Indentation Errors**: Python relies on indentation to define the structure of the code. Ensure consistent use of spaces or tabs.
@@ -223,104 +192,109 @@ response_messages = hopenai.get_query_assistant(assistant, question)
     
     By keeping these common pitfalls in mind, you can write cleaner, more efficient, and error-free Python code.
 
-## File Management
+# File Management
 
 Tools for managing files using the `hopenai.py` helper file.
 
-### Features
+## Features
 - List uploaded files
 - View file information
 - Delete files
 - Batch operations
 
-### Example Usage
+## Example Usage
 
-```python
-# List all files
-client = hopenai.OpenAI()
-files_before = list(client.files.list())
-print("Uploaded files:")
-print_file_info(files_before)
-# Delete all files (with confirmation)
-hopenai.delete_all_files(ask_for_confirmation=False)
-# Verify deletion
-files_after = list(client.files.list())
-print("Files after deletion:")
-print_file_info(files_after)
-```
+  ```python
+  # List all files
+  client = hopenai.OpenAI()
+  files_before = list(client.files.list())
+  print("Uploaded files:")
+  print_file_info(files_before)
+  # Delete all files (with confirmation)
+  hopenai.delete_all_files(ask_for_confirmation=False)
+  # Verify deletion
+  files_after = list(client.files.list())
+  print("Files after deletion:")
+  print_file_info(files_after)
+  ```
 
-#### Assistant's Response:
-    Uploaded files:
-    {'id': 'file-QFUuXpobjoLCnLBaCX2HK5', 'created_at': datetime.datetime(2024, 12, 11, 20, 14), 'filename': 'all.coding_style.how_to_guide.md'}
-    {'id': 'file-5m1CX8UeABBJtFATb3cLtz', 'created_at': datetime.datetime(2024, 12, 11, 19, 59, 4), 'filename': 'all.write_unit_tests.how_to_guide.md'}
-    {'id': 'file-UhqL4yhYrFP8ziDmM3XzB1', 'created_at': datetime.datetime(2024, 12, 11, 19, 59, 4), 'filename': 'all.coding_style.how_to_guide.md'}
-    {'id': 'file-VEzEvpmVfhgUTpH5dmWtxC', 'created_at': datetime.datetime(2024, 12, 11, 19, 59, 4), 'filename': 'all.imports_and_packages.how_to_guide.md'}
+- Assistant's Response:
+  ```
+  Uploaded files:
+  {'id': 'file-QFUuXpobjoLCnLBaCX2HK5', 'created_at': datetime.datetime(2024, 12, 11, 20, 14), 'filename': 'all.coding_style.how_to_guide.md'}
+  {'id': 'file-5m1CX8UeABBJtFATb3cLtz', 'created_at': datetime.datetime(2024, 12, 11, 19, 59, 4), 'filename': 'all.write_unit_tests.how_to_guide.md'}
+  {'id': 'file-UhqL4yhYrFP8ziDmM3XzB1', 'created_at': datetime.datetime(2024, 12, 11, 19, 59, 4), 'filename': 'all.coding_style.how_to_guide.md'}
+  {'id': 'file-VEzEvpmVfhgUTpH5dmWtxC', 'created_at': datetime.datetime(2024, 12, 11, 19, 59, 4), 'filename': 'all.imports_and_packages.how_to_guide.md'}
 
-    Files after deletion:
+  Files after deletion:
+  ...
+  ```
 
-## Vector Store Operations
+# Vector Store Operations
 
-Manage and utilize vector stores for efficient document retrieval using the `hopenai.py` helper file.
+Manage and utilize vector stores for efficient document retrieval using the
+`hopenai.py` helper file.
 
-### Features
+## Features
 - Create vector stores
 - Upload document batches
 - Monitor upload status
 - Query stored documents
 
-### Example Usage
+## Example Usage
 
-```python
-vector_store_name = "batch_vector_store"
-file_paths = [
-    "../helpers_root/docs/coding/all.imports_and_packages.how_to_guide.md",
-    "../helpers_root/docs/coding/all.write_unit_tests.how_to_guide.md",
-    "../helpers_root/docs/coding/all.coding_style.how_to_guide.md"
-]
+  ```python
+  vector_store_name = "batch_vector_store"
+  file_paths = [
+      "../helpers_root/docs/coding/all.imports_and_packages.how_to_guide.md",
+      "../helpers_root/docs/coding/all.write_unit_tests.how_to_guide.md",
+      "../helpers_root/docs/coding/all.coding_style.how_to_guide.md"
+  ]
 
-# Create and upload
-vector_store = client.beta.vector_stores.create(name=vector_store_name)
-file_streams = [open(path, "rb") for path in file_paths]
-file_batch = client.beta.vector_stores.file_batches.upload_and_poll(
-    vector_store_id=vector_store.id,
-    files=file_streams
-)
-```
+  # Create and upload
+  vector_store = client.beta.vector_stores.create(name=vector_store_name)
+  file_streams = [open(path, "rb") for path in file_paths]
+  file_batch = client.beta.vector_stores.file_batches.upload_and_poll(
+      vector_store_id=vector_store.id,
+      files=file_streams
+  )
+  ```
 
-## Code Generation with Testing
+# Code Generation with Testing
 
-Create an AI assistant using the `hopenai.py` helper file that generates both code and corresponding unit tests.
+Create an AI assistant using the `hopenai.py` helper file that generates both
+code and corresponding unit tests.
 
-### Features
+## Features
 - Follows PEP 8 standards
 - Generates comprehensive unit tests
 - Handles edge cases
 - Includes documentation
 
-### Example Usage
+## Example Usage
 
-```python
-# Create specialized assistant
-coding_assistant = hopenai.get_coding_style_assistant(
-    assistant_name="CodeAndTestAssistant",
-    instructions="""
-    You are a coding assistant trained to write Python code and unit tests.
-    Follow PEP 8 standards and write comprehensive tests.
-    """,
-    vector_store_name=vector_store_name
-)
+  ```python
+  # Create specialized assistant
+  coding_assistant = hopenai.get_coding_style_assistant(
+      assistant_name="CodeAndTestAssistant",
+      instructions="""
+      You are a coding assistant trained to write Python code and unit tests.
+      Follow PEP 8 standards and write comprehensive tests.
+      """,
+      vector_store_name=vector_store_name
+  )
 
-# Generate code and tests
-task = """
-Write a Python function `calculate_area` that computes the area of a rectangle 
-given its width and height. Then, write unit tests to verify its functionality.
-"""
-response = hopenai.get_query_assistant(coding_assistant, task)
-```
+  # Generate code and tests
+  task = """
+  Write a Python function `calculate_area` that computes the area of a rectangle 
+  given its width and height. Then, write unit tests to verify its functionality.
+  """
+  response = hopenai.get_query_assistant(coding_assistant, task)
+  ```
 
-#### Assistant's Response:
-
-assistant: Here's the Python function `calculate_area` that computes the area of a rectangle given its width and height, along with unit tests to verify its functionality.
+- Assistant's Response:
+  ```
+  assistant: Here's the Python function `calculate_area` that computes the area of a rectangle given its width and height, along with unit tests to verify its functionality.
     
     ### Python Function
     
@@ -374,36 +348,35 @@ assistant: Here's the Python function `calculate_area` that computes the area of
         unittest.main()
     ```
     
-    ### Explanation
-    
-    - The `calculate_area` function takes two parameters, `width` and `height`, and calculates the area by multiplying these two values. It also raises a `ValueError` if either of the values is negative.
-    - The test cases cover:
-      - Normal positive dimensions.
-      - Zero dimensions.
-      - Negative values, which should raise exceptions.
-    
-    You can run the tests using a Python environment that supports `unittest`.
+- The `calculate_area` function takes two parameters, `width` and `height`, and
+  calculates the area by multiplying these two values. It also raises a
+  `ValueError` if either of the values is negative.
+- The test cases cover:
+  - Normal positive dimensions.
+  - Zero dimensions.
+  - Negative values, which should raise exceptions.
 
-## Assistant Management
+You can run the tests using a Python environment that supports `unittest`.
+
+# Assistant Management
 
 Tools for managing AI assistants using the `hopenai.py` helper file.
 
-### Features
+## Features
 - List existing assistants
 - View assistant details
 - Delete assistants
 - Batch operations
 
-### Example Usage
+## Example Usage
 
-```python
-# List assistants
-assistants = client.beta.assistants.list()
+  ```python
+  # List assistants
+  assistants = client.beta.assistants.list()
 
-# Delete assistants
-hopenai.delete_all_assistants(ask_for_confirmation=True)
-```
-## Notes
+  # Delete assistants
+  hopenai.delete_all_assistants(ask_for_confirmation=True)
+  ```
 
 - Refer to the Jupyter Notebook for a more comprehensive tutorial
 - Make sure that helpers module is properly initialized and updated
