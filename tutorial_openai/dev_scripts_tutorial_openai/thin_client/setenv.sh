@@ -90,6 +90,10 @@ if [[ $IS_SUPER_REPO == 1 ]]; then
     echo "PYTHONPATH=$PYTHONPATH"
 fi;
 
+# Remove write permissions for symlinked files to prevent accidental 
+# modifications before starting to develop.
+set_symlink_permissions .
+
 # - Set specific configuration of the project.
 configure_specific_project
 
