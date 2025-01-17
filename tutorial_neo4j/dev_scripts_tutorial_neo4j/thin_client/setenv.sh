@@ -9,13 +9,12 @@ DIR_TAG="tutorial_neo4j"
 
 # NOTE: We can't use $0 to find out in which file we are in, since this file is
 # sourced and not executed.
-SCRIPT_PATH="tutorial_neo4j/dev_scripts_${DIR_TAG}/thin_client/setenv.sh"
-
+SCRIPT_PATH="dev_scripts_${DIR_TAG}/thin_client/setenv.sh"
 echo "##> $SCRIPT_PATH"
 
 # To customize: xyz
+# IS_SUPER_REPO=1
 IS_SUPER_REPO=1
-# IS_SUPER_REPO=0
 echo "IS_SUPER_REPO=$IS_SUPER_REPO"
 
 if [[ $IS_SUPER_REPO == 1 ]]; then
