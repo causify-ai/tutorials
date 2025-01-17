@@ -105,7 +105,6 @@ if [[ 1 == 1 ]]; then
   wget -qO - https://debian.neo4j.com/neotechnology.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/neotechnology.gpg
   echo 'deb [signed-by=/etc/apt/keyrings/neotechnology.gpg] https://debian.neo4j.com stable latest' | sudo tee /etc/apt/sources.list.d/neo4j.list
   sudo apt-get update
-  sudo apt list -a neo4j
   sudo apt-get install $APT_GET_OPTS neo4j
 fi;
 
