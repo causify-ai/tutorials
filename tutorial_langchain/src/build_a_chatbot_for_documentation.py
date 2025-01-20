@@ -1,11 +1,11 @@
 # ---
 # jupyter:
 #   jupytext:
-#     formats: ipynb,py:light
+#     formats: ipynb,py:percent
 #     text_representation:
 #       extension: .py
-#       format_name: light
-#       format_version: '1.5'
+#       format_name: percent
+#       format_version: '1.3'
 #       jupytext_version: 1.16.6
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
@@ -13,295 +13,203 @@
 #     name: python3
 # ---
 
-# # Tutorial For Langchain
+# %% [markdown]
+# # Building a Documentation Chatbot with LangChain
 #
-# The notebook shows how to use langchain API with an example. In this example we will be building chatbot for the internal documentation using lancgchain.
-#
-# Refernces: 
-#  - Official docs : https://python.langchain.com/docs/introduction/
+# This script demonstrates how to build an intelligent chatbot that queries documentation using LangChain. 
+# The chatbot can:
+# - Parse and preprocess Markdown files.
+# - Embed document content for efficient similarity-based retrieval.
+# - Answer detailed, context-aware queries from users.
 
-# ## Imports
-
-# %load_ext autoreload
-# %autoreload 2
-# %matplotlib inline
-
-# +
+# %%
 import os
-import glob
 import logging
-
-import langchain_openai as langOpenAI
-import langchain.document_loaders as docloader
-import langchain.docstore.document as docstore
-import langchain.text_splitter as txtsplitter
-import langchain.embeddings as lang_embeddings
-import langchain.vectorstores as vectorstores
-import langchain.chains as chains
-import langchain.chat_models as chatmodels
-
-from typing import List
-
-import helpers.hsystem as hsystem
-import helpers.hprint as hprint
 import helpers.hdbg as hdbg
-import helpers.hpandas as hpanda
+from langchain.chat_models import ChatOpenAI
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.chains import RetrievalQA
+from langchain_utils import (
+    list_markdown_files,
+    parse_markdown_files,
+    split_documents,
+    create_vector_store,
+    build_retriever,
+    watch_folder_for_changes,
+    update_vector_store
+)
+# Configure logging.
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+# Set the OpenAI API key.
+os.environ["OPENAI_API_KEY"] = "your_openai_api_key_here"
+# Initialize the chat model
+chat_model = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0)
 
-
-
-# +
+# %%
 hdbg.init_logger(verbosity=logging.INFO)
 
 _LOG = logging.getLogger(__name__)
-# -
 
-# ### Define the GPT Model to use.
+# %%
+import os
+import logging
+from langchain.chat_models import ChatOpenAI
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.chains import RetrievalQA
+import langchain_utils as lang_utils 
 
-# +
-os.environ["OPENAI_API_KEY"] = "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"
+# %%
+hdbg.init_logger(verbosity=logging.INFO)
 
-chat_model = langOpenAI.ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0)
+_LOG = logging.getLogger(__name__)
 
+# %% [markdown]
+# ## Define Config
 
-# -
+# %%
+config = {
+    "open_ai_api_key": "your_api_key_here",
+    # Define language model arguments.
+    "language_model": {
+        # Define your model here.
+        "model": "gpt-40-mini",
+        "temperature": 0,
+    },
+    # Define input directory path containing documents.
+    "source_directory": "../../docs",
+    "parse_data_into_chunks": {
+        "chunk_size" = 500,
+        "chunk_overlap" = 50,
+    },
+}
 
-def parse_markdown_files(file_paths) -> List[docstore.Document]:
-    """
-    Parse all the markdown files into Documents.
-
-    :param file_paths: list of md file_paths
-    """
-    documents = []
-    for file_path in file_paths:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            content = f.read()
-        # Create a Document object for each file
-        documents.append(docstore.Document(page_content=content, metadata={"source": file_path}))
-    return documents
-
-
-def list_markdown_files(directory:str) -> List[str]:
-    return list(glob.glob(f"{directory}/*.md"))
-
-
-# ### RecursiveCharacterTextSplitter 
-# Utility function in LangChain  for splitting large chunks of text into smaller more manageable pieces while ensuring minimal overlap or fragmentation of meaningful content.
+# %% [markdown]
+# ## Setting Up
 #
+# We'll begin by importing the required libraries and configuring the environment. The chatbot will use:
+# - OpenAI's GPT-3.5 as the core language model.
+# - FAISS for fast document retrieval.
+# - LangChain utilities for document parsing, text splitting, and chaining.
 
-# +
-# Directory containing Markdown files
-directory = "../../docs"
+# %%
+# Set the OpenAI API key.
+os.environ["OPENAI_API_KEY"] = config["open_ai_api_key"]
+# Initialize the chat model.
+chat_model = ChatOpenAI(**config["language_model"])
 
-# List Markdown files
-markdown_files = list_markdown_files(directory)
+# %% [markdown]
+# ## Parse and Preprocess Documentation
+#
+# Markdown files serve as the primary data source for this chatbot. 
+# We'll parse the files into LangChain `Document` objects and split them into manageable chunks to ensure efficient retrieval.
 
-# Parse Markdown files into LangChain documents
-documents = parse_markdown_files(markdown_files)
-
-# Split long documents into smaller chunks
-text_splitter = txtsplitter.RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-split_documents = text_splitter.split_documents(documents)
-
+# %%
+split_documents = lang_utils.parse_data_into_chunks(
+    dir_path = config["source_directory"],
+    **config["parse_data_into_chunks"],
+)
+_LOG.info("Processed and chunked %d documents.", len(split_documents))
 # Print sample chunked documents
 for doc in split_documents[:5]:
     _LOG.info("Source: %s", {doc.metadata['source']})
     _LOG.info("Content: %s", {doc.page_content})
-# -
 
-# ### VECTOR STORES
+# %% [markdown]
+# ## Create a FAISS Vector Store
 #
-# #### FAISS (Facebook AI Similarity Search) 
-# It is a library designed for efficient similarity search and clustering of dense vectors. In LangChain, FAISS is commonly used as a vector store to store and retrieve embeddings, which are vector representations of text or other data.
+# To enable fast document retrieval, we'll embed the document chunks using OpenAI's embeddings and store them in a FAISS vector store.
+
+# %%
+# Initialize OpenAI embeddings.
+embeddings = OpenAIEmbeddings()
+# Create a FAISS vector store.
+vector_store = create_vector_store(chunked_documents, embeddings)
+logger.info("FAISS vector store created with %d documents.", len(chunked_documents)).
+
+# %% [markdown]
+# ## Build a QA Chain
 #
+# The `RetrievalQA` chain combines document retrieval with OpenAI's GPT-3.5 for question answering. 
+# It retrieves the most relevant document chunks and uses them as context to generate answers.
 
-# +
-# Initialize embeddings
-embeddings = lang_embeddings.OpenAIEmbeddings()
+# %%
+# Build the retriever from the vector store
+retriever = build_retriever(vector_store)
 
-# Embed and store split_documents
-vector_store = vectorstores.FAISS.from_documents(split_documents, embeddings)
+# Create the RetrievalQA chain
+qa_chain = RetrievalQA.from_chain_type(llm=chat_model, retriever=retriever, return_source_documents=True)
 
-retriever = vector_store.as_retriever()
-# -
+logger.info("RetrievalQA chain initialized.")
 
-# Create the QA chain
-qa_chain = chains.RetrievalQA.from_chain_type(
-    llm=chat_model,
-    retriever=retriever,
-    return_source_documents=True
-)
+# %% [markdown]
+# ## Step 5: Query the Chatbot
+#
+# Let's interact with the chatbot! We'll ask it questions based on the documentation. 
+# The chatbot will retrieve relevant chunks and generate context-aware responses.
 
+# %%
+# Define a user query
+query = "What are the guidelines for setting up a new project?"
 
-# +
-# User's question
-query = "What are the guidelines on creating new project"
+# Query the chatbot
+response = qa_chain({"query": query})
 
-# Get the answer and source documents
-result = qa_chain({"query": query})
+# Display the answer and source documents
+print(f"Answer:\n{response['result']}\n")
+print("Source Documents:")
+for doc in response['source_documents']:
+    print(f"- Source: {doc.metadata['source']}")
+    print(f"  Excerpt: {doc.page_content[:200]}")
 
-# Print the answer
-_LOG.info("Answer: %s", result['result'])
+# %% [markdown]
+# ## Step 6: Dynamic Updates
+#
+# What if the documentation changes? We'll handle this by monitoring the folder for new or modified files.
+# The vector store will be updated dynamically to ensure the chatbot stays up-to-date.
 
-# Print the source file references
-_LOG.info("\nSource Documents:")
-for doc in result['source_documents']:
-    _LOG.info("File: %s", {doc.metadata['source']})
-    _LOG.info("Excerpt: %s", {doc.page_content[:200]})
+# %%
+# Monitor the folder for changes and update the vector store
+known_files = {}
+changes = watch_folder_for_changes(docs_directory, known_files)
 
+if changes["new"] or changes["modified"]:
+    # Parse and process the changed files
+    new_documents = parse_markdown_files(changes["new"] + changes["modified"])
+    update_vector_store(vector_store, new_documents, embeddings)
+    logger.info("Vector store updated with new/modified documents.")
 
-# -
+# %% [markdown]
+# ## Step 7: Enhancements - Personalization
+#
+# We can extend the chatbot to include personalized responses:
+# - Filter documents by metadata (e.g., tags, categories).
+# - Customize responses based on user preferences.
+#
+# For example, users can ask for specific sections of the documentation or request summaries tailored to their needs.
 
-def get_vectors_by_document_name(vector_store: vectorstores.FAISS, document_name: str) -> List:
-    """
-    Retrieve vectors from a FAISS vector store based on the document name.
+# %%
+# Example query with personalized intent
+personalized_query = "Show me onboarding guidelines for new employees."
 
-    :param vector_store: FAISS vector store object that supports similarity search.
-    :param document_name:  name of the document used as a filter in the metadata.
+# Query the chatbot
+personalized_response = qa_chain({"query": personalized_query})
 
-    :return: list of results from the FAISS vector store that match the given document name.
-    """
-    # Query using the metadata field source
-    results = vector_store.similarity_search(
-        # Pass an empty query or a dummy vector if supported
-        query="",
-        # Retrieve all matching documents
-        k=None,
-        # Filter by the document name
-        filter={"source": document_name} 
-    )
-    return results
+# Display the personalized response
+print(f"Answer:\n{personalized_response['result']}\n")
+print("Source Documents:")
+for doc in personalized_response['source_documents']:
+    print(f"- Source: {doc.metadata['source']}")
+    print(f"  Excerpt: {doc.page_content[:200]}")
 
-
-
-# +
-# Example usage
-document_name = "all.how_write_tutorials.how_to_guide.md"
-results = get_vectors_by_document_name(vector_store, document_name)
-
-# Print results
-for doc in results:
-    _LOG.info("File: %s", {doc.metadata['source']})
-    _LOG.info("Content: %s", {doc.page_content[:200]})
-# -
-
-# ### Demo to create a documentation QA bot but the docs can be updated or deleted.
-
-# Initialize some state.
-vector_store = None
-folder = "../docs"
-filename_to_md5sum = {}
-
-# +
-from typing import List
-from langchain.schema import Document
-
-def parse_markdown_files(file_paths: List[str]) -> List[Document]:
-    """
-    Parse and structure Markdown files into LangChain Document objects.
-
-    :param file_paths: list of file paths to the Markdown files
-
-    :return: list of Document objects, where each document contains the content
-                        of a Markdown file and metadata with the file's source path.
-    """
-    documents = []
-    filename_to_md5sum = {}
-    for file_path in file_paths:
-        # Read the content of the Markdown file
-        with open(file_path, 'r', encoding='utf-8') as f:
-            content = f.read()       
-        # Compute the MD5 checksum of the file
-        md5sum, _ = hsystem.system_to_string(f"md5sum {file_path}")[1].split()
-        filename_to_md5sum[file_path] = md5sum 
-        # Create a Document object for each file
-        documents.append(Document(page_content=content, metadata={"source": file_path}))
-    
-    return documents
-
-
-
-# -
-
-def create_vector_store_from_markdown_files(folder):
-    # List Markdown files
-    markdown_files = list_markdown_files(directory)
-    # Parse Markdown files into LangChain documents
-    documents = parse_markdown_files(markdown_files)
-    # Split long documents into smaller chunks
-    text_splitter = txtsplitter.RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-    split_documents = text_splitter.split_documents(documents)
-    # Create embeddings for all documents.
-    vector_store = vectorstores.Chroma.from_documents(split_documents, embeddings)
-    return vector_store
-
-
-def get_changes_in_documents_folder(folder):
-    # List Markdown files
-    markdown_files = list_markdown_files(folder)
-    changes = {}
-    changes["modified"] = []
-    for file_path in markdown_files:
-        md5sum, _ = hsystem.system_to_string(f"md5sum {file_path}")[1].split()
-        if file_path not in filename_to_md5sum or filename_to_md5sum[file_path] == md5sum:
-            print(f"Found a new / modified file {file_path}")
-            changes["modified"].append(file_path)
-    return changes
-
-
-def update_files_in_vector_store(vector_store, files):
-    if len(files) == 0:
-        print("No new files found")
-        return
-    ids_to_delete = []
-    for file in files:
-        for doc in vector_store:
-            if doc.metadata.get('source') == file:
-                ids_to_delete.append(doc.id)
-    vector_store.delete(ids_to_delete)
-    documents = parse_markdown_files(files)
-    # Split long documents into smaller chunks
-    text_splitter = txtsplitter.RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-    split_documents = text_splitter.split_documents(documents)
-    texts = [doc.page_content for doc in split_documents]
-    embeddings_list = embeddings.embed_documents(texts)  # Compute embeddings for multiple documents
-    # Add documents to vector store with computed embeddings
-    vector_store.add_documents(
-        documents=split_documents,
-        embeddings=embeddings_list
-    )
-    return vector_store
-
-
-query = "What are the goals for tutorial project?"
-
-if vector_store:
-    changes = get_changes_in_documents_folder(folder)
-    vector_store = update_files_in_vector_store(vector_store, changes["modified"])
-else:
-    vector_store = create_vector_store_from_markdown_files(folder)
-
-
-# Create the QA chain
-qa_chain = chains.RetrievalQA.from_chain_type(
-    llm=chat_model,
-    retriever=retriever,
-    return_source_documents=True
-)
-
-# +
-# Get the answer and source documents
-result = qa_chain({"query": query})
-
-# Print the answer
-_LOG.info("Answer: %s", result['result'])
-
-# Print the source file references
-_LOG.info("\nSource Documents:")
-for doc in result['source_documents']:
-    _LOG.info("File: %s", {doc.metadata['source']})
-    _LOG.info("Excerpt: %s", {doc.page_content[:200]})
-# -
-
-
-
-
+# %% [markdown]
+# ## Summary
+#
+# In this script, we:
+# 1. Parsed and processed Markdown documentation.
+# 2. Embedded document chunks into a FAISS vector store for efficient retrieval.
+# 3. Built a RetrievalQA chain for context-aware question answering.
+# 4. Enabled dynamic updates to handle changing documentation.
+# 5. Enhanced the chatbot with personalized query handling.
+#
+# This showcases how LangChain can be used to build intelligent, flexible chatbots tailored for specific tasks.
