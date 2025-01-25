@@ -1,0 +1,40 @@
+time="2025-01-20T06:05:50Z" level=warning msg="The \"CSFY_FORCE_TEST_FAIL\" variable is not set. Defaulting to a blank string."
+time="2025-01-20T06:05:50Z" level=warning msg="The \"CSFY_AWS_ACCESS_KEY_ID\" variable is not set. Defaulting to a blank string."
+time="2025-01-20T06:05:50Z" level=warning msg="The \"CSFY_AWS_DEFAULT_REGION\" variable is not set. Defaulting to a blank string."
+time="2025-01-20T06:05:50Z" level=warning msg="The \"CSFY_AWS_SECRET_ACCESS_KEY\" variable is not set. Defaulting to a blank string."
+time="2025-01-20T06:05:50Z" level=warning msg="The \"OPENAI_API_KEY\" variable is not set. Defaulting to a blank string."
+time="2025-01-20T06:05:50Z" level=warning msg="The \"CSFY_TELEGRAM_TOKEN\" variable is not set. Defaulting to a blank string."
+time="2025-01-20T06:05:50Z" level=warning msg="The \"CSFY_CI\" variable is not set. Defaulting to a blank string."
+time="2025-01-20T06:05:50Z" level=warning msg="/data/sonaalk/src/tutorials1/tutorial_tensorflow/devops/compose/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+CSFY_IS_SUPER_REPO=1
+##> devops/docker_run/entrypoint.sh
+UID=1027
+GID=998
+CSFY_GIT_ROOT_PATH=/app
+CSFY_HELPERS_ROOT_PATH=/app/helpers_root
+> source /app/helpers_root/dev_scripts_helpers/thin_client/thin_client_utils.sh ...
+[0mAM_CONTAINER_VERSION=''
+CSFY_IS_SUPER_REPO=1
+##> devops/docker_run/docker_setenv.sh
+> source /app/helpers_root/dev_scripts_helpers/thin_client/thin_client_utils.sh ...
+[0m# activate_docker_venv()
+# set_path()
+PATH=.:./devops:./dev_scripts_tutorial_tensorflow:./src::/src:/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# set_pythonpath()
+PYTHONPATH=/src:
+# Configure env
+AM_ENABLE_DIND=1
+# set_up_docker_in_docker()
+{ "storage-driver": "vfs" }
+ * Starting Docker: docker
+   ...done.
+ * Docker is running
+Waiting for /var/run/docker.sock to be created.
+Permissions for /var/run/docker.sock have been changed.
+Setting sudo docker permissions
+srw-rw-rw- 1 root docker 0 Jan 20 06:05 /var/run/docker.sock
+srw-rw-rw- 1 root docker 0 Jan 20 06:05 /var/run/docker.sock
+# set_up_docker_git()
+git --version: git version 2.43.0
+fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).

@@ -98,15 +98,14 @@ if [[ 1 == 1 ]]; then
   apt-get install $APT_GET_OPTS graphviz
 fi;
 
-# Insatll Neo4j.
+# - Install Neo4j.
 if [[ 1 == 1 ]]; then
-  sudo apt install gnupg -y
-  curl -fsSL https://debian.neo4j.com/neotechnology.gpg.key |sudo gpg --dearmor -o /usr/share/keyrings/neo4j.gpg
-  echo "deb [signed-by=/usr/share/keyrings/neo4j.gpg] https://debian.neo4j.com stable 4.1" | sudo tee -a /etc/apt/sources.list.d/neo4j.list
-  sudo apt update
-  sudo apt install neo4j -y
-  pip3 install jupyterlab --break-system-packages
-  pip3 install py2neo --break-system-packages
+  # See Documentation: https://neo4j.com/docs/operations-manual/current/installation/linux/debian/#debian-installation
+  apt-get install $APT_GET_OPTS gnupg
+  wget -qO - https://debian.neo4j.com/neotechnology.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/neotechnology.gpg
+  echo 'deb [signed-by=/etc/apt/keyrings/neotechnology.gpg] https://debian.neo4j.com stable latest' | sudo tee /etc/apt/sources.list.d/neo4j.list
+  sudo apt-get update
+  sudo apt-get install $APT_GET_OPTS neo4j
 fi;
 
 # Some tools refer to `python` and `pip`, so we create symlinks.

@@ -1,0 +1,3 @@
+# tutorial_tensorflow-1.0.0
+- 2025-01-13
+- First release

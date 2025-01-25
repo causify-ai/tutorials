@@ -107,30 +107,27 @@ def enable_privileged_mode() -> bool:
     Return whether an host supports privileged mode for its containers.
     """
     ret = False
-    if get_name() in ("//dev_tools",):
+    # Keep this in alphabetical order.
+    if hserver.is_cmamp_prod():
+        ret = False
+    elif hserver.is_dev4() or hserver.is_ig_prod():
+        ret = False
+    elif hserver.is_dev_ck():
+        ret = True
+    elif hserver.is_inside_ci():
+        ret = True
+    elif hserver.is_mac(version="Catalina"):
+        # Docker for macOS Catalina supports dind.
+        ret = True
+    elif hserver.is_mac(version="Monterey") or hserver.is_mac(
+        version="Ventura"
+    ):
+        # Docker for macOS Monterey doesn't seem to support dind.
         ret = False
     else:
-        # Keep this in alphabetical order.
-        if hserver.is_cmamp_prod():
-            ret = False
-        elif hserver.is_dev4() or hserver.is_ig_prod():
-            ret = False
-        elif hserver.is_dev_ck():
-            ret = True
-        elif hserver.is_inside_ci():
-            ret = True
-        elif hserver.is_mac(version="Catalina"):
-            # Docker for macOS Catalina supports dind.
-            ret = True
-        elif hserver.is_mac(version="Monterey") or hserver.is_mac(
-            version="Ventura"
-        ):
-            # Docker for macOS Monterey doesn't seem to support dind.
-            ret = False
-        else:
-            ret = False
-            only_warning = True
-            _raise_invalid_host(only_warning)
+        ret = False
+        only_warning = True
+        _raise_invalid_host(only_warning)
     return ret
 
 
@@ -399,10 +396,6 @@ def skip_submodules_test() -> bool:
 
     E.g. while running `i run_fast_tests`.
     """
-    # TODO(gp): Why do we want to skip running tests?
-    if get_name() in ("//dev_tools",):
-        # Skip running `amp` tests from `dev_tools`.
-        return True
     return False
 
 
@@ -437,7 +430,7 @@ def is_CK_S3_available() -> bool:
     val = True
     if hserver.is_inside_ci():
         repo_name = get_name()
-        if repo_name in ("//amp", "//dev_tools"):
+        if repo_name in ("//amp",):
             # No CK bucket.
             val = False
         # TODO(gp): We might want to enable CK tests also on lemonade.
