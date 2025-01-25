@@ -36,6 +36,7 @@ seaborn = "*"
 scikit-learn = "*"
 statsmodels = "*"
 tqdm = "*"
+s3fs = "*"
 
 [tool.poetry.dev-dependencies]
 
