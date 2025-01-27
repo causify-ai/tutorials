@@ -33,15 +33,16 @@ def _print(msg: str) -> None:
 
 
 # To customize: xyz
-#_REPO_NAME = "xyz"
+# _REPO_NAME = "xyz"
 _REPO_NAME = "tutorial_openai"
 
 # To customize: xyz
-_GITHUB_REPO_ACCOUNT = "kaizen-ai"
+_GITHUB_REPO_ACCOUNT = "causify-ai"
 
 # To customize: xyz
-#_DOCKER_IMAGE_NAME = "xyz"
+# _DOCKER_IMAGE_NAME = "xyz"
 _DOCKER_IMAGE_NAME = "tutorial_openai"
+
 
 def get_name() -> str:
     return f"//{_REPO_NAME}"
@@ -51,7 +52,9 @@ def get_repo_map() -> Dict[str, str]:
     """
     Return a mapping of short repo name -> long repo name.
     """
-    repo_map: Dict[str, str] = {_REPO_NAME: f"{_GITHUB_REPO_ACCOUNT}/{_REPO_NAME}"}
+    repo_map: Dict[str, str] = {
+        _REPO_NAME: f"{_GITHUB_REPO_ACCOUNT}/{_REPO_NAME}"
+    }
     return repo_map
 
 
@@ -93,8 +96,8 @@ def get_docker_base_image_name() -> str:
 
 def _raise_invalid_host(only_warning: bool) -> None:
     host_os_name = os.uname()[0]
-    am_host_os_name = os.environ.get("AM_HOST_OS_NAME", None)
-    msg = f"Don't recognize host: host_os_name={host_os_name}, am_host_os_name={am_host_os_name}"
+    csfy_host_os_name = os.environ.get("CSFY_HOST_OS_NAME", None)
+    msg = f"Don't recognize host: host_os_name={host_os_name}, csfy_host_os_name={csfy_host_os_name}"
     # TODO(Grisha): unclear if it is a difference between `cmamp` and `sorrentum`.
     if only_warning:
         _LOG.warning(msg)
@@ -119,9 +122,7 @@ def enable_privileged_mode() -> bool:
     elif hserver.is_mac(version="Catalina"):
         # Docker for macOS Catalina supports dind.
         ret = True
-    elif hserver.is_mac(version="Monterey") or hserver.is_mac(
-        version="Ventura"
-    ):
+    elif hserver.is_mac(version="Monterey") or hserver.is_mac(version="Ventura"):
         # Docker for macOS Monterey doesn't seem to support dind.
         ret = False
     else:
@@ -203,9 +204,9 @@ def has_dind_support() -> bool:
     rc = os.system(cmd)
     _print("cmd=%s -> rc=%s" % (cmd, rc))
     # dind is supported on both Mac and GH Actions.
-    check_repo = os.environ.get("AM_REPO_CONFIG_CHECK", "True") != "False"
-    #TODO(Juraj): HelpersTask16.
-    #if check_repo:
+    check_repo = os.environ.get("CSFY_REPO_CONFIG_CHECK", "True") != "False"
+    # TODO(Juraj): HelpersTask16.
+    # if check_repo:
     #    if hserver.is_inside_ci():
     #        # Docker-in-docker is needed for GH actions. For all other builds is optional.
     #        assert has_dind, (
@@ -216,12 +217,12 @@ def has_dind_support() -> bool:
     #        only_warning = True
     #        _raise_invalid_host(only_warning)
     #        return False
-    #else:
-    #    am_repo_config = os.environ.get("AM_REPO_CONFIG_CHECK", "True")
+    # else:
+    #    csfy_repo_config = os.environ.get("CSFY_REPO_CONFIG_CHECK", "True")
     #    print(
     #        _WARNING
-    #        + ": Skip checking since AM_REPO_CONFIG_CHECK="
-    #        + f"'{am_repo_config}'"
+    #        + ": Skip checking since CSFY_REPO_CONFIG_CHECK="
+    #        + f"'{csfy_repo_config}'"
     #    )
     return has_dind
 
@@ -348,7 +349,7 @@ def get_unit_test_bucket_path() -> str:
     """
     Return the path to the unit test bucket.
     """
-    
+
     assert 0, f"Not supported by '{_REPO_NAME}'"
     unit_test_bucket = "cryptokaizen-unit-test"
     # We do not use `os.path.join` since it converts `s3://` to `s3:/`.
