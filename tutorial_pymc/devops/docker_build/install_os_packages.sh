@@ -33,8 +33,10 @@ apt-get $APT_GET_OPTS install pkg-config python3-dev build-essential
 pip3 install poetry --break-system-packages
 echo "POETRY VERSION="$(poetry --version)
 
-# TODO(gp): We can remove lots of this.
-#apt-get install $APT_GET_OPTS cifs-utils
+# - Install gcc and build tools.
+if [[ 0 == 1 ]]; then
+  apt-get install $APT_GET_OPTS build-essential
+fi;
 
 # - Install Git.
 if [[ 1 == 1 ]]; then
@@ -43,9 +45,6 @@ if [[ 1 == 1 ]]; then
   # sudo add-apt-repository ppa:git-core/ppa -y
   apt-get install $APT_GET_OPTS git
 fi;
-
-#apt-get install $APT_GET_OPTS keyutils
-#apt-get install $APT_GET_OPTS make
 
 # We need `ip` to test Docker for running in privileged mode.
 # See AmpTask2200 "Update tests after pandas update".
@@ -81,22 +80,26 @@ if [[ 1 == 1 ]]; then
 fi;
 
 ## - Install Github CLI.
-apt-get install $APT_GET_OPTS wget
-sudo mkdir -p -m 755 /etc/apt/keyrings
-wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null
-sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-sudo apt update
-sudo apt install gh -y
-echo "GH VERSION="$(gh --version)
+if [[ 1 == 1 ]]; then
+  apt-get install $APT_GET_OPTS wget
+  sudo mkdir -p -m 755 /etc/apt/keyrings
+  wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null
+  sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+  sudo apt update
+  sudo apt install gh -y
+  echo "GH VERSION="$(gh --version)
+fi;
 
 # - Install graphviz.
-# This is needed to install pygraphviz.
-# See https://github.com/alphamatic/amp/issues/1311.
-# It needs tzdata so it needs to go after installing tzdata.
-apt-get install $APT_GET_OPTS libgraphviz-dev
-# This is needed to install dot.
-apt-get install $APT_GET_OPTS graphviz
+if [[ 1 == 1 ]]; then
+  # This is needed to install pygraphviz.
+  # See https://github.com/alphamatic/amp/issues/1311.
+  # It needs tzdata so it needs to go after installing tzdata.
+  apt-get install $APT_GET_OPTS libgraphviz-dev
+  # This is needed to install dot.
+  apt-get install $APT_GET_OPTS graphviz
+fi;
 
 # Some tools refer to `python` and `pip`, so we create symlinks.
 if [[ ! -e /usr/bin/python ]]; then

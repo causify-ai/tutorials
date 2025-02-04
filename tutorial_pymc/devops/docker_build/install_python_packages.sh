@@ -44,7 +44,7 @@ if [[ 1 == 1 ]]; then
   python3 -m ${ENV_NAME} /${ENV_NAME}
   source /${ENV_NAME}/bin/activate
   #pip3 install wheel
-  poetry install
+  poetry install --no-root
   poetry env list
   # Clean up.
   if [[ $CLEAN_UP_INSTALLATION ]]; then
@@ -52,7 +52,7 @@ if [[ 1 == 1 ]]; then
   else
     echo "WARNING: Skipping clean up installation"
   fi;
-  pip freeze 2>&1 >/home/pip_list.txt
+  pip freeze 2>&1 >/install/pip_list.txt
   #
   if [[ $CLEAN_UP_INSTALLATION ]]; then
     pip cache purge
@@ -78,20 +78,16 @@ else
   fi;
 fi;
 
-# Install pymc.
-sudo /bin/bash -c "(source /venv/bin/activate; pip install h5py)"
-sudo /bin/bash -c "(source /venv/bin/activate; pip install pymc)"
-#
-## Clean up.
-#if [[ $CLEAN_UP_INSTALLATION ]]; then
-#  echo "Cleaning up installation..."
-#  DIRS="/app/tmp.pypoetry /tmp/*"
-#  echo "Cleaning up installation... done"
-#  du -hs $DIRS | sort -h
-#  rm -rf $DIRS
-#else
-#  echo "WARNING: Skipping clean up installation"
-#fi;
-#
-#echo "# Disk space before $0"
-#report_disk_usage
+# Clean up.
+if [[ $CLEAN_UP_INSTALLATION ]]; then
+  echo "Cleaning up installation..."
+  DIRS="/usr/lib/gcc /app/tmp.pypoetry /tmp/*"
+  echo "Cleaning up installation... done"
+  du -hs $DIRS | sort -h
+  rm -rf $DIRS
+else
+  echo "WARNING: Skipping clean up installation"
+fi;
+
+echo "# Disk space before $0"
+report_disk_usage

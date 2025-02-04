@@ -10,7 +10,7 @@ jupytext = "*"
 matplotlib = "*"
 numpy = "*"
 pandas = ">= 2.1.1"
-psutil = "*"                        # Is this needed?
+psutil = "*"               # Is this needed?
 pyarrow = "*"
 pytest = "*"
 pytest-cov = "*"
@@ -19,12 +19,16 @@ pytest-rerunfailures = "*"
 pytest-timeout = "*"
 pytest-xdist = "*"
 python = ">= 3.12"
-python-dotenv = "*"                 # Is this needed?
-requests = "*"                      # Is this needed?
+python-dotenv = "*"        # Is this needed?
+requests = "*"             # Is this needed?
 scikit-learn = "*"
 seaborn = "*"
 statsmodels = "*"
 tqdm = "*"
+invoke = "*"
+s3fs = "*"
+h5py = "*"
+pymc = "*"
 
 [tool.poetry.dev-dependencies]
 
