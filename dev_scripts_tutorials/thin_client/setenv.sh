@@ -12,11 +12,11 @@ DIR_TAG="tutorials"
 SCRIPT_PATH="dev_scripts_${DIR_TAG}/thin_client/setenv.sh"
 echo "##> $SCRIPT_PATH"
 
-IS_SUPER_REPO=1
-# IS_SUPER_REPO=0
-echo "IS_SUPER_REPO=$IS_SUPER_REPO"
+# IS_ONLY_HELPER=1
+IS_ONLY_HELPER=0
+echo "IS_ONLY_HELPER=$IS_ONLY_HELPER"
 
-if [[ $IS_SUPER_REPO == 1 ]]; then
+if [[ $IS_ONLY_HELPER == 0 ]]; then
     # We can reuse the thin environment of `helpers` or create a new one.
     VENV_TAG="helpers"
 else
@@ -31,7 +31,7 @@ umask 002
 GIT_ROOT_DIR=$(git rev-parse --show-toplevel)
 echo "GIT_ROOT_DIR=$GIT_ROOT_DIR"
 
-if [[ $IS_SUPER_REPO == 1 ]]; then
+if [[ $IS_ONLY_HELPER == 0 ]]; then
     # For super-repos `GIT_ROOT_DIR` points to the super-repo.
     HELPERS_ROOT_DIR="${GIT_ROOT_DIR}/helpers_root"
 else
@@ -48,7 +48,7 @@ source $SOURCE_PATH
 # - Activate environment
 activate_venv $VENV_TAG
 
-if [[ $IS_SUPER_REPO == 1 ]]; then
+if [[ $IS_ONLY_HELPER == 0 ]]; then
     HELPERS_ROOT_DIR="${GIT_ROOT_DIR}/helpers_root"
     echo "HELPERS_ROOT_DIR=$HELPERS_ROOT_DIR"
     dassert_dir_exists $HELPERS_ROOT_DIR
@@ -64,7 +64,7 @@ dassert_dir_exists $DEV_SCRIPT_DIR
 # Set basic vars.
 set_path $DEV_SCRIPT_DIR
 
-if [[ $IS_SUPER_REPO == 1 ]]; then
+if [[ $IS_ONLY_HELPER == 0 ]]; then
     # Set vars for helpers_root.
     set_path "${HELPERS_ROOT_DIR}/dev_scripts_helpers"
 fi;
@@ -72,7 +72,7 @@ fi;
 # - PYTHONPATH
 set_pythonpath
 
-if [[ $IS_SUPER_REPO == 1 ]]; then
+if [[ $IS_ONLY_HELPER == 0 ]]; then
     # Add helpers.
     dassert_dir_exists $HELPERS_ROOT_DIR
     export PYTHONPATH=$HELPERS_ROOT_DIR:$PYTHONPATH
