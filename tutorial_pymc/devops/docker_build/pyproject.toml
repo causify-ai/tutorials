@@ -22,7 +22,7 @@ pytest-instafail = "*"
 pytest-rerunfailures = "*"
 pytest-timeout = "*"
 pytest-xdist = "*"
-python = ">= 3.12"
+python = ">=3.10,<3.13"    # To make pytensor happy.
 python-dotenv = "*"        # Is this needed?
 requests = "*"             # Is this needed?
 s3fs = "*"
