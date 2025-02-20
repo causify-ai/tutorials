@@ -1,1 +1,5 @@
-../../../helpers_root/devops/docker_build/dockerignore.dev
+# The build context for DEV is only devops, so we ignore everything but
+# `devops`.
+**
+!devops/**
+!helpers_root/devops/**
