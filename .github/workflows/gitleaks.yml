@@ -40,4 +40,3 @@ jobs:
           GITLEAKS_ENABLE_SUMMARY: true
           GITLEAKS_ENABLE_UPLOAD_ARTIFACT: false
           GITLEAKS_CONFIG: .github/gitleaks-rules.toml
-          
