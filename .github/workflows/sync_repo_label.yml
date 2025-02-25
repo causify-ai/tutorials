@@ -16,5 +16,5 @@ jobs:
   sync_repo_labels:
     uses: causify-ai/template/.github/workflows/reusable_sync_repo_label.yml@TemplateTask1_Create_issue_labels_config_file
     with:
-      repo-name: 'causify-ai/template'
+      repo-name: 'causify-ai/tutorials'
     secrets: inherit
