@@ -1,0 +1,20 @@
+name: Sync Repo Labels
+on:
+  # Temporary workaround to trigger the workflow
+  pull_request:
+    # https://github.community/t/dont-run-actions-on-draft-pull-requests/16817/19
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches:
+      - master
+      - TemplateTask1_Create_issue_labels_config_file
+  push:
+    branches:
+      - main
+  # Run manually.
+  workflow_dispatch:
+jobs:
+  sync_repo_labels:
+    uses: causify-ai/template/.github/workflows/reusable_sync_repo_label.yml@TemplateTask1_Create_issue_labels_config_file
+    with:
+      repo-name: 'causify-ai/template'
+    secrets: inherit
