@@ -3,7 +3,8 @@ from typing import List, Optional, Tuple, Dict, Any
 
 import os
 from github import Github, Auth
-from datetime import datetime
+from datetime import datetime, timezone
+from tqdm import tqdm
 # import helpers.hdbg as hdbg
 
 _LOG = logging.getLogger(__name__)
@@ -51,61 +52,219 @@ class GitHubAPI:
 # #############################################################################
 
 def get_total_commits(
-    github_name: Optional[List[str]], 
-    period: Optional[Tuple[datetime, datetime]], 
-    repo_name: Optional[List[str]]
+    client: Github,
+    org_name: str,
+    github_names: Optional[List[str]] = None,
+    period: Optional[Tuple[datetime, datetime]] = None
 ) -> Dict[str, Any]:
     """
-    Fetches the number of commits made in the specified repositories
-    and by the specified GitHub users within a given period.
+    Fetches the number of commits made in the repositories of the specified
+    organization, optionally filtered by GitHub usernames and a
+    specified time period.
 
-    :param github_name: List of GitHub usernames to filter commits. If None, fetches for all users.
-    :param period: Start and end datetime tuple for filtering commits.
-    :param repo_name: List of repository names to fetch commits from. If None, considers all repos.
-    :return: A JSON object containing:
-        - total_commits (int): Total number of commits.
+    :param client: Authenticated instance of the PyGithub client.
+    :param org_name: Name of the GitHub organization.
+    :param github_names: List of GitHub usernames to filter commits. If None, fetches for all users.
+    :param period: Tuple containing start and end datetime for filtering commits.
+    :return: A dictionary containing:
+        - total_commits (int): Total number of commits across all repositories.
         - period (str): The time range considered.
-        - repositories (List[str]): List of repositories included.
+        - commits_per_repository (Dict[str, int]): Dictionary with repository names as keys and commit counts as values.
     """
-    pass
+    try:
+        # Retrieve repositories for the specified organization
+        repos_info = get_repo_names(client, org_name)
+        repositories = repos_info.get("repositories", [])
+    except Exception as e:
+        _LOG.error(f"Error retrieving repositories for '{org_name}': {e}")
+        return {"total_commits": 0, "period": "N/A", "commits_per_repository": {}}
+
+    total_commits = 0
+    commits_per_repository = {}
+    since, until = period if period else (None, None)
+
+    # Iterate over each repository
+    for repo_name in repositories:
+        try:
+            repo = client.get_repo(f"{org_name}/{repo_name}")
+            repo_commit_count = 0
+            if github_names:
+                for username in github_names:
+                    commits = repo.get_commits(author=username, since=since, until=until)
+                    repo_commit_count += commits.totalCount
+            else:
+                commits = repo.get_commits(since=since, until=until)
+                repo_commit_count = commits.totalCount
+
+            commits_per_repository[repo_name] = repo_commit_count
+            total_commits += repo_commit_count
+        except Exception as e:
+            _LOG.error(f"Error accessing commits for repository '{repo_name}': {e}")
+            commits_per_repository[repo_name] = 0
+
+    result = {
+        "total_commits": total_commits,
+        "period": f"{since} to {until}" if since and until else "All time",
+        "commits_per_repository": commits_per_repository
+    }
+
+    return result
 
 def get_total_prs(
-    github_name: Optional[List[str]], 
-    period: Optional[Tuple[datetime, datetime]], 
-    repo_name: Optional[List[str]]
+    client: Github,
+    org_name: str,
+    github_names: Optional[List[str]] = None,
+    period: Optional[Tuple[datetime, datetime]] = None,
+    state: str = 'open'
 ) -> Dict[str, Any]:
     """
-    Fetches the number of pull requests made in the specified repositories
-    and by the specified GitHub users within a given period.
+    Fetches the number of pull requests made in the repositories of the specified
+    organization, optionally filtered by GitHub usernames, a specified time period,
+    and the state of the pull requests.
 
-    :param github_name: List of GitHub usernames to filter pull requests.
-    :param period: Start and end datetime tuple for filtering pull requests.
-    :param repo_name: List of repository names to fetch pull requests from.
-    :return: A JSON object containing:
+    :param client: Authenticated instance of the PyGithub client.
+    :param org_name: Name of the GitHub organization.
+    :param github_names: List of GitHub usernames to filter pull requests. If None, fetches for all users.
+    :param period: Tuple containing start and end datetime for filtering pull requests.
+    :param state: The state of the pull requests to fetch. Can be 'open', 'closed', or 'all'.
+    :return: A dictionary containing:
         - total_prs (int): Total number of pull requests.
         - period (str): The time range considered.
-        - repositories (List[str]): List of repositories included.
+        - prs_per_repository (Dict[str, int]): Dictionary with repository names as keys and pull request counts as values.
     """
-    pass
+    try:
+        # Retrieve repositories for the specified organization
+        repos_info = get_repo_names(client, org_name)
+        repositories = repos_info.get("repositories", [])
+    except Exception as e:
+        _LOG.error(f"Error retrieving repositories for '{org_name}': {e}")
+        return {"total_prs": 0, "period": "N/A", "prs_per_repository": {}}
+
+    total_prs = 0
+    prs_per_repository = {}
+
+    # Define the date range and ensure they are timezone-aware in UTC
+    if period:
+        since, until = [dt.replace(tzinfo=timezone.utc) if dt.tzinfo is None else dt.astimezone(timezone.utc) for dt in period]
+    else:
+        since = until = None
+
+    # Iterate over each repository with progress tracking
+    for repo_name in tqdm(repositories, desc="Processing repositories", unit="repo"):
+        try:
+            repo = client.get_repo(f"{org_name}/{repo_name}")
+            repo_pr_count = 0
+            pulls = repo.get_pulls(state=state)  # Fetch pull requests based on the specified state
+
+            for pr in pulls:
+                # Ensure pr.created_at is timezone-aware in UTC
+                pr_created_at = pr.created_at.replace(tzinfo=timezone.utc) if pr.created_at.tzinfo is None else pr.created_at.astimezone(timezone.utc)
+                # Filter by creation date if period is specified
+                if since and until and not (since <= pr_created_at <= until):
+                    continue
+                # Filter by author if github_names is specified
+                if github_names and pr.user.login not in github_names:
+                    continue
+                repo_pr_count += 1
+
+            prs_per_repository[repo_name] = repo_pr_count
+            total_prs += repo_pr_count
+        except Exception as e:
+            _LOG.error(f"Error accessing pull requests for repository '{repo_name}': {e}")
+            prs_per_repository[repo_name] = 0
+
+    result = {
+        "total_prs": total_prs,
+        "period": f"{since} to {until}" if since and until else "All time",
+        "prs_per_repository": prs_per_repository
+    }
+
+    return result
 
 def get_prs_not_merged(
-    github_name: Optional[List[str]], 
-    period: Optional[Tuple[datetime, datetime]], 
-    repo_name: Optional[List[str]]
+    client: Github,
+    org_name: str,
+    github_names: Optional[List[str]] = None,
+    period: Optional[Tuple[datetime, datetime]] = None
 ) -> Dict[str, Any]:
     """
     Fetches the count of closed but unmerged pull requests in the specified repositories
     and by the specified GitHub users within a given period.
 
-    :param github_name: List of GitHub usernames to filter pull requests.
-    :param period: Start and end datetime tuple for filtering pull requests.
-    :param repo_name: List of repository names to fetch pull requests from.
-    :return: A JSON object containing:
+    :param client: Authenticated instance of the PyGithub client.
+    :param org_name: Name of the GitHub organization.
+    :param github_names: List of GitHub usernames to filter pull requests. If None, fetches for all users.
+    :param period: Tuple containing start and end datetime for filtering pull requests.
+    :return: A dictionary containing:
         - prs_not_merged (int): Total number of closed but unmerged pull requests.
         - period (str): The time range considered.
-        - repositories (List[str]): List of repositories included.
+        - prs_per_repository (Dict[str, int]): Dictionary with repository names as keys and unmerged pull request counts as values.
     """
-    pass
+    try:
+        # Retrieve repositories for the specified organization
+        repos_info = get_repo_names(client, org_name)
+        repositories = repos_info.get("repositories", [])
+    except Exception as e:
+        _LOG.error(f"Error retrieving repositories for '{org_name}': {e}")
+        return {"prs_not_merged": 0, "period": "N/A", "prs_per_repository": {}}
+
+    total_unmerged_prs = 0
+    prs_per_repository = {}
+
+    # Define the date range and ensure they are timezone-aware in UTC
+    if period:
+        since, until = [dt.replace(tzinfo=timezone.utc) if dt.tzinfo is None else dt.astimezone(timezone.utc) for dt in period]
+    else:
+        since = until = None
+
+    # Iterate over each repository with progress tracking
+    for repo_name in tqdm(repositories, desc="Processing repositories", unit="repo"):
+        try:
+            repo = client.get_repo(f"{org_name}/{repo_name}")
+            repo_unmerged_pr_count = 0
+            pulls = repo.get_pulls(state='closed')  # Fetch closed pull requests
+
+            for pr in pulls:
+                try:
+                    # Print progress
+                    # _LOG.info(f"Processing PR #{pr.number} from {repo_name}")
+
+                    # Ensure pr.created_at is always set before usage
+                    pr_created_at = pr.created_at if pr.created_at else datetime.min
+                    if pr_created_at.tzinfo is None:
+                        pr_created_at = pr_created_at.replace(tzinfo=timezone.utc)
+                    else:
+                        pr_created_at = pr_created_at.astimezone(timezone.utc)
+
+                    # Filter by unmerged status
+                    if pr.merged:
+                        continue
+                    # Filter by author if github_names is specified
+                    if github_names and pr.user.login not in github_names:
+                        continue
+                    # Filter by creation date if period is specified
+                    if since and until and not (since <= pr_created_at <= until):
+                        continue
+
+                    repo_unmerged_pr_count += 1
+
+                except Exception as e:
+                    _LOG.error(f"Error processing PR #{pr.number} in '{repo_name}': {e}")
+                    continue  # Skip this PR and proceed with the next one
+
+            prs_per_repository[repo_name] = repo_unmerged_pr_count
+            total_unmerged_prs += repo_unmerged_pr_count
+        except Exception as e:
+            _LOG.error(f"Error accessing pull requests for repository '{repo_name}': {e}")
+            prs_per_repository[repo_name] = 0
+
+    result = {
+        "prs_not_merged": total_unmerged_prs,
+        "period": f"{since} to {until}" if since and until else "All time",
+        "prs_per_repository": prs_per_repository
+    }
+
+    return result
 
 def get_issues_without_assignee(
     period: Optional[Tuple[datetime, datetime]], 
@@ -189,30 +348,25 @@ def get_prs_not_merged_by_person(
 # #############################################################################
 
 # TODO(prahar08modi): Test the function using pytest
-def get_repo_names(
-    client: Github, org_or_user_name: str
-) -> Dict[str, Any]:
+def get_repo_names(client: Github, org_name: str) -> Dict[str, List[str]]:
     """
-    Retrieve a list of repositories under a specific organization or user.
+    Retrieve a list of repositories under a specific organization.
 
     :param client: An instance of the PyGithub client.
-    :param org_or_user_name: Name of the GitHub organization or user.
-    :return: A JSON object containing:
-        - owner (str): Name of the organization or user.
+    :param org_name: Name of the GitHub organization.
+    :return: A dictionary containing:
+        - owner (str): Name of the organization.
         - repositories (List[str]): List of repository names.
     """
     try:
-        # Attempt to get as an organization
-        owner = client.get_organization(org_or_user_name)
-    except:
-        try:
-            # If not an organization, attempt to get as a user
-            owner = client.get_user(org_or_user_name)
-        except:
-            raise ValueError(f"'{org_or_user_name}' is neither a valid GitHub user nor organization.")
+        # Attempt to get the organization
+        owner = client.get_organization(org_name)
+    except Exception as e:
+        _LOG.error(f"Error retrieving organization '{org_name}': {e}")
+        raise ValueError(f"'{org_name}' is not a valid GitHub organization.")
 
     repos = [repo.name for repo in owner.get_repos()]
-    result = {"owner": org_or_user_name, "repositories": repos}
+    result = {"owner": org_name, "repositories": repos}
     return result
 
 # TODO(prahar08modi): Test the function using pytest
