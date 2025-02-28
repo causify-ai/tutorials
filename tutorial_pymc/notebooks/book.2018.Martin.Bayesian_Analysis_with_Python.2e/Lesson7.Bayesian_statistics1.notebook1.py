@@ -51,94 +51,32 @@ import preliz as pz
 # %%
 import utils
 
-utils.notebook_signature()
-
-# %% [markdown]
-# ### Style notebook.
-
-# %%
-plt.rcParams['figure.figsize'] = [8, 3]
+utils.config_notebook()
 
 # %% [markdown] heading_collapsed=true
 # # Chap1: Thinking probabilistically
 
 # %% [markdown]
-# ## Gaussian
-
-# %% hidden=true
-np.random.seed(42)
-
-# Create a Normal Gaussian.
-mu = 0.0
-sigma = 1.0
-X = stats.norm(mu, sigma)
-
-# Print 3 realizations.
-x = X.rvs(3)
-print(x)
-
-# %% hidden=true run_control={"marked": true}
-# - Plot Gaussian PDF for different values of the params.
-
-mu_params = [-1, 0, 1]
-sd_params = [0.5, 1, 1.5]
-x = np.linspace(-7, 7, 200)
-# Create a 3x3 plot.
-_, ax = plt.subplots(len(mu_params),
-                     len(sd_params),
-                     sharex=True,
-                     sharey=True,
-                     figsize=(9, 7),
-                     # Fit plots into the figure cleanly.
-                     constrained_layout=True)
-                     #constrained_layout=False)
-for i in range(3):
-    for j in range(3):
-        mu = mu_params[i]
-        sd = sd_params[j]
-        # Evaluate the PDF in several points.
-        y = stats.norm(mu, sd).pdf(x)
-        # Plot the PDF.
-        ax[i, j].plot(x, y)
-        # Add the legend.
-        ax[i, j].plot([], label="mu={:3.2f}\nsigma={:3.2f}".format(mu, sd), alpha=0)
-        ax[i, j].legend(loc=1)
-ax[2, 1].set_xlabel('x')
-ax[1, 0].set_ylabel('p(x)', rotation=0, labelpad=20)
-#ax[1, 0].set_yticks([])
-
-# %%
-params = {
-    #"kind": "cdf",
-    "kind": "pdf",
-    "pointinterval": False,
-    "interval": "hdi",   # Highest density interval.
-    #"interval": "eti",  # Equal tailed interval.
-    "xy_lim": "auto"
-}
-
-pz.Normal(mu=0, sigma=1).plot_interactive(**params)
-
-# %%
-# Generate some samples.
-pdf = pz.Normal(mu=0, sigma=1)
-pdf.rvs(10)
-
-# %%
-# #?plt.hist
-
-# %%
-#n = 100
-#n = 1000
-n = 100_000_000
-plt.hist(pdf.rvs(1000), density=True)
-pdf.plot_pdf();
-
-# %% [markdown]
 # ## Binomial
 
 # %%
-help(pz.Binomial.plot_interactive)
+#help(pz.Binomial.plot_interactive)
+
+# %%
+np.random.seed(42)
+
+# Create a Normal Gaussian.
+n = 8
+#p = 0.25
+p = 0.01
+X = stats.binom(n, p)
+
+# Print 3 realizations.
+x = X.rvs(n)
+print(x)
+
+# %%
+utils.plot_binomial()
 
 # %%
 params = {
@@ -192,32 +130,32 @@ data = stats.bernoulli.rvs(p=theta_real, size=trials)
 print(data)
 
 # %%
-params1 = [0.8, 1.0, 2.0, 4.0]
-params2 = [0.8, 1.0, 2.0, 4.0]
-x = np.linspace(0, 1, 200)
-# Create a plot.
-_, ax = plt.subplots(len(params1),
-                     len(params2),
-                     sharex=True,
-                     sharey=True,
-                     figsize=(9, 7),
-                     # Fit plots into the figure cleanly.
-                     constrained_layout=True)
-                     #constrained_layout=False)
-for i in range(len(params1)):
-    for j in range(len(params2)):
-        param1 = params1[i]
-        param2 = params2[j]
-        # Evaluate the PDF in several points.
-        y = stats.beta(a=param1, b=param2).pdf(x)
-        # Plot the PDF.
-        ax[i, j].plot(x, y)
-        # Add the legend.
-        ax[i, j].plot([], label="a={:3.2f}\nb={:3.2f}".format(param1, param2), alpha=0)
-        ax[i, j].legend(loc=1)
-ax[2, 1].set_xlabel('x')
-ax[1, 0].set_ylabel('p(x)', rotation=0, labelpad=20);
-#ax[1, 0].set_yticks([])
+# params1 = [0.8, 1.0, 2.0, 4.0]
+# params2 = [0.8, 1.0, 2.0, 4.0]
+# x = np.linspace(0, 1, 200)
+# # Create a plot.
+# _, ax = plt.subplots(len(params1),
+#                      len(params2),
+#                      sharex=True,
+#                      sharey=True,
+#                      figsize=(9, 7),
+#                      # Fit plots into the figure cleanly.
+#                      constrained_layout=True)
+#                      #constrained_layout=False)
+# for i in range(len(params1)):
+#     for j in range(len(params2)):
+#         param1 = params1[i]
+#         param2 = params2[j]
+#         # Evaluate the PDF in several points.
+#         y = stats.beta(a=param1, b=param2).pdf(x)
+#         # Plot the PDF.
+#         ax[i, j].plot(x, y)
+#         # Add the legend.
+#         ax[i, j].plot([], label="a={:3.2f}\nb={:3.2f}".format(param1, param2), alpha=0)
+#         ax[i, j].legend(loc=1)
+# ax[2, 1].set_xlabel('x')
+# ax[1, 0].set_ylabel('p(x)', rotation=0, labelpad=20);
+# #ax[1, 0].set_yticks([])
 
 # %% [markdown]
 # ### Beta in function of mean and concentration.
