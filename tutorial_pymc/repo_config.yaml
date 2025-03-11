@@ -1,0 +1,19 @@
+repo_info:
+  repo_name: tutorials
+  github_repo_account: causify-ai
+  github_host_name: github.com
+  invalid_words:
+  issue_prefix: TutorialsTask
+
+docker_info:
+  docker_image_name: tutorial_pymc
+
+s3_bucket_info:
+  unit_test_bucket_name: s3://cryptokaizen-unit-test
+  html_bucket_name: s3://cryptokaizen-html
+  html_ip: http://172.30.2.44
+
+runnable_dir_info:
+  use_helpers_as_nested_module: 1
+  venv_tag: helpers
+  dir_suffix: tutorial_pymc
