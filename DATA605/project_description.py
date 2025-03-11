@@ -24,15 +24,15 @@ The project should be related to ingesting and processing real-time data about b
 The assignment requires to describe the basic functionalities of the package using examples and then a concrete project related to implementing something related to time series analysis.
 The complexity of the project is 1, where 1 is easy (it should take around 7 days) to develop, 2 is medium difficulty (it should take around 10 days to complete), 3 is hard (it should take 14 days to complete).
 
-The output should follow the template below
-Title:
-Difficulty: (1=easy, 3=difficult)
-Description
-Describe technology
-Describe the project
-Useful resources
-Is it free?
-Python libraries / bindings
+The output should follow the template below in markdown:
+**Title**:
+**Difficulty**: (1=easy, 3=difficult)
+**Description**
+**Describe technology**
+**Describe the project**
+**Useful resources**
+**Is it free?**
+**Python libraries / bindings**
 
 An example of a project where XYZ is “AWS Glue” is the following
 
@@ -50,11 +50,14 @@ boto3 (AWS SDK for Python): The official Python SDK for interacting with AWS ser
 PySpark: A Python API for Apache Spark, used for writing distributed data processing scripts in AWS Glue. PySpark is key for data transformation within Glue jobs.  PySpark Documentation
 AWS Glue Python Library: A specialized library in AWS Glue for managing and transforming data, including utilities for Glue-specific tasks such as working with the Glue Data Catalog and executing ETL jobs. AWS Glue Python API Reference
 """
-MARKDOWN_FILE_PATH = "./projects/DATA605_Projects.md"
+MARKDOWN_FILE_PATH = "/app/DATA605/projects/DATA605_projects.md"
 # The maximum number of projects.
 # Set the value to None to disable the limit.
-MAX_PROJECTS = 5
+MAX_PROJECTS = None
 
+import os
+# Set the OpenAI API key.
+os.environ["OPENAI_API_KEY"] = ""
 
 def read_google_sheet(url: str) -> pd.DataFrame:
     """
@@ -70,7 +73,7 @@ def read_google_sheet(url: str) -> pd.DataFrame:
     return df
 
 
-def generate_project_description(project_name: str, difficulty: str) -> str:
+def generate_project_description(project_name: str, difficulty: str, prompt: str) -> str:
     """
     Generate a project description.
 
@@ -79,8 +82,14 @@ def generate_project_description(project_name: str, difficulty: str) -> str:
     :return: the project description
     """
     # Generate the project description.
-    prompt = f"Generate a project description for '{project_name}' with difficulty level '{difficulty}'."
-    description = hopenai.get_completion(prompt, model="gpt-4o-mini")
+    prompt = f"""
+    {prompt}
+
+    Following the instructions:
+
+    {PROMPT_DOC_URL}
+    """
+    description = hopenai.get_completion(prompt, model="gpt-4o")
     return description
 
 
@@ -91,22 +100,29 @@ def create_markdown_file(df: pd.DataFrame, markdown_file_path: str) -> None:
     :param df: the dataframe containing the project descriptions
     :param markdown_file_path: the path to the markdown file
     """
-    content = "# DATA605 Projects\n\n"
     # Generate the project descriptions.
+    content = ""
     # Limit the number of projects.
-    for _, row in df.head(
+    for _, row in df.iloc[1:55].head(
         MAX_PROJECTS if MAX_PROJECTS is not None else len(df)
     ).iterrows():
+        prompt = "" 
         project_name = row["Project name"]
         difficulty = row["Difficulty"]
-        description = generate_project_description(project_name, difficulty)
-        # Add the project description to the markdown file.
-        content += f"## {project_name}\n"
-        content += f"**Difficulty:** {difficulty}\n\n"
-        content += f"{description}\n\n"
-    # Write the markdown file.
-    hio.to_file(markdown_file_path, content)
+        prompt += f"""
+        Generate a project description for '{project_name}' with difficulty level '{difficulty}'.
 
+        """
+        description = generate_project_description(project_name, difficulty, prompt)
+        # Add the project description to the markdown file.
+        content += f"### {project_name}\n"
+        content += f"{description}\n\n"
+    if len(description)>0:
+        # Write the markdown file.
+        print(content)
+        hio.to_file(markdown_file_path, content)
+    else:
+        raise ValueError("No project descriptions generated.")
 
 def main():
     # Read the Google Sheet.
