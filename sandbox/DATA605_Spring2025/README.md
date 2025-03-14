@@ -138,7 +138,7 @@
   - We will use this issue for project-related discussions.
   - Update the
     [signup sheet](https://docs.google.com/spreadsheets/d/1Ez5uRvOgvDMkFc9c6mI21kscTKnpiCSh4UkUh_ifLIw/edit?gid=0#gid=0)
-    with the issue numbers.
+    with the git hub issue link.
 
 - **Create a Git Branch Named After the Issue**
   - Name your Git branch as follows: `TutorialsTask{issue_number}_{project_tag}`
