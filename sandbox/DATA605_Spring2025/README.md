@@ -70,7 +70,7 @@
 
 **NOTE**:
 
-- If you choose use a paid service, you are responsible for the costs incurred.
+- If you choose to use a paid service, you are responsible for the costs incurred.
   In any case, you are expected to use the services efficiently to keep them
   within free tier usage
 - To save costs/improve usage, you should make sure that the services are turned
