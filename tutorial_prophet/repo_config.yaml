@@ -3,10 +3,10 @@ repo_info:
   github_repo_account: causify-ai
   github_host_name: github.com
   invalid_words:
-  issue_prefix: TutorTask
+  issue_prefix: TutorialsTask
 
 docker_info:
-  docker_image_name: tutorials
+  docker_image_name: tutorial_prophet
 
 s3_bucket_info:
   unit_test_bucket_name: s3://cryptokaizen-unit-test
@@ -16,4 +16,4 @@ s3_bucket_info:
 runnable_dir_info:
   use_helpers_as_nested_module: 1
   venv_tag: helpers
-  dir_suffix: tutorials
+  dir_suffix: tutorial_prophet
