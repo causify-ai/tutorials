@@ -16,6 +16,7 @@
 # Notebook Extractor Module Documentation
 
 ## Summary
+
 This document explains the workflow and usage of the
 `HelpersTask57_Extract_cells_from_a_notebook_as_png.py` script. The module is
 designed to create images of cells and their outputs from a Jupyter notebook
@@ -27,7 +28,7 @@ based on special comments embedded in the notebook. The special comments
 This script is useful when one wants to include pictures from a Jupyter notebook
 into other documents, such as markdown, Latex.
 
-## Summary of 
+## Brief description of the script
 
 The `HelpersTask57_Extract_cells_from_a_notebook_as_png.py` module perform a
 sequence of actions, such as:
@@ -37,41 +38,32 @@ sequence of actions, such as:
 - Adjust the extracted cells based on the specified extraction mode
   (`only code`, `only output`, or `all`)
 - Convert each extraction region into an HTML file
-- Use Playwright to capture a screenshot of the rendered HTML
-- Saving screenshots in a dedicated folder using filenames based on the
+- Use `playwright` to capture a screenshot of the rendered HTML
+- Save screenshots in a dedicated folder using filenames based on the
   marker-provided name
 
 ## Features
 
-- Multiple Extraction Regions:
+- `Multiple Extraction Regions`: the module can extract several regions from a
+  `notebook`. Each region is defined by a pair of comments, so you can have
+  separate sections in the same notebook.
 
-  The module can extract several regions from a `notebook`. Each region is
-  defined by a pair of comments, so you can have separate sections in the same
-  notebook.
-
-- Custom Extraction Modes:
-
-  Each region can specify a mode:
+- `Custom Extraction Modes`: each region can specify a mode to capture its
+  content
   - `only_input`: Only the code (cell input) is retained
   - `only_output`: Only the outputs are retained
   - `all`: Both code and outputs are included
 
-- Custom and Unique Output Filenames::
+- `Custom and Unique Output Filenames`: Each extraction region uses the output
+  filename provided in the start marker. If the same filename is specified for
+  multiple regions, a counter suffix (e.g., `_1`, `_2`, etc.) is automatically
+  appended to ensure that each screenshot file is unique.
 
-  Each extraction region uses the output filename provided in the start marker.
-  If the same filename is specified for multiple regions, a counter suffix
-  (e.g., \_1, \_2, etc.) is automatically appended to ensure that each
-  screenshot file is unique..
+- `Automated HTML Conversion` Uses `nbconvert's HTMLExporter` to convert the
+  extracted notebook cells to HTML before capturing a screenshot.
 
-- Automated HTML Conversion:
-
-  Uses `nbconvert's HTMLExporter` to convert the extracted notebook cells to
-  HTML before capturing a screenshot.
-
-- Playwright Integration:
-
-  The module uses `Playwright` to launch a headless browser, render the HTML
-  file, and capture high-quality screenshots.
+- `Playwright Integration`: The module uses `Playwright` to launch a headless
+  browser, render the HTML file, and capture screenshots.
 
 ## Workflow
 
@@ -137,27 +129,26 @@ To enable extraction, add markers in your code cells:
 - Start Marker
 
   Place the start marker at the beginning of a cell:
-  ```
+  ```python
   # start_extract(only_input)=my_screenshot.png
   ```
 
-  Replace only_input with only_output or all as needed. The filename
-  `(my_screenshot.png)` is used as the base name for the output screenshot.
+  Replace `only_input` with `only_output` or `all` as needed. The filename
+  `my_screenshot.png` is used as the base name for the output screenshot.
 
 - End Marker
 
   Mark the end of the extraction region with:
-  ```
+  ```python
   # end_extract
   ```
 
 These markers can reside in the same cell or in different cells. If multiple
 regions specify the same filename, the module appends `_1`, `_2`, etc.
 
-## Examples
-
 ### Example 1: Single Extraction Region
-```
+
+```python
 # start_extract(only_input)=example.png
 print("This is an example extraction region.")
 # end_extract
@@ -166,26 +157,17 @@ print("This is an example extraction region.")
 Result: The module extracts the region, retains only the code, and saves the
 screenshot as `screenshots/example.png`.
 
-## Example 2: Multiple Extraction Regions with Same Base Name
-```
+### Example 2: Multiple Extraction Regions with Same Base Name
+
+```python
 # start_extract(all)=shared_name.png
 print("Region 1: Showing both input and output.")
 # end_extract
-```
-```
+...
 # start_extract(only_output)=shared_name.png
 print("Region 2: Showing only output.")
 # end_extract
 ```
 
 Result: The first region will be saved as `screenshots/shared_name.png` and the
-second as `screenshots/shared_name_1`.png.
-
-## Conclusion
-
-The `HelpersTask57_Extract_cells_from_a_notebook_as_png.py` module simplifies
-the extraction and visualization of specific notebook sections. By using custom
-markers, you can tailor which parts of your notebook are captured, select
-between code and outputs, and automatically generate uniquely named screenshots.
-This makes it an excellent tool for documentation, presentations, or automated
-reporting.
+second as `screenshots/shared_name_1.png`.
