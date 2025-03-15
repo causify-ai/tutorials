@@ -9,34 +9,50 @@ import os
 import re
 from typing import Dict
 
+# TODO(gp): no need to abbreviate
 import nbconvert as nbc
 import nbformat
+# TODO(gp): do we need to abbreviate?
 import playwright.sync_api as psi
 
 _LOG = logging.getLogger(__name__)
 
+# TODO(gp): Let's convert this into a Class called NotebookImageExtractor,
+# so we keep the related functions together.
 
-def extract_regions_from_notebook(notebook_path: str) -> list:
+def extract_regions_from_notebook(notebook_path: str) -> Tuple[str, str, str]:
     """
     Extract regions from a notebook based on extraction markers.
 
-    The function reads a Jupyter notebook and searches for all regions
-    indicated by the markers "# start_extract(mode)=<output_filename>"
-    and "# end_extract". For each region found, it collects the cells
-    between these markers. Each region is returned as a tuple containing
-    the extraction mode, the output filename (as specified in the
-    marker), and the list of cells for that region.
+    This function reads a Jupyter notebook and searches for all regions
+    indicated by the markers inside cells:
+    ```
+    # start_extract(mode)=<output_filename>
+    ...
+    # end_extract
+    ```
+    For each region found, it collects the cells between these markers. Each
+    region is returned as a tuple containing the extraction mode, the output
+    filename (as specified in the marker), and the list of cells for that
+    region.
 
     :param notebook_path: The path to the Jupyter notebook.
     :return: tuples (mode, out_filename, region_cells) for each
         extraction region.
+    # TODO: Add some examples of outputs
     """
+    # Read notebook.
     nb = nbformat.read(notebook_path, as_version=4)
+    # TODO(Shaunak): Add examples of text to parse.
+    # TODO: -> start_marker_regex
     start_re = re.compile(
         r"#\s*start_extract\(\s*(only_input|only_output|all)\s*\)\s*=\s*(\S+)"
     )
+    # TODO: -> end_marker_regex
     end_re = re.compile(r"#\s*end_extract")
+    #
     regions = []
+    # TODO: let's call it state="look_for_start_extract", "look_for_end_extract".
     in_extract = False
     current_mode = None
     current_out_filename = None
@@ -46,6 +62,9 @@ def extract_regions_from_notebook(notebook_path: str) -> list:
             continue
         if not in_extract:
             # Look for a start marker in the cell.
+            hdbg.dassert(not end_re.search(cell.source),
+                         "Found an end marker not paired with a start marketi at: %s",
+                         str(cell.source))
             m = start_re.search(cell.source)
             if m:
                 current_mode = m.group(1)
@@ -54,6 +73,7 @@ def extract_regions_from_notebook(notebook_path: str) -> list:
                 # Remove the start marker from the cell.
                 cell.source = start_re.sub("", cell.source).strip()
                 # If the end marker exists in the same cell, remove it and finish the region.
+                # TODO: How can this happen? For me this is an error.
                 if end_re.search(cell.source):
                     cell.source = end_re.sub("", cell.source).strip()
                     current_cells.append(cell)
@@ -81,17 +101,13 @@ def extract_regions_from_notebook(notebook_path: str) -> list:
     return regions
 
 
+# output_html_file
 def convert_notebook_to_html(nb: nbformat.NotebookNode, output_html: str) -> None:
     """
-    Convert a notebook object to an HTML file.
-
-    This function uses nbconvert's HTMLExporter to convert the given
-    notebook object into an HTML file saved at the specified output
-    path.
+    Convert a notebook object to an HTML file using `nbconvert`.
 
     :param nb: notebook object containing the extracted cells.
     :param output_html: filename for the temporary HTML output.
-    :return: None
     """
     html_exporter = nbc.HTMLExporter()
     body, _ = html_exporter.from_notebook_node(nb)
@@ -99,8 +115,9 @@ def convert_notebook_to_html(nb: nbformat.NotebookNode, output_html: str) -> Non
         f.write(body)
 
 
+# -> timeout_in_msec
 def capture_screenshot(
-    html_file: str, screenshot_path: str, timeout: int = 2000
+    html_file: str, screenshot_path: str, *, timeout: int = 2000
 ) -> None:
     """
     Capture a screenshot of an HTML file using Playwright.
@@ -113,15 +130,17 @@ def capture_screenshot(
     :param html_file: path to the HTML file.
     :param screenshot_path: path where the screenshot will be saved.
     :param timeout: time in milliseconds to wait for the page to render.
-        Defaults to 2000.
-    :return: None
     """
     file_url = "file:///" + os.path.abspath(html_file)
     with psi.sync_playwright() as p:
+        # Launch a headless Chromium browser.
         browser = p.chromium.launch(headless=True)
+        # Open the HTML file.
         page = browser.new_page(viewport={"width": 1200, "height": 800})
         page.goto(file_url)
+        # Wait for a specified timeout to ensure the page.
         page.wait_for_timeout(timeout)
+        # Take a screenshot, saving to file.
         page.screenshot(path=screenshot_path)
         browser.close()
 
@@ -131,13 +150,14 @@ def extract_and_capture(notebook_path: str) -> list:
     Extract notebook regions, convert each to HTML, and capture separate
     screenshots.
 
-    The function orchestrates the extraction of all marked regions from a Jupyter notebook.
-    It processes each region independently: adjusting cells according to its extraction mode,
-    converting the region to an HTML file, capturing a screenshot using Playwright, and then
-    cleaning up the temporary HTML file. Screenshots are saved in the "screenshots" folder with
-    filenames based on the name provided in the extraction marker. If a name is repeated,
-    a counter suffix (_1, _2, etc.) is appended to ensure unique filenames. A list of screenshot file
-    paths is returned.
+    The function orchestrates the extraction of all marked regions from a
+    Jupyter notebook. It processes each region independently: adjusting cells
+    according to its extraction mode, converting the region to an HTML file,
+    capturing a screenshot using Playwright, and then cleaning up the temporary
+    HTML file. Screenshots are saved in the "screenshots" folder with filenames
+    based on the name provided in the extraction marker. If a name is repeated,
+    a counter suffix (_1, _2, etc.) is appended to ensure unique filenames. A
+    list of screenshot file paths is returned.
 
     :param notebook_path: path to the Jupyter notebook.
     :return: list of paths to the screenshot files.

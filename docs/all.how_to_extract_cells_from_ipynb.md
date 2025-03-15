@@ -15,15 +15,22 @@
 
 # Notebook Extractor Module Documentation
 
+## Summary
 This document explains the workflow and usage of the
-`HelpersTask57_Extract_cells_from_a_notebook_as_png.py` module. The module is
-designed to extract code cells (or outputs) from a `Jupyter Notebook` based on
-specially formatted comments and then capture separate screenshots for each
-extraction region using `Playwright`.
+`HelpersTask57_Extract_cells_from_a_notebook_as_png.py` script. The module is
+designed to create images of cells and their outputs from a Jupyter notebook
+based on special comments embedded in the notebook. The special comments
+- Mark what cell / cells to extract
+- Which part of the cells to extract (e.g., input cell, output of a cell, or both)
+- How to name the output file
 
-## Overview
+This script is useful when one wants to include pictures from a Jupyter notebook
+into other documents, such as markdown, Latex.
 
-The `HelpersTask57_Extract_cells_from_a_notebook_as_png.py` module is built to:
+## Summary of 
+
+The `HelpersTask57_Extract_cells_from_a_notebook_as_png.py` module perform a
+sequence of actions, such as:
 
 - Extract multiple regions from a Jupyter Notebook where each region is
   delimited by markers
