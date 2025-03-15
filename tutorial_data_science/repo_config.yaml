@@ -3,7 +3,7 @@ repo_info:
   github_repo_account: causify-ai
   github_host_name: github.com
   invalid_words:
-  issue_prefix: TutorialsTask
+  issue_prefix: TutorTask
 
 docker_info:
   docker_image_name: tutorial_data_science

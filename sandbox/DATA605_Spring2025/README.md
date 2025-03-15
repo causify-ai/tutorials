@@ -141,9 +141,9 @@
     with the git hub issue link.
 
 - **Create a Git Branch Named After the Issue**
-  - Name your Git branch as follows: `TutorialsTask{issue_number}_{project_tag}`
+  - Name your Git branch as follows: `TutorTask{issue_number}_{project_tag}`
     - Example: If your issue number is **#645**, your branch name should be:
-      **`TutorialsTask645_Spring2025_Redis_cache_to_fetch_user_profiles`**
+      **`TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles`**
 
 - **Steps to create the branch:**
 
@@ -152,14 +152,14 @@
   > git clone git@github.com:causify-ai/tutorials.git tutorials1
   > cd $HOME/src/tutorials1
   > git checkout master
-  > git checkout -b TutorialsTask645_Spring2025_Redis_cache_to_fetch_user_profiles
+  > git checkout -b TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles
   ```
 
 - **Add Files Only in Your Project Directory**
   - Add your project files under the following directory:
     `{GIT_ROOT}/sandbox/projects/{branch_name}`
     - Example: If you cloned the repo on your laptop, your directory should be:
-      `~/src/tutorials1/sandbox/projects/TutorialsTask645_Spring2025_Redis_cache_to_fetch_user_profiles`
+      `~/src/tutorials1/sandbox/projects/TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles`
 
 - **Create a Pull Request (PR)**:
   - Always create a **Pull Request (PR)** from your branch.
@@ -171,8 +171,8 @@
   - When making progress, use **incremental branch names** by appending `_1`,
     `_2`, etc.
     - Example:
-      - `TutorialsTask645_Spring2025_Redis_cache_to_fetch_user_profiles_1`
-      - `TutorialsTask645_Spring2025_Redis_cache_to_fetch_user_profiles_2`
+      - `TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles_1`
+      - `TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles_2`
   - The tag of your projects follows the schema
     `Spring{year}_{project_title_without_spaces}`
     - E.g., if the project title is "`Redis cache to fetch user profiles`", the
