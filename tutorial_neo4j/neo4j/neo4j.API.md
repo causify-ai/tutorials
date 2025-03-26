@@ -5,30 +5,30 @@
 - [Introduction](#introduction)
   * [Overview](#overview)
   * [Goals](#goals)
+- [Docker Container](#docker-container)
 - [Neo4j Server](#native-api)
   * [Starting Server](#starting-server)
   * [Connecting to the Server](#connecting-to-the-server)
      * [Updating the Password](#updating-the-password)
         - [Why Update the Password](#why-update-the-password)
         - [Steps to change Password](#steps-to-change-the-password)
-- [Clauses in Neo4j](#clauses-in-neo4j)
-  * [Write Clauses Key Operations](#write-clauses-key-operations)
-  * [Read Clauses Key Operations](#read-clauses-key-operations)
 - [Creating Nodes](#creating-nodes)
   * [Functions for node creation](#functions-for-node-creation)
   * [General Process for creating nodes](#general-process-for-creating-nodes)
   * [Creating relationships between nodes](#creating-relationships-between-nodes)
     - [General Process](#general-process)  
-- [Docker Container](#docker-container)
+- [Clauses in Neo4j](#clauses-in-neo4j)
+  * [Write Clauses Key Operations](#write-clauses-key-operations)
+  * [Read Clauses Key Operations](#read-clauses-key-operations)
 <!-- tocstop -->
 
-# Introduction
+## Introduction
 
-## Overview
+### Overview
 
 Neo4j is a graph database management system designed to handle large-scale, highly interconnected data. It enables users to model data as nodes (entities) and relationships (connections) with associated properties. This tutorial will guide you through the essentials of Neo4j, its native API, and hands-on examples using Python libraries like neo4j and py2neo.
 
-## Goals
+### Goals
 
 The primary goal of this tutorial is to provide everything you need to:
 
@@ -39,18 +39,21 @@ The primary goal of this tutorial is to provide everything you need to:
 - Create, query, and manipulate data in Neo4j using Cypher.
  
 - Explore visualization techniques for graph data.
- 
-- Use Docker to provide a reproducible environment.
- 
-- Execute Jupyter notebooks with runnable examples.
 
+## Docker Container 
+Steps to run the container:
 
+```bash
+> source dev_scritps_tutorial_neo4j/thin_client/setenv.sh
+> i docker_build_local_image --version 1.1.0 --container-dir-name tutorial_neo4j
+> i docker_jupyter --version 1.1.0 --skip-pull --stage local -d
+```
 
-# Native API
+## Native API
 
 The native API serves as a python client to help us establish connection to a `Neo4j` server. 
 
-## Starting server
+### Starting server
 
 This is first step in the process. We need need to have a running server in the backend for us to work with.
 
@@ -74,7 +77,7 @@ This is first step in the process. We need need to have a running server in the 
 
 ---
 
-## Connecting to the server
+### Connecting to the server
 
 1. **URI and Authentication**:
    - To connect to the Neo4j server, you need the Bolt protocol URI and authentication credentials:
@@ -111,13 +114,13 @@ Key functions Used:
   - Verifies the connection to the Neo4j database server.  
   - Raises an exception if the connection fails; otherwise, no output.
 
-### Updating the Password
+#### Updating the Password
 
-#### Why Update the Password?
+##### Why Update the Password?
 - **Mandatory Step**: The default credentials (`neo4j/neo4j`) are required initially but must be changed for security.
 - **Permanent Change**: Once updated, the password cannot be reverted unless you perform a clean reinstallation.
 
-#### Steps to Change the Password
+##### Steps to Change the Password
 
 1. **Define the Password Change Logic**:
    - Use a transaction function to execute the Cypher command for changing the password:
@@ -145,9 +148,152 @@ Key functions Used:
 
 ---
 
-# Clauses in Neo4j
 
-##  Write Clauses Key Operations
+## Creating Nodes
+
+1. **Node Basics**:
+   - A **node** is a fundamental unit of data in Neo4j. It can have:
+     - **Labels**: Categorize the node (e.g., `Person`, `Employee`).
+     - **Properties**: Key-value pairs associated with the node.
+
+2. **Key Operations**:
+   - **`CREATE` Statement**: Used to create nodes in the database.
+   - **Transaction Methods**:
+     - `tx.run()`: Executes a Cypher query within a transaction.
+
+
+### Functions for Node Creation
+
+1. **Create a Simple Node**:
+   - **Use Case**: Suppose you want to add a person named "Dave" to your database.  
+     - You can use the `CREATE` statement in Cypher to create a node with a specific label (e.g., `Person`) and a property (`name`).  
+     - Example:
+
+       ```cypher
+       CREATE (a:Person {name: $name})
+       ```
+
+     - **Details**:
+       - The `tx.run()` method allows passing the query and arguments.
+       - Here, `$name` is a parameter placeholder, and its value (e.g., `"Dave"`) is passed as an argument.
+       - Although not a standard practice, the property values can also be
+         assigned directly, e.g.,:
+
+        ```cypher
+        CREATE (a:Person {name: "Dave"})
+       ```
+
+2. **Create a Node with Multiple Labels**:
+   - **Use Case**: Consider creating a node that represents a person named "Hank" who is also an employee.  
+     - You can assign multiple labels (e.g., `Person` and `Employee`) to the same node:
+
+       ```cypher
+       CREATE (a:Person:Employee {name: $name})
+       ```
+
+     - **Details**:
+       - Multiple labels are separated by a colon (`:`).
+       - This approach helps categorize nodes under multiple groups for better querying.
+
+3. **Create a Node with Multiple Properties**:
+   - **Use Case**: You want to create a node for "Ivy" with additional details like age and city.  
+     - Use the `CREATE` statement with a label (`Person`) and multiple properties:
+
+       ```cypher
+       CREATE (a:Person {name: $name, age: $age, city: $city})
+       ```
+
+     - **Details**:
+       - Properties are key-value pairs, passed as a dictionary in the code (e.g., `{"name": "Ivy", "age": 28, "city": "New York"}`).
+       - This makes the node richer with more descriptive data.
+
+4. **Create a Node and Return It**:
+   - **Use Case**: Suppose you want to create a node for "Jack" and immediately confirm it was added successfully.  
+     - You can use the `RETURN` clause in Cypher to fetch the created node:
+
+       ```cypher
+       CREATE (a:Person {name: $name}) RETURN a
+       ```
+
+     - **Details**:
+       - The `RETURN` clause ensures the created node is available in the result.
+       - The resulting node can be accessed programmatically for further actions.
+
+### General Process for Creating Nodes
+
+1. Use `CREATE` to define the node structure (labels and properties).
+2. Pass the query and parameters to `tx.run()` to execute it.
+3. Optionally, use `RETURN` to retrieve the created node for confirmation.
+
+**Example in Code**:  
+
+If you want to create a node with the label `Person` and the property `name: "Dave"`, the query will look like this:
+
+```python
+tx.run("CREATE (a:Person {name: $name})", name="Dave")
+```
+
+### Creating Relationships Between Nodes
+
+1. **Creating a Simple Relationship**:
+   - **Use Case**:  
+     Suppose you want to define that "Jack" knows "Dave".
+   - **Query**:
+
+     ```cypher
+     MATCH (a:Person {name: $node1_name}), (b:Person {name: $node2_name})
+     CREATE (a)-[:KNOWS]->(b)
+     ```
+
+   - **Details**:
+     - `MATCH`: Finds the nodes based on their label (`Person`) and property (`name`).
+     - `CREATE`: Adds a relationship of type `KNOWS` between the two nodes.
+
+2. **Creating a Relationship with Properties**:
+   - **Use Case**:  
+     You want to record that "Grace" works with "Hank" since 2020.
+   - **Query**:
+
+     ```cypher
+     MATCH (a:Employee {name: $node1_name}), (b:Employee {name: $node2_name})
+     CREATE (a)-[:WORKS_WITH {since: $since}]->(b)
+     ```
+
+   - **Details**:
+     - **Relationship Type**: `WORKS_WITH` categorizes the relationship.
+     - **Properties**: Add key-value pairs (e.g., `since: 2020`) to store additional information about the relationship.
+
+#### General Process 
+
+1. **Identify Nodes**:
+   - Use the `MATCH` clause to locate the nodes involved in the relationship.
+   - Nodes are identified by their labels and unique properties (e.g., `name`).
+
+2. **Define the Relationship**:
+   - Use the `CREATE` clause to specify:
+     - The direction of the relationship (e.g., `(a)-[:KNOWS]->(b)`).
+     - Any properties associated with the relationship.
+
+3. **Transaction Execution**:
+   - Pass the query and parameters to `tx.run()` within a transaction.
+
+**Example Relationships in the Graph**
+
+1. **Nodes**:
+   - (_0:Person {name: 'Jack'})  
+   - (_1:Person {name: 'Dave'})  
+   - (_2:Employee {name: 'Grace'})  
+   - (_3:Employee {name: 'Hank'})  
+
+2. **Relationships**:
+   - (_0)-[:KNOWS]->(_1): Jack knows Dave.  
+   - (_2)-[:WORKS_WITH {since: 2020}]->(_3): Grace works with Hank since 2020.
+
+**Note**: Relationships are crucial in Neo4j as they define how nodes are connected and enable efficient traversal and querying.
+
+## Clauses in Neo4j
+
+###  Write Clauses Key Operations
 
 1. **MERGE Clause**:
    - **Purpose**: Ensures the node or relationship exists in the database:
@@ -182,20 +328,20 @@ Key functions Used:
    - **Purpose**: Removes nodes or relationships from the database.
    - **Use Case**:
      - Delete the `KNOWS` relationship between "Alice" and "Bob".
-     - Delete the node "Bob" entirely.
-   - **Query**:
-
+     
      ```cypher
-     MATCH (a:Person {name: $name})
-     DELETE a
-     ```
-
-     ```cypher
-     MATCH (a:Person {name: $node1_name})-[r:KNOWS]->(b:Person {name: $node2_name})
+     MATCH (a:Person {name: $node1_name})-[r:KNOWS]->(b:Person {name: $node2_name}, {node1_name: "Alice". node2_name: "Bob"})
      DELETE r
      ```
 
-## Read Clauses Key operations
+     - Delete the node "Bob" entirely.
+   
+     ```cypher
+     MATCH (a:Person {name: $name}, name="Bob")
+     DELETE a
+     ```
+
+### Read Clauses Key operations
 
 1. **MATCH Clause**:
    - **Purpose**: Retrieves nodes, relationships, or paths that match a specific pattern.
@@ -253,158 +399,3 @@ Key functions Used:
      MATCH (a:Person)
      RETURN COUNT(a) as count
      ```
-
-
-
-# Creating Nodes
-
-1. **Node Basics**:
-   - A **node** is a fundamental unit of data in Neo4j. It can have:
-     - **Labels**: Categorize the node (e.g., `Person`, `Employee`).
-     - **Properties**: Key-value pairs associated with the node.
-
-2. **Key Operations**:
-   - **`CREATE` Statement**: Used to create nodes in the database.
-   - **Transaction Methods**:
-     - `tx.run()`: Executes a Cypher query within a transaction.
-
-## Functions for Node Creation
-
-1. **Create a Simple Node**:
-   - **Use Case**: Suppose you want to add a person named "Dave" to your database.  
-     - You can use the `CREATE` statement in Cypher to create a node with a specific label (e.g., `Person`) and a property (`name`).  
-     - Example:
-
-       ```cypher
-       CREATE (a:Person {name: $name})
-       ```
-
-     - **Details**:
-       - The `tx.run()` method allows passing the query and arguments.
-       - Here, `$name` is a parameter placeholder, and its value (e.g., `"Dave"`) is passed as an argument.
-
-2. **Create a Node with a Specific Label**:
-   - **Use Case**: Let’s say you want to create an `Employee` node named "Grace".  
-     - You define the label (`Employee`) and property (`name`) dynamically:
-
-       ```cypher
-       CREATE (a:Employee {name: $name})
-       ```
-
-     - **Details**:
-       - The label (`Employee`) determines the category of the node.
-       - The property is a key-value pair where the key is `name`.
-
-3. **Create a Node with Multiple Labels**:
-   - **Use Case**: Consider creating a node that represents a person named "Hank" who is also an employee.  
-     - You can assign multiple labels (e.g., `Person` and `Employee`) to the same node:
-
-       ```cypher
-       CREATE (a:Person:Employee {name: $name})
-       ```
-
-     - **Details**:
-       - Multiple labels are separated by a colon (`:`).
-       - This approach helps categorize nodes under multiple groups for better querying.
-
-4. **Create a Node with Multiple Properties**:
-   - **Use Case**: You want to create a node for "Ivy" with additional details like age and city.  
-     - Use the `CREATE` statement with a label (`Person`) and multiple properties:
-
-       ```cypher
-       CREATE (a:Person {name: $name, age: $age, city: $city})
-       ```
-
-     - **Details**:
-       - Properties are key-value pairs, passed as a dictionary in the code (e.g., `{"name": "Ivy", "age": 28, "city": "New York"}`).
-       - This makes the node richer with more descriptive data.
-
-5. **Create a Node and Return It**:
-   - **Use Case**: Suppose you want to create a node for "Jack" and immediately confirm it was added successfully.  
-     - You can use the `RETURN` clause in Cypher to fetch the created node:
-
-       ```cypher
-       CREATE (a:Person {name: $name}) RETURN a
-       ```
-
-     - **Details**:
-       - The `RETURN` clause ensures the created node is available in the result.
-       - The resulting node can be accessed programmatically for further actions.
-
-## General Process for Creating Nodes
-
-1. Use `CREATE` to define the node structure (labels and properties).
-2. Pass the query and parameters to `tx.run()` to execute it.
-3. Optionally, use `RETURN` to retrieve the created node for confirmation.
-
-
-> **Example in Code**:  
-
-If you want to create a node with the label `Person` and the property `name: "Dave"`, the query will look like this:
-
-```python
-tx.run("CREATE (a:Person {name: $name})", name="Dave")
-```
-
-## Creating Relationships Between Nodes
-
-1. **Creating a Simple Relationship**:
-   - **Use Case**:  
-     Suppose you want to define that "Jack" knows "Dave".
-   - **Query**:
-     ```cypher
-     MATCH (a:Person {name: $node1_name}), (b:Person {name: $node2_name})
-     CREATE (a)-[:KNOWS]->(b)
-     ```
-   - **Details**:
-     - `MATCH`: Finds the nodes based on their label (`Person`) and property (`name`).
-     - `CREATE`: Adds a relationship of type `KNOWS` between the two nodes.
-
-2. **Creating a Relationship with Properties**:
-   - **Use Case**:  
-     You want to record that "Grace" works with "Hank" since 2020.
-   - **Query**:
-     ```cypher
-     MATCH (a:Employee {name: $node1_name}), (b:Employee {name: $node2_name})
-     CREATE (a)-[:WORKS_WITH {since: $since}]->(b)
-     ```
-   - **Details**:
-     - **Relationship Type**: `WORKS_WITH` categorizes the relationship.
-     - **Properties**: Add key-value pairs (e.g., `since: 2020`) to store additional information about the relationship.
-
-### General Process 
-
-1. **Identify Nodes**:
-   - Use the `MATCH` clause to locate the nodes involved in the relationship.
-   - Nodes are identified by their labels and unique properties (e.g., `name`).
-
-2. **Define the Relationship**:
-   - Use the `CREATE` clause to specify:
-     - The direction of the relationship (e.g., `(a)-[:KNOWS]->(b)`).
-     - Any properties associated with the relationship.
-
-3. **Transaction Execution**:
-   - Pass the query and parameters to `tx.run()` within a transaction.
-
->  Example Relationships in the Graph
-
-1. **Nodes**:
-   - (_0:Person {name: 'Jack'})  
-   - (_1:Person {name: 'Dave'})  
-   - (_2:Employee {name: 'Grace'})  
-   - (_3:Employee {name: 'Hank'})  
-
-2. **Relationships**:
-   - (_0)-[:KNOWS]->(_1): Jack knows Dave.  
-   - (_2)-[:WORKS_WITH {since: 2020}]->(_3): Grace works with Hank since 2020.
-
-> **Note**: Relationships are crucial in Neo4j as they define how nodes are connected and enable efficient traversal and querying.
-
-# Docker Container 
-Steps to run the container:
-
-```bash
-> source dev_scritps_tutorial_neo4j/thin_client/setenv.sh
-> i docker_build_local_image --version 1.1.0 --container-dir-name tutorial_neo4j
-> i docker_jupyter --version 1.1.0 --skip-pull --stage local -d
-```

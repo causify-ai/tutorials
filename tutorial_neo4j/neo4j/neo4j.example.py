@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.16.6
+#       jupytext_version: 1.16.7
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -64,13 +64,6 @@ data.head()
 class Neo4jAPI:
     """
     A wrapper class for interacting with the Neo4j database.
-
-    Methods:
-        - __init__: Initialize the connection to Neo4j.
-        - close: Close the connection to Neo4j.
-        - run_query: Run a Cypher query.
-        - load_data: Load data from a Pandas DataFrame into Neo4j.
-        - visualize_graph: Visualize the Neo4j graph using Pyvis.
     """
     def __init__(self, uri, user, password):
         """

@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.16.6
+#       jupytext_version: 1.16.7
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -31,7 +31,7 @@
 #     * `neo4j` is library that serves as a python client to establish connection to
 #        Neo4j database servers.
 #     * `py2neo`
-# - This is done through building the docker image. Refer `xyz.md`
+# - This is done through building the docker image. Refer `neo4j.API.md`
 #
 #
 
