@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.16.6
+#       jupytext_version: 1.16.7
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -25,6 +25,12 @@
 #
 # We'll start by setting up the environment and initializing our language model (`ChatOpenAI`).
 # Here, we're using OpenAI's `gpt-4o-mini` model with a temperature of 0 for deterministic outputs.
+
+# %%
+# !sudo /venv/bin/pip install langchain --quiet
+# !sudo /venv/bin/pip install -U langchain-community --quiet
+# !sudo /venv/bin/pip install -U langchain-openai --quiet
+
 
 # %%
 import os
@@ -46,10 +52,10 @@ _LOG = logging.getLogger(__name__)
 
 # %%
 import os
-os.environ["OPENAI_API_KEY"] = ""  # Replace with your actual API key
+os.environ["OPENAI_API_KEY"] = "your-openapi-key"  
 
 from langchain_openai import ChatOpenAI
-chat_model = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0)
+chat_model = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
 # %% [markdown]
 # ## Message Handling with `HumanMessage` and `SystemMessage`
@@ -91,7 +97,7 @@ chat_model.invoke(messages)
 # We'll use `ChatPromptTemplate` to define structured prompts and format them dynamically.
 
 # %%
-from langchain.prompts import ChatPromptTemplate
+import langchain.prompts as lngchprmt
 
 # Define a custom template for hospital reviews
 review_template_str = """
@@ -104,7 +110,7 @@ any information that's not from the context. If you don't know an answer, say yo
 {question}
 """
 
-review_template = ChatPromptTemplate.from_template(review_template_str)
+review_template = lngchprmt.ChatPromptTemplate.from_template(review_template_str)
 
 # Provide context and a question
 context = "I had a great stay!"
@@ -121,16 +127,16 @@ print(review_template.format(context=context, question=question))
 
 # %%
 # Define system and human message templates.
-review_system_prompt = SystemMessagePromptTemplate(
-    prompt=PromptTemplate(input_variables=["context"], template=review_template_str)
+review_system_prompt = lngchprmt.SystemMessagePromptTemplate(
+    prompt=lngchprmt.PromptTemplate(input_variables=["context"], template=review_template_str)
 )
 
-review_human_prompt = HumanMessagePromptTemplate(
-    prompt=PromptTemplate(input_variables=["question"], template="{question}")
+review_human_prompt = lngchprmt.HumanMessagePromptTemplate(
+    prompt=lngchprmt.PromptTemplate(input_variables=["question"], template="{question}")
 )
 
 # Combine into a chat prompt template.
-review_prompt_template = ChatPromptTemplate(
+review_prompt_template = lngchprmt.ChatPromptTemplate(
     input_variables=["context", "question"],
     messages=[review_system_prompt, review_human_prompt]
 )
@@ -155,6 +161,9 @@ review_chain = review_prompt_template | chat_model | output_parser
 # Test the chain
 review_chain.invoke({"context": context, "question": question})
 
+# %%
+# !ls /shared_data/dev/
+
 # %% [markdown]
 # ## Retrieval with FAISS
 #
@@ -162,7 +171,7 @@ review_chain.invoke({"context": context, "question": question})
 # We'll demonstrate how to load a dataset, create embeddings, and retrieve documents.
 
 # %%
-
+# !cp /Users/saggese/src/github/langchain_neo4j_rag_app/data/reviews.csv build_LLM_RAG_chatbot_with_langchain/
 REVIEWS_CSV_PATH = "build_LLM_RAG_chatbot_with_langchain/reviews.csv"
 REVIEWS_CHROMA_PATH = "chroma_data"
 
@@ -219,13 +228,10 @@ import time
 
 def get_current_wait_time(hospital: str) -> int | str:
     """Dummy function to generate fake wait times"""
-
     if hospital not in ["A", "B", "C", "D"]:
         return f"Hospital {hospital} does not exist"
-
-    # Simulate API call delay
+    # Simulate API call delay.
     time.sleep(1)
-
     return random.randint(0, 10000)
 
 

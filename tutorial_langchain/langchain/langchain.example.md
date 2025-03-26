@@ -1,5 +1,13 @@
 # Tutorial: Building a Documentation QA Bot with LangChain
 
+<!--toc-->
+- [Introduction](#introduction)
+- [Setup and Dependencies](#setup-and-dependencies)
+- [Key Components](#key-components)
+<!--tocstop-->
+
+
+
 ## Introduction
 This tutorial demonstrates how to use `LangChain` to build a documentation-based QA
 bot. The bot parses Markdown files, creates embeddings, stores them in a vector
@@ -7,6 +15,25 @@ database, and retrieves relevant information in response to user queries.
 Additionally, it supports dynamic updates when documentation changes.
 
 ## Setup and Dependencies
+
+### Building and Running the Docker Container
+1. **Activate virtual environment:**
+   ```bash
+   > source dev_scripts_tutorial_data/thin_client/setenv.sh
+   ```
+2. **Build Docker Image:**
+   ```bash
+   > i docker_build_local_image --version 1.0.0
+   ```
+3. **Run Container:**
+   ```bash
+   > i docker_bash --skip-pull --stage local --version 1.0.0
+   ```
+4. **Launch Jupyter Notebook:**
+   ```bash
+   > i docker_jupyter --skip-pull --stage local --version 1.0.0 -d
+   ```
+
 ### Environment Setup
 Set the `OPENAI_API_KEY` environment variable for API access:
 ```python
@@ -84,22 +111,11 @@ retrieving embeddings.
 vector_store = FAISS.from_documents(split_documents, embeddings)
 retriever = vector_store.as_retriever()
 ```
+
 This initializes a FAISS vector store with embeddings computed from the split
 documents, enabling similarity-based retrieval.
 
-### 4. Creating Embeddings and Vector Stores
-`LangChain` supports FAISS and Chroma as vector databases. These libraries store
-and retrieve embeddings based on similarity search.
-```python
-# Initialize embeddings
-embeddings = OpenAIEmbeddings()
-
-# Create a FAISS vector store
-vector_store = FAISS.from_documents(split_documents, embeddings)
-retriever = vector_store.as_retriever()
-```
-
-### 5. QA Chain Setup
+### 4. QA Chain Setup
 The `RetrievalQA` chain uses a retriever to fetch relevant documents and a
 language model to answer queries.
 ```python

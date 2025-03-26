@@ -1,5 +1,4 @@
 # LangChain API Tutorial
----
 
 <!--toc-->
 - [Introduction](#introduction)
@@ -26,7 +25,6 @@ This tutorial explores:
 - Using retrieval mechanisms like FAISS to enhance context.
 - Building flexible agents for decision-making.
 
----
 
 ## Architecture Overview
 
@@ -43,22 +41,38 @@ Chains represent workflows. They connect prompts, models, and output parsers in 
 ### 3. **Retrieval**
 Retrieval mechanisms allow you to augment your model's responses with external data. For example:
 - Searching documents for relevant context using FAISS or similar tools.
-- Passing the retrieved data to the model for more informed responses.
+- Passing the retrieved data to the model for more 
+  informed responses.
 
 ### 4. **Agents**
 Agents can dynamically decide which tools or actions to use based on the input. This flexibility is crucial for creating adaptable systems.
 
----
-
 ## Setting Up
 
+### Building and Running the Docker Container
+1. **Activate virtual environment:**
+   ```bash
+   > source dev_scripts_tutorial_data/thin_client/setenv.sh
+   ```
+2. **Build Docker Image:**
+   ```bash
+   > i docker_build_local_image --version 1.0.0
+   ```
+3. **Run Container:**
+   ```bash
+   > i docker_bash --skip-pull --stage local --version 1.0.0
+   ```
+4. **Launch Jupyter Notebook:**
+   ```bash
+   > i docker_jupyter --skip-pull --stage local --version 1.0.0 -d
+   ```
+### Dependencies
 To start, ensure you have:
 1. Installed LangChain and necessary dependencies.
 2. Configured your OpenAI API key.
 
 The `ChatOpenAI` model serves as the backbone for generating responses in this tutorial. It’s configured with a low temperature (`0`) to ensure deterministic outputs.
 
----
 
 ## Message Handling
 
@@ -69,7 +83,6 @@ LangChain provides `SystemMessage` and `HumanMessage` to structure conversations
 ### Why This Is Important:
 By explicitly defining roles, you can control the assistant's responses, ensuring relevance and accuracy.
 
----
 
 ## Custom Prompts
 
@@ -82,7 +95,6 @@ Imagine creating a system to analyze patient reviews for hospitals. You can defi
 
 This modularity ensures clarity and consistency across tasks.
 
----
 
 ## Chains
 
@@ -99,7 +111,6 @@ A chain could:
 ### Why Chains Matter:
 Chains reduce boilerplate code, making your application more maintainable and modular.
 
----
 
 ## Retrieval with FAISS
 
@@ -112,7 +123,6 @@ You might have a collection of patient reviews stored as embeddings in FAISS. Wh
 - **Embedding Creation:** Convert text into vector representations.
 - **Similarity Search:** Quickly find the closest matches to a query.
 
----
 
 ## Building a QA System
 
@@ -124,7 +134,6 @@ Combining retrieval with chains allows you to build a robust QA system. The work
 ### Why This Matters:
 This approach improves accuracy by grounding responses in factual data, reducing the risk of hallucination.
 
----
 
 ## Agents and Tools
 
@@ -140,4 +149,3 @@ An agent could:
 
 This dynamic capability makes agents ideal for complex, multi-step tasks.
 
----
