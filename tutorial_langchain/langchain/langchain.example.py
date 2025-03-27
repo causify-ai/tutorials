@@ -16,46 +16,26 @@
 # %% [markdown]
 # # Building a Documentation Chatbot with LangChain
 #
-# This script demonstrates how to build an intelligent chatbot that queries documentation using LangChain. 
+# This script demonstrates how to build an intelligent chatbot that queries documentation using LangChain.
 # The chatbot can:
 # - Parse and preprocess Markdown files.
 # - Embed document content for efficient similarity-based retrieval.
 # - Answer detailed, context-aware queries from users.
 
 # %%
-import os
 import logging
+import os
+
 import helpers.hdbg as hdbg
-from langchain.chat_models import ChatOpenAI
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.chains import RetrievalQA
-from langchain_utils import (
-    list_markdown_files,
-    parse_markdown_files,
-    split_documents,
-    create_vector_store,
-    build_retriever,
-    watch_folder_for_changes,
-    update_vector_store
-)
-# Configure logging.
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-# Set the OpenAI API key.
-os.environ["OPENAI_API_KEY"] = "your_openai_api_key_here"
+import langchain.chains as chains
+import langchain.chat_models as chat_models
+import langchain.embeddings as embeddings
+import langchain_utils as langch_utils
 
 # %%
 hdbg.init_logger(verbosity=logging.INFO)
 
 _LOG = logging.getLogger(__name__)
-
-# %%
-import os
-import logging
-from langchain.chat_models import ChatOpenAI
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.chains import RetrievalQA
-import langchain_utils as lang_utils 
 
 # %%
 hdbg.init_logger(verbosity=logging.INFO)
@@ -86,7 +66,7 @@ config = {
 # ## Setting Up
 #
 # We'll begin by importing the required libraries and configuring the environment. The chatbot will use:
-# - OpenAI's GPT-3.5 as the core language model.
+# - OpenAI's GPT-4o-mini as the core language model.
 # - FAISS for fast document retrieval.
 # - LangChain utilities for document parsing, text splitting, and chaining.
 
@@ -94,21 +74,21 @@ config = {
 # Set the OpenAI API key.
 os.environ["OPENAI_API_KEY"] = config["open_ai_api_key"]
 # Initialize the chat model.
-chat_model = ChatOpenAI(**config["language_model"])
+chat_model = chatmodels.ChatOpenAI(**config["language_model"])
 
 # %% [markdown]
 # ## Parse and Preprocess Documentation
 #
-# Markdown files serve as the primary data source for this chatbot. 
+# Markdown files serve as the primary data source for this chatbot.
 # We'll parse the files into LangChain `Document` objects and split them into manageable chunks to ensure efficient retrieval.
 
 # %%
-split_documents = lang_utils.parse_data_into_chunks(
+split_documents = langch_utils.parse_data_into_chunks(
     dir_path = config["source_directory"],
     **config["parse_data_into_chunks"],
 )
 _LOG.info("Processed and chunked %d documents.", len(split_documents))
-# Print sample chunked documents
+# Print sample chunked documents.
 for doc in split_documents[:5]:
     _LOG.info("Source: %s", {doc.metadata['source']})
     _LOG.info("Content: %s", {doc.page_content})
@@ -120,40 +100,40 @@ for doc in split_documents[:5]:
 
 # %%
 # Initialize OpenAI embeddings.
-embeddings = OpenAIEmbeddings()
+embeddings = embeddings.OpenAIEmbeddings()
 # Create a FAISS vector store.
-vector_store = create_vector_store(chunked_documents, embeddings)
-logger.info("FAISS vector store created with %d documents.", len(chunked_documents)).
+vector_store = langch_utils.create_vector_store(chunked_documents, embeddings)
+logger.info("FAISS vector store created with %d documents.", len(chunked_documents))
 
 # %% [markdown]
 # ## Build a QA Chain
 #
-# The `RetrievalQA` chain combines document retrieval with OpenAI's GPT-3.5 for question answering. 
+# The `RetrievalQA` chain combines document retrieval with OpenAI's GPT-3.5 for question answering.
 # It retrieves the most relevant document chunks and uses them as context to generate answers.
 
 # %%
-# Build the retriever from the vector store
-retriever = build_retriever(vector_store)
+# Build the retriever from the vector store.
+retriever = langch_utils.build_retriever(vector_store)
 
-# Create the RetrievalQA chain
-qa_chain = RetrievalQA.from_chain_type(llm=chat_model, retriever=retriever, return_source_documents=True)
+# Create the RetrievalQA chain.
+qa_chain = chains.RetrievalQA.from_chain_type(llm=chat_model, retriever=retriever, return_source_documents=True)
 
 logger.info("RetrievalQA chain initialized.")
 
 # %% [markdown]
 # ## Step 5: Query the Chatbot
 #
-# Let's interact with the chatbot! We'll ask it questions based on the documentation. 
+# Let's interact with the chatbot! We'll ask it questions based on the documentation.
 # The chatbot will retrieve relevant chunks and generate context-aware responses.
 
 # %%
-# Define a user query
+# Define a user query.
 query = "What are the guidelines for setting up a new project?"
 
-# Query the chatbot
+# Query the chatbot.
 response = qa_chain({"query": query})
 
-# Display the answer and source documents
+# Display the answer and source documents.
 print(f"Answer:\n{response['result']}\n")
 print("Source Documents:")
 for doc in response['source_documents']:
@@ -167,14 +147,14 @@ for doc in response['source_documents']:
 # The vector store will be updated dynamically to ensure the chatbot stays up-to-date.
 
 # %%
-# Monitor the folder for changes and update the vector store
+# Monitor the folder for changes and update the vector store.
 known_files = {}
-changes = watch_folder_for_changes(docs_directory, known_files)
+changes = langch_utils.watch_folder_for_changes(docs_directory, known_files)
 
 if changes["new"] or changes["modified"]:
     # Parse and process the changed files
-    new_documents = parse_markdown_files(changes["new"] + changes["modified"])
-    update_vector_store(vector_store, new_documents, embeddings)
+    new_documents = langch_utils.parse_markdown_files(changes["new"] + changes["modified"])
+    langch_utils.update_vector_store(vector_store, new_documents, embeddings)
     logger.info("Vector store updated with new/modified documents.")
 
 # %% [markdown]
@@ -187,13 +167,13 @@ if changes["new"] or changes["modified"]:
 # For example, users can ask for specific sections of the documentation or request summaries tailored to their needs.
 
 # %%
-# Example query with personalized intent
+# Example query with personalized intent.
 personalized_query = "Show me onboarding guidelines for new employees."
 
-# Query the chatbot
+# Query the chatbot.
 personalized_response = qa_chain({"query": personalized_query})
 
-# Display the personalized response
+# Display the personalized response.
 print(f"Answer:\n{personalized_response['result']}\n")
 print("Source Documents:")
 for doc in personalized_response['source_documents']:
