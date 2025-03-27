@@ -46,7 +46,7 @@
   - Make sure you code by understanding the tool and what your code is doing
     with it
   - Google and ChatGPT are your friends, but don't abuse them: copy-pasting code
-    is not recommmended and won't benefit the learning outcomes. The projects
+    is not recommended and won't benefit the learning outcomes. The projects
     are designed in a way that once you understand the underlying technology:
     - Easy Project: Takes 2-3 days to complete
     - Medium Difficulty Project: Takes 4-5 to complete
@@ -55,7 +55,7 @@
 - It is highly recommended to choose a project from the
   [signup sheet](https://docs.google.com/spreadsheets/d/1Ez5uRvOgvDMkFc9c6mI21kscTKnpiCSh4UkUh_ifLIw/edit?gid=0#gid=0).
   If you'd like to propose a new idea or suggest modifications, please contact
-  us—we will review and accommodate reasonable requests.
+  us: we will review and accommodate reasonable requests.
 - Your project should align with your learning goals and interests, offering a
   great opportunity to explore various technologies and strengthen your resume.
 - If selecting a project from the sign-up sheet, ensure you fill out the
@@ -102,31 +102,13 @@
   - E.g., it's not ok to use an AWS DB instance, you want to install Postgres in
     your container for any database requirements
 
-## Working on the project
-
-Use the project template files in `/sandbox/DATA605/tutorial_template` to understand the deliverables and coding style. They consist of: 
-
-- **Scripts/Notebooks**:
-  - You will work on one API file and one Example (Your project) file. 
-  - We encourage you to use notebooks only but if need be, you can choose
-    python scripts instead.
-- **Markdowns**:
-  - One markdown file linked to each python script, i.e, API and example
-
-In general 
-- For API: you are expected to describe the API, its architecture, etc.
-- For Example: You are expected to use the project tool according to the
-  specifications mentioned in [Google Doc](https://docs.google.com/document/d/1fEd7_oLhFnA5ovzj_HMb9EeMU84nOGEGeWqNRZSz2wo)
-
-More details in [Documentation](#documentation) section and examples [here](#examples-of-a-class-project).
-
 ### Contribution to the repo
 
 - You will work in the same way open-source developers (and specifically
   developers on Causify.AI) contribute to a project
 
 - Setup your working environment by following the instructions in the
-  [document](https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
+  [document](/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
 
 - Each step of the project is delivered by committing code to the dir
   corresponding to your project and doing a GitHub Pull Request (PR)
@@ -202,17 +184,39 @@ More details in [Documentation](#documentation) section and examples [here](#exa
 
 ### Documentation
 
-For your course project, you're not just building something cool—you're also
-teaching others how to use a Big Data, AI, LLM, or data science tech. Instead of
-a project report, you'll create a tutorial that's hands-on and
-beginner-friendly. Think of it as your chance to help a classmate get started
-with the same tech. The goal of this tutorial help pickup a new technology in 60
-Minutes! That should make sure the tutorial is not lengthy and covers all the
-important aspects a developer should know before
+- For your course project, you're not just building something cool—you're also
+  teaching others how to use a Big Data, AI, LLM, or data science tech
+- As a project report, you'll create a tutorial that's hands-on and
+  beginner-friendly
+  - Think of it as your chance to help a classmate get started with the same tech
+  - The goal of this tutorial is to help pickup a new technology in 60 Minutes!
+  - That should make sure the tutorial is not lengthy and covers all the important
+    aspects a developer should know before starting building with that technology.
 
-You are expected to create an end-to-end tutorial for your package in accordance
-with the guidelines mentioned
-[here](https://github.com/causify-ai/tutorials/blob/f0f37d83919d552fabb0505240d016b4b7028ca3/docs/all.how_write_tutorials.how_to_guide.md).
+- You are expected to create an end-to-end tutorial for your package in
+  accordance with the guidelines mentioned
+  [here](/docs/all.how_write_tutorials.how_to_guide.md).
+
+## Working on the project
+
+- Use the project template files in `//tutorials/DATA605/tutorial_template` to
+  understand the deliverables and coding style
+- They consist of: 
+
+- **Scripts/Notebooks**:
+  - You will work on one API file and one Example (Your project) file. 
+  - We encourage you to use notebooks only but if need be, you can choose
+    python scripts instead.
+- **Markdowns**:
+  - One markdown file linked to each python script, i.e, API and example
+
+In general 
+- For API: you are expected to describe the API, its architecture, etc.
+- For Example: You are expected to use the project tool according to the
+  specifications mentioned in [Google Doc](https://docs.google.com/document/d/1fEd7_oLhFnA5ovzj_HMb9EeMU84nOGEGeWqNRZSz2wo)
+
+More details in [Documentation](#documentation) section and examples [here](#examples-of-a-class-project).
+
 
 ## Submission
 
