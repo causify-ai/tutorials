@@ -14,7 +14,7 @@
   * [3. FAISS (Facebook AI Similarity Search)](#3-faiss-facebook-ai-similarity-search)
     + [Key Features:](#key-features-2)
     + [Example:](#example-2)
-  * [4. QA Chain Setup](#4-qa-chain-setup)
+- [4. QA Chain Setup](#4-qa-chain-setup)
   * [6. Querying the QA Bot](#6-querying-the-qa-bot)
   * [7. Dynamic Document Updates](#7-dynamic-document-updates)
     + [Detecting Changes](#detecting-changes)
@@ -24,21 +24,14 @@
 
 <!-- tocstop -->
 
-# Tutorial: Building a Documentation QA Bot with LangChain
-
-<!--toc-->
-
-- [Introduction](#introduction)
-- [Setup and Dependencies](#setup-and-dependencies)
-- [Key Components](#key-components)
-<!--tocstop-->
-
-## Introduction
+# Introduction
 
 This tutorial demonstrates how to use `LangChain` to build a documentation-based
 QA bot. The bot parses Markdown files, creates embeddings, stores them in a
 vector database, and retrieves relevant information in response to user queries.
 Additionally, it supports dynamic updates when documentation changes.
+
+![alt text](/image-6.png)
 
 ## Setup and Dependencies
 
@@ -132,6 +125,8 @@ searches.
 
 ### 3. FAISS (Facebook AI Similarity Search)
 
+![alt text](/image-7.png)
+
 FAISS is a library designed for efficient similarity search and clustering of
 dense vectors. In `LangChain`, FAISS serves as a vector store for storing and
 retrieving embeddings.
@@ -161,6 +156,8 @@ This initializes a FAISS vector store with embeddings computed from the split
 documents, enabling similarity-based retrieval.
 
 ## 4. QA Chain Setup
+
+![alt text](/image-8.png)
 
 The `RetrievalQA` chain uses a retriever to fetch relevant documents and a
 language model to answer queries.
@@ -193,13 +190,15 @@ for doc in result['source_documents']:
 
 ### 7. Dynamic Document Updates
 
+![alt text](/image-9.png)
+
 The bot detects changes in the document folder and updates the vector store
 accordingly.
 
 #### Detecting Changes
 
-- The function `get_changes_in_documents_folder()` detect changes in the
-  Markdown files within a folder by using an hash signature.
+- The function `get_changes_in_documents_folder()` detects changes in the
+  Markdown files within a folder by using a hash signature.
 - The `modified` key lists files that are new or whose contents have changed
   compared to the stored checksums. This ensures that only updated files are
   processed.

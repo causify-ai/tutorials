@@ -1,3 +1,5 @@
+# LangChain API Tutorial
+
 <!-- toc -->
 
 - [Introduction](#introduction)
@@ -26,22 +28,6 @@
 
 <!-- tocstop -->
 
-# LangChain API Tutorial
-
-<!--toc-->
-
-- [Introduction](#introduction)
-- [Architecture Overview](#architecture-overview)
-- [Setting Up](#setting-up)
-- [Message Handling](#message-handling)
-- [Custom Prompts](#custom-prompts)
-- [Chains](#chains)
-- [Retrieval with FAISS](#retrieval-with-faiss)
-- [Building a QA System](#building-a-qa-system)
-- [Agents and Tools](#agents-and-tools)
-- [Conclusion](#conclusion)
-<!--tocstop-->
-
 ## Introduction
 
 LangChain is a framework designed to make language model-based application
@@ -64,6 +50,8 @@ This tutorial explores:
 ## Architecture Overview
 
 LangChain is built around four key components:
+
+![alt text](/image.png)
 
 ### 1. **Prompts**
 
@@ -99,7 +87,7 @@ This flexibility is crucial for creating adaptable systems.
 
 1. **Activate virtual environment:**
    ```bash
-   > source dev_scripts_tutorial_data/thin_client/setenv.sh
+   > source dev_scripts_tutorial_langchain/thin_client/setenv.sh
    ```
 2. **Build Docker Image:**
    ```bash
@@ -127,6 +115,8 @@ outputs.
 
 ## Message Handling
 
+![alt text](/image-1.png)
+
 LangChain provides `SystemMessage` and `HumanMessage` to structure
 conversations. These objects enable fine-grained control:
 
@@ -139,6 +129,8 @@ By explicitly defining roles, you can control the assistant's responses,
 ensuring relevance and accuracy.
 
 ## Custom Prompts
+
+![alt text](/image-2.png)
 
 Prompts are critical in defining the tasks a language model performs. LangChain
 provides the `ChatPromptTemplate` for creating structured prompts. These prompts
@@ -177,6 +169,8 @@ modular.
 
 ## Retrieval with FAISS
 
+![alt text](/image-5.png)
+
 Retrieval mechanisms like FAISS allow you to augment language models with
 external data. FAISS (Facebook AI Similarity Search) is an efficient library for
 dense vector search, making it ideal for retrieving relevant documents or
@@ -195,6 +189,8 @@ the assistant's ability to answer.
 
 ## Building a QA System
 
+![alt text](/image-4.png)
+
 Combining retrieval with chains allows you to build a robust QA system. The
 workflow might look like this:
 
@@ -210,6 +206,8 @@ This approach improves accuracy by grounding responses in factual data, reducing
 the risk of hallucination.
 
 ## Agents and Tools
+
+![alt text](/image-3.png)
 
 Agents are flexible systems capable of deciding which tools or workflows to use
 dynamically. LangChain agents can:
