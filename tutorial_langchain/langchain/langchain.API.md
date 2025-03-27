@@ -4,27 +4,27 @@
 
 - [Introduction](#introduction)
 - [Architecture Overview](#architecture-overview)
-  * [1. **Prompts**](#1-prompts)
-  * [2. **Chains**](#2-chains)
-  * [3. **Retrieval**](#3-retrieval)
-  * [4. **Agents**](#4-agents)
+  * [1. Prompts](#1-prompts)
+  * [2. Chains](#2-chains)
+  * [3. Retrieval](#3-retrieval)
+  * [4. Agents](#4-agents)
 - [Setting Up](#setting-up)
   * [Building and Running the Docker Container](#building-and-running-the-docker-container)
   * [Dependencies](#dependencies)
 - [Message Handling](#message-handling)
-  * [Why This Is Important:](#why-this-is-important)
+  * [Why This Is Important](#why-this-is-important)
 - [Custom Prompts](#custom-prompts)
-  * [Example Use Case:](#example-use-case)
+  * [Example Use Case](#example-use-case)
 - [Chains](#chains)
-  * [Example Workflow:](#example-workflow)
+  * [Example Workflow](#example-workflow)
   * [Why Chains Matter:](#why-chains-matter)
 - [Retrieval with FAISS](#retrieval-with-faiss)
-  * [Example Use Case:](#example-use-case-1)
-  * [Key Features:](#key-features)
+  * [Example Use Case](#example-use-case-1)
+  * [Key Features](#key-features)
 - [Building a QA System](#building-a-qa-system)
-  * [Why This Matters:](#why-this-matters)
+  * [Why This Matters](#why-this-matters)
 - [Agents and Tools](#agents-and-tools)
-  * [Example Use Case:](#example-use-case-2)
+  * [Example Use Case](#example-use-case-2)
 
 <!-- tocstop -->
 
@@ -53,7 +53,7 @@ LangChain is built around four key components:
 
 ![alt text](/image.png)
 
-### 1. **Prompts**
+### 1. Prompts
 
 Prompts define the interaction between users and the language model. With
 LangChain, prompts are dynamic and parameterized, enabling reuse across
@@ -62,13 +62,13 @@ different contexts. Examples include:
 - Single-turn question answering.
 - Context-aware summarization.
 
-### 2. **Chains**
+### 2. Chains
 
 Chains represent workflows. They connect prompts, models, and output parsers in
 a pipeline, ensuring consistent processing. Chains help automate multi-step
 tasks.
 
-### 3. **Retrieval**
+### 3. Retrieval
 
 Retrieval mechanisms allow you to augment your model's responses with external
 data. For example:
@@ -76,7 +76,7 @@ data. For example:
 - Searching documents for relevant context using FAISS or similar tools.
 - Passing the retrieved data to the model for more informed responses.
 
-### 4. **Agents**
+### 4. Agents
 
 Agents can dynamically decide which tools or actions to use based on the input.
 This flexibility is crucial for creating adaptable systems.
@@ -123,7 +123,7 @@ conversations. These objects enable fine-grained control:
 - **SystemMessage**: Defines the assistant's behavior or scope.
 - **HumanMessage**: Represents user input.
 
-### Why This Is Important:
+### Why This Is Important
 
 By explicitly defining roles, you can control the assistant's responses,
 ensuring relevance and accuracy.
@@ -136,7 +136,7 @@ Prompts are critical in defining the tasks a language model performs. LangChain
 provides the `ChatPromptTemplate` for creating structured prompts. These prompts
 allow dynamic input formatting, making them reusable for various applications.
 
-### Example Use Case:
+### Example Use Case
 
 Imagine creating a system to analyze patient reviews for hospitals. You can
 define a prompt template that:
@@ -154,7 +154,7 @@ simplify complex operations, such as:
 - Processing user queries.
 - Generating structured outputs.
 
-### Example Workflow:
+### Example Workflow
 
 A chain could:
 
@@ -176,13 +176,13 @@ external data. FAISS (Facebook AI Similarity Search) is an efficient library for
 dense vector search, making it ideal for retrieving relevant documents or
 embeddings.
 
-### Example Use Case:
+### Example Use Case
 
 You might have a collection of patient reviews stored as embeddings in FAISS.
 When a user queries, the system retrieves the top-matching reviews, enhancing
 the assistant's ability to answer.
 
-### Key Features:
+### Key Features
 
 - **Embedding Creation:** Convert text into vector representations.
 - **Similarity Search:** Quickly find the closest matches to a query.
@@ -200,7 +200,7 @@ workflow might look like this:
    template.
 3. **Generate Response:** Use the language model to create a detailed answer.
 
-### Why This Matters:
+### Why This Matters
 
 This approach improves accuracy by grounding responses in factual data, reducing
 the risk of hallucination.
@@ -215,7 +215,7 @@ dynamically. LangChain agents can:
 1. Combine multiple tools, such as retrieval mechanisms or APIs.
 2. Use decision logic to select the appropriate tool based on the input.
 
-### Example Use Case:
+### Example Use Case
 
 An agent could:
 
