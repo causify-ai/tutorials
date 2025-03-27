@@ -104,6 +104,22 @@
 
 ## Working on the project
 
+Use the project template files in `/sandbox/DATA605/tutorial_template` to understand the deliverables and coding style. They consist of: 
+
+- **Scripts/Notebooks**:
+  - You will work on one API file and one Example (Your project) file. 
+  - We encourage you to use notebooks only but if need be, you can choose
+    python scripts instead.
+- **Markdowns**:
+  - One markdown file linked to each python script, i.e, API and example
+
+In general 
+- For API: you are expected to describe the API, its architecture, etc.
+- For Example: You are expected to use the project tool according to the
+  specifications mentioned in [Google Doc](https://docs.google.com/document/d/1fEd7_oLhFnA5ovzj_HMb9EeMU84nOGEGeWqNRZSz2wo)
+
+More details in [Documentation](#documentation) section and examples [here](#examples-of-a-class-project).
+
 ### Contribution to the repo
 
 - You will work in the same way open-source developers (and specifically
@@ -157,10 +173,16 @@
 
 - **Add Files Only in Your Project Directory**
   - Add your project files under the following directory:
-    `{GIT_ROOT}/sandbox/projects/{branch_name}`
+    `{GIT_ROOT}/sandbox/DATA605_Spring2025/projects/{branch_name}`
     - Example: If you cloned the repo on your laptop, your directory should be:
-      `~/src/tutorials1/sandbox/projects/TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles`
-
+      `~/src/tutorials1/sandbox/DATA605_Spring2025/projects/TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles`
+  - Copy the template files to the project directory:
+    
+    ```bash
+    > cp -r ~/src/tutorials1/sandbox/DATA605_Spring2025/tutorial_template/ ~/src/tutorials1/sandbox/DATA605_Spring2025/projects/{branch_name}
+    ```
+    Start working on the files accordingly. 
+    
 - **Create a Pull Request (PR)**:
   - Always create a **Pull Request (PR)** from your branch.
   - Add `@tkpratardan`, `@Prahar08modi`, and `@gpsaggese` as reviewers.
