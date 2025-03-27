@@ -13,13 +13,13 @@
 
 # DATA605 Class Projects
 
-- The goal of the class project is to learn cutting-edge modern big data
+- The goal of the class project is to learn a cutting-edge modern big data
   technology and write a (small) example of a system using it
 - Each class project is similar in spirit to the tutorials for various
-  technologies (e.g., Git, Docker, SQL, Mongo, Airflow, Dask) we have looked at
-  and studied in classes
-- Through the class projects you will learn how a tool fits your Datascience,
-  Data engineering, Machine Learning workflows.
+  technologies we have looked at and studied in classes (e.g., Git, Docker, SQL,
+  Mongo, Airflow, Dask) 
+- Through the class projects you will learn how a tool fits your data science,
+  data engineering, machine learning workflows.
 
 ## Choosing a project
 
@@ -33,8 +33,8 @@
     under a header with the same name of the Project Name
   - You need to fill out the yellow fields in the
     [signup sheet](https://docs.google.com/spreadsheets/d/1Ez5uRvOgvDMkFc9c6mI21kscTKnpiCSh4UkUh_ifLIw/edit?gid=0#gid=0),
-    such as Name, GitHub user, UMD ID, Date. Once done, we will add you to the
-    repo so that you can start working
+    such as Name, GitHub user, UMD ID, Date
+  - Once done, we will add you to the repo so that you can start working
 
 - The project is individual
   - Students can discuss and help each other (they will do that even if we say
@@ -46,16 +46,17 @@
   - Make sure you code by understanding the tool and what your code is doing
     with it
   - Google and ChatGPT are your friends, but don't abuse them: copy-pasting code
-    is not recommended and won't benefit the learning outcomes. The projects
-    are designed in a way that once you understand the underlying technology:
-    - Easy Project: Takes 2-3 days to complete
-    - Medium Difficulty Project: Takes 4-5 to complete
-    - Difficult Project: Takes 6-8 to complete.
+    is not recommended and won't benefit the learning outcomes
+- The projects are designed in a way that once you understand the underlying
+  technology:
+  - Easy Project: Takes 2-3 days to complete
+  - Medium Difficulty Project: Takes 4-5 to complete
+  - Difficult Project: Takes 6-8 to complete.
 
-- It is highly recommended to choose a project from the
-  [signup sheet](https://docs.google.com/spreadsheets/d/1Ez5uRvOgvDMkFc9c6mI21kscTKnpiCSh4UkUh_ifLIw/edit?gid=0#gid=0).
-  If you'd like to propose a new idea or suggest modifications, please contact
-  us: we will review and accommodate reasonable requests.
+- It is highly recommended to choose a project from the sign up sheet
+    If you really need to propose a new idea or suggest modifications, please
+    contact us: we will review but we won't guarantee we can accommodate all
+    requests
 - Your project should align with your learning goals and interests, offering a
   great opportunity to explore various technologies and strengthen your resume.
 - If selecting a project from the sign-up sheet, ensure you fill out the
@@ -84,7 +85,7 @@
   - [helpers](https://github.com/causify-ai/helpers)
 
 - Install Docker on your computer
-  - Ok to use Docker natively on Mac and Linux
+  - You can use Docker natively on Mac and Linux
   - Use VMware in Windows or dual-boot
     - If you have problems installing it on your laptop, it recommended to use
       one computer from UMD, or perhaps a device of one your friends
@@ -107,8 +108,12 @@
 - You will work in the same way open-source developers (and specifically
   developers on Causify.AI) contribute to a project
 
-- Setup your working environment by following the instructions in the
-  [document](/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
+- Each project will need to be organized like a proper open source project,
+  including filing issues, opening PRs, checking in the code in
+  https://github.com/causify-ai/tutorials
+
+- Set up your working environment by following the instructions in the
+  [document](/helpers_root/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
 
 - Each step of the project is delivered by committing code to the dir
   corresponding to your project and doing a GitHub Pull Request (PR)
@@ -116,15 +121,11 @@
   - We will specifically do a reviews of intermediate results of the project and
     give you some feedback on what to improve (adopting Agile methodology)
 
-- Each project will need to be organized like a proper open source project,
-  including filing issues, opening PRs, checking in the code in
-  https://github.com/causify-ai/tutorials
-
 - **Project Tag Naming Convention**
-  - Your project tag follows this format:
+  - Your project tag should follows this format:
     `Spring{year}_{project_title_without_spaces}`
-    - Example: If your project title is **"Redis cache to fetch user
-      profiles"**, your project tag will be:
+    - Example: if your project title is **"Redis cache to fetch user
+      profiles"**, your project branch will be:
       **`Spring2025_Redis_cache_to_fetch_user_profiles`**
 
 - **Create a GitHub Issue**
@@ -155,37 +156,50 @@
 
 - **Add Files Only in Your Project Directory**
   - Add your project files under the following directory:
-    `{GIT_ROOT}/sandbox/DATA605_Spring2025/projects/{branch_name}`
+    `{GIT_ROOT}/DATA605/Spring2025/projects/{branch_name}`
     - Example: If you cloned the repo on your laptop, your directory should be:
-      `~/src/tutorials1/sandbox/DATA605_Spring2025/projects/TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles`
+      `~/src/tutorials1/DATA605/Spring2025/projects/TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles`
   - Copy the template files to the project directory:
-    
     ```bash
-    > cp -r ~/src/tutorials1/sandbox/DATA605_Spring2025/tutorial_template/ ~/src/tutorials1/sandbox/DATA605_Spring2025/projects/{branch_name}
+    > cp -r ~/src/tutorials1/DATA605/Spring2025/tutorial_template/ ~/src/tutorials1/DATA605/Spring2025/projects/{branch_name}
     ```
-    Start working on the files accordingly. 
+  - Start working on the files
     
 - **Create a Pull Request (PR)**:
   - Always create a **Pull Request (PR)** from your branch.
-  - Add `@tkpratardan`, `@Prahar08modi`, and `@gpsaggese` as reviewers.
-  - **You cannot push directly to the `master` branch.**
-  - Only push commits to **your project branch.**
+  - Add your TAs (e.g., `@tkpratardan`, `@Prahar08modi`) and `@gpsaggese` as
+    reviewers.
+  - You cannot push directly to the `master` branch. Only push commits to **your
+    project branch.**
 
 - **Naming for Consecutive Updates**
-  - When making progress, use **incremental branch names** by appending `_1`,
-    `_2`, etc.
+  - When making progress, use incremental branch names by appending `_1`,
+    `_2` to your branch name, etc.
     - Example:
       - `TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles_1`
       - `TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles_2`
-  - The tag of your projects follows the schema
-    `Spring{year}_{project_title_without_spaces}`
-    - E.g., if the project title is "`Redis cache to fetch user profiles`", the
-      tag is `Spring2025_Redis_cache_to_fetch_user_profiles`
+
+## Working on the project
+
+- Use the project template files in `//tutorials/DATA605/tutorial_template` to
+  understand the deliverables and the coding style
+- They consist of: 
+
+- **Scripts/Notebooks**:
+  - You will work on one API file and one Example (Your project) file. 
+  - We encourage you to use Python files and call the code from notebooks
+- **Markdowns**:
+  - One markdown file linked to each python script, i.e, API and example
+
+In general 
+- For API: you are expected to describe the API, its architecture, etc.
+- For Example: You are expected to use the project tool according to the
+  specifications mentioned in [Google Doc](https://docs.google.com/document/d/1fEd7_oLhFnA5ovzj_HMb9EeMU84nOGEGeWqNRZSz2wo)
 
 ### Documentation
 
-- For your course project, you're not just building something cool—you're also
-  teaching others how to use a Big Data, AI, LLM, or data science tech
+- For your course project, you're not just building something cool, but you're
+  also teaching others how to use a Big Data, AI, LLM, or data science tech
 - As a project report, you'll create a tutorial that's hands-on and
   beginner-friendly
   - Think of it as your chance to help a classmate get started with the same tech
@@ -196,27 +210,6 @@
 - You are expected to create an end-to-end tutorial for your package in
   accordance with the guidelines mentioned
   [here](/docs/all.how_write_tutorials.how_to_guide.md).
-
-## Working on the project
-
-- Use the project template files in `//tutorials/DATA605/tutorial_template` to
-  understand the deliverables and coding style
-- They consist of: 
-
-- **Scripts/Notebooks**:
-  - You will work on one API file and one Example (Your project) file. 
-  - We encourage you to use notebooks only but if need be, you can choose
-    python scripts instead.
-- **Markdowns**:
-  - One markdown file linked to each python script, i.e, API and example
-
-In general 
-- For API: you are expected to describe the API, its architecture, etc.
-- For Example: You are expected to use the project tool according to the
-  specifications mentioned in [Google Doc](https://docs.google.com/document/d/1fEd7_oLhFnA5ovzj_HMb9EeMU84nOGEGeWqNRZSz2wo)
-
-More details in [Documentation](#documentation) section and examples [here](#examples-of-a-class-project).
-
 
 ## Submission
 
@@ -240,23 +233,25 @@ More details in [Documentation](#documentation) section and examples [here](#exa
     - ...
 
 - The script/notebook should be able to run end-to-end without errors, otherwise
-  the project is not considered complete. Ideally the notebook should run
-  correctly by executing "Restart and Run all cells" before a commit is pushed.
+  the project is not considered complete
+  - Ideally the notebook should run correctly by executing "Restart and Run all
+    cells"
   - We are not going to debug your code
   - If there are problems we will use the GitHub issue to communicate and we
     expect you to fix the problem
 
-**NOTE**: The Markdown files should not be copy-paste of the notebook's cells
-and output.
+- **NOTE**: The Markdown files should not be copy-paste of the notebook's cells
+  and output.
+  - The markdown should explain the "why", the decision choices, while the code
+    should explain the "what" and "how"
 
 ## Examples of a class project
 
 The layout of each project should follow the examples in
 
-- Example for open_ai tutorial:
-  - Https://github.com/causify-ai/tutorials/tree/master/tutorial_openai
-- Example for langchain tutorial
-  - Https://github.com/causify-ai/tutorials/tree/master/tutorial_langchain
-- Examples for neo4j in
-  - Https://github.com/causify-ai/tutorials/tree/master/tutorial_neo4j
-- The tutorials from DATA605 class
+- Example for [open_ai tutorial](https://github.com/causify-ai/tutorials/tree/master/tutorial_openai)
+- Example for [langchain tutorial](https://github.com/causify-ai/tutorials/tree/master/tutorial_langchain)
+- Examples for [neo4j](https://github.com/causify-ai/tutorials/tree/master/tutorial_neo4j)
+
+- Note that the tutorials from DATA605 class are built using a simpler approach
+  for Docker and bash (e.g., `bash` scripts instead of Python code)
