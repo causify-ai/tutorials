@@ -5,6 +5,8 @@ description = ""
 authors = ["GP Saggese <gp@kaizen-tech.io>"]
 
 [tool.poetry.dependencies]
+h5py = "*"
+invoke = "*"
 jupyter = "*"
 jupytext = "*"
 matplotlib = "*"
@@ -12,23 +14,22 @@ numpy = "*"
 pandas = ">= 2.1.1"
 psutil = "*"               # Is this needed?
 pyarrow = "*"
+#pymc = "*"
+pymc = "== 5.18.2"         # https://github.com/pymc-devs/pymc/issues/7592
 pytest = "*"
 pytest-cov = "*"
 pytest-instafail = "*"
 pytest-rerunfailures = "*"
 pytest-timeout = "*"
 pytest-xdist = "*"
-python = ">= 3.12"
+python = ">=3.10,<3.13"    # To make pytensor happy.
 python-dotenv = "*"        # Is this needed?
 requests = "*"             # Is this needed?
+s3fs = "*"
 scikit-learn = "*"
 seaborn = "*"
 statsmodels = "*"
 tqdm = "*"
-invoke = "*"
-s3fs = "*"
-h5py = "*"
-pymc = "*"
 
 [tool.poetry.dev-dependencies]
 
