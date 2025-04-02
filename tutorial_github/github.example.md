@@ -1,89 +1,182 @@
-# GitHub API Integration Layer Documentation
+<!-- toc -->
 
-## Overview
+- [GitHub API Wrapper Documentation](#github-api-wrapper-documentation)
+  * [GitHub Endpoints Used in the Wrapper](#github-endpoints-used-in-the-wrapper)
+    + [1. Commits API](#1-commits-api)
+    + [2. Pull Requests API](#2-pull-requests-api)
+    + [3. Issues API](#3-issues-api)
+    + [4. Repositories API](#4-repositories-api)
+    + [5. Contributors API](#5-contributors-api)
+  * [Core Wrapper Functions](#core-wrapper-functions)
+    + [1. `GitHubAPI`](#1-githubapi)
+    + [2. `get_repo_names`](#2-get_repo_names)
+    + [3. `get_github_contributors`](#3-get_github_contributors)
+    + [4. `normalize_period_to_utc`](#4-normalize_period_to_utc)
+  * [Global Metrics Functions](#global-metrics-functions)
+    + [1. `get_total_commits`](#1-get_total_commits)
+    + [2. `get_total_prs`](#2-get_total_prs)
+    + [3. `get_prs_not_merged`](#3-get_prs_not_merged)
+    + [4. `get_total_issues`](#4-get_total_issues)
+    + [5. `get_issues_without_assignee`](#5-get_issues_without_assignee)
+  * [User-Centric Wrapper Functions](#user-centric-wrapper-functions)
+    + [1. `get_commits_by_person`](#1-get_commits_by_person)
+    + [2. `get_prs_by_person`](#2-get_prs_by_person)
+    + [3. `get_prs_not_merged_by_person`](#3-get_prs_not_merged_by_person)
+    + [4. `get_issues_by_person`](#4-get_issues_by_person)
+  * [Real-Life Use Cases](#real-life-use-cases)
+  * [Authentication](#authentication)
 
-This document describes a Python-based integration layer built on top of the [GitHub REST API](https://docs.github.com/en/rest) using the [PyGithub](https://pygithub.readthedocs.io/en/latest/) library. Our API layer provides a streamlined approach to retrieving and analyzing repository activity, including commits, pull requests, and contributor information. This integration helps developers and analysts to:
+<!-- tocstop -->
 
-1. **Authenticate and interact with GitHub seamlessly**.
-2. **Retrieve key repository and user activity metrics** such as commit counts and PR statistics.
-3. **Aggregate and analyze GitHub data over specified time periods**.
-4. **Simplify complex API interactions** and return structured data for further processing.
+# GitHub API Wrapper Documentation
 
-## Problem Statement
+This document outlines the core endpoints and utility functions provided in the
+`github_utils.py` module. The purpose of this wrapper is to simplify GitHub
+analytics for developer performance tracking and team productivity insights.
 
-Working directly with the GitHub REST API presents several challenges:
+## GitHub Endpoints Used in the Wrapper
 
-- **Complexity**: Managing HTTP requests, authentication, pagination, and rate limits requires additional effort.
-- **Data Aggregation**: Extracting and merging information (commits, PRs, contributors) often requires multiple API calls and careful handling of paginated responses.
-- **Lack of Built-in Analytics**: The native API provides raw data but lacks pre-built analytical tools.
+### 1. Commits API
 
-Our integration layer solves these challenges by:
-- **Simplifying authentication and API calls**.
-- **Providing high-level functions** for retrieving and aggregating GitHub activity.
-- **Handling pagination, filtering, and data transformation** automatically.
+- Endpoint: `GET /repos/{owner}/{repo}/commits`
+  - Usage: Retrieves commits for a repository, optionally filtered by author and
+    date range.
 
-## Alternatives and Comparisons
+### 2. Pull Requests API
 
-### GitHub REST API
-- **Advantages**:
-  - Comprehensive and flexible, offering full access to GitHub data.
-  - Supports detailed repository statistics and complex integrations.
-- **Limitations**:
-  - Requires handling HTTP requests manually.
-  - Rate limits can restrict usage.
-  - Involves additional effort to manage pagination and authentication.
+- Endpoint: `GET /repos/{owner}/{repo}/pulls`
+  - Usage: Fetches pull requests based on state (open, closed, all).
+- Endpoint: `GET /repos/{owner}/{repo}/pulls/{pull_number}`
+  - Usage: Fetches metadata about an individual PR, such as author and merge
+    status.
 
-### `gh` Command-Line Interface (CLI)
-- **Advantages**:
-  - Officially supported by GitHub.
-  - User-friendly for quick tasks and automation scripts.
-- **Limitations**:
-  - Limited functionality compared to the REST API.
-  - Not well-suited for large-scale data collection or detailed analytics.
+### 3. Issues API
 
-### Python Wrappers (PyGithub, ghapi)
-- **Advantages**:
-  - Provides a Pythonic abstraction over the REST API.
-  - Simplifies authentication, pagination, and data retrieval.
-  - Supports built-in mechanisms for handling rate limits and structured API responses.
-  - Actively maintained by the community for reliability and compatibility with API updates.
-- **Limitations**:
-  - Not officially maintained by GitHub.
-  - Some advanced GitHub API features may not be fully exposed.
+- Endpoint: `GET /repos/{owner}/{repo}/issues`
+  - Usage: Retrieves issues, optionally filtered by state and since date. Used
+    for counting issues and filtering unassigned ones.
 
-### Recommendation
-For collecting GitHub statistics with scalability and maintainability in mind, **Python wrappers like PyGithub or ghapi** are the best option because they:
-- Provide an intuitive interface, reducing development and maintenance effort.
-- Support seamless integration with Python-based analysis and visualization tools.
-- Abstract away the complexities of HTTP requests, pagination, and authentication.
+### 4. Repositories API
 
-While the REST API offers unmatched flexibility and the CLI is excellent for quick tasks, Python wrappers offer the best balance between ease of use and functionality.
+- Endpoint: `GET /orgs/{org}/repos`
+  - Usage: Fetches all repositories under a specific organization.
 
-## Native GitHub API Overview
+### 5. Contributors API
 
-The [GitHub REST API](https://docs.github.com/en/rest) provides access to various GitHub resources:
+- Endpoint: `GET /repos/{owner}/{repo}/contributors`
+  - Usage: Returns contributors to a repository along with commit counts.
 
-- **Authentication**: Supports OAuth and personal access tokens.
-- **Repositories**: Retrieve details, contributors, commits, and pull requests.
-- **Pull Requests**: Fetch, filter, and analyze PRs based on state and contributors.
-- **Issues**: Identify unassigned issues and track repository activity.
-- **Users**: Retrieve GitHub usernames and contributor details.
-- **Pagination and Rate Limiting**: Manages large datasets with paginated responses.
+## Core Wrapper Functions
 
-### Challenges with the Native API
-- **Pagination**: API responses are paginated, requiring additional logic to retrieve complete datasets.
-- **Time-Based Filtering**: Requires careful use of parameters to filter results by date ranges.
-- **Complex Data Merging**: Combining commits, PRs, and contributor data requires multiple queries and transformations.
+### 1. `GitHubAPI`
 
-## Our Integration Layer
+Initializes an authenticated GitHub client using a personal access token (PAT).
 
-### Goals
-1. **Simplified Authentication**: Easy setup using personal access tokens (PATs).
-2. **High-Level API Functions**: Pre-built methods to retrieve commits, PRs, and contributor data without requiring manual API calls.
-3. **Automated Data Handling**: Built-in logic for pagination, rate limits, and filtering.
-4. **Structured Outputs**: Returns data in dictionary or DataFrame format for seamless integration into analysis workflows.
+- Automatically detects token from environment or accepts explicitly.
+- Handles both public GitHub and GitHub Enterprise (custom base URL).
 
-## Conclusion
+### 2. `get_repo_names`
 
-This integration layer enhances the usability of the GitHub API by abstracting away complexity, providing structured data retrieval, and enabling insightful analytics on repository activity. It simplifies authentication, streamlines data processing, and makes GitHub data accessible for monitoring, reporting, and decision-making.
+- Returns all repositories under a GitHub organization.
 
+  **Returns**:
+
+  ```python
+  {
+      "owner": "org_name",
+      "repositories": ["repo1", "repo2", ...]
+  }
+  ```
+
+### 3. `get_github_contributors`
+
+- Retrieves all contributors across a list of repositories.
+
+  **Returns**:
+
+  ```python
+  {
+      "org/repo1": ["user1", "user2", ...],
+      ...
+  }
+  ```
+
+### 4. `normalize_period_to_utc`
+
+- Converts naive or local datetime objects into UTC-aware datetimes.
+
+## Global Metrics Functions
+
+### 1. `get_total_commits`
+
+- Computes the total number of commits across all repositories in an
+  organization.
+- Optionally filtered by usernames and a time period.
+
+### 2. `get_total_prs`
+
+- Computes the number of PRs by state (`open`, `closed`, or `all`) within an
+  org.
+- Optionally filtered by usernames and time period.
+
+### 3. `get_prs_not_merged`
+
+- Identifies closed PRs that were never merged.
+
+  **Use case**: Detect abandoned or rejected PRs.
+
+### 4. `get_total_issues`
+
+- Retrieves issue counts across all repositories, excluding PRs.
+- Allows filtering by state and time window.
+
+### 5. `get_issues_without_assignee`
+
+- Returns the number of issues that have no assignee, useful for task triage.
+
+## User-Centric Wrapper Functions
+
+These functions wrap global metrics to return results for individual users.
+
+### 1. `get_commits_by_person`
+
+- Returns total commits made by a specific GitHub user, along with repository
+  breakdown.
+
+### 2. `get_prs_by_person`
+
+- Returns number of PRs opened by a specific user, optionally filtered by state.
+
+### 3. `get_prs_not_merged_by_person`
+
+- Returns unmerged PRs authored by a specific user.
+
+### 4. `get_issues_by_person`
+
+- Returns number of issues authored by a specific user.
+
+## Real-Life Use Cases
+
+These functions are designed to support practical workflows:
+
+- **Performance Reviews**: Use user-specific metrics to track engineering KPIs.
+- **Top Contributor Reports**: Rank users based on commit/PR stats.
+- **Sprint Planning**: Visualize developer throughput across projects.
+- **Pull Request Hygiene**: Monitor unmerged or stale PRs to improve code review
+  cycles.
+- **Productivity Dashboards**: Build Streamlit or Dash apps using structured
+  JSON outputs.
+
+## Authentication
+
+All functions require a GitHub PAT (Personal Access Token) with appropriate
+scopes:
+
+```bash
+export GITHUB_ACCESS_TOKEN="your_token"
+```
+
+Scopes required:
+
+- `repo` (for private repo access)
+- `read:org` (to fetch org members and repositories)
