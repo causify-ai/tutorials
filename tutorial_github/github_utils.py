@@ -24,7 +24,8 @@ class GitHubAPI:
         """
         Initialize the GitHub API client
 
-        :param access_token: github personal access token; if not provided, it is fetched from the environment variable `GITHUB_ACCESS_TOKEN`
+        :param access_token: github personal access token; if not provided, it
+            is fetched from the environment variable `GITHUB_ACCESS_TOKEN`
         :param base_url: optional custom GitHub Enterprise base URL
         """
         self.access_token = access_token or os.getenv("GITHUB_ACCESS_TOKEN")
@@ -89,7 +90,8 @@ def get_github_contributors(
     Retrieve GitHub usernames contributing to specified repositories
 
     :param client: authenticated instance of the PyGithub client
-    :param repo_names: repository names in the format 'owner/repo' to fetch contributor usernames
+    :param repo_names: repository names in the format 'owner/repo' to fetch
+        contributor usernames
     :return: a dictionary containing:
         - repository: repository name
         - contributors: contributor GitHub usernames
@@ -117,7 +119,8 @@ def normalize_period_to_utc(
     Convert a datetime period to UTC and ensure both dates are timezone-aware
 
     :param period: start and end datetime
-    :return: tuple of UTC-aware start and end datetime, or (None, None) if period is None
+    :return: tuple of UTC-aware start and end datetime, or (None, None) if
+        period is None
     """
     if not period:
         return None, None
@@ -144,16 +147,19 @@ def get_total_commits(
 ) -> Dict[str, Any]:
     """
     Fetch the number of commits made in the repositories of the specified
-    organization, optionally filtered by GitHub usernames and a specified time period
+    organization, optionally filtered by GitHub usernames and a specified time
+    period
 
     :param client: authenticated instance of the PyGithub client
     :param org_name: name of the GitHub organization
-    :param usernames: GitHub usernames to filter commits; if None, fetches for all users
+    :param usernames: GitHub usernames to filter commits; if None, fetches for
+        all users
     :param period: start and end datetime for filtering commits
     :return: a dictionary containing:
         - total_commits (int): total number of commits across all repositories
         - period (str): the time range considered
-        - commits_per_repository (Dict[str, int]): repository names as keys and commit counts as values
+        - commits_per_repository (Dict[str, int]): repository names as keys and
+          commit counts as values
     """
     try:
         # Retrieve repositories for the specified organization.
@@ -217,13 +223,15 @@ def get_total_prs(
 
     :param client: authenticated instance of the PyGithub client
     :param org_name: name of the GitHub organization
-    :param usernames: GitHub usernames to filter pull requests; if None, fetches for all users
+    :param usernames: GitHub usernames to filter pull requests; if None, fetches
+        for all users
     :param period: start and end datetime for filtering pull requests
     :param state: the state of the pull requests to fetch; can be 'open', 'closed', or 'all'
     :return: a dictionary containing:
         - total_prs (int): total number of pull requests
         - period (str): the time range considered
-        - prs_per_repository (Dict[str, int]): repository names as keys and pull request counts as values
+        - prs_per_repository (Dict[str, int]): repository names as keys and pull
+            request counts as values
     """
     try:
         # Retrieve repositories for the specified organization.
@@ -303,7 +311,8 @@ def get_prs_not_merged(
     :return: a dictionary containing:
         - prs_not_merged (int): total number of closed but unmerged pull requests
         - period (str): the time range considered
-        - prs_per_repository (Dict[str, int]): repository names as keys and unmerged pull request counts as values
+        - prs_per_repository (Dict[str, int]): repository names as keys and
+            unmerged pull request counts as values
     """
     try:
         # Retrieve repositories for the specified organization.
@@ -397,14 +406,18 @@ def get_total_issues(
 
     :param client: authenticated instance of the PyGithub client
     :param org_name: name of the GitHub organization
-    :param repo_names: repository names to fetch issues from; if None, fetches from all repositories in the organization
-    :param state: the state of the issues to consider ('open', 'closed', or 'all'); default is 'open'
-    :param period: start and end datetime for filtering issues; if None, considers all time
+    :param repo_names: repository names to fetch issues from; if None, fetches
+        from all repositories in the organization
+    :param state: the state of the issues to consider ('open', 'closed', or
+        'all'); default is 'open'
+    :param period: start and end datetime for filtering issues; if None,
+        considers all time
     :return: a dictionary containing:
         - total_issues (int): total number of issues
         - state (str): the state of the issues considered
         - period (str): the time range considered
-        - issues_per_repository (Dict[str, int]): repository names as keys and issue counts as values
+        - issues_per_repository (Dict[str, int]): repository names as keys and
+          issue counts as values
     """
     total_issues = 0
     issues_per_repository = {}
@@ -487,18 +500,22 @@ def get_issues_without_assignee(
     period: Optional[Tuple[datetime.datetime, datetime.datetime]] = None,
 ) -> Dict[str, Any]:
     """
-    Retrieve the number of issues without an assignee within a specified time range and state.
+    Retrieve the number of issues without an assignee within a specified time
+    range and state.
 
     :param client: authenticated instance of the PyGithub client
     :param org_name: name of the GitHub organization
-    :param repo_names: repository names to fetch issues from; if None, fetches from all repositories in the organization
+    :param repo_names: repository names to fetch issues from; if None, fetches
+        from all repositories in the organization
     :param state: the state of the issues to consider ('open', 'closed', or 'all')
-    :param period: start and end datetime for filtering issues; if None, considers all time
+    :param period: start and end datetime for filtering issues; if None,
+        considers all time
     :return: a dictionary containing:
         - issues_without_assignee (int): total number of issues without an assignee
         - state (str): the state of the issues considered
         - period (str): the time range considered
-        - issues_per_repository (Dict[str, int]): repository names as keys and unassigned issue counts as values
+        - issues_per_repository (Dict[str, int]): repository names as keys and
+          unassigned issue counts as values
     """
     issues_without_assignee = 0
     issues_per_repository = {}
@@ -594,7 +611,8 @@ def get_commits_by_person(
         - user (str): GitHub username
         - total_commits (int): total number of commits made by the user
         - period (str): the time range considered
-        - commits_per_repository (Dict[str, int]): repository names as keys and commit counts as values
+        - commits_per_repository (Dict[str, int]): repository names as keys and
+          commit counts as values
     """
     result = get_total_commits(
         client=client, org_name=org_name, usernames=[username], period=period
@@ -622,12 +640,14 @@ def get_prs_by_person(
     :param username: GitHub username to fetch pull request data for
     :param org_name: name of the GitHub organization
     :param period: start and end datetime for filtering pull requests
-    :param state: state of the pull requests to fetch; can be 'open', 'closed', or 'all'
+    :param state: state of the pull requests to fetch; can be 'open', 'closed',
+        or 'all'
     :return: a dictionary containing:
         - user (str): GitHub username
         - total_prs (int): total number of pull requests created
         - period (str): the time range considered
-        - prs_per_repository (Dict[str, int]): repository names as keys and pull request counts as values
+        - prs_per_repository (Dict[str, int]): repository names as keys and pull
+          request counts as values
     """
     result = get_total_prs(
         client=client,
@@ -651,8 +671,8 @@ def get_prs_not_merged_by_person(
     period: Optional[Tuple[datetime.datetime, datetime.datetime]] = None,
 ) -> Dict[str, Any]:
     """
-    Fetch the number of closed but unmerged pull requests created by a specific GitHub user
-    in the given repositories and time period.
+    Fetch the number of closed but unmerged pull requests created by a specific
+    GitHub user in the given repositories and time period.
 
     :param client: authenticated instance of the PyGithub client
     :param username: GitHub username to fetch unmerged pull request data for
@@ -662,7 +682,8 @@ def get_prs_not_merged_by_person(
         - user (str): GitHub username
         - prs_not_merged (int): total number of closed but unmerged pull requests
         - period (str): the time range considered
-        - prs_per_repository (Dict[str, int]): repository names as keys and unmerged PR counts as values
+        - prs_per_repository (Dict[str, int]): repository names as keys and
+          unmerged PR counts as values
     """
     result = get_prs_not_merged(
         client=client, org_name=org_name, usernames=[username], period=period
