@@ -11,15 +11,16 @@ A brief overview of what the script does in one line.
 The name of this script should in the following format:
  - if the notebook is exploring `pycaret API`, then it is `pycaret.API.py`
 
- Follow the reference on coding style guide to write clean and readable code. 
+ Follow the reference on coding style guide to write clean and readable code.
 - https://github.com/causify-ai/helpers/blob/master/docs/coding/all.coding_style.how_to_guide.md
 """
 
 # Comments should be imperative and have a period at the end.
-# Your code should be well commented. 
+# Your code should be well commented.
 # Import libraries in this section.
 # Avoid imports like import *, from ... import ..., from ... import *, etc.
 import logging
+
 # Following is a useful library for typehinting.
 # For typehints like list, dict, etc. you can use the following:
 ## def func(arg1:List[int]) -> List[int]:
@@ -43,17 +44,19 @@ _LOG = logging.getLogger(__name__)
 
 
 # #############################################################################
-# <Class Name> ("Template" in this case)
+# Template
 # #############################################################################
+
 
 class Template:
     """
     Brief imperative description of what the class does in one line, if needed.
     """
+
     def __init__(self):
         pass
-    
-    def method1(self, arg1:int) -> None:
+
+    def method1(self, arg1: int) -> None:
         """
         Brief imperative description of what the method does in one line.
 
@@ -68,10 +71,9 @@ class Template:
         # Code bloks go here.
         # Make sure to include comments to explain what the code is doing.
         # No empty lines between code blocks.
-        pass
 
 
-def template_function(arg1:int) -> None:
+def template_function(arg1: int) -> None:
     """
     Brief imperative description of what the function does in one line.
 

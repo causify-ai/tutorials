@@ -10,7 +10,7 @@ This script is how you use (customize) the API in the project. The
 naming should be as follows:
  - if the project is on `pycaret`, then it is `pycaret.example.py`
 
- Follow the reference on coding style guide to write clean and readable code. 
+ Follow the reference on coding style guide to write clean and readable code.
 - https://github.com/causify-ai/helpers/blob/master/docs/coding/all.coding_style.how_to_guide.md
 """
 
@@ -28,33 +28,35 @@ from typing import List
 import pandas as pd
 import numpy as np
 
-########################################################################
+# #############################################################################
 # Prefer using logger over print statements.
 # You can use logger in the following manner:
-## _LOG.info("message") for logging level INFO
-## _LOG.debug("message") for logging level DEBUG, etc.
-### To add string formatting, use the following syntax:
-### _LOG.info("message %s", "string") and so on.
-##########################################################################
+# _LOG.info("message") for logging level INFO
+# _LOG.debug("message") for logging level DEBUG, etc.
+# To add string formatting, use the following syntax:
+# _LOG.info("message %s", "string") and so on.
+# #############################################################################
 _LOG = logging.getLogger(__name__)
 
 
 # #############################################################################
-# <Class Name> ("Template" in this case)
+# Template
 # #############################################################################
+
 
 class Template:
     """
     Brief imperative description of what the class does in one line, if needed.
     """
+
     def __init__(self):
         pass
-    
-    def method1(self, arg1:int) -> None:
+
+    def method1(self, arg1: int) -> None:
         """
         Brief imperative description of what the method does in one line.
 
-        You can elaborate more in the method docstring in this section, for e.g. explaining 
+        You can elaborate more in the method docstring in this section, for e.g. explaining
         the formula/algorithm. Every method/function should have a docstring, typehints and include the
         parameters and return as follows:
 
@@ -64,14 +66,13 @@ class Template:
         # Code bloks go here.
         # Make sure to include comments to explain what the code is doing.
         # No empty lines between code blocks.
-        pass
 
 
-def template_function(arg1:int) -> None:
+def template_function(arg1: int) -> None:
     """
     Brief imperative description of what the function does in one line.
 
-    You can elaborate more in the function docstring in this section, for e.g. explaining 
+    You can elaborate more in the function docstring in this section, for e.g. explaining
     the formula/algorithm. Every function should have a docstring, typehints and include the
     parameters and return as follows:
 
