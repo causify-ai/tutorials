@@ -31,7 +31,6 @@
 
 ## README format
 - Each project contains a readme summarizing its status
-- [ ] Does it have
 
 ## What are the goals for each tutorial
 
