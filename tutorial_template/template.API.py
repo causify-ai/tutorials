@@ -3,8 +3,10 @@ A brief overview of what the script does in one line.
 
 1. Make sure to include the citations here (code and research)
 2. Make sure to run the linter on the script before committing changes.
-    - Many changes would be pointed out by the linter to maintain consistency with coding style.
-3. Provide here the reference to the documentation that explains the system in detail. (e.g., pycaret.API.md)
+    - Many changes would be pointed out by the linter to maintain consistency
+      with coding style.
+3. Provide here the reference to the documentation that explains the system in
+   detail. (e.g., pycaret.API.md)
 
 The name of this script should in the following format:
  - if the notebook is exploring `pycaret API`, then it is `pycaret.API.py`
@@ -27,14 +29,16 @@ from typing import List
 import pandas as pd
 import numpy as np
 
-########################################################################
 # Prefer using logger over print statements.
 # You can use logger in the following manner:
-## _LOG.info("message") for logging level INFO
-## _LOG.debug("message") for logging level DEBUG, etc.
-### To add string formatting, use the following syntax:
-### _LOG.info("message %s", "string") and so on.
-##########################################################################
+# ```
+# _LOG.info("message") for logging level INFO
+# _LOG.debug("message") for logging level DEBUG, etc.
+# ```
+# To add string formatting, use the following syntax:
+# ```
+# _LOG.info("message %s", "string") and so on.
+# ```
 _LOG = logging.getLogger(__name__)
 
 
@@ -53,9 +57,10 @@ class Template:
         """
         Brief imperative description of what the method does in one line.
 
-        You can elaborate more in the method docstring in this section, for e.g. explaining 
-        the formula/algorithm. Every method/function should have a docstring, typehints and include the
-        parameters and return as follows:
+        You can elaborate more in the method docstring in this section, for
+        e.g. explaining the formula/algorithm. Every method/function should
+        have a docstring, typehints and include the parameters and return as
+        follows:
 
         :param arg1: description of arg1
         :return: description of return
@@ -70,9 +75,9 @@ def template_function(arg1:int) -> None:
     """
     Brief imperative description of what the function does in one line.
 
-    You can elaborate more in the function docstring in this section, for e.g. explaining 
-    the formula/algorithm. Every function should have a docstring, typehints and include the
-    parameters and return as follows:
+    You can elaborate more in the function docstring in this section, for e.g.
+    explaining the formula/algorithm. Every function should have a docstring,
+    typehints and include the parameters and return as follows:
 
     :param arg1: description of arg1
     :return: description of return

@@ -8,10 +8,11 @@
 <!-- tocstop -->
 
 ## Table of Contents 
-The markdown code should have a TOC.
-T
+The markdown code should have a TOC. This can be generated automatically with the
+linter.
+
 ### Hierarchy 
-Hierarch of the markdown file should be followed.
+Hierarchy of the markdown file should be followed.
 
 ```
 # Level 1 (Used before TOC as title)
@@ -23,7 +24,7 @@ Level 1 Headings  indicate the tile as  `# <tool> Tutorial` (e.g., `PyCaret Tuto
 
 ## General Guidelines
 
-- Follow the instrutions in [README](/sandbox/DATA605_Spring2025/README.md)
+- Follow the instructions in [README](/DATA605/DATA605_Spring2025/README.md)
   on what to write in the API tutorial. 
 - Include descriptions of API works based on what is explored in `template.API.py/ipynb`. 
 - The file should be name with the following conventions:
