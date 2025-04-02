@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.16.6
+#       jupytext_version: 1.16.7
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -43,8 +43,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 # Set the OpenAI API key.
 os.environ["OPENAI_API_KEY"] = "your_openai_api_key_here"
-# Initialize the chat model
-chat_model = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0)
 
 # %%
 hdbg.init_logger(verbosity=logging.INFO)

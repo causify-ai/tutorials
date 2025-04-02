@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.16.6
+#       jupytext_version: 1.16.7
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -27,29 +27,42 @@
 # Here, we're using OpenAI's `gpt-4o-mini` model with a temperature of 0 for deterministic outputs.
 
 # %%
-import os
-import logging
-import langchain as lnch
-import langchain.schema.messages as lnchscme
-# Install necessary package
-# #!pip install --quiet chromadb
+# #!sudo /venv/bin/pip install langchain --quiet
+# #!sudo /venv/bin/pip install -U langchain-community --quiet
+# #!sudo /venv/bin/pip install -U langchain-openai --quiet
+# #!sudo /venv/bin/pip install --quiet chromadb
 
-from langchain.document_loaders.csv_loader import CSVLoader
-from langchain_community.vectorstores import Chroma
-from langchain_openai import OpenAIEmbeddings
+
+# %%
+import logging
+import os
+import random
+import time
+
 import helpers.hdbg as hdbg
+import langchain
+import langchain.agents as lngchagents
+import langchain.document_loaders.csv_loader as csvloader
+import langchain.prompts as lngchprmt
+import langchain.schema.messages as lnchscme
+import langchain.schema.runnable as lngchschrun
+import langchain_community.vectorstores as vectorstores
+import langchain_core.output_parsers as lngchoutpar
+import langchain_openai as lngchopai
 
 # %%
 hdbg.init_logger(verbosity=logging.INFO)
 
 _LOG = logging.getLogger(__name__)
 
-# %%
-import os
-os.environ["OPENAI_API_KEY"] = ""  # Replace with your actual API key
+# %% [markdown]
+# ## Add your OpenAPI key and initiate GPT model
 
-from langchain_openai import ChatOpenAI
-chat_model = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0)
+# %%
+# Add OpenAPI to environment variable.
+os.environ["OPENAI_API_KEY"] = "your-openapi-key"
+# Initiate OpenAI model.
+chat_model = lngchopai.ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
 # %% [markdown]
 # ## Message Handling with `HumanMessage` and `SystemMessage`
@@ -61,12 +74,12 @@ chat_model = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0)
 # Let's see how this works in practice with some example messages.
 
 # %%
-from langchain.schema.messages import HumanMessage, SystemMessage
-
 # Define system behavior and user input.
 messages = [
-    SystemMessage(content="You're an assistant knowledgeable about healthcare."),
-    HumanMessage(content="What is Medicaid managed care?")
+    lnchscme.SystemMessage(
+        content="You're an assistant knowledgeable about healthcare."
+    ),
+    lnchscme.HumanMessage(content="What is Medicaid managed care?"),
 ]
 # Generate a response.
 chat_model.invoke(messages)
@@ -79,8 +92,10 @@ chat_model.invoke(messages)
 
 # %%
 messages = [
-    SystemMessage(content="You're an assistant knowledgeable about healthcare. Only answer healthcare-related questions."),
-    HumanMessage(content="How do I change a tire?")
+    SystemMessage(
+        content="You're an assistant knowledgeable about healthcare. Only answer healthcare-related questions."
+    ),
+    HumanMessage(content="How do I change a tire?"),
 ]
 chat_model.invoke(messages)
 
@@ -91,9 +106,7 @@ chat_model.invoke(messages)
 # We'll use `ChatPromptTemplate` to define structured prompts and format them dynamically.
 
 # %%
-from langchain.prompts import ChatPromptTemplate
-
-# Define a custom template for hospital reviews
+# Define a custom template for hospital reviews.
 review_template_str = """
 Your job is to use patient reviews to answer questions about their experience at a hospital.
 Use the following context to answer questions. Be as detailed as possible, but don't make up
@@ -104,13 +117,13 @@ any information that's not from the context. If you don't know an answer, say yo
 {question}
 """
 
-review_template = ChatPromptTemplate.from_template(review_template_str)
+review_template = lngchprmt.ChatPromptTemplate.from_template(review_template_str)
 
-# Provide context and a question
+# Provide context and a question.
 context = "I had a great stay!"
 question = "Did anyone have a positive experience?"
 
-# Format the template
+# Format the template.
 print(review_template.format(context=context, question=question))
 
 # %% [markdown]
@@ -121,22 +134,28 @@ print(review_template.format(context=context, question=question))
 
 # %%
 # Define system and human message templates.
-review_system_prompt = SystemMessagePromptTemplate(
-    prompt=PromptTemplate(input_variables=["context"], template=review_template_str)
+review_system_prompt = lngchprmt.SystemMessagePromptTemplate(
+    prompt=lngchprmt.PromptTemplate(
+        input_variables=["context"], template=review_template_str
+    )
 )
 
-review_human_prompt = HumanMessagePromptTemplate(
-    prompt=PromptTemplate(input_variables=["question"], template="{question}")
+review_human_prompt = lngchprmt.HumanMessagePromptTemplate(
+    prompt=lngchprmt.PromptTemplate(
+        input_variables=["question"], template="{question}"
+    )
 )
 
 # Combine into a chat prompt template.
-review_prompt_template = ChatPromptTemplate(
+review_prompt_template = lngchprmt.ChatPromptTemplate(
     input_variables=["context", "question"],
-    messages=[review_system_prompt, review_human_prompt]
+    messages=[review_system_prompt, review_human_prompt],
 )
 
 # Format messages.
-formatted_messages = review_prompt_template.format_messages(context=context, question=question)
+formatted_messages = review_prompt_template.format_messages(
+    context=context, question=question
+)
 print(formatted_messages)
 
 # %% [markdown]
@@ -146,14 +165,15 @@ print(formatted_messages)
 # We'll create a simple chain to answer questions based on a given context.
 
 # %%
-from langchain_core.output_parsers import StrOutputParser
-
-# Create a chain using the template and chat model
-output_parser = StrOutputParser()
+# Create a chain using the template and chat model.
+output_parser = lngchoutpar.StrOutputParser()
 review_chain = review_prompt_template | chat_model | output_parser
 
-# Test the chain
+# Test the chain.
 review_chain.invoke({"context": context, "question": question})
+
+# %%
+# !ls /shared_data/dev/
 
 # %% [markdown]
 # ## Retrieval with FAISS
@@ -162,18 +182,20 @@ review_chain.invoke({"context": context, "question": question})
 # We'll demonstrate how to load a dataset, create embeddings, and retrieve documents.
 
 # %%
-
+# #!cp /Users/saggese/src/github/langchain_neo4j_rag_app/data/reviews.csv build_LLM_RAG_chatbot_with_langchain/.
 REVIEWS_CSV_PATH = "build_LLM_RAG_chatbot_with_langchain/reviews.csv"
 REVIEWS_CHROMA_PATH = "chroma_data"
 
-# Load reviews dataset
-loader = CSVLoader(file_path=REVIEWS_CSV_PATH, source_column="review")
+# Load reviews dataset.
+loader = csvloader.CSVLoader(file_path=REVIEWS_CSV_PATH, source_column="review")
 reviews = loader.load()
 
-# Create a vector store
-reviews_vector_db = Chroma.from_documents(reviews, OpenAIEmbeddings(), persist_directory=REVIEWS_CHROMA_PATH)
+# Create a vector store.
+reviews_vector_db = vectorstores.Chroma.from_documents(
+    reviews, lngchopai.OpenAIEmbeddings(), persist_directory=REVIEWS_CHROMA_PATH
+)
 
-# Retrieve relevant documents
+# Retrieve relevant documents.
 question = "Has anyone complained about communication with the hospital staff?"
 relevant_docs = reviews_vector_db.similarity_search(question, k=3)
 
@@ -187,22 +209,21 @@ print(relevant_docs[1].page_content)
 # This chain retrieves relevant documents and uses them as context for the assistant.
 
 # %%
-from langchain.schema.runnable import RunnablePassthrough
-
-# Create a retriever
+# Create a retriever.
 reviews_retriever = reviews_vector_db.as_retriever(k=10)
 
-# Build the QA chain
+# Build the QA chain.
 review_chain = (
-    {"context": reviews_retriever, "question": RunnablePassthrough()}
+    {"context": reviews_retriever, "question": lngchschrun.RunnablePassthrough()}
     | review_prompt_template
     | chat_model
-    | StrOutputParser()
+    | lngchoutpar.StrOutputParser()
 )
 
-# Test the QA chain
+# Test the QA chain.
 question = "Has anyone complained about communication with the hospital staff?"
 review_chain.invoke(question)
+
 
 # %% [markdown]
 # ## Agents
@@ -213,34 +234,26 @@ review_chain.invoke(question)
 # - The chain is hardwired
 # - An agent is an LLM that decides the sequence of actions to execute.
 
+
 # %%
-import random
-import time
-
 def get_current_wait_time(hospital: str) -> int | str:
-    """Dummy function to generate fake wait times"""
+    """
+    Dummy function to generate fake wait times.
 
+    :param
+    """
     if hospital not in ["A", "B", "C", "D"]:
         return f"Hospital {hospital} does not exist"
-
-    # Simulate API call delay
+    # Simulate API call delay.
     time.sleep(1)
-
     return random.randint(0, 10000)
 
 
 # %%
-from langchain.agents import (
-    create_openai_functions_agent,
-    Tool,
-    AgentExecutor,
-)
-from langchain import hub
-
 # Tool is an interface that an agent uses to interact with a function.
 # Each description explains the Agent when to call each tool.
 tools = [
-    Tool(
+    lngchagents.Tool(
         name="Reviews",
         func=review_chain.invoke,
         description="""Useful when you need to answer questions
@@ -253,7 +266,7 @@ tools = [
         the input should be "What do patients think about the triage system?"
         """,
     ),
-    Tool(
+    lngchagents.Tool(
         name="Waits",
         func=get_current_wait_time,
         description="""Use when asked about current wait times
@@ -267,21 +280,21 @@ tools = [
     ),
 ]
 
-hospital_agent_prompt = hub.pull("hwchase17/openai-functions-agent")
+hospital_agent_prompt = langchain.hub.pull("hwchase17/openai-functions-agent")
 
 agent_chat_model = ChatOpenAI(
     model="gpt-3.5-turbo-1106",
     temperature=0,
 )
 
-hospital_agent = create_openai_functions_agent(
+hospital_agent = lngchagents.create_openai_functions_agent(
     llm=agent_chat_model,
     prompt=hospital_agent_prompt,
     tools=tools,
 )
 
 # Agent run-time.
-hospital_agent_executor = AgentExecutor(
+hospital_agent_executor = lngchagents.AgentExecutor(
     agent=hospital_agent,
     tools=tools,
     return_intermediate_steps=True,
