@@ -34,8 +34,8 @@ def extract_usernames_from_gsheet(gsheet_url: str) -> List[str]:
     credentials = hgofiapi.get_credentials(
         service_key_path="/app/DATA605/google_secret.json"
     )
-    df = hgofiapi.read_google_file(url, credentials=credentials)
-    usernames = df["github_username"].tolist()
+    df = hgofiapi.read_google_file(gsheet_url, credentials=credentials)
+    usernames = df["GitHub user"].tolist()
     _LOG.info("Usernames = \n  %s", usernames)
     return usernames
 
@@ -54,9 +54,9 @@ def send_invitations(
     :param repo_url: URL of the target repository
     """
     # Initialize GitHub API.
-    g = Github(gh_access_token)
+    github = Github(gh_access_token)
     # Get the repository.
-    repo = g.get_repo(f"{org_name}/{repo_name}")
+    repo = github.get_repo(f"{org_name}/{repo_name}")
     # Send invitations.
     for username in usernames:
         try:
