@@ -108,7 +108,7 @@ the workflow:
     MERGE (director:Director {name: $director})
     MERGE (director)-[:DIRECTED]->(movie)
     ```
-    ![alt text](/image.png)
+    ![alt text](image.png)
 
 - **Batch Processing**: Iterates over DataFrame rows to populate the graph.
 - **Idempotent Data Loading**: Uses `MERGE` instead of `CREATE` to prevent
@@ -136,4 +136,4 @@ the workflow:
   - Temporal patterns (via release years)
   - Collaborative networks
 
-![alt text](/image-1.png)
+![alt text](image-1.png)

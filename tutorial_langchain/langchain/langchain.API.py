@@ -30,6 +30,9 @@
 # #!sudo /venv/bin/pip install langchain --quiet
 # #!sudo /venv/bin/pip install -U langchain-community --quiet
 # #!sudo /venv/bin/pip install -U langchain-openai --quiet
+# #!sudo /venv/bin/pip install -U langchain-core --quiet
+# #!sudo /venv/bin/pip install -U langchainhub --quiet
+# #!sudo /venv/bin/pip install -U unstructured --quiet
 # #!sudo /venv/bin/pip install --quiet chromadb
 
 
@@ -43,6 +46,7 @@ import helpers.hdbg as hdbg
 import langchain
 import langchain.agents as lngchagents
 import langchain.document_loaders.csv_loader as csvloader
+import langchain.hub
 import langchain.prompts as lngchprmt
 import langchain.schema.messages as lnchscme
 import langchain.schema.runnable as lngchschrun
@@ -60,7 +64,7 @@ _LOG = logging.getLogger(__name__)
 
 # %%
 # Add OpenAPI to environment variable.
-os.environ["OPENAI_API_KEY"] = "your-openapi-key"
+os.environ["OPENAI_API_KEY"] = ""
 # Initiate OpenAI model.
 chat_model = lngchopai.ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
@@ -92,10 +96,10 @@ chat_model.invoke(messages)
 
 # %%
 messages = [
-    SystemMessage(
+    lnchscme.SystemMessage(
         content="You're an assistant knowledgeable about healthcare. Only answer healthcare-related questions."
     ),
-    HumanMessage(content="How do I change a tire?"),
+    lnchscme.HumanMessage(content="How do I change a tire?"),
 ]
 chat_model.invoke(messages)
 
@@ -172,9 +176,6 @@ review_chain = review_prompt_template | chat_model | output_parser
 # Test the chain.
 review_chain.invoke({"context": context, "question": question})
 
-# %%
-# !ls /shared_data/dev/
-
 # %% [markdown]
 # ## Retrieval with FAISS
 #
@@ -182,8 +183,7 @@ review_chain.invoke({"context": context, "question": question})
 # We'll demonstrate how to load a dataset, create embeddings, and retrieve documents.
 
 # %%
-# #!cp /Users/saggese/src/github/langchain_neo4j_rag_app/data/reviews.csv build_LLM_RAG_chatbot_with_langchain/.
-REVIEWS_CSV_PATH = "build_LLM_RAG_chatbot_with_langchain/reviews.csv"
+REVIEWS_CSV_PATH = "data/reviews.csv"
 REVIEWS_CHROMA_PATH = "chroma_data"
 
 # Load reviews dataset.
@@ -239,8 +239,6 @@ review_chain.invoke(question)
 def get_current_wait_time(hospital: str) -> int | str:
     """
     Dummy function to generate fake wait times.
-
-    :param
     """
     if hospital not in ["A", "B", "C", "D"]:
         return f"Hospital {hospital} does not exist"
@@ -282,13 +280,8 @@ tools = [
 
 hospital_agent_prompt = langchain.hub.pull("hwchase17/openai-functions-agent")
 
-agent_chat_model = ChatOpenAI(
-    model="gpt-3.5-turbo-1106",
-    temperature=0,
-)
-
 hospital_agent = lngchagents.create_openai_functions_agent(
-    llm=agent_chat_model,
+    llm=chat_model,
     prompt=hospital_agent_prompt,
     tools=tools,
 )

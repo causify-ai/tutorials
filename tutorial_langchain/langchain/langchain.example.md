@@ -31,7 +31,7 @@ QA bot. The bot parses Markdown files, creates embeddings, stores them in a
 vector database, and retrieves relevant information in response to user queries.
 Additionally, it supports dynamic updates when documentation changes.
 
-![alt text](/image-6.png)
+![alt text](image-6.png)
 
 ## Setup and Dependencies
 
@@ -125,7 +125,7 @@ searches.
 
 ### 3. FAISS (Facebook AI Similarity Search)
 
-![alt text](/image-7.png)
+![alt text](image-7.png)
 
 FAISS is a library designed for efficient similarity search and clustering of
 dense vectors. In `LangChain`, FAISS serves as a vector store for storing and
@@ -157,7 +157,7 @@ documents, enabling similarity-based retrieval.
 
 ## 4. QA Chain Setup
 
-![alt text](/image-8.png)
+![alt text](image-8.png)
 
 The `RetrievalQA` chain uses a retriever to fetch relevant documents and a
 language model to answer queries.
@@ -190,7 +190,7 @@ for doc in result['source_documents']:
 
 ### 7. Dynamic Document Updates
 
-![alt text](/image-9.png)
+![alt text](image-9.png)
 
 The bot detects changes in the document folder and updates the vector store
 accordingly.

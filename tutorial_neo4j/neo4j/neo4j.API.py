@@ -35,6 +35,13 @@
 #
 #
 
+# +
+# # !sudo /venv/bin/pip install pyvis --quiet
+# # !sudo /venv/bin/pip install neo4j --quiet
+# # !sudo /venv/bin/pip install py2neo --quiet
+# # !sudo /venv/bin/pip install networkx --quiet
+# -
+
 # %load_ext autoreload
 # %autoreload 2
 # %matplotlib inline
@@ -42,17 +49,14 @@
 # # Import libraries
 
 # +
-import datetime
 import logging
 
-import neo4j as nj
-import py2neo as pyneo
-import networkx as nx
-import matplotlib.pyplot as plt
-
 import helpers.hdbg as hdbg
-import helpers.hpandas as hpandas
 import helpers.hprint as hprint
+import matplotlib.pyplot as plt
+import neo4j as nj
+import networkx as nx
+import py2neo as pyneo
 
 # +
 # Setup notebook.
@@ -77,7 +81,16 @@ hprint.config_notebook()
 #
 # As discussed earlier, the default port for the `HTTP`, i.e, the database server is assigned to 7474
 
+# +
+# Install Neo4j.
+# #!wget -O - https://debian.neo4j.com/neotechnology.gpg.key | sudo apt-key add -
+# #!echo 'deb https://debian.neo4j.com stable latest' | sudo tee /etc/apt/sources.list.d/neo4j.list
+# #!sudo apt update
+#
+# #!sudo apt install neo4j -y
+
 # !sudo neo4j start
+# -
 
 # ## Connect to Neo4j Server
 #
@@ -86,25 +99,31 @@ hprint.config_notebook()
 # +
 # URI and authentication details.
 URI = "neo4j://localhost:7687"
-#USER = "neo4j"
-#PASSWORD = "neo4j"
+USER = "neo4j"
+PASSWORD = "neo4j"
 
-# # Create a driver instance.
-# driver = nj.GraphDatabase.driver(URI, auth=(USER, PASSWORD))
-# driver.verify_connectivity()
-# print("Connection established.")
+# Create a driver instance.
+driver = nj.GraphDatabase.driver(URI, auth=(USER, PASSWORD))
+driver.verify_connectivity()
+_LOG.info("Connection established.")
+
+
 # -
 
 # ## Update Password of Neo4j database
 #
 # This is a mandatory step. The default credentials will be accepted as authentication while pushing changes to the database. Remeber that once changed, the updates are permanent and will only be reset in a clean reinstallation.
 
+
 # +
-# The first step once you have created a session is to change the password. You can do this using the following command:
 def change_password(tx, current_password, new_password):
-    tx.run("ALTER CURRENT USER SET PASSWORD FROM $current_password TO $new_password",
-           current_password=current_password, new_password=new_password)
-    
+    tx.run(
+        "ALTER CURRENT USER SET PASSWORD FROM $current_password TO $new_password",
+        current_password=current_password,
+        new_password=new_password,
+    )
+
+
 # Change the password.
 with driver.session(database="system") as session:
     session.write_transaction(change_password, "neo4j", "new_password")
@@ -112,25 +131,25 @@ with driver.session(database="system") as session:
 # Reconnect with the new password.
 driver = nj.GraphDatabase.driver(URI, auth=("neo4j", "new_password"))
 driver.verify_connectivity()
-print("Connection established.")
+_LOG.info("Connection established.")
 # -
 
 # # Check the Neo4j graph
 
 # +
 # Connect to the graph database.
-graph = Graph(URI, auth=(USER, "new_password"))
+graph = pyneo.Graph(URI, auth=(USER, "new_password"))
 
 
 def view_graph(graph):
     nodes = graph.nodes.match()
     relationships = graph.relationships.match()
-    print("Nodes in the graph:")
+    _LOG.info("Nodes in the graph:")
     for node in nodes:
-        print(node)
-    print("\nRelationships in the graph:")
+        _LOG.info(node)
+    _LOG.info("\nRelationships in the graph:")
     for relationship in relationships:
-        print(relationship)
+        _LOG.info(relationship)
 
 
 # -
@@ -145,16 +164,19 @@ def view_graph(graph):
 
 # ## Creating Nodes
 
+
 # +
 def create_person(tx, name):
     # The CREATE statement is used to create a new node in the database.
     # In this example, we create a node with the label 'Person' and a property 'name'.
     tx.run("CREATE (a:Person {name: $name})", name=name)
 
+
 def create_node_with_label(tx, label, name):
     # Create a node with a specified label and a property 'name'.
     # The label is provided as a parameter.
     tx.run(f"CREATE (a:{label} {{name: $name}})", name=name)
+
 
 def create_node_with_multiple_labels(tx, labels, name):
     # Create a node with multiple labels and a property 'name'.
@@ -162,16 +184,19 @@ def create_node_with_multiple_labels(tx, labels, name):
     label_str = ":".join(labels)
     tx.run(f"CREATE (a:{label_str} {{name: $name}})", name=name)
 
+
 def create_node_with_properties(tx, label, properties):
     # Create a node with a specified label and multiple properties.
     # The properties are provided as a dictionary.
     props_str = ", ".join([f"{key}: ${key}" for key in properties.keys()])
     tx.run(f"CREATE (a:{label} {{{props_str}}})", **properties)
 
+
 def return_created_node(tx, label, name):
     # Create a node with a specified label and a property 'name', then return the created node.
     result = tx.run(f"CREATE (a:{label} {{name: $name}}) RETURN a", name=name)
     return result.single()[0]
+
 
 # Use the session to write the transactions
 with driver.session() as session:
@@ -180,13 +205,19 @@ with driver.session() as session:
     # Create a node with the label 'Employee' and the name 'Grace'
     session.execute_write(create_node_with_label, "Employee", "Grace")
     # Create a node with the labels 'Person' and 'Employee' and the name 'Hank'
-    session.execute_write(create_node_with_multiple_labels, ["Person", "Employee"], "Hank")
+    session.execute_write(
+        create_node_with_multiple_labels, ["Person", "Employee"], "Hank"
+    )
     # Create a node with the label 'Person' and properties 'name', 'age', and 'city'
-    session.execute_write(create_node_with_properties, "Person", {"name": "Ivy", "age": 28, "city": "New York"})
+    session.execute_write(
+        create_node_with_properties,
+        "Person",
+        {"name": "Ivy", "age": 28, "city": "New York"},
+    )
     # Create a node with the label 'Person' and the name 'Jack', then return the created node
     created_node = session.execute_write(return_created_node, "Person", "Jack")
 
-print("Nodes created and returned node:", created_node)
+_LOG.info("Nodes created and returned node:", created_node)
 
 view_graph(graph)
 
@@ -195,10 +226,12 @@ view_graph(graph)
 
 # ## Clearing the database
 
+
 # +
 def clear_database(tx):
     tx.run("MATCH (n) DETACH DELETE n")
-    
+
+
 with driver.session() as session:
     # Clear the database
     session.execute_write(clear_database)
@@ -208,28 +241,58 @@ with driver.session() as session:
 
 # # Create Relations between Nodes
 
-# +
-def create_relationship(tx, node1_label, node1_name, relationship_type, node2_label, node2_name):
-    # Create a relationship between two existing nodes
-    tx.run(f"MATCH (a:{node1_label} {{name: $node1_name}}), (b:{node2_label} {{name: $node2_name}}) "
-           f"CREATE (a)-[:{relationship_type}]->(b)",
-           node1_name=node1_name, node2_name=node2_name)
 
-def create_relationship_with_properties(tx, node1_label, node1_name, relationship_type, properties, node2_label, node2_name):
+# +
+def create_relationship(
+    tx, node1_label, node1_name, relationship_type, node2_label, node2_name
+):
+    # Create a relationship between two existing nodes
+    tx.run(
+        f"MATCH (a:{node1_label} {{name: $node1_name}}), (b:{node2_label} {{name: $node2_name}}) "
+        f"CREATE (a)-[:{relationship_type}]->(b)",
+        node1_name=node1_name,
+        node2_name=node2_name,
+    )
+
+
+def create_relationship_with_properties(
+    tx,
+    node1_label,
+    node1_name,
+    relationship_type,
+    properties,
+    node2_label,
+    node2_name,
+):
     # Create a relationship with label and properties between two existing nodes
     props_str = ", ".join([f"{key}: ${key}" for key in properties.keys()])
-    tx.run(f"MATCH (a:{node1_label} {{name: $node1_name}}), (b:{node2_label} {{name: $node2_name}}) "
-           f"CREATE (a)-[:{relationship_type} {{{props_str}}}]->(b)",
-           node1_name=node1_name, node2_name=node2_name, **properties)
+    tx.run(
+        f"MATCH (a:{node1_label} {{name: $node1_name}}), (b:{node2_label} {{name: $node2_name}}) "
+        f"CREATE (a)-[:{relationship_type} {{{props_str}}}]->(b)",
+        node1_name=node1_name,
+        node2_name=node2_name,
+        **properties,
+    )
+
 
 # Use the session to write the transactions
 with driver.session() as session:
     # Create a relationship 'KNOWS' between 'Alice' and 'Bob'
-    session.execute_write(create_relationship, "Person", "Jack", "KNOWS", "Person", "Dave")
+    session.execute_write(
+        create_relationship, "Person", "Jack", "KNOWS", "Person", "Dave"
+    )
     # Create a relationship 'WORKS_WITH' with properties between 'Grace' and 'Hank'
-    session.execute_write(create_relationship_with_properties, "Employee", "Grace", "WORKS_WITH", {"since": 2020}, "Employee", "Hank")
+    session.execute_write(
+        create_relationship_with_properties,
+        "Employee",
+        "Grace",
+        "WORKS_WITH",
+        {"since": 2020},
+        "Employee",
+        "Hank",
+    )
 
-print("Relationships created.")
+_LOG.info("Relationships created.")
 view_graph(graph)
 
 
@@ -237,54 +300,86 @@ view_graph(graph)
 
 # ## Write Clauses
 
+
 # +
 def merge_node(tx, label, properties):
     # MERGE clause is used to create a node if it does not exist, or match it if it does.
     props_str = ", ".join([f"{key}: ${key}" for key in properties.keys()])
     tx.run(f"MERGE (a:{label} {{{props_str}}})", **properties)
 
-def merge_relationship(tx, node1_label, node1_name, relationship_type, node2_label, node2_name):
+
+def merge_relationship(
+    tx, node1_label, node1_name, relationship_type, node2_label, node2_name
+):
     # MERGE clause is used to create a relationship if it does not exist, or match it if it does.
-    tx.run(f"MATCH (a:{node1_label} {{name: $node1_name}}), (b:{node2_label} {{name: $node2_name}}) "
-           f"MERGE (a)-[:{relationship_type}]->(b)",
-           node1_name=node1_name, node2_name=node2_name)
+    tx.run(
+        f"MATCH (a:{node1_label} {{name: $node1_name}}), (b:{node2_label} {{name: $node2_name}}) "
+        f"MERGE (a)-[:{relationship_type}]->(b)",
+        node1_name=node1_name,
+        node2_name=node2_name,
+    )
+
 
 def set_properties(tx, label, name, properties):
     # SET clause is used to update properties of a node.
     props_str = ", ".join([f"a.{key} = ${key}" for key in properties.keys()])
-    tx.run(f"MATCH (a:{label} {{name: $name}}) SET {props_str}", name=name, **properties)
+    tx.run(
+        f"MATCH (a:{label} {{name: $name}}) SET {props_str}",
+        name=name,
+        **properties,
+    )
+
 
 def delete_node(tx, label, name):
     # DELETE clause is used to delete a node.
     tx.run(f"MATCH (a:{label} {{name: $name}}) DELETE a", name=name)
 
-def delete_relationship(tx, node1_label, node1_name, relationship_type, node2_label, node2_name):
+
+def delete_relationship(
+    tx, node1_label, node1_name, relationship_type, node2_label, node2_name
+):
     # DELETE clause is used to delete a relationship between two nodes.
-    tx.run(f"MATCH (a:{node1_label} {{name: $node1_name}})-[r:{relationship_type}]->(b:{node2_label} {{name: $node2_name}}) DELETE r",
-           node1_name=node1_name, node2_name=node2_name)
+    tx.run(
+        f"MATCH (a:{node1_label} {{name: $node1_name}})-[r:{relationship_type}]->(b:{node2_label} {{name: $node2_name}}) DELETE r",
+        node1_name=node1_name,
+        node2_name=node2_name,
+    )
+
 
 # Use the session to write the transactions
 with driver.session() as session:
     # Create a node with the label 'Person' and properties 'name' and 'age'
-    session.execute_write(create_node_with_properties, "Person", {"name": "Alice", "age": 30})
+    session.execute_write(
+        create_node_with_properties, "Person", {"name": "Alice", "age": 30}
+    )
     # Create a node with the label 'Person' and properties 'name' and 'age'
-    session.execute_write(create_node_with_properties, "Person", {"name": "Bob", "age": 25})
+    session.execute_write(
+        create_node_with_properties, "Person", {"name": "Bob", "age": 25}
+    )
     # Create a relationship 'KNOWS' between 'Alice' and 'Bob'
-    session.execute_write(create_relationship, "Person", "Alice", "KNOWS", "Person", "Bob")
+    session.execute_write(
+        create_relationship, "Person", "Alice", "KNOWS", "Person", "Bob"
+    )
     # Merge a node with the label 'Person' and properties 'name' and 'age'
     session.execute_write(merge_node, "Person", {"name": "Charlie", "age": 25})
     # Merge a relationship 'KNOWS' between 'Alice' and 'Charlie'
-    session.execute_write(merge_relationship, "Person", "Alice", "KNOWS", "Person", "Charlie")
+    session.execute_write(
+        merge_relationship, "Person", "Alice", "KNOWS", "Person", "Charlie"
+    )
     # Set properties 'age' and 'city' for the node 'Alice'
-    session.execute_write(set_properties, "Person", "Alice", {"age": 31, "city": "New York"})
-    print("\n Graph Before Deletion:")
+    session.execute_write(
+        set_properties, "Person", "Alice", {"age": 31, "city": "New York"}
+    )
+    _LOG.info("\n Graph Before Deletion:")
     view_graph(graph)
 
     # Delete the relationship 'KNOWS' between 'Alice' and 'Bob'
-    session.execute_write(delete_relationship, "Person", "Alice", "KNOWS", "Person", "Bob")
+    session.execute_write(
+        delete_relationship, "Person", "Alice", "KNOWS", "Person", "Bob"
+    )
     # Delete the node 'Charlie'
     session.execute_write(delete_node, "Person", "Bob")
-    print("\n Graph After Deletion:")
+    _LOG.info("\n Graph After Deletion:")
     view_graph(graph)
 
 
@@ -292,39 +387,50 @@ with driver.session() as session:
 
 # ## Read Clauses
 
+
 # +
 def find_all_nodes(tx):
     # Use MATCH to find all nodes.
     result = tx.run("MATCH (n) RETURN n")
     for record in result:
-        print(record[0])
+        _LOG.info(record[0])
+
 
 def find_relations(tx, name):
     # Use MATCH to find the person and who they work with.
-    result = tx.run("MATCH (a:Employee {name: $name})-[:WORKS_WITH]->(Employee) "
-                    "RETURN Employee.name ORDER BY Employee.name", name=name)
+    result = tx.run(
+        "MATCH (a:Employee {name: $name})-[:WORKS_WITH]->(Employee) "
+        "RETURN Employee.name ORDER BY Employee.name",
+        name=name,
+    )
     record = result.single()
-    print(record)
-    
+    _LOG.info(record)
+
+
 def optional_match(tx):
     # Use OPTIONAL MATCH to find nodes that may or may not have a relationship.
-    result = tx.run("OPTIONAL MATCH (a:Person)-[r:KNOWS]->(b:Person) RETURN a.name, b.name")
+    result = tx.run(
+        "OPTIONAL MATCH (a:Person)-[r:KNOWS]->(b:Person) RETURN a.name, b.name"
+    )
     for record in result:
-        print(f"{record['a.name']} knows {record['b.name']}")
+        _LOG.info(f"{record['a.name']} knows {record['b.name']}")
+
 
 def where_clause(tx):
     # Use WHERE clause to filter nodes.
     result = tx.run("MATCH (a:Person) WHERE a.age > 25 RETURN a.name, a.age")
     for record in result:
-        print(f"{record['a.name']} is {record['a.age']} years old")
+        _LOG.info(f"{record['a.name']} is {record['a.age']} years old")
+
 
 def count_function(tx):
     # Use COUNT function to count nodes.
     result = tx.run("MATCH (a:Person) RETURN COUNT(a) as count")
     record = result.single()
-    print(f"Total number of Person nodes: {record['count']}")
+    _LOG.info(f"Total number of Person nodes: {record['count']}")
 
-# Use the session to read the transactions.    
+
+# Use the session to read the transactions.
 with driver.session() as session:
     # Find and print all nodes.
     session.execute_read(find_all_nodes)
@@ -338,7 +444,6 @@ with driver.session() as session:
     session.execute_read(count_function)
 
 
-
 # + vscode={"languageId": "ruby"}
 def plot_graph(results):
     # Create a directed graph
@@ -346,15 +451,26 @@ def plot_graph(results):
 
     # Add nodes and edges from the query results
     for record in result:
-        G.add_node(record['from'])
-        G.add_node(record['to'])
-        G.add_edge(record['from'], record['to'], label=record['rel'])
+        G.add_node(record["from"])
+        G.add_node(record["to"])
+        G.add_edge(record["from"], record["to"], label=record["rel"])
 
     # Draw the graph
     pos = nx.spring_layout(G)
     plt.figure(figsize=(10, 8))
-    nx.draw(G, pos, with_labels=True, node_color='skyblue', node_size=2000, edge_color='gray', font_size=15, font_weight='bold')
-    edge_labels = nx.get_edge_attributes(G, 'label')
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='red', font_size=12)
+    nx.draw(
+        G,
+        pos,
+        with_labels=True,
+        node_color="skyblue",
+        node_size=2000,
+        edge_color="gray",
+        font_size=15,
+        font_weight="bold",
+    )
+    edge_labels = nx.get_edge_attributes(G, "label")
+    nx.draw_networkx_edge_labels(
+        G, pos, edge_labels=edge_labels, font_color="red", font_size=12
+    )
     plt.title("Neo4j Graph Visualization")
     plt.show()
