@@ -33,48 +33,6 @@ Additionally, it supports dynamic updates when documentation changes.
 
 ![alt text](/image-6.png)
 
-## Setup and Dependencies
-
-### Building and Running the Docker Container
-
-- Go to the top of the repo
-  ```
-  > cd $GIT_ROOT
-  ```
-- Build the thin environment
-  ```bash
-  > ./helpers_root/dev_scripts_helpers/thin_client/build.py
-  ```
-- Go to the project dir
-  ```
-  > cd tutorial_langchain
-  ```
-- Activate virtual environment:
-  ```bash
-  > source dev_scripts_tutorial_langchain/thin_client/setenv.sh
-  ```
-- Build Docker Image:
-  ```bash
-  > i docker_build_local_image --version 1.0.0
-  ```
-- Run Container:
-  ```bash
-  > i docker_bash --skip-pull --stage local --version 1.0.0
-  ```
-- Launch Jupyter Notebook:
-  ```bash
-  > i docker_jupyter --skip-pull --stage local --version 1.0.0 -d
-  ```
-
-### Environment Setup
-
-Set the `OPENAI_API_KEY` environment variable for API access:
-
-```python
-import os
-os.environ["OPENAI_API_KEY"] = "<your_openai_api_key>"
-```
-
 ## Key Components
 
 ### 1. RecursiveCharacterTextSplitter

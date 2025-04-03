@@ -57,16 +57,16 @@ LangChain is built around four key components:
 ![alt text](/image.png)
 
 - 1. Prompts
-  - Prompts define the interaction between users and the language model. With
-    LangChain, prompts are dynamic and parameterized, enabling reuse across
+  - Prompts define the interaction between users and the language model
+  - With LangChain, prompts are dynamic and parameterized, enabling reuse across
     different contexts
   - Examples include:
     - Single-turn question answering.
     - Context-aware summarization.
 
 - 2. Chains
-  - Chains represent workflows. They connect prompts, models, and output parsers
-    in a pipeline, ensuring consistent processing
+  - Chains represent workflows, connecting prompts, models, and output parsers in
+    a pipeline, ensuring consistent processing
   - Chains help automate multi-step tasks.
 
 - 3. Retrieval
@@ -82,27 +82,6 @@ LangChain is built around four key components:
   - This flexibility is crucial for creating adaptable systems.
 
 ## Setting Up
-
-### Building and Running the Docker Container
-
-- You can run the LangChain tutorial and example with the following commands
-
-1. **Activate virtual environment:**
-   ```bash
-   > source dev_scripts_tutorial_langchain/thin_client/setenv.sh
-   ```
-2. **Build Docker Image:**
-   ```bash
-   > i docker_build_local_image --version 1.0.0
-   ```
-3. **Run Container:**
-   ```bash
-   > i docker_bash --skip-pull --stage local --version 1.0.0
-   ```
-4. **Launch Jupyter Notebook:**
-   ```bash
-   > i docker_jupyter --skip-pull --stage local --version 1.0.0 -d
-   ```
 
 ### Dependencies
 
