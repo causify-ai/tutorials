@@ -37,22 +37,34 @@ Additionally, it supports dynamic updates when documentation changes.
 
 ### Building and Running the Docker Container
 
-1. **Activate virtual environment:**
-   ```bash
-   > source dev_scripts_tutorial_data/thin_client/setenv.sh
-   ```
-2. **Build Docker Image:**
-   ```bash
-   > i docker_build_local_image --version 1.0.0
-   ```
-3. **Run Container:**
-   ```bash
-   > i docker_bash --skip-pull --stage local --version 1.0.0
-   ```
-4. **Launch Jupyter Notebook:**
-   ```bash
-   > i docker_jupyter --skip-pull --stage local --version 1.0.0 -d
-   ```
+- Go to the top of the repo
+  ```
+  > cd $GIT_ROOT
+  ```
+- Build the thin environment
+  ```bash
+  > ./helpers_root/dev_scripts_helpers/thin_client/build.py
+  ```
+- Go to the project dir
+  ```
+  > cd tutorial_langchain
+  ```
+- Activate virtual environment:
+  ```bash
+  > source dev_scripts_tutorial_langchain/thin_client/setenv.sh
+  ```
+- Build Docker Image:
+  ```bash
+  > i docker_build_local_image --version 1.0.0
+  ```
+- Run Container:
+  ```bash
+  > i docker_bash --skip-pull --stage local --version 1.0.0
+  ```
+- Launch Jupyter Notebook:
+  ```bash
+  > i docker_jupyter --skip-pull --stage local --version 1.0.0 -d
+  ```
 
 ### Environment Setup
 

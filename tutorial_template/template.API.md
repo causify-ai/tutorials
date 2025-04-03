@@ -1,5 +1,3 @@
-# Tutorial Template for Native API of the tool used
-
 <!-- toc -->
 
 - [Table of Contents](#table-of-contents)
@@ -8,16 +6,19 @@
 
 <!-- tocstop -->
 
+# Tutorial Template for Native API of the tool used
+- E.g., Native API for `pycaret`
+
 ## Table of Contents
 
-The markdown code should have a TOC. This can be generated automatically with
-the linter.
+The markdown code can have a TOC. This can be generated automatically with
+the linter or other tools.
 
 ### Hierarchy
 
 Hierarchy of the markdown file should be followed.
 ```
-# Level 1 (Used before TOC as title)
+# Level 1 (Used as title)
 All the subheadings should follow the below structure:
 ## Level 2
 ### Level 3

@@ -30,15 +30,18 @@
 
 ## Introduction
 
-LangChain is a framework designed to make language model-based application
-development intuitive and modular. By abstracting components like prompts,
-workflows, and retrieval, it allows you to focus on solving problems rather than
-low-level integration. It simplifies the development of language model-powered
-applications by providing tools for prompt creation, chaining tasks, and
-integrating retrieval mechanisms. This tutorial explores LangChain's core
-capabilities through examples, helping you understand how to design intelligent
-workflows. More documentation details can be found at
-[LangChain Documentation](https://python.langchain.com/docs/introduction/).
+- LangChain is a framework designed to make LLM-based application development
+  intuitive and modular
+- By abstracting components like prompts, workflows, and retrieval, it allows the
+  developer to focus on solving problems rather than low-level integration with
+  different LLM APIs
+- It simplifies the development of language model-powered applications by
+  providing tools for prompt creation, chaining tasks, and integrating retrieval
+  mechanisms
+- This tutorial explores LangChain's core capabilities through examples, helping
+  you understand how to design intelligent workflows
+- More documentation details can be found at
+  [LangChain Documentation](https://python.langchain.com/docs/introduction/).
 
 This tutorial explores:
 
@@ -53,37 +56,36 @@ LangChain is built around four key components:
 
 ![alt text](/image.png)
 
-### 1. Prompts
+- 1. Prompts
+  - Prompts define the interaction between users and the language model. With
+    LangChain, prompts are dynamic and parameterized, enabling reuse across
+    different contexts
+  - Examples include:
+    - Single-turn question answering.
+    - Context-aware summarization.
 
-Prompts define the interaction between users and the language model. With
-LangChain, prompts are dynamic and parameterized, enabling reuse across
-different contexts. Examples include:
+- 2. Chains
+  - Chains represent workflows. They connect prompts, models, and output parsers
+    in a pipeline, ensuring consistent processing
+  - Chains help automate multi-step tasks.
 
-- Single-turn question answering.
-- Context-aware summarization.
+- 3. Retrieval
+  - Retrieval mechanisms allow you to augment your model's responses with
+    external data
+  - For example:
+    - Searching documents for relevant context using FAISS or similar tools.
+    - Passing the retrieved data to the model for more informed responses.
 
-### 2. Chains
-
-Chains represent workflows. They connect prompts, models, and output parsers in
-a pipeline, ensuring consistent processing. Chains help automate multi-step
-tasks.
-
-### 3. Retrieval
-
-Retrieval mechanisms allow you to augment your model's responses with external
-data. For example:
-
-- Searching documents for relevant context using FAISS or similar tools.
-- Passing the retrieved data to the model for more informed responses.
-
-### 4. Agents
-
-Agents can dynamically decide which tools or actions to use based on the input.
-This flexibility is crucial for creating adaptable systems.
+- 4. Agents
+  - Agents can dynamically decide which tools or actions to use based on the
+    input
+  - This flexibility is crucial for creating adaptable systems.
 
 ## Setting Up
 
 ### Building and Running the Docker Container
+
+- You can run the LangChain tutorial and example with the following commands
 
 1. **Activate virtual environment:**
    ```bash

@@ -1,5 +1,3 @@
-# Description
-
 <!-- toc -->
 
 - [Table of Contents](#table-of-contents)
@@ -8,15 +6,19 @@
 
 <!-- tocstop -->
 
+# Project description
+- E.g., Building an awesome system to ... with `pycaret`
+
 ## Table of Contents
 
-The markdown code should have a TOC.
+The markdown code can have a TOC. This can be generated automatically with
+the linter or other tools.
 
 ### Hierarchy
 
 Hierarchy of the markdown file should be followed.
 ```
-# Level 1 Heading (Used before TOC)
+# Level 1 (Used as title)
 All the subheadings should follow the below structure:
 ## Level 2
 ### Level 3
@@ -26,7 +28,7 @@ All the subheadings should follow the below structure:
 
 ## General Guidelines
 
-- Follow the instructions in [README](/sandbox/DATA605_Spring2025/README.md) on
+- Follow the instructions in [README](/DATA605/DATA605_Spring2025/README.md) on
   what to write in the project example.
 - Include descriptions of how you used the API in your projects with
   descriptions on architecture, data, etc used in `template.example.py/ipynb`.

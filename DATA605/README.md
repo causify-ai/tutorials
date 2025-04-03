@@ -179,6 +179,23 @@
       - `TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles_1`
       - `TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles_2`
 
+## Configuring your system
+
+- We have a flow for students -> interns / RAs / TAs -> full time contributors
+  - There are different levels of complexity to set up your system to work
+  - Tmux vs not tmux
+  - Docker Python workflow (like in the tutorials) vs Docker bash workflow
+  - ...
+
+- A detailed guide on how to configure the system as interns is 
+  https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md
+  - Contains various workflows (with different level of complexity / efficiency)
+
+- An interesting set of reading to become a better developer / researcher is here
+  https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.onboarding_checklist.reference.md#must-read
+  - Note that this is from interns, you don't have to set everything up according
+    to this document
+
 ## Working on the project
 
 - Use the project template files in `//tutorials/DATA605/tutorial_template` to
