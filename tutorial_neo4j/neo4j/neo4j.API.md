@@ -35,7 +35,7 @@ using Python libraries like neo4j and py2neo.
 
 An example of ER diagrams that can be modelled using Neo4j.
 
-![alt text](/mermaid-diagram-2025-03-27-035437.png)
+![alt text](mermaid-diagram-2025-03-27-035437.png)
 
 ### Goals
 
@@ -64,7 +64,7 @@ Steps to run the container:
 The native API serves as a python client to help us establish connection to a
 `Neo4j` server.
 
-![alt text](/mermaid-diagram-2025-03-27-034817.png)
+![alt text](mermaid-diagram-2025-03-27-034817.png)
 
 ### Starting server
 
@@ -312,7 +312,7 @@ tx.run("CREATE (a:Person {name: $name})", name="Dave")
    - (\_0)-[:KNOWS]->(\_1): Jack knows Dave.
    - (\_2)-[:WORKS_WITH {since: 2020}]->(\_3): Grace works with Hank since 2020.
 
-![alt text](/mermaid-diagram-2025-03-27-035900.png)
+![alt text](mermaid-diagram-2025-03-27-035900.png)
 
 **Note**: Relationships are crucial in Neo4j as they define how nodes are
 connected and enable efficient traversal and querying.
