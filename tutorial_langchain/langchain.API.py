@@ -209,7 +209,14 @@ review_chain.invoke({"context": context, "question": question})
 # We'll demonstrate how to load a dataset, create embeddings, and retrieve documents.
 
 # %%
+import pandas as pd
+
 REVIEWS_CSV_PATH = "data/reviews.csv"
+
+df = pd.read_csv(REVIEWS_CSV_PATH)
+df.head(3)
+
+# %%
 REVIEWS_CHROMA_PATH = "chroma_data"
 
 # Load reviews dataset.
@@ -221,12 +228,14 @@ reviews_vector_db = vectorstores.Chroma.from_documents(
     reviews, lngchopai.OpenAIEmbeddings(), persist_directory=REVIEWS_CHROMA_PATH
 )
 
+# %%
 # Retrieve relevant documents.
 question = "Has anyone complained about communication with the hospital staff?"
 relevant_docs = reviews_vector_db.similarity_search(question, k=3)
 
-print(relevant_docs[0].page_content)
-print(relevant_docs[1].page_content)
+print("#0\n" + relevant_docs[0].page_content)
+print("#1\n" + relevant_docs[1].page_content)
+print("#2\n" + relevant_docs[2].page_content)
 
 # %% [markdown]
 # ## Building a Retrieval-Enhanced QA Chain

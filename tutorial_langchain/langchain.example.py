@@ -59,7 +59,6 @@ _LOG = logging.getLogger(__name__)
 
 # %%
 config = {
-    "open_ai_api_key": "",
     # Define language model arguments.
     "language_model": {
         # Define your model here.
@@ -84,7 +83,7 @@ config = {
 
 # %%
 # Set the OpenAI API key.
-os.environ["OPENAI_API_KEY"] = config["open_ai_api_key"]
+#os.environ["OPENAI_API_KEY"] = config["open_ai_api_key"]
 # Initialize the chat model.
 chat_model = langchain_openai.ChatOpenAI(**config["language_model"])
 
