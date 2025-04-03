@@ -8,10 +8,19 @@ import logging
 import subprocess
 from typing import List
 
-# Install pygithub.
-subprocess.run(
-    ["sudo", "/venv/bin/pip", "install", "--quiet", " pygithub"], check=True
-)
+# Install required packages.
+packages = [
+    "pygithub",
+    "google-api-python-client",
+    "oauth2client",
+    "gspread"
+]
+for pkg in packages:
+    subprocess.run(
+        ["sudo", "/venv/bin/pip", "install", "--quiet", "--upgrade", pkg],
+        check=True
+    )
+
 import helpers.hgoogle_file_api as hgofiapi
 from github import Github
 
@@ -63,8 +72,7 @@ def send_invitations(
             # Send invitation by adding as collaborator.
             repo.add_to_collaborators(
                 username,
-                # TODO Krishna: Update the permission accordingly.
-                permission="pull",
+                permission="write",
             )
             _LOG.info(f"Invitation sent to {username}")
         except Exception as e:
@@ -73,7 +81,9 @@ def send_invitations(
 
 def main():
     # Extract usernames from Google Sheet.
-    usernames = extract_usernames_from_gsheet(DRIVE_URL)
+    #usernames = extract_usernames_from_gsheet(DRIVE_URL)
+    usernames =  [ "jramod", "madhusomething", "dhruv2009", "Dharmitha7", "SivaRajes", "vihaanshah1501", "vikranth1000", "vineetj5", "vishwapatel21", "yslin227", "ojasonu", "x-claimer", "gouravreddy02", "kanishkkaul12", "rkoush", "Harshitha230", "Murugavel-22", "mohitsalur", "vishwaksena-dingari", "pyellapu07", "sathwikhnaik", "dhanushv2000", "hrathore1995", "Deepikag8", "20krish20", "serjiusinfanto", "Adwait197", "harshith1801", "LifeofArin", "ravivignesh1999", "saanikapatil08", "Shrutii007", "samarthsingh1", "yzhen1", "msenthi7", "pallak02", "Mayur074", "parth20y", "mikhail12310", "Pravalikasure11", "Satyamkale123", "lakshithask2024", "mkdatadive", "Man1shC", "harshshri07", "siri-l-y"
+    ]
     # Send invitations.
     send_invitations(usernames, GH_ACCESS_TOKEN, REPO_NAME, ORG_NAME)
 
