@@ -20,6 +20,15 @@
 # LangChain is a powerful framework designed to facilitate building language model-powered applications.
 # We'll explore its components, including prompt creation, chains, retrieval, and agents.
 
+# %%
+# Use this to enable vim shortcuts.
+# # !sudo /bin/bash -c "(source /venv/bin/activate; pip install --quiet jupyterlab-vim)"
+# # !jupyter labextension enable
+
+# %%
+# %load_ext autoreload
+# %autoreload 2
+
 # %% [markdown]
 # ## Setting Up
 #
@@ -55,7 +64,8 @@ import langchain_core.output_parsers as lngchoutpar
 import langchain_openai as lngchopai
 
 # %%
-hdbg.init_logger(verbosity=logging.INFO)
+# Avoid messages from OpenAI REST interface.
+hdbg.init_logger(verbosity=logging.CRITICAL)
 
 _LOG = logging.getLogger(__name__)
 
@@ -64,7 +74,7 @@ _LOG = logging.getLogger(__name__)
 
 # %%
 # Add OpenAPI to environment variable.
-os.environ["OPENAI_API_KEY"] = ""
+#os.environ["OPENAI_API_KEY"] = ""
 # Initiate OpenAI model.
 chat_model = lngchopai.ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
@@ -86,7 +96,16 @@ messages = [
     lnchscme.HumanMessage(content="What is Medicaid managed care?"),
 ]
 # Generate a response.
-chat_model.invoke(messages)
+val = chat_model.invoke(messages)
+
+# %%
+type(val)
+
+# %%
+print(val.content)
+
+# %%
+val.usage_metadata
 
 # %% [markdown]
 # ## Restricting Assistant's Scope
@@ -101,7 +120,8 @@ messages = [
     ),
     lnchscme.HumanMessage(content="How do I change a tire?"),
 ]
-chat_model.invoke(messages)
+val = chat_model.invoke(messages)
+print(val.content)
 
 # %% [markdown]
 # ## Creating Custom Prompts with `ChatPromptTemplate`
@@ -161,6 +181,12 @@ formatted_messages = review_prompt_template.format_messages(
     context=context, question=question
 )
 print(formatted_messages)
+
+# %%
+print(formatted_messages[0].content)
+
+# %%
+print(formatted_messages[1].content)
 
 # %% [markdown]
 # ## Chains
