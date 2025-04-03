@@ -1,26 +1,23 @@
 <!-- toc -->
 
 - [Introduction](#introduction)
-- [Setup and Dependencies](#setup-and-dependencies)
-  * [Building and Running the Docker Container](#building-and-running-the-docker-container)
-  * [Environment Setup](#environment-setup)
-- [Key Components](#key-components)
-  * [1. RecursiveCharacterTextSplitter](#1-recursivecharactertextsplitter)
-    + [Key Features:](#key-features)
-    + [Example:](#example)
-  * [2. OpenAIEmbeddings](#2-openaiembeddings)
-    + [Key Features:](#key-features-1)
-    + [Example:](#example-1)
-  * [3. FAISS (Facebook AI Similarity Search)](#3-faiss-facebook-ai-similarity-search)
-    + [Key Features:](#key-features-2)
-    + [Example:](#example-2)
-- [4. QA Chain Setup](#4-qa-chain-setup)
-  * [6. Querying the QA Bot](#6-querying-the-qa-bot)
-  * [7. Dynamic Document Updates](#7-dynamic-document-updates)
-    + [Detecting Changes](#detecting-changes)
-    + [Workflow for Updating the Bot](#workflow-for-updating-the-bot)
-- [Complete Workflow](#complete-workflow)
-- [Example Usage](#example-usage)
+  * [Key Components](#key-components)
+    + [1. RecursiveCharacterTextSplitter](#1-recursivecharactertextsplitter)
+      - [Key Features:](#key-features)
+      - [Example:](#example)
+    + [2. OpenAIEmbeddings](#2-openaiembeddings)
+      - [Key Features:](#key-features-1)
+      - [Example:](#example-1)
+    + [3. FAISS (Facebook AI Similarity Search)](#3-faiss-facebook-ai-similarity-search)
+      - [Key Features:](#key-features-2)
+      - [Example:](#example-2)
+  * [4. QA Chain Setup](#4-qa-chain-setup)
+    + [6. Querying the QA Bot](#6-querying-the-qa-bot)
+    + [7. Dynamic Document Updates](#7-dynamic-document-updates)
+      - [Detecting Changes](#detecting-changes)
+      - [Workflow for Updating the Bot](#workflow-for-updating-the-bot)
+  * [Complete Workflow](#complete-workflow)
+  * [Example Usage](#example-usage)
 
 <!-- tocstop -->
 
@@ -31,7 +28,7 @@ QA bot. The bot parses Markdown files, creates embeddings, stores them in a
 vector database, and retrieves relevant information in response to user queries.
 Additionally, it supports dynamic updates when documentation changes.
 
-![alt text](figures/image-6.png)
+![alt text](/figures/image-6.png)
 
 ## Key Components
 
@@ -95,7 +92,7 @@ searches.
 
 ### 3. FAISS (Facebook AI Similarity Search)
 
-![alt text](figures/image-7.png)
+![alt text](/figures/image-7.png)
 
 FAISS is a library designed for efficient similarity search and clustering of
 dense vectors. In `LangChain`, FAISS serves as a vector store for storing and
@@ -127,7 +124,7 @@ documents, enabling similarity-based retrieval.
 
 ## 4. QA Chain Setup
 
-![alt text](figures/image-8.png)
+![alt text](/figures/image-8.png)
 
 The `RetrievalQA` chain uses a retriever to fetch relevant documents and a
 language model to answer queries.
@@ -160,7 +157,7 @@ for doc in result['source_documents']:
 
 ### 7. Dynamic Document Updates
 
-![alt text](figures/image-9.png)
+![alt text](/figures/image-9.png)
 
 The bot detects changes in the document folder and updates the vector store
 accordingly.

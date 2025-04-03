@@ -1,18 +1,20 @@
 <!-- toc -->
 
-- [Table of Contents](#table-of-contents)
-  * [Hierarchy](#hierarchy)
-- [General Guidelines](#general-guidelines)
+- [Project description](#project-description)
+  * [Table of Contents](#table-of-contents)
+    + [Hierarchy](#hierarchy)
+  * [General Guidelines](#general-guidelines)
 
 <!-- tocstop -->
 
 # Project description
+
 - E.g., Building an awesome system to ... with `pycaret`
 
 ## Table of Contents
 
-The markdown code can have a TOC. This can be generated automatically with
-the linter or other tools.
+The markdown code can have a TOC. This can be generated automatically with the
+linter or other tools.
 
 ### Hierarchy
 

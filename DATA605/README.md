@@ -3,8 +3,9 @@
 - [DATA605 Class Projects](#data605-class-projects)
   * [Choosing a project](#choosing-a-project)
   * [Pre-requisites](#pre-requisites)
-  * [Working on the project](#working-on-the-project)
     + [Contribution to the repo](#contribution-to-the-repo)
+  * [Configuring your system](#configuring-your-system)
+  * [Working on the project](#working-on-the-project)
     + [Documentation](#documentation)
   * [Submission](#submission)
   * [Examples of a class project](#examples-of-a-class-project)
@@ -17,7 +18,7 @@
   technology and write a (small) example of a system using it
 - Each class project is similar in spirit to the tutorials for various
   technologies we have looked at and studied in classes (e.g., Git, Docker, SQL,
-  Mongo, Airflow, Dask) 
+  Mongo, Airflow, Dask)
 - Through the class projects you will learn how a tool fits your data science,
   data engineering, machine learning workflows.
 
@@ -53,10 +54,9 @@
   - Medium Difficulty Project: Takes 4-5 to complete
   - Difficult Project: Takes 6-8 to complete.
 
-- It is highly recommended to choose a project from the sign up sheet
-    If you really need to propose a new idea or suggest modifications, please
-    contact us: we will review but we won't guarantee we can accommodate all
-    requests
+- It is highly recommended to choose a project from the sign up sheet If you
+  really need to propose a new idea or suggest modifications, please contact us:
+  we will review but we won't guarantee we can accommodate all requests
 - Your project should align with your learning goals and interests, offering a
   great opportunity to explore various technologies and strengthen your resume.
 - If selecting a project from the sign-up sheet, ensure you fill out the
@@ -71,9 +71,9 @@
 
 **NOTE**:
 
-- If you choose to use a paid service, you are responsible for the costs incurred.
-  In any case, you are expected to use the services efficiently to keep them
-  within free tier usage
+- If you choose to use a paid service, you are responsible for the costs
+  incurred. In any case, you are expected to use the services efficiently to
+  keep them within free tier usage
 - To save costs/improve usage, you should make sure that the services are turned
   off/shutdown when not being used.
 
@@ -164,7 +164,7 @@
     > cp -r ~/src/tutorials1/DATA605/Spring2025/tutorial_template/ ~/src/tutorials1/DATA605/Spring2025/projects/{branch_name}
     ```
   - Start working on the files
-    
+
 - **Create a Pull Request (PR)**:
   - Always create a **Pull Request (PR)** from your branch.
   - Add your TAs (e.g., `@tkpratardan`, `@Prahar08modi`) and `@gpsaggese` as
@@ -173,8 +173,8 @@
     project branch.**
 
 - **Naming for Consecutive Updates**
-  - When making progress, use incremental branch names by appending `_1`,
-    `_2` to your branch name, etc.
+  - When making progress, use incremental branch names by appending `_1`, `_2`
+    to your branch name, etc.
     - Example:
       - `TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles_1`
       - `TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles_2`
@@ -187,31 +187,34 @@
   - Docker Python workflow (like in the tutorials) vs Docker bash workflow
   - ...
 
-- A detailed guide on how to configure the system as interns is 
+- A detailed guide on how to configure the system as interns is
   https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md
   - Contains various workflows (with different level of complexity / efficiency)
 
-- An interesting set of reading to become a better developer / researcher is here
+- An interesting set of reading to become a better developer / researcher is
+  here
   https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.onboarding_checklist.reference.md#must-read
-  - Note that this is from interns, you don't have to set everything up according
-    to this document
+  - Note that this is from interns, you don't have to set everything up
+    according to this document
 
 ## Working on the project
 
 - Use the project template files in `//tutorials/DATA605/tutorial_template` to
   understand the deliverables and the coding style
-- They consist of: 
+- They consist of:
 
 - **Scripts/Notebooks**:
-  - You will work on one API file and one Example (Your project) file. 
+  - You will work on one API file and one Example (Your project) file.
   - We encourage you to use Python files and call the code from notebooks
 - **Markdowns**:
   - One markdown file linked to each python script, i.e, API and example
 
-In general 
+In general
+
 - For API: you are expected to describe the API, its architecture, etc.
 - For Example: You are expected to use the project tool according to the
-  specifications mentioned in [Google Doc](https://docs.google.com/document/d/1fEd7_oLhFnA5ovzj_HMb9EeMU84nOGEGeWqNRZSz2wo)
+  specifications mentioned in
+  [Google Doc](https://docs.google.com/document/d/1fEd7_oLhFnA5ovzj_HMb9EeMU84nOGEGeWqNRZSz2wo)
 
 ### Documentation
 
@@ -219,10 +222,12 @@ In general
   also teaching others how to use a Big Data, AI, LLM, or data science tech
 - As a project report, you'll create a tutorial that's hands-on and
   beginner-friendly
-  - Think of it as your chance to help a classmate get started with the same tech
+  - Think of it as your chance to help a classmate get started with the same
+    tech
   - The goal of this tutorial is to help pickup a new technology in 60 Minutes!
-  - That should make sure the tutorial is not lengthy and covers all the important
-    aspects a developer should know before starting building with that technology.
+  - That should make sure the tutorial is not lengthy and covers all the
+    important aspects a developer should know before starting building with that
+    technology.
 
 - You are expected to create an end-to-end tutorial for your package in
   accordance with the guidelines mentioned
@@ -266,9 +271,12 @@ In general
 
 The layout of each project should follow the examples in
 
-- Example for [open_ai tutorial](https://github.com/causify-ai/tutorials/tree/master/tutorial_openai)
-- Example for [langchain tutorial](https://github.com/causify-ai/tutorials/tree/master/tutorial_langchain)
-- Examples for [neo4j](https://github.com/causify-ai/tutorials/tree/master/tutorial_neo4j)
+- Example for
+  [langchain tutorial](https://github.com/causify-ai/tutorials/tree/master/tutorial_langchain)
+- Examples for
+  [neo4j](https://github.com/causify-ai/tutorials/tree/master/tutorial_neo4j)
+- Example for
+  [open_ai tutorial](https://github.com/causify-ai/tutorials/tree/master/tutorial_openai)
 
 - Note that the tutorials from DATA605 class are built using a simpler approach
   for Docker and bash (e.g., `bash` scripts instead of Python code)

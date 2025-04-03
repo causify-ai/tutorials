@@ -1,3 +1,12 @@
+<!-- toc -->
+
+- [Project files](#project-files)
+- [Setup and Dependencies](#setup-and-dependencies)
+  * [Building and Running the Docker Container](#building-and-running-the-docker-container)
+    + [Environment Setup](#environment-setup)
+
+<!-- tocstop -->
+
 # Project files
 
 - Author: Krishna Pratardan Taduri <kptaduri@umd.edu>
@@ -6,27 +15,27 @@
 This project contains the following files
 
 - Boilerplate files to get the project run in `//tutorials`
-  - changelog.txt
-  - conftest.py
-  - invoke.yaml
-  - pip_list.txt
-  - poetry.lock.out
-  - pytest.ini
-  - repo_config.yaml
-  - tasks.py
+  - `changelog`.txt
+  - `conftest`.py
+  - `invoke`.yaml
+  - `pip_list`.txt
+  - `poetry`.lock.out
+  - `pytest`.ini
+  - `repo_config`.yaml
+  - `tasks`.py
 
-- README.md: This file
-- langchain.API.ipynb: a notebook describing the native API of LangChain
-- langchain.API.md: a description of the native API of LangChain
-- langchain.API.py: code for using API of LangChain
-- langchain.example.ipynb: a notebook implementing a project using LangChain
-- langchain.example.md: a markdown description of the project
-- langchain.example.py: code for implementing the project
+- `README`.md: This file
+- `langchain`.API.ipynb: a notebook describing the native API of LangChain
+- `langchain`.API.md: a description of the native API of LangChain
+- `langchain`.API.py: code for using API of LangChain
+- `langchain`.example.ipynb: a notebook implementing a project using LangChain
+- `langchain`.example.md: a markdown description of the project
+- `langchain`.example.py: code for implementing the project
 
 - `dev_scripts_tutorial_langchain` boilerplate files
 - `devops` mostly boilerplate files
-  - devops/docker_build/pyproject.toml: contains the dependency of the package in
-    Poetry format
+  - `devops/docker_build/pyproject.toml`: contains the dependency of the package
+    in Poetry format
 
 # Setup and Dependencies
 

@@ -1,18 +1,20 @@
 <!-- toc -->
 
-- [Table of Contents](#table-of-contents)
-  * [Hierarchy](#hierarchy)
-- [General Guidelines](#general-guidelines)
+- [Tutorial Template for Native API of the tool used](#tutorial-template-for-native-api-of-the-tool-used)
+  * [Table of Contents](#table-of-contents)
+    + [Hierarchy](#hierarchy)
+  * [General Guidelines](#general-guidelines)
 
 <!-- tocstop -->
 
 # Tutorial Template for Native API of the tool used
+
 - E.g., Native API for `pycaret`
 
 ## Table of Contents
 
-The markdown code can have a TOC. This can be generated automatically with
-the linter or other tools.
+The markdown code can have a TOC. This can be generated automatically with the
+linter or other tools.
 
 ### Hierarchy
 
