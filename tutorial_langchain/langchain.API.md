@@ -46,7 +46,7 @@ This tutorial explores:
 
 LangChain is built around four key components:
 
-![alt text](/figures/image.png)
+![alt text](figures/image.png)
 
 - 1. Prompts
   - Prompts define the interaction between users and the language model
