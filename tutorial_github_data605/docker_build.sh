@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 GIT_ROOT=$(git rev-parse --show-toplevel)
-source $GIT_ROOT/tutorial_github_simple/docker_common/utils.sh
+source $GIT_ROOT/tutorial_github_data605/docker_common/utils.sh
 
 REPO_NAME=pmodi08
 IMAGE_NAME=umd_data605_template

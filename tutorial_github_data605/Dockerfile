@@ -38,6 +38,10 @@ RUN pip3 install \
 
 RUN mkdir /install
 
+# Install the project packages.
+ADD requirements.txt /install
+RUN pip3 install -r /install/requirements.txt
+
 # Install Jupyter extensions.
 ADD install_jupyter_extensions.sh /install
 RUN /install/install_jupyter_extensions.sh
