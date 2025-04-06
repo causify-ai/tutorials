@@ -20,6 +20,15 @@
 # LangChain is a powerful framework designed to facilitate building language model-powered applications.
 # We'll explore its components, including prompt creation, chains, retrieval, and agents.
 
+# %%
+# Use this to enable vim shortcuts.
+# # !sudo /bin/bash -c "(source /venv/bin/activate; pip install --quiet jupyterlab-vim)"
+# # !jupyter labextension enable
+
+# %%
+# %load_ext autoreload
+# %autoreload 2
+
 # %% [markdown]
 # ## Setting Up
 #
@@ -55,7 +64,8 @@ import langchain_core.output_parsers as lngchoutpar
 import langchain_openai as lngchopai
 
 # %%
-hdbg.init_logger(verbosity=logging.INFO)
+# Avoid messages from OpenAI REST interface.
+hdbg.init_logger(verbosity=logging.CRITICAL)
 
 _LOG = logging.getLogger(__name__)
 
@@ -64,7 +74,7 @@ _LOG = logging.getLogger(__name__)
 
 # %%
 # Add OpenAPI to environment variable.
-os.environ["OPENAI_API_KEY"] = ""
+#os.environ["OPENAI_API_KEY"] = ""
 # Initiate OpenAI model.
 chat_model = lngchopai.ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
@@ -86,7 +96,16 @@ messages = [
     lnchscme.HumanMessage(content="What is Medicaid managed care?"),
 ]
 # Generate a response.
-chat_model.invoke(messages)
+val = chat_model.invoke(messages)
+
+# %%
+type(val)
+
+# %%
+print(val.content)
+
+# %%
+val.usage_metadata
 
 # %% [markdown]
 # ## Restricting Assistant's Scope
@@ -101,7 +120,8 @@ messages = [
     ),
     lnchscme.HumanMessage(content="How do I change a tire?"),
 ]
-chat_model.invoke(messages)
+val = chat_model.invoke(messages)
+print(val.content)
 
 # %% [markdown]
 # ## Creating Custom Prompts with `ChatPromptTemplate`
@@ -162,6 +182,12 @@ formatted_messages = review_prompt_template.format_messages(
 )
 print(formatted_messages)
 
+# %%
+print(formatted_messages[0].content)
+
+# %%
+print(formatted_messages[1].content)
+
 # %% [markdown]
 # ## Chains
 #
@@ -183,7 +209,17 @@ review_chain.invoke({"context": context, "question": question})
 # We'll demonstrate how to load a dataset, create embeddings, and retrieve documents.
 
 # %%
+import pandas as pd
+
 REVIEWS_CSV_PATH = "data/reviews.csv"
+
+df = pd.read_csv(REVIEWS_CSV_PATH)
+df.head(3)
+
+# %%
+len(reviews)
+
+# %%
 REVIEWS_CHROMA_PATH = "chroma_data"
 
 # Load reviews dataset.
@@ -195,12 +231,14 @@ reviews_vector_db = vectorstores.Chroma.from_documents(
     reviews, lngchopai.OpenAIEmbeddings(), persist_directory=REVIEWS_CHROMA_PATH
 )
 
+# %%
 # Retrieve relevant documents.
 question = "Has anyone complained about communication with the hospital staff?"
 relevant_docs = reviews_vector_db.similarity_search(question, k=3)
 
-print(relevant_docs[0].page_content)
-print(relevant_docs[1].page_content)
+print("#0\n" + relevant_docs[0].page_content)
+print("#1\n" + relevant_docs[1].page_content)
+print("#2\n" + relevant_docs[2].page_content)
 
 # %% [markdown]
 # ## Building a Retrieval-Enhanced QA Chain
@@ -222,6 +260,7 @@ review_chain = (
 
 # Test the QA chain.
 question = "Has anyone complained about communication with the hospital staff?"
+#question = "Has anyone complained the price of eggs?"
 review_chain.invoke(question)
 
 
