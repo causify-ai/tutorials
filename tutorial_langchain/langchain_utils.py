@@ -10,6 +10,8 @@ import langchain.chains
 import langchain.docstore.document as lngchdocstordoc
 import langchain.embeddings
 import langchain.hub
+import langchain.schema
+from langchain.schema import retriever
 import langchain.text_splitter
 from langchain_community.document_loaders import UnstructuredMarkdownLoader
 from langchain_community.vectorstores import FAISS
@@ -117,7 +119,7 @@ def create_vector_store(
     return vector_store
 
 
-def build_retriever(vector_store: FAISS, *, search_kwargs: Optional[Dict[str, int]] = None) -> langchain.schema.retriever.BaseRetriever:
+def build_retriever(vector_store: FAISS, *, search_kwargs: Optional[Dict[str, int]] = None) -> retriever.BaseRetriever:
     """
     Build retriever from vector store.
 

@@ -217,6 +217,9 @@ df = pd.read_csv(REVIEWS_CSV_PATH)
 df.head(3)
 
 # %%
+len(reviews)
+
+# %%
 REVIEWS_CHROMA_PATH = "chroma_data"
 
 # Load reviews dataset.
@@ -257,6 +260,7 @@ review_chain = (
 
 # Test the QA chain.
 question = "Has anyone complained about communication with the hospital staff?"
+#question = "Has anyone complained the price of eggs?"
 review_chain.invoke(question)
 
 
