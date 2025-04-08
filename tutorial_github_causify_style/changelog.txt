@@ -1,1 +1,3 @@
-../helpers_root/changelog.txt
+# tutorials_github-1.0.0
+- 2025-04-08
+- Initial release

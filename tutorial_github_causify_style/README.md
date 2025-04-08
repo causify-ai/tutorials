@@ -9,8 +9,8 @@
 
 # Project files
 
-- Author: Krishna Pratardan Taduri <kptaduri@umd.edu>
-- Date: 2025-03-15
+- Author:
+- Date:
 
 This project contains the following files
 
@@ -25,14 +25,14 @@ This project contains the following files
   - `tasks.py`
 
 - `README.md`: This file
-- `langchain.API.ipynb`: a notebook describing the native API of LangChain
-- `langchain.API.md`: a description of the native API of LangChain
-- `langchain.API.py`: code for using API of LangChain
-- `langchain.example.ipynb`: a notebook implementing a project using LangChain
-- `langchain.example.md`: a markdown description of the project
-- `langchain.example.py`: code for implementing the project
+- `github.API.ipynb`: a notebook describing the native API of GitHub
+- `github.API.md`: a description of the native API of GitHub
+- `github.API.py`: code for using API of GitHub
+- `github.example.ipynb`: a notebook implementing a project using GitHub
+- `github.example.md`: a markdown description of the project
+- `github.example.py`: code for implementing the project
 
-- `dev_scripts_tutorial_langchain` boilerplate files
+- `dev_scripts_tutorial_github` boilerplate files
 - `devops` mostly boilerplate files
   - `devops/docker_build/pyproject.toml`: contains the dependency of the package
     in Poetry format
@@ -47,15 +47,15 @@ This project contains the following files
   ```
 - Build the thin environment
   ```bash
-  > ./helpers_root/dev_scripts_helpers/thin_client/build.py
+  > dev_scripts_tutorial_github/thin_client/build.py
   ```
 - Go to the project dir
   ```
-  > cd tutorial_langchain
+  > cd tutorial_github_causify_style
   ```
 - Activate virtual environment:
   ```bash
-  > source dev_scripts_tutorial_langchain/thin_client/setenv.sh
+  > source dev_scripts_tutorial_github/thin_client/setenv.sh
   ```
 - Build Docker Image:
   ```bash
