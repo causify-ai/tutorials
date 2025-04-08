@@ -1,0 +1,79 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.40kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:20.04
+#2 ...
+
+#3 [auth] library/ubuntu:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:20.04
+#2 DONE 0.4s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [ 1/17] FROM docker.io/library/ubuntu:20.04@sha256:8e5c4f0285ecbb4ead070431d29b576a530d3166df73ec44affc1cd27555141b
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 2.47kB done
+#6 DONE 0.0s
+
+#7 [ 5/17] RUN apt install -y --no-install-recommends     python3     python3-pip     python3-dev
+#7 CACHED
+
+#8 [12/17] RUN /install/install_jupyter_extensions.sh
+#8 CACHED
+
+#9 [ 7/17] RUN pip3 install     ipython     tornado==6.1     jupyter-client==7.3.2     jupyter-contrib-core     jupyter-contrib-nbextensions     psycopg2-binary     yapf
+#9 CACHED
+
+#10 [ 8/17] RUN mkdir /install
+#10 CACHED
+
+#11 [ 2/17] RUN apt-get -y update
+#11 CACHED
+
+#12 [ 4/17] RUN apt install -y --no-install-recommends     sudo     curl     systemctl     gnupg     git     vim
+#12 CACHED
+
+#13 [13/17] ADD etc_sudoers /install/
+#13 CACHED
+
+#14 [14/17] COPY etc_sudoers /etc/sudoers
+#14 CACHED
+
+#15 [16/17] ADD version.sh /install/
+#15 CACHED
+
+#16 [11/17] ADD install_jupyter_extensions.sh /install
+#16 CACHED
+
+#17 [15/17] COPY bashrc /root/.bashrc
+#17 CACHED
+
+#18 [ 6/17] RUN python3 -m pip install --upgrade pip
+#18 CACHED
+
+#19 [ 9/17] ADD requirements.txt /install
+#19 CACHED
+
+#20 [10/17] RUN pip3 install -r /install/requirements.txt
+#20 CACHED
+
+#21 [ 3/17] RUN apt-get -y upgrade
+#21 CACHED
+
+#22 [17/17] RUN /install/version.sh 2>&1 | tee version.log
+#22 CACHED
+
+#23 exporting to image
+#23 exporting layers done
+#23 writing image sha256:40aa96f00b3d1d6425700b1bcee20f6d920ba72f05b01fb793c5c0d5c257bf48 done
+#23 naming to docker.io/umd_data605/umd_data605_template done
+#23 DONE 0.0s
