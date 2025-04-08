@@ -1,1 +1,4 @@
 pandas
+plotly
+PyGithub
+tqdm
