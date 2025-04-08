@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 
-REPO_NAME=pmodi08
+REPO_NAME=umd_data605
 IMAGE_NAME=umd_data605_template
 FULL_IMAGE_NAME=$REPO_NAME/$IMAGE_NAME
 
