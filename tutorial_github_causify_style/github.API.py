@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.16.7
+#       jupytext_version: 1.17.0
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -42,16 +42,14 @@
 # 6. Click **Generate token**.
 # 7. **Copy and save your token immediately**—you won’t be able to see it again later.
 
+# %%
+# !sudo /bin/bash -c "(source /venv/bin/activate; pip install --quiet jupyterlab-vim)"
+# !jupyter labextension enable
+
 # %% [markdown]
 # ## Setup
 #
 # Before proceeding with API calls, ensure that your environment is correctly set up.
-#
-# ### 1. Install Dependencies
-# You need to install `PyGithub` to interact with GitHub.
-
-# %%
-# !sudo /venv/bin/pip install PyGithub
 
 # %% [markdown]
 # ### 2. Import Required Modules
@@ -81,8 +79,9 @@ _LOG = logging.getLogger(__name__)
 
 # %%
 # Set your GitHub access token here.
-os.environ["GITHUB_ACCESS_TOKEN"] = "your_personal_access_token"
+os.environ["GITHUB_ACCESS_TOKEN"] = ""
 
+# %%
 # Retrieve it when needed.
 access_token = os.getenv("GITHUB_ACCESS_TOKEN")
 
