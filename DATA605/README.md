@@ -54,9 +54,10 @@
   - Medium Difficulty Project: Takes 4-5 to complete
   - Difficult Project: Takes 6-8 to complete.
 
-- It is highly recommended to choose a project from the sign up sheet If you
-  really need to propose a new idea or suggest modifications, please contact us:
-  we will review but we won't guarantee we can accommodate all requests
+- It is highly recommended to choose a project from the sign up sheet
+  - If you really need to propose a new idea or suggest modifications, please
+    contact us: we will review but we won't guarantee we can accommodate all
+    requests
 - Your project should align with your learning goals and interests, offering a
   great opportunity to explore various technologies and strengthen your resume.
 - If selecting a project from the sign-up sheet, ensure you fill out the
@@ -72,8 +73,8 @@
 **NOTE**:
 
 - If you choose to use a paid service, you are responsible for the costs
-  incurred. In any case, you are expected to use the services efficiently to
-  keep them within free tier usage
+  incurred. In any case, you are expected to use the services efficiently to keep
+  them within free tier usage
 - To save costs/improve usage, you should make sure that the services are turned
   off/shutdown when not being used.
 
@@ -173,8 +174,8 @@
     project branch.**
 
 - **Naming for Consecutive Updates**
-  - When making progress, use incremental branch names by appending `_1`, `_2`
-    to your branch name, etc.
+  - When making progress, use incremental branch names by appending `_1`, `_2` to
+    your branch name, etc.
     - Example:
       - `TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles_1`
       - `TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles_2`
