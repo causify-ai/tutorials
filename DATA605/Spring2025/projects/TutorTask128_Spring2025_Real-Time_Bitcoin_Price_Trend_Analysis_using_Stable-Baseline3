@@ -1,0 +1,3 @@
+git add .
+git commit -m "Added initial project folder and README"
+git push
