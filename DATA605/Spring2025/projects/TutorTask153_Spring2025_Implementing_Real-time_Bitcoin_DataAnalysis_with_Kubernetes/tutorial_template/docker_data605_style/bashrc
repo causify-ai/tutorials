@@ -1,1 +1,1 @@
-../../../docker_common/bashrc
+set -o vi
