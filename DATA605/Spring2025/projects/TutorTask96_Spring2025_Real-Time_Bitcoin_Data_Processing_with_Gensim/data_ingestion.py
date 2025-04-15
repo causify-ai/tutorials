@@ -34,17 +34,18 @@ def save(timestamp, price):
     df.to_csv("data.csv", index=False)
 
 
+def data_ingest(minutes):
+    for _ in range(minutes):
+    # for _ in range(60):  # Collect for x minutes
+    # while True:  # Collect indefinitely
+        timestamp = pd.Timestamp.now()
+        price = fetch_price()
 
-for _ in range(1):  # Collect for x minutes
-# for _ in range(60):  # Collect for 60 minutes
-# while True:
-    timestamp = pd.Timestamp.now()
-    price = fetch_price()
-
-    if timestamp and price:
-        logger.info(f"Time: {timestamp} | Price: {price}")
-        save(timestamp, price)
-    else:
-        logger.info("No record found")
-        
-    time.sleep(60)  # Scraping data after every 60 seconds
+        if timestamp and price:
+            logger.info(f"Time: {timestamp} | Price: {price}")
+            save(timestamp, price)
+        else:
+            logger.info("No record found")
+            
+        time.sleep(60)  # Scraping data after every 60 seconds
+    logger.info("Data Ingestion Module Completed")
