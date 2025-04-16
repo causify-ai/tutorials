@@ -9,7 +9,7 @@ def extract_text(file_path):
     ext = os.path.splitext(file_path)[1].lower()
     
     try:
-        if ext == '.txt':
+        if ext in ['.txt', '.md', '.py', '.js', '.java', '.cpp', '.c', '.ts', '.html', '.css', '.json', '.xml']:
             return extract_txt(file_path)
         elif ext == '.pdf':
             return extract_pdf(file_path)
@@ -34,6 +34,18 @@ def extract_pdf(file_path):
 def extract_docx(file_path):
     doc = Document(file_path)
     return "\n\n".join([para.text for para in doc.paragraphs if para.text.strip()])
+
+def extract_ipynb(file_path):
+    import json
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        cells = [cell['source'] for cell in data.get('cells', []) if cell['cell_type'] in ['code', 'markdown']]
+        flat_text = "\n\n".join(["".join(cell) for cell in cells])
+        return flat_text
+    except:
+        return ""
+
 
 
 def chunk_text(text, max_chars=500):

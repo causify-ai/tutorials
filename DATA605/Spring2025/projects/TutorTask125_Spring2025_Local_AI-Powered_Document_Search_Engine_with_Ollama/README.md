@@ -1,45 +1,76 @@
-# Tutorial Template: Two Docker Approaches
+# Local AI-Powered Document Search Engine
 
-- This directory provides two versions of the same tutorial setup to help you
-  work with Jupyter notebooks and Python scripts inside Docker environments
+A streamlined document search engine that leverages AI embeddings to enable semantic search across your local files using Ollama and FAISS.
 
-- Both versions run the same code but use different Docker approaches, with
-  different level of complexity and maintainability
+## Features
 
-## 1. `data605_style` (Simple Docker Environment)
+- **Local Document Indexing**: Index text, PDF, and Word documents from any local directory
+- **Semantic Search**: Find documents based on meaning, not just keywords
+- **Privacy-Focused**: All processing happens locally on your machine
+- **User-Friendly Interface**: Simple Streamlit UI for easy interaction
+- **Efficient Search**: Fast retrieval using FAISS vector database
 
-- This version is modeled after the setup used in DATA605 tutorials
-- This template provides a ready-to-run environment, including scripts to build,
-  run, and clean the Docker container.
+## Requirements
 
-- For your specific project, you should:
-  - Modify the Dockerfile to add project-specific dependencies
-  - Update bash/scripts accordingly
-  - Expose additional ports if your project requires them
+- Python 3.8+
+- Ollama (for embedding generation)
 
-## 2. `causify_style` (Causify AI dev-system)
+## Installation
 
-- This setup reflects the approach commonly used in Causify AI dev-system
-- **Recommended** for students familiar with Docker or those wishing to explore a
-  production-like setup
-- Pros
-  - Docker layer written in Python to make it easy to extend and test
-  - Less redundant since code is factored out
-  - Used for real-world development, production workflows
-  - Used for all internships, RA / TA, full-time at UMD DATA605 / MSML610 /
-    Causify 
-- Cons
-  - It is more complex to use and configure
-  - More dependencies from the 
-- For thin environment setup instructions, refer to:  
-  [How to Set Up Development on Laptop](https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
+1. Clone this repository
+2. Install the required dependencies:
 
-## Reference Tutorials
+```bash
+pip install -r requirements.txt
+```
 
-- The `tutorial_github` example has been implemented in both environments for you
-  to refer to:
-  - `tutorial_github_data605_style` uses the simpler DATA605 approach
-  - `tutorial_github_causify_style` uses the more complex Causify approach
+3. Ensure you have [Ollama](https://ollama.ai/) installed and running locally
 
-- Choose the approach that best fits your comfort level and project needs. Both
-  are valid depending on your use case.
+## Usage
+
+1. Start the application:
+
+```bash
+streamlit run app.py
+```
+
+2. In the web interface:
+   - Enter the directory path you want to index
+   - Click "Scan Files" to locate supported documents
+   - Confirm and click "Build Index" to process the documents
+   - Use the search bar to find information across your documents
+
+## Architecture
+
+The application consists of several components:
+
+- `app.py`: Main Streamlit interface
+- `utils/`:
+  - `file_scanner.py`: Identifies supported documents in specified directories
+  - `processing.py`: Extracts and chunks text from various document formats
+  - `build_index.py`: Creates FAISS vector index from document chunks
+  - `search.py`: Handles semantic search against the index
+
+## Supported File Types
+
+- Text files (.txt)
+- PDF documents (.pdf)
+- Word documents (.docx)
+
+## Advanced Configuration
+
+You can modify these settings in the code:
+
+- `MAX_FILE_SIZE`: Maximum file size to process (default: 100MB)
+- `EXCLUDED_DIR_NAMES`: Directories to skip during scanning
+- `SUPPORTED_EXTENSIONS`: File types to index
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- Uses [sentence-transformers](https://www.sbert.net/) for text embeddings
+- Employs [FAISS](https://github.com/facebookresearch/faiss) for efficient similarity search
+- Built with [Streamlit](https://streamlit.io/) for the user interface

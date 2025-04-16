@@ -1,11 +1,11 @@
 import os
 
-SUPPORTED_EXTENSIONS = ['.txt', '.pdf', '.docx']
+SUPPORTED_EXTENSIONS = ['.txt', '.pdf', '.docx', '.py', '.js', '.java', '.cpp', '.c', '.ts', '.html', '.css', '.xml', '.ipynb', '.md']
 
 # Any folder name (not full path) in this list will be skipped
 EXCLUDED_DIR_NAMES = {
     'AppData', 'anaconda3', 'node_modules', '__pycache__', 'WindowsNoEditor',
-    '.git', '.vscode', '.conda', '.cache', '.mamba', 'env', 'venv'
+    '.git', '.vscode', '.conda', '.cache', '.mamba', 'env', 'venv',
 }
 
 # Set max file size (in bytes) – default: 100 MB
