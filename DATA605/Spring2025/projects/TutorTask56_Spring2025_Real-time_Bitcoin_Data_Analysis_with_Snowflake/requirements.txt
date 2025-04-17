@@ -1,0 +1,6 @@
+pandas
+requests
+python-dotenv
+snowflake-connector-python
+jupyter
+plotly
