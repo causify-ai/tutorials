@@ -13,9 +13,13 @@ def fasttext(documents):
     logger.info("Vectorization completed using Fast Text Model")
     return ft_model
 
-# Document Vectorization
-def do2vec(documents):
+def doc_tagger(documents):
     tagged_docs = [TaggedDocument(words=doc, tags=[str(i)]) for i, doc in enumerate(documents)]
+    logger.info("Document Tagging completed")
+    return tagged_docs
+
+# Document Vectorization
+def do2vec(tagged_docs):
     d2v_model = Doc2Vec(tagged_docs, vector_size=50, window=2, min_count=1, workers=4)
     logger.info("Document Vectorization completed using Doc2Vec Model")
     return d2v_model
