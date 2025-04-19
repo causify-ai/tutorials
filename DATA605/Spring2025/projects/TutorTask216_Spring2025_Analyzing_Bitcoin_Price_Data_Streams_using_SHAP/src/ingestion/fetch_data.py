@@ -3,12 +3,17 @@ import pandas as pd
 import yaml
 import os
 from datetime import datetime
+from dotenv import load_dotenv
 
 def load_config(path="config/config.yaml"):
     with open(path, "r") as file:
         return yaml.safe_load(file)
 
 def fetch_market_chart_data(config, override_days=None):
+    
+    load_dotenv() 
+    api_key = os.getenv("COINGECKO_API_KEY")
+
     url = config["api"]["base_url"]
     params = {
         "vs_currency": config["api"]["vs_currency"],
@@ -18,7 +23,7 @@ def fetch_market_chart_data(config, override_days=None):
 
     headers = {
         "accept": "application/json",
-        "x-cg-demo-api-key": config["api"]["api_key"]
+        "x-cg-demo-api-key": api_key
     }
 
     response = requests.get(url, headers=headers, params=params)
