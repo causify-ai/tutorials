@@ -1,0 +1,5 @@
+api:
+  base_url: "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart"
+  vs_currency: "USD"
+  days: 30
+  api_key: "CG-Ra8Q8f4PeVQZz79DbaaPPtUM"
