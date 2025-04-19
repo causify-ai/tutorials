@@ -10,11 +10,13 @@ This file contains utility functions that support the tutorial notebooks.
 """
 
 import logging
-from requests import Request, Session
+import requests
 import pandas as pd
 import sqlite3
 import mplfinance as mpf
 import yfinance as yf
+
+DATEFMT = "%Y-%m-%d-%H-%M-%S"
 
 # -----------------------------------------------------------------------------
 # Logging
@@ -77,11 +79,13 @@ def fetchDB(query, db):
 
     :param query (str): SQL Query to be executed.
     :param db: Path to the SQLite database file. SQLite database on which query is to be executed.
-    :return: Pandas Dataframe of the data executed using SQLite from the database.
+    :return data: Pandas Dataframe of the data executed using SQLite from the database.
     
     """
     conn = sqlite3.connect(db)
-    return pd.read_sql_query(query, conn)
+    data = pd.read_sql_query(query, conn)
+    conn.close()
+    return data
 
 # -----------------------------------------------------------------------------
 # liveBTC: Fetches live Bitcoin price data from CoinMarketCap using a provided API key and URL.
@@ -131,6 +135,8 @@ def addDatapoint(liveData, db):
     
     :return None: The function inserts the data and does not return a value
     """
+    conn = sqlite3.connect(db)
+
     date, liveOpen, volume = liveData['date'],liveData['open'],liveData['volume']
     query = f'''INSERT INTO btc_daily_stats (date, open, volume) VALUES (STRFTIME({DATEFMT},{date}), {liveOpen}, {volume})'''
     query = f'''INSERT INTO btc_daily_stats (date, open, volume) VALUES (?,?,?)'''
@@ -138,5 +144,6 @@ def addDatapoint(liveData, db):
     cursor = conn.cursor()
     cursor.execute(query, (date, liveOpen, volume))
     conn.commit()
-    return cursor.lastrowid
+    conn.close()
+    return None
     
