@@ -36,11 +36,14 @@ RUN pip3 install \
     psycopg2-binary \
     yapf
 
+# Install JupyterLab
+RUN pip install jupyterlab
+
 RUN mkdir /install
 
 # Install Jupyter extensions.
 ADD install_jupyter_extensions.sh /install
-RUN /install/install_jupyter_extensions.sh
+# RUN /install/install_jupyter_extensions.sh
 
 # Config.
 ADD etc_sudoers /install/
