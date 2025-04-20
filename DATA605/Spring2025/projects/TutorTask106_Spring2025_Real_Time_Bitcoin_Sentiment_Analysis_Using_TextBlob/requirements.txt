@@ -1,0 +1,11 @@
+pandas
+plotly
+PyGithub
+tqdm
+numpy
+textblob==0.17.1
+pycoingecko==3.1.0
+matplotlib==3.10.1
+newsapi-python==0.2.7
+scikit-learn==1.4.0
+statsmodels==0.14.1
