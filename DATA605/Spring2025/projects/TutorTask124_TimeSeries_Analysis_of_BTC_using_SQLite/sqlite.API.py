@@ -21,14 +21,17 @@ The name of this script should in the following format:
 # Avoid imports like import *, from ... import ..., from ... import *, etc.
 import logging
 
-# Following is a useful library for typehinting.
-# For typehints like list, dict, etc. you can use the following:
-## def func(arg1:List[int]) -> List[int]:
-# For more info check: https://docs.python.org/3/library/typing.html
-from typing import List
-
+# Import standard and third-party libraries for logging, HTTP requests, data handling, visualization, and database operations.
+import logging
+from requests import Request, Session
 import pandas as pd
-import numpy as np
+import sqlite3
+import mplfinance as mpf
+import yfinance as yf
+import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+import sqlite_utils
 
 # Prefer using logger over print statements.
 # You can use logger in the following manner:
@@ -44,47 +47,44 @@ _LOG = logging.getLogger(__name__)
 
 
 # #############################################################################
-# Template
+# API Script
 # #############################################################################
 
 
-class Template:
-    """
-    Brief imperative description of what the class does in one line, if needed.
-    """
+# Set your CoinMarketCap API key.
+API_KEY = 'bdbd5008-53de-4bf9-b9b8-c1edb2c6afb0'
 
-    def __init__(self):
-        pass
+# Define headers for API authentication and response format.
+headers = {'X-CMC_PRO_API_KEY': API_KEY,'Accept': 'application/json'}
 
-    def method1(self, arg1: int) -> None:
-        """
-        Brief imperative description of what the method does in one line.
+# Define the endpoint URL for fetching latest cryptocurrency listings.
+url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
 
-        You can elaborate more in the method docstring in this section, for
-        e.g. explaining the formula/algorithm. Every method/function should
-        have a docstring, typehints and include the parameters and return as
-        follows:
+# Set request parameters: limit results and specify currency conversion.
+params = {'limit': 1,'convert': 'USD'}
 
-        :param arg1: description of arg1
-        :return: description of return
-        """
-        # Code bloks go here.
-        # Make sure to include comments to explain what the code is doing.
-        # No empty lines between code blocks.
+# Set the date format string for consistent datetime parsing.
+DATEFMT = "%Y-%m-%d-%H-%M-%S"
+
+# Fetch 15 years of daily BTC-USD historical data using a custom sqlite_utils function.
+data = sqlite_utils.fetchHistoricalBTC(ticker="BTC-USD", period='15y', interval='1d')
 
 
-def template_function(arg1: int) -> None:
-    """
-    Brief imperative description of what the function does in one line.
+# Store the DataFrame into a local SQLite database file named 'btcDaily.db'.
+sqlite_utils.storeData(data=data, db="./btcDaily.db")
 
-    You can elaborate more in the function docstring in this section, for e.g.
-    explaining the formula/algorithm. Every function should have a docstring,
-    typehints and include the parameters and return as follows:
+# Define SQL query to select all records from the btc_daily_stats table.
+query = "SELECT * FROM btc_daily_stats"
 
-    :param arg1: description of arg1
-    :return: description of return
-    """
-    # Code bloks go here.
-    # Make sure to include comments to explain what the code is doing.
-    # No empty lines between code blocks.
-    pass
+# Fetch the data from the database.
+data = sqlite_utils.fetchDB(query=query, db="./btcDaily.db")
+
+
+# Define the endpoint for live Bitcoin quotes.
+url = 'https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest'
+
+# Fetch live Bitcoin data and additional statistics using a custom utility.
+btcLiveData, btcAuxData = sqlite_utils.liveBTC(url=url, API_KEY=API_KEY)
+
+# Add the latest live data point to the local SQLite database.
+sqlite_utils.addDatapoint(liveData=btcLiveData, db="./btcDaily.db")

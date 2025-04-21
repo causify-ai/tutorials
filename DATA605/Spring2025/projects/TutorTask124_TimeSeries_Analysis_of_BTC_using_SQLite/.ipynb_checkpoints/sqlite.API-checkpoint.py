@@ -21,12 +21,7 @@ The name of this script should in the following format:
 # Avoid imports like import *, from ... import ..., from ... import *, etc.
 import logging
 
-# Following is a useful library for typehinting.
-# For typehints like list, dict, etc. you can use the following:
-## def func(arg1:List[int]) -> List[int]:
-# For more info check: https://docs.python.org/3/library/typing.html
-from typing import List
-
+# Import standard and third-party libraries for logging, HTTP requests, data handling, visualization, and database operations.
 import logging
 from requests import Request, Session
 import pandas as pd
@@ -34,6 +29,7 @@ import sqlite3
 import mplfinance as mpf
 import yfinance as yf
 import matplotlib.pyplot as plt
+%matplotlib inline
 import seaborn as sns
 import sqlite_utils
 
@@ -51,131 +47,44 @@ _LOG = logging.getLogger(__name__)
 
 
 # #############################################################################
-# Bitcoin API Setup using SQLite Script
+# API Script
 # #############################################################################
 
+
+# Set your CoinMarketCap API key.
 API_KEY = 'bdbd5008-53de-4bf9-b9b8-c1edb2c6afb0'
+
+# Define headers for API authentication and response format.
 headers = {'X-CMC_PRO_API_KEY': API_KEY,'Accept': 'application/json'}
+
+# Define the endpoint URL for fetching latest cryptocurrency listings.
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
+
+# Set request parameters: limit results and specify currency conversion.
 params = {'limit': 1,'convert': 'USD'}
 
+# Set the date format string for consistent datetime parsing.
 DATEFMT = "%Y-%m-%d-%H-%M-%S"
 
-# Load Data
+# Fetch 15 years of daily BTC-USD historical data using a custom sqlite_utils function.
 data = sqlite_utils.fetchHistoricalBTC(ticker="BTC-USD", period='15y', interval='1d')
 
-# Storing Data into SQLite
+
+# Store the DataFrame into a local SQLite database file named 'btcDaily.db'.
 sqlite_utils.storeData(data=data, db="./btcDaily.db")
 
-# Query Data from SQLite
+# Define SQL query to select all records from the btc_daily_stats table.
 query = "SELECT * FROM btc_daily_stats"
+
+# Fetch the data from the database.
 data = sqlite_utils.fetchDB(query=query, db="./btcDaily.db")
 
-# Live BTC Price
+
+# Define the endpoint for live Bitcoin quotes.
 url = 'https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest'
-API_KEY = 'bdbd5008-53de-4bf9-b9b8-c1edb2c6afb0'
+
+# Fetch live Bitcoin data and additional statistics using a custom utility.
 btcLiveData, btcAuxData = sqlite_utils.liveBTC(url=url, API_KEY=API_KEY)
 
-# Inserting Live Data into SQLite
+# Add the latest live data point to the local SQLite database.
 sqlite_utils.addDatapoint(liveData=btcLiveData, db="./btcDaily.db")
-
-# #############################################################################
-# Bitcoin Analysis using SQLite Script
-# #############################################################################
-# 
-
-query = "SELECT * FROM btc_daily_stats"
-data = sqlite_utils.fetchDB(query=query, db="./btcDaily.db")
-data['date'] = pd.to_datetime(data['date'], format=DATEFMT)
-
-# Bitcoin Open Price
-plt.figure(figsize=(15,5), dpi=100)
-sns.lineplot(data=data, x='date', y='open')
-sns.scatterplot(x=[data.iloc[-1]['date']], y=[data.iloc[-1]['open']], s=500, marker='*', color='red', label='Current BTC Price') 
-plt.grid(True)
-plt.xlabel("Date")
-plt.ylabel("Opening Price")
-plt.title("BTC Opening price across time.")
-plt.show(block=False)
-
-## Moving Average
-query = '''SELECT 
-    date,
-    open,
-    ROUND(AVG(open) OVER (
-        ORDER BY date 
-        ROWS BETWEEN 1 PRECEDING AND CURRENT ROW
-    ), 2) AS ma_2d_open, --Adding 2 Day Moving Average
-    
-    ROUND(AVG(open) OVER (
-        ORDER BY date 
-        ROWS BETWEEN 29 PRECEDING AND CURRENT ROW
-    ), 2) AS ma_30d_open, --Adding 30 Day Moving Average
-    
-    ROUND(AVG(open) OVER (
-        ORDER BY date 
-        ROWS BETWEEN 119 PRECEDING AND CURRENT ROW
-    ), 2) AS ma_120d_open --Adding 120 Day Moving Average
-FROM btc_daily_stats
-ORDER BY date;
-'''
-dataMA = sqlite_utils.fetchDB(query=query, db="./btcDaily.db")
-dataMA['date'] = pd.to_datetime(dataMA['date'], format=DATEFMT)
-
-plt.figure(figsize=(15,5), dpi=100)
-sns.lineplot(data=dataMA, x='date', y='open', label='Open Price', color='royalblue')
-sns.lineplot(data=dataMA, x='date', y='ma_2d_open', label='2day MA Open Price', color='tomato')
-sns.lineplot(data=dataMA, x='date', y='ma_30d_open', label='30day MA Open Price', color='orange')
-sns.lineplot(data=dataMA, x='date', y='ma_120d_open', label='120day MA Open Price', color='forestgreen')
-
-sns.scatterplot(x=[dataMA.iloc[-1]['date']], y=[dataMA.iloc[-1]['open']], s=500, marker='*', color='red', label='Current BTC Price') 
-plt.grid(True)
-plt.xlabel("Date")
-plt.ylabel("Opening Price")
-plt.title("BTC Opening price across time.")
-plt.show(block=False)
-
-## Moving Average - Data Range
-dateStart, dateEnd = '2024-12-24-00-00-00', '2025-04-15-00-00-00'
-
-query = f'''SELECT 
-    date,
-    open,
-    ROUND(AVG(open) OVER (
-        ORDER BY date 
-        ROWS BETWEEN 1 PRECEDING AND CURRENT ROW
-    ), 2) AS ma_2d_open,
-    
-    ROUND(AVG(open) OVER (
-        ORDER BY date 
-        ROWS BETWEEN 29 PRECEDING AND CURRENT ROW
-    ), 2) AS ma_30d_open,
-    
-    ROUND(AVG(open) OVER (
-        ORDER BY date 
-        ROWS BETWEEN 119 PRECEDING AND CURRENT ROW
-    ), 2) AS ma_120d_open
-FROM btc_daily_stats
-WHERE date BETWEEN '{dateStart}' AND '{dateEnd}' --Adding Date Range
-ORDER BY date;
-'''
-
-dataMA = sqlite_utils.fetchDB(query=query, db="./btcDaily.db")
-dataMA['date'] = pd.to_datetime(dataMA['date'], format=DATEFMT)
-
-plt.figure(figsize=(15,5), dpi=100)
-sns.lineplot(data=dataMA, x='date', y='open', label='Open Price', color='royalblue')
-sns.lineplot(data=dataMA, x='date', y='ma_2d_open', label='2day MA Open Price', color='tomato')
-sns.lineplot(data=dataMA, x='date', y='ma_30d_open', label='30day MA Open Price', color='orange')
-sns.lineplot(data=dataMA, x='date', y='ma_120d_open', label='120day MA Open Price', color='forestgreen')
-
-sns.scatterplot(x=[dataMA.iloc[-1]['date']], y=[dataMA.iloc[-1]['open']], s=400, marker='*', color='red', label='Current BTC Price') 
-plt.grid(True)
-plt.xlabel("Data")
-plt.ylabel("Opening Price")
-
-plt.title(f"BTC Opening price from {dateStart[:10]} to {dateEnd[:10]}")
-plt.show(block=False)
-
-
-plt.show()
