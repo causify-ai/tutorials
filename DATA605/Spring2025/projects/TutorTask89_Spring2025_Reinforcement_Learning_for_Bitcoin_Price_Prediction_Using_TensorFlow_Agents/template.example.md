@@ -9,7 +9,7 @@
 
 # Project description
 
-- E.g., Building an awesome system to ... with `pycaret`
+- A reinforcement learning agent using `TF-Agents` to predict and act upon Bitcoin price movements based on historical data.​
 
 ## Table of Contents
 
