@@ -2,6 +2,14 @@
 .env
 data1/
 data2/
+
+../../../../.DS_Store
+../../../.DS_Store
+../../.DS_Store
+../.DS_Store
+../../../../tutorial_neo4j/.DS_Store
+../../../../tutorial_neo4j/dev_scripts_tutorial_neo4j/.DS_Store
+../../../../tutorial_neo4j/devops/.DS_Store
 # Python bytecode
 __pycache__/
 *.py[cod]
