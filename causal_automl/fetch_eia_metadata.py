@@ -159,7 +159,7 @@ def _main(parser: argparse.ArgumentParser) -> None:
     args = parser.parse_args()
     hdbg.init_logger(verbosity=args.log_level, use_exec_path=True)
     _LOG.debug("Traversing EIA hierarchy under category='%s'...", args.category)
-    # Fetch metadata
+    # Fetch metadata.
     metadata_list = _collect_leaf_metadata(args.category, args.api_key)
     _LOG.debug("Found %d leaf datasets.", len(metadata_list))
     if metadata_list:
