@@ -1,7 +1,5 @@
 # Environment variables
 .env
-data1/
-data2/
 
 ../../../../.DS_Store
 ../../../.DS_Store
