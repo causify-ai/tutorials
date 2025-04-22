@@ -1,0 +1,12 @@
+tensorflow
+tf-agents
+gymnasium
+numpy
+pandas
+matplotlib
+pycoingecko
+python-dotenv
+PyYAML
+tqdm
+absl-py
+scikit-learn
