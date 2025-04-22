@@ -1,3 +1,0 @@
-gremlinpython
-async-timeout
-aiohttp
