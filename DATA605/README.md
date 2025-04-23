@@ -149,7 +149,7 @@
 
   ```bash
   > cd $HOME/src
-  > git clone git@github.com:causify-ai/tutorials.git tutorials1
+  > git clone --recursive git@github.com:causify-ai/tutorials.git tutorials1
   > cd $HOME/src/tutorials1
   > git checkout master
   > git checkout -b TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles
@@ -162,7 +162,7 @@
       `~/src/tutorials1/DATA605/Spring2025/projects/TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles`
   - Copy the template files to the project directory:
     ```bash
-    > cp -r ~/src/tutorials1/DATA605/Spring2025/tutorial_template/ ~/src/tutorials1/DATA605/Spring2025/projects/{branch_name}
+    > cp -r ~/src/tutorials1/DATA605/tutorial_template/ ~/src/tutorials1/DATA605/Spring2025/projects/{branch_name}
     ```
   - Start working on the files
 
@@ -182,42 +182,45 @@
 
 ## Configuring your system
 
-- We have a flow for students -> interns / RAs / TAs -> full time contributors
-  - There are different levels of complexity to set up your system to work
-  - Tmux vs not tmux
-  - Docker Python workflow (like in the tutorials) vs Docker bash workflow
-  - ...
+Before starting implementation, you need to choose **one** of the two supported Docker-based workflows. Finalize your setup choice before proceeding with development.
 
-- A detailed guide on how to configure the system as interns is
-  https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md
-  - Contains various workflows (with different level of complexity / efficiency)
+### 1. Simple Docker Setup (`data605_style`) — Recommended for Students
 
-- An interesting set of reading to become a better developer / researcher is
-  here
-  https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.onboarding_checklist.reference.md#must-read
-  - Note that this is from interns, you don't have to set everything up
-    according to this document
+- A minimal and straightforward setup, modeled after what we use in DATA605 tutorials.
+- The environment comes with Python, Jupyter, and commonly-used packages already installed.
+- Simple scripts (`docker_build.sh`, `docker_bash.sh`, `docker_jupyter.sh`) help you build the container, launch it, and start working immediately.
+- Ideal for students who:
+  - Are new to Docker or want to avoid setup overhead
+  - Need a reliable, pre-built environment to focus on the tutorial and project code
+
+- You may still customize the Dockerfile, expose other ports, or add project-specific dependencies as needed.
+
+### 2. Causify-style Thin Docker Environment (`causify_style`)
+
+- A production-style Docker setup used in internships, RA/TA work, at Causify AI.
+- Uses a thin Docker layer, with logic written in Python and reusable script structure.
+
+- **Why choose this?**
+  - Encouraged for students familiar with Docker or looking to grow into advanced workflows
+  - Recommended for contributing to Causify, MSML610, and DATA605 long-term projects
+
+- Setup Guide:
+  - To configure your system for this approach, follow this detailed guide:  
+    - [Set Up Development on Laptop](https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
+
+  - You may also refer to this reference checklist curated for interns:  
+    - [Intern Onboarding Reference](https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.onboarding_checklist.reference.md#must-read)
+
+> *Note: You don’t have to follow everything in the intern checklist — it’s meant to help you become a better developer/researcher.*
+
+### Want to Learn More?
+
+If you’re unsure which setup is best or want to explore both, refer to the full breakdown in the tutorial template:  
+  - [Tutorial Template: Two Docker Approaches](https://github.com/causify-ai/tutorials/blob/master/DATA605/tutorial_template/README.md)
 
 ## Working on the project
 
-- Use the project template files in `//tutorials/DATA605/tutorial_template` to
-  understand the deliverables and the coding style
-- They consist of:
-
-- **Scripts/Notebooks**:
-  - You will work on one API file and one Example (Your project) file.
-  - We encourage you to use Python files and call the code from notebooks
-- **Markdowns**:
-  - One markdown file linked to each python script, i.e, API and example
-
-In general
-
-- For API: you are expected to describe the API, its architecture, etc.
-- For Example: You are expected to use the project tool according to the
-  specifications mentioned in
-  [Google Doc](https://docs.google.com/document/d/1fEd7_oLhFnA5ovzj_HMb9EeMU84nOGEGeWqNRZSz2wo)
-
-### Documentation
+### Project Goal
 
 - For your course project, you're not just building something cool, but you're
   also teaching others how to use a Big Data, AI, LLM, or data science tech
@@ -230,43 +233,70 @@ In general
     important aspects a developer should know before starting building with that
     technology.
 
-- You are expected to create an end-to-end tutorial for your package in
-  accordance with the guidelines mentioned
-  [here](/docs/all.how_write_tutorials.how_to_guide.md).
+### Understanding the deliverables
+
+- Use the project template files in `//tutorials/DATA605/tutorial_template` to
+  understand the deliverables and the coding style. They consist of:
+
+- **Utils Module**:
+  - This file is meant to contain helper functions, reusable logic, and API wrappers.
+  - Keep the notebooks focused on documentation and outputs. Place any logic or workflow functions inside this module.
+- **Scripts/Notebooks**:
+  - You will work on one API file and one Example (Your project) file.
+  - We encourage you to use Python files (Utils module) and call the code from notebooks.
+- **Markdowns**:
+  - One markdown file linked to each python script, i.e, API and example.
+
+For more guidance on this structure and the rationale behind it, see [How to write the Tutorial](https://github.com/causify-ai/tutorials/blob/master/docs/all.how_write_tutorials.how_to_guide.md).
+
+In general
+
+- For API: you are expected to describe the API, its architecture, etc.
+- For Example: You are expected to use the project tool according to the
+  specifications mentioned in
+  [Google Doc](https://docs.google.com/document/d/1fEd7_oLhFnA5ovzj_HMb9EeMU84nOGEGeWqNRZSz2wo)
 
 ## Submission
 
-- You will submit two markdown files
-  - `XYZ.API.md`: A markdown about the API and the software layer written by you
-    on top of the native API
-  - `XYZ.example.md`: A markdown with a full example of an application using the
-    API
+Your submission must include the following files:
 
-- Your tutorials should provide a comprehensive, detailed explanation of every
-  aspect of the project. They should include, but are not limited to, the
-  following:
-  - Explain how to run the system by starting the container system, e.g.,
-    - Report command lines
-    - How the output looks like
-    - ...
-  - Describe exactly what you have done
-    - Describe the script/notebook with examples of the output
-    - Use diagrams (e.g., use `mermaid`)
-    - Describe the schema used in the DB if you have any
-    - ...
+1. `XYZ.API.md`:  
+   - A markdown file documenting the native API and the software layer you have written on top of it
 
-- The script/notebook should be able to run end-to-end without errors, otherwise
-  the project is not considered complete
-  - Ideally the notebook should run correctly by executing "Restart and Run all
-    cells"
-  - We are not going to debug your code
-  - If there are problems we will use the GitHub issue to communicate and we
-    expect you to fix the problem
+2. `XYZ.API.ipynb`:  
+   - A Jupyter notebook demonstrating usage of the native API and your wrapper layer, with clean, minimal cells
 
-- **NOTE**: The Markdown files should not be copy-paste of the notebook's cells
-  and output.
-  - The markdown should explain the "why", the decision choices, while the code
-    should explain the "what" and "how"
+3. `XYZ.example.md`:  
+   - A markdown file presenting a complete example of an application that uses your API layer
+
+4. `XYZ.example.ipynb`:  
+   - A Jupyter notebook corresponding to the example above, demonstrating end-to-end functionality
+
+5. `XYZ_utils.py`:  
+   - A Python module containing reusable utility functions and wrappers around the API
+   - The notebooks should invoke logic from this file instead of embedding complex code inline
+
+### Submission Guidelines
+
+- Each markdown file should explain the intent and design decisions:
+  - Avoid copy-pasting code cells or raw outputs from the notebooks
+  - Instead, use the markdown to communicate the reasoning behind your choices
+
+- Each notebook should:
+  - Be self-contained and executable from top to bottom via "Restart and Run All"
+  - Use functions from `XYZ_utils.py` to keep the cells concise and maintainable
+  - Demonstrate functionality clearly and logically with clean, commented outputs
+
+- Docker setup:
+  - Include clear instructions on how to build and run your Docker container
+  - Mention expected terminal outputs when running scripts (e.g., starting Jupyter, mounting volumes, etc.)
+
+- Visual documentation:
+  - Include diagrams and flowcharts when relevant (e.g., using `mermaid`)
+  - Provide schema descriptions if your project uses a database or structured data
+
+- Projects that do not run end-to-end or lack proper documentation will be considered incomplete
+  - In case of issues, they will be flagged through GitHub issues, and you will be expected to resolve them in a timely manner
 
 ## Examples of a class project
 
@@ -278,6 +308,10 @@ The layout of each project should follow the examples in
   [neo4j](https://github.com/causify-ai/tutorials/tree/master/tutorial_neo4j)
 - Example for
   [open_ai tutorial](https://github.com/causify-ai/tutorials/tree/master/tutorial_openai)
+- Example for
+  [github tutorial (data605_style)](https://github.com/causify-ai/tutorials/tree/master/tutorial_github_data605_style)
+- Example for
+  [github tutorial (causify_style)](https://github.com/causify-ai/tutorials/tree/master/tutorial_github_causify_style)
 
-- Note that the tutorials from DATA605 class are built using a simpler approach
+> Note that the tutorials from DATA605 class are built using a simpler approach
   for Docker and bash (e.g., `bash` scripts instead of Python code)

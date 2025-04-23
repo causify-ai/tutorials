@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.16.7
+#       jupytext_version: 1.17.0
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -37,7 +37,7 @@
 #
 # Our custom GitHub API layer enables a wide range of data-driven assessments of developer activity and repository health. Below are some practical use cases that can be directly implemented using the APIs exposed by our software layer.
 #
-# ### 1. Individual Developer Contribution Report
+# ### Individual Developer Contribution Report
 # Generate a personal activity summary for a specific contributor within a defined time range. Metrics include:
 # - Number of commits across repositories.
 # - Number of pull requests (PRs) created.
@@ -46,7 +46,7 @@
 #
 # > **Use case:** Great for quarterly reviews or self-assessments.
 #
-# ### 2. Comparative Productivity Analysis
+# ### Comparative Productivity Analysis
 # Compare the contributions of two or more developers using metrics such as:
 # - Commits per repository.
 # - PRs submitted and merged.
@@ -54,7 +54,7 @@
 #
 # > **Use case:** Helps team leads assess team balance, recognize underappreciated efforts, or allocate resources more efficiently.
 #
-# ### 3. Identify Most Active Contributors
+# ### Identify Most Active Contributors
 # Scan an entire organization and rank users based on contribution statistics such as:
 # - Total commits.
 # - PR activity (opened/merged).
@@ -62,19 +62,19 @@
 #
 # > **Use case:** Identify top performers or potential mentors in the team.
 #
-# ### 4. Stale or Unmerged PR Monitoring
+# ### Stale or Unmerged PR Monitoring
 # Detect PRs that have been closed but not merged. These could indicate:
 # - Abandoned or rejected work.
 # - PRs needing review attention.
 #
 # > **Use case:** Improve code review cycles and minimize wasted effort.
 #
-# ### 5. Open Issues Without Assignees
+# ### Open Issues Without Assignees
 # Track unassigned issues to ensure tasks are distributed and prioritized appropriately.
 #
 # > **Use case:** Project managers can use this to ensure no work falls through the cracks.
 #
-# ### 6. Team-Level Activity Heatmaps
+# ### Team-Level Activity Heatmaps
 # Generate visual dashboards showing activity across teams or projects:
 # - Contribution volume by repository.
 # - Commit spikes over time.
@@ -85,15 +85,21 @@
 # ## Setup
 #
 # Before proceeding with API calls, ensure that your environment is correctly set up.
-#
-# ### 1. Install Dependencies
-# You need to install `PyGithub` to interact with GitHub.
 
 # %%
-# !sudo /venv/bin/pip install PyGithub plotly
+# !sudo /bin/bash -c "(source /venv/bin/activate; pip install --quiet jupyterlab-vim)"
+# !jupyter labextension enable
 
 # %% [markdown]
-# ### 2. Import Required Modules
+# ### Install required libraries
+# Install the required libraries: 
+
+# %%
+# Install plotly.
+# !sudo /venv/bin/pip install plotly
+
+# %% [markdown]
+# ### Import Required Modules
 # Import the necessary libraries:
 
 # %%
@@ -111,7 +117,7 @@ logging.basicConfig(level=logging.INFO)
 _LOG = logging.getLogger(__name__)
 
 # %% [markdown]
-# ### 3. Set Up GitHub Authentication
+# ### Set Up GitHub Authentication
 # Store your **GitHub Personal Access Token (PAT)** as an environment variable for security. You can do this in your terminal:
 #
 # ```sh
@@ -122,7 +128,7 @@ _LOG = logging.getLogger(__name__)
 
 # %%
 # Set your GitHub access token here.
-os.environ["GITHUB_ACCESS_TOKEN"] = "your_personal_access_token"
+os.environ["GITHUB_ACCESS_TOKEN"] = ""
 
 # Retrieve it when needed.
 access_token = os.getenv("GITHUB_ACCESS_TOKEN")
