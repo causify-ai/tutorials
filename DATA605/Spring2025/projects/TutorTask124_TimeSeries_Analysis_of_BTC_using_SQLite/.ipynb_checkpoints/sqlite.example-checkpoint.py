@@ -44,7 +44,7 @@ _LOG = logging.getLogger(__name__)
 # Bitcoin API Setup using SQLite Script
 # #############################################################################
 
-API_KEY = 'bdbd5008-53de-4bf9-b9b8-c1edb2c6afb0'
+API_KEY = # TO BE FILLED
 headers = {'X-CMC_PRO_API_KEY': API_KEY,'Accept': 'application/json'}
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
 params = {'limit': 1,'convert': 'USD'}
