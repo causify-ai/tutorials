@@ -94,18 +94,18 @@ def _collect_leaf_metadata(route: str, api_key: str) -> List[Dict[str, Any]]:
         return []
     # Get child routes if present and recurse into each.
     children = data.get("routes", [])
-    metadata_list = []
+    metadata_entries = []
     if children:
         # Recurse to get leaf node.
         for child in children:
             child_id = child["id"]
             child_route = f"{route}/{child_id}"
-            metadata_list.extend(_collect_leaf_metadata(child_route, api_key))
+            metadata_entries.extend(_collect_leaf_metadata(child_route, api_key))
     else:
         # This is a leaf route, extract and append metadata.
         metadata = _extract_metadata(data, route)
-        metadata_list.append(metadata)
-    return metadata_list
+        metadata_entries.append(metadata)
+    return metadata_entries
 
 
 # #############################################################################
@@ -114,21 +114,21 @@ def _collect_leaf_metadata(route: str, api_key: str) -> List[Dict[str, Any]]:
 
 
 def _write_csv_to_s3(
-    metadata_list: List[Dict], filename: str, aws_profile: str
+    metadata_entries: List[Dict], filename: str, aws_profile: str
 ) -> None:
     """
     Write metadata to an S3 bucket in CSV format.
 
-    :param metadata_list: metadata to be written
+    :param metadata_entries: metadatas to be written
     :param filename: full S3 URI where CSV should be saved
     :param aws_profile: AWS CLI profile to use for authentication
     """
     # Prepare CSV content in memory.
-    fieldnames = list(metadata_list[0].keys())
+    fieldnames = list(metadata_entries[0].keys())
     buffer = io.StringIO()
     writer = csv.DictWriter(buffer, fieldnames=fieldnames)
     writer.writeheader()
-    for row in metadata_list:
+    for row in metadata_entries:
         writer.writerow(row)
     # Upload the CSV string to the specified S3 bucket.
     csv_str = buffer.getvalue()
@@ -160,16 +160,16 @@ def _main(parser: argparse.ArgumentParser) -> None:
     hdbg.init_logger(verbosity=args.log_level, use_exec_path=True)
     _LOG.debug("Traversing EIA hierarchy under category='%s'...", args.category)
     # Fetch metadata.
-    metadata_list = _collect_leaf_metadata(args.category, args.api_key)
-    _LOG.debug("Found %d leaf datasets.", len(metadata_list))
-    if metadata_list:
+    metadata_entries = _collect_leaf_metadata(args.category, args.api_key)
+    _LOG.debug("Found %d leaf datasets.", len(metadata_entries))
+    if metadata_entries:
         file_name = f"eia_{args.category}_metadata.csv"
         output_path = (
             f"s3://causify-data-collaborators/causal_automl/metadata/{file_name}"
         )
         _LOG.debug("Writing metadata to: %s", output_path)
         # Write to S3 bucket.
-        _write_csv_to_s3(metadata_list, output_path, args.aws_profile)
+        _write_csv_to_s3(metadata_entries, output_path, args.aws_profile)
     else:
         # Skip if no metadata found.
         _LOG.warning("No leaf datasets found under category='%s'.", args.category)
