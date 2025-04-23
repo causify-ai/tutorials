@@ -34,7 +34,14 @@ RUN pip3 install \
     jupyter-contrib-core \
     jupyter-contrib-nbextensions \
     psycopg2-binary \
-    yapf
+    pycoingecko==3.1.0 \
+    pandas==2.2.0 \
+    numpy==1.26.3 \
+    newsapi-python==0.2.7\
+    textblob==0.17.1 \
+    statsmodels==0.14.1
+
+
 
 RUN mkdir /install
 
