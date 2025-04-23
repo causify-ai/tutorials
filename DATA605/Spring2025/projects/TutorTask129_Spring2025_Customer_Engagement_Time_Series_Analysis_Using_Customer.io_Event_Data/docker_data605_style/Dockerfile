@@ -34,13 +34,14 @@ RUN pip3 install \
     jupyter-contrib-core \
     jupyter-contrib-nbextensions \
     psycopg2-binary \
-    yapf
+    yapf \
+    jupyterlab
 
 RUN mkdir /install
 
 # Install Jupyter extensions.
 ADD install_jupyter_extensions.sh /install
-RUN /install/install_jupyter_extensions.sh
+# RUN /install/install_jupyter_extensions.sh
 
 # Config.
 ADD etc_sudoers /install/
