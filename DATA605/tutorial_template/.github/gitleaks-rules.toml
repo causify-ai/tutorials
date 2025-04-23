@@ -1,0 +1,8 @@
+# .github/gitleaks-rules.toml
+title = "Gitleaks rules for tutorial"
+
+# Example rule: flag any assignment to a “password”-like variable
+[[rules]]
+description = "Generic password assignment"
+regex = '''(?i)(password|passwd|pwd)\s*[:=]\s*["']?[\w\W]{4,}'''
+tags = ["key","password"]
