@@ -33,7 +33,7 @@ wheels/
 *.egg
 
 # Data files
-*.csv
+# *.csv
 *.json
 *.db
 # data/
