@@ -15,11 +15,12 @@
 # %% [markdown]
 # CONTENTS:
 # - [Exploratory Data Analysis: FRED Metadata](#exploratory-data-analysis:-fred-metadata)
-#   - [Contents](#contents)
 #   - [Introduction](#introduction)
 #   - [Import necessary Packages and load the Metadata](#import-necessary-packages-and-load-the-metadata)
 #     - [Column information](#column-information)
 #   - [Preprocessing](#preprocessing)
+#   - [Common Plotting Functions](#common-plotting-functions)
+#   - [Filtering Functions](#filtering-functions)
 #   - [Introductory Analytics](#introductory-analytics)
 #     - [Missing Data](#missing-data)
 #     - [Descriptor Analytics](#descriptor-analytics)
@@ -36,9 +37,10 @@
 #   - [Seasonal Adjustment Analysis](#seasonal-adjustment-analysis)
 #   - [Analyses on Categories and Tags](#analyses-on-categories-and-tags)
 #     - [Categories Distribution](#categories-distribution)
+#     - [Hierarchical Categorical Analyses](#hierarchical-categorical-analyses)
 #     - [Tags Distribution](#tags-distribution)
 #     - [Count of Tags and Categories per Series](#count-of-tags-and-categories-per-series)
-#     - [Co-occurance of the Top 20 Tags with the Top 20 Categories](#co-occurance-of-the-top-20-tags-with-the-top-20-categories)
+#     - [Top Tags for Each Root Category](#top-tags-for-each-root-category)
 #   - [Geographical Analysis](#geographical-analysis)
 #     - [US vs Non-US](#us-vs-non-us)
 #     - [Breakdown by Continent](#breakdown-by-continent)
@@ -52,58 +54,10 @@
 # # Exploratory Data Analysis: FRED Metadata
 
 # %% [markdown]
-# <a name='contents'></a>
-# ## Contents
-#
-# - [Introduction](#introduction)
-# - [Import necessary Packages and load the Metadata](#import-necessary-packages-and-load-the-metadata)
-#   - [Column information](#column-information)
-#
-# - [Preprocessing](#preprocessing)
-#
-# - [Introductory Analytics](#introductory-analytics)
-#     - [Missing Data](#missing-data)
-#     - [Descriptor Analytics](#descriptor-analytics)
-#     - [Top Data Sources](#top-data-sources)
-#
-# - [Data Freshness](#data-freshness)
-#     - [Start/End Cohorts by Decade](#startend-cohorts-by-decade)
-#     - [Discontinued Series](#discontinued-series)
-#     - [Active vs. Discontinued by Source](#activevs-discontinued-by-source)
-#     - [Top 20 Discontinued by Data Source](#top-20-discontinued-by-data-source)
-#     - [Top 20 Discontinued by Tag](#top-20-discontinued-by-tag)
-#     - [Top 20 Discontinued by Category](#top-20-discontinued-by-category)
-#     - [Overall Frequency Distribution](#frequency-distribution-by-base-frequency)
-#     - [Non‑Dominant Frequency Distribution](#non-dominant-frequency-distribution)
-#     - [Base Frequency by Data Source (Top 20)](#data-source-vs-base-frequency-top-20-sources)
-#     - [Base Frequency by Data Source (Non‑dominant)](#data-source-vs-base-frequency-non-dominant-sources)
-#
-# - [Seasonal Adjustment Distribution](#seasonal-adjustment-distribution)
-#
-# - [Analyses of Categories and Tags](#analyses-on-categories-and-tags)
-#     - [Categories Distribution](#categories-distribution)
-#     - [Tags Distribution](#tags-distribution)
-#     - [Count of Tags and Categories per Series](#count-of-tags-and-categories-per-series)
-#     - [Tag–Category Co‑occurrence Heatmap](#tag–category-co-occurrence)
-#
-# - [Geographical Analysis](#geographical-analysis)
-#     - [US vs Non‑US Data](#us-vs-non-us-data)
-#     - [Series by Continent](#series-by-continent)
-#     - [Distribution in Non‑Dominant Continents](#distribution-in-non-dominant-continents)
-#     - [Choropleth: Series Count by State](#choropleth-series-count-by-state)
-#
-# - [Analysis of some Derived Features](#analyses-of-some-derived-features)
-#     - [Feature Correlation](#feature-correlation)
-#     - [Duration vs. Staleness](#duration-vs-staleness)
-#
-# ---
-#
-
-# %% [markdown]
 # <a name='introduction'></a>
 # ## Introduction
 #
-# This notebook draws statistical insights from the metadata of the Federdal Reserve Economic Database. The goal is to get a full picture of what data is available on FRED. It performs a suite of exploratory analyses on `s3://causify-data-collaborators/causal_automl/metadata/fred_series_metadata.csv`, including tag/category distributions, temporal and geographic breakdowns, source comparisons, and more.
+# This notebook draws statistical insights from the metadata of the Federdal Reserve Economic Database. The goal is to get a full picture of what data is available on FRED, including tag/category distributions, temporal and geographic breakdowns, source comparisons, and more.
 
 # %% [markdown]
 # <a name='import-necessary-packages-and-load-the-metadata'></a>
@@ -115,8 +69,11 @@
 # %autoreload 2
 import json
 import textwrap
+from collections import Counter, defaultdict
+from typing import Dict, List, Optional, Sequence, Tuple
 
 import helpers.hs3 as hs3
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -137,9 +94,13 @@ stream = s3.open(file_path, mode="r")
 fred = pd.read_csv(stream, engine="python", on_bad_lines="skip")
 
 # %%
+# fred = pd.read_csv('fred_series_metadata_saved_new.csv')
+
+# %%
 print(fred.shape)
 print(fred.columns)
 fred.head(5)
+
 
 # %% [markdown]
 # <a name='column-information'></a>
@@ -165,112 +126,583 @@ fred.head(5)
 # %% [markdown]
 # <a name='preprocessing'></a>
 # ## Preprocessing
-#
-# To get useful insights, the dataset is first processed, with the data standardized and some new columns derived. The raw CSV is first loaded with all fields as strings, then the key date columns are converted into proper timestamps and any timezone info is removed. We split out tags and categories into list columns, count how many each series has, and flag those marked “discontinued.” We also derive how long it’s been since each series was updated, bucket update and start/end years for easy grouping, and compute roughly how many years each series spans. This gives us a clean, consistent table ready for analysis.
 
 # %%
-# Parse all date columns, and base frequencies
-# last_updated: ISO with timezone → UTC → drop tzinfo.
-fred["last_updated"] = pd.to_datetime(
-    fred["last_updated"], utc=True, errors="coerce"
-).dt.tz_convert(None)
-# start_date & end_date: simple YYYY-MM-DD → datetime, invalid → NaT.
-fred["start_date"] = pd.to_datetime(
-    fred["start_date"], format="%Y-%m-%d", errors="coerce"
-)
-fred["end_date"] = pd.to_datetime(
-    fred["end_date"], format="%Y-%m-%d", errors="coerce"
-)
-fred["freq_base"] = (
-    fred["frequency"]
-    .fillna("Not Available")
-    .str.split(pat=",", n=1)  # specify n by name
-    .str[0]
-)
 
-# %%
-# Split tags & categories, count them, and flag discontinuations.
-# Expand semicolon-separated strings into Python lists.
-fred["tags_list"] = fred["tags"].str.split(";")
-fred["categories_list"] = (
-    fred["categories"]
-    .fillna("")  # avoid None
-    .str.split(";")  # split on ;
-    .apply(
-        lambda L: [  # strip + title‑case
-            c.strip().title() for c in L if c.strip()
-        ]
+
+def preprocess_fred(
+    df: pd.DataFrame, country_continent_csv: str = "country_continent.csv"
+) -> pd.DataFrame:
+    """
+    Preprocessing function.
+
+    :param df: raw FRED DataFrame
+    :param country_continent_csv: path to CSV mapping Country_Name →
+        Continent_Name
+    :return: preprocessed data
+    """
+    df = df.copy()
+    # Parse dates & drop tzinfo.
+    df["last_updated"] = pd.to_datetime(
+        df["last_updated"], utc=True, errors="coerce"
+    ).dt.tz_convert(None)
+    df["start_date"] = pd.to_datetime(
+        df["start_date"], format="%Y-%m-%d", errors="coerce"
     )
-)
-# Count number of tags/categories per series.
-fred["n_tags"] = fred["tags_list"].str.len()
-fred["n_categories"] = fred["categories_list"].str.len()
-# Flag any series tagged as 'discontinued' (case-insensitive).
-fred["is_discontinued"] = fred["tags_list"].apply(
-    lambda lst: any(
-        str(tag).strip().lower() == "discontinued" for tag in (lst or [])
+    df["end_date"] = pd.to_datetime(
+        df["end_date"], format="%Y-%m-%d", errors="coerce"
     )
-)
+    # Extract base frequency.
+    df["freq_base"] = (
+        df["frequency"].fillna("Not Available").str.split(",", n=1).str[0]
+    )
+    # Split tags & categories into lists, count them.
+    df["tags_list"] = df["tags"].str.split(";")
+    df["categories_list"] = (
+        df["categories"]
+        .fillna("")
+        .str.split(";")
+        .map(lambda L: [c.strip().title() for c in L if c.strip()])
+    )
+    df["n_tags"] = df["tags_list"].str.len().fillna(0).astype(int)
+    df["n_categories"] = df["categories_list"].str.len().fillna(0).astype(int)
+    # Flag discontinued series.
+    df["is_discontinued"] = df["tags_list"].map(
+        lambda lst: any(
+            str(t).strip().lower() == "discontinued" for t in (lst or [])
+        )
+    )
+    # Compute staleness, years, decades, duration.
+    today = pd.Timestamp.today().normalize()
+    df["staleness_days"] = (today - df["last_updated"]).dt.days
+    df["last_year"] = df["last_updated"].dt.year
+    df["start_year"] = df["start_date"].dt.year
+    df["end_year"] = df["end_date"].dt.year
+    df["start_decade"] = (df["start_year"] // 10) * 10
+    df["end_decade"] = (df["end_year"] // 10) * 10
+    # Duration in years (only where both dates valid).
+    mask = df["start_date"].notna() & df["end_date"].notna()
+    dur_days = (
+        df.loc[mask, "end_date"].values.astype("datetime64[D]")
+        - df.loc[mask, "start_date"].values.astype("datetime64[D]")
+    ).astype(int)
+    df["duration_years"] = np.nan
+    df.loc[mask, "duration_years"] = dur_days / 365.0
+    # Infer country & continent.
+    cc = pd.read_csv(country_continent_csv)
+    cc["Country_Name"] = cc["Country_Name"].str.strip()
+    cc["Continent_Name"] = cc["Continent_Name"].str.strip()
+    country2cont = dict(zip(cc["Country_Name"], cc["Continent_Name"]))
+
+    def _infer_country(row):
+        for t in row["tags_list"] or []:
+            tt = str(t).strip()
+            if tt in country2cont:
+                return tt
+        for fld in ("title", "description", "notes"):
+            for w in str(row.get(fld, "")).split():
+                w0 = w.strip(",.()")
+                if w0 in country2cont:
+                    return w0
+        return np.nan
+
+    df["country"] = df.apply(_infer_country, axis=1)
+    df["continent"] = df["country"].map(country2cont).fillna("Other")
+    # Lengths of free‐text fields.
+    df["title_len"] = df["title"].str.len().fillna(0).astype(int)
+    df["desc_len"] = df["description"].str.len().fillna(0).astype(int)
+    df["notes_len"] = df["notes"].str.len().fillna(0).astype(int)
+
+    return df
 
 
 # %%
-# Compute staleness, year/decade buckets, and duration in years.
-# Today's date (normalized to midnight).
-today = pd.Timestamp.today().normalize()
-# Days since last_updated.
-fred["staleness_days"] = (today - fred["last_updated"]).dt.days
-# Extract calendar years.
-fred["last_year"] = fred["last_updated"].dt.year
-fred["start_year"] = fred["start_date"].dt.year
-fred["end_year"] = fred["end_date"].dt.year
-fred["start_decade"] = (fred["start_year"] // 10) * 10
-fred["end_decade"] = (fred["end_year"] // 10) * 10
-# Vectorized duration: retain only where both dates are valid.
-mask = fred["start_date"].notna() & fred["end_date"].notna()
-dur_days = (
-    fred.loc[mask, "end_date"].values.astype("datetime64[D]")
-    - fred.loc[mask, "start_date"].values.astype("datetime64[D]")
-).astype(int)
-# Assign duration in years.
-fred["duration_years"] = np.nan
-fred.loc[mask, "duration_years"] = dur_days / 365.0
-
-# %%
-# Preprocessing: Infer country & continent from text fields
-# Load country → continent mapping.
-cc = pd.read_csv("country_continent.csv")
-cc["Country_Name"] = cc["Country_Name"].str.strip()
-cc["Continent_Name"] = cc["Continent_Name"].str.strip()
-country2cont = dict(zip(cc["Country_Name"], cc["Continent_Name"]))
+fred = preprocess_fred(fred, country_continent_csv="country_continent.csv")
 
 
-# Scan tags, title, description, notes for any exact country match.
-def infer_country_from_text(row):
-    for tag in row.get("tags_list") or []:
-        t = str(tag).strip()
-        if t in country2cont:
-            return t
-    for field in ["title", "description", "notes"]:
-        for word in str(row.get(field, "")).split():
-            w = word.strip(",.()")
-            if w in country2cont:
-                return w
-    return np.nan
-
-
-# Apply to create a 'country' column.
-fred["country"] = fred.apply(infer_country_from_text, axis=1)
-# Map country → continent, defaulting missing to 'Other'.
-fred["continent"] = fred["country"].map(country2cont).fillna("Other")
+# %% [markdown]
+# <a name='common-plotting-functions'></a>
+# ## Common Plotting Functions
 
 
 # %%
-# Preprocessing: Lengths of Descriptors
-fred["title_len"] = fred["title"].str.len()
-fred["desc_len"] = fred["description"].str.len()
-fred["notes_len"] = fred["notes"].str.len()
-# Quick sanity check.
-fred.head()
+def plot_top_n_annotated_bar(
+    counts: pd.Series,
+    total: int,
+    top_n: int,
+    *,
+    wrap_width: int | None = 30,  # if None, no wrapping
+    cmap=plt.cm.Spectral,
+    figsize=(12, 8),
+    dpi=100,
+    xlabel: str = "",
+    ylabel: str = "Count",
+    title: str = "",
+    note_prefix: str = "Top {n} cover ",
+    note_pos: tuple = (0.95, 0.85),
+    rotation: int = 45,
+    fontsize_title: int = 16,
+    fontsize_labels: int = 10,
+    fontsize_annotation: int = 10,
+    fontsize_note: int = 11,
+    formatter=None,  # FuncFormatter for y-axis
+    annotation_fmt: str = "{pct:.1f}%",  # how to format the bar-labels
+    show_coverage_note: bool = True,  # whether to draw the Top-N note
+) -> Tuple[matplotlib.figure.Figure, matplotlib.axes.Axes]:
+    """
+    Plot the top N entries of counts as a bar chart and annotate each bar with
+    its percentage of total and optionally add a coverage note.
+
+    :param counts: count values keyed by label
+    :param total: grand total to compute percentages against
+    :param top_n: number of top entries to plot
+    :param wrap_width: integer value to wrap long labels; if None, no
+        wrapping
+    :param cmap: colormap for bars
+    :param figsize: dimensions of the figure
+    :param dpi: resolution of the figure
+    :param xlabel: label for the x-axis
+    :param ylabel: label for the y-axis
+    :param title: title of the chart
+    :param note_prefix: template for coverage note, must include {n}
+    :param note_pos: coordinates for coverage note in axes space
+    :param rotation: rotation angle for tick labels
+    :param fontsize_title: font size for the chart title
+    :param fontsize_labels: font size for axis labels
+    :param fontsize_annotation: font size for bar annotations
+    :param fontsize_note: font size for the coverage note
+    :param formatter: custom formatter for y-axis ticks
+    :param annotation_fmt: template for bar-label annotations, must
+        include {pct}
+    :param show_coverage_note: flag to indicate whether to display the
+        coverage note
+    :return: figure and axes references
+    """
+    top = counts.head(top_n)
+    if wrap_width:
+        labels = [textwrap.fill(lbl, wrap_width) for lbl in top.index]
+    else:
+        labels = list(top.index)
+    values = top.values
+    coverage = values.sum() / total * 100
+    x = np.arange(len(top))
+    colors = cmap(np.linspace(0, 1, len(top)))
+    fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
+    bars = ax.bar(x, values, color=colors, edgecolor="gray", linewidth=1)
+    offset = max(values) * 0.01
+    for b, cnt in zip(bars, values):
+        pct = cnt / total * 100
+        txt = annotation_fmt.format(pct=pct)
+        ax.text(
+            b.get_x() + b.get_width() * 0.5,
+            cnt + offset,
+            txt,
+            ha="center",
+            va="bottom",
+            fontsize=fontsize_annotation,
+        )
+    ax.set_xticks(x)
+    ax.set_xticklabels(
+        labels, rotation=rotation, ha="right", fontsize=fontsize_labels
+    )
+    ax.set_xlabel(xlabel, fontsize=fontsize_labels)
+    ax.set_ylabel(ylabel, fontsize=fontsize_labels)
+    ax.set_title(title, fontsize=fontsize_title, pad=12)
+    if formatter:
+        ax.yaxis.set_major_formatter(formatter)
+    else:
+        ax.yaxis.set_major_formatter(FuncFormatter(lambda v, p: f"{int(v):,}"))
+    if show_coverage_note:
+        note = note_prefix.format(n=top_n) + f"{coverage:.1f}%"
+        ax.text(
+            note_pos[0],
+            note_pos[1],
+            note,
+            transform=ax.transAxes,
+            ha="right",
+            va="top",
+            fontsize=fontsize_note,
+            bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.7),
+        )
+    plt.tight_layout()
+    return fig, ax
+
+
+# %%
+def plot_histograms(
+    data_series,
+    labels,
+    colors,
+    *,
+    bins=50,
+    kde=True,
+    figsize=(8, 5),
+    xlabel="",
+    title="",
+    legend_title=None,
+    show_legend=True,
+    xticks=None,
+    xtick_labels=None,
+    xticks_shift: float = 0.0,
+    xticks_rotation: float = 0,
+    invert_xaxis: bool = False,
+) -> Tuple[matplotlib.figure.Figure, matplotlib.axes.Axes]:
+    """
+    Plot one or multiple overlaid histograms with optional KDE, plus advanced
+    x-axis control.
+
+    :param data_series: data to plot
+    :param labels: legend labels corresponding to each data series
+    :param colors: colors for each data series
+    :param bins: number of bins or bin edges
+    :param kde: flag indicating whether to plot kernel density estimate
+    :param figsize: size of the figure
+    :param xlabel: label for the x-axis
+    :param title: title of the chart
+    :param legend_title: title for the legend
+    :param show_legend: flag indicating whether to display the legend
+    :param xticks: positions for x-ticks
+    :param xtick_labels: labels for x-ticks
+    :param xticks_shift: offset to add to each x-tick position
+    :param xticks_rotation: angle for rotating x-tick labels
+    :param invert_xaxis: flag indicating whether to invert the x-axis
+    :return: figure and axis objects
+    """
+    fig, ax = plt.subplots(figsize=figsize)
+    for series, lbl, col in zip(data_series, labels, colors):
+        sns.histplot(series, bins=bins, kde=kde, color=col, label=lbl, ax=ax)
+    if show_legend and labels and any(labels):
+        ax.legend(title=legend_title)
+    ax.set_xlabel(xlabel)
+    ax.set_title(title)
+    # custom x-ticks.
+    if xticks is not None:
+        shifted = np.array(xticks) + xticks_shift
+        ax.set_xticks(shifted)
+    if xtick_labels is not None:
+        ax.set_xticklabels(xtick_labels, rotation=xticks_rotation)
+    if invert_xaxis:
+        ax.invert_xaxis()
+    plt.tight_layout()
+    return fig, ax
+
+
+# %%
+def plot_stacked_bar(
+    df: pd.DataFrame,
+    index_labels: list[str],
+    xlabel: str,
+    ylabel: str,
+    title: str,
+    legend_labels: list[str],
+    colormap,
+    *,
+    width: float = 0.8,
+    figsize: tuple = (14, 6),
+    dpi: int = 100,
+    bbox_to_anchor: tuple = (0, 0, 0.85, 1),
+) -> Tuple[matplotlib.figure.Figure, matplotlib.axes.Axes]:
+    """
+    Plot a stacked bar chart.
+
+    :param df: input chart data to plot as stacked bars
+    :param index_labels: labels for the x-axis corresponding to each row
+    :param xlabel: label for the x-axis
+    :param ylabel: label for the y-axis
+    :param title: title of the chart
+    :param legend_labels: entries for the legend in the order of the
+        data columns
+    :param colormap: either a colormap or a sequence of colors for the
+        bars
+    :param width: width of the bars
+    :param figsize: size of the figure
+    :param dpi: dots per inch of the figure
+    :param bbox_to_anchor: dimensions for figure layout adjustment to
+        accommodate the legend
+    :return: figure and axes
+    """
+    fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
+
+    plot_kwargs = dict(
+        kind="bar",
+        stacked=True,
+        ax=ax,
+        width=width,
+        edgecolor="white",
+        linewidth=1,
+        legend=False,
+    )
+    if isinstance(colormap, (list, tuple)):
+        plot_kwargs["color"] = colormap
+    else:
+        plot_kwargs["colormap"] = colormap
+
+    df.plot(**plot_kwargs)
+
+    ax.set_xticks(np.arange(len(index_labels)))
+    ax.set_xticklabels(index_labels, rotation=45, ha="right", fontsize=10)
+    ax.set_xlabel(xlabel, fontsize=12)
+    ax.set_ylabel(ylabel, fontsize=12)
+    ax.set_title(title, fontsize=14, pad=12)
+    ax.yaxis.set_major_formatter(lambda x, pos: f"{int(x):,}")
+
+    ax.legend(legend_labels, title="", loc="upper right", fontsize=10)
+    fig.tight_layout(rect=bbox_to_anchor)
+    return fig, ax
+
+
+# %%
+def plot_donut(
+    sizes,
+    labels,
+    title,
+    *,
+    colors=None,
+    explode=None,
+    figsize=(6, 6),
+    fontsize=12,
+) -> Tuple[matplotlib.figure.Figure, matplotlib.axes.Axes]:
+    """
+    Draw a donut-style pie chart.
+
+    :param sizes: values for each slice
+    :param labels: labels for each slice
+    :param title: chart title
+    :param colors: optional colors for slices defaults to Set2 colormap
+    :param explode: optional fractional offset for slices defaults to
+        pulling out the first slice
+    :param figsize: optional figure size
+    :param fontsize: optional font size for slice annotations
+    :return: figure and axes objects
+    """
+    fig, ax = plt.subplots(figsize=figsize)
+    if colors is None:
+        colors = plt.cm.Set2(np.arange(len(sizes)))
+    if explode is None:
+        explode = (0.05,) + (0,) * (len(sizes) - 1)
+
+    wedges, texts, autotexts = ax.pie(
+        sizes,
+        labels=labels,
+        autopct="%1.1f%%",
+        startangle=90,
+        pctdistance=0.75,
+        colors=colors,
+        explode=explode,
+        wedgeprops={"linewidth": 1, "edgecolor": "white"},
+        textprops={"fontsize": fontsize},
+    )
+    centre_circle = plt.Circle((0, 0), 0.45, fc="white", linewidth=0)
+    ax.add_artist(centre_circle)
+
+    ax.set_title(title, fontsize=16, pad=20)
+    ax.axis("equal")
+    plt.tight_layout()
+    return fig, ax
+
+
+# %%
+def plot_cumulative_coverage(
+    cum_coverage: pd.Series,
+    N: int,
+    xlabel: str,
+    ylabel: str,
+    title: str,
+    *,
+    highlight_color: str = "red",
+    linestyle: str = "--",
+    figsize: tuple = (10, 6),
+    dpi: int = 100,
+    grid_alpha: float = 0.7,
+) -> Tuple[matplotlib.figure.Figure, matplotlib.axes.Axes]:
+    """
+    Plot cumulative coverage curve and highlight the top-n cutoff.
+
+    :param cum_coverage: cumulative coverage values sorted descending
+    :param N: index at which to draw and label the horizontal cutoff
+        line
+    :param xlabel: label for the x axis
+    :param ylabel: label for the y axis
+    :param title: title of the plot
+    :param highlight_color: color of the cutoff line default is red
+    :param linestyle: linestyle of the cutoff line default is --
+    :param figsize: size of the figure default is (10, 6)
+    :param dpi: figure dpi default is 100
+    :param grid_alpha: alpha transparency for the horizontal grid
+        default is 0.7
+    :return: figure and axes objects
+    """
+    x = np.arange(1, len(cum_coverage) + 1)
+    cutoff = cum_coverage.iloc[N - 1]
+    fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
+    ax.plot(x, cum_coverage.values, linewidth=2)
+    ax.axhline(
+        cutoff,
+        color=highlight_color,
+        linestyle=linestyle,
+        label=f"Top {N} Coverage: {cutoff:.1f}%",
+    )
+    ax.set_xlabel(xlabel, fontsize=13)
+    ax.set_ylabel(ylabel, fontsize=13)
+    ax.set_title(title, fontsize=16, pad=12)
+    ax.legend(loc="lower right")
+    ax.grid(axis="y", linestyle="--", alpha=grid_alpha)
+    plt.tight_layout()
+    return fig, ax
+
+
+# %% [markdown]
+# <a name='filtering-functions'></a>
+# ## Filtering Functions
+
+
+# %%
+def prepare_top_counts(
+    df: pd.DataFrame,
+    column: str,
+    *,
+    top_n: Optional[int] = None,
+    filter_mask: Optional[pd.Series] = None,
+    explode: bool = False,
+    split: Optional[Tuple[str, int]] = None,
+    drop: Sequence[str] = (),
+    rename: dict = {},
+    threshold: Optional[int] = None,
+    include_other: bool = False,
+    other_label: str = "Other",
+) -> Tuple[pd.Series, int]:
+    """
+    Return a (counts, total) pair ready for plotting.
+
+    :param df: data to count over
+    :param column: column name to count over
+    :param top_n: take only the top N after all other operations
+    :param filter_mask: mask to pre‐filter df
+    :param explode: if True, column must be list‐like and will be exploded first
+    :param split: (separator, level) to split strings, e.g. (";", 0) for root or (";", -1) for leaf
+    :param drop: indices to drop
+    :param rename:i ndex renames
+    :param threshold: if set, group any value with count < threshold into a single cell
+    :param include_other: if True and top_n is set, append “Other” containing everything below top_n
+    :param other_label: the label for that combined bucket (default "Other")
+
+    :return:
+             - counts: categories, with integer counts
+             - total: total count over which percentages should be computed
+    """
+    s = df[column]
+    if filter_mask is not None:
+        s = s[filter_mask]
+    if explode:
+        s = s.explode()
+    if split is not None:
+        sep, lvl = split
+        s = (
+            s.fillna("")
+            .astype(str)
+            .str.split(sep)
+            .apply(
+                lambda L: (
+                    L[lvl].strip()
+                    if len(L) > abs(lvl) and L[lvl].strip()
+                    else None
+                )
+            )
+        )
+    s = s.dropna()
+    counts = s.value_counts()
+    if drop:
+        counts.index = counts.index.str.strip()
+        counts = counts.drop(index=drop, errors="ignore")
+    if rename:
+        counts = counts.rename(index=rename)
+    total = len(s)
+    if threshold is not None:
+        major = counts[counts >= threshold]
+        minor = counts[counts < threshold].sum()
+        counts = pd.concat([major, pd.Series({other_label: minor})])
+    if top_n is not None:
+        top = counts.head(top_n)
+        if include_other and len(counts) > top_n:
+            other = counts.iloc[top_n:].sum()
+            top = top.append(pd.Series({other_label: other}))
+        counts = top
+    return counts, total
+
+
+# %%
+def get_binary_counts(
+    df: pd.DataFrame,
+    *,
+    mask: Optional[pd.Series] = None,
+    pattern: Optional[str] = None,
+    search_cols: Optional[List[str]] = None,
+    labels: List[str] = ["True", "False"],
+) -> Tuple[List[str], List[int]]:
+    """
+    Return (labels, counts) for a binary split of df.
+
+    :param df: input data
+    :param mask: boolean filter for rows (optional)
+    :param pattern: regex pattern to match in columns (optional)
+    :param search_cols: list of column names to search (optional)
+    :param labels: two-element list with label for True and label for
+        False
+    :return: labels, [count_true, count_false]
+    """
+    if mask is None:
+        if pattern is None or not search_cols:
+            raise ValueError(
+                "Either mask or (pattern + search_cols) must be provided"
+            )
+        # build the mask
+        mask = pd.Series(False, index=df.index)
+        for col in search_cols:
+            if col in df:
+                mask |= (
+                    df[col]
+                    .fillna("")
+                    .str.contains(pattern, case=False, regex=True)
+                )
+    else:
+        # ensure it's boolean
+        mask = mask.astype(bool)
+
+    counts = mask.value_counts()
+    true_count = int(counts.get(True, 0))
+    false_count = int(counts.get(False, 0))
+    return labels, [true_count, false_count]
+
+
+# %%
+def prepare_crosstab(
+    df,
+    index_col: str,
+    pivot_col: str,
+    *,
+    top_n: int = None,
+    index_list: List[str] = None,
+    wrap_width: int = 30,
+) -> Tuple[pd.DataFrame, List[str]]:
+    """
+    Generate a contingency table of counts between the index and pivot columns
+    with optional top_n filtering.
+
+    :param df the input data :param index_col the field to group as rows
+    :param pivot_col the field to pivot as columns :param top_n how many
+    of the top values of index_col to include :param index_list exact
+    list of index values to include :param wrap_width how many chars
+    before wrapping labels :return the reindexed table and wrapped
+    labels
+    """
+    if index_list is not None:
+        idx = index_list
+    else:
+        idx = df[index_col].value_counts().head(top_n).index.tolist()
+    ct = pd.crosstab(df[index_col], df[pivot_col]).reindex(idx).fillna(0)
+    labels = [textwrap.fill(lbl, wrap_width) for lbl in idx]
+    return ct, labels
+
 
 # %% [markdown]
 # <a name='introductory-analytics'></a>
@@ -281,7 +713,7 @@ fred.head()
 # ### Missing Data
 
 # %%
-# Exclude computed columns.
+# 1) Compute missingness
 original_cols = pd.Index(
     [
         "id",
@@ -299,28 +731,31 @@ original_cols = pd.Index(
         "end_date",
     ]
 )
-# Compute percent missing per original column.
 miss = fred[original_cols].isna().mean() * 100
-# Keep only columns with any missingness.
 miss = miss[miss > 0].sort_values(ascending=False)
-# Plot bar chart.
-plt.figure(figsize=(max(6, len(miss) * 1.2), 5))
-bars = plt.bar(miss.index, miss.values, color="gray", edgecolor="black")
-# Annotate.
-for bar in bars:
-    plt.text(
-        bar.get_x() + bar.get_width() / 2,
-        bar.get_height() + 0.1,
-        f"{bar.get_height():.3f}%",
-        ha="center",
-        va="bottom",
-        fontsize=10,
-    )
-plt.ylabel("% Missing", fontsize=12)
-plt.title("% Missing Missing per Column", fontsize=14)
-plt.xticks(rotation=45, ha="right")
-plt.tight_layout()
-plt.show()
+
+# 2) Plot via our helper
+# note: total=100 so that cnt/total*100 yields the original %Missing values,
+#       note_prefix="" to skip the coverage box.
+plot_top_n_annotated_bar(
+    counts=miss,
+    total=100,
+    top_n=len(miss),
+    wrap_width=30,
+    figsize=(max(6, len(miss) * 1.2), 5),
+    dpi=100,
+    xlabel="",
+    ylabel="% Missing",
+    title="% Missing per Column",
+    rotation=45,
+    fontsize_title=14,
+    fontsize_labels=10,
+    fontsize_annotation=10,
+    note_prefix="",  # disable the "Top N cover…" note
+    show_coverage_note=False,
+    annotation_fmt="{pct:.3f}%",
+)
+
 
 # %% [markdown]
 # Aside from the optional notes field, the dataset has got essentially full coverage across all other metadata columns—so downstream analyses won’t be materially impacted by missing values.
@@ -333,25 +768,29 @@ plt.show()
 
 
 # Plot title and description lengths together.
-plt.figure(figsize=(8, 5))
-sns.histplot(
-    fred["title_len"], bins=50, kde=True, color="C0", label="Title Length"
+plot_histograms(
+    data_series=[fred["title_len"], fred["desc_len"]],
+    labels=["Title Length", "Description Length"],
+    colors=["C0", "C1"],
+    bins=50,
+    kde=True,
+    figsize=(8, 5),
+    xlabel="Length (characters)",
+    title="Title vs. Description Length Distribution",
+    legend_title="Metric",
 )
-sns.histplot(
-    fred["desc_len"], bins=50, kde=True, color="C1", label="Description Length"
-)
-plt.legend(title="Metric")
-plt.title("Title vs. Description Length Distribution")
-plt.xlabel("Length (characters)")
-plt.tight_layout()
-plt.show()
 # Plot notes length separately.
-plt.figure(figsize=(8, 5))
-sns.histplot(fred["notes_len"], bins=50, kde=True, color="C2")
-plt.title("Notes Length Distribution")
-plt.xlabel("Length (characters)")
-plt.tight_layout()
-plt.show()
+plot_histograms(
+    data_series=[fred["notes_len"]],
+    labels=["Notes Length"],
+    colors=["C2"],
+    bins=50,
+    kde=True,
+    figsize=(8, 5),
+    xlabel="Length (characters)",
+    title="Notes Length Distribution",
+    legend_title=None,
+)
 
 
 # %% [markdown]
@@ -369,74 +808,43 @@ plt.show()
 
 # %%
 # Prepare data.
-src_total = fred["data_source"].value_counts()
-top20 = src_total.head(20)
-labels = top20.index.tolist()
-counts = top20.values
-total = src_total.sum()
-coverage_pct = counts.sum() / total * 100
-wrapped = [textwrap.fill(lbl, width=25) for lbl in labels]
+src_counts, total = prepare_top_counts(fred, "data_source", top_n=20)
 # Plot.
-fig, ax = plt.subplots(figsize=(14, 6), dpi=100)
-colors = plt.cm.Spectral(np.linspace(0, 1, len(labels)))
-x = np.arange(len(labels))
-bars = ax.bar(x, counts, color=colors, edgecolor="white", linewidth=1)
-# Annotate.
-for bar, c in zip(bars, counts):
-    pct = c / total * 100
-    ax.text(
-        bar.get_x() + bar.get_width() / 2,
-        c + counts.max() * 0.01,
-        f"{pct:.1f}%",
-        ha="center",
-        va="bottom",
-        fontsize=10,
-    )
-# Add Coverage.
-note = f"Top 20 cover {coverage_pct:.1f}% of all series"
-ax.text(
-    0.95,
-    0.85,
-    note,
-    transform=ax.transAxes,
-    ha="right",
-    va="top",
-    fontsize=11,
-    bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.7),
+plot_top_n_annotated_bar(
+    counts=src_counts,
+    total=total,
+    top_n=20,
+    wrap_width=25,
+    figsize=(14, 6),
+    dpi=100,
+    xlabel="Data Source",
+    ylabel="Series Count",
+    title="Top 20 Data Sources",
+    note_prefix="Top {n} cover ",
+    note_pos=(0.95, 0.85),
+    rotation=45,
+    fontsize_title=16,
+    fontsize_labels=10,
+    fontsize_annotation=10,
+    fontsize_note=11,
 )
-ax.set_xticks(x)
-ax.set_xticklabels(wrapped, rotation=45, ha="right", fontsize=10)
-ax.set_ylabel("Series Count", fontsize=13)
-ax.set_xlabel("Data Source", fontsize=13)
-ax.set_title("Top 20 Data Sources", fontsize=16, pad=12)
-ax.yaxis.set_major_formatter(lambda x, pos: f"{int(x):,}")
-ax.grid(axis="y", linestyle="--", alpha=0.5)
-plt.tight_layout()
-plt.show()
+
 
 # %%
-# Compute cumulative coverage for data sources.
+# Coverage.
+# Prepare data.
 N = 20
 src_counts = fred["data_source"].value_counts()
-cum_coverage = (
+cum_src_coverage = (
     src_counts.sort_values(ascending=False).cumsum() / src_counts.sum() * 100
 )
-# Plot coverage vs. top N data sources.
-n_src = np.arange(1, len(cum_coverage) + 1)
-fig, ax = plt.subplots(figsize=(10, 6), dpi=100)
-ax.plot(n_src, cum_coverage.values, linewidth=2)
-# Highlight the Top N cutoff.
-cutoff = cum_coverage.iloc[N - 1]
-ax.axhline(
-    cutoff, color="red", linestyle="--", label=f"Top {N} Coverage: {cutoff:.1f}%"
+plot_cumulative_coverage(
+    cum_coverage=cum_src_coverage,
+    N=N,
+    xlabel="Top N Data Sources",
+    ylabel="Coverage (%)",
+    title=f"Coverage vs Top {N} Data Sources",
 )
-ax.set_xlabel("Top N Data Sources", fontsize=13)
-ax.set_ylabel("Coverage (%)", fontsize=13)
-ax.set_title(f"Coverage vs Top {N} Data Sources", fontsize=16, pad=12)
-ax.legend(loc="lower right")
-ax.grid(axis="y", linestyle="--", alpha=0.7)
-plt.tight_layout()
-plt.show()
 
 
 # %% [markdown]
@@ -457,14 +865,55 @@ plt.show()
 # ## Data Freshness
 
 # %%
-# Plot growth by start year.
+
+
+def plot_cumulative_count(
+    series,
+    xlabel: str = "",
+    ylabel: str = "",
+    title: str = "",
+    color: str = "steelblue",
+    linewidth: float = 2,
+    grid: bool = True,
+    grid_alpha: float = 0.3,
+    figsize: tuple = (10, 6),
+    dpi: int = 100,
+    fontsize_title: int = 14,
+    fontsize_labels: int = 12,
+):
+    """
+    Given a pandas Series with sortable index (e.g. years), plot its cumulative
+    values as a line with optional grid and labeling.
+    """
+    fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
+    ax.plot(series.index, series.values, color=color, linewidth=linewidth)
+    if grid:
+        ax.grid(True, alpha=grid_alpha)
+    ax.set_xlabel(xlabel, fontsize=fontsize_labels)
+    ax.set_ylabel(ylabel, fontsize=fontsize_labels)
+    ax.set_title(title, fontsize=fontsize_title, pad=12)
+    plt.tight_layout()
+    return fig, ax
+
+
+# %%
+# 1) prepare the cumulative series
 cum = fred.groupby("start_year").size().sort_index().cumsum()
-cum.plot(color="steelblue", linewidth=2)
-plt.title("Growth of the Database by Start Year", pad=12, fontsize=14)
-plt.xlabel("Year", fontsize=12)
-plt.ylabel("Cumulative Count", fontsize=12)
-plt.grid(True, alpha=0.3)
-plt.tight_layout()
+
+# 2) call the helper
+plot_cumulative_count(
+    cum,
+    xlabel="Year",
+    ylabel="Cumulative Count",
+    title="Growth of the Database by Start Year",
+    color="steelblue",
+    linewidth=2,
+    grid_alpha=0.3,
+    fontsize_title=14,
+    fontsize_labels=12,
+)
+plt.show()
+
 
 # %% [markdown]
 # - **Slow beginnings:** Very little data from 1700 through roughly 1950 were added.
@@ -472,29 +921,56 @@ plt.tight_layout()
 # - **Digital‐era explosion:** After 1980 the curve steepens, and especially post‑2000 it shoots up to over 600 000 series—driven by electronic data releases, globalization of sources, and API availability. The dataset’s breadth is overwhelmingly a product of recent decades; most series are relatively “young.”
 
 # %%
-# Plot staleness by days
-plt.figure(figsize=(12, 6))
-sns.histplot(fred["staleness_days"], bins=50, kde=True)
-plt.title("Days Since Last Update")
-plt.xlabel("Staleness (days)")
-plt.show()
+# Plot staleness by days.
+# Prepare data.
+plot_histograms(
+    data_series=[fred["staleness_days"]],
+    labels=["Staleness (days)"],
+    colors=["C0"],
+    bins=50,
+    kde=True,
+    figsize=(12, 6),
+    xlabel="Staleness (days)",
+    title="Days Since Last Update",
+    legend_title=None,
+)
+
 
 # %%
-# Plot staleness by year.
-# Prepare the data.
-yrs = fred["last_year"].value_counts().sort_index(ascending=False)
-years = yrs.index.astype(str)
-counts = yrs.values
-colors = plt.cm.coolwarm(np.linspace(0, 1, len(years)))
+def prepare_last_year_data(fred: pd.DataFrame) -> Tuple:
+    """
+    Extract last updated years and compute histogram bins and tick marks.
+
+    :param fred: input dataframe containing column 'last_year'
+    :return: tuple of filtered year series, bin edges for each year, and
+        ticks for each year
+    """
+    years_series = fred["last_year"].dropna().astype(int)
+    year_min, year_max = years_series.min(), years_series.max()
+    bin_edges = np.arange(year_min, year_max + 2)
+    ticks = np.arange(year_min, year_max + 1, 1)
+    return years_series, bin_edges, ticks
+
+
+# Prepare data.
+years_series, bin_edges, ticks = prepare_last_year_data(fred)
 # Plot.
-plt.figure(figsize=(12, 6))
-plt.bar(years, counts, color=colors, edgecolor="white", linewidth=1)
-plt.plot(years, counts, color="black", linewidth=2, marker="o")
-plt.title("Series by Last Updated Year")
-plt.xlabel("Year")
-plt.ylabel("Count")
-plt.xticks(rotation=45)
-plt.tight_layout()
+fig, ax = plot_histograms(
+    data_series=[years_series],
+    labels=[""],
+    colors=["C0"],
+    bins=bin_edges,
+    kde=True,
+    figsize=(12, 6),
+    xlabel="Year",
+    title="Series by Last Updated Year",
+    legend_title=None,
+    xticks=ticks,
+    xtick_labels=ticks,
+    xticks_shift=0.5,
+    xticks_rotation=45,
+    invert_xaxis=True,
+)
 plt.show()
 
 
@@ -510,8 +986,79 @@ plt.show()
 # <a name='start/end-cohorts-by-decade'></a>
 # ### Start/End Cohorts by Decade
 
+
 # %%
-# Prepare data.
+def plot_grouped_bars(
+    df: pd.DataFrame,
+    categories: list[str],
+    series_names: list[str],
+    colors: list[str],
+    *,
+    xlabel: str = "",
+    ylabel: str = "",
+    title: str = "",
+    bar_width: float = 0.4,
+    annotation_fmt: str = "{pct:.1f}%",
+    fontsize_title: int = 15,
+    fontsize_labels: int = 13,
+    fontsize_annotation: int = 9,
+    grid: bool = True,
+    grid_kwargs: dict = None,
+    figsize: tuple = (10, 5),
+    dpi: int = 100,
+    legend_title: str = None,
+):
+    """
+    Plot multiple series side by side for each category.
+
+    :param df: source for series counts
+    :param categories: category labels for x-axis
+    :param series_names: series names to plot
+    :param colors: color codes for series
+    :return: figure and axes
+    """
+    x = np.arange(len(categories))
+    fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
+    n = len(series_names)
+    for i, (name, color) in enumerate(zip(series_names, colors)):
+        vals = df[name].loc[categories].values
+        offset = (i - (n - 1) / 2) * bar_width
+        bars = ax.bar(
+            x + offset,
+            vals,
+            width=bar_width,
+            label=name,
+            color=color,
+            edgecolor="white",
+        )
+        # annotate each bar.
+        maxval = df.values.max()
+        for b, v in zip(bars, vals):
+            pct = v / df[series_names].values.sum() * 100
+            txt = annotation_fmt.format(pct=pct)
+            ax.text(
+                b.get_x() + b.get_width() / 2,
+                v + maxval * 0.005,
+                txt,
+                ha="center",
+                va="bottom",
+                fontsize=fontsize_annotation,
+            )
+    ax.set_xticks(x)
+    ax.set_xticklabels(categories, fontsize=fontsize_labels)
+    ax.set_xlabel(xlabel, fontsize=fontsize_labels)
+    ax.set_ylabel(ylabel, fontsize=fontsize_labels)
+    ax.set_title(title, fontsize=fontsize_title, pad=12)
+    if legend_title or series_names:
+        ax.legend(title=legend_title)
+    if grid:
+        ax.grid(axis="y", **(grid_kwargs or {"linestyle": "--", "alpha": 0.7}))
+    plt.tight_layout()
+    return fig, ax
+
+
+# %%
+# Prepare Data.
 start_counts = fred["start_decade"].value_counts().sort_index()
 end_counts = fred["end_decade"].value_counts().sort_index()
 df_decade = (
@@ -519,76 +1066,45 @@ df_decade = (
     .fillna(0)
     .astype(int)
 )
-# Filter ≥1940.
+
+# Filter to >=1940.
 df_plot = df_decade.loc[df_decade.index >= 1940]
+categories = df_plot.index.astype(int).tolist()
+
+# Plot
+plot_grouped_bars(
+    df=df_plot,
+    categories=categories,
+    series_names=["Started", "Ended"],
+    colors=["C0", "C1"],
+    xlabel="Decade",
+    ylabel="Series Count",
+    title="Series Start vs. End by Decade (1940+)",
+    legend_title="Metric",
+    bar_width=0.4,
+    annotation_fmt="{pct:.1f}%",
+    figsize=(10, 5),
+    dpi=100,
+)
+# Coverage.
 total_started = df_decade["Started"].sum()
 total_ended = df_decade["Ended"].sum()
-pct_started_40p = df_plot["Started"].sum() / total_started * 100
-pct_ended_40p = df_plot["Ended"].sum() / total_ended * 100
-# Plot.
-fig, ax = plt.subplots(figsize=(10, 5), dpi=100)
-bar_width = 0.4
-x = np.arange(len(df_plot.index))
-bars_start = ax.bar(
-    x - bar_width / 2,
-    df_plot["Started"],
-    width=bar_width,
-    label="Start",
-    color="C0",
-    edgecolor="white",
-)
-bars_end = ax.bar(
-    x + bar_width / 2,
-    df_plot["Ended"],
-    width=bar_width,
-    label="End",
-    color="C1",
-    edgecolor="white",
-)
-# Annotate.
-for bar in bars_start:
-    pct = bar.get_height() / total_started * 100
-    ax.text(
-        bar.get_x() + bar.get_width() / 2,
-        bar.get_height() + df_plot.values.max() * 0.005,
-        f"{pct:.1f}%",
-        ha="center",
-        va="bottom",
-        fontsize=9,
-    )
-for bar in bars_end:
-    pct = bar.get_height() / total_ended * 100
-    ax.text(
-        bar.get_x() + bar.get_width() / 2,
-        bar.get_height() + df_plot.values.max() * 0.005,
-        f"{pct:.1f}%",
-        ha="center",
-        va="bottom",
-        fontsize=9,
-    )
-ax.set_xticks(x)
-ax.set_xticklabels(df_plot.index.astype(int), fontsize=12)
-ax.set_xlabel("Decade", fontsize=13)
-ax.set_ylabel("Series Count", fontsize=13)
-ax.set_title("Series Start vs. End by Decade (1940+)", fontsize=15, pad=12)
-ax.legend(title="Metric")
-note = (
-    f"Starts ≥1940 cover {pct_started_40p:.1f}% of all series\n"
-    f"Ends   ≥1940 cover {pct_ended_40p:.1f}% of all series"
-)
-ax.text(
+pct_s = df_plot["Started"].sum() / total_started * 100
+pct_e = df_plot["Ended"].sum() / total_ended * 100
+plt.gca().text(
     0.323,
     0.95,
-    note,
-    transform=ax.transAxes,
+    f"Starts ≥1940 cover {pct_s:.1f}% of all series\n"
+    f"Ends   ≥1940 cover {pct_e:.1f}% of all series",
+    transform=plt.gca().transAxes,
     ha="right",
     va="top",
     fontsize=10,
     bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.7),
 )
-ax.grid(axis="y", linestyle="--", alpha=0.7)
-plt.tight_layout()
+
 plt.show()
+
 
 # %% [markdown]
 # - **Modern‐Era Focus**
@@ -606,37 +1122,42 @@ plt.show()
 # - **Ongoing Data Availability**
 #   The spike in 2020 end dates implies that the vast majority of series are still maintained beyond that year; very few series have truly “ended.”
 
+# %%
+# Prepare data.
+today = pd.Timestamp.today().normalize()
+future_ends = (fred["end_date"] > today).sum()
+total_series = len(fred)
+# Plot.
+plot_top_n_annotated_bar(
+    counts=pd.Series({"Future Ends": future_ends}),
+    total=total_series,
+    top_n=1,
+    wrap_width=None,  # no wrapping needed for single label
+    figsize=(6, 5),
+    dpi=100,
+    xlabel="",  # no x-label
+    ylabel="Series Count",
+    title="Series with End Date After Today",
+    rotation=0,  # vertical label
+    fontsize_title=15,
+    fontsize_labels=12,
+    fontsize_annotation=12,
+    formatter=FuncFormatter(lambda y, pos: f"{int(y):,}"),
+    show_coverage_note=False,  # omit "Top N cover…" note
+)
+
+
 # %% [markdown]
 # <a name='discontinued-series'></a>
 # ### Discontinued Series
 
 # %%
-
-# Compute status counts
-status = fred["is_discontinued"].value_counts()
-labels = ["Active", "Discontinued"]
-sizes = [status.get(False, 0), status.get(True, 0)]
-# Plot donut graph.
-plt.figure(figsize=(6, 6))
-colors = plt.cm.Set2(np.arange(len(sizes)))
-explode = (0.05, 0)
-wedges, texts, autotexts = plt.pie(
-    sizes,
-    labels=labels,
-    autopct="%1.1f%%",
-    startangle=90,
-    pctdistance=0.75,
-    colors=colors,
-    explode=explode,
-    wedgeprops={"linewidth": 1, "edgecolor": "white"},
-    textprops={"fontsize": 12},
+# Prepare data.
+labels, sizes = get_binary_counts(
+    fred, mask=fred["is_discontinued"], labels=["Active", "Discontinued"]
 )
-centre_circle = plt.Circle((0, 0), 0.45, fc="white", linewidth=0)
-plt.gca().add_artist(centre_circle)
-plt.title("Active vs. Discontinued Series", fontsize=16, pad=20)
-plt.axis("equal")
-plt.tight_layout()
-plt.show()
+# Plot.
+plot_donut(sizes=sizes, labels=labels, title="Active vs. Discontinued Series")
 
 
 # %% [markdown]
@@ -645,54 +1166,47 @@ plt.show()
 
 # %%
 # Prepare data.
-ds = fred.groupby(["data_source", "is_discontinued"]).size().unstack(fill_value=0)
-top20_sources = fred["data_source"].value_counts().head(20).index.tolist()
-ds_top20 = ds.reindex(top20_sources).fillna(0)
-wrapped_labels = [textwrap.fill(src, width=30) for src in top20_sources]
-# Plot.
-fig, ax = plt.subplots(figsize=(14, 6), dpi=100)
-ds_top20.plot(
-    kind="bar",
-    stacked=True,
-    ax=ax,
-    color=["C0", "C1"],  # blue=active, orange=discontinued
-    edgecolor="white",
-    linewidth=1,
-    legend=True,
+ds_top20, labels = prepare_crosstab(
+    fred,
+    index_col="data_source",
+    pivot_col="is_discontinued",
+    top_n=20,
+    wrap_width=30,
 )
-ax.set_xticklabels(wrapped_labels, rotation=45, ha="right", fontsize=10)
-ax.set_xlabel("Data Source", fontsize=12)
-ax.set_ylabel("Series Count", fontsize=12)
-ax.yaxis.set_major_formatter(lambda x, pos: f"{int(x):,}")
-ax.set_title("Active vs. Discontinued by Data Source", fontsize=14, pad=12)
-ax.legend(["Active", "Discontinued"], title="", loc="upper right", fontsize=10)
-fig.tight_layout(rect=[0, 0, 0.85, 1])
-plt.show()
+
+
+# Plot.
+plot_stacked_bar(
+    df=ds_top20,
+    index_labels=labels,
+    xlabel="Data Source",
+    ylabel="Series Count",
+    title="Active vs. Discontinued by Data Source",
+    legend_labels=["Active", "Discontinued"],
+    colormap=["C0", "C1"],
+)
 
 # %%
 # Prepare data.
-nd_sources = fred["data_source"].value_counts().head(20).index.tolist()[5:]
-ds_top20 = ds.reindex(nd_sources).fillna(0)
-wrapped_labels = [textwrap.fill(src, width=30) for src in nd_sources]
-# Plot.
-fig, ax = plt.subplots(figsize=(14, 6), dpi=100)
-ds_top20.plot(
-    kind="bar",
-    stacked=True,
-    ax=ax,
-    color=["C0", "C1"],  # blue=active, orange=discontinued
-    edgecolor="white",
-    linewidth=1,
-    legend=True,
+nd = ds_top20.index[5:]
+ds_nd, labels_nd = prepare_crosstab(
+    fred,
+    index_col="data_source",
+    pivot_col="is_discontinued",
+    index_list=nd,
+    wrap_width=30,
 )
-ax.set_xticklabels(wrapped_labels, rotation=45, ha="right", fontsize=10)
-ax.set_xlabel("Data Source", fontsize=12)
-ax.set_ylabel("Series Count", fontsize=12)
-ax.yaxis.set_major_formatter(lambda x, pos: f"{int(x):,}")
-ax.set_title("Active vs. Discontinued by Data Source", fontsize=14, pad=12)
-ax.legend(["Active", "Discontinued"], title="", loc="upper right", fontsize=10)
-fig.tight_layout(rect=[0, 0, 0.85, 1])
-plt.show()
+
+# Plot.
+plot_stacked_bar(
+    df=ds_nd,
+    index_labels=labels_nd,
+    xlabel="Data Source",
+    ylabel="Series Count",
+    title="Active vs. Discontinued (Non-Dominant Sources)",
+    legend_labels=["Active", "Discontinued"],
+    colormap=["C0", "C1"],
+)
 
 # %% [markdown]
 # <a name='top-20-discontinued-by-data-source'></a>
@@ -700,43 +1214,25 @@ plt.show()
 
 # %%
 # Prepare data.
-N = 20
-total_disc = fred["is_discontinued"].sum()
-disc_src = fred.loc[fred["is_discontinued"], "data_source"].value_counts().head(N)
-labels_src = [textwrap.fill(lbl, width=30) for lbl in disc_src.index]
-coverage_src = disc_src.sum() / total_disc * 100
-# Plot.
-fig, ax = plt.subplots(figsize=(12, 8), dpi=100)
-x = np.arange(len(disc_src))
-colors = plt.cm.Spectral(np.linspace(0, 1, N))
-bars = ax.bar(x, disc_src.values, color=colors, edgecolor="gray", linewidth=1)
-# Annotate.
-for bar, cnt in zip(bars, disc_src.values):
-    pct = cnt / total_disc * 100
-    ax.text(
-        bar.get_x() + bar.get_width() * 0.5,
-        cnt + total_disc * 0.005,
-        f"{pct:.1f}%",
-        ha="center",
-        va="bottom",
-        fontsize=10,
-    )
-ax.set_xticks(x)
-ax.set_xticklabels(labels_src, rotation=45, ha="right", fontsize=10)
-ax.set_ylabel("Discontinued Series Count", fontsize=13)
-ax.set_xlabel("Data Source", fontsize=13)
-ax.set_title(f"Top {N} Data Sources by Discontinued Series", fontsize=16, pad=12)
-ax.text(
-    0.95,
-    0.85,
-    f"Top {N} cover {coverage_src:.1f}% of discontinued series",
-    transform=ax.transAxes,
-    ha="right",
-    va="top",
-    fontsize=11,
-    bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.7),
+disc_src, _ = prepare_top_counts(
+    fred, "data_source", filter_mask=fred["is_discontinued"], top_n=20
 )
-plt.tight_layout()
+
+# Plot with our reusable function
+fig, ax = plot_top_n_annotated_bar(
+    counts=disc_src,
+    total=total,
+    top_n=20,
+    wrap_width=30,
+    figsize=(12, 8),
+    dpi=100,
+    xlabel="Data Source",
+    ylabel="Discontinued Series Count",
+    title=f"Top {20} Data Sources by Discontinued Series",
+    rotation=45,
+    annotation_fmt="{pct:.3f}%",  # one decimal place
+    show_coverage_note=True,  # keep the “Top N cover…” note
+)
 plt.show()
 
 
@@ -746,54 +1242,45 @@ plt.show()
 
 # %%
 # Prepare data.
-disc_tag_series = (
-    fred.loc[fred["is_discontinued"], ["id", "tags_list"]]
-    .explode("tags_list")
-    .dropna(subset=["tags_list"])
+disc_tags, _ = prepare_top_counts(
+    fred,
+    "tags_list",
+    filter_mask=fred["is_discontinued"],
+    explode=True,
+    drop=[
+        "discontinued",
+        "federal reserve",
+        "fred",
+        "nsa",
+        "usa",
+        "county",
+        "bls",
+        "acs",
+    ],
+    top_n=20,
 )
-disc_tags = (
-    disc_tag_series.groupby("tags_list")["id"]
-    .nunique()
-    .sort_values(ascending=False)
-    .head(N)
+
+# Plot using our reusable function
+fig, ax = plot_top_n_annotated_bar(
+    counts=disc_tags,
+    total=total,
+    top_n=N,
+    wrap_width=25,
+    figsize=(12, 8),
+    dpi=100,
+    xlabel="Tag",
+    ylabel="Discontinued Series Count",
+    title=f"Top {N} Tags by Discontinued Series",
+    rotation=45,
+    fontsize_title=16,
+    fontsize_labels=10,
+    fontsize_annotation=10,
+    fontsize_note=11,
+    formatter=FuncFormatter(lambda y, pos: f"{int(y):,}"),
+    note_prefix=f"Top {N} appear in ",
+    show_coverage_note=False,
 )
-top_tag_set = set(disc_tags.index)
-disc_series = fred.loc[fred["is_discontinued"]]
-has_top_tag = disc_series["tags_list"].apply(
-    lambda tags: any(t in top_tag_set for t in (tags or []))
-)
-coverage_tag = has_top_tag.sum() / total_disc * 100
-labels_tag = [textwrap.fill(lbl, width=25) for lbl in disc_tags.index]
-# Plot.
-fig, ax = plt.subplots(figsize=(12, 8), dpi=100)
-x = np.arange(len(disc_tags))
-colors = plt.cm.magma(np.linspace(0, 1, N))
-bars = ax.bar(x, disc_tags.values, color=colors, edgecolor="white", linewidth=1)
-for bar, cnt in zip(bars, disc_tags.values):
-    pct = cnt / total_disc * 100
-    ax.text(
-        bar.get_x() + bar.get_width() * 0.5,
-        cnt + total_disc * 0.005,
-        f"{pct:.1f}%",
-        ha="center",
-        va="bottom",
-        fontsize=10,
-    )
-ax.set_xticks(x)
-ax.set_xticklabels(labels_tag, rotation=45, ha="right", fontsize=10)
-ax.set_ylabel("Discontinued Series Count", fontsize=13)
-ax.set_xlabel("Tag", fontsize=13)
-ax.set_title(f"Top {N} Tags by Discontinued Series", fontsize=16, pad=12)
-ax.text(
-    0.95,
-    0.85,
-    f"Top {N} appear in {coverage_tag:.1f}% of discontinued series",
-    transform=ax.transAxes,
-    ha="right",
-    va="top",
-    fontsize=11,
-    bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.7),
-)
+
 plt.tight_layout()
 plt.show()
 
@@ -804,57 +1291,39 @@ plt.show()
 
 # %%
 
-# Prepare data.
-disc_cat_series = (
-    fred.loc[fred["is_discontinued"], ["id", "categories_list"]]
-    .explode("categories_list")
-    .dropna(subset=["categories_list"])
+# Prepare data: root (top‐level) categories for discontinued series
+disc_root, _ = prepare_top_counts(
+    fred,
+    "categories",
+    filter_mask=fred["is_discontinued"],
+    split=(";", 0),  # root
+    top_n=20,
 )
-disc_cats = (
-    disc_cat_series.groupby("categories_list")["id"]
-    .nunique()
-    .sort_values(ascending=False)
-    .head(N)
-)
-top_cat_set = set(disc_cats.index)
-has_top_cat = disc_series["categories_list"].apply(
-    lambda cats: any(c in top_cat_set for c in (cats or []))
-)
-coverage_cat = has_top_cat.sum() / total_disc * 100
 
-labels_cat = [textwrap.fill(lbl, width=25) for lbl in disc_cats.index]
-# Plot.
-fig, ax = plt.subplots(figsize=(12, 8), dpi=100)
-x = np.arange(len(disc_cats))
-colors = plt.cm.viridis(np.linspace(0, 1, N))
-bars = ax.bar(x, disc_cats.values, color=colors, edgecolor="white", linewidth=1)
-for bar, cnt in zip(bars, disc_cats.values):
-    pct = cnt / total_disc * 100
-    ax.text(
-        bar.get_x() + bar.get_width() * 0.5,
-        cnt + total_disc * 0.005,
-        f"{pct:.1f}%",
-        ha="center",
-        va="bottom",
-        fontsize=10,
-    )
-ax.set_xticks(x)
-ax.set_xticklabels(labels_cat, rotation=45, ha="right", fontsize=10)
-ax.set_ylabel("Discontinued Series Count", fontsize=13)
-ax.set_xlabel("Category", fontsize=13)
-ax.set_title(f"Top {N} Categories by Discontinued Series", fontsize=16, pad=12)
-ax.text(
-    0.95,
-    0.85,
-    f"Top {N} appear in {coverage_cat:.1f}% of discontinued series",
-    transform=ax.transAxes,
-    ha="right",
-    va="top",
-    fontsize=11,
-    bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.7),
+# Plot using our reusable bar‐chart function
+fig, ax = plot_top_n_annotated_bar(
+    counts=disc_root,
+    total=total,
+    top_n=N,
+    wrap_width=30,
+    figsize=(12, 8),
+    dpi=100,
+    xlabel="Root Category",
+    ylabel="Discontinued Series Count",
+    title=f"Discontinued Series by Root Categories",
+    rotation=45,
+    fontsize_title=16,
+    fontsize_labels=10,
+    fontsize_annotation=10,
+    fontsize_note=11,
+    formatter=FuncFormatter(lambda y, pos: f"{int(y):,}"),
+    note_prefix=f"Top {N} cover ",
+    show_coverage_note=False,
 )
+
 plt.tight_layout()
 plt.show()
+
 
 # %% [markdown]
 # - A small set of sources drive most discontinuations:
@@ -878,69 +1347,35 @@ plt.show()
 
 # %%
 # Prepare Data.
-freq_counts = fred["freq_base"].value_counts()
-threshold = 100
-major = freq_counts[freq_counts >= threshold]
-minor_sum = int(freq_counts[freq_counts < threshold].sum())
-counts = pd.concat([major, pd.Series({"Other": minor_sum})])
-counts = counts.sort_values(ascending=False)
-labels = counts.index.tolist()
-values = counts.values
-total = values.sum()
-x_pos = np.arange(len(labels))
-colors = plt.cm.Pastel1(np.linspace(0, 1, len(labels)))
-# Plot.
-plt.figure(figsize=(10, 6), dpi=100)
-plt.bar(x_pos, values, color=colors, edgecolor="white", linewidth=1)
-# Annotate.
-for i, v in enumerate(values):
-    pct = v / total * 100
-    plt.text(
-        i, v + total * 0.005, f"{pct:.2f}%", ha="center", va="bottom", fontsize=10
-    )
-plt.gca().yaxis.set_major_formatter(FuncFormatter(lambda y, pos: f"{int(y):,}"))
-plt.xticks(x_pos, labels, rotation=45, fontsize=12)
-plt.ylabel("Number of Series", fontsize=13)
-plt.title("Frequency Distribution (by Base Frequency)", fontsize=15, pad=12)
-plt.grid(axis="y", linestyle="--", alpha=0.7)
+freq_counts, _ = prepare_top_counts(
+    fred,
+    "freq_base",
+    threshold=100,  # everything <100 → 'Other'
+    include_other=False,
+)
+
+# Plot..
+plot_top_n_annotated_bar(
+    counts=freq_counts,
+    total=total,
+    top_n=len(freq_counts),
+    wrap_width=25,  # wrap long labels
+    figsize=(10, 6),
+    dpi=100,
+    xlabel="Base Frequency",
+    ylabel="Number of Series",
+    title="Frequency Distribution (by Base Frequency)",
+    rotation=45,
+    fontsize_title=15,
+    fontsize_labels=12,
+    fontsize_annotation=10,
+    formatter=FuncFormatter(lambda y, pos: f"{int(y):,}"),
+    show_coverage_note=False,  # omit coverage note
+    annotation_fmt="{pct:.2f}%",
+)
 plt.tight_layout()
 plt.show()
 
-# %%
-# Prepare data.
-threshold = 100
-major = freq_counts[freq_counts >= threshold]
-minor_sum = int(freq_counts[freq_counts < threshold].sum())
-counts = pd.concat([major, pd.Series({"Other": minor_sum})])
-counts = counts.sort_values(ascending=False)
-counts_nd = counts.drop(counts.index[:3])
-labels = counts_nd.index.tolist()
-values = counts_nd.values
-total = counts.sum()
-total_nd = counts_nd.sum()
-# Plot.
-x_pos = np.arange(len(labels))
-colors = plt.cm.Pastel1(np.linspace(0, 1, len(labels)))
-plt.figure(figsize=(10, 6), dpi=100)
-plt.bar(x_pos, values, color=colors, edgecolor="white", linewidth=1)
-# Annotate.
-for i, v in enumerate(values):
-    pct = v / total * 100
-    plt.text(
-        i,
-        v + total_nd * 0.005,
-        f"{pct:.2f}%",
-        ha="center",
-        va="bottom",
-        fontsize=10,
-    )
-plt.gca().yaxis.set_major_formatter(FuncFormatter(lambda y, pos: f"{int(y):,}"))
-plt.xticks(x_pos, labels, rotation=45, fontsize=12)
-plt.ylabel("Number of Series", fontsize=13)
-plt.title("Non‑Dominant Frequency Distribution", fontsize=15, pad=12)
-plt.grid(axis="y", linestyle="--", alpha=0.7)
-plt.tight_layout()
-plt.show()
 
 # %% [markdown]
 # <a name='base-frequency-by-data-source'></a>
@@ -948,80 +1383,45 @@ plt.show()
 
 # %%
 # Prepare data.
-top20 = fred["data_source"].value_counts().head(20).index.tolist()
-wrapped = [textwrap.fill(lbl, width=25) for lbl in top20]
-ct = pd.crosstab(fred["data_source"], fred["freq_base"])
-ct = ct.reindex(top20, fill_value=0)
+ct, labels = prepare_crosstab(
+    fred, index_col="data_source", pivot_col="freq_base", top_n=20, wrap_width=25
+)
+
 # Plot.
-fig, ax = plt.subplots(figsize=(14, 6), dpi=100)
-ct.plot(
-    kind="bar",
-    stacked=True,
-    ax=ax,
-    width=0.8,
+plot_stacked_bar(
+    df=ct,
+    index_labels=labels,
+    xlabel="Data Source",
+    ylabel="Series Count",
+    title="Data Source vs. Base Frequency (Top 20)",
+    legend_labels=ct.columns.tolist(),
     colormap="tab20",
-    legend=False,  # we'll add legend inside
+    width=0.8,
 )
-ax.set_xticks(np.arange(len(wrapped)))
-ax.set_xticklabels(wrapped, rotation=45, ha="right", fontsize=10)
-ax.set_xlabel("Data Source", fontsize=13)
-ax.set_ylabel("Series Count", fontsize=13)
-ax.set_title(
-    "Data Source vs. Base Frequency (Top 20 Sources)", fontsize=16, pad=12
-)
-ax.yaxis.set_major_formatter(lambda x, pos: f"{int(x):,}")
-handles, labels = ax.get_legend_handles_labels()
-ax.legend(
-    handles,
-    labels,
-    title="Frequency",
-    loc="upper right",
-    bbox_to_anchor=(0.98, 0.98),
-    frameon=True,
-    fontsize=9,
-    title_fontsize=10,
-)
-plt.tight_layout()
-plt.show()
 
 # %%
 # Prepare data.
 top20 = fred["data_source"].value_counts().head(20).index.tolist()
-nd_15 = top20[5:]
-wrapped = [textwrap.fill(lbl, width=25) for lbl in nd_15]
-ct = pd.crosstab(fred["data_source"], fred["freq_base"])
-ct = ct.reindex(nd_15, fill_value=0)
+nd15 = top20[5:]
+ct_nd, labels_nd15 = prepare_crosstab(
+    fred,
+    index_col="data_source",
+    pivot_col="freq_base",
+    index_list=nd15,
+    wrap_width=25,
+)
+
 # Plot.
-fig, ax = plt.subplots(figsize=(14, 6), dpi=100)
-ct.plot(
-    kind="bar",
-    stacked=True,
-    ax=ax,
-    width=0.8,
+plot_stacked_bar(
+    df=ct_nd,
+    index_labels=labels_nd15,
+    xlabel="Data Source",
+    ylabel="Series Count",
+    title="Data Source vs. Non-Dominant Base Frequencies",
+    legend_labels=ct_nd.columns.tolist(),
     colormap="tab20",
-    legend=False,  # we'll add legend inside
+    width=0.8,
 )
-ax.set_xticks(np.arange(len(wrapped)))
-ax.set_xticklabels(wrapped, rotation=45, ha="right", fontsize=10)
-ax.set_xlabel("Data Source", fontsize=13)
-ax.set_ylabel("Series Count", fontsize=13)
-ax.set_title(
-    "Data Source vs. Base Frequency (Non-dominant sources)", fontsize=16, pad=12
-)
-ax.yaxis.set_major_formatter(lambda x, pos: f"{int(x):,}")
-handles, labels = ax.get_legend_handles_labels()
-ax.legend(
-    handles,
-    labels,
-    title="Frequency",
-    loc="upper right",
-    bbox_to_anchor=(0.98, 0.98),
-    frameon=True,
-    fontsize=9,
-    title_fontsize=10,
-)
-plt.tight_layout()
-plt.show()
 
 # %% [markdown]
 # - **Annual, Monthly & Quarterly dominate**
@@ -1043,25 +1443,27 @@ plt.show()
 
 # %%
 # Prepare data.
-sa_counts = fred["seasonal_adjustment"].value_counts()
-labels = sa_counts.index.tolist()
-sizes = sa_counts.values
-total = sizes.sum()
+sa_counts, _ = prepare_top_counts(fred, "seasonal_adjustment", top_n=None)
 # Plot.
-plt.figure(figsize=(10, 6))
-colors = plt.cm.Pastel2(np.linspace(0, 1, len(labels)))
-x_pos = np.arange(len(labels))
-plt.bar(x_pos, sizes, color=colors, edgecolor="white", linewidth=1)
-# Annotate.
-for i, v in enumerate(sizes):
-    pct = v / total * 100
-    plt.text(
-        i, v + total * 0.005, f"{pct:.3f}%", ha="center", va="bottom", fontsize=11
-    )
-plt.gca().yaxis.set_major_formatter(FuncFormatter(lambda y, pos: f"{int(y):,}"))
-plt.xticks(x_pos, labels, fontsize=8, rotation=45)
-plt.ylabel("Number of Series", fontsize=13)
-plt.title("Seasonal Adjustment Distribution", fontsize=15, pad=12)
+plot_top_n_annotated_bar(
+    counts=sa_counts,
+    total=total,
+    top_n=len(sa_counts),
+    wrap_width=30,
+    figsize=(10, 6),
+    dpi=100,
+    xlabel="",
+    ylabel="Number of Series",
+    title="Seasonal Adjustment Distribution",
+    rotation=45,
+    fontsize_title=15,
+    fontsize_labels=8,
+    fontsize_annotation=11,
+    formatter=FuncFormatter(lambda y, pos: f"{int(y):,}"),
+    show_coverage_note=False,
+    annotation_fmt="{pct:.3f}%",
+)
+
 plt.tight_layout()
 plt.show()
 
@@ -1081,73 +1483,48 @@ plt.show()
 # ### Categories Distribution
 
 # %%
-# Compute counts and select top N categories.
-N = 20
-cat_counts = fred["categories_list"].explode().value_counts()
-total_tags = cat_counts.sum()
-top_cats = cat_counts.head(N)
-coverage_pct = top_cats.sum() / total_tags * 100
-# Set up the figure.
-fig, ax = plt.subplots(figsize=(12, 8), dpi=100)
-x = np.arange(len(top_cats))
-colors = plt.cm.viridis(np.linspace(0, 1, len(top_cats)))
-bars = ax.bar(x, top_cats.values, color=colors, edgecolor="white", linewidth=1)
-# Annotate.
-for bar in bars:
-    height = bar.get_height()
-    pct = height / total_tags * 100
-    ax.text(
-        bar.get_x() + bar.get_width() * 0.5,
-        height + total_tags * 0.005,
-        f"{pct:.1f}%",
-        ha="center",
-        va="bottom",
-        fontsize=10,
-    )
-# Configure and Format plot.
-ax.set_xticks(x)
-ax.set_xticklabels(top_cats.index, rotation=90, fontsize=10)
-ax.yaxis.set_major_formatter(lambda v, pos: f"{int(v):,}")
-ax.set_title(f"Top {N} Categories by Series Count", fontsize=16, pad=12)
-ax.set_xlabel("Category", fontsize=13)
-ax.set_ylabel("Series Count", fontsize=13)
-# Add coverage note.
-note = f"Top {N} cover {coverage_pct:.1f}% of all category tags"
-ax.text(
-    0.95,
-    0.85,
-    note,
-    transform=ax.transAxes,
-    ha="right",
-    va="top",
-    fontsize=11,
-    bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.7),
+# Prepare Data.
+cat_counts, _ = prepare_top_counts(
+    fred, "categories_list", explode=True, top_n=20
 )
-
+# Plot.
+plot_top_n_annotated_bar(
+    counts=cat_counts,
+    total=total,
+    top_n=N,
+    wrap_width=25,
+    figsize=(12, 8),
+    dpi=100,
+    xlabel="Category",
+    ylabel="Series Count",
+    title=f"Top {N} Categories by Series Count",
+    rotation=90,
+    fontsize_title=16,
+    fontsize_labels=10,
+    fontsize_annotation=10,
+    fontsize_note=11,
+    formatter=FuncFormatter(lambda v, p: f"{int(v):,}"),
+    show_coverage_note=False,
+)
 plt.tight_layout()
 plt.show()
 
 # %%
-# Compute the cumulative coverage for categories.
-cum_coverage = (
+# Coverage vs Top 20 Categorie
+# Prepare data.
+cat_counts = fred["categories_list"].explode().value_counts()
+cum_cat_coverage = (
     cat_counts.sort_values(ascending=False).cumsum() / cat_counts.sum() * 100
 )
-# Plot
-n_tags = np.arange(1, len(cum_coverage) + 1)
-plt.figure(figsize=(10, 6))
-plt.plot(n_tags, cum_coverage.values)
-plt.axhline(
-    cum_coverage.iloc[19],
-    color="r",
-    linestyle="--",
-    label=f"Top {N} Coverage: {cum_coverage.iloc[19]:.1f}%",
+
+plot_cumulative_coverage(
+    cum_coverage=cum_cat_coverage,
+    N=N,
+    xlabel="Top N Categories",
+    ylabel="Coverage (%)",
+    title=f"Coverage vs Top {N} Categories",
 )
-plt.xlabel(f"Top N Categories")
-plt.ylabel("Coverage (%)")
-plt.title(f"Coverage vs Top {N} Categories")
-plt.legend()
-plt.tight_layout()
-plt.show()
+
 
 # %% [markdown]
 # - **Highly concentrated**
@@ -1159,85 +1536,292 @@ plt.show()
 #   Beyond the top 20, coverage climbs very slowly toward 100 % as you include more categories. Thousands of categories are needed before capturing the remaining ~37 % of assignments.
 
 # %% [markdown]
+# <a name='hierarchical-categorical-analyses'></a>
+# ### Hierarchical Categorical Analyses
+
+# %%
+# Prepare data.
+root_counts, total_series = prepare_top_counts(
+    fred, "categories", split=(";", 0), top_n=20
+)
+
+# 3) Plot.
+plot_top_n_annotated_bar(
+    counts=root_counts,
+    total=total_series,
+    top_n=8,
+    wrap_width=25,  # wrap long names
+    figsize=(12, 6),
+    dpi=100,
+    xlabel="Root Category",
+    ylabel="Series Count",
+    title="Top 20 Root Categories by Series Count",
+    rotation=90,  # vertical x‐labels
+    fontsize_title=16,
+    fontsize_labels=10,
+    fontsize_annotation=10,
+    fontsize_note=11,
+    formatter=FuncFormatter(lambda v, p: f"{int(v):,}"),
+)
+plt.tight_layout()
+plt.show()
+
+
+# %%
+# Prepare data.
+leaf_counts, total_series = prepare_top_counts(
+    fred, "categories", split=(";", -1), top_n=20
+)
+
+# Plot.
+plot_top_n_annotated_bar(
+    counts=leaf_counts,
+    total=total_series,
+    top_n=20,
+    wrap_width=25,  # wrap long leaf names
+    figsize=(12, 6),
+    dpi=100,
+    xlabel="Leaf Category",
+    ylabel="Series Count",
+    title="Top 20 Leaf Categories by Series Count",
+    rotation=90,  # vertical x‐labels
+    fontsize_title=16,
+    fontsize_labels=10,
+    fontsize_annotation=10,
+    fontsize_note=11,
+    formatter=FuncFormatter(lambda v, p: f"{int(v):,}"),
+)
+plt.tight_layout()
+plt.show()
+
+
+# %%
+
+
+def build_category_tree(cat_series: pd.Series) -> Tuple[Dict, int]:
+    """
+    Build a nested tree of category counts.
+
+    :param cat_series: category series with categories separated by
+        semicolon
+    :return: tree and total count
+    """
+    tree = {}
+    total = 0
+    for cats in cat_series.fillna(""):
+        levels = [c.strip() for c in cats.split(";") if c.strip()]
+        if not levels:
+            continue
+        total += 1
+        # walk / create nested nodes
+        node = tree.setdefault(levels[0], {"_count": 0, "_children": {}})
+        node["_count"] += 1
+        for lvl in levels[1:]:
+            node = node["_children"].setdefault(
+                lvl, {"_count": 0, "_children": {}}
+            )
+            node["_count"] += 1
+    return tree, total
+
+
+def print_category_tree(
+    tree: dict,
+    total: int,
+    top_n: int = 20,
+    pct_digits: int = 1,
+    indent: int = 4,
+) -> None:
+    """
+    Recursively print the top_n roots with percentages of total.
+
+    :param tree: category tree as returned by build_category_tree
+    :param total: total count for computing percentages
+    :param top_n: number of root categories to show
+    :param pct_digits: number of decimal places in percentages
+    :param indent: number of spaces per nesting level
+    """
+    fmt = f"{{:.{pct_digits}f}}%"
+
+    def _recurse(node_dict, depth):
+        for name, data in sorted(
+            node_dict.items(), key=lambda x: x[1]["_count"], reverse=True
+        ):
+            pct = fmt.format(data["_count"] / total * 100)
+            print(" " * (depth * indent) + f"- {name} ({pct})")
+            if data["_children"]:
+                _recurse(data["_children"], depth + 1)
+
+    roots = sorted(tree.items(), key=lambda x: x[1]["_count"], reverse=True)[
+        :top_n
+    ]
+    for root_name, root_data in roots:
+        root_pct = fmt.format(root_data["_count"] / total * 100)
+        print(f"{root_name} ({root_pct})")
+        if root_data["_children"]:
+            _recurse(root_data["_children"], depth=1)
+        print()
+
+
+# %%
+# Prepare data.
+tree, total = build_category_tree(fred["categories"])
+# Visualize.
+print_category_tree(tree, total, top_n=20, pct_digits=3, indent=4)
+
+
+# %%
+# As this is a lot of data, this has been represented in a more digestable manner:.
+
+# %%
+
+
+def build_category_hierarchy_counts(
+    cat_series: pd.Series,
+) -> Tuple[Counter, Dict[str, Counter], Dict[Tuple[str, str], Counter], int]:
+    """
+    Given a Series of semicolon‐delimited category paths,
+
+    :param cat_series: a series of semicolon delimited category paths
+    :return: count of roots, a mapping of child counts per root, a
+        mapping of grandchild counts per root and child, and the total
+        count
+    """
+    paths = (
+        cat_series.fillna("")
+        .str.split(";")
+        .apply(lambda L: [p.strip() for p in L if p.strip()])
+    )
+    root_ct, child_ct, grand_ct = Counter(), {}, {}
+    for path in paths:
+        if not path:
+            continue
+        root = path[0]
+        root_ct[root] += 1
+        if len(path) > 1:
+            child = path[1]
+            child_ct.setdefault(root, Counter())[child] += 1
+            if len(path) > 2:
+                grand = path[2]
+                grand_ct.setdefault((root, child), Counter())[grand] += 1
+    total = sum(root_ct.values())
+    return root_ct, child_ct, grand_ct, total
+
+
+def print_category_hierarchy(
+    root_ct: Counter,
+    child_ct: dict,
+    grand_ct: dict,
+    total: int,
+    *,
+    top_n: int = 20,
+    indent_str: str = "  ",
+    pct_fmt: str = "{:.2f}%",
+) -> None:
+    """
+    Print a simple ASCII tree of the top_n roots, their top-2 children, and
+    top-2 grandchildren :param root_ct: counts for root categories :param
+    child_ct: counts for children under each root :param grand_ct: counts for
+    grandchildren under each child :param total: overall count :param top_n:
+    number of root categories to print :param indent_str: string used for
+    indentation :param pct_fmt: string format for percentages :return: None.
+    """
+
+    def _print_sub(root, rc) -> None:
+        """
+        Print details of a single root category in the hierarchy.
+
+        :param root: the name of the root category being printed
+        :param rc: the count of series for the root category
+        :return: None
+        """
+        pct_root = pct_fmt.format(rc / total * 100)
+        print(f"{root} ({pct_root})")
+        # Top 2 children
+        cc = child_ct.get(root, Counter())
+        top2_c = cc.most_common(2)
+        for child, ccnt in top2_c:
+            pct_c = pct_fmt.format(ccnt / total * 100)
+            print(f"{indent_str}├─ {child} ({pct_c})")
+            # Top 2 grandchildren
+            gc = grand_ct.get((root, child), Counter())
+            top2_g = gc.most_common(2)
+            for grand, gcnt in top2_g:
+                pct_g = pct_fmt.format(gcnt / total * 100)
+                print(f"{indent_str*2}│   ├─ {grand} ({pct_g})")
+            # “Others” under grandchildren
+            others_g = ccnt - sum(g for _, g in top2_g)
+            if others_g > 0:
+                pct_og = pct_fmt.format(others_g / total * 100)
+                print(f"{indent_str*2}│   └─ Others ({pct_og})")
+        # “Others” under children
+        others_c = rc - sum(c for _, c in top2_c)
+        if others_c > 0:
+            pct_oc = pct_fmt.format(others_c / total * 100)
+            print(f"{indent_str}└─ Others ({pct_oc})")
+        print()  # blank line between roots
+
+    for root, rc in root_ct.most_common(top_n):
+        _print_sub(root, rc)
+
+
+# %%
+# Prepare data.
+root_ct, child_ct, grand_ct, total = build_category_hierarchy_counts(
+    fred["categories"]
+)
+# Visualize.
+print_category_hierarchy(root_ct, child_ct, grand_ct, total, top_n=20)
+
+
+# %% [markdown]
 # <a name='tags-distribution'></a>
 # ### Tags Distribution
 
 # %%
-# Compute counts and select top N tags.
-N = 20
-tag_counts = fred["tags_list"].explode().value_counts()
-total_tags = tag_counts.sum()
-top_tags = tag_counts.head(N)
-coverage_pct = top_tags.sum() / total_tags * 100
-# Set up the figure.
-fig, ax = plt.subplots(figsize=(12, 8), dpi=100)
-x = np.arange(len(top_tags))
-colors = plt.cm.magma(np.linspace(0, 1, len(top_tags)))
-bars = ax.bar(x, top_tags.values, color=colors, edgecolor="white", linewidth=1)
-# Annotate.
-for bar in bars:
-    height = bar.get_height()
-    pct = height / total_tags * 100
-    ax.text(
-        bar.get_x() + bar.get_width() * 0.5,
-        height + total_tags * 0.005,
-        f"{pct:.1f}%",
-        ha="center",
-        va="bottom",
-        fontsize=10,
-    )
-# Configure and format plot.
-ax.set_xticks(x)
-ax.set_xticklabels(top_tags.index, rotation=90, fontsize=10)
-ax.yaxis.set_major_formatter(lambda v, pos: f"{int(v):,}")
-ax.set_title(f"Top {N} Tags by Series Count", fontsize=16, pad=12)
-ax.set_xlabel("Tag", fontsize=13)
-ax.set_ylabel("Series Count", fontsize=13)
-# Add coverage note.
-note = f"Top {N} cover {coverage_pct:.1f}% of all tag occurrences"
-ax.text(
-    0.95,
-    0.85,
-    note,
-    transform=ax.transAxes,
-    ha="right",
-    va="top",
-    fontsize=11,
-    bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.7),
-)
-plt.tight_layout()
-plt.show()
-
-# %%
-# Compute the cumulative coverage for categories.
-cum_coverage = (
-    tag_counts.sort_values(ascending=False).cumsum() / tag_counts.sum() * 100
+# Prepare data.
+tag_counts, total_tags = prepare_top_counts(
+    fred,
+    "tags_list",
+    explode=True,
+    drop=[
+        "St. Louis Fed",
+        "Federal Reserve",
+        "FRED",
+        "nsa",
+        "usa",
+        "county",
+        "census",
+        "bls",
+        "acs",
+        "state",
+        "Small Area Income &amp",
+        "Poverty Estimates",
+        "bea",
+    ],
+    rename={"saipe": "Small Area Income and Poverty Estimates"},
+    top_n=20,
 )
 # Plot.
-n_tags = np.arange(1, len(cum_coverage) + 1)
-plt.figure(figsize=(10, 6))
-plt.plot(n_tags, cum_coverage.values)
-plt.axhline(
-    cum_coverage.iloc[19],
-    color="r",
-    linestyle="--",
-    label=f"Top {N} Coverage: {cum_coverage.iloc[19]:.1f}%",
+plot_top_n_annotated_bar(
+    counts=tag_counts,
+    total=total,
+    top_n=20,
+    wrap_width=25,  # wrap long tag names
+    figsize=(12, 8),
+    dpi=100,
+    xlabel="Tag",
+    ylabel="Series Count",
+    title=f"Top {20} Semantically Unique Tags",
+    rotation=90,  # vertical x-labels
+    fontsize_title=16,
+    fontsize_labels=10,
+    fontsize_annotation=10,
+    fontsize_note=11,
+    formatter=FuncFormatter(lambda v, pos: f"{int(v):,}"),
+    show_coverage_note=False,
 )
-plt.xlabel(f"Top N Tags")
-plt.ylabel("Coverage (%)")
-plt.title(f"Coverage vs Top {N} Tags")
-plt.legend()
 plt.tight_layout()
 plt.show()
-
-
-# %% [markdown]
-# - **Moderate concentration**
-#   The top 20 tags cover about **53 %** of all tag occurrences.
-#   - Tags like **St. Louis Fed**, **Federal Reserve**, and **Economic Data** each appear on roughly 4–5 % of series.
-#
-# - **Even longer tail**
-#   After the first few dozen tags, adding more yields diminishing returns in coverage. Thousands of additional tags must be included to reach beyond ~90 % total coverage.
 
 # %% [markdown]
 # <a name='count-of-tags-and-categories-per-series'></a>
@@ -1245,16 +1829,17 @@ plt.show()
 
 # %%
 # Plot.
-plt.figure(figsize=(10, 6))
-sns.histplot(
-    fred["n_categories"], bins=20, kde=True, color="C0", label="Category count"
+plot_histograms(
+    data_series=[fred["n_categories"], fred["n_tags"]],
+    labels=["Category count", "Tag count"],
+    colors=["C0", "C1"],
+    bins=20,
+    kde=True,
+    figsize=(10, 6),
+    xlabel="Number per Series",
+    title="Distribution of Categories vs. Tags per Series",
+    legend_title="Series Metric",
 )
-sns.histplot(fred["n_tags"], bins=20, kde=True, color="C1", label="Tag count")
-plt.legend(title="Series Metric")
-plt.title("Distribution of Categories vs. Tags per Series")
-plt.xlabel("Number per Series")
-plt.tight_layout()
-plt.show()
 
 # %% [markdown]
 # - **Categories are very coarse**
@@ -1264,37 +1849,155 @@ plt.show()
 #   Tag counts per series cluster around 20–25 and extend past 35, showing that FRED uses tags to capture much finer detail.
 
 # %% [markdown]
-# <a name='co-occurance-of-the-top-20-tags-with-the-top-20-categories'></a>
-# ### Co-occurance of the Top 20 Tags with the Top 20 Categories
+# <a name='top-tags-for-each-root-category'></a>
+#
+# ### Top Tags for Each Root Category
 
 # %%
-# Prepare data.
-top_tags = tag_counts.head(20).index
-top_cats = cat_counts.head(20).index
-M = pd.DataFrame(0, index=top_tags, columns=top_cats)
-for tags, cats in zip(fred["tags_list"], fred["categories_list"]):
-    for t in tags or []:
-        if t in top_tags:
-            for c in cats or []:
-                if c in top_cats:
-                    M.at[t, c] += 1
-# Plot.
-sns.clustermap(
-    M,
-    cmap="Reds",
-    row_cluster=False,  # disable clustering of rows
-    col_cluster=False,  # disable clustering of columns
+
+
+def get_top_tags_by_root(
+    df: pd.DataFrame,
+    categories_col: str = "categories",
+    tags_col: str = "tags_list",
+    redundant: set[str] = None,
+    top_n: int = 10,
+) -> pd.DataFrame:
+    """
+    For each root category, find the top-N most common tags excluding any in
+    redundant.
+
+    :param df: the source data containing category and tags columns
+    :param categories_col: the name of the column with category data
+    :param tags_col: the name of the column with tags list
+    :param redundant: the set of tags to exclude from the counts
+    :param top_n: the maximum number of tags to return per root category
+    :return: columns root, tag, count
+    """
+    if redundant is None:
+        redundant = set()
+    redundant_lower = {t.lower() for t in redundant}
+
+    # 1) Compute each series’ root category
+    root_series = (
+        df[categories_col]
+        .fillna("")
+        .str.split(";", n=1)
+        .str[0]
+        .str.strip()
+        .replace("", np.nan)
+    )
+
+    # 2) Build counts[root][tag] = # of series with that (root,tag)
+    counts: dict[str, Counter] = defaultdict(Counter)
+    for tags, root in zip(df[tags_col], root_series):
+        if pd.isna(root) or not tags:
+            continue
+        for tag in set(tags):
+            t = tag.strip()
+            if not t or t.lower() in redundant_lower:
+                continue
+            counts[root][t] += 1
+
+    # 3) Extract the top-N tags for each root
+    rows = []
+    for root, ctr in counts.items():
+        for tag, cnt in ctr.most_common(top_n):
+            rows.append({"root": root, "tag": tag, "count": cnt})
+
+    top10 = (
+        pd.DataFrame(rows)
+        .sort_values(["root", "count"], ascending=[True, False])
+        .groupby("root", as_index=False)
+        .head(top_n)
+    )
+
+    return top10
+
+
+# %%
+REDUNDANT = {
+    "Federal Reserve",
+    "FRED",
+    "nsa",
+    "usa",
+    "county",
+    "census",
+    "bls",
+    "acs",
+    "state",
+    "Small Area Income &amp",
+    "Poverty Estimates",
+    "ppp",
+    "pwt",
+    "oecd",
+    "mei",
+    "bea",
+    "gdp",
+    "nipa",
+    "upenn",
+    "St. Louis Fed",
+    "sa",
+    "naics",
+    "indexes",
+}
+
+top10 = get_top_tags_by_root(
+    df=fred,
+    categories_col="categories",
+    tags_col="tags_list",
+    redundant=REDUNDANT,
+    top_n=10,
 )
-plt.title("Tag–Category Co-occurrence")
+
+# %%
+
+# 1) Compute total tag‐counts per root (for coverage %)
+root_totals = top10.groupby("root")["count"].sum()
+
+# 2) For each root, pull out its top‐10 tags and call the bar‐plot helper
+for root, grp in top10.groupby("root"):
+    # series of “tag” → count
+    s = grp.set_index("tag")["count"]
+    total_for_root = root_totals[root]
+
+    fig, ax = plot_top_n_annotated_bar(
+        counts=s,
+        total=total,
+        top_n=len(s),
+        wrap_width=25,
+        cmap=plt.cm.Spectral,
+        figsize=(6, 4),
+        dpi=100,
+        xlabel="",
+        ylabel="Series Count",
+        title=f"Top 10 Tags for {root}",
+        rotation=45,
+        fontsize_title=14,
+        fontsize_labels=9,
+        fontsize_annotation=9,
+        annotation_fmt="{pct:.1f}%",
+        show_coverage_note=False,
+        note_prefix="Top 10 cover ",
+    )
+    plt.show()
 
 # %% [markdown]
-# **Insights**
+# 1. **“Economic Data” is everywhere**
+#    - Ranks #1 in all root categories
+#    - Covers **68%** of U.S. Regional Data, **15%** of International Data, but still appears in ~6–7% of specialized areas like Production & Business Activity and Money, Banking & Finance
 #
-# - **Fed‑related tags** (e.g. “St. Louis Fed”, “Federal Reserve”, “FRED”) overwhelmingly co‑occur with the **“U.S. Regional Data”** and **“States”** categories, reflecting that Federal Reserve data is heavily state‑level and regional in scope.
-# - **Seasonal adjustment tags** (“Not Seasonally Adjusted”, “nsa”) also align almost exclusively with the same U.S.‑regional categories, indicating these series are predominantly regionally reported.
-# - **Demographic tags** like “county”, “County or County Equivalent”, “Census”, and “census” show strong links to the **“Counties”** and **“Population, Employment, & Labor Markets”** categories, as expected for household and geographic population metrics.
-# - The **“annual”** and **“persons”** tags—while more diffuse—still peak in categories such as **“International Data”** and **“Production & Business Activity”**, suggesting annual totals and person‑level metrics are used across broader economic indicators.
-# - **Most tags exhibit very little co‑occurrence outside their primary 1–2 categories**, highlighting that the top tags and categories form clear thematic clusters rather than a highly entangled network.
+# 2. **Common metadata tags dominate**
+#    - **Not Seasonally Adjusted**, **public domain: citation requested**, **United States of America** all sit in the top 4 for most categories
+#    - Their prevalence ranges from 60 +% in U.S.‐centric feeds down to ~1–2% in niche domains
+#
+# 3. **Concentration vs. dispersion**
+#    - **U.S. Regional Data** and **International Data** show “head” models: a handful of tags cover the majority, then a steep drop‐off
+#    - **Prices**, **National Accounts**, etc. display a flatter top 10 (each tag ~1–2%), indicating a long tail of descriptors
+#
+# 4. **Category-specific spikes**
+#    - **International Data**: “Economic Data” hits ~15%, double its share elsewhere
+#    - **Population, Employment & Labor Markets**: top tags cluster around ~2.5%, reflecting very diverse labeling
 #
 
 # %% [markdown]
@@ -1306,100 +2009,49 @@ plt.title("Tag–Category Co-occurrence")
 # ### US vs Non-US
 
 # %%
-# Prepare data.
-pattern = r"\b(?:usa|united states of america)\b"
-descriptive_cols = ["tags", "categories", "title", "description", "notes"]
-is_us = pd.Series(False, index=fred.index)
-for col in descriptive_cols:
-    if col in fred.columns:
-        is_us |= (
-            fred[col].fillna("").str.contains(pattern, case=False, regex=True)
-        )
-# Count US vs Non‑US series.
-counts = is_us.value_counts()
-labels = ["US", "Non‑US"]
-sizes = [counts.get(True, 0), counts.get(False, 0)]
-# Plot.
-plt.figure(figsize=(6, 6))
-colors = plt.cm.Set2(np.arange(len(sizes)))
-explode = (0.05, 0)  # pull out the US slice slightly
-wedges, texts, autotexts = plt.pie(
-    sizes,
-    labels=labels,
-    autopct="%1.1f%%",
-    startangle=90,
-    pctdistance=0.75,
-    colors=colors,
-    explode=explode,
-    wedgeprops={"linewidth": 1, "edgecolor": "white"},
-    textprops={"fontsize": 12},
+
+# Use the function to get labels and sizes, then plot the donut.
+labels, sizes = get_binary_counts(
+    fred,
+    pattern=r"\b(?:usa|united states of america)\b",
+    search_cols=["tags", "categories", "title", "description", "notes"],
+    labels=["US", "Non-US"],
 )
-centre_circle = plt.Circle((0, 0), 0.45, fc="white", linewidth=0)
-plt.gca().add_artist(centre_circle)
-plt.title("US vs Non‑US Data", fontsize=16, pad=20)
-plt.axis("equal")
-plt.tight_layout()
-plt.show()
+plot_donut(sizes=sizes, labels=labels, title="US vs Non-US Data")
+
+# %%
 
 # %% [markdown]
 # <a name='breakdown-by-continent'></a>
 # ### Breakdown by Continent
 
 # %%
-# Prepare Data
-cont_counts = fred["continent"].value_counts()
-labels = cont_counts.index.tolist()
-sizes = cont_counts.values
-total = sizes.sum()
-# Plot.
-plt.figure(figsize=(10, 6))
-colors = plt.cm.Pastel1(np.linspace(0, 1, len(labels)))
-x_pos = np.arange(len(labels))
-plt.bar(x_pos, sizes, color=colors, edgecolor="white", linewidth=1)
-# Annotate.
-for i, v in enumerate(sizes):
-    pct = v / total * 100
-    plt.text(
-        i, v + total * 0.005, f"{pct:.3f}%", ha="center", va="bottom", fontsize=12
-    )
-plt.xticks(x_pos, labels, fontsize=12)
-plt.ylabel("Number of Series", fontsize=14)
-plt.title("Series by Continent", fontsize=16, pad=15)
-plt.gca().yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x):,}"))
+# Prepare data.
+cont_counts, total_cont = prepare_top_counts(fred, "continent")
+
+# Plot using our reusable bar‐chart function.
+plot_top_n_annotated_bar(
+    counts=cont_counts,
+    total=total,
+    top_n=len(cont_counts),  # plot all continents
+    wrap_width=None,  # labels are short
+    figsize=(10, 6),
+    dpi=100,
+    xlabel="",  # no x-label
+    ylabel="Number of Series",
+    title="Series by Continent",
+    rotation=0,  # horizontal x-labels
+    fontsize_title=16,
+    fontsize_labels=12,
+    fontsize_annotation=12,
+    fontsize_note=11,
+    formatter=FuncFormatter(lambda v, pos: f"{int(v):,}"),
+    show_coverage_note=False,  # omit coverage note
+    annotation_fmt="{pct:.3f}%",
+)
 plt.tight_layout()
 plt.show()
 
-# %%
-# Prepare Data.
-cont_counts_nd = (
-    fred["continent"]
-    .value_counts()
-    .drop(labels=["Other", "North America", np.nan], errors="ignore")
-)
-labels_nd = cont_counts_nd.index.tolist()
-sizes_nd = cont_counts_nd.values
-total_nd = sizes_nd.sum()
-# Plot.
-plt.figure(figsize=(10, 6))
-colors = plt.cm.Pastel1(np.linspace(0, 1, len(labels_nd)))
-x_pos = np.arange(len(labels_nd))
-plt.bar(x_pos, sizes_nd, color=colors, edgecolor="white", linewidth=1)
-for i, v in enumerate(sizes_nd):
-    pct = v / total * 100
-    plt.text(
-        i,
-        v + total_nd * 0.005,
-        f"{pct:.3f}%",
-        ha="center",
-        va="bottom",
-        fontsize=12,
-    )
-plt.xticks(x_pos, labels_nd, fontsize=12)
-plt.ylabel("Number of Series", fontsize=14)
-plt.title("Distribution in Non-Dominant Continents", fontsize=16, pad=15)
-plt.gca().yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f"{int(x):,}"))
-plt.tight_layout()
-plt.show()
 
 # %% [markdown]
 # - **Asia Second**
@@ -1410,49 +2062,151 @@ plt.show()
 # <a name='distribution-of-data-by-state'></a>
 # ### Distribution of Data by State
 
-# %%
 
-# Prepare data.
-raw_counts = fred["categories_list"].explode().value_counts().to_dict()
-with open("us_states.geojson") as f:
-    geo = json.load(f)
-geo_states = {feat["properties"]["name"] for feat in geo["features"]}
-state_series = {st: raw_counts.get(st, 0) for st in geo_states}
-patches = []
-values = []
-for feat in geo["features"]:
-    name = feat["properties"]["name"]
-    count = state_series.get(name, 0)
-    geom = feat["geometry"]
-    rings = (
-        geom["coordinates"]
-        if geom["type"] == "Polygon"
-        else [r for poly in geom["coordinates"] for r in poly]
-    )
-    for ring in rings:
-        patches.append(Polygon(ring, closed=True))
-        values.append(count)
-# Plot choropleth map.
-plt.style.use("ggplot")  # or remove this line to stick with default
-fig, ax = plt.subplots(figsize=(15, 10), dpi=100)
-ax.set_facecolor("#f7f7f7")
-pc = PatchCollection(
+# %%
+def plot_choropleth_map(
     patches,
-    array=np.array(values),
-    cmap="viridis",
-    norm=plt.Normalize(vmin=0, vmax=max(values)),
-    edgecolor="white",
-    linewidth=0.5,
+    values,
+    *,
+    cmap: str = "viridis",
+    vmin: float | None = None,
+    vmax: float | None = None,
+    style: str = "ggplot",
+    figsize: tuple = (15, 10),
+    dpi: int = 100,
+    facecolor: str = "#f7f7f7",
+    edgecolor: str = "white",
+    linewidth: float = 0.5,
+    cbar_orientation: str = "horizontal",
+    cbar_fraction: float = 0.04,
+    cbar_pad: float = 0.05,
+    cbar_label: str = "",
+    title: str = "",
+    title_kwargs: dict | None = None,
+) -> Tuple[matplotlib.figure.Figure, matplotlib.axes.Axes]:
+    """
+    Plot a choropleth given a list of matplotlib.patches.Polygon and
+    corresponding values.
+
+    :param patches: collection of patch objects for geographical areas
+    :param values: numerical values corresponding to patches
+    :param cmap: colormap name to use
+    :param vmin: minimum value for normalization optional
+    :param vmax: maximum value for normalization optional
+    :param style: style name for plot optional
+    :param figsize: figure dimensions optional
+    :param dpi: dots per inch resolution optional
+    :param facecolor: background color for plot area optional
+    :param edgecolor: color for patch boundaries optional
+    :param linewidth: line thickness for patch outlines optional
+    :param cbar_orientation: direction of colorbar optional
+    :param cbar_fraction: fraction parameter for colorbar size optional
+    :param cbar_pad: padding between plot and colorbar optional
+    :param cbar_label: label for colorbar optional
+    :param title: plot title
+    :param title_kwargs: optional keyword arguments for title formatting
+    :return: choropleth map
+    """
+    if style:
+        plt.style.use(style)
+    fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
+    ax.set_facecolor(facecolor)
+
+    # Normalize color scale
+    norm = plt.Normalize(
+        vmin=0 if vmin is None else vmin,
+        vmax=(max(values) if vmax is None else vmax),
+    )
+
+    # Create patch collection
+    pc = PatchCollection(
+        patches,
+        array=np.array(values),
+        cmap=cmap,
+        norm=norm,
+        edgecolor=edgecolor,
+        linewidth=linewidth,
+    )
+    ax.add_collection(pc)
+    ax.autoscale_view()
+
+    # Colorbar
+    cbar = fig.colorbar(
+        pc,
+        ax=ax,
+        orientation=cbar_orientation,
+        fraction=cbar_fraction,
+        pad=cbar_pad,
+    )
+    cbar.set_label(cbar_label, fontsize=12)
+    cbar.ax.tick_params(labelsize=10)
+
+    # Title
+    if title:
+        ax.set_title(
+            title,
+            **(
+                {"fontsize": 20, "fontweight": "bold", "pad": 20}
+                if title_kwargs is None
+                else title_kwargs
+            ),
+        )
+
+    ax.set_aspect("equal")
+    ax.axis("off")
+    plt.tight_layout()
+    return fig, ax
+
+
+# %%
+def get_patches_and_values(
+    geojson_path: str, fred: pd.DataFrame
+) -> Tuple[List[Polygon], List[int]]:
+    """
+    Compute patches and corresponding values for a choropleth map based on US
+    state data.
+
+    :param geojson_path: path to the GeoJSON file
+    :param fred: data to compute state counts
+    :return: states and corresponding values
+    """
+    # Prepare data.
+    raw_counts = fred["categories_list"].explode().value_counts().to_dict()
+    with open(geojson_path) as f:
+        geo = json.load(f)
+    geo_states = {feat["properties"]["name"] for feat in geo["features"]}
+    state_series = {st: raw_counts.get(st, 0) for st in geo_states}
+    # Build patches and values.
+    patches = []
+    values = []
+    for feat in geo["features"]:
+        name = feat["properties"]["name"]
+        count = state_series.get(name, 0)
+        geom = feat["geometry"]
+        rings = (
+            geom["coordinates"]
+            if geom["type"] == "Polygon"
+            else [r for poly in geom["coordinates"] for r in poly]
+        )
+        for ring in rings:
+            patches.append(Polygon(ring, closed=True))
+            values.append(count)
+    return patches, values
+
+
+# %%
+# Compute patches and values using the helper function.
+patches, values = get_patches_and_values("us_states.geojson", fred)
+
+# 3) Plot choropleth via our helper
+fig, ax = plot_choropleth_map(
+    patches=patches,
+    values=values,
+    cmap="magma",
+    cbar_label="Number of Series",
+    title="FRED Series Count by State",
+    title_kwargs={"fontsize": 20, "fontweight": "bold", "pad": 20},
 )
-ax.add_collection(pc)
-ax.autoscale_view()
-cbar = fig.colorbar(pc, ax=ax, orientation="horizontal", fraction=0.04, pad=0.05)
-cbar.set_label("Number of Series", fontsize=12)
-cbar.ax.tick_params(labelsize=10)
-ax.set_title("FRED Series Count by State", fontsize=20, fontweight="bold", pad=20)
-ax.set_aspect("equal")
-ax.axis("off")
-plt.tight_layout()
 plt.show()
 
 
@@ -1482,6 +2236,51 @@ plt.show()
 # <a name='derived-feature-correlation'></a>
 # ### Derived Feature Correlation
 
+
+# %%
+def plot_heatmap(
+    matrix,
+    *,
+    annot: bool = True,
+    cmap: str = "coolwarm",
+    fmt: str = ".2f",
+    cbar: bool = True,
+    figsize: tuple = (8, 6),
+    title: str = "",
+    xlabel: str = "",
+    ylabel: str = "",
+    **heatmap_kwargs,
+) -> Tuple[matplotlib.figure.Figure, matplotlib.axes.Axes]:
+    """
+    Plot a correlation (or any) matrix as a heatmap.
+
+    :param matrix: pandas DataFrame or 2D array to be plotted
+    :param annot: whether to annotate cells with their values
+    :param cmap: colormap name
+    :param fmt: string format for annotations
+    :param cbar: whether to show the colorbar
+    :param figsize: tuple for figure size
+    :param title: plot title :param xlabel, ylabel: axis labels
+    :param heatmap_kwargs: additional kwargs passed to sns.heatmap
+    :return: the heatmap
+    """
+    fig, ax = plt.subplots(figsize=figsize)
+    sns.heatmap(
+        matrix,
+        annot=annot,
+        fmt=fmt,
+        cmap=cmap,
+        cbar=cbar,
+        ax=ax,
+        **heatmap_kwargs,
+    )
+    ax.set_title(title, pad=12)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    plt.tight_layout()
+    return fig, ax
+
+
 # %%
 # Prepare data.
 num = fred[["n_tags", "n_categories", "duration_years", "staleness_days"]].copy()
@@ -1490,10 +2289,16 @@ num["is_sa"] = (fred["seasonal_adjustment"] != "Not Seasonally Adjusted").astype
 )
 num["is_discontinued"] = fred["is_discontinued"].astype(int)
 corr = num.corr()
-# Plot.
-sns.heatmap(corr, annot=True, cmap="coolwarm")
-plt.title("Correlation Matrix")
-plt.tight_layout()
+
+# Plot via helper.
+plot_heatmap(
+    matrix=corr,
+    annot=True,
+    cmap="coolwarm",
+    fmt=".2f",
+    figsize=(8, 6),
+    title="Correlation Matrix",
+)
 
 
 # %% [markdown]
@@ -1517,19 +2322,59 @@ plt.tight_layout()
 # ### Duration vs Staleness
 
 # %%
+
+
+def plot_scatterplot(
+    df,
+    x,
+    y,
+    figsize=(8, 6),
+    dpi=100,
+    alpha=0.3,
+    s=10,
+    title="",
+    xlabel="",
+    ylabel="",
+) -> Tuple[matplotlib.figure.Figure, matplotlib.axes.Axes]:
+    """
+    Generic scatterplot function.
+
+    :param df: data
+    :param x: name of x-axis column
+    :param y: name of y-axis column
+    :param figsize: tuple for figure size
+    :param dpi: resolution
+    :param alpha: transparency for points
+    :param s: marker size
+    :param title: plot title
+    :param xlabel: label for x-axis
+    :param ylabel: label for y-axis
+    :return: the figure and axes objects of the scatterplot
+    """
+    fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
+    sns.scatterplot(data=df, x=x, y=y, alpha=alpha, s=s, ax=ax)
+    ax.set_title(title)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    plt.tight_layout()
+    return fig, ax
+
+
+# %%
 # Prepare data.
 active = fred[fred["is_discontinued"] == False]
 sample = active.sample(min(len(active), 700000), random_state=1)
-# Plot.
-plt.figure(figsize=(8, 6))
-sns.scatterplot(
-    x="duration_years", y="staleness_days", data=sample, alpha=0.3, s=10
+
+plot_scatterplot(
+    df=sample,
+    x="duration_years",
+    y="staleness_days",
+    alpha=0.3,
+    s=10,
+    title="Duration (years) vs. Staleness (days) (Active Series)",
+    xlabel="Duration (years)",
+    ylabel="Staleness (days)",
 )
-plt.title("Duration (years) vs. Staleness (days) (Active Series)")
-plt.xlabel("Duration (years)")
-plt.ylabel("Staleness (days)")
-plt.tight_layout()
-plt.show()
 
 # %% [markdown]
 # - **No clear “longer‑lived = fresher” trend** – series that have run for decades (100+ years) can be either very up‑to‑date or months/years stale, and short‐duration series likewise span the full staleness range.
