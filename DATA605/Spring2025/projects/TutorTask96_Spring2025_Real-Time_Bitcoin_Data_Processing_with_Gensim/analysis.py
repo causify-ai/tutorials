@@ -4,6 +4,10 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+def sub_dataframe(df, index):
+    return df.iloc[index]
+
+
 def vector_model_topic_similarity(vecmodel):
     '''
     What does function tells? Basis similarity matrix we can conclude -
@@ -19,6 +23,7 @@ def vector_model_topic_similarity(vecmodel):
 
 # Finding similarity between 2 windows using word/char vectorizer model
 def vecmodel_window_similarity(model, doc1, doc2):
+    '''Checking similarity between segmented data (2 documents) using vectorization model'''
     vec_1 = np.mean([model.wv[token] for token in doc1], axis=0)
     vec_2 = np.mean([model.wv[token] for token in doc2], axis=0)
 
@@ -29,7 +34,8 @@ def vecmodel_window_similarity(model, doc1, doc2):
 # Finding window similarity using doc2vec model
 def similar_d2v_time(df, d2v_model, doc):
     '''
-    doc = ['medium_down', 'stable', 'stable', 'stable', 'stable']
+    Finding top 5 similar documents/timeframes to the given document.
+    So that we can check what is the most similar history and it's result to invest accordingly
     '''
     vector = d2v_model.infer_vector(doc)
 
@@ -53,7 +59,7 @@ def d2v_cosine_sim_heatmap(d2v_model,tagged_docs):
 
     plt.figure(figsize=(12, 8))
     sns.heatmap(similarity_matrix, annot=True, cmap='coolwarm')
-    plt.title('Cosine Similarity Between Time Windows')
+    plt.title('Cosine Similarity Between Time Windows based on Doc2Vec Model')
     plt.xlabel('Window')
     plt.ylabel('Window')
     plt.show()
@@ -82,7 +88,7 @@ def word2v_cosine_sim_heatmap(model,documents):
 
 # Cosine Similarity Between Time Windows
 def topic_model_cos_sim(model, corpus):
-    # Get LSI topic vectors for all windows
+    # Get topic vectors for all windows
     lsi_topic_vectors = [model[corpus[i]] for i in range(len(corpus))]
 
     # Convert sparse topic distributions into dense numpy arrays
@@ -95,7 +101,7 @@ def topic_model_cos_sim(model, corpus):
             vec[topic_id] = value
         dense_vectors.append(vec)
 
-    # Cosine similarity between LSI topic vectors
+    # Cosine similarity between topic vectors
     similarity_lsi = cosine_similarity(dense_vectors)
 
     # Visualize with heatmap
