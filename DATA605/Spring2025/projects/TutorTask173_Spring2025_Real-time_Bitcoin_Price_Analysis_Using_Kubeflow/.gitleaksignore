@@ -1,9 +1,2 @@
-[[rules]]
-description = "Ignore environment variable references like DB_PASSWORD, 
-connection_string"
-regex = '''(?i)(DB_PASSWORD|connection_string)'''
-path = 
-'''DATA605/Spring2025/projects/TutorTask173_Spring2025_Real-time_Bitcoin_Price_Analysis_Using_Kubeflow/scripts/fetch_bitcoin_price.py'''
-
 rule1076
 rule589
