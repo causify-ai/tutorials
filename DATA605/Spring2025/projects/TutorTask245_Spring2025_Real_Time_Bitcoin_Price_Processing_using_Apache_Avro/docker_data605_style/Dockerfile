@@ -27,6 +27,7 @@ RUN python3 -m pip install --upgrade pip
 #   assert 0 < size <= self._size
 # for tornado==6.2 and jupyter-client==8.0.2.
 # https://discourse.jupyter.org/t/jupyter-notebook-zmq-message-arrived-on-closed-channel-error/17869/10
+
 RUN pip3 install \
     ipython \
     tornado==6.1 \
@@ -34,9 +35,15 @@ RUN pip3 install \
     jupyter-contrib-core \
     jupyter-contrib-nbextensions \
     psycopg2-binary \
-    yapf
+    yapf \
+    avro-python3 \
+    confluent-kafka \
+    pyspark \
+    requests
+
 
 RUN mkdir /install
+
 
 # Install Jupyter extensions.
 ADD install_jupyter_extensions.sh /install
@@ -53,3 +60,6 @@ RUN /install/version.sh 2>&1 | tee version.log
 
 # Jupyter.
 EXPOSE 8888
+
+COPY . /workspace
+WORKDIR /workspace
