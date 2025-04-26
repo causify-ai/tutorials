@@ -1,0 +1,22 @@
+# Use a small Python image
+FROM python:3.9-slim
+
+# Set working directory inside the container
+WORKDIR /app
+
+# Copy the Bitcoin price fetcher script into the container
+COPY ../scripts/fetch_bitcoin_price.py .
+
+# Install required Python libraries
+RUN pip install requests pandas sqlalchemy psycopg2-binary
+
+# Set environment variables default values (optional safety)
+ENV DB_USER=postgres
+ENV DB_PASSWORD=yourpassword
+ENV DB_HOST=localhost
+ENV DB_PORT=5432
+ENV DB_NAME=bitcoin_db
+ENV COINGECKO_API_KEY=your_coingecko_api_key
+
+# Command to run the script
+CMD ["python", "fetch_bitcoin_price.py"]
