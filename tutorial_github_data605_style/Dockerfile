@@ -20,6 +20,7 @@ RUN apt install -y --no-install-recommends \
     python3-dev
 
 RUN python3 -m pip install --upgrade pip
+RUN pip3 install pandas requests scikit-learn econml matplotlib
     
 # Install Python packages.
 # There is a bug:
