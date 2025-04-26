@@ -12,20 +12,20 @@ def fetch_bitcoin_price():
         "vs_currencies": "usd"
     }
     headers = {
-        "x-cg-pro-api-key": os.getenv("COINGECKO_API_KEY")
+        "x-cg-pro-api-key": os.getenv("COINGECKO_API_KEY", "dummy_api_key")
     }
     response = requests.get(url, params=params, headers=headers)
     data = response.json()
     price = data["bitcoin"]["usd"]
     return price
 
-# Save to TimescaleDB
+# Save to TimescaleDB (or MySQL in Kubeflow)
 def save_to_database(price):
-    db_user = os.getenv("DB_USER")
-    db_password = os.getenv("DB_PASSWORD")
-    db_host = os.getenv("DB_HOST")
-    db_port = os.getenv("DB_PORT")
-    db_name = os.getenv("DB_NAME")
+    db_user = os.getenv("DB_USER", "user")
+    db_password = os.getenv("DB_PASSWORD", "password")
+    db_host = os.getenv("DB_HOST", "localhost")
+    db_port = os.getenv("DB_PORT", "5432")
+    db_name = os.getenv("DB_NAME", "bitcoin_db")
 
     connection_string = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
     engine = create_engine(connection_string)
