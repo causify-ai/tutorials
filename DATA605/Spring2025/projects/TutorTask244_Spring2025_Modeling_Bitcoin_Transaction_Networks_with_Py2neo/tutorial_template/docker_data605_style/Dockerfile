@@ -36,7 +36,12 @@ RUN pip3 install \
     psycopg2-binary \
     yapf \
     py2neo \
-    neo4j
+    neo4j \
+    pandas \
+    numpy \
+    matplotlib \
+    requests
+    
 RUN mkdir /install
 
 # Install Jupyter extensions.
