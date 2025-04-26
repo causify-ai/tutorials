@@ -34,8 +34,9 @@ RUN pip3 install \
     jupyter-contrib-core \
     jupyter-contrib-nbextensions \
     psycopg2-binary \
-    yapf
-
+    yapf \
+    py2neo \
+    neo4j
 RUN mkdir /install
 
 # Install Jupyter extensions.
