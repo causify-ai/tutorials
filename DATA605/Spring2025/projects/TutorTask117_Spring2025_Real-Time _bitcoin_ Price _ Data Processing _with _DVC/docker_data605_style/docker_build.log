@@ -1,0 +1,90 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.75kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:20.04
+#2 ...
+
+#3 [auth] library/ubuntu:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:20.04
+#2 DONE 2.4s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [ 1/20] FROM docker.io/library/ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 4.15kB done
+#6 DONE 0.0s
+
+#7 [ 8/20] RUN mkdir /install
+#7 CACHED
+
+#8 [ 2/20] RUN apt-get -y update
+#8 CACHED
+
+#9 [17/20] COPY run_jupyter.sh /run_jupyter.sh
+#9 CACHED
+
+#10 [11/20] RUN /install/install_jupyter_extensions.sh
+#10 CACHED
+
+#11 [ 5/20] RUN apt install -y --no-install-recommends     python3     python3-pip     python3-dev
+#11 CACHED
+
+#12 [16/20] RUN /install/version.sh 2>&1 | tee version.log
+#12 CACHED
+
+#13 [15/20] ADD version.sh /install/
+#13 CACHED
+
+#14 [10/20] RUN chmod +x /install/install_jupyter_extensions.sh
+#14 CACHED
+
+#15 [13/20] COPY etc_sudoers /etc/sudoers
+#15 CACHED
+
+#16 [18/20] COPY docker_jupyter.sh /docker_jupyter.sh
+#16 CACHED
+
+#17 [ 7/20] RUN pip3 install     ipython     tornado==6.1     jupyter-client==7.3.2     jupyter-contrib-core     jupyter-contrib-nbextensions     psycopg2-binary     yapf
+#17 CACHED
+
+#18 [ 6/20] RUN python3 -m pip install --upgrade pip
+#18 CACHED
+
+#19 [ 4/20] RUN apt install -y --no-install-recommends     sudo     curl     systemctl     gnupg     git     vim
+#19 CACHED
+
+#20 [12/20] ADD etc_sudoers /install/
+#20 CACHED
+
+#21 [ 3/20] RUN apt-get -y upgrade
+#21 CACHED
+
+#22 [14/20] COPY bashrc /root/.bashrc
+#22 CACHED
+
+#23 [19/20] RUN chmod +x /run_jupyter.sh
+#23 CACHED
+
+#24 [ 9/20] ADD install_jupyter_extensions.sh /install
+#24 CACHED
+
+#25 [20/20] RUN chmod +x /docker_jupyter.sh
+#25 CACHED
+
+#26 exporting to image
+#26 exporting layers done
+#26 writing image sha256:b24e17fd3a2cf896324e7c1cca645975508ea1b592419c584835738a2910da75 done
+#26 naming to docker.io/umd_data605/umd_data605_template done
+#26 DONE 0.0s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/laej1bvuma1975qafow3vdiun
