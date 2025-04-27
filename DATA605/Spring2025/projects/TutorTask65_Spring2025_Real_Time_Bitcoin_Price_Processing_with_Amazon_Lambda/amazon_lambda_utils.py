@@ -1,65 +1,41 @@
-"""
-template_utils.py
+import requests
+import datetime
+import json
+import boto3
 
-This file contains utility functions that support the tutorial notebooks.
-
-- Notebooks should call these functions instead of writing raw logic inline.
-- This helps keep the notebooks clean, modular, and easier to debug.
-- Students should implement functions here for data preprocessing,
-  model setup, evaluation, or any reusable logic.
-"""
-
-import pandas as pd
-import logging
-from sklearn.model_selection import train_test_split
-from pycaret.classification import compare_models
-
-# -----------------------------------------------------------------------------
-# Logging
-# -----------------------------------------------------------------------------
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-# -----------------------------------------------------------------------------
-# Example 1: Split the dataset into train and test sets
-# -----------------------------------------------------------------------------
-
-def split_data(df: pd.DataFrame, target_column: str, test_size: float = 0.2):
+def get_live_btc_price():
     """
-    Split the dataset into training and testing sets.
-
-    :param df: full dataset
-    :param target_column: name of the target column
-    :param test_size: proportion of test data (default = 0.2)
-
-    :return: X_train, X_test, y_train, y_test
+    Simulate a Lambda function that fetches live Bitcoin price.
     """
-    logger.info("Splitting data into train and test sets")
-    X = df.drop(columns=[target_column])
-    y = df[target_column]
-    return train_test_split(X, y, test_size=test_size, random_state=42)
 
-# -----------------------------------------------------------------------------
-# Example 2: PyCaret classification pipeline
-# -----------------------------------------------------------------------------
+    url = "https://api.coinbase.com/v2/prices/spot?currency=USD"
+    response = requests.get(url)
 
-def run_pycaret_classification(df: pd.DataFrame, target_column: str) -> pd.DataFrame:
+    if response.status_code == 200:
+        data = response.json()
+        price = data['data']['amount']
+        timestamp = datetime.datetime.utcnow().isoformat()
+
+        result = {
+            'price': float(price),
+            'timestamp': timestamp
+        }
+        return result
+    else:
+        raise Exception(f"Failed to fetch BTC price. Status Code: {response.status_code}")
+
+def upload_to_s3(data, bucket_name, file_name):
     """
-    Run a basic PyCaret classification experiment.
-
-    :param df: dataset containing features and target
-    :param target_column: name of the target column
-
-    :return: comparison of top-performing models
+    Simulate a Lambda function that uploads data to S3.
     """
-    logger.info("Initializing PyCaret classification setup")
-    ...
 
-    logger.info("Comparing models")
-    results = compare_models()
-    ...
+    # Create S3 client
+    s3 = boto3.client('s3',region_name='us-east-1')
 
-    return results
+    # Convert data to JSON string
+    json_data = json.dumps(data)
 
+    # Upload JSON to S3 bucket
+    s3.put_object(Bucket=bucket_name, Key=file_name, Body=json_data)
 
+    return f"s3://{bucket_name}/{file_name}"

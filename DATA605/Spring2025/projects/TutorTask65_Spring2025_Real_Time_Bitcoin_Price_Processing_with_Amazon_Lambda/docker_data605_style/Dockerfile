@@ -29,12 +29,19 @@ RUN python3 -m pip install --upgrade pip
 # https://discourse.jupyter.org/t/jupyter-notebook-zmq-message-arrived-on-closed-channel-error/17869/10
 RUN pip3 install \
     ipython \
+    notebook \
+    pandas \
+    numpy \
+    boto3 \
+    websockets \
+    requests \     
     tornado==6.1 \
     jupyter-client==7.3.2 \
     jupyter-contrib-core \
     jupyter-contrib-nbextensions \
-    psycopg2-binary \
-    yapf
+    psycopg2-binary
+
+
 
 RUN mkdir /install
 
