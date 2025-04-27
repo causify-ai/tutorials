@@ -1,0 +1,105 @@
+Metadata-Version: 2.1
+Name: hupper
+Version: 1.12.1
+Summary: Integrated process monitor for developing and reloading daemons.
+Home-page: https://github.com/Pylons/hupper
+Author: Michael Merickel
+Author-email: pylons-discuss@googlegroups.com
+License: MIT
+Project-URL: Documentation, https://docs.pylonsproject.org/projects/hupper/en/latest/
+Project-URL: Changelog, https://docs.pylonsproject.org/projects/hupper/en/latest/changes.html
+Project-URL: Issue Tracker, https://github.com/Pylons/hupper/issues
+Keywords: server,daemon,autoreload,reloader,hup,file,watch,process
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Requires-Python: >=3.7
+Description-Content-Type: text/x-rst
+License-File: LICENSE.txt
+Provides-Extra: docs
+Requires-Dist: watchdog ; extra == 'docs'
+Requires-Dist: setuptools ; extra == 'docs'
+Requires-Dist: Sphinx ; extra == 'docs'
+Requires-Dist: pylons-sphinx-themes ; extra == 'docs'
+Provides-Extra: testing
+Requires-Dist: watchdog ; extra == 'testing'
+Requires-Dist: pytest ; extra == 'testing'
+Requires-Dist: pytest-cov ; extra == 'testing'
+Requires-Dist: mock ; extra == 'testing'
+
+======
+hupper
+======
+
+.. image:: https://img.shields.io/pypi/v/hupper.svg
+    :target: https://pypi.python.org/pypi/hupper
+
+.. image:: https://github.com/Pylons/hupper/actions/workflows/ci-tests.yml/badge.svg?branch=main
+    :target: https://github.com/Pylons/hupper/actions/workflows/ci-tests.yml?query=branch%3Amain
+
+.. image:: https://readthedocs.org/projects/hupper/badge/?version=latest
+    :target: https://readthedocs.org/projects/hupper/?badge=latest
+    :alt: Documentation Status
+
+``hupper`` is an integrated process monitor that will track changes to
+any imported Python files in ``sys.modules`` as well as custom paths. When
+files are changed the process is restarted.
+
+Command-line Usage
+==================
+
+Hupper can load any Python code similar to ``python -m <module>`` by using the
+``hupper -m <module>`` program.
+
+.. code-block:: console
+
+   $ hupper -m myapp
+   Starting monitor for PID 23982.
+
+API Usage
+=========
+
+Start by defining an entry point for your process. This must be an importable
+path in string format. For example, ``myapp.scripts.serve.main``.
+
+.. code-block:: python
+
+    # myapp/scripts/serve.py
+
+    import sys
+    import hupper
+    import waitress
+
+
+    def wsgi_app(environ, start_response):
+        start_response('200 OK', [('Content-Type', 'text/plain')])
+        yield b'hello'
+
+
+    def main(args=sys.argv[1:]):
+        if '--reload' in args:
+            # start_reloader will only return in a monitored subprocess
+            reloader = hupper.start_reloader('myapp.scripts.serve.main')
+
+            # monitor an extra file
+            reloader.watch_files(['foo.ini'])
+
+        waitress.serve(wsgi_app)
+
+Acknowledgments
+===============
+
+``hupper`` is inspired by initial work done by Carl J Meyer and David Glick
+during a Pycon sprint and is built to be a more robust and generic version of
+Ian Bicking's excellent PasteScript ``paste serve --reload`` and Pyramid's
+``pserve --reload``.
