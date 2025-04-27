@@ -1,2 +1,0 @@
-*/10 * * * * /app/Sparkov_Data_Generation/datagen_command.sh >> /app/logger.log 2>&1
-

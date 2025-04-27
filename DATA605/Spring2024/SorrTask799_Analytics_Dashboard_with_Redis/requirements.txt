@@ -1,5 +1,0 @@
-streamlit
-redis
-pandas
-altair
-plotly
