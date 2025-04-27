@@ -1,0 +1,22 @@
+{
+  "name": "tutorial_llamaindex",
+  "image": "causify/tutorial_llamaindex:local-harshavardhan-patil-1.0.0",
+  "workspaceFolder": "/app",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-toolsai.jupyter"
+      ]
+    }
+  },
+  "remoteUser": "root",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/app,type=bind"
+  ],
+  "runArgs": [
+    "--env-file",
+    "devops/env/default.env"
+  ],
+  "postCreateCommand": "echo 'Python path set to /venv/bin/python'"
+}

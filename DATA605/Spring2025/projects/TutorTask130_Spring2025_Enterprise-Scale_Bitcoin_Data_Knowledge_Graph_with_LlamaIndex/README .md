@@ -74,3 +74,7 @@ This project contains the following files
 todo
 
 ###
+
+Questions:
+1. End product
+2. Persistent Storage (Slow KnowledgeGraphIndex construction)
