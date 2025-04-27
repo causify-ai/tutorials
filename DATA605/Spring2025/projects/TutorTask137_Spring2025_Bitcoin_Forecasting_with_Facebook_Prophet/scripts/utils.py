@@ -1,65 +1,30 @@
-"""
-template_utils.py
-
-This file contains utility functions that support the tutorial notebooks.
-
-- Notebooks should call these functions instead of writing raw logic inline.
-- This helps keep the notebooks clean, modular, and easier to debug.
-- Students should implement functions here for data preprocessing,
-  model setup, evaluation, or any reusable logic.
-"""
-
 import pandas as pd
-import logging
-from sklearn.model_selection import train_test_split
-from pycaret.classification import compare_models
+import requests
 
-# -----------------------------------------------------------------------------
-# Logging
-# -----------------------------------------------------------------------------
+def load_historical_data(filepath):
+    df = pd.read_csv(filepath)
+    df['datetime'] = pd.to_datetime(df['Timestamp'], unit='s')
+    df = df[['datetime', 'Close']].dropna()
+    df.rename(columns={'datetime': 'ds', 'Close': 'y'}, inplace=True)
+    df = df.set_index('ds').resample('D').agg({'y': 'last'}).reset_index()
+    return df
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+def fetch_live_data(days=365, currency='usd'):
+    url = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart"
+    params = {
+        'vs_currency': currency,
+        'days': days,
+        'interval': 'daily'
+    }
+    response = requests.get(url, params=params)
+    data = response.json()
+    prices = data['prices']
+    df = pd.DataFrame(prices, columns=['timestamp', 'y'])
+    df['ds'] = pd.to_datetime(df['timestamp'], unit='ms')
+    return df[['ds', 'y']]
 
-# -----------------------------------------------------------------------------
-# Example 1: Split the dataset into train and test sets
-# -----------------------------------------------------------------------------
-
-def split_data(df: pd.DataFrame, target_column: str, test_size: float = 0.2):
-    """
-    Split the dataset into training and testing sets.
-
-    :param df: full dataset
-    :param target_column: name of the target column
-    :param test_size: proportion of test data (default = 0.2)
-
-    :return: X_train, X_test, y_train, y_test
-    """
-    logger.info("Splitting data into train and test sets")
-    X = df.drop(columns=[target_column])
-    y = df[target_column]
-    return train_test_split(X, y, test_size=test_size, random_state=42)
-
-# -----------------------------------------------------------------------------
-# Example 2: PyCaret classification pipeline
-# -----------------------------------------------------------------------------
-
-def run_pycaret_classification(df: pd.DataFrame, target_column: str) -> pd.DataFrame:
-    """
-    Run a basic PyCaret classification experiment.
-
-    :param df: dataset containing features and target
-    :param target_column: name of the target column
-
-    :return: comparison of top-performing models
-    """
-    logger.info("Initializing PyCaret classification setup")
-    ...
-
-    logger.info("Comparing models")
-    results = compare_models()
-    ...
-
-    return results
-
-
+def merge_and_clean_data(historical_df, live_df):
+    final_df = pd.concat([historical_df, live_df])
+    final_df.drop_duplicates(subset='ds', keep='last', inplace=True)
+    final_df = final_df.set_index('ds').resample('D').agg({'y': 'last'}).reset_index()
+    return final_df
