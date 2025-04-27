@@ -1,0 +1,69 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# === Environment Variables ===
+.env
+.env.*
+
+# === Docker ===
+*.log
+docker-compose.override.yml
+
+# Ignore docker build files that might be local
+docker-compose.override.yaml
+Dockerfile-dev
+
+# === System Files ===
+.DS_Store
+Thumbs.db
+
+# === VSCode or IDE Specific ===
+.vscode/
+.idea/
+
+# === Mac/Linux Hidden Files ===
+*.swp
+*.swo
+*~
+
+# === Redis and Celery files ===
+celerybeat-schedule
+*.pid
+
+# === General Data Files ===
+*.db
+*.sqlite
+*.h5
+*.pkl
+*.csv
+*.tsv
+*.parquet
+
+# === Temporary Files ===
+tmp/
+temp/
+*.bak
+*.tmp
+
+# === Gitleaks Reports (if generated) ===
+results.sarif
+gitleaks.sarif
+
+# === Slack Webhook or Sensitive Files (safety) ===
+slack_webhook.txt
