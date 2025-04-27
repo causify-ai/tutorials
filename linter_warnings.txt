@@ -1,0 +1,4 @@
+cmd line='./helpers_root/linters/base.py --files dir1/file1.py dir2/file2.py --num_threads -1'
+file_paths=0 []
+actions=25 ['add_python_init_files', 'add_toc_to_notebook', 'fix_md_links', 'lint_md', 'check_md_toc_headers', 'autoflake', 'fix_whitespaces', 'doc_formatter', 'isort', 'class_method_order', 'normalize_imports', 'format_separating_line', 'add_class_frames', 'remove_empty_lines_in_function', 'black', 'process_jupytext', 'check_file_size', 'check_filename', 'check_merge_conflict', 'check_import', 'warn_incorrectly_formatted_todo', 'check_md_reference', 'flake8', 'pylint', 'mypy']
+////////////////////////////////////////////////////////////////////////////////
