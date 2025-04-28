@@ -3,15 +3,15 @@
 Fetch metadata from the EIA v2 API and upload it to S3.
 
 Usage:
-> python fetch_eia_metadata.py --category electricity --api_key <API_KEY> --aws_profile
+> python fetch_eia_metadata.py --category electricity --api_key <API_KEY>
 
-This script traverses the EIA v2 API under a specified category and collects all time series
-metadata. It then writes the extracted metadata to an S3 bucket in CSV format.
+This script traverses the EIA v2 API under a specified category, collects all time series 
+metadata, and writes the metadata and associated parameter values to an S3 bucket in CSV 
+format.
 
 Arguments:
     --category       Root category path under the EIA v2 API.
     --api_key        EIA API key used to authenticate requests.
-    --aws_profile    AWS CLI profile to use for writing the output to S3. Defaults to "ck".
 """
 
 import argparse
@@ -23,12 +23,15 @@ from typing import Any, Dict, List
 import helpers.hdbg as hdbg
 import helpers.hparser as hparser
 import helpers.hs3 as hs3
+import pandas as pd
 import requests
 
 _LOG = logging.getLogger(__name__)
 
+BASE_URL = "https://api.eia.gov/v2"
+
 # #############################################################################
-# API interaction.
+# API interaction
 # #############################################################################
 
 
@@ -41,8 +44,7 @@ def _get_api_request(route: str, api_key: str) -> Dict[str, Any]:
     :return: content from the EIA API response
     """
     # Build the full API request URL.
-    base_url = "https://api.eia.gov/v2"
-    url = f"{base_url}/{route}?api_key={api_key}"
+    url = f"{BASE_URL}/{route}?api_key={api_key}"
     # Send HTTP GET request to the EIA API.
     response = requests.get(url, timeout=20)
     # Parse JSON content.
@@ -61,10 +63,13 @@ def _extract_metadata(data: Dict[str, Any], route: str) -> Dict[str, Any]:
     :param route: full route path used to access this response
     :return: metadata fields
     """
-    base_browser_url = f"https://www.eia.gov/opendata/browser/{route}"
+    url = f"{BASE_URL}/{route}?api_key=api_key"
+    dataset_id = data.get("id")
+    dataset_id_clean = dataset_id.replace("-", "_")
+    param_file_path = f"s3://causify-data-collaborators/causal_automl/metadata/eia_parameters/{dataset_id_clean}_parameters.csv"
     metadata = {
-        "url": base_browser_url,
-        "id": data.get("id"),
+        "url": url,
+        "id": dataset_id,
         "name": data.get("name"),
         "description": data.get("description"),
         "frequency": data.get("frequency"),
@@ -74,69 +79,99 @@ def _extract_metadata(data: Dict[str, Any], route: str) -> Dict[str, Any]:
         "end_period": data.get("endPeriod"),
         "default_date_format": data.get("defaultDateFormat"),
         "default_frequency": data.get("defaultFrequency"),
+        "parameter_values_file": param_file_path,
     }
     return metadata
 
 
-def _collect_leaf_metadata(route: str, api_key: str) -> List[Dict[str, Any]]:
+def _get_all_leaf_routes(root_route: str, api_key: str) -> List[str]:
     """
-    Recursively traverse the API tree and collect metadata from all leaf
-    routes.
+    Traverse the API tree and collect metadata from all leaf routes.
 
     :param route: root category route
     :param api_key: EIA API key
     :return: metadata extracted from all leaf endpoints
     """
-    # Get the API response for the current route.
-    data = _get_api_request(route, api_key)
-    if not data:
-        # Check if response is empty.
-        return []
-    # Get child routes if present and recurse into each.
-    children = data.get("routes", [])
-    metadata_entries = []
-    if children:
-        # Recurse to get leaf node.
-        for child in children:
-            child_id = child["id"]
-            child_route = f"{route}/{child_id}"
-            metadata_entries.extend(_collect_leaf_metadata(child_route, api_key))
-    else:
-        # This is a leaf route, extract and append metadata.
-        metadata = _extract_metadata(data, route)
-        metadata_entries.append(metadata)
-    return metadata_entries
+    # Queue to hold routes to explore.
+    queue = [root_route]
+    leaf_routes = []
+    # Traverse and collect all leaf routes.
+    while queue:
+        current_route = queue.pop(0)
+        data = _get_api_request(current_route, api_key)
+        if not data:
+            continue
+        children = data.get("routes", [])
+        if children:
+            # This route has children.
+            for child in children:
+                child_id = child["id"]
+                queue.append(f"{current_route}/{child_id}")
+        else:
+            # This is a leaf route.
+            leaf_routes.append(current_route)
+    return leaf_routes
+
+def _get_facet_values(
+    facets: Dict[str, List[str]], route: str, api_key: str
+) -> pd.DataFrame:
+    """
+    :param facets: all available facets for the dataset
+    :param route: dataset route under the EIA v2 API
+    :param api_key: EIA API key
+    :return: all parameter value rows
+    """
+    facet_values = {}
+    rows = []
+    for facet_id in facets:
+        # Extract the actual facet ID.
+        facetid = facet_id["id"]
+        # Build the URL to query all values for this facet.
+        url = f"{BASE_URL}/{route}/facet/{facetid}?api_key={api_key}"
+        # Query the EIA API.
+        response = requests.get(url, timeout=20)
+        # Parse the response for facet values.
+        entry = response.json().get("response", {}).get("facets", {})
+        facet_values[facetid] = entry
+        # Build a row for each value associated with this facet.
+        for values in entry:
+            row = {
+                "facet_id": facetid,
+                "id": values.get("id"),
+                "name": values.get("name"),
+                "alias": values.get("alias"),
+            }
+            rows.append(row)
+    df_params = pd.DataFrame(rows)
+    return df_params
 
 
 # #############################################################################
-# Output handling.
+# Output handling
 # #############################################################################
 
 
-def _write_csv_to_s3(
-    metadata_entries: List[Dict], filename: str, aws_profile: str
+def _write_df_to_s3(
+    dataframe: pd.DataFrame, filename: str, aws_profile: str
 ) -> None:
     """
     Write metadata to an S3 bucket in CSV format.
 
-    :param metadata_entries: metadatas to be written
+    :param dataframe: dataframe to be written
     :param filename: full S3 URI where CSV should be saved
     :param aws_profile: AWS CLI profile to use for authentication
     """
-    # Prepare CSV content in memory.
-    fieldnames = list(metadata_entries[0].keys())
+    # Convert DataFrame to CSV String.
     buffer = io.StringIO()
-    writer = csv.DictWriter(buffer, fieldnames=fieldnames)
-    writer.writeheader()
-    for row in metadata_entries:
-        writer.writerow(row)
+    dataframe.to_csv(buffer, index=False)
+    csv_str = buffer.getvalue()
     # Upload the CSV string to the specified S3 bucket.
     csv_str = buffer.getvalue()
     hs3.to_file(csv_str, filename, mode="wb", aws_profile=aws_profile)
 
 
 # #############################################################################
-# CLI entry point.
+# CLI entry point
 # #############################################################################
 
 
@@ -160,20 +195,36 @@ def _main(parser: argparse.ArgumentParser) -> None:
     hdbg.init_logger(verbosity=args.log_level, use_exec_path=True)
     _LOG.debug("Traversing EIA hierarchy under category='%s'...", args.category)
     # Fetch metadata.
-    metadata_entries = _collect_leaf_metadata(args.category, args.api_key)
-    _LOG.debug("Found %d leaf datasets.", len(metadata_entries))
-    if metadata_entries:
+    leaf_routes = _get_all_leaf_routes(args.category, args.api_key)
+    _LOG.debug("Found %d leaf datasets.", len(leaf_routes))
+    if leaf_routes:
+        metadata_entries = []
+        for route in leaf_routes:
+            data = _get_api_request(route, args.api_key)
+            # Extract metadata.
+            metadata = _extract_metadata(data, route)
+            metadata_entries.append(metadata)
+            # Extract parameter values.
+            facets = data.get("facets", {})
+            df_params = _get_facet_values(facets, route, args.api_key)
+            # Write parameter values to S3 bucket.
+            param_path = metadata["parameter_values_file"]
+            #df_params.to_csv(param_path, index=False)
+            _LOG.debug("Writing parameter values to: %s", param_path)
+            _write_df_to_s3(df_params, param_path, args.aws_profile)
+        # Convert metadata to DataFrame.
+        df_metadata = pd.DataFrame(metadata_entries)
+        # Write metadata to S3 bucket.
         file_name = f"eia_{args.category}_metadata.csv"
         output_path = (
             f"s3://causify-data-collaborators/causal_automl/metadata/{file_name}"
         )
         _LOG.debug("Writing metadata to: %s", output_path)
-        # Write to S3 bucket.
-        _write_csv_to_s3(metadata_entries, output_path, args.aws_profile)
+        _write_df_to_s3(df_metadata, output_path, args.aws_profile)
     else:
         # Skip if no metadata found.
         _LOG.warning("No leaf datasets found under category='%s'.", args.category)
-
+        
 
 if __name__ == "__main__":
     _main(_parse())
