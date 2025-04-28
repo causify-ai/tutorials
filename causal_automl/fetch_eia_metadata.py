@@ -112,8 +112,9 @@ def _get_all_leaf_routes(root_route: str, api_key: str) -> List[str]:
             leaf_routes.append(current_route)
     return leaf_routes
 
+
 def _get_facet_values(
-    facets: Dict[str, List[str]], route: str, api_key: str
+    metadata: Dict[str, Any], route: str, api_key: str
 ) -> pd.DataFrame:
     """
     :param facets: all available facets for the dataset
@@ -121,6 +122,7 @@ def _get_facet_values(
     :param api_key: EIA API key
     :return: all parameter value rows
     """
+    facets = metadata["facets"]
     facet_values = {}
     rows = []
     for facet_id in facets:
@@ -136,6 +138,7 @@ def _get_facet_values(
         # Build a row for each value associated with this facet.
         for values in entry:
             row = {
+                "dataset_id": metadata["id"],
                 "facet_id": facetid,
                 "id": values.get("id"),
                 "name": values.get("name"),
@@ -193,11 +196,10 @@ def _parse() -> argparse.ArgumentParser:
 def _main(parser: argparse.ArgumentParser) -> None:
     args = parser.parse_args()
     hdbg.init_logger(verbosity=args.log_level, use_exec_path=True)
-    _LOG.debug("Traversing EIA hierarchy under category='%s'...", args.category)
-    # Fetch metadata.
     leaf_routes = _get_all_leaf_routes(args.category, args.api_key)
     _LOG.debug("Found %d leaf datasets.", len(leaf_routes))
     if leaf_routes:
+        
         metadata_entries = []
         for route in leaf_routes:
             data = _get_api_request(route, args.api_key)
@@ -205,26 +207,21 @@ def _main(parser: argparse.ArgumentParser) -> None:
             metadata = _extract_metadata(data, route)
             metadata_entries.append(metadata)
             # Extract parameter values.
-            facets = data.get("facets", {})
-            df_params = _get_facet_values(facets, route, args.api_key)
+            df_params = _get_facet_values(metadata, route, args.api_key)
             # Write parameter values to S3 bucket.
             param_path = metadata["parameter_values_file"]
-            #df_params.to_csv(param_path, index=False)
             _LOG.debug("Writing parameter values to: %s", param_path)
             _write_df_to_s3(df_params, param_path, args.aws_profile)
         # Convert metadata to DataFrame.
         df_metadata = pd.DataFrame(metadata_entries)
         # Write metadata to S3 bucket.
-        file_name = f"eia_{args.category}_metadata.csv"
+        file_name = f"eia_{args.category}_metadata_index.csv"
         output_path = (
             f"s3://causify-data-collaborators/causal_automl/metadata/{file_name}"
         )
         _LOG.debug("Writing metadata to: %s", output_path)
         _write_df_to_s3(df_metadata, output_path, args.aws_profile)
-    else:
-        # Skip if no metadata found.
-        _LOG.warning("No leaf datasets found under category='%s'.", args.category)
-        
+
 
 if __name__ == "__main__":
     _main(_parse())
