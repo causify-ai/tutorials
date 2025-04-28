@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.17.0
+#       jupytext_version: 1.16.7
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -14,29 +14,13 @@
 # ---
 
 # %% [markdown]
-# CONTENTS:
-# - [**Exploratory Data Analysis: Gridstatus metadata**](#**exploratory-data-analysis:-gridstatus-metadata**)
-#     - [**Missing Value Summary**](#**missing-value-summary**)
-#       - [**Exploring Gaps in Metadata Coverage**](#**exploring-gaps-in-metadata-coverage**)
-#     - [**Exploratory Analysis**](#**exploratory-analysis**)
-#       - [****1. Source Distribution****](#****1.-source-distribution****)
-#       - [****2. Frequency Distribution****](#****2.-frequency-distribution****)
-#       - [****3. How far the data goes back****](#****3.-how-far-the-data-goes-back****)
-#       - [****4. Dataset Coverage Distribution****](#****4.-dataset-coverage-distribution****)
-#       - [****5. Coverage Insights by Frequency and Snowflake Ingestion****](#****5.-coverage-insights-by-frequency-and-snowflake-ingestion****)
-#       - [****6. Snowflake Ingestion Insights by Table Type****](#****6.-snowflake-ingestion-insights-by-table-type****)
-#       - [****7. Analysis of Potentially Discontinued Series****](#****7.-analysis-of-potentially-discontinued-series****)
-#       - [****8. Coverage by Source and Category****](#****8.-coverage-by-source-and-category****)
+# # Exploratory Data Analysis: Gridstatus metadata
 
 # %% [markdown]
-# <a name='**exploratory-data-analysis:-gridstatus-metadata**'></a>
-# # **Exploratory Data Analysis: Gridstatus metadata**
-
-# %% [markdown]
-# This notebook analyzes the metadata of 268 time series datasets available on [GridStatus.io](https://www.gridstatus.io/datasets). The metadata is loaded from the AWS S3 bucket `causify-data-collaborators` using helper functions from `hs3.py`. The goal is to explore the variety, coverage, and quality of the available time series data.
+# This notebook analyzes the metadata of 268 time series datasets available on GridStatus.io. The metadata is loaded from the AWS S3 bucket `causify-data-collaborators` using helper functions from `hs3.py`. The goal is to explore the variety, coverage, and quality of the available time series data.
 
 # %%
-# Import necessary libraries and modules.
+# Imports.
 import io
 
 import helpers.hs3 as hs3
@@ -46,7 +30,7 @@ import pandas as pd
 import seaborn as sns
 
 # %%
-# Read metadata from the S3 bucket.
+# Load Data.
 file_path = "s3://causify-data-collaborators/causal_automl/metadata/gridstatus_metadata.csv"
 file = hs3.from_file(file_path, aws_profile="ck")
 gs_meta = pd.read_csv(io.StringIO(file))
@@ -68,6 +52,17 @@ def _make_plots(
     y_rotation=None,
     grid=False,
 ):
+    """
+    Generate a plot with the given parameters. 
+
+    :param title: title of the plot
+    :param x_label: x-axis label
+    :param y_label: y-axis label
+    :param legend: legend title
+    :param x_rotation: rotation angle for x-axis labels
+    :param y_rotation: rotation angle for y-axis labels
+    :param grid: display grid if True
+    """
     if title:
         plt.title(title)
     if x_label:
@@ -87,39 +82,42 @@ def _make_plots(
 
 # %%
 # Add a new category by parsing the description to match common categories.
-def categorize_metadata(description):
+def _categorize_metadata(description) -> str:
+    """
+    Categorize a dataset based on keywords in its description.
+
+    :param description: text description of the dataset
+    :return: category label
+    """
     description = str(description).lower()
     if "load" in description or "demand" in description:
         return "Energy Load"
-    elif "price" in description or "lmp" in description:
+    if "price" in description or "lmp" in description:
         return "Prices"
-    elif "fuel" in description or "energy source" in description:
+    if "fuel" in description or "energy source" in description:
         return "Fuel Mix"
-    elif "record" in description or "stat" in description:
+    if "record" in description or "stat" in description:
         return "Records"
-    elif (
+    if (
         "renewable" in description
         or "solar" in description
         or "wind" in description
     ):
         return "Renewables"
-    elif (
+    if (
         "congestion" in description
         or "constraint" in description
         or "interface" in description
     ):
         return "Congestion"
-    elif "record" in description or "stat" in description:
-        return "Records"
-    else:
-        return "Other"
+    return "Other"
 
 
-gs_meta["category"] = gs_meta["description"].apply(categorize_metadata)
+gs_meta["category"] = gs_meta["description"].apply(_categorize_metadata)
+disp.display(gs_meta.head())
 
 # %% [markdown]
-# <a name='**missing-value-summary**'></a>
-# ### **Missing Value Summary**
+# ### Missing Value Summary
 #
 # The table below shows the number of missing (null) values in each metadata field, helping identify potential data quality issues.
 
@@ -145,8 +143,7 @@ missing_gs_meta[missing_gs_meta["Missing Count"] > 0].sort_values(
 _make_plots(x_label="Missing %", grid=True)
 
 # %% [markdown]
-# <a name='**exploring-gaps-in-metadata-coverage**'></a>
-# #### **Exploring Gaps in Metadata Coverage**
+# #### Exploring Gaps in Metadata Coverage
 #
 # Metadata gaps often arise due to differences in dataset structures, ingestion processes, and metadata governance practices. The presence of missing values in specific fields may indicate variations in how datasets are sourced, updated, and cataloged. Some fields may be absent due to inconsistencies in data collection methods, while others might reflect evolving metadata standards or incomplete historical ingestion. Understanding these gaps helps assess the completeness and reliability of the dataset catalog, ensuring that metadata accurately supports downstream analytics and decision-making.
 #
@@ -177,8 +174,7 @@ _make_plots(x_label="Missing %", grid=True)
 # The very low missingness in descriptions likely results from simple human oversight rather than systemic metadata issues. However, even minor gaps can reduce usability for data discovery and should be addressed to ensure 100% metadata completeness.
 
 # %% [markdown]
-# <a name='**exploratory-analysis**'></a>
-# ### **Exploratory Analysis**
+# ### Exploratory Analysis
 #
 # From the 19 columns available in the GridStatus metadata, the following are most relevant for initial exploratory analysis:
 #
@@ -202,8 +198,7 @@ _make_plots(x_label="Missing %", grid=True)
 # - `publication_frequency` is null for all records except one, and as a result, it is excluded from the analysis.
 
 # %% [markdown]
-# <a name='****1.-source-distribution****'></a>
-# #### ****1. Source Distribution****
+# #### Source Distribution
 #
 # Most of the datasets come from ERCOT, PJM, and CAISO, which are some of the most active and prominent grid operators in North America. Together, they account for over half of all datasets. This dominance can be attributed to several key factors: these operators are technologically advanced, offering consistent, high-quality data crucial for grid operations. Their robust infrastructure, strong regulatory frameworks, and comprehensive real-time monitoring systems enable reliable data streams. As a result, these sources are prioritized due to their ability to provide the most accurate, up-to-date, and complete information for grid stability and market analysis.
 
@@ -215,8 +210,7 @@ _make_plots(
 )
 
 # %% [markdown]
-# <a name='****2.-frequency-distribution****'></a>
-# #### ****2. Frequency Distribution****
+# #### Frequency Distribution
 #
 # Most datasets in GridStatus are updated frequently, with the majority updating on an hourly basis or every 5 minutes. This indicates a system designed to prioritize real-time or near-real-time data, which is likely crucial for applications requiring timely insights or rapid decision-making. The frequent updates suggest that GridStatus is optimized for scenarios where data freshness is critical, such as monitoring, forecasting, or dynamic reporting. However, fewer datasets with more specialized or less frequent update intervals point to a more selective approach for data that doesn't require constant refreshing. This could reflect a design choice to balance system resources and avoid unnecessary processing for data that doesn’t change frequently.
 
@@ -228,8 +222,17 @@ _make_plots(
 )
 
 # %% [markdown]
-# <a name='****3.-how-far-the-data-goes-back****'></a>
-# #### ****3. How far the data goes back****
+# #### Category Distribution
+
+# %%
+# Plot the distribution of entries by category from the dataframe.
+gs_meta["category"].value_counts().plot(kind="bar", figsize=(9, 5))
+_make_plots(
+    title="Distribution by Category", y_label="Number of Datasets", x_rotation=45
+)
+
+# %% [markdown]
+# #### How far the data goes back
 #
 # The earliest available datasets indicate a few sources with historical data dating back to 1993 and the early 2000s, suggesting the presence of long-term historical records. However, the majority of datasets begin around 2010 or later, with a noticeable drop in availability after 2020. This gap could be attributed to several factors: a reduction in new data collection, shifts in collection focus, or adjustments in data processing methodologies. The dip in 2020 could also be a result of the global impact of COVID-19, potentially disrupting data collection efforts or shifting priorities during the pandemic. As organizations focused on the immediate needs of the crisis, some data streams may have been paused or limited. Overall, while the bulk of data covers the last decade, the 2020 gap suggests disruptions in normal data collection, possibly compounded by the pandemic.
 
@@ -262,8 +265,7 @@ print("Earliest available dataset(s):")
 disp.display(earliest_rows)
 
 # %% [markdown]
-# <a name='****4.-dataset-coverage-distribution****'></a>
-# #### ****4. Dataset Coverage Distribution****
+# #### Dataset Coverage Distribution
 #
 # The distribution of dataset coverage exhibits a multimodal pattern, with the Kernel Density Estimate (KDE) curve peaking around 8-10 years, indicating that most datasets provide medium-term historical coverage. This suggests that a significant portion of datasets may be tied to medium-term projects or have data collection timelines that span 8-10 years, possibly reflecting the average life cycle of many ongoing research or operational datasets. The concentration around 3 years reflects a notable group of datasets with shorter historical coverage. This could indicate datasets that are collected for specific, short-term projects or those with a more limited scope in terms of time. It may also reflect the prevalence of datasets that are updated periodically or on an as-needed basis, which often have a narrower window of coverage. The gap observed after 14-15 years indicates fewer datasets extending beyond this period, which could be due to the challenges in maintaining data continuity over longer time spans, limited access to older data, or a lack of incentive to keep data beyond this time horizon. This pattern suggests that while there is strong availability of datasets across a range of time spans, there may be a notable gap in long-term historical coverage, particularly for datasets that span more than 15 years.
 
@@ -282,8 +284,7 @@ _make_plots(
 )
 
 # %% [markdown]
-# <a name='****5.-coverage-insights-by-frequency-and-snowflake-ingestion****'></a>
-# #### ****5. Coverage Insights by Frequency and Snowflake Ingestion****
+# #### Coverage Insights by Frequency and Snowflake Ingestion
 #
 # The distribution of coverage durations across data frequencies reveals a strong concentration of datasets in the 1 hour and 5 mins categories, indicating a focus on high-resolution, time-sensitive data. This pattern suggests that the majority of the datasets are designed for real-time or near-real-time analytics, reflecting the importance of monitoring or responding to frequent, granular changes in data sources. Furthermore, most of these high-frequency datasets are successfully ingested into Snowflake, indicating that ingestion pipelines are optimized for high-frequency data streams. This prioritization likely stems from the increasing demand for up-to-date information and the ability to perform near-instantaneous analysis, which are critical for decision-making in operational environments. As a result, Snowflake's ability to efficiently handle and integrate high-frequency data is a key enabler for supporting analytics in time-critical contexts.
 
@@ -307,8 +308,7 @@ _make_plots(
 )
 
 # %% [markdown]
-# <a name='****6.-snowflake-ingestion-insights-by-table-type****'></a>
-# #### ****6. Snowflake Ingestion Insights by Table Type****
+# #### Snowflake Ingestion Insights by Table Type
 #
 # ```is_in_snowflake``` tells us what data is ready for the analytics team to use and what might still be missing from the system, while ```table_type``` distinguishes between how data is structured and consumed. Together, they highlight the current state of data integration and readiness across the warehouse. Understanding these gaps can inform ingestion priorities and surface potential blind spots in data accessibility.
 #
@@ -319,7 +319,7 @@ _make_plots(
 # **Note:** The following plot may be misleading if observed without context, as it could lead to incorrect conclusions. Since all `materialized_view` and most `view` entries are not ingested into Snowflake, one might mistakenly assume that the entries across this metadata are not ingested by Snowflake. In reality, around 85% of the entries fall under the `table_view`, and 95% of all `table_view` entries are ingested by Snowflake. Therefore, the majority of the data is successfully ingested into Snowflake, and this context is important for drawing accurate conclusions.
 
 # %%
-# Plot a normalized stacked bar chart of Snowflake ingestion by table type using a colormap.
+# Plot a normalized stacked bar chart of Snowflake ingestion by table type.
 sf_by_ttype = (
     pd.crosstab(
         gs_meta["table_type"], gs_meta["is_in_snowflake"], normalize="index"
@@ -337,8 +337,7 @@ _make_plots(
 )
 
 # %% [markdown]
-# <a name='****7.-analysis-of-potentially-discontinued-series****'></a>
-# #### ****7. Analysis of Potentially Discontinued Series****
+# #### Analysis of Potentially Discontinued Series
 #
 # This plot visualizes the number of time series grouped by the number of days since their most recent data point ```latest_available_time_utc```. Time series with a high number of days since the last update may indicate that the datasets are potentially discontinued or inactive. A threshold of 60 days has been set to flag series that are potentially outdated, helping to identify datasets that may require further review for reactivation, archival, or removal. This approach provides a proactive way to monitor the health and relevance of time series in the data pipeline.
 
@@ -369,8 +368,7 @@ _make_plots(
 )
 
 # %% [markdown]
-# <a name='****8.-coverage-by-source-and-category****'></a>
-# #### ****8. Coverage by Source and Category****
+# #### Coverage by Source and Category
 #
 # The distribution of datasets across categories reveals underlying priorities in data collection practices within the energy sector. Load datasets overwhelmingly dominate the catalog, making up nearly 40% of the total, with ERCOT alone contributing about 25% of these entries. This suggests a strategic focus on understanding and forecasting demand patterns, likely because load forecasting is foundational for grid reliability and market operations. Price datasets form the second largest group, around 20%, highlighting the critical role of market pricing signals in operational decision-making and regulatory compliance. Meanwhile, categories like Renewables, Records, and Fuel Mix are moderately represented, each comprising between 7–10% of the data. Their presence reflects an emerging but still secondary emphasis on system transparency, environmental reporting, and evolving grid dynamics as the energy transition accelerates. The smaller size of categories such as Outages, Congestion, and Ancillary Services points to either challenges in consistent data availability across markets or a narrower operational scope for these datasets. Overall, the skewed distribution suggests that core operational metrics — particularly load and pricing — are prioritized for integration and standardization, while other areas are either developing or selectively collected depending on system maturity and regional market practices.
 
@@ -392,3 +390,13 @@ _make_plots(
     y_label="Category",
     y_rotation=0,
 )
+
+# %%
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_colwidth', None) 
+display(gs_meta[['name', 'description']])
+
+
+# %%
+
+# %%
