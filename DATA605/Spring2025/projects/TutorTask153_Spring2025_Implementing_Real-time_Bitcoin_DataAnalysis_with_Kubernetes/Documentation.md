@@ -1,4 +1,4 @@
-# XYZ API Documentation
+# API Documentation
 
 ## 1. Overview of Native CoinGecko API
 
@@ -46,7 +46,7 @@ We leverage two primary endpoints:
 ### 3.1. Usage Examples
 
 ```python
-import XYZ_utils as api
+import utils as api
 
 # 1. Fetch latest price
 df_price = api.fetch_price(
@@ -91,13 +91,13 @@ graph LR
 
 ## 5. Docker & Kubernetes Integration Notes
 
-- **Dockerfile** packages `XYZ_utils.py` and installs dependencies (`requests`, `pandas`, `matplotlib`).
+- **Dockerfile** packages `utils.py` and installs dependencies (`requests`, `pandas`, `matplotlib`).
 - Environment variables or build args can inject `API_KEY` at runtime.
 
 ```dockerfile
 ARG DEMO_API_KEY
 ENV DEMO_API_KEY=${DEMO_API_KEY}
-COPY XYZ_utils.py /app/
+COPY utils.py /app/
 RUN pip install requests pandas matplotlib
 ```
 
