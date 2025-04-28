@@ -1,6 +1,7 @@
 import logging
 import requests
 import json
+import os
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 from apscheduler.schedulers.blocking import BlockingScheduler
@@ -95,9 +96,9 @@ class CryptoDataFetcher:
 if __name__ == "__main__":
     # InfluxDB configuration
     INFLUXDB_URL = "http://localhost:8086"
-    INFLUXDB_TOKEN = "As1W8vixBZwzD3dDvmrAvZi79sx1QdyAXH0H73FShCxVfOf4hBWHPwa5osmXkw6r"
-    INFLUXDB_ORG = "data-605"
-    INFLUXDB_BUCKET = "crypto-bucket"
+    INFLUXDB_TOKEN = os.getenv("INFLUXDB_ADMIN_TOKEN")
+    INFLUXDB_ORG = os.getenv("INFLUXDB_ORG")
+    INFLUXDB_BUCKET = os.getenv("INFLUXDB_BUCKET")
 
     # Initialize the fetcher and start the scheduler
     fetcher = CryptoDataFetcher(

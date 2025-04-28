@@ -1,20 +1,29 @@
 import docker
 import time
+import os
 
 def build_and_run_containers():
     client = docker.from_env()
 
-    # InfluxDB container configuration
+    # InfluxDB container configuration - now from environment variables
     influxdb_container_name = "influxdb"
     influxdb_image = "influxdb:latest"
     influxdb_port = 8086
+
+    # Read environment variables (with defaults if not provided)
+    influxdb_username = os.getenv("INFLUXDB_USERNAME")
+    influxdb_password = os.getenv("INFLUXDB_PASSWORD")
+    influxdb_admin_token = os.getenv("INFLUXDB_ADMIN_TOKEN")
+    influxdb_org = os.getenv("INFLUXDB_ORG")
+    influxdb_bucket = os.getenv("INFLUXDB_BUCKET")
+
     influxdb_env = {
         "DOCKER_INFLUXDB_INIT_MODE": "setup",
-        "DOCKER_INFLUXDB_INIT_USERNAME": "admin",
-        "DOCKER_INFLUXDB_INIT_PASSWORD": "adminpassword",
-        "DOCKER_INFLUXDB_INIT_ADMIN_TOKEN": "As1W8vixBZwzD3dDvmrAvZi79sx1QdyAXH0H73FShCxVfOf4hBWHPwa5osmXkw6r",
-        "DOCKER_INFLUXDB_INIT_ORG": "data-605",
-        "DOCKER_INFLUXDB_INIT_BUCKET": "crypto-bucket"
+        "DOCKER_INFLUXDB_INIT_USERNAME": influxdb_username,
+        "DOCKER_INFLUXDB_INIT_PASSWORD": influxdb_password,
+        "DOCKER_INFLUXDB_INIT_ADMIN_TOKEN": influxdb_admin_token,
+        "DOCKER_INFLUXDB_INIT_ORG": influxdb_org,
+        "DOCKER_INFLUXDB_INIT_BUCKET": influxdb_bucket
     }
 
     # Fetch data scheduler container configuration
@@ -30,8 +39,9 @@ def build_and_run_containers():
         # Step 2: Run InfluxDB container
         print("Starting InfluxDB container...")
         try:
-            client.containers.get(influxdb_container_name).stop()
-            client.containers.get(influxdb_container_name).remove()
+            container = client.containers.get(influxdb_container_name)
+            container.stop()
+            container.remove()
         except docker.errors.NotFound:
             pass  # Container doesn't exist, proceed to create it
 
@@ -56,8 +66,9 @@ def build_and_run_containers():
         # Step 4: Run the fetch data scheduler container
         print("Starting fetch data scheduler container...")
         try:
-            client.containers.get(scheduler_container_name).stop()
-            client.containers.get(scheduler_container_name).remove()
+            container = client.containers.get(scheduler_container_name)
+            container.stop()
+            container.remove()
         except docker.errors.NotFound:
             pass  # Container doesn't exist, proceed to create it
 
