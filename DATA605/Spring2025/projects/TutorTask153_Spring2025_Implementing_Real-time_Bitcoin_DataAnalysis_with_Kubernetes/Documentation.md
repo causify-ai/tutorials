@@ -33,7 +33,7 @@ We leverage two primary endpoints:
 
 ---
 
-## 3. Wrapper Functions in `XYZ_utils.py`
+## 3. Wrapper Functions in `utils.py`
 
 | Function                  | Intent                                      | Key Design Decisions                                         |
 |---------------------------|---------------------------------------------|--------------------------------------------------------------|
