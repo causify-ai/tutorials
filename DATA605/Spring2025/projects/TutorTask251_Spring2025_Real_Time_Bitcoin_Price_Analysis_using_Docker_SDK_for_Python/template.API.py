@@ -29,6 +29,7 @@ from typing import List
 
 import pandas as pd
 import numpy as np
+import requests
 
 # Prefer using logger over print statements.
 # You can use logger in the following manner:
@@ -72,6 +73,25 @@ class Template:
         # Make sure to include comments to explain what the code is doing.
         # No empty lines between code blocks.
 
+    def fetch_histominute(self, fsym: str, tsym: str, limit: int = 60) -> pd.DataFrame:
+        """
+        Fetch historical minute-level data from CryptoCompare API.
+
+        :param fsym: Base cryptocurrency symbol (e.g., 'BTC')
+        :param tsym: Quote currency symbol (e.g., 'USD')
+        :param limit: Number of minutes of data to retrieve (default 60)
+        :return: Pandas DataFrame with historical minute data.
+        """
+        url = 'https://min-api.cryptocompare.com/data/v2/histominute'
+        params = {'fsym': fsym, 'tsym': tsym, 'limit': limit}
+        _LOG.info("Fetching historical minute data for %s/%s", fsym, tsym)
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        json_data = response.json()
+        data = json_data['Data']['Data']
+        df = pd.DataFrame(data)
+        return df
+
 
 def template_function(arg1: int) -> None:
     """
@@ -88,3 +108,11 @@ def template_function(arg1: int) -> None:
     # Make sure to include comments to explain what the code is doing.
     # No empty lines between code blocks.
     pass
+
+
+if __name__ == "__main__":
+    # Example usage of the API call
+    template = Template()
+    df = template.fetch_histominute('BTC', 'USD', 60)
+    _LOG.info("Retrieved %d records", len(df))
+    print(df.head())

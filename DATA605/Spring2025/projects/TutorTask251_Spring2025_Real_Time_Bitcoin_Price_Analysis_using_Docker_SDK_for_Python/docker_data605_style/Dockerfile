@@ -34,7 +34,11 @@ RUN pip3 install \
     jupyter-contrib-core \
     jupyter-contrib-nbextensions \
     psycopg2-binary \
-    yapf
+    yapf\
+    pandas\
+    matplotlib\
+    requests\
+    numpy
 
 RUN mkdir /install
 
