@@ -1,3 +1,4 @@
 # Ignore large binaries
 minikube-linux-amd64
 kubectl
+.env

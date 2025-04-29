@@ -3,32 +3,29 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def fetch_price(coin_id: str, vs_currency: str = "usd", api_key: str = None) -> pd.DataFrame:
+def fetch_price(coin_id: str, vs_currencies: str = "usd") -> pd.DataFrame:
     """
     Fetch the latest Bitcoin price from CoinGecko
 
     Args:
         coin_id: Identifier for the cryptocurrency (e.g., "bitcoin").
-        vs_currency: The currency to compare against (default: "usd").
-        api_key: Your CoinGecko API key.
+        vs_currencies: The currency to compare against (default: "usd").
 
     Returns:
         pd.DataFrame with columns ['timestamp', 'price'] indexed by timestamp.
     """
-    url = "https://api.coingecko.com/api/v3/coins/markets"
+    url = "https://api.coingecko.com/api/v3/simple/price"
     params = {
         "ids": coin_id,
-        "vs_currencies": vs_currency,
+        "vs_currencies": vs_currencies,
     }
-    if api_key:
-        params["x_cg_demo_api_key"] = api_key
 
     response = requests.get(url, params=params)
     response.raise_for_status()
     data = response.json()
-    price = data.get(coin_id, {}).get(vs_currency)
+    price = data.get(coin_id, {}).get(vs_currencies)
     if price is None:
-        raise ValueError(f"No price data returned for {coin_id} in {vs_currency}")
+        raise ValueError(f"No price data returned for {coin_id} in {vs_currencies}")
 
     df = pd.DataFrame({
         "timestamp": [pd.Timestamp.now(tz="UTC")],
