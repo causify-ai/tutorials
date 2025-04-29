@@ -6,26 +6,29 @@ import requests
 from datetime import datetime
 
 # 1. Fetch real-time Bitcoin price
-def fetch_bitcoin_price(api_url="https://api.coindesk.com/v1/bpi/currentprice/BTC.json"):
+def fetch_bitcoin_price(
+        api_url="https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_vol=true"):
     """
-    Fetch the current Bitcoin price in USD from an API.
+    Fetch the current Bitcoin price and 24hr volume in USD from CoinGecko.
 
     Args:
-        api_url (str): API endpoint for Bitcoin price.
+        api_url (str): CoinGecko API endpoint.
 
     Returns:
-        dict: Bitcoin price data including price, timestamp, etc.
+        dict: Bitcoin price and volume data with timestamp.
     """
     response = requests.get(api_url)
     data = response.json()
 
-    price_usd = float(data["bpi"]["USD"]["rate"].replace(",", ""))
-    timestamp = data["time"]["updatedISO"]
+    price_usd = data["bitcoin"]["usd"]
+    volume_usd = data["bitcoin"]["usd_24h_vol"]
+    timestamp = datetime.utcnow().isoformat()
 
     return {
         "price_usd": price_usd,
+        "volume_usd": volume_usd,
         "timestamp": timestamp,
-        "source": "Coindesk"
+        "source": "CoinGecko"
     }
 
 # 2. Send data to Kinesis Stream
