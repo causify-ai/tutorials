@@ -13,6 +13,25 @@ class TripletGenerator:
     
     def __init__(self):
         self.triplets = []
+        self.triplets_with_metadata = []
+
+        self.metrics = [
+        "transaction_volume_btc",
+        "transaction_volume_usd",
+        "active_addresses",
+        "transaction_fees",
+        "mempool_size",
+        "hash_rate",
+        "difficulty",
+        "utxo_set_size"]
+        self.indicators = [
+        "federal_funds_rate",
+        "cpi",
+        "real_gdp_growth",
+        "unemployment_rate",
+        "sp500",
+        "dollar_index",
+        "m2_money_supply"]
     
     def timestamp_to_date(self, timestamp: int) -> str:
         """Convert Unix timestamp to YYYY-MM-DD format"""
@@ -20,7 +39,7 @@ class TripletGenerator:
     
     def timestamp_to_datetime(self, timestamp: int) -> str:
         """Convert Unix timestamp to YYYY-MM-DD format"""
-        return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H.%M.%S')
+        return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
     
     def add_triplet(self, subject: str, predicate: str, object_value: Any) -> None:
         """Add a triplet to the list"""
@@ -75,7 +94,7 @@ class TripletGenerator:
         block_id = f"Block:{block_height}"
         self.add_triplet(block_id, "HAS_HASH", block_hash)
         self.add_triplet(block_id, "HAS_HEIGHT", block_height)
-        self.add_triplet(block_id, "CREATED_AT", block_time)
+        self.add_triplet(block_id, "CREATED_AT", f"Timestamp:{block_time}")
         self.add_triplet(block_id, "HAS_DATE", block_date)
         self.add_triplet(block_id, "HAS_DIFFICULTY", block_difficulty)
         self.add_triplet(block_id, "HAS_TRANSACTION_COUNT", n_tx)
@@ -128,7 +147,7 @@ class TripletGenerator:
                 
                 # Create date-based triplets
                 date_id = f"Date:{date_str}"
-                value_id = f"{indicator_id}:{date_str}"
+                value_id = f"{indicator_id}:{date_id}"
                 
                 # Add basic triplets
                 self.add_triplet(indicator_id, "HAS_VALUE_ON", date_id)
@@ -174,16 +193,13 @@ class TripletGenerator:
                 
                 # Convert timestamp to date for day-based metrics
                 date_str = self.timestamp_to_date(timestamp)
-                time_id = f"Timestamp:{timestamp}"
                 date_id = f"Date:{date_str}"
-                value_id = f"{metric_id}:{timestamp}"
+                value_id = f"{metric_id}: {date_id}"
                 
                 # Create time-based triplets
-                self.add_triplet(time_id, "HAS_DATE", date_str)
-                self.add_triplet(time_id, f"HAS_{metric_name.upper()}", value)
-                self.add_triplet(metric_id, "HAS_VALUE_AT", time_id)
+                self.add_triplet(metric_id, "HAS_VALUE_AT", date_id)
                 self.add_triplet(value_id, "HAS_VALUE", value)
-                self.add_triplet(value_id, "MEASURED_AT", time_id)
+                self.add_triplet(value_id, "MEASURED_AT", date_id)
                 
                 # Add date-based triplets with more explicit and queryable relationships
                 if metric_period == 'day':
@@ -272,7 +288,6 @@ class TripletGenerator:
     
     def create_specific_relationships(self) -> None:
         """Create specific relationships based on domain knowledge"""
-        # Add specific relationships between Federal Funds Rate and Bitcoin metrics
         fed_rate_id = "EconomicIndicator:federal_funds_rate"
         hash_rate_id = "OnChainMetric:hash_rate"
         transaction_volume_btc_id = "OnChainMetric:transaction_volume_btc"
@@ -296,6 +311,61 @@ class TripletGenerator:
         sp500_id = "EconomicIndicator:sp500"
         self.add_triplet(sp500_id, "CORRELATES_WITH", transaction_volume_usd_id)
         self.add_triplet(transaction_volume_usd_id, "CORRELATES_WITH", sp500_id)
+    
+    def add_triplet_with_metadata(self, subject, predicate, object_value, metadata=None):
+        """Add a triplet to the list with metadata"""
+        obj = str(object_value)
+        triplet = (subject, predicate, obj)
+
+        # Add default metadata if none provided
+        if metadata is None:
+            metadata = {
+                "year": None,
+                "month": None,
+                "day": None,
+                "hour": None,
+                "metric_type": None,
+                "indicator_type": None,
+                "block_height": None,
+                "txid": None
+            }
+            
+        # Extract time period if present in subject or object
+        if "Date:" in subject or "Timestamp:" in subject:
+            dt = parse_datetime(subject)
+            if dt is None:
+                print(subject)
+            metadata["year"] = dt.year
+            metadata["month"] = dt.month
+            metadata["day"] = dt.day
+            metadata["hour"] = dt.hour
+        if "Date:" in obj or "Timestamp:" in obj:
+            dt = parse_datetime(obj)
+            metadata["year"] = dt.year
+            metadata["month"] = dt.month
+            metadata["day"] = dt.day
+            metadata["hour"] = dt.hour
+            
+        # Extract metric and indicator type if present
+        for x in self.metrics:
+            if x in obj or x in subject:
+                metadata["metric_type"] = x
+        for x in self.indicators:
+            if x in obj or x in subject:
+                metadata["indicator_type"] = x
+        
+        # Extract block height and transaction id if present
+        if "Block:" in subject:
+            metadata["block_height"] = subject.replace("Block:", "")
+        if "Transaction:" in subject:
+            metadata["txid"] = subject.replace("Transaction:", "")
+        if "Block:" in obj:
+            metadata["block_height"] = obj.replace("Block:", "")
+        if "Transaction:" in obj:
+            metadata["txid"] = obj.replace("Transaction:", "")
+
+        # Store the triplet with its metadata
+        self.triplets_with_metadata.append((triplet, metadata))
         
     def load_and_process_data(self, 
                              blocks_data, 
@@ -335,8 +405,12 @@ class TripletGenerator:
         
         # Create specific domain knowledge-based relationships
         self.create_specific_relationships()
+
+        # Create metadata
+        for sub, pred, obj in self.triplets:
+            self.add_triplet_with_metadata(sub, pred, obj)
         
-        return self.triplets
+        return self.triplets_with_metadata
     
     def export_triplets_to_csv(self, output_file: str) -> None:
         """Export triplets to a CSV file"""
@@ -553,6 +627,38 @@ def is_date_or_timestamp(value: str) -> bool:
     
     return False
 
+def parse_datetime(text: str):
+    """
+    Extracts a date or datetime from a string.
+    """
+    # Pattern to match datetime first (date + time)
+    datetime_pattern = r'(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})'
+    # Pattern to match date only
+    date_pattern = r'(\d{4}-\d{2}-\d{2})'
+    # Why did I add this ;(
+    readable_date_pattern = r'(\d{1,2}(st|nd|rd|th)?\s+[A-Za-z]+\s+\d{4})'
+
+    match = re.search(datetime_pattern, text)
+    if match:
+        dt_str = match.group(1)
+        return datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S")
+    
+    match = re.search(date_pattern, text)
+    if match:
+        date_str = match.group(1)
+        return datetime.strptime(date_str, "%Y-%m-%d")
+    
+    match = re.search(readable_date_pattern, text)
+    if match:
+        date_str = match.group(1)
+        # Clean suffixes like 'th', 'st', 'nd', 'rd'
+        date_str_clean = re.sub(r'(st|nd|rd|th)', '', date_str)
+        try:
+            return datetime.strptime(date_str_clean.strip(), "%d %B %Y")
+        except ValueError:
+            return None
+
+    return None
 
 def is_numeric(value: str) -> bool:
     """Check if a value is numeric"""
@@ -561,6 +667,4 @@ def is_numeric(value: str) -> bool:
         return True
     except (ValueError, TypeError):
         return False
-
-
 
