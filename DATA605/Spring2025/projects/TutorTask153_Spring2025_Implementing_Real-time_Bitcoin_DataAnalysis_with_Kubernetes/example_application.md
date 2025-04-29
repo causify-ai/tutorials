@@ -102,5 +102,4 @@ This CronJob ensures the ingestion logic runs reliably every minute. The API ser
 
 ---
 
-_End of Example.md_
 
