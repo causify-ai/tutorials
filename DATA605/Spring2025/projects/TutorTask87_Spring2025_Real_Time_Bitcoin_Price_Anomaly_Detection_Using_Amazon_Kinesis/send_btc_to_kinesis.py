@@ -3,6 +3,7 @@
 import time
 from utils.utils import fetch_bitcoin_price, send_to_kinesis
 
+
 STREAM_NAME = "bitcoin-price-stream"
 
 def main():
