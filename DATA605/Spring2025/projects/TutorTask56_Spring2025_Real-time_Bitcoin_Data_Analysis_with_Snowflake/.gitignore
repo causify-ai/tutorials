@@ -1,0 +1,2 @@
+.env # Ensure .env is ignored in future
+.env

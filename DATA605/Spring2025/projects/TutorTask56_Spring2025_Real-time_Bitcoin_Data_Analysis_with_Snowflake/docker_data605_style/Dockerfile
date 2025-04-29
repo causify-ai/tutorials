@@ -1,55 +1,33 @@
-FROM ubuntu:20.04
-ENV DEBIAN_FRONTEND=noninteractive
+# Use slim Python image
+FROM python:3.10-slim
 
-RUN apt-get -y update
-RUN apt-get -y upgrade
+# Set working directory inside container
+WORKDIR /project
 
-# Install system utilities.
-RUN apt install -y --no-install-recommends \
-    sudo \
-    curl \
-    systemctl \
-    gnupg \
-    git \
-    vim
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y git sudo curl && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Python.
-RUN apt install -y --no-install-recommends \
-    python3 \
-    python3-pip \
-    python3-dev
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN python3 -m pip install --upgrade pip
-    
-# Install Python packages.
-# There is a bug:
-#   File "/opt/homebrew/lib/python3.10/site-packages/tornado/iostream.py", line 182, in advance
-#   assert 0 < size <= self._size
-# for tornado==6.2 and jupyter-client==8.0.2.
-# https://discourse.jupyter.org/t/jupyter-notebook-zmq-message-arrived-on-closed-channel-error/17869/10
-RUN pip3 install \
-    ipython \
-    tornado==6.1 \
-    jupyter-client==7.3.2 \
-    jupyter-contrib-core \
-    jupyter-contrib-nbextensions \
-    psycopg2-binary \
-    yapf
+# Install JupyterLab
+RUN pip install jupyterlab
 
-RUN mkdir /install
+# Copy project files
+COPY . .
 
-# Install Jupyter extensions.
-ADD install_jupyter_extensions.sh /install
-RUN /install/install_jupyter_extensions.sh
+# Allow sudo if needed for extensions
+COPY docker_data605_style/etc_sudoers /etc/sudoers
 
-# Config.
-ADD etc_sudoers /install/
-COPY etc_sudoers /etc/sudoers
-COPY bashrc /root/.bashrc
+# Make sure entrypoint script is executable
+RUN chmod +x docker_data605_style/run_all.sh
 
-# Report package versions.
-ADD version.sh /install/
-RUN /install/version.sh 2>&1 | tee version.log
-
-# Jupyter.
+# Expose ports: 8501 (Streamlit) and 8888 (Jupyter)
+EXPOSE 8501
 EXPOSE 8888
+
+# Run both Jupyter and Streamlit
+CMD ["bash", "docker_data605_style/run_all.sh"]

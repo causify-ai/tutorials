@@ -1,12 +1,9 @@
 #!/bin/bash -e
 
-GIT_ROOT=$(git rev-parse --show-toplevel)
-source $GIT_ROOT/docker_common/utils.sh
+# Set image name
+IMAGE_NAME="btc_snowflake_app"
 
-REPO_NAME=umd_data605
-IMAGE_NAME=umd_data605_template
+# Build Docker image from Dockerfile
+docker build -f docker_data605_style/Dockerfile -t $IMAGE_NAME .
 
-# Build container.
-export DOCKER_BUILDKIT=1
-#export DOCKER_BUILDKIT=0
-build_container_image
+echo "Docker image '$IMAGE_NAME' built successfully."

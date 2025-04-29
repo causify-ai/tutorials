@@ -1,9 +1,13 @@
-#!/bin/bash -e
+#!/bin/bash
 
-GIT_ROOT=$(git rev-parse --show-toplevel)
-source $GIT_ROOT/tutorial_github_simple/docker_common/utils.sh
+IMAGE_NAME="btc_snowflake_app"
+CONTAINER_NAME="btc_container"
 
-REPO_NAME=umd_data605
-IMAGE_NAME=umd_data605_template
+echo "Stopping and removing container: $CONTAINER_NAME"
+docker stop $CONTAINER_NAME 2>/dev/null || echo "Container not running."
+docker rm $CONTAINER_NAME 2>/dev/null || echo "Container does not exist."
 
-remove_container_image
+echo "Removing image: $IMAGE_NAME"
+docker rmi $IMAGE_NAME 2>/dev/null || echo "Image does not exist."
+
+echo "Cleanup complete."
