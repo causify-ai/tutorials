@@ -4,6 +4,17 @@ import boto3
 import json
 import requests
 from datetime import datetime
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+# boto3 will now automatically use these
+aws_access_key = os.getenv("AWS_ACCESS_KEY_ID")
+aws_secret_key = os.getenv("AWS_SECRET_ACCESS_KEY")
+region = os.getenv("AWS_DEFAULT_REGION")
+
 
 # 1. Fetch real-time Bitcoin price
 def fetch_bitcoin_price(
@@ -32,7 +43,7 @@ def fetch_bitcoin_price(
     }
 
 # 2. Send data to Kinesis Stream
-def send_to_kinesis(stream_name, region_name, data):
+def send_to_kinesis(stream_name, data):
     """
     Send a single record (dict) to an AWS Kinesis Data Stream.
 
@@ -44,7 +55,7 @@ def send_to_kinesis(stream_name, region_name, data):
     Returns:
         dict: Response from Kinesis put_record API.
     """
-    kinesis_client = boto3.client('kinesis', region_name=region_name)
+    kinesis_client = boto3.client('kinesis')
 
     partition_key = "partitionKey"  # Can be random or fixed
 
