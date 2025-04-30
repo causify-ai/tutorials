@@ -83,7 +83,7 @@ sns.set_theme(style="whitegrid")
 
 # %%
 # Set configurations.
-fred_path = "s3://causify-data-collaborators/causal_automl/metadata/fred_series_metadata.csv"
+fred_path = "s3://causify-data-collaborators/causal_automl/metadata/fred_series_metadata_v1.0.csv"
 country_continent_path = "s3://causify-data-collaborators/causal_automl/supplemental_data/country_continent.csv"
 us_states_path = "s3://causify-data-collaborators/causal_automl/supplemental_data/us_states.geojson"
 # Set top N for bar charts.
