@@ -1,3 +1,15 @@
+"""
+Customer.io Data Simulation and Forecasting Script
+
+This script generates mock users, simulates time-stamped event logs, and performs ARIMA forecasting
+on daily user interaction counts.
+
+References:
+- Customer.io Python SDK: https://customer.io/docs/api
+- Faker Library: https://faker.readthedocs.io
+- ARIMA Model: https://www.statsmodels.org/
+"""
+
 import pandas as pd
 import numpy as np
 from statsmodels.tsa.arima.model import ARIMA
@@ -7,13 +19,20 @@ import time
 import random
 from datetime import datetime, timedelta
 
-# === SETUP ===
+# === Customer.io Setup ===
 SITE_ID = "1d7fdb608de0a0a8cd66"
 API_KEY = "4c9b87c8eae4e9729835"
 cio = CustomerIO(site_id=SITE_ID, api_key=API_KEY)
 faker = Faker()
 
 def generate_users(num_users=1000, output_file="simulated_user_ids.csv"):
+    """
+    Generate simulated users and push them to Customer.io.
+
+    :param num_users: Number of users to create
+    :param output_file: Filename to save user IDs
+    :return: List of user IDs
+    """
     user_ids = []
     for _ in range(num_users):
         user_id = f"user_{faker.uuid4()[:8]}"
@@ -29,6 +48,14 @@ def generate_users(num_users=1000, output_file="simulated_user_ids.csv"):
     return user_ids
 
 def simulate_events(user_ids, output_file="simulated_event_log.csv", days_back=180):
+    """
+    Simulate behavioral events (e.g., clicks, logins) for each user.
+
+    :param user_ids: List of Customer.io user IDs
+    :param output_file: CSV to store simulated events
+    :param days_back: Days in the past to simulate data
+    :return: List of simulated event records
+    """
     event_types = ["email_opened", "clicked", "app_login"]
     campaigns = ["Spring Sale", "Black Friday", "Summer Promo"]
     all_events = []
@@ -62,6 +89,12 @@ def simulate_events(user_ids, output_file="simulated_event_log.csv", days_back=1
     return all_events
 
 def retrieve_event_summary(filename="simulated_event_log.csv"):
+    """
+    Aggregate events into daily counts per event type.
+
+    :param filename: CSV file with simulated event logs
+    :return: DataFrame with rows as dates and columns as event types
+    """
     df = pd.read_csv(filename)
     df["timestamp"] = pd.to_datetime(df["timestamp"])
     df["date"] = df["timestamp"].dt.date
