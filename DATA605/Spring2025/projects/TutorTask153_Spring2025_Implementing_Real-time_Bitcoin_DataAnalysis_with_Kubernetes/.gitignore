@@ -3,4 +3,3 @@ kubectl
 .env
 kubernetes/postgres-secret.yaml
 local_charts
-.gitleaks.toml
