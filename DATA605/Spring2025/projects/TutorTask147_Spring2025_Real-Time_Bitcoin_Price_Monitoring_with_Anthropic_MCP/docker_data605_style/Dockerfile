@@ -34,7 +34,18 @@ RUN pip3 install \
     jupyter-contrib-core \
     jupyter-contrib-nbextensions \
     psycopg2-binary \
-    yapf
+    yapf \
+    # Install data ingestion, analysis, and visualization packages
+    requests \  
+    aiohttp \ 
+    pandas \ 
+    statsmodels \
+    matplotlib \
+    plotly \
+    schedule \
+    tqdm \
+    ipywidgets
+
 
 RUN mkdir /install
 
@@ -53,3 +64,7 @@ RUN /install/version.sh 2>&1 | tee version.log
 
 # Jupyter.
 EXPOSE 8888
+
+# copy your Jupyter launch script in and make it executable
+COPY run_jupyter.sh /usr/local/bin/run_jupyter.sh
+RUN chmod +x /usr/local/bin/run_jupyter.sh
