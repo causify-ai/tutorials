@@ -123,6 +123,7 @@ def validate_data(df: pd.DataFrame, suite_name: str = "bitcoin_suite", datasourc
         expectation_suite_name=suite_name
     )
 
+    # Expectations
     validator.expect_column_values_to_be_between("price_usd", min_value=20000, max_value=100000)
     validator.expect_column_values_to_not_be_null("price_usd")
     validator.expect_column_values_to_not_be_null("timestamp")

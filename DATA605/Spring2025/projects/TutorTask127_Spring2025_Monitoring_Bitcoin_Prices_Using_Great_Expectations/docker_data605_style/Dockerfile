@@ -40,11 +40,13 @@ RUN python3 -m pip install \
 # Install additional Python packages
 RUN python3 -m pip install \
     great_expectations==0.18.13 \
+    numpy==1.23.5 \
     pandas==2.1.4 \
     requests==2.31.0 \
     httpx==0.27.0 \
     matplotlib==3.8.4 \
     seaborn==0.13.2 \
+    statsmodels==0.14.1 \
     jupyterlab==4.1.6
 
 RUN mkdir /install

@@ -100,20 +100,6 @@
       "meta": {}
     },
     {
-      "expectation_type": "expect_column_values_to_not_be_null",
-      "kwargs": {
-        "column": "price_usd"
-      },
-      "meta": {}
-    },
-    {
-      "expectation_type": "expect_column_values_to_not_be_null",
-      "kwargs": {
-        "column": "last_updated"
-      },
-      "meta": {}
-    },
-    {
       "expectation_type": "expect_column_values_to_be_of_type",
       "kwargs": {
         "column": "market_cap",
@@ -135,6 +121,20 @@
         "column": "market_cap",
         "max_value": 2500000000000.0,
         "min_value": 300000000000.0
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "price_usd"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "last_updated"
       },
       "meta": {}
     }
