@@ -63,14 +63,6 @@ statsmodels = "*"
 SQLAlchemy = "*"
 tqdm = "*"
 #typed_ast = ">= 1.5.5"
-###
-notebook = "*"
-fredapi = "*"
-llama-index = "*"
-llama-index-llms-ollama = "*"
-llama-index-embeddings-huggingface = "*"
-bitcoinrpc = "*"
-llama-index-readers-structured-data = "*"
 
 [tool.poetry.dev-dependencies]
 

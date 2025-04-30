@@ -1,139 +1,831 @@
 import json
 import pandas as pd
 from datetime import datetime
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any, Tuple, Optional, Set
 import re
-from typing import List, Tuple, Dict, Any, Optional
+import logging
+from llama_index.core.graph_stores.types import (
+    LabelledPropertyGraph,
+    LabelledNode,
+    EntityNode,
+    BaseNode,
+    Relation,
+    KG_NODES_KEY,
+    KG_RELATIONS_KEY,
+    TRIPLET_SOURCE_KEY,
+)
+from llama_index.core.schema import TextNode
+
+"""
+# Cypher-Optimized Property Graph for Bitcoin Data
+
+## 1. Entity Structure Overview
+
+### Entity Labeling Strategy
+
+We'll implement a hierarchical labeling system with two tiers:
+- **Primary Label**: Represents the broad category (e.g., `Block`, `Transaction`, `Metric`, `Indicator`)
+- **Secondary Label**: Specifies the exact entity type (e.g., `HashRate`, `SP500`, `FederalFundsRate`)
+
+This dual-label approach ensures both broad categorization for simple queries and specific identification for detailed analysis. Every entity will have at least one label, with specialized entities having two or more.
+
+### Temporal Properties Framework
+
+All time-relevant nodes will consistently include:
+- `year`: Integer (e.g., 2025)
+- `month`: Integer (1-12)
+- `day`: Integer (1-31)
+- `timestamp`: ISO format string (e.g., "2025-04-18T14:23:15Z")
+- `date`: YYYY-MM-DD format (e.g., "2025-04-18")
+
+This consistent temporal property pattern enables efficient time-based filtering across all entity types without complex joins.
+
+### Value Representation
+
+Values will be stored as typed properties rather than embedded in node names:
+- Numeric values as actual numbers (not strings)
+- Units as separate string properties
+- Boolean flags for special conditions
+- Descriptive metrics with appropriate types
+
+## 2. Core Entity Types in Detail
+
+### Blockchain Entities
+
+#### Block Nodes
+- **Labels**: `:Block`
+- **Identifier Properties**:
+  - `height`: Integer (primary identifier)
+  - `hash`: String (cryptographic hash)
+- **Temporal Properties**: Full datetime suite (year, month, day, timestamp, date)
+- **Metric Properties**:
+  - `difficulty`: Numeric
+  - `transaction_count`: Integer
+  - `size`: Integer (bytes)
+  - `weight`: Integer
+  - `version`: Integer
+  - `merkle_root`: String
+  - `bits`: String
+  - `nonce`: Integer
+  - `avg_transaction_value`: Numeric (BTC)
+  - `median_transaction_value`: Numeric (BTC)
+  - `min_transaction_value`: Numeric (BTC)
+  - `max_transaction_value`: Numeric (BTC)
+  - `fee_total`: Numeric (BTC)
+  - `fee_rate_avg`: Numeric (sat/vByte)
+
+#### Transaction Nodes
+- **Labels**: `:Transaction`
+- **Identifier Properties**:
+  - `txid`: String (transaction hash, primary identifier)
+- **Temporal Properties**: Full datetime suite (inherited from containing block)
+- **Metric Properties**:
+  - `size`: Integer (bytes)
+  - `virtual_size`: Integer (vBytes)
+  - `weight`: Integer
+  - `fee`: Numeric (BTC)
+  - `fee_rate`: Numeric (sat/vByte)
+  - `input_count`: Integer
+  - `output_count`: Integer
+  - `total_input_value`: Numeric (BTC)
+  - `total_output_value`: Numeric (BTC)
+  - `is_coinbase`: Boolean
+
+#### Address Nodes
+- **Labels**: `:Address`
+- **Identifier Properties**:
+  - `address`: String (primary identifier)
+- **Metric Properties**:
+  - `type`: String (p2pkh, p2sh, bech32, etc.)
+  - `first_seen`: Timestamp
+  - `last_seen`: Timestamp
+  - `total_received`: Numeric (BTC)
+  - `total_sent`: Numeric (BTC)
+  - `balance`: Numeric (BTC)
+  - `transaction_count`: Integer
+
+### Economic Indicators
+
+#### Indicator Nodes
+- **Labels**: `:Indicator`, plus specific indicator type (e.g., `:SP500`, `:FederalFundsRate`)
+- **Identifier Properties**:
+  - `name`: String (canonical name)
+  - `id`: String (machine-readable identifier)
+- **Temporal Properties**: Full datetime suite
+- **Value Properties**:
+  - `value`: Numeric (appropriately typed for the indicator)
+  - `unit`: String
+  - `change`: Numeric (day-over-day change)
+  - `percent_change`: Numeric (percentage)
+  - `source`: String (data source identifier)
+
+#### Specific Indicator Types
+- **S&P 500**: `:Indicator:SP500` with value in points
+- **Federal Funds Rate**: `:Indicator:FederalFundsRate` with value as percentage
+- **Consumer Price Index**: `:Indicator:CPI` with value as index points
+- **U.S. Dollar Index**: `:Indicator:DollarIndex` with value as index points
+- **GDP Growth Rate**: `:Indicator:GDPGrowth` with value as percentage
+- **Unemployment Rate**: `:Indicator:UnemploymentRate` with value as percentage
+- **M2 Money Supply**: `:Indicator:M2MoneySupply` with value in trillions USD
+
+### Bitcoin Network Metrics
+
+#### Metric Nodes
+- **Labels**: `:Metric`, plus specific metric type (e.g., `:HashRate`, `:TransactionVolume`)
+- **Identifier Properties**:
+  - `name`: String (canonical name)
+  - `id`: String (machine-readable identifier)
+- **Temporal Properties**: Full datetime suite
+- **Value Properties**:
+  - `value`: Numeric (appropriately typed for the metric)
+  - `unit`: String
+  - `change`: Numeric (day-over-day change)
+  - `percent_change`: Numeric (percentage)
+  - `source`: String (data source identifier)
+
+#### Specific Metric Types
+- **Hash Rate**: `:Metric:HashRate` with value in TH/s
+- **Transaction Volume BTC**: `:Metric:TransactionVolumeBTC` with value in BTC
+- **Transaction Volume USD**: `:Metric:TransactionVolumeUSD` with value in USD
+- **Active Addresses**: `:Metric:ActiveAddresses` with value as count
+- **Transaction Fees**: `:Metric:TransactionFees` with value in BTC
+- **Mempool Size**: `:Metric:MempoolSize` with value in bytes
+- **UTXO Set Size**: `:Metric:UTXOSetSize` with value as count
+- **Mining Difficulty**: `:Metric:Difficulty` with value as numeric difficulty
+
+### Market Events
+
+#### Event Nodes
+- **Labels**: `:Event`, plus event type (e.g., `:Regulatory`, `:Market`)
+- **Identifier Properties**:
+  - `name`: String (descriptive name)
+  - `id`: String (machine-readable identifier)
+- **Temporal Properties**: Full datetime suite
+- **Property Fields**:
+  - `description`: String
+  - `impact`: String (qualitative assessment)
+  - `impact_value`: Numeric (quantitative assessment if available)
+  - `source`: String (data source)
+  - `url`: String (reference link)
+
+## 3. Relationship Structure in Detail
+
+### Block-centric Relationships
+
+#### Block Sequence
+- **Type**: `[:FOLLOWS]`
+- **Direction**: Block → Previous Block
+- **Properties**:
+  - `time_difference`: Integer (seconds between blocks)
+
+#### Block Composition
+- **Type**: `[:CONTAINS]`
+- **Direction**: Block → Transaction
+- **Properties**:
+  - `position`: Integer (transaction index in block)
+
+#### Block Economic Context
+- **Type**: `[:HAS_ECONOMIC_CONTEXT]`
+- **Direction**: Block → Indicator
+- **Properties**:
+  - `relevance`: Numeric (correlation coefficient if available)
+  - `context_type`: String (market, monetary, etc.)
+
+#### Block Metric Context
+- **Type**: `[:HAS_METRIC_CONTEXT]`
+- **Direction**: Block → Metric
+- **Properties**:
+  - `relevance`: Numeric (correlation coefficient if available)
+
+### Transaction Relationships
+
+#### Transaction Input/Output
+- **Type**: `[:SENDS_TO]`
+- **Direction**: Transaction → Address
+- **Properties**:
+  - `value`: Numeric (BTC)
+  - `position`: Integer (output index)
+  - `script_type`: String
+
+#### Transaction Source
+- **Type**: `[:SPENDS_FROM]`
+- **Direction**: Transaction → Address
+- **Properties**:
+  - `value`: Numeric (BTC)
+  - `position`: Integer (input index)
+
+### Metric and Indicator Relationships
+
+#### Correlation Relationships
+- **Type**: `[:CORRELATES_WITH]`
+- **Direction**: Metric ↔ Indicator (bidirectional representation)
+- **Properties**:
+  - `correlation`: Numeric (Pearson correlation coefficient)
+  - `p_value`: Numeric (statistical significance)
+  - `time_period`: String (e.g., "2025-Q1")
+  - `sample_size`: Integer
+  - `influence_direction`: String ("positive" or "negative")
+  - `strength`: String ("weak", "moderate", "strong")
+
+#### Causal Relationships
+- **Type**: `[:INFLUENCES]`
+- **Direction**: Indicator → Metric or Metric → Indicator
+- **Properties**:
+  - `influence_strength`: Numeric (coefficient)
+  - `lag_period`: String (time lag for effect)
+  - `confidence`: Numeric (statistical confidence)
+
+#### Temporal Aggregation
+- **Type**: `[:AGGREGATES]`
+- **Direction**: TimePeriod → Metric/Indicator
+- **Properties**:
+  - `aggregation_type`: String ("average", "sum", "max", "min")
+  - `count`: Integer (number of data points)
+
+### Event Relationships
+
+#### Event Impact
+- **Type**: `[:IMPACTS]`
+- **Direction**: Event → Metric/Indicator
+- **Properties**:
+  - `impact_type`: String ("immediate", "delayed", "sustained")
+  - `magnitude`: Numeric
+  - `direction`: String ("increase", "decrease")
+  - `duration`: String (duration of impact)
+
+#### Event Sequence
+- **Type**: `[:FOLLOWS_EVENT]`
+- **Direction**: Event → Event
+- **Properties**:
+  - `causality`: Boolean (whether directly causal)
+  - `time_between`: String (duration between events)
+"""
+
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 class TripletGenerator:
     """
-    Class to generate knowledge graph triplets from Bitcoin data, economic indicators,
-    and on-chain metrics.
+    Creates entities and relationships that are optimized for Cypher queries,
+    making it easy for an LLM to generate effective queries that return relevant subgraphs.
     """
     
     def __init__(self):
-        self.triplets = []
-        self.triplets_with_metadata = []
-
+        self.nodes = []  # Will store LabelledNode objects
+        self.relations = []  # Will store Relation objects
+        self.text_nodes = []  # Will store TextNode objects for embedding
+        
+        # Track created entities to avoid duplicates
+        self.created_entity_ids = set()
+        self.created_relation_ids = set()
+        
+        # Define metrics and indicators for convenience
         self.metrics = [
-        "transaction_volume_btc",
-        "transaction_volume_usd",
-        "active_addresses",
-        "transaction_fees",
-        "mempool_size",
-        "hash_rate",
-        "difficulty",
-        "utxo_set_size"]
+            "transaction_volume_btc",
+            "transaction_volume_usd",
+            "active_addresses",
+            "transaction_fees",
+            "mempool_size",
+            "hash_rate",
+            "difficulty",
+            "utxo_set_size"
+        ]
+        
         self.indicators = [
-        "federal_funds_rate",
-        "cpi",
-        "real_gdp_growth",
-        "unemployment_rate",
-        "sp500",
-        "dollar_index",
-        "m2_money_supply"]
-    
-    def timestamp_to_date(self, timestamp: int) -> str:
-        """Convert Unix timestamp to YYYY-MM-DD format"""
-        return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d')
-    
-    def timestamp_to_datetime(self, timestamp: int) -> str:
-        """Convert Unix timestamp to YYYY-MM-DD format"""
-        return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
-    
-    def add_triplet(self, subject: str, predicate: str, object_value: Any) -> None:
-        """Add a triplet to the list"""
-        self.triplets.append((subject, predicate, str(object_value)))
-    
-    def get_canonical_metric_name(self, metric_name: str) -> str:
-        """Get canonical name for metric to improve query matching"""
-        name_mapping = {
+            "federal_funds_rate",
+            "cpi",
+            "real_gdp_growth",
+            "unemployment_rate",
+            "sp500",
+            "dollar_index",
+            "m2_money_supply"
+        ]
+        
+        # Mapping for friendly display names
+        self.metric_display_names = {
             "transaction_volume_btc": "Bitcoin Transaction Volume",
             "transaction_volume_usd": "Bitcoin Transaction Volume in USD",
-            "active_addresses": "Bitcoin Active Addresses",
+            "active_addresses": "Active Bitcoin Addresses",
             "transaction_fees": "Bitcoin Transaction Fees",
             "mempool_size": "Bitcoin Mempool Size",
             "hash_rate": "Bitcoin Network Hash Rate",
             "difficulty": "Bitcoin Network Difficulty",
             "utxo_set_size": "Bitcoin UTXO Set Size"
         }
-        return name_mapping.get(metric_name, metric_name.replace("_", " ").title())
-
-    def format_date_for_queries(self, date_str: str) -> str:
-        """Format date in multiple formats for better query matching"""
-        try:
-            date_obj = datetime.strptime(date_str, '%Y-%m-%d')
-            # Return multiple formats to improve matching
-            day_with_suffix = self.get_day_with_suffix(date_obj.day)
-            return f"{day_with_suffix} {date_obj.strftime('%B %Y')}"  # e.g., "25th April 2025"
-        except ValueError:
-            return date_str
-            
-    def get_day_with_suffix(self, day: int) -> str:
-        """Add appropriate suffix to day number"""
-        if 11 <= day <= 13:
-            suffix = 'th'
-        else:
-            suffix = {1: 'st', 2: 'nd', 3: 'rd'}.get(day % 10, 'th')
-        return f"{day}{suffix}"
         
+        self.indicator_display_names = {
+            "federal_funds_rate": "Federal Funds Rate",
+            "cpi": "Consumer Price Index",
+            "real_gdp_growth": "Real GDP Growth",
+            "unemployment_rate": "Unemployment Rate",
+            "sp500": "S&P 500 Index",
+            "dollar_index": "US Dollar Index",
+            "m2_money_supply": "M2 Money Supply"
+        }
+        
+        # Mapping for indicator units
+        self.indicator_units = {
+            "federal_funds_rate": "percent",
+            "cpi": "index points",
+            "real_gdp_growth": "percent",
+            "unemployment_rate": "percent",
+            "sp500": "points",
+            "dollar_index": "index points",
+            "m2_money_supply": "trillion USD"
+        }
+        
+        # Mapping for metric units
+        self.metric_units = {
+            "transaction_volume_btc": "BTC",
+            "transaction_volume_usd": "USD",
+            "active_addresses": "count",
+            "transaction_fees": "BTC",
+            "mempool_size": "bytes",
+            "hash_rate": "TH/s",
+            "difficulty": "difficulty",
+            "utxo_set_size": "count"
+        }
+            
+    def timestamp_to_date(self, timestamp: int) -> str:
+        """Convert Unix timestamp to YYYY-MM-DD format"""
+        return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d')
+    
+    def timestamp_to_datetime(self, timestamp: int) -> str:
+        """Convert Unix timestamp to YYYY-MM-DD HH:MM:SS format"""
+        return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+    
+    def extract_datetime_components(self, timestamp: int) -> Dict[str, int]:
+        """Extract year, month, day, and hour from timestamp for property storage"""
+        dt = datetime.fromtimestamp(timestamp)
+        return {
+            "year": dt.year,
+            "month": dt.month,
+            "day": dt.day,
+            "hour": dt.hour,
+            "minute": dt.minute,
+            "second": dt.second
+        }
+
+    def create_entity_node(
+        self, 
+        name: str, 
+        primary_label: str, 
+        secondary_labels: Optional[List[str]] = None,
+        properties: Optional[Dict[str, Any]] = None
+    ) -> EntityNode:
+        """
+        Create an EntityNode with primary and optional secondary labels
+        """
+        # Ensure properties is a dictionary
+        if properties is None:
+            properties = {}
+            
+        # Create combined label list
+        labels = [primary_label]
+        if secondary_labels:
+            labels.extend(secondary_labels)
+            
+        # Create a unique ID based on label and name
+        entity_id = f"{primary_label}:{name}"
+        
+        # Check if this entity already exists
+        if entity_id in self.created_entity_ids:
+            # Find the existing node and update its properties
+            for node in self.nodes:
+                if node.id == entity_id:
+                    # Update properties
+                    node.properties.update(properties)
+                    return node
+        
+        # Create new entity node
+        node = EntityNode(
+            name=name,
+            label=":".join(labels),
+            properties=properties,
+            id_=entity_id
+        )
+        
+        # Add to tracking set
+        self.created_entity_ids.add(entity_id)
+        self.nodes.append(node)
+        
+        return node
+    
+    def create_relation(
+        self,
+        source_id: str,
+        target_id: str,
+        label: str,
+        properties: Optional[Dict[str, Any]] = None
+    ) -> Optional[Relation]:
+        """
+        Create a relationship between two entities
+        """
+        # Ensure properties is a dictionary
+        if properties is None:
+            properties = {}
+            
+        # Create a unique ID for the relation to prevent duplicates
+        relation_id = f"{source_id}-{label}-{target_id}"
+        
+        # Check if this relation already exists
+        if relation_id in self.created_relation_ids:
+            return None
+        
+        # Create new relation
+        relation = Relation(
+            source_id=source_id,
+            target_id=target_id,
+            label=label,
+            properties=properties
+        )
+        
+        # Add to tracking set
+        self.created_relation_ids.add(relation_id)
+        self.relations.append(relation)
+        
+        return relation
+    
+    def create_natural_language_description(self, entity_or_relation) -> str:
+        """
+        Create a natural language description of an entity or relation for embedding
+        """
+        if isinstance(entity_or_relation, EntityNode):
+            entity = entity_or_relation
+            # Extract label parts
+            labels = entity.label.split(':')
+            primary_label = labels[0] if labels else "Entity"
+            
+            # Create description based on entity type
+            if primary_label == "Block":
+                return f"Bitcoin block {entity.name} with {entity.properties.get('transaction_count', 'unknown')} transactions, created on {entity.properties.get('date', 'unknown date')}."
+            
+            elif primary_label == "Transaction":
+                return f"Bitcoin transaction {entity.name} with {entity.properties.get('input_count', 0)} inputs and {entity.properties.get('output_count', 0)} outputs, totaling {entity.properties.get('total_output_value', 0)} BTC."
+            
+            elif primary_label == "Metric":
+                metric_name = entity.properties.get('display_name', entity.name)
+                value = entity.properties.get('value', 'unknown')
+                date = entity.properties.get('date', 'unknown date')
+                unit = entity.properties.get('unit', '')
+                return f"{metric_name} was {value} {unit} on {date}."
+            
+            elif primary_label == "Indicator":
+                indicator_name = entity.properties.get('display_name', entity.name)
+                value = entity.properties.get('value', 'unknown')
+                date = entity.properties.get('date', 'unknown date')
+                unit = entity.properties.get('unit', '')
+                return f"{indicator_name} was {value} {unit} on {date}."
+                
+            elif primary_label == "Address":
+                return f"Bitcoin address {entity.name} with balance of {entity.properties.get('balance', 0)} BTC."
+                
+            else:
+                # Generic entity description
+                props_str = ", ".join([f"{k}: {v}" for k, v in entity.properties.items()])
+                return f"{primary_label} {entity.name} with properties: {props_str}..."
+                
+        elif isinstance(entity_or_relation, Relation):
+            relation = entity_or_relation
+            source_id = relation.source_id
+            target_id = relation.target_id
+            label = relation.label
+            
+            # Clean up IDs for readability
+            source_type, source_name = source_id.split(':', 1) if ':' in source_id else ("Entity", source_id)
+            target_type, target_name = target_id.split(':', 1) if ':' in target_id else ("Entity", target_id)
+            
+            relation_labels = {
+                "FOLLOWS": "follows",
+                "CONTAINS": "contains",
+                "HAS_ECONOMIC_CONTEXT": "has economic context",
+                "HAS_METRIC_CONTEXT": "has metric context",
+                "SENDS_TO": "sends funds to",
+                "SPENDS_FROM": "spends funds from",
+                "CORRELATES_WITH": "correlates with",
+                "INFLUENCES": "influences",
+                "AGGREGATES": "aggregates",
+                "IMPACTS": "impacts",
+                "FOLLOWS_EVENT": "follows event"
+            }
+            
+            relation_text = relation_labels.get(label, label.lower().replace('_', ' '))
+            
+            # Generate basic relation description
+            description = f"{source_type} {source_name} {relation_text} {target_type} {target_name}"
+            
+            # Add some properties if available
+            if relation.properties:
+                first_prop = list(relation.properties.items())[0]
+                description += f" with {first_prop[0]} of {first_prop[1]}"
+                
+            return description
+            
+        else:
+            return "Unknown entity or relation type"
+
+    def create_text_node_for_embedding(self, entity_or_relation) -> TextNode:
+        """
+        Create a TextNode from an entity or relation for embedding
+        """
+        description = self.create_natural_language_description(entity_or_relation)
+        
+        # Create ID based on the type
+        if isinstance(entity_or_relation, EntityNode):
+            node_id = f"text_node:{entity_or_relation.id}"
+            metadata = {**entity_or_relation.properties, "source_entity": entity_or_relation.id}
+        else:  # Relation
+            node_id = f"text_node:{entity_or_relation.source_id}_{entity_or_relation.label}_{entity_or_relation.target_id}"
+            metadata = {**entity_or_relation.properties, "source_relation": f"{entity_or_relation.source_id}_{entity_or_relation.label}_{entity_or_relation.target_id}"}
+        
+        # Create text node
+        text_node = TextNode(
+            text=description,
+            id_=node_id,
+            metadata=metadata
+        )
+        
+        self.text_nodes.append(text_node)
+        return text_node
+    
     def process_block_data(self, block_data: Dict[str, Any]) -> None:
-        """Process a single block of blockchain data and create triplets"""
+        """
+        Process a single block of blockchain data and create corresponding nodes and relations
+        """
         if not block_data:
             return
             
         # Extract block information
         block_hash = block_data.get('hash', '')
         block_height = block_data.get('height', 0)
-        block_time = self.timestamp_to_datetime(int(block_data.get('time', 0)))
-        block_date = self.timestamp_to_date(int(block_data.get('time', 0))) if block_time else ''
-        block_difficulty = block_data.get('difficulty', 0)
-        n_tx = block_data.get('nTx', 0)
+        block_time = int(block_data.get('time', 0))
         
-        # Create block-related triplets
-        block_id = f"Block:{block_height}"
-        self.add_triplet(block_id, "HAS_HASH", block_hash)
-        self.add_triplet(block_id, "HAS_HEIGHT", block_height)
-        self.add_triplet(block_id, "CREATED_AT", f"Timestamp:{block_time}")
-        self.add_triplet(block_id, "HAS_DATE", block_date)
-        self.add_triplet(block_id, "HAS_DIFFICULTY", block_difficulty)
-        self.add_triplet(block_id, "HAS_TRANSACTION_COUNT", n_tx)
+        # Skip if essential data is missing
+        if not block_hash or block_height == 0 or block_time == 0:
+            logger.warning(f"Skipping block with incomplete data: {block_data}")
+            return
         
-        # Add transactions to block
+        # Create block entity
+        date_str = self.timestamp_to_date(block_time)
+        datetime_str = self.timestamp_to_datetime(block_time)
+        time_components = self.extract_datetime_components(block_time)
+        
+        # Core block properties
+        block_properties = {
+            'hash': block_hash,
+            'height': block_height,
+            'timestamp': block_time,
+            'datetime': datetime_str,
+            'date': date_str,
+            **time_components,  # Add year, month, day as separate properties
+            'difficulty': block_data.get('difficulty', 0),
+            'transaction_count': block_data.get('nTx', 0),
+            'size': block_data.get('size', 0),
+        }
+        
+        # Create Block entity node
+        block_entity = self.create_entity_node(
+            name=str(block_height),  # Use height as name
+            primary_label="Block",
+            properties=block_properties
+        )
+        
+        # Create previous block relationship if available
+        if 'previousblockhash' in block_data and block_height > 0:
+            self.create_relation(
+                source_id=block_entity.id,
+                target_id=f"Block:{block_height-1}",
+                label="FOLLOWS",
+                properties={
+                    'time_difference': 600,  # Assuming ~10 minutes, can be calculated if timestamp available
+                }
+            )
+        
+        # Process transactions in block
         if 'tx' in block_data and block_data['tx']:
-            for tx in block_data['tx']:
+            tx_list = block_data['tx']
+            for i, tx in enumerate(tx_list):
                 if isinstance(tx, dict) and 'txid' in tx:
-                    tx_id = f"Transaction:{tx['txid']}"
-                    self.add_triplet(block_id, "CONTAINS_TRANSACTION", tx_id)
-                    self.add_triplet(tx_id, "BELONGS_TO_BLOCK", block_id)
+                    # Full transaction data available
+                    self.process_transaction(tx, block_entity, position=i)
                 elif isinstance(tx, str):
-                    tx_id = f"Transaction:{tx}"
-                    self.add_triplet(block_id, "CONTAINS_TRANSACTION", tx_id)
-                    self.add_triplet(tx_id, "BELONGS_TO_BLOCK", block_id)
+                    # Only txid available, create minimal transaction entity
+                    tx_entity = self.create_entity_node(
+                        name=tx,
+                        primary_label="Transaction",
+                        properties={
+                            'txid': tx,
+                            'blockhash': block_hash,
+                            'block_height': block_height,
+                            'timestamp': block_time,
+                            'datetime': datetime_str,
+                            'date': date_str,
+                            **time_components,
+                        }
+                    )
+                    
+                    # Create transaction-block relationship
+                    self.create_relation(
+                        source_id=block_entity.id,
+                        target_id=tx_entity.id,
+                        label="CONTAINS",
+                        properties={
+                            'position': i
+                        }
+                    )
+                    
+                    # Create transaction-block relationship (reverse direction)
+                    self.create_relation(
+                        source_id=tx_entity.id,
+                        target_id=block_entity.id,
+                        label="CONTAINED_IN",
+                        properties={}
+                    )
+    
+    def process_transaction(self, tx_data: Dict[str, Any], block_entity: EntityNode, position: int = 0) -> None:
+        """
+        Process a transaction and create corresponding nodes and relations
+        """
+        # Extract transaction information
+        txid = tx_data.get('txid', '')
+        block_hash = block_entity.properties.get('hash', '')
+        block_height = block_entity.properties.get('height', 0)
+        block_time = block_entity.properties.get('timestamp', 0)
         
-        # Previous block relationship if available
-        if 'previousblockhash' in block_data:
-            self.add_triplet(block_id, "FOLLOWS", f"Block:{block_height-1}")
-            self.add_triplet(f"Block:{block_height-1}", "PRECEDES", block_id)
+        # Skip if essential data is missing
+        if not txid:
+            logger.warning(f"Skipping transaction with no txid: {tx_data}")
+            return
         
-        # Create date node for cross-domain relationships
-        date_id = f"Date:{block_date}"
-        self.add_triplet(date_id, "HAS_BLOCK", block_id)
-        self.add_triplet(block_id, "CREATED_ON", date_id)
+        # Extract time components
+        date_str = self.timestamp_to_date(block_time)
+        datetime_str = self.timestamp_to_datetime(block_time)
+        time_components = self.extract_datetime_components(block_time)
+        
+        # Calculate transaction values
+        input_count = len(tx_data.get('vin', []))
+        output_count = len(tx_data.get('vout', []))
+        
+        # Calculate total input/output values if available
+        total_input_value = 0
+        total_output_value = 0
+        
+        for vin in tx_data.get('vin', []):
+            if 'value' in vin:
+                total_input_value += vin.get('value', 0)
+        
+        for vout in tx_data.get('vout', []):
+            if 'value' in vout:
+                total_output_value += vout.get('value', 0)
+        
+        # Check if coinbase transaction
+        is_coinbase = False
+        if tx_data.get('vin', []):
+            is_coinbase = 'coinbase' in tx_data['vin'][0]
+        
+        # Create Transaction entity node
+        tx_properties = {
+            'txid': txid,
+            'blockhash': block_hash,
+            'block_height': block_height,
+            'timestamp': block_time,
+            'datetime': datetime_str,
+            'date': date_str,
+            **time_components,
+            'input_count': input_count,
+            'output_count': output_count,
+            'total_input_value': total_input_value,
+            'total_output_value': total_output_value,
+            'is_coinbase': is_coinbase,
+            'fee': total_input_value - total_output_value if not is_coinbase and total_input_value > 0 else 0,
+        }
+        
+        # Add size information if available
+        if 'size' in tx_data:
+            tx_properties['size'] = tx_data.get('size', 0)
+        
+        tx_entity = self.create_entity_node(
+            name=txid,
+            primary_label="Transaction",
+            properties=tx_properties
+        )
+        
+        # Create transaction-block relationship
+        self.create_relation(
+            source_id=block_entity.id,
+            target_id=tx_entity.id,
+            label="CONTAINS",
+            properties={
+                'position': position
+            }
+        )
+        
+        # Create transaction-block relationship (reverse direction)
+        self.create_relation(
+            source_id=tx_entity.id,
+            target_id=block_entity.id,
+            label="CONTAINED_IN",
+            properties={}
+        )
+        
+        # Process inputs and outputs to create address entities and relationships
+        self.process_transaction_addresses(tx_data, tx_entity)
+    
+    def process_transaction_addresses(self, tx_data: Dict[str, Any], tx_entity: EntityNode) -> None:
+        """
+        Process transaction inputs and outputs to create address entities and relationships
+        """
+        # Process outputs (vout)
+        for i, vout in enumerate(tx_data.get('vout', [])):
+            if 'scriptPubKey' in vout and 'address' in vout['scriptPubKey']:
+                address = vout['scriptPubKey']['address']
+                value = vout.get('value', 0)
+                
+                # Create address entity if it doesn't exist
+                address_entity = self.create_entity_node(
+                    name=address,
+                    primary_label="Address",
+                    properties={
+                        'address': address,
+                        'type': vout['scriptPubKey'].get('type', 'unknown'),
+                        'last_seen': tx_entity.properties.get('timestamp', 0),
+                    }
+                )
+                
+                # Create transaction-to-address relationship
+                self.create_relation(
+                    source_id=tx_entity.id,
+                    target_id=address_entity.id,
+                    label="SENDS_TO",
+                    properties={
+                        'value': value,
+                        'position': i,
+                        'script_type': vout['scriptPubKey'].get('type', 'unknown'),
+                        'timestamp': tx_entity.properties.get('timestamp', 0),
+                    }
+                )
+        
+        # Process inputs (vin) - requires additional lookup if available
+        for i, vin in enumerate(tx_data.get('vin', [])):
+            # Skip coinbase transactions
+            if 'coinbase' in vin:
+                continue
+                
+            # Process address if available
+            if 'address' in vin:
+                address = vin['address']
+                value = vin.get('value', 0)
+                
+                # Create address entity if it doesn't exist
+                address_entity = self.create_entity_node(
+                    name=address,
+                    primary_label="Address",
+                    properties={
+                        'address': address,
+                        'last_seen': tx_entity.properties.get('timestamp', 0),
+                    }
+                )
+                
+                # Create address-to-transaction relationship
+                self.create_relation(
+                    source_id=address_entity.id,
+                    target_id=tx_entity.id,
+                    label="SPENDS_FROM",
+                    properties={
+                        'value': value,
+                        'position': i,
+                        'timestamp': tx_entity.properties.get('timestamp', 0),
+                    }
+                )
     
     def process_economic_indicators(self, economic_data: Dict[str, Any]) -> None:
-        """Process economic indicators data and create triplets"""
+        """
+        Process economic indicators data and create corresponding nodes and relations
+        """
         for indicator_name, indicator_data in economic_data.items():
             # Skip any error entries
             if 'error' in indicator_data:
                 continue
                 
             # Get the indicator display name
-            indicator_display = indicator_data.get('indicator', indicator_name.upper())
+            indicator_display = self.indicator_display_names.get(
+                indicator_name, 
+                indicator_data.get('indicator', indicator_name.upper())
+            )
             
-            # Create indicator entity
-            indicator_id = f"EconomicIndicator:{indicator_name}"
-            self.add_triplet(indicator_id, "HAS_NAME", indicator_display)
+            # Create indicator base entity (without time-series data)
+            indicator_base_entity = self.create_entity_node(
+                name=indicator_name,
+                primary_label="Indicator",
+                secondary_labels=[indicator_name.capitalize().replace('_', '')],
+                properties={
+                    'name': indicator_name,
+                    'display_name': indicator_display,
+                    'unit': self.indicator_units.get(indicator_name, ''),
+                    'description': f"Economic indicator tracking {indicator_display}"
+                }
+            )
             
             # Process each value point
             values = indicator_data.get('values', [])
@@ -145,44 +837,114 @@ class TripletGenerator:
                 if pd.isna(value) or date_str == '' or value is None:
                     continue
                 
-                # Create date-based triplets
-                date_id = f"Date:{date_str}"
-                value_id = f"{indicator_id}:{date_id}"
+                # Parse date
+                try:
+                    date_dt = datetime.strptime(date_str, '%Y-%m-%d')
+                    # Extract time components
+                    time_components = {
+                        'year': date_dt.year,
+                        'month': date_dt.month,
+                        'day': date_dt.day,
+                        'hour': 0,
+                        'minute': 0,
+                        'second': 0
+                    }
+                except ValueError:
+                    logger.warning(f"Invalid date format: {date_str}")
+                    continue
                 
-                # Add basic triplets
-                self.add_triplet(indicator_id, "HAS_VALUE_ON", date_id)
-                self.add_triplet(date_id, f"HAS_{indicator_name.upper()}", value)
-                self.add_triplet(value_id, "HAS_VALUE", value)
-                self.add_triplet(value_id, "RECORDED_AT", date_id)
-                self.add_triplet(value_id, "HAS_INDICATOR_TYPE", indicator_display)
+                # Create time-specific indicator entity
+                indicator_value_entity = self.create_entity_node(
+                    name=f"{indicator_name}_{date_str}",
+                    primary_label="IndicatorValue",
+                    secondary_labels=[indicator_name.capitalize().replace('_', '')],
+                    properties={
+                        'indicator': indicator_name,
+                        'display_name': indicator_display,
+                        'date': date_str,
+                        'timestamp': int(date_dt.timestamp()),
+                        **time_components,
+                        'value': value,
+                        'unit': self.indicator_units.get(indicator_name, ''),
+                    }
+                )
                 
-                # Add direct date-indicator relationships
-                self.add_triplet(date_id, f"HAS_{indicator_name.upper()}_INDICATOR", indicator_id)
-                self.add_triplet(indicator_id, "MEASURED_ON", date_id)
-
+                # Create relationship between base indicator and value
+                self.create_relation(
+                    source_id=indicator_base_entity.id,
+                    target_id=indicator_value_entity.id,
+                    label="HAS_VALUE_ON",
+                    properties={
+                        'date': date_str
+                    }
+                )
+                
+                # Create time-based relationships
+                time_entity_id = f"Time:{date_str}"
+                time_entity = self.create_entity_node(
+                    name=date_str,
+                    primary_label="Time",
+                    properties={
+                        'date': date_str,
+                        **time_components
+                    }
+                )
+                
+                # Connect indicator value to time
+                self.create_relation(
+                    source_id=indicator_value_entity.id,
+                    target_id=time_entity.id,
+                    label="MEASURED_AT",
+                    properties={}
+                )
+                
+                # Connect time to indicator value
+                self.create_relation(
+                    source_id=time_entity.id,
+                    target_id=indicator_value_entity.id,
+                    label="HAS_INDICATOR",
+                    properties={
+                        'indicator_type': indicator_name
+                    }
+                )
+    
     def process_onchain_metrics(self, metrics_data: Dict[str, Any]) -> None:
-        """Process on-chain metrics data and create triplets"""
+        """
+        Process on-chain metrics data and create corresponding nodes and relations
+        
+        Args:
+            metrics_data: Dictionary of on-chain metric data
+        """
         for metric_name, metric_data in metrics_data.items():
             # Skip any error entries
             if 'error' in metric_data:
                 continue
             
             # Get metadata
-            metric_display = metric_data.get('name', metric_name)
-            metric_unit = metric_data.get('unit', '')
+            metric_display = self.metric_display_names.get(
+                metric_name, 
+                metric_data.get('name', metric_name)
+            )
+            metric_unit = self.metric_units.get(metric_name, metric_data.get('unit', ''))
             metric_description = metric_data.get('description', '')
-            metric_period = metric_data.get('period', 'day')
             
-            # Create metric node with more descriptive names
-            metric_id = f"OnChainMetric:{metric_name}"
-            canonical_name = self.get_canonical_metric_name(metric_name)
-            self.add_triplet(metric_id, "HAS_DISPLAY_NAME", canonical_name)
-            self.add_triplet(metric_id, "HAS_UNIT", metric_unit)
-            self.add_triplet(metric_id, "HAS_DESCRIPTION", metric_description)
-            self.add_triplet(metric_id, "HAS_PERIOD", metric_period)
+            # Create metric base entity (without time-series data)
+            metric_base_entity = self.create_entity_node(
+                name=metric_name,
+                primary_label="Metric",
+                secondary_labels=[metric_name.capitalize().replace('_', '')],
+                properties={
+                    'name': metric_name,
+                    'display_name': metric_display,
+                    'unit': metric_unit,
+                    'description': metric_description or f"Bitcoin on-chain metric tracking {metric_display}"
+                }
+            )
             
             # Process each data point
             values = metric_data.get('values', [])
+            previous_value = None
+            
             for value_point in values:
                 timestamp = value_point.get('x', 0)
                 value = value_point.get('y')
@@ -193,478 +955,383 @@ class TripletGenerator:
                 
                 # Convert timestamp to date for day-based metrics
                 date_str = self.timestamp_to_date(timestamp)
-                date_id = f"Date:{date_str}"
-                value_id = f"{metric_id}: {date_id}"
+                # Extract time components
+                time_components = self.extract_datetime_components(timestamp)
                 
-                # Create time-based triplets
-                self.add_triplet(metric_id, "HAS_VALUE_AT", date_id)
-                self.add_triplet(value_id, "HAS_VALUE", value)
-                self.add_triplet(value_id, "MEASURED_AT", date_id)
+                # Calculate change from previous value if available
+                change = None
+                percent_change = None
+                if previous_value is not None and previous_value != 0:
+                    change = value - previous_value
+                    percent_change = (change / previous_value) * 100
                 
-                # Add date-based triplets with more explicit and queryable relationships
-                if metric_period == 'day':
-                    # Add direct value to date relationship
-                    self.add_triplet(date_id, f"HAS_{canonical_name.upper()}", value)
-                    
-                    # Create explicit Bitcoin metric relationships
-                    self.add_triplet(date_id, f"HAS_BITCOIN_{metric_name.upper()}", value)
-                    
-                    # Add natural language date formats
-                    formatted_date = self.format_date_for_queries(date_str)
-                    formatted_date_id = f"FormattedDate:{formatted_date}"
-                    self.add_triplet(formatted_date_id, f"HAS_BITCOIN_{metric_name.upper()}", value)
-                    self.add_triplet(formatted_date_id, "CORRESPONDS_TO", date_id)
-                    
-                    # Add standard relationships
-                    self.add_triplet(metric_id, "HAS_VALUE_ON", date_id)
-                    self.add_triplet(date_id, f"HAS_{metric_name.upper()}_METRIC", metric_id)
-           
+                previous_value = value
+                
+                # Create time-specific metric entity
+                metric_value_entity = self.create_entity_node(
+                    name=f"{metric_name}_{date_str}",
+                    primary_label="MetricValue",
+                    secondary_labels=[metric_name.capitalize().replace('_', '')],
+                    properties={
+                        'metric': metric_name,
+                        'display_name': metric_display,
+                        'date': date_str,
+                        'timestamp': timestamp,
+                        **time_components,
+                        'value': value,
+                        'unit': metric_unit,
+                        'change': change,
+                        'percent_change': percent_change
+                    }
+                )
+                
+                # Create relationship between base metric and value
+                self.create_relation(
+                    source_id=metric_base_entity.id,
+                    target_id=metric_value_entity.id,
+                    label="HAS_VALUE_ON",
+                    properties={
+                        'date': date_str
+                    }
+                )
+                
+                # Create time-based relationships
+                time_entity_id = f"Time:{date_str}"
+                time_entity = self.create_entity_node(
+                    name=date_str,
+                    primary_label="Time",
+                    properties={
+                        'date': date_str,
+                        **time_components
+                    }
+                )
+                
+                # Connect metric value to time
+                self.create_relation(
+                    source_id=metric_value_entity.id,
+                    target_id=time_entity.id,
+                    label="MEASURED_AT",
+                    properties={}
+                )
+                
+                # Connect time to metric value
+                self.create_relation(
+                    source_id=time_entity.id,
+                    target_id=metric_value_entity.id,
+                    label="HAS_METRIC",
+                    properties={
+                        'metric_type': metric_name
+                    }
+                )
     
     def create_cross_domain_relationships(self) -> None:
-        """Create relationships between different domains (economic, on-chain, blockchain)"""
-        # Find all dates with metrics
-        dates_info = {}
+        """
+        Create relationships between different domains (economic indicators, on-chain metrics, blockchain)
+        """
+        # Map of time entities to their related blocks, indicators, and metrics
+        time_mappings = {}
         
-        for subject, predicate, obj in self.triplets:
-            if subject.startswith("Date:"):
-                date = subject.replace("Date:", "")
+        # First, collect all time-based entities
+        for node in self.nodes:
+            if 'date' in node.properties:
+                date_str = node.properties['date']
                 
-                if date not in dates_info:
-                    dates_info[date] = {
-                        "blocks": [],
-                        "economic_indicators": [],
-                        "onchain_metrics": []
+                if date_str not in time_mappings:
+                    time_mappings[date_str] = {
+                        'blocks': [],
+                        'indicators': [],
+                        'metrics': []
                     }
                 
-                # Extract block information
-                if predicate == "HAS_BLOCK":
-                    dates_info[date]["blocks"].append(obj)
-                
-                # Extract economic indicators
-                elif any(x in predicate for x in ["FEDERAL", "CPI", "UNEMPLOYMENT", "SP500", "DOLLAR", "M2"]):
-                    indicator_name = predicate.replace("HAS_", "")
-                    dates_info[date]["economic_indicators"].append((indicator_name, obj))
-                
-                # Extract on-chain metrics
-                elif any(x in predicate for x in ["TRANSACTION_VOLUME", "ACTIVE_ADDRESSES", "HASH_RATE", 
-                                                "TRANSACTION_FEES", "MEMPOOL_SIZE", "DIFFICULTY"]):
-                    metric_name = predicate.replace("HAS_", "")
-                    dates_info[date]["onchain_metrics"].append((metric_name, obj))
+                # Categorize by primary label
+                if node.label.startswith('Block'):
+                    time_mappings[date_str]['blocks'].append(node.id)
+                elif node.label.startswith('IndicatorValue'):
+                    time_mappings[date_str]['indicators'].append(node.id)
+                elif node.label.startswith('MetricValue'):
+                    time_mappings[date_str]['metrics'].append(node.id)
         
-        # Create cross-domain relationships for each date
-        for date, info in dates_info.items():
-            date_id = f"Date:{date}"
-            
-            # Create relationships between blocks and economic indicators
-            for block_id in info["blocks"]:
-                for indicator_name, indicator_value in info["economic_indicators"]:
-                    indicator_id = f"EconomicIndicator:{indicator_name.lower()}"
-                    self.add_triplet(block_id, f"COINCIDES_WITH_{indicator_name}", indicator_id)
-                    self.add_triplet(block_id, f"OBSERVED_DURING_{indicator_name}_VALUE", indicator_value)
-                    self.add_triplet(indicator_id, "MEASURED_DURING_BLOCK", block_id)
-            
-            # Create relationships between blocks and on-chain metrics
-            for block_id in info["blocks"]:
-                for metric_name, metric_value in info["onchain_metrics"]:
-                    metric_id = f"OnChainMetric:{metric_name.lower()}"
-                    self.add_triplet(block_id, f"HAS_{metric_name}_VALUE", metric_value)
-                    self.add_triplet(metric_id, "MEASURED_FOR_BLOCK", block_id)
-            
-            # Create relationships between economic indicators and on-chain metrics
-            for indicator_name, indicator_value in info["economic_indicators"]:
-                indicator_id = f"EconomicIndicator:{indicator_name.lower()}"
-                
-                for metric_name, metric_value in info["onchain_metrics"]:
-                    metric_id = f"OnChainMetric:{metric_name.lower()}"
-                    relation_id = f"Relation:{indicator_name}_{metric_name}:{date}"
+        # Now create cross-domain relationships for each date
+        for date_str, entities in time_mappings.items():
+            # Connect blocks with indicators on the same day
+            for block_id in entities['blocks']:
+                for indicator_id in entities['indicators']:
+                    # Extract indicator details
+                    indicator_node = None
+                    for node in self.nodes:
+                        if node.id == indicator_id:
+                            indicator_node = node
+                            break
                     
-                    self.add_triplet(indicator_id, f"CORRELATES_WITH_{metric_name}", metric_id)
-                    self.add_triplet(metric_id, f"CORRELATES_WITH_{indicator_name}", indicator_id)
-                    self.add_triplet(relation_id, "HAS_INDICATOR", indicator_id)
-                    self.add_triplet(relation_id, "HAS_METRIC", metric_id)
-                    self.add_triplet(relation_id, "HAS_DATE", date_id)
-                    self.add_triplet(relation_id, "HAS_INDICATOR_VALUE", indicator_value)
-                    self.add_triplet(relation_id, "HAS_METRIC_VALUE", metric_value)
-    
-    def create_specific_relationships(self) -> None:
-        """Create specific relationships based on domain knowledge"""
-        fed_rate_id = "EconomicIndicator:federal_funds_rate"
-        hash_rate_id = "OnChainMetric:hash_rate"
-        transaction_volume_btc_id = "OnChainMetric:transaction_volume_btc"
-        transaction_volume_usd_id = "OnChainMetric:transaction_volume_usd"
-        active_addresses_id = "OnChainMetric:active_addresses"
-        
-        # Fed rate impacts mining profitability which affects hash rate
-        self.add_triplet(fed_rate_id, "INFLUENCES", hash_rate_id)
-        self.add_triplet(hash_rate_id, "INFLUENCED_BY", fed_rate_id)
-        
-        # Fed rate affects USD value which impacts BTC transaction volume
-        self.add_triplet(fed_rate_id, "IMPACTS", transaction_volume_usd_id)
-        self.add_triplet(transaction_volume_usd_id, "IMPACTED_BY", fed_rate_id)
-        
-        # M2 Money Supply impacts Bitcoin adoption metrics
-        m2_id = "EconomicIndicator:m2_money_supply"
-        self.add_triplet(m2_id, "INFLUENCES", active_addresses_id)
-        self.add_triplet(m2_id, "INFLUENCES", transaction_volume_btc_id)
-        
-        # S&P 500 correlation with Bitcoin metrics (risk-on/risk-off behavior)
-        sp500_id = "EconomicIndicator:sp500"
-        self.add_triplet(sp500_id, "CORRELATES_WITH", transaction_volume_usd_id)
-        self.add_triplet(transaction_volume_usd_id, "CORRELATES_WITH", sp500_id)
-    
-    def add_triplet_with_metadata(self, subject, predicate, object_value, metadata=None):
-        """Add a triplet to the list with metadata"""
-        obj = str(object_value)
-        triplet = (subject, predicate, obj)
-
-        # Add default metadata if none provided
-        if metadata is None:
-            metadata = {
-                "year": None,
-                "month": None,
-                "day": None,
-                "hour": None,
-                "metric_type": None,
-                "indicator_type": None,
-                "block_height": None,
-                "txid": None
-            }
+                    if indicator_node:
+                        indicator_type = indicator_node.properties.get('indicator', '')
+                        indicator_value = indicator_node.properties.get('value', 0)
+                        
+                        # Create block-to-indicator relationship
+                        self.create_relation(
+                            source_id=block_id,
+                            target_id=indicator_id,
+                            label="HAS_ECONOMIC_CONTEXT",
+                            properties={
+                                'relevance': 1.0,  # Default value, could be calculated
+                                'context_type': indicator_type,
+                                'indicator_value': indicator_value
+                            }
+                        )
             
-        # Extract time period if present in subject or object
-        if "Date:" in subject or "Timestamp:" in subject:
-            dt = parse_datetime(subject)
-            if dt is None:
-                print(subject)
-            metadata["year"] = dt.year
-            metadata["month"] = dt.month
-            metadata["day"] = dt.day
-            metadata["hour"] = dt.hour
-        if "Date:" in obj or "Timestamp:" in obj:
-            dt = parse_datetime(obj)
-            metadata["year"] = dt.year
-            metadata["month"] = dt.month
-            metadata["day"] = dt.day
-            metadata["hour"] = dt.hour
+            # Connect blocks with metrics on the same day
+            for block_id in entities['blocks']:
+                for metric_id in entities['metrics']:
+                    # Extract metric details
+                    metric_node = None
+                    for node in self.nodes:
+                        if node.id == metric_id:
+                            metric_node = node
+                            break
+                    
+                    if metric_node:
+                        metric_type = metric_node.properties.get('metric', '')
+                        metric_value = metric_node.properties.get('value', 0)
+                        
+                        # Create block-to-metric relationship
+                        self.create_relation(
+                            source_id=block_id,
+                            target_id=metric_id,
+                            label="HAS_METRIC_CONTEXT",
+                            properties={
+                                'relevance': 1.0,  # Default value, could be calculated
+                                'metric_value': metric_value
+                            }
+                        )
             
-        # Extract metric and indicator type if present
-        for x in self.metrics:
-            if x in obj or x in subject:
-                metadata["metric_type"] = x
-        for x in self.indicators:
-            if x in obj or x in subject:
-                metadata["indicator_type"] = x
+            # Connect indicators with metrics on the same day
+            for indicator_id in entities['indicators']:
+                for metric_id in entities['metrics']:
+                    # Extract indicator details
+                    indicator_node = None
+                    metric_node = None
+                    
+                    for node in self.nodes:
+                        if node.id == indicator_id:
+                            indicator_node = node
+                        elif node.id == metric_id:
+                            metric_node = node
+                    
+                    if indicator_node and metric_node:
+                        indicator_type = indicator_node.properties.get('indicator', '')
+                        metric_type = metric_node.properties.get('metric', '')
+                        
+                        # Create correlation relationship
+                        self.create_relation(
+                            source_id=indicator_id,
+                            target_id=metric_id,
+                            label="CORRELATES_WITH",
+                            properties={
+                                'correlation': 0.0,  # Placeholder, would be calculated
+                                'p_value': 0.05,     # Placeholder
+                                'time_period': date_str,
+                                'indicator_value': indicator_node.properties.get('value', 0),
+                                'metric_value': metric_node.properties.get('value', 0)
+                            }
+                        )
+    
+    def create_domain_specific_relationships(self) -> None:
+        """
+        Create domain-specific relationships based on known correlations and influences
+        """
+        # Define known relationships between metrics and indicators
+        influence_relationships = [
+            # Federal Funds Rate influences multiple metrics
+            {
+                'source_type': 'Indicator', 
+                'source_name': 'federal_funds_rate',
+                'target_type': 'Metric',
+                'target_name': 'hash_rate',
+                'label': 'INFLUENCES',
+                'properties': {
+                    'influence_strength': -0.7,  # Negative influence
+                    'lag_period': '1 month',
+                    'confidence': 0.8,
+                    'explanation': 'Higher interest rates reduce mining profitability, potentially reducing hash rate'
+                }
+            },
+            {
+                'source_type': 'Indicator', 
+                'source_name': 'federal_funds_rate',
+                'target_type': 'Metric',
+                'target_name': 'transaction_volume_usd',
+                'label': 'INFLUENCES',
+                'properties': {
+                    'influence_strength': -0.5,
+                    'lag_period': '2 weeks',
+                    'confidence': 0.7,
+                    'explanation': 'Higher interest rates tend to reduce overall transaction volumes'
+                }
+            },
+            
+            # M2 Money Supply influences adoption metrics
+            {
+                'source_type': 'Indicator', 
+                'source_name': 'm2_money_supply',
+                'target_type': 'Metric',
+                'target_name': 'active_addresses',
+                'label': 'INFLUENCES',
+                'properties': {
+                    'influence_strength': 0.6,
+                    'lag_period': '3 months',
+                    'confidence': 0.75,
+                    'explanation': 'Increased money supply may drive adoption of Bitcoin as inflation hedge'
+                }
+            },
+            {
+                'source_type': 'Indicator', 
+                'source_name': 'm2_money_supply',
+                'target_type': 'Metric',
+                'target_name': 'transaction_volume_btc',
+                'label': 'INFLUENCES',
+                'properties': {
+                    'influence_strength': 0.5,
+                    'lag_period': '2 months',
+                    'confidence': 0.7,
+                    'explanation': 'Increased money supply may increase Bitcoin transaction activity'
+                }
+            },
+            
+            # S&P 500 correlations (risk-on/risk-off behavior)
+            {
+                'source_type': 'Indicator', 
+                'source_name': 'sp500',
+                'target_type': 'Metric',
+                'target_name': 'transaction_volume_usd',
+                'label': 'CORRELATES_WITH',
+                'properties': {
+                    'correlation': 0.45,
+                    'p_value': 0.02,
+                    'time_period': 'long-term',
+                    'strength': 'moderate',
+                    'explanation': 'Bitcoin often moves with broader market sentiment'
+                }
+            },
+        ]
         
-        # Extract block height and transaction id if present
-        if "Block:" in subject:
-            metadata["block_height"] = subject.replace("Block:", "")
-        if "Transaction:" in subject:
-            metadata["txid"] = subject.replace("Transaction:", "")
-        if "Block:" in obj:
-            metadata["block_height"] = obj.replace("Block:", "")
-        if "Transaction:" in obj:
-            metadata["txid"] = obj.replace("Transaction:", "")
-
-        # Store the triplet with its metadata
-        self.triplets_with_metadata.append((triplet, metadata))
+        # Create these relationships
+        for relationship in influence_relationships:
+            source_id = f"{relationship['source_type']}:{relationship['source_name']}"
+            target_id = f"{relationship['target_type']}:{relationship['target_name']}"
+            
+            # Add the relationship
+            self.create_relation(
+                source_id=source_id,
+                target_id=target_id,
+                label=relationship['label'],
+                properties=relationship['properties']
+            )
+            
+            # Add the inverse relationship if it's a correlation
+            if relationship['label'] == 'CORRELATES_WITH':
+                self.create_relation(
+                    source_id=target_id,
+                    target_id=source_id,
+                    label=relationship['label'],
+                    properties=relationship['properties']
+                )
+    
+    def generate_text_nodes_for_embedding(self) -> None:
+        """
+        Generate text nodes for all entities and relationships for vector embedding
+        """
+        logger.info("Generating text nodes for embedding...")
         
+        # Process entities first
+        for entity in self.nodes:
+            self.create_text_node_for_embedding(entity)
+        
+        # Then process relationships
+        for relation in self.relations:
+            self.create_text_node_for_embedding(relation)
+            
+        logger.info(f"Generated {len(self.text_nodes)} text nodes for embedding")
+    
     def load_and_process_data(self, 
-                             blocks_data, 
-                             economic_data, 
-                             onchain_data) -> List[Tuple[str, str, Any]]:
+                             blocks_data: Any, 
+                             economic_data: Any, 
+                             onchain_data: Any,
+                             create_embeddings: bool = True) -> Tuple[List[LabelledNode], List[Relation], List[TextNode]]:
         """
-        Load and process all data files to generate triplets
+        Load and process all data to generate property graph nodes and relations
         """
+        logger.info("Starting data processing for property graph generation...")
+        
         # Process blockchain data if provided
         if blocks_data:
             try:
                 if isinstance(blocks_data, list):
+                    logger.info(f"Processing {len(blocks_data)} blocks...")
                     for block in blocks_data:
                         self.process_block_data(block)
                 elif isinstance(blocks_data, dict):
                     # Single block case
+                    logger.info("Processing single block...")
                     self.process_block_data(blocks_data)
+                else:
+                    logger.warning(f"Unsupported blocks_data type: {type(blocks_data)}")
             except Exception as e:
-                print(f"Error processing blockchain data: {e}")
+                logger.error(f"Error processing blockchain data: {str(e)}", exc_info=True)
+        else:
+            logger.info("No blockchain data provided, skipping block processing")
         
         # Process economic indicators if provided
         if economic_data:
             try:
+                logger.info(f"Processing economic indicators ({len(economic_data)} indicators)...")
                 self.process_economic_indicators(economic_data)
             except Exception as e:
-                print(f"Error processing economic indicators: {e}")
+                logger.error(f"Error processing economic indicators: {str(e)}", exc_info=True)
+        else:
+            logger.info("No economic data provided, skipping indicator processing")
         
         # Process on-chain metrics if provided
         if onchain_data:
             try:
+                logger.info(f"Processing on-chain metrics ({len(onchain_data)} metrics)...")
                 self.process_onchain_metrics(onchain_data)
             except Exception as e:
-                print(f"Error processing on-chain metrics: {e}")
+                logger.error(f"Error processing on-chain metrics: {str(e)}", exc_info=True)
+        else:
+            logger.info("No on-chain metric data provided, skipping metric processing")
         
         # Create cross-domain relationships
+        logger.info("Creating cross-domain relationships...")
         self.create_cross_domain_relationships()
         
-        # Create specific domain knowledge-based relationships
-        self.create_specific_relationships()
-
-        # Create metadata
-        for sub, pred, obj in self.triplets:
-            self.add_triplet_with_metadata(sub, pred, obj)
+        # Create domain-specific relationships
+        logger.info("Creating domain-specific relationships...")
+        self.create_domain_specific_relationships()
         
-        return self.triplets_with_metadata
-    
-    def export_triplets_to_csv(self, output_file: str) -> None:
-        """Export triplets to a CSV file"""
-        df = pd.DataFrame(self.triplets, columns=['subject', 'predicate', 'object'])
-        df.to_csv(output_file, index=False)
-        print(f"Exported {len(self.triplets)} triplets to {output_file}")
-    
-    def export_triplets_to_json(self, output_file: str) -> None:
-        """Export triplets to a JSON file"""
-        triplets_json = []
-        for subject, predicate, obj in self.triplets:
-            triplets_json.append({
-                "subject": subject,
-                "predicate": predicate,
-                "object": obj
-            })
+        # Create text nodes for embedding if requested
+        if create_embeddings:
+            self.generate_text_nodes_for_embedding()
         
-        with open(output_file, 'w') as f:
-            json.dump(triplets_json, f, indent=2)
+        # Log summary statistics
+        logger.info(f"Property graph generation complete:")
+        logger.info(f"  - {len(self.nodes)} nodes created")
+        logger.info(f"  - {len(self.relations)} relations created")
+        logger.info(f"  - {len(self.text_nodes)} text nodes created for embedding")
         
-        print(f"Exported {len(self.triplets)} triplets to {output_file}")
+        return self.nodes, self.relations, self.text_nodes
 
-############################################################
-# Converting Triplets into Natural Language for embeddings #
-
+    def get_property_graph_data(self) -> Dict[str, Any]:
+        """
+        Get all property graph data in a format suitable for KG_NODES_KEY and KG_RELATIONS_KEY
+        """
+        return {
+            KG_NODES_KEY: self.nodes,
+            KG_RELATIONS_KEY: self.relations
+        }
     
-def transform_triplets_for_embedding(triplets: List[Tuple[str, str, str]]) -> List[str]:
-    """
-    Transform a list of triplets into natural language sentences suitable for embedding.
-    """
-    return [triplet_to_natural_language(triplet) for triplet in triplets]
-
-def triplet_to_natural_language(triplet: Tuple[str, str, str]) -> str:
-    """
-    Convert a knowledge graph triplet into natural language.
-    """
-    subject, predicate, obj = triplet
-    
-    # Extract entity types and names
-    subject_type, subject_name = extract_entity_parts(subject)
-    obj_type, obj_name = extract_entity_parts(obj)
-    
-    # Format the predicate for readability
-    formatted_predicate = format_predicate(predicate)
-    
-    # Handle special cases based on entity types and predicates
-    if predicate.startswith("HAS_VALUE") and is_date_or_timestamp(obj):
-        return f"The {format_entity_name(subject_name)} had a value of {obj}."
+    def get_text_nodes(self) -> List[TextNode]:
+        """
+        Get all text nodes for embedding
+        """
+        return self.text_nodes
         
-    elif predicate.startswith("HAS_") and is_numeric(obj):
-        metric_name = predicate.replace("HAS_", "").replace("_", " ").lower()
-        return f"The {format_entity_name(subject_name)} has a {metric_name} of {obj}."
-        
-    elif "CORRELATES_WITH" in predicate:
-        target = predicate.split("_WITH_")[-1]
-        return f"{format_entity_name(subject_name)} correlates with {format_entity_name(target)}."
-    
-    elif predicate.startswith("OBSERVED_DURING_") and "_VALUE" in predicate:
-        indicator = predicate.replace("OBSERVED_DURING_", "").replace("_VALUE", "")
-        return f"{format_entity_name(subject_name)} was observed when {format_entity_name(indicator)} was {obj}."
-    
-    elif "MEASURED_DURING" in predicate:
-        return f"{format_entity_name(subject_name)} was measured during {format_entity_name(obj_name)}."
-    
-    elif "CREATED_ON" in predicate or "CREATED_AT" in predicate:
-        return f"{format_entity_name(subject_name)} was created on {obj}."
-    
-    elif predicate == "CONTAINS_TRANSACTION":
-        return f"{format_entity_name(subject_name)} contains the transaction {format_entity_name(obj_name)}."
-    
-    elif "FOLLOWS" in predicate or "PRECEDES" in predicate:
-        return f"{format_entity_name(subject_name)} {formatted_predicate} {format_entity_name(obj_name)}."
-    
-    # Default case
-    return f"{format_entity_name(subject_name)} {formatted_predicate} {format_entity_name(obj_name)}."
-
-
-def extract_entity_parts(entity: str) -> Tuple[str, str]:
-    """
-    Extract the entity type and name from an entity string like 'EntityType:name'.
-    """
-    if ":" in entity:
-        parts = entity.split(":", 1)
-        return parts[0], parts[1]
-    else:
-        return "", entity
-
-
-def format_entity_name(name: str) -> str:
-    """
-    Format an entity name for natural language presentation.
-    """
-    # Handle specific entity types
-    if name.startswith("Block:"):
-        return f"Bitcoin block {name.replace('Block:', '')}"
-    
-    elif name.startswith("Transaction:"):
-        return f"transaction {name.replace('Transaction:', '')}"
-    
-    elif name.startswith("Date:"):
-        return f"{name.replace('Date:', '')}"
-    
-    elif name.startswith("EconomicIndicator:"):
-        indicator = name.replace("EconomicIndicator:", "")
-        return format_indicator_name(indicator)
-    
-    elif name.startswith("OnChainMetric:"):
-        metric = name.replace("OnChainMetric:", "")
-        return format_metric_name(metric)
-    
-    # General case: replace underscores with spaces and title case
-    return name.replace("_", " ").title()
-
-
-def format_indicator_name(indicator: str) -> str:
-    """Format economic indicator names nicely"""
-    indicator_mapping = {
-        "federal_funds_rate": "Federal Funds Rate",
-        "cpi": "Consumer Price Index",
-        "real_gdp_growth": "Real GDP Growth",
-        "unemployment_rate": "Unemployment Rate",
-        "sp500": "S&P 500 Index",
-        "dollar_index": "US Dollar Index",
-        "m2_money_supply": "M2 Money Supply"
-    }
-    
-    return indicator_mapping.get(indicator, indicator.replace("_", " ").title())
-
-
-def format_metric_name(metric: str) -> str:
-    """Format on-chain metric names nicely"""
-    metric_mapping = {
-        "transaction_volume_btc": "Bitcoin Transaction Volume",
-        "transaction_volume_usd": "Bitcoin Transaction Volume (USD)",
-        "active_addresses": "Active Bitcoin Addresses",
-        "transaction_fees": "Bitcoin Transaction Fees",
-        "mempool_size": "Bitcoin Mempool Size",
-        "hash_rate": "Bitcoin Network Hash Rate",
-        "difficulty": "Bitcoin Network Difficulty",
-        "utxo_set_size": "Bitcoin UTXO Set Size"
-    }
-    
-    return metric_mapping.get(metric, metric.replace("_", " ").title())
-
-
-def format_predicate(predicate: str) -> str:
-    """
-    Format a predicate for natural language.
-    
-    Args:
-        predicate: The raw predicate from the triplet
-        
-    Returns:
-        Formatted predicate
-    """
-    # Common predicates mapping
-    predicate_mapping = {
-        "HAS_HASH": "has hash",
-        "HAS_HEIGHT": "has height",
-        "CREATED_AT": "was created at",
-        "HAS_DATE": "occurred on",
-        "HAS_DIFFICULTY": "has difficulty",
-        "HAS_TRANSACTION_COUNT": "contains",
-        "CONTAINS_TRANSACTION": "contains",
-        "BELONGS_TO_BLOCK": "belongs to",
-        "FOLLOWS": "follows",
-        "PRECEDES": "precedes",
-        "CREATED_ON": "was created on",
-        "HAS_VALUE": "has value",
-        "RECORDED_AT": "was recorded at",
-        "HAS_INDICATOR_TYPE": "is of type",
-        "MEASURED_ON": "was measured on",
-        "HAS_DISPLAY_NAME": "is displayed as",
-        "HAS_UNIT": "is measured in",
-        "HAS_DESCRIPTION": "is described as",
-        "HAS_PERIOD": "has period",
-        "MEASURED_AT": "was measured at",
-        "INFLUENCES": "influences",
-        "INFLUENCED_BY": "is influenced by",
-        "IMPACTS": "impacts",
-        "IMPACTED_BY": "is impacted by"
-    }
-    
-    # Try direct mapping
-    if predicate in predicate_mapping:
-        return predicate_mapping[predicate]
-    
-    # Handle HAS_X predicates
-    if predicate.startswith("HAS_"):
-        attr = predicate[4:].lower().replace("_", " ")
-        return f"has {attr}"
-    
-    # Handle CORRELATES_WITH_X predicates
-    if "CORRELATES_WITH" in predicate:
-        return "correlates with"
-    
-    # Handle OBSERVED_DURING_X_VALUE predicates
-    if "_VALUE" in predicate and "OBSERVED_DURING" in predicate:
-        return "was observed during"
-    
-    # Default: replace underscores with spaces and lowercase
-    return predicate.replace("_", " ").lower()
-
-
-def is_date_or_timestamp(value: str) -> bool:
-    """Check if a value is a date or timestamp"""
-    # Check for ISO date format (YYYY-MM-DD)
-    if re.match(r'^\d{4}-\d{2}-\d{2}$', value):
-        return True
-    
-    # Check for datetime format (YYYY-MM-DD HH:MM:SS)
-    if re.match(r'^\d{4}-\d{2}-\d{2} \d{2}[.:]\d{2}[.:]\d{2}$', value):
-        return True
-    
-    return False
-
-def parse_datetime(text: str):
-    """
-    Extracts a date or datetime from a string.
-    """
-    # Pattern to match datetime first (date + time)
-    datetime_pattern = r'(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})'
-    # Pattern to match date only
-    date_pattern = r'(\d{4}-\d{2}-\d{2})'
-    # Why did I add this ;(
-    readable_date_pattern = r'(\d{1,2}(st|nd|rd|th)?\s+[A-Za-z]+\s+\d{4})'
-
-    match = re.search(datetime_pattern, text)
-    if match:
-        dt_str = match.group(1)
-        return datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S")
-    
-    match = re.search(date_pattern, text)
-    if match:
-        date_str = match.group(1)
-        return datetime.strptime(date_str, "%Y-%m-%d")
-    
-    match = re.search(readable_date_pattern, text)
-    if match:
-        date_str = match.group(1)
-        # Clean suffixes like 'th', 'st', 'nd', 'rd'
-        date_str_clean = re.sub(r'(st|nd|rd|th)', '', date_str)
-        try:
-            return datetime.strptime(date_str_clean.strip(), "%d %B %Y")
-        except ValueError:
-            return None
-
-    return None
-
-def is_numeric(value: str) -> bool:
-    """Check if a value is numeric"""
-    try:
-        float(value)
-        return True
-    except (ValueError, TypeError):
-        return False
-
