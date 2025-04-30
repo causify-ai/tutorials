@@ -68,12 +68,12 @@ The structure used:
   ```python
   threshold = mean + 2 * std
   ```
-- Detected spikes on high-engagement days (e.g., 2025-01-21).
+- Detected spikes on high-engagement days (e.g., 2025-01-27).
 
 ### 4. Forecasting with ARIMA
 - Applied ARIMA on each event type.
 - Flat forecasts captured general level but struggled with fluctuations.
-- Best performance on `app_login` (MAE: 5.80, RMSE: 7.72)
+- Best performance on `email_opened` (MAE: 6.20, RMSE: 7.14)
 
 ### 5. Anomaly Detection (Z-Score)
 - Z-scores used to identify statistically significant highs/lows.
@@ -82,8 +82,8 @@ The structure used:
 
 | Date       | Count | Z-Score | Type        |
 |------------|-------|---------|-------------|
-| 2025-03-15 | 102   | +2.15   | High spike  |
-| 2025-03-14 | 65    | -2.18   | Sharp drop  |
+| 2025-03-05 | 109   | +2.62   | High spike  |
+| 2025-12-11 | 56    | -2.87   | Sharp drop  |
 
 ---
 
@@ -91,9 +91,9 @@ The structure used:
 
 | Event        | MAE   | RMSE  | Interpretation           |
 |--------------|-------|-------|---------------------------|
-| email_opened | 8.11  | 9.72  | Struggled with volatility |
-| app_login    | 5.80  | 7.72  | Best performance          |
-| clicked      | 6.39  | 7.43  | Moderate, missed spikes   |
+| email_opened | 6.20  | 7.14  |  Best performance  |
+| app_login    | 9.32  | 10.02 |  Moderate, missed spikes   |
+| clicked      | 9.82  | 11.61 |  Struggled with volatility  |
 
 ---
 
