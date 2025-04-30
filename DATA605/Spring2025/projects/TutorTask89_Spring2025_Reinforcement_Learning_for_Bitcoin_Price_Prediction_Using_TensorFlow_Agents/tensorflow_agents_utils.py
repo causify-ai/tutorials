@@ -10,6 +10,7 @@ Functions include:
 - localize_to_timezone: Converts a naive datetime or string to a timezone-aware pandas Timestamp.
 - split_yahoo_data: Splits the DataFrame into training, testing, and validation sets.
 - calculate_features: Computes a suite of features on the DataFrame, including log returns and simple moving averages.
+- calculate_normalization_params: Calculates normalization parameters for specified columns in the DataFrame.
 """
 
 import os
@@ -138,6 +139,8 @@ def save_to_csv(df: pd.DataFrame, file_path: str) -> None:
 
     :param df: DataFrame to save
     :param file_path: Path to the CSV file
+    :param save_index: Whether to save the DataFrame index to the CSV file
+    :return: None
     """
     try:
         os.makedirs("data", exist_ok=True)
@@ -228,23 +231,106 @@ def split_yahoo_data(
 # Feature Calculation (Log Returns and SMAs)
 # #############################################################################
 def calculate_features(
-    df: pd.DataFrame, sma_windows: dict = {"SMA_20": 20}, drop_na: bool = True
+    df: pd.DataFrame,
+    price_sma_windows: dict = {"Price_SMA_20": 20},
+    volume_sma_windows: dict = {"Volume_SMA_20": 20},
+    drop_na: bool = True,
 ) -> pd.DataFrame:
     """
     Compute a suite of features on the DataFrame, including log returns and simple moving averages.
 
-    :param df: DataFrame with a 'Close' column and datetime index
-    :param sma_windows: dict mapping column names to SMA window sizes, e.g., {'SMA_20': 20}
+    :param df: DataFrame with 'Close' and 'Volume' columns and datetime index
+    :param price_sma_windows: dict mapping column names to price SMA window sizes, e.g., {'Price_SMA_20': 20}
+    :param volume_sma_windows: dict mapping column names to volume SMA window sizes, e.g., {'Volume_SMA_20': 20}
     :param drop_na: whether to drop rows with NaN after feature calculations
     :return: DataFrame with new feature columns added
     """
-    # Compute log returns
-    df = df.copy()
-    df["Log_Returns"] = np.log(df["Close"] / df["Close"].shift(1))
-    # Compute SMAs
-    for name, window in sma_windows.items():
-        df[name] = df["Close"].rolling(window=window).mean()
-    if drop_na:
-        df = df.dropna()
-    _LOG.info(f"Feature calculation complete. Data shape: {df.shape}")
-    return df
+    try:
+        # Create a copy to avoid modifying the original
+        df = df.copy()
+        # Compute log returns for price
+        df["Log_Returns"] = np.log(df["Close"] / df["Close"].shift(1))
+        # Compute price SMAs
+        for name, window in price_sma_windows.items():
+            df[name] = df["Close"].rolling(window=window).mean()
+        # Compute volume SMAs
+        for name, window in volume_sma_windows.items():
+            df[name] = df["Volume"].rolling(window=window).mean()
+        # Remove rows with missing values if required
+        if drop_na:
+            df = df.dropna()
+        _LOG.info(f"Data shape after feature calculation: {df.shape}")
+        return df
+    except Exception as e:
+        _LOG.error(f"Error calculating features: {e}")
+        raise
+
+
+# #############################################################################
+# Normalization Parameters Calculation
+# #############################################################################
+def calculate_normalization_params(
+    df: pd.DataFrame,
+    columns: list,
+    method: str = "zscore",
+) -> dict:
+    """
+    Calculate normalization parameters for the specified columns in the DataFrame.
+
+    :param df: DataFrame containing the data
+    :param columns: List of columns to calculate parameters for
+    :param method: Normalization method ('minmax' or 'zscore')
+    :return: Dictionary of normalization parameters for each column
+    """
+    try:
+        params = {}
+        if method == "minmax":
+            for col in columns:
+                min_val = df[col].min()
+                max_val = df[col].max()
+                params[col] = {"min": min_val, "max": max_val}
+                _LOG.info(f"Column {col} - Min: {min_val}, Max: {max_val}")
+        elif method == "zscore":
+            for col in columns:
+                mean = df[col].mean()
+                std = df[col].std()
+                params[col] = {"mean": mean, "std": std}
+                _LOG.info(f"Column {col} - Mean: {mean}, Std: {std}")
+        else:
+            raise ValueError(f"Unsupported normalization method: {method}")
+        return params
+    except Exception as e:
+        _LOG.error(f"Error calculating normalization parameters: {e}")
+        raise
+
+
+# #############################################################################
+# Normalize Data
+# #############################################################################
+def normalize_data(dataframes: list, params: dict) -> tuple:
+    """
+    Normalize the training, validation, and test data using the calculated parameters.
+
+    :param dataframes: List of DataFrames to normalize
+    :param params: Dictionary of normalization parameters
+    :return: Tuple of normalized DataFrames
+    """
+    try:
+        for col, stat in params.items():
+            if "min" in stat:
+                min_val = stat["min"]
+                max_val = stat["max"]
+                for df in dataframes:
+                    df[col] = (df[col] - min_val) / (max_val - min_val)
+            elif "mean" in stat:
+                mean = stat["mean"]
+                std = stat["std"]
+                for df in dataframes:
+                    df[col] = (df[col] - mean) / std
+        _LOG.info(
+            f"Data normalization complete. Data shapes: {[df.shape for df in dataframes]}"
+        )
+        return dataframes[0], dataframes[1], dataframes[2]
+    except Exception as e:
+        _LOG.error(f"Error normalizing data: {e}")
+        raise
