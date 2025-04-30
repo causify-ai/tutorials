@@ -4,16 +4,19 @@ This file contains utlility functions for the project.
 Functions include:
 
 - logging_setup: Sets up the logger with customizable handlers for console and file output.
-- load_yahoo_data: Loads historical Bitcoin OHLCV data from Yahoo Finance.
-- clean_yahoo_data: Cleans historical Bitcoin OHLCV data from Yahoo Finance.
-- save_to_csv: Saves any DataFrame to a CSV file in data folder.
-
+- load_yahoo_data: Fetches historical Bitcoin OHLCV data from Yahoo Finance.
+- clean_yahoo_data: Cleans the historical Bitcoin data fetched from Yahoo Finance.
+- save_to_csv: Saves the DataFrame to a CSV file.
+- localize_to_timezone: Converts a naive datetime or string to a timezone-aware pandas Timestamp.
+- split_yahoo_data: Splits the DataFrame into training, testing, and validation sets.
+- calculate_features: Computes a suite of features on the DataFrame, including log returns and simple moving averages.
 """
 
 import os
 import logging
-import yfinance as yf
+import numpy as np
 import pandas as pd
+import yfinance as yf
 
 
 # #############################################################################
@@ -116,6 +119,10 @@ def clean_yahoo_data(
         if missing_values.any():
             _LOG.warning(f"Missing values found in DataFrame: {df.isna().sum()}")
             df = df.dropna()
+        if df.index.tzinfo is not None:
+            _LOG.info(f"DataFrame timezone: {df.index.tzinfo}")
+        else:
+            _LOG.info("DataFrame has no timezone")
         return df
     except Exception as e:
         _LOG.error(f"Error cleaning data: {e}")
@@ -139,3 +146,105 @@ def save_to_csv(df: pd.DataFrame, file_path: str) -> None:
     except Exception as e:
         _LOG.error(f"Error saving data to CSV: {e}")
         raise
+
+
+# #############################################################################
+# Localize datetime to DataFrame timezone
+# #############################################################################
+def localize_to_timezone(input_date: str, timezone: str) -> pd.Timestamp:
+    """
+    Convert a naive datetime or string to a timezone-aware pandas Timestamp.
+
+    :param input_date: The input date, either as a datetime object or a string
+    :param timezone: The timezone to localize to (e.g., 'UTC', 'America/New_York')
+    :return: A timezone-aware pandas Timestamp
+    """
+    return pd.to_datetime(input_date).tz_localize(timezone)
+
+
+# #############################################################################
+# Data Split for Training, Validation, and Testing
+# #############################################################################
+def split_yahoo_data(
+    df: pd.DataFrame,
+    train_start_date: str = "2014-09-17",
+    validation_start_date: str = "2022-02-21",
+    test_start_date: str = "2024-01-01",
+    train_data_path: str = "data/train_data.csv",
+    validation_data_path: str = "data/validation_data.csv",
+    test_data_path: str = "data/test_data.csv",
+) -> None:
+    """
+    Split the DataFrame into training, testing, and validation sets.
+
+    :param df: DataFrame containing the historical data
+    :param train_start_date: Start date for the training set
+    :param validation_start_date: Start date for the validation set
+    :param test_start_date: Start date for the testing set
+    :param train_data_path: Path to save the training data
+    :param validation_data_path: Path to save the validation data
+    :param test_data_path: Path to save the testing data
+    """
+    try:
+        # Check if DataFrame index has timezone information
+        has_tz = df.index.tzinfo is not None
+        if has_tz:
+            # If DataFrame has timezone, localize the input dates to match
+            train_start_date = localize_to_timezone(train_start_date, df.index.tzinfo)
+            validation_start_date = localize_to_timezone(
+                validation_start_date, df.index.tzinfo
+            )
+            test_start_date = localize_to_timezone(test_start_date, df.index.tzinfo)
+        else:
+            _LOG.info("DataFrame has no timezone")
+            # If DataFrame has no timezone, keep dates timezone-naive
+            train_start_date = pd.to_datetime(train_start_date)
+            validation_start_date = pd.to_datetime(validation_start_date)
+            test_start_date = pd.to_datetime(test_start_date)
+        _LOG.info(
+            f"Train start: {train_start_date}, Validation start: {validation_start_date}, Test start: {test_start_date}"
+        )
+        # Split the data into training, validation, and testing sets
+        train_data = df.loc[
+            train_start_date : validation_start_date - pd.Timedelta(days=1)
+        ]
+        validation_data = df.loc[
+            validation_start_date : test_start_date - pd.Timedelta(days=1)
+        ]
+        test_data = df.loc[test_start_date:]
+        _LOG.info(
+            f"Train shape: {train_data.shape}, Validation shape: {validation_data.shape}, Test shape: {test_data.shape}"
+        )
+        # Save the split data to CSV files
+        save_to_csv(train_data, train_data_path)
+        save_to_csv(validation_data, validation_data_path)
+        save_to_csv(test_data, test_data_path)
+    except Exception as e:
+        _LOG.error(f"Error splitting data: {e}")
+        raise
+
+
+# #############################################################################
+# Feature Calculation (Log Returns and SMAs)
+# #############################################################################
+def calculate_features(
+    df: pd.DataFrame, sma_windows: dict = {"SMA_20": 20}, drop_na: bool = True
+) -> pd.DataFrame:
+    """
+    Compute a suite of features on the DataFrame, including log returns and simple moving averages.
+
+    :param df: DataFrame with a 'Close' column and datetime index
+    :param sma_windows: dict mapping column names to SMA window sizes, e.g., {'SMA_20': 20}
+    :param drop_na: whether to drop rows with NaN after feature calculations
+    :return: DataFrame with new feature columns added
+    """
+    # Compute log returns
+    df = df.copy()
+    df["Log_Returns"] = np.log(df["Close"] / df["Close"].shift(1))
+    # Compute SMAs
+    for name, window in sma_windows.items():
+        df[name] = df["Close"].rolling(window=window).mean()
+    if drop_na:
+        df = df.dropna()
+    _LOG.info(f"Feature calculation complete. Data shape: {df.shape}")
+    return df

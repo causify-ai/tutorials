@@ -16,7 +16,9 @@ if __name__ == "__main__":
             start_date="2014-09-17",
             end_date="2025-04-29",
         )
-        cleaned_data = utils.clean_yahoo_data(data)
-        utils.save_to_csv(cleaned_data, "data/yahoo_btc_data.csv")
+        cleaned_df = utils.clean_yahoo_data(data)
+        features_df = utils.calculate_features(cleaned_df)
+        utils.save_to_csv(features_df, "data/yahoo_btc_data.csv")
+        utils.split_yahoo_data(features_df)
     except Exception as e:
         _LOG.error(f"An error occurred: {e}")
