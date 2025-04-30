@@ -6,9 +6,9 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.16.7
+#       jupytext_version: 1.17.0
 #   kernelspec:
-#     display_name: Python 3 (ipykernel)
+#     display_name: client_venv.helpers
 #     language: python
 #     name: python3
 # ---
@@ -95,9 +95,8 @@ N = 20
 
 # %%
 s3 = hs3.get_s3fs("ck")
-# stream = s3.open(fred_path, mode="r")
-# fred = pd.read_csv(stream, engine="python", on_bad_lines="skip")
-fred = pd.read_csv("fred_series_metadata_saved_new.csv")
+stream = s3.open(fred_path, mode="r")
+fred = pd.read_csv(stream, engine="python", on_bad_lines="skip")
 # Load country to continent mapper.
 with s3.open(country_continent_path) as f:
     cc = pd.read_csv(f)
