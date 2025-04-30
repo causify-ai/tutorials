@@ -1,7 +1,9 @@
 import datetime
+from datetime import timezone
 import time
 import logging
 import os
+import pandas as pd
 from typing import Any, Dict, List, Optional, Tuple
 
 import github
@@ -60,8 +62,6 @@ class GitHubAPI:
 # Utility APIs
 # #############################################################################
 
-
-# TODO(prahar08modi): Test the function using pytest
 def get_repo_names(client: github.Github, org_name: str) -> Dict[str, List[str]]:
     """
     Retrieve a list of repositories under a specific organization
@@ -83,7 +83,6 @@ def get_repo_names(client: github.Github, org_name: str) -> Dict[str, List[str]]
     return result
 
 
-# TODO(prahar08modi): Test the function using pytest
 def get_github_contributors(
     client: github.Github, repo_names: List[str]
 ) -> Dict[str, List[str]]:
@@ -133,6 +132,23 @@ def normalize_period_to_utc(
         )
         for dt in period
     )
+
+def wait_for_rate_limit_reset(client: github.Github):
+    """
+    Wait until the Github rate limit resets
+
+    :param client: authenticated instance of the PyGithub client
+    """
+    rate_limit = client.get_rate_limit()
+    remaining = rate_limit.core.remaining
+    reset_timestamp = rate_limit.core.reset.timestamp()
+    current_timestamp = datetime.datetime.now(timezone.utc).timestamp()
+
+    if remaining == 0:
+        sleep_time = reset_timestamp - current_timestamp
+        if sleep_time > 0:
+            print(f"[Rate Limit Hit] Sleeping for {sleep_time/60:.2f} minutes...")
+            time.sleep(sleep_time + 5)
 
 # #############################################################################
 # Global Metrics APIs
@@ -739,3 +755,129 @@ def get_prs_not_merged_by_person(
         "period": result["period"],
         "prs_per_repository": result["prs_per_repository"],
     }
+
+# #############################################################################
+# Stats Comparison APIs
+# #############################################################################
+
+def collect_user_statistics(
+    client: github.Github,
+    usernames: List[str],
+    org_name: str,
+    period: Optional[Tuple[datetime.datetime, datetime.datetime]] = None,
+    repo_names: Optional[List[str]] = None,
+) -> List[Dict[str, Any]]:
+    """
+    Collect GitHub activity metrics for a list of users with rate-limit-aware retry logic.
+    Includes total commits, PRs, additions, deletions, and repository-level breakdown.
+
+    :param client: authenticated instance of the PyGithub client
+    :param usernames: list of GitHub usernames to process
+    :param org_name: name of the GitHub organization
+    :param period: optional tuple of start and end datetime for filtering activity
+    :param repo_names: optional list of repositories to scope the query; if None, uses all repos in org
+    :return: list of dictionaries containing per-user statistics, including:
+        - Username (str)
+        - Total Commits (int)
+        - Total PRs (int)
+        - Total Additions (int)
+        - Total Deletions (int)
+        - Total Changes (int)
+        - Repo Breakdown (Dict[str, Dict[str, int]])
+    """
+    results = []
+    pending_usernames = usernames.copy()
+    while pending_usernames:
+        username = pending_usernames[0]
+        try:
+            print(f"Processing user: {username}")
+            wait_for_rate_limit_reset(client)
+            commits_data = get_commits_by_person(
+                client=client,
+                username=username,
+                org_name=org_name,
+                period=period,
+                repo_names=repo_names,
+            )
+            wait_for_rate_limit_reset(client)
+            prs_data = get_prs_by_person(
+                client=client,
+                username=username,
+                org_name=org_name,
+                period=period,
+                state="all",
+                repo_names=repo_names,
+            )
+            total_commits = commits_data["total_commits"]
+            total_additions = 0
+            total_deletions = 0
+            repo_breakdown = {}
+            for repo, branches in commits_data["commits_per_repository"].items():
+                repo_add = 0
+                repo_del = 0
+                repo_commit = 0
+                repo_master_commit = 0
+                for branch, stats in branches.items():
+                    repo_add += stats["additions"]
+                    repo_del += stats["deletions"]
+                    repo_commit += stats["commits"]
+                    if branch == "master":
+                        repo_master_commit = stats["commits"]
+                repo_breakdown[repo] = {
+                    "repo_commits": repo_commit,
+                    "repo_master_commits": repo_master_commit,
+                    "repo_additions": repo_add,
+                    "repo_deletions": repo_del,
+                    "repo_total_changes": repo_add + repo_del,
+                }
+                total_additions += repo_add
+                total_deletions += repo_del
+            results.append({
+                "Username": username,
+                "Total Commits": total_commits,
+                "Total PRs": prs_data["total_prs"],
+                "Total Additions": total_additions,
+                "Total Deletions": total_deletions,
+                "Total Changes": total_additions + total_deletions,
+                "Repo Breakdown": repo_breakdown,
+            })
+            pending_usernames.pop(0)
+            print(f"Finished processing user: {username}")
+        except Exception as e:
+            _LOG.error("Error occurred while processing user '%s': %s", username, e)
+            print(f"Retrying user after rate-limit reset: {username}")
+            pending_usernames.insert(0, username)
+            wait_for_rate_limit_reset(client)
+    return results
+
+def extract_commits_to_master(df_comparison: "pd.DataFrame") -> "pd.DataFrame":
+    """
+    Extract the 'Repo Breakdown' column of the user comparison dataframe to
+    extract the number of commits to the 'master' branch for each user and
+    repository.
+
+    :param df_comparison: DataFrame containing user-level GitHub activity metrics.
+                          It must contain columns:
+                            - 'Username' (str)
+                            - 'Repo Breakdown' (Dict[str, Dict[str, int]])
+    :return: A DataFrame with one row per (user, repository) pair, containing:
+             - Username (str)
+             - Repository (str)
+             - Commits to Master (int) – only for repos with > 0 master commits
+    """
+    repo_master_commit_records = []
+
+    for _, row in df_comparison.iterrows():
+        username = row["Username"]
+        repo_breakdown = row.get("Repo Breakdown", {})
+
+        for repo_name, repo_stats in repo_breakdown.items():
+            master_commits = repo_stats.get("repo_master_commits", 0)
+            if master_commits > 0:
+                repo_master_commit_records.append({
+                    "Username": username,
+                    "Repository": repo_name,
+                    "Commits to Master": master_commits,
+                })
+
+    return pd.DataFrame(repo_master_commit_records)

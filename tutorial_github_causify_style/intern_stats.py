@@ -95,7 +95,7 @@ config = {
     # Replace with actual GitHub organization or username.
     "org_name": "causify-ai",  
     "start_date": (datetime(2025, 2, 1)),
-    "end_date": (datetime(2025, 4, 28)),
+    "end_date": (datetime(2025, 4, 29)),
     # Load from environment variable.
     "access_token": access_token,  
 }
@@ -124,195 +124,19 @@ usernames = ["aangelo9", "allenmatt10", "indrayudd", "neomisule", "Peeyush4", "s
 # Define Repositories to search
 repos = ["helpers", "tutorials"]
 
-# Initialize results container and tracking
-comparison_results = []
-completed_users = set()
+results = github_utils.collect_user_statistics(
+    client=client,
+    usernames=usernames,
+    org_name=config["org_name"],
+    period=(config["start_date"], config["end_date"]),
+    repo_names=repos
+)
 
-# Helper to wait for rate limit reset
-def wait_for_rate_limit_reset(client):
-    rate_limit = client.get_rate_limit()
-    remaining = rate_limit.core.remaining
-    reset_timestamp = rate_limit.core.reset.timestamp()
-    current_timestamp = datetime.now(timezone.utc).timestamp()
-
-    if remaining == 0:
-        sleep_time = reset_timestamp - current_timestamp
-        if sleep_time > 0:
-            print(f"[Rate Limit Hit] Sleeping for {sleep_time/60:.2f} minutes...")
-            time.sleep(sleep_time + 5)  # Add 5 seconds buffer
-
-# Loop until all usernames are processed
-pending_usernames = usernames.copy()
-
-while pending_usernames:
-    username = pending_usernames[0]
-    try:
-        print(f"Processing user: {username}")
-
-        wait_for_rate_limit_reset(client)  # Check before calling
-        commits_data = github_utils.get_commits_by_person(
-            client, username, config["org_name"],
-            period=(config["start_date"], config["end_date"]),
-            repo_names=repos
-        )
-
-        wait_for_rate_limit_reset(client)  # Check again
-        
-        prs_data = github_utils.get_prs_by_person(
-            client, username, config["org_name"],
-            period=(config["start_date"], config["end_date"]),
-            state="all",
-            repo_names=repos
-        )
-
-        # Initialize values
-        total_commits = commits_data["total_commits"]
-        total_additions = 0
-        total_deletions = 0
-        repo_breakdown = {}
-
-        for repo, branches in commits_data["commits_per_repository"].items():
-            repo_additions = 0
-            repo_deletions = 0
-            repo_commits = 0
-            repo_master_commits = 0
-
-            for branch, stats in branches.items():
-                repo_additions += stats["additions"]
-                repo_deletions += stats["deletions"]
-                repo_commits += stats["commits"]
-
-                if branch == "master":
-                    repo_master_commits = stats["commits"]
-
-            repo_breakdown[repo] = {
-                "repo_commits": repo_commits,
-                "repo_master_commits": repo_master_commits,
-                "repo_additions": repo_additions,
-                "repo_deletions": repo_deletions,
-                "repo_total_changes": repo_additions + repo_deletions
-            }
-
-            total_additions += repo_additions
-            total_deletions += repo_deletions
-        
-        comparison_results.append({
-            "Username": username,
-            "Total Commits": total_commits,
-            "Total PRs": prs_data["total_prs"],
-            "Total Additions": total_additions,
-            "Total Deletions": total_deletions,
-            "Total Changes": total_additions + total_deletions,
-            "Repo Breakdown": repo_breakdown,
-        })
-
-        pending_usernames.pop(0)  # Pop the first user
-        completed_users.add(username)
-        print(f"Finished processing user: {username}")
-
-    except Exception as e:
-        print(f"Error occurred while processing user {username}: {e}")
-        print("Will retry after rate limit reset...")
-        pending_usernames.insert(0, username)  # Retry this user later
-
-        # Wait for rate limit reset before trying again
-        wait_for_rate_limit_reset(client)
-
-# Finally create dataframe
-df_comparison = pd.DataFrame(comparison_results)
+df_comparison = pd.DataFrame(results)
 df_comparison
 
 # %%
-# Define developer GitHub usernames.
-usernames = ["aangelo9", "allenmatt10", "indrayudd", "neomisule", "Peeyush4", "sandeepthalapanane"]
-
-# Define Repositories to search
-repos = ["helpers", "tutorials"]
-
-# Initialize results container.
-comparison_results = []
-
-# Collect metrics for each user.
-for username in usernames:
-    commits_data = github_utils.get_commits_by_person(
-        client, username, config["org_name"],
-        period=(config["start_date"], config["end_date"]),
-        repo_names=repos
-    )
-    prs_data = github_utils.get_prs_by_person(
-        client, username, config["org_name"],
-        period=(config["start_date"], config["end_date"]),
-        state="all",
-        repo_names=repos
-    )
-
-    # Initialize values
-    total_commits = commits_data["total_commits"]
-    commits_to_master = 0
-    total_additions = 0
-    total_deletions = 0
-    repo_breakdown = {}
-
-    # Loop through each repo and branch inside commits_per_repository
-    for repo, branches in commits_data["commits_per_repository"].items():
-        repo_additions = 0
-        repo_deletions = 0
-        repo_commits = 0
-        repo_master_commits = 0
-
-        for branch, stats in branches.items():
-            repo_additions += stats["additions"]
-            repo_deletions += stats["deletions"]
-            repo_commits += stats["commits"]
-
-            if branch == "master":
-                repo_master_commits = stats["commits"]
-
-        repo_breakdown[repo] = {
-            "repo_commits": repo_commits,
-            "repo_master_commits": repo_master_commits,
-            "repo_additions": repo_additions,
-            "repo_deletions": repo_deletions,
-            "repo_total_changes": repo_additions + repo_deletions
-        }
-
-        total_additions += repo_additions
-        total_deletions += repo_deletions
-    
-    comparison_results.append({
-        "Username": username,
-        "Total Commits": total_commits,
-        "Total PRs": prs_data["total_prs"],
-        "Total Additions": total_additions,
-        "Total Deletions": total_deletions,
-        "Total Changes": total_additions + total_deletions,
-        "Repo Breakdown": repo_breakdown,
-    })
-
-# Create DataFrame.
-df_comparison = pd.DataFrame(comparison_results)
-df_comparison
-
-# %%
-# Expand Repo Breakdown into a new flat dataframe
-repo_master_commit_records = []
-
-for _, row in df_comparison.iterrows():
-    username = row["Username"]
-    repo_breakdown = row["Repo Breakdown"]
-    for repo_name, repo_stats in repo_breakdown.items():
-        repo_master_commit_records.append({
-            "Username": username,
-            "Repository": repo_name,
-            "Commits to Master": repo_stats.get("repo_master_commits", 0)
-        })
-
-# Create a flat DataFrame
-df_master_commits = pd.DataFrame(repo_master_commit_records)
-
-# Only keep rows where there are actually master commits (optional filtering)
-df_master_commits = df_master_commits[df_master_commits["Commits to Master"] > 0]
-
+df_master_commits = github_utils.extract_commits_to_master(df_comparison)
 df_master_commits
 
 # %% [markdown]
@@ -327,7 +151,7 @@ fig_total_commits = px.bar(
 )
 fig_total_commits.show()
 
-# Commits to master branch
+# Commits to master branch.
 fig = px.bar(
     df_master_commits,
     x="Username",
@@ -339,7 +163,7 @@ fig = px.bar(
 )
 fig.show()
 
-# Total Line changes
+# Total Line changes.
 fig_total_changes = px.bar(
     df_comparison, x="Username", y="Total Changes",
     title="Total Lines Changed per Developer",
