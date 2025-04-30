@@ -1,11 +1,12 @@
 # ---
 # jupyter:
 #   jupytext:
+#     formats: ipynb,py:percent
 #     text_representation:
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.17.0
+#       jupytext_version: 1.16.7
 #   kernelspec:
 #     display_name: client_venv.helpers
 #     language: python
@@ -154,8 +155,7 @@ def _infer_country(row: pd.Series, country2cont: Dict[str, str]) -> Optional[str
 
     :param row: row with data including tags and text fields
     :param country2cont: mapping from country names to continents
-    :return: first matching country if found, or np.nan if no match
-        exists
+    :return: first matching country if found, or nan if no match exists
     """
     for t in row["tags_list"] or []:
         tt = str(t).strip()
@@ -273,10 +273,10 @@ def plot_top_n_annotated_bar(
     show_coverage_note: bool = True,
 ) -> Tuple[matplotlib.figure.Figure, matplotlib.axes.Axes]:
     """
-    Plot the top N entries of counts as a bar chart and annotate each bar with
-    its percentage of total.
+    Plot the top N entries of counts as a bar chart.
 
-    You can optionally add a coverage note.
+    Annotate each bar with its percentage of total. Optionally add a
+    coverage note.
 
     :param counts: count values keyed by label
     :param total: total to compute percentages against
@@ -435,7 +435,6 @@ def plot_histograms(
         ax.invert_xaxis()
     # Optimize layout.
     plt.tight_layout()
-    # Finalize plot.
     return fig, ax
 
 
@@ -519,10 +518,10 @@ def plot_donut(
     :param sizes: values for each slice
     :param labels: labels for each slice
     :param title: chart title
-    :param colors: optional colors for slices
-    :param explode: optional fractional offset for slices
-    :param figsize: optional figure size
-    :param fontsize: optional font size for slice annotations
+    :param colors: colors for slices
+    :param explode: fractional offset for slices
+    :param figsize: figure size
+    :param fontsize: font size for slice annotations
     :return: figure and axes objects
     """
     # Create figure and axes.
@@ -638,7 +637,7 @@ def prepare_top_counts(
     :param top_n: take only the top N after all other operations
     :param filter_mask: mask to pre‐filter df
     :param explode: if True, column must be list‐like and will be exploded first
-    :param split: (separator, level) to split strings, e.g. (";", 0) for root or (";", -1) for leaf
+    :param split: (separator, level) to split strings, e.g. (";", 0) for root
     :param drop: indices to drop
     :param rename:i ndex renames
     :param threshold: if set, group any value with count < threshold into a single cell
@@ -708,9 +707,9 @@ def get_binary_counts(
     Return binary counts from dataframe.
 
     :param df: input data
-    :param mask: filter for rows (optional)
-    :param pattern: regex pattern to match in columns (optional)
-    :param search_cols: list of column names to search (optional)
+    :param mask: filter for rows
+    :param pattern: regex pattern to match in columns
+    :param search_cols: list of column names to search
     :param labels: two-element list with labels for positive and
         negative cases
     :return: labels and a two-element list with counts for positive and
@@ -756,8 +755,7 @@ def prepare_crosstab(
     :param index_col: field to group as rows
     :param pivot_col: field to pivot as columns
     :param top_n: number of top values of index_col to include
-        (optional)
-    :param index_list: exact list of index values to include (optional)
+    :param index_list: exact list of index values to include
     :param wrap_width: number of characters before wrapping labels
     :return: the reindexed table and list of wrapped labels
     """
@@ -1450,7 +1448,7 @@ plt.show()
 freq_counts, _ = prepare_top_counts(
     fred,
     "freq_base",
-    threshold=100,  # everything <100 → 'Other'
+    threshold=100,
     include_other=False,
 )
 # Plot.
@@ -1458,7 +1456,7 @@ plot_top_n_annotated_bar(
     counts=freq_counts,
     total=total,
     top_n=len(freq_counts),
-    wrap_width=25,  # wrap long labels
+    wrap_width=25,
     figsize=(10, 6),
     dpi=100,
     xlabel="Base Frequency",
@@ -1469,7 +1467,7 @@ plot_top_n_annotated_bar(
     fontsize_labels=12,
     fontsize_annotation=10,
     formatter=FuncFormatter(lambda y, pos: f"{int(y):,}"),
-    show_coverage_note=False,  # omit coverage note
+    show_coverage_note=False,
     annotation_fmt="{pct:.2f}%",
 )
 plt.tight_layout()
@@ -1674,13 +1672,13 @@ plot_top_n_annotated_bar(
     counts=leaf_counts,
     total=total_series,
     top_n=20,
-    wrap_width=25,  # wrap long leaf names
+    wrap_width=25,
     figsize=(12, 6),
     dpi=100,
     xlabel="Leaf Category",
     ylabel="Series Count",
     title="Top 20 Leaf Categories by Series Count",
-    rotation=90,  # vertical x‐labels
+    rotation=90,
     fontsize_title=16,
     fontsize_labels=10,
     fontsize_annotation=10,
@@ -1743,13 +1741,13 @@ def _print_sub(
     """
     Print details of a single root category in the hierarchy.
 
-    :param root: the name of the root category being printed
-    :param rc: the series count for the root category
-    :param child_ct: counts for children under each root
-    :param grand_ct: counts for grandchildren under each child
+    :param root: name of the root category
+    :param rc: count of the root category
+    :param child_ct: count of children under the root
+    :param grand_ct: count of grandchildren under the child categories
     :param total: overall count
-    :param indent_str: string used for indentation
-    :param pct_fmt: string format for percentages
+    :param indent_str: character used for indentation
+    :param pct_fmt: format for percentages
     :return: None
     """
     # Compute root percentage.
@@ -1789,16 +1787,15 @@ def print_category_hierarchy(
     pct_fmt: str = "{:.2f}%",
 ) -> None:
     """
-    Print a simple ASCII tree of the top_n roots, their top-2 children, and
-    top-2 grandchildren.
+    Print a tree of the top N roots, their top-2 children, and so on.
 
     :param root_ct: counts for root categories
     :param child_ct: counts for children under each root
     :param grand_ct: counts for grandchildren under each child
     :param total: overall count
     :param top_n: number of root categories to print
-    :param indent_str: string used for indentation
-    :param pct_fmt: string format for percentages
+    :param indent_str: character for indentation
+    :param pct_fmt: format for percentages
     :return: None.
     """
     for root, rc in root_ct.most_common(top_n):
@@ -1848,13 +1845,13 @@ plot_top_n_annotated_bar(
     counts=tag_counts,
     total=total,
     top_n=N,
-    wrap_width=25,  # wrap long tag names
+    wrap_width=25,
     figsize=(12, 8),
     dpi=100,
     xlabel="Tag",
     ylabel="Series Count",
     title=f"Top {N} Semantically Unique Tags",
-    rotation=90,  # vertical x-labels
+    rotation=90,
     fontsize_title=16,
     fontsize_labels=10,
     fontsize_annotation=10,
@@ -1990,8 +1987,9 @@ def get_top_tags_by_root(
     top_n: int = 10,
 ) -> pd.DataFrame:
     """
-    For each root category, find the top-N most common tags excluding any in
-    redundant.
+    For each root category, find the top-N most common tags.
+
+    Exclude rednundancy.
 
     :param df: the source data containing category and tags columns
     :param categories_col: the name of the column with category data
@@ -2186,8 +2184,8 @@ def plot_choropleth_map(
     values,
     *,
     cmap: str = "viridis",
-    vmin: float | None = None,
-    vmax: float | None = None,
+    vmin: Optional[float] = None,
+    vmax: Optional[float] = None,
     style: str = "ggplot",
     figsize: tuple = (15, 10),
     dpi: int = 100,
@@ -2199,7 +2197,7 @@ def plot_choropleth_map(
     cbar_pad: float = 0.05,
     cbar_label: str = "",
     title: str = "",
-    title_kwargs: dict | None = None,
+    title_kwargs: Optional[dict] = None,
 ) -> Tuple[matplotlib.figure.Figure, matplotlib.axes.Axes]:
     """
     Plot a choropleth given a list of patch objects and corresponding values.
@@ -2207,20 +2205,20 @@ def plot_choropleth_map(
     :param patches: collection of patch objects for geographical areas
     :param values: numerical values corresponding to patches
     :param cmap: colormap name to use
-    :param vmin: minimum value for normalization optional
-    :param vmax: maximum value for normalization optional
-    :param style: style name for plot optional
-    :param figsize: figure dimensions optional
-    :param dpi: dots per inch resolution optional
-    :param facecolor: background color for plot area optional
-    :param edgecolor: color for patch boundaries optional
-    :param linewidth: line thickness for patch outlines optional
-    :param cbar_orientation: direction of colorbar optional
-    :param cbar_fraction: fraction parameter for colorbar size optional
-    :param cbar_pad: padding between plot and colorbar optional
-    :param cbar_label: label for colorbar optional
+    :param vmin: minimum value for normalization
+    :param vmax: maximum value for normalization
+    :param style: style name for plot
+    :param figsize: figure dimensions
+    :param dpi: dots per inch resolution
+    :param facecolor: background color for plot area
+    :param edgecolor: color for patch boundaries
+    :param linewidth: line thickness for patch outlines
+    :param cbar_orientation: direction of colorbar
+    :param cbar_fraction: fraction parameter for colorbar size
+    :param cbar_pad: padding between plot and colorbar
+    :param cbar_label: label for colorbar
     :param title: plot title
-    :param title_kwargs: optional keyword arguments for title formatting
+    :param title_kwargs: keyword arguments for title formatting
     :return: choropleth map
     """
     if style:
