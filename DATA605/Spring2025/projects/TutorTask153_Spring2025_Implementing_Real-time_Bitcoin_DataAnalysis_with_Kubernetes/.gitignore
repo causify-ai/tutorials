@@ -2,3 +2,4 @@ minikube-linux-amd64
 kubectl
 .env
 kubernetes/postgres-secret.yaml
+local_charts
