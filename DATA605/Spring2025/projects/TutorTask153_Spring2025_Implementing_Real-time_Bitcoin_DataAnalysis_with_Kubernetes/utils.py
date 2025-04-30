@@ -33,19 +33,42 @@ def fetch_price(coin_id: str, vs_currencies: str = "usd") -> pd.DataFrame:
     }).set_index("timestamp")
     return df
 
-def compute_moving_average(df: pd.DataFrame, window: int = 20) -> pd.DataFrame:
+def compute_moving_average(
+    coin_id: str,
+    vs_currency: str = "usd",
+    window: int = 20,
+    api_key: str = None
+) -> pd.DataFrame:
     """
-    Compute a rolling moving average on the price series.
+    Fetch the past 24 hours of hourly price data and compute a rolling moving average.
 
-    Args:
-        df: DataFrame with a 'price' column indexed by timestamp.
-        window: Window size in periods for the moving average.
+    - Uses /market_chart with days=2 (Demo Plan auto returns hourly data for days 2–90).
+    - Filters to the last 24 hours using a tz-aware cutoff to ensure no dtype mismatches.
 
-    Returns:
-        pd.DataFrame with a new column 'ma_{window}'.
+    Returns a DataFrame indexed by UTC timestamp with 'price' and 'ma_{window}'.
     """
+    url = f"https://api.coingecko.com/api/v3/coins/{coin_id}/market_chart"
+    params = {"vs_currency": vs_currency, "days": 2}
+    resp = requests.get(url, params=params)
+    resp.raise_for_status()
+    prices = resp.json().get('prices', [])
+    if not prices:
+        raise ValueError(f"No historical price data returned for {coin_id}")
+
+    # Build a DataFrame of prices with timezone-aware UTC index
+    df = pd.DataFrame(prices, columns=['timestamp_ms', 'price'])
+    times = pd.to_datetime(df['timestamp_ms'], unit='ms', utc=True)
+    df = df.set_index(times)
+    df.index.name = 'timestamp'
+    df = df[['price']]
+
+    # Filter last 24 hours with tz-aware cutoff
+    cutoff = pd.Timestamp.now(tz='UTC') - pd.Timedelta(days=1)
+    df = df.loc[df.index >= cutoff]
+
+    # Compute rolling average
     ma_col = f"ma_{window}"
-    df[ma_col] = df["price"].rolling(window=window).mean()
+    df[ma_col] = df['price'].rolling(window=window, min_periods=1).mean()
     return df
 
 def fetch_market_data(
