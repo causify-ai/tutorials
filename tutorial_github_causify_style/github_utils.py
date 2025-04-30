@@ -1,13 +1,13 @@
 import datetime
+import functools
 import logging
 import os
 import time
-from datetime import timezone
 from typing import Any, Dict, List, Optional, Tuple
 
 import github
 import pandas as pd
-from tqdm import tqdm
+import tqdm
 
 _LOG = logging.getLogger(__name__)
 
@@ -24,12 +24,12 @@ class GitHubAPI:
     """
 
     def __init__(
-        self, access_token: Optional[str] = None, base_url: Optional[str] = None
+        self, *, access_token: Optional[str] = None, base_url: Optional[str] = None
     ):
         """
         Initialize the GitHub API client.
 
-        :param access_token: github personal access token; if not provided, it
+        :param access_token: GitHub personal access token; if not provided, it
             is fetched from the environment variable `GITHUB_ACCESS_TOKEN`
         :param base_url: optional custom GitHub Enterprise base URL
         """
@@ -65,6 +65,7 @@ class GitHubAPI:
 # #############################################################################
 
 
+@functools.lru_cache
 def get_repo_names(client: github.Github, org_name: str) -> Dict[str, List[str]]:
     """
     Retrieve a list of repositories under a specific organization.
@@ -88,6 +89,7 @@ def get_repo_names(client: github.Github, org_name: str) -> Dict[str, List[str]]
     return result
 
 
+@functools.lru_cache
 def get_github_contributors(
     client: github.Github, repo_names: List[str]
 ) -> Dict[str, List[str]]:
@@ -146,7 +148,7 @@ def wait_for_rate_limit_reset(client: github.Github):
     rate_limit = client.get_rate_limit()
     remaining = rate_limit.core.remaining
     reset_timestamp = rate_limit.core.reset.timestamp()
-    current_timestamp = datetime.datetime.now(timezone.utc).timestamp()
+    current_timestamp = datetime.datetime.now(datetime.timezone.utc).timestamp()
     if remaining == 0:
         sleep_time = reset_timestamp - current_timestamp
         if sleep_time > 0:
@@ -162,6 +164,7 @@ def wait_for_rate_limit_reset(client: github.Github):
 def get_total_commits(
     client: github.Github,
     org_name: str,
+    *,
     usernames: Optional[List[str]] = None,
     period: Optional[Tuple[datetime.datetime, datetime.datetime]] = None,
     repo_names: Optional[List[str]] = None,
@@ -184,6 +187,19 @@ def get_total_commits(
         - commits_per_repository (Dict[str, Any]): repository
             names mapped to branch names mapped to commit, addition, deletion, and
             total change counts
+
+    ```
+    {'user': 'gpsaggese',
+    'total_commits': 243,
+    'period': '2025-01-20 00:00:00 to 2025-02-25 00:00:00',
+    'commits_per_repository':
+        {'helpers': {
+            'CmTask11978_fix_the_docker_release_flow': {
+                'commits': 6,
+                'additions': 2145,
+                'deletions': 952,
+                'total_changes': 3097},
+    ```
     """
     try:
         if not repo_names:
@@ -203,7 +219,7 @@ def get_total_commits(
     commits_per_repository = {}
     since, until = period if period else (None, None)
     # Iterate over each repository.
-    for repo_name in tqdm(
+    for repo_name in tqdm.tqdm(
         repositories, desc="Processing repositories", unit="repo"
     ):
         try:
@@ -214,6 +230,7 @@ def get_total_commits(
                 branch_additions = 0
                 branch_deletions = 0
                 if usernames:
+                    # A list of usernames to filter commits by.
                     for username in usernames:
                         commits = repo.get_commits(
                             sha=branch.name,
@@ -227,6 +244,7 @@ def get_total_commits(
                                 branch_additions += commit.stats.additions
                                 branch_deletions += commit.stats.deletions
                 else:
+                    # No usernames to filter commits by.
                     commits = repo.get_commits(
                         sha=branch.name, since=since, until=until
                     )
@@ -235,6 +253,7 @@ def get_total_commits(
                             branch_commit_count += 1
                             branch_additions += commit.stats.additions
                             branch_deletions += commit.stats.deletions
+                # If there are commits in the branch, add it to the dictionary.
                 if branch_commit_count > 0:
                     branch_commit_counts[branch.name] = {
                         "commits": branch_commit_count,
@@ -243,23 +262,26 @@ def get_total_commits(
                         "total_changes": branch_additions + branch_deletions,
                     }
                     total_commits += branch_commit_count
+                # If there are commits in the repository, add it to the dictionary.
                 if branch_commit_counts:
                     commits_per_repository[repo_name] = branch_commit_counts
         except Exception as e:
             _LOG.error(
                 "Error accessing commits for repository '%s': %s", repo_name, e
             )
-
-    return {
+    # Package the results.
+    result = {
         "total_commits": total_commits,
         "period": f"{since} to {until}" if since and until else "All time",
         "commits_per_repository": commits_per_repository,
     }
+    return result
 
 
 def get_total_prs(
     client: github.Github,
     org_name: str,
+    *,
     usernames: Optional[List[str]] = None,
     period: Optional[Tuple[datetime.datetime, datetime.datetime]] = None,
     state: str = "open",
@@ -299,7 +321,7 @@ def get_total_prs(
     # Define the date range and ensure they are timezone-aware in UTC.
     since, until = normalize_period_to_utc(period)
     # Iterate over each repository with progress tracking.
-    for repo_name in tqdm(
+    for repo_name in tqdm.tqdm(
         repositories, desc="Processing repositories", unit="repo"
     ):
         try:
@@ -354,6 +376,7 @@ def get_total_prs(
 def get_prs_not_merged(
     client: github.Github,
     org_name: str,
+    *,
     usernames: Optional[List[str]] = None,
     period: Optional[Tuple[datetime.datetime, datetime.datetime]] = None,
     repo_names: Optional[List[str]] = None,
@@ -393,7 +416,7 @@ def get_prs_not_merged(
     # Define the date range and ensure they are timezone-aware in UTC.
     since, until = normalize_period_to_utc(period)
     # Iterate over each repository with progress tracking.
-    for repo_name in tqdm(
+    for repo_name in tqdm.tqdm(
         repositories, desc="Processing repositories", unit="repo"
     ):
         try:
@@ -461,6 +484,7 @@ def get_prs_not_merged(
 def get_total_issues(
     client: github.Github,
     org_name: str,
+    *,
     repo_names: Optional[List[str]] = None,
     state: str = "open",
     period: Optional[Tuple[datetime.datetime, datetime.datetime]] = None,
@@ -501,7 +525,7 @@ def get_total_issues(
             "issues_per_repository": {},
         }
     # Iterate over each repository.
-    for repo_name in tqdm(
+    for repo_name in tqdm.tqdm(
         repo_names, desc="Processing repositories", unit="repo"
     ):
         try:
@@ -558,6 +582,7 @@ def get_total_issues(
 def get_issues_without_assignee(
     client: github.Github,
     org_name: str,
+    *,
     repo_names: Optional[List[str]] = None,
     state: str = "open",
     period: Optional[Tuple[datetime.datetime, datetime.datetime]] = None,
@@ -596,7 +621,7 @@ def get_issues_without_assignee(
             "period": "N/A",
             "issues_per_repository": {},
         }
-    for repo_name in tqdm(
+    for repo_name in tqdm.tqdm(
         repo_names, desc="Processing repositories", unit="repo"
     ):
         try:
@@ -659,6 +684,7 @@ def get_commits_by_person(
     client: github.Github,
     username: str,
     org_name: str,
+    *,
     period: Optional[Tuple[datetime.datetime, datetime.datetime]] = None,
     repo_names: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
@@ -784,6 +810,7 @@ def collect_user_statistics(
     client: github.Github,
     usernames: List[str],
     org_name: str,
+    *,
     period: Optional[Tuple[datetime.datetime, datetime.datetime]] = None,
     repo_names: Optional[List[str]] = None,
 ) -> List[Dict[str, Any]]:

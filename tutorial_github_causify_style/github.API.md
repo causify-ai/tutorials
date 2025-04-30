@@ -36,19 +36,23 @@ helps developers and analysts to:
 
 ## Problem Statement
 
-While the [GitHub REST API](https://docs.github.com/en/rest) provides access to
-various GitHub resources—such as repositories, pull requests, issues, and user
-data—it presents several challenges when used directly:
+- The [GitHub REST API](https://docs.github.com/en/rest) provides access to
+  various GitHub resources—such as:
+  - Repositories
+  - Pull requests
+  - Issues, and
+  - User data
 
-- **Complexity**: Managing raw HTTP requests, authentication (OAuth, personal
-  access tokens), pagination, and rate limits requires significant effort.
-- **Data Aggregation**: Extracting and merging information (e.g., commits, PRs,
-  contributors) often involves multiple API calls and careful handling of
-  paginated responses.
-- **Time-Based Filtering**: Retrieving data within specific time frames requires
-  precise parameter usage.
-- **Lack of Built-in Analytics**: The API provides raw data but lacks pre-built
-  tools for analysis and insights.
+- The REST API also presents several challenges when used directly:
+  - **Complexity**: Managing raw HTTP requests, authentication (OAuth, personal
+    access tokens), pagination, and rate limits requires significant effort.
+  - **Data Aggregation**: Extracting and merging information (e.g., commits, PRs,
+    contributors) often involves multiple API calls and careful handling of
+    paginated responses.
+  - **Time-Based Filtering**: Retrieving data within specific time frames
+    requires precise parameter usage.
+  - **Lack of Built-in Analytics**: The API provides raw data but lacks pre-built
+    tools for analysis and insights.
 
 To overcome these limitations, our integration layer provides a streamlined
 solution by:
@@ -62,7 +66,9 @@ solution by:
 
 ## Alternatives and Comparisons
 
-### [GitHub REST API](https://docs.github.com/en/rest?apiVersion=2022-11-28)
+### GitHub REST API
+
+- [GitHub REST API](https://docs.github.com/en/rest?apiVersion=2022-11-28)
 
 - **Advantages**:
   - Comprehensive and flexible, offering full access to GitHub data.
@@ -72,7 +78,9 @@ solution by:
   - Rate limits can restrict usage.
   - Involves additional effort to manage pagination and authentication.
 
-### `gh` Command-Line Interface ([gh CLI](https://cli.github.com))
+### `gh` Command-Line Interface
+
+- `gh` Command-Line Interface ([gh CLI](https://cli.github.com))
 
 - **Advantages**:
   - Officially supported by GitHub.
@@ -81,7 +89,11 @@ solution by:
   - Limited functionality compared to the REST API.
   - Not well-suited for large-scale data collection or detailed analytics.
 
-### Python Wrappers ([PyGithub](https://github.com/PyGithub/PyGithub), [ghapi](https://github.com/AnswerDotAI/ghapi))
+### Python Wrappers
+
+- Python Wrappers
+  - [PyGithub](https://github.com/PyGithub/PyGithub)
+  - [ghapi](https://github.com/AnswerDotAI/ghapi))
 
 - **Advantages**:
   - Provides a Pythonic abstraction over the REST API.
