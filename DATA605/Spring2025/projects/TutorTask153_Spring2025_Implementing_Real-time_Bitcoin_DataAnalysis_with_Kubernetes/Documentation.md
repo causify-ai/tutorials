@@ -38,7 +38,7 @@ We leverage two primary endpoints:
 | Function                  | Intent                                      | Key Design Decisions                                         |
 |---------------------------|---------------------------------------------|--------------------------------------------------------------|
 | `fetch_price`            | Get current price for a single coin         | Uses `/simple/price`, injects API key if provided; returns a 1-row DataFrame with timestamped price.  |
-| `fetch_market_data`      | Get comprehensive market snapshot           | Hits `/coins/markets`, flattens JSON to DataFrame; parses date fields.                                 |
+| `fetch_market_data` (Optional)     | Get comprehensive market snapshot           | Hits `/coins/markets`, flattens JSON to DataFrame; parses date fields.                                 |
 | `compute_moving_average` | Smooth price history via rolling window     | Leverages `df.rolling(window).mean()`; appends `ma_{window}` column.                                   |
 | `plot_price_trend`       | Visualize price & moving average over time  | Uses Matplotlib; flexible on whether to include MA curve.                                            |
 
