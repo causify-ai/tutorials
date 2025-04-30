@@ -1,15 +1,16 @@
 import datetime
-from datetime import timezone
-import time
 import logging
 import os
-import pandas as pd
+import time
+from datetime import timezone
 from typing import Any, Dict, List, Optional, Tuple
 
 import github
+import pandas as pd
 from tqdm import tqdm
 
 _LOG = logging.getLogger(__name__)
+
 
 # #############################################################################
 # GitHubAPI
@@ -18,14 +19,15 @@ _LOG = logging.getLogger(__name__)
 
 class GitHubAPI:
     """
-    A class to initialize and manage authentication with the GitHub API using PyGithub.
+    A class to initialize and manage authentication with the GitHub API using
+    PyGithub.
     """
 
     def __init__(
         self, access_token: Optional[str] = None, base_url: Optional[str] = None
     ):
         """
-        Initialize the GitHub API client
+        Initialize the GitHub API client.
 
         :param access_token: github personal access token; if not provided, it
             is fetched from the environment variable `GITHUB_ACCESS_TOKEN`
@@ -45,7 +47,7 @@ class GitHubAPI:
 
     def get_client(self) -> github.Github:
         """
-        Return the authenticated GitHub client
+        Return the authenticated GitHub client.
 
         :return: an instance of the authenticated PyGithub client
         """
@@ -53,7 +55,7 @@ class GitHubAPI:
 
     def close_connection(self) -> None:
         """
-        Close the GitHub API connection
+        Close the GitHub API connection.
         """
         self.github.close()
 
@@ -62,9 +64,10 @@ class GitHubAPI:
 # Utility APIs
 # #############################################################################
 
+
 def get_repo_names(client: github.Github, org_name: str) -> Dict[str, List[str]]:
     """
-    Retrieve a list of repositories under a specific organization
+    Retrieve a list of repositories under a specific organization.
 
     :param client: authenticated instance of the PyGithub client
     :param org_name: name of the GitHub organization
@@ -77,7 +80,9 @@ def get_repo_names(client: github.Github, org_name: str) -> Dict[str, List[str]]
         owner = client.get_organization(org_name)
     except Exception as e:
         _LOG.error("Error retrieving organization '%s': %s", org_name, e)
-        raise ValueError(f"'{org_name}' is not a valid GitHub organization.") from e
+        raise ValueError(
+            f"'{org_name}' is not a valid GitHub organization."
+        ) from e
     repos = [repo.name for repo in owner.get_repos()]
     result = {"owner": org_name, "repositories": repos}
     return result
@@ -87,7 +92,7 @@ def get_github_contributors(
     client: github.Github, repo_names: List[str]
 ) -> Dict[str, List[str]]:
     """
-    Retrieve GitHub usernames contributing to specified repositories
+    Retrieve GitHub usernames contributing to specified repositories.
 
     :param client: authenticated instance of the PyGithub client
     :param repo_names: repository names in the format 'owner/repo' to fetch
@@ -105,9 +110,7 @@ def get_github_contributors(
             ]
             result[repo_name] = contributors
         except Exception as e:
-            _LOG.error(
-                "Error fetching contributors for %s: %s", repo_name, e
-            )
+            _LOG.error("Error fetching contributors for %s: %s", repo_name, e)
             result[repo_name] = []
     return result
 
@@ -116,11 +119,11 @@ def normalize_period_to_utc(
     period: Optional[Tuple[datetime.datetime, datetime.datetime]],
 ) -> Tuple[Optional[datetime.datetime], Optional[datetime.datetime]]:
     """
-    Convert a datetime period to UTC and ensure both dates are timezone-aware
+    Convert a datetime period to UTC and ensure both dates are timezone-aware.
 
     :param period: start and end datetime
-    :return: tuple of UTC-aware start and end datetime, or (None, None) if
-        period is None
+    :return: tuple of UTC-aware start and end datetime, or (None, None)
+        if period is None
     """
     if not period:
         return None, None
@@ -133,9 +136,10 @@ def normalize_period_to_utc(
         for dt in period
     )
 
+
 def wait_for_rate_limit_reset(client: github.Github):
     """
-    Wait until the Github rate limit resets
+    Wait until the Github rate limit resets.
 
     :param client: authenticated instance of the PyGithub client
     """
@@ -143,12 +147,12 @@ def wait_for_rate_limit_reset(client: github.Github):
     remaining = rate_limit.core.remaining
     reset_timestamp = rate_limit.core.reset.timestamp()
     current_timestamp = datetime.datetime.now(timezone.utc).timestamp()
-
     if remaining == 0:
         sleep_time = reset_timestamp - current_timestamp
         if sleep_time > 0:
             print(f"[Rate Limit Hit] Sleeping for {sleep_time/60:.2f} minutes...")
             time.sleep(sleep_time + 5)
+
 
 # #############################################################################
 # Global Metrics APIs
@@ -165,7 +169,7 @@ def get_total_commits(
     """
     Fetch the number of commits made in the repositories of the specified
     organization, optionally filtered by GitHub usernames and a specified time
-    period
+    period.
 
     :param client: authenticated instance of the PyGithub client
     :param org_name: name of the GitHub organization
@@ -177,8 +181,8 @@ def get_total_commits(
     :return: a dictionary containing:
         - total_commits (int): total number of commits across all repositories
         - period (str): the time range considered
-        - commits_per_repository (Dict[str, Any]): repository 
-            names mapped to branch names mapped to commit, addition, deletion, and 
+        - commits_per_repository (Dict[str, Any]): repository
+            names mapped to branch names mapped to commit, addition, deletion, and
             total change counts
     """
     try:
@@ -189,9 +193,7 @@ def get_total_commits(
         else:
             repositories = repo_names
     except Exception as e:
-        _LOG.error(
-            "Error retrieving repositories for '%s': %s", org_name, e
-        )
+        _LOG.error("Error retrieving repositories for '%s': %s", org_name, e)
         return {
             "total_commits": 0,
             "period": "N/A",
@@ -214,7 +216,10 @@ def get_total_commits(
                 if usernames:
                     for username in usernames:
                         commits = repo.get_commits(
-                            sha=branch.name, author=username, since=since, until=until
+                            sha=branch.name,
+                            author=username,
+                            since=since,
+                            until=until,
                         )
                         for commit in commits:
                             if commit.stats:
@@ -222,7 +227,9 @@ def get_total_commits(
                                 branch_additions += commit.stats.additions
                                 branch_deletions += commit.stats.deletions
                 else:
-                    commits = repo.get_commits(sha=branch.name, since=since, until=until)
+                    commits = repo.get_commits(
+                        sha=branch.name, since=since, until=until
+                    )
                     for commit in commits:
                         if commit.stats:
                             branch_commit_count += 1
@@ -239,7 +246,9 @@ def get_total_commits(
                 if branch_commit_counts:
                     commits_per_repository[repo_name] = branch_commit_counts
         except Exception as e:
-            _LOG.error("Error accessing commits for repository '%s': %s", repo_name, e)
+            _LOG.error(
+                "Error accessing commits for repository '%s': %s", repo_name, e
+            )
 
     return {
         "total_commits": total_commits,
@@ -258,8 +267,8 @@ def get_total_prs(
 ) -> Dict[str, Any]:
     """
     Fetch the number of pull requests made in the repositories of the specified
-    organization, optionally filtered by GitHub usernames, a specified time period,
-    and the state of the pull requests
+    organization, optionally filtered by GitHub usernames, a specified time
+    period, and the state of the pull requests.
 
     :param client: authenticated instance of the PyGithub client
     :param org_name: name of the GitHub organization
@@ -283,9 +292,7 @@ def get_total_prs(
         else:
             repositories = repo_names
     except Exception as e:
-        _LOG.error(
-            "Error retrieving repositories for '%s': %s", org_name, e
-        )
+        _LOG.error("Error retrieving repositories for '%s': %s", org_name, e)
         return {"total_prs": 0, "period": "N/A", "prs_per_repository": {}}
     total_prs = 0
     prs_per_repository = {}
@@ -308,7 +315,10 @@ def get_total_prs(
                     pr = repo.get_pull(issue.number)
                 except Exception as e:
                     _LOG.warning(
-                        "Could not fetch PR #%d in %s: %s", issue.number, repo_name, e
+                        "Could not fetch PR #%d in %s: %s",
+                        issue.number,
+                        repo_name,
+                        e,
                     )
                     continue
                 # Ensure pr.created_at is timezone-aware in UTC.
@@ -328,7 +338,9 @@ def get_total_prs(
             total_prs += repo_pr_count
         except Exception as e:
             _LOG.error(
-                "Error accessing pull requests for repository '%s': %s", repo_name, e
+                "Error accessing pull requests for repository '%s': %s",
+                repo_name,
+                e,
             )
             prs_per_repository[repo_name] = 0
     result = {
@@ -347,8 +359,8 @@ def get_prs_not_merged(
     repo_names: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """
-    Fetch the count of closed but unmerged pull requests in the specified repositories
-    and by the specified GitHub users within a given period
+    Fetch the count of closed but unmerged pull requests in the specified
+    repositories and by the specified GitHub users within a given period.
 
     :param client: authenticated instance of the PyGithub client
     :param org_name: name of the GitHub organization
@@ -370,9 +382,7 @@ def get_prs_not_merged(
         else:
             repositories = repo_names
     except Exception as e:
-        _LOG.error(
-            "Error retrieving repositories for '%s': %s", org_name, e
-        )
+        _LOG.error("Error retrieving repositories for '%s': %s", org_name, e)
         return {
             "prs_not_merged": 0,
             "period": "N/A",
@@ -399,9 +409,7 @@ def get_prs_not_merged(
             for pr in pulls:
                 try:
                     # Print progress.
-                    _LOG.debug(
-                        "Processing PR #%d from %s", pr.number, repo_name
-                    )
+                    _LOG.debug("Processing PR #%d from %s", pr.number, repo_name)
                     # Ensure PR creation date is always set before usage.
                     pr_created_at = (
                         pr.created_at if pr.created_at else datetime.datetime.min
@@ -427,14 +435,19 @@ def get_prs_not_merged(
                 except Exception as e:
                     # Skip this PR and proceed with the next one.
                     _LOG.error(
-                        "Error processing PR #%d in '%s': %s", pr.number, repo_name, e
+                        "Error processing PR #%d in '%s': %s",
+                        pr.number,
+                        repo_name,
+                        e,
                     )
                     continue
             prs_per_repository[repo_name] = repo_unmerged_pr_count
             total_unmerged_prs += repo_unmerged_pr_count
         except Exception as e:
             _LOG.error(
-                "Error accessing pull requests for repository '%s': %s", repo_name, e
+                "Error accessing pull requests for repository '%s': %s",
+                repo_name,
+                e,
             )
             prs_per_repository[repo_name] = 0
     result = {
@@ -453,7 +466,8 @@ def get_total_issues(
     period: Optional[Tuple[datetime.datetime, datetime.datetime]] = None,
 ) -> Dict[str, Any]:
     """
-    Retrieve the number of issues in the specified repositories within a given time range and state
+    Retrieve the number of issues in the specified repositories within a given
+    time range and state.
 
     :param client: authenticated instance of the PyGithub client
     :param org_name: name of the GitHub organization
@@ -479,9 +493,7 @@ def get_total_issues(
             repos_info = get_repo_names(client, org_name)
             repo_names = repos_info.get("repositories", [])
     except Exception as e:
-        _LOG.error(
-            "Error retrieving repositories for '%s': %s", org_name, e
-        )
+        _LOG.error("Error retrieving repositories for '%s': %s", org_name, e)
         return {
             "total_issues": 0,
             "state": state,
@@ -503,7 +515,9 @@ def get_total_issues(
                         continue
                     # Ensure Issue creation date is timezone-aware in UTC.
                     issue_created_at = (
-                        issue.created_at if issue.created_at else datetime.datetime.min
+                        issue.created_at
+                        if issue.created_at
+                        else datetime.datetime.min
                     )
                     if issue_created_at.tzinfo is None:
                         issue_created_at = issue_created_at.replace(
@@ -523,9 +537,7 @@ def get_total_issues(
                     repo_issue_count += 1
                 except Exception as e:
                     # Skip this issue and proceed with the next one.
-                    _LOG.error(
-                        "Error processing issue in '%s': %s", repo_name, e
-                    )
+                    _LOG.error("Error processing issue in '%s': %s", repo_name, e)
                     continue
             issues_per_repository[repo_name] = repo_issue_count
             total_issues += repo_issue_count
@@ -577,9 +589,7 @@ def get_issues_without_assignee(
             repos_info = get_repo_names(client, org_name)
             repo_names = repos_info.get("repositories", [])
     except Exception as e:
-        _LOG.error(
-            "Error retrieving repositories for '%s': %s", org_name, e
-        )
+        _LOG.error("Error retrieving repositories for '%s': %s", org_name, e)
         return {
             "issues_without_assignee": 0,
             "state": state,
@@ -600,7 +610,9 @@ def get_issues_without_assignee(
                         continue
                     # Ensure Issue creation date is timezone-aware in UTC.
                     issue_created_at = (
-                        issue.created_at if issue.created_at else datetime.datetime.min
+                        issue.created_at
+                        if issue.created_at
+                        else datetime.datetime.min
                     )
                     if issue_created_at.tzinfo is None:
                         issue_created_at = issue_created_at.replace(
@@ -620,9 +632,7 @@ def get_issues_without_assignee(
                     if not issue.assignees:
                         repo_unassigned_count += 1
                 except Exception as e:
-                    _LOG.error(
-                        "Error processing issue in '%s': %s", repo_name, e
-                    )
+                    _LOG.error("Error processing issue in '%s': %s", repo_name, e)
                     continue
             issues_per_repository[repo_name] = repo_unassigned_count
             issues_without_assignee += repo_unassigned_count
@@ -669,7 +679,11 @@ def get_commits_by_person(
           commit counts as values
     """
     result = get_total_commits(
-        client=client, org_name=org_name, usernames=[username], period=period, repo_names=repo_names
+        client=client,
+        org_name=org_name,
+        usernames=[username],
+        period=period,
+        repo_names=repo_names,
     )
     return {
         "user": username,
@@ -688,8 +702,8 @@ def get_prs_by_person(
     repo_names: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """
-    Fetch the number of pull requests created by a specific GitHub user
-    in the given repositories and time period.
+    Fetch the number of pull requests created by a specific GitHub user in the
+    given repositories and time period.
 
     :param client: authenticated instance of the PyGithub client
     :param username: GitHub username to fetch pull request data for
@@ -712,7 +726,7 @@ def get_prs_by_person(
         usernames=[username],
         period=period,
         state=state,
-        repo_names=repo_names
+        repo_names=repo_names,
     )
     return {
         "user": username,
@@ -747,7 +761,11 @@ def get_prs_not_merged_by_person(
           unmerged PR counts as values
     """
     result = get_prs_not_merged(
-        client=client, org_name=org_name, usernames=[username], period=period, repo_names=repo_names
+        client=client,
+        org_name=org_name,
+        usernames=[username],
+        period=period,
+        repo_names=repo_names,
     )
     return {
         "user": username,
@@ -756,9 +774,11 @@ def get_prs_not_merged_by_person(
         "prs_per_repository": result["prs_per_repository"],
     }
 
+
 # #############################################################################
 # Stats Comparison APIs
 # #############################################################################
+
 
 def collect_user_statistics(
     client: github.Github,
@@ -768,8 +788,9 @@ def collect_user_statistics(
     repo_names: Optional[List[str]] = None,
 ) -> List[Dict[str, Any]]:
     """
-    Collect GitHub activity metrics for a list of users with rate-limit-aware retry logic.
-    Includes total commits, PRs, additions, deletions, and repository-level breakdown.
+    Collect GitHub activity metrics for a list of users with rate-limit-aware
+    retry logic. Includes total commits, PRs, additions, deletions, and
+    repository-level breakdown.
 
     :param client: authenticated instance of the PyGithub client
     :param usernames: list of GitHub usernames to process
@@ -832,23 +853,28 @@ def collect_user_statistics(
                 }
                 total_additions += repo_add
                 total_deletions += repo_del
-            results.append({
-                "Username": username,
-                "Total Commits": total_commits,
-                "Total PRs": prs_data["total_prs"],
-                "Total Additions": total_additions,
-                "Total Deletions": total_deletions,
-                "Total Changes": total_additions + total_deletions,
-                "Repo Breakdown": repo_breakdown,
-            })
+            results.append(
+                {
+                    "Username": username,
+                    "Total Commits": total_commits,
+                    "Total PRs": prs_data["total_prs"],
+                    "Total Additions": total_additions,
+                    "Total Deletions": total_deletions,
+                    "Total Changes": total_additions + total_deletions,
+                    "Repo Breakdown": repo_breakdown,
+                }
+            )
             pending_usernames.pop(0)
             print(f"Finished processing user: {username}")
         except Exception as e:
-            _LOG.error("Error occurred while processing user '%s': %s", username, e)
+            _LOG.error(
+                "Error occurred while processing user '%s': %s", username, e
+            )
             print(f"Retrying user after rate-limit reset: {username}")
             pending_usernames.insert(0, username)
             wait_for_rate_limit_reset(client)
     return results
+
 
 def extract_commits_to_master(df_comparison: "pd.DataFrame") -> "pd.DataFrame":
     """
@@ -866,18 +892,17 @@ def extract_commits_to_master(df_comparison: "pd.DataFrame") -> "pd.DataFrame":
              - Commits to Master (int) – only for repos with > 0 master commits
     """
     repo_master_commit_records = []
-
     for _, row in df_comparison.iterrows():
         username = row["Username"]
         repo_breakdown = row.get("Repo Breakdown", {})
-
         for repo_name, repo_stats in repo_breakdown.items():
             master_commits = repo_stats.get("repo_master_commits", 0)
             if master_commits > 0:
-                repo_master_commit_records.append({
-                    "Username": username,
-                    "Repository": repo_name,
-                    "Commits to Master": master_commits,
-                })
-
+                repo_master_commit_records.append(
+                    {
+                        "Username": username,
+                        "Repository": repo_name,
+                        "Commits to Master": master_commits,
+                    }
+                )
     return pd.DataFrame(repo_master_commit_records)

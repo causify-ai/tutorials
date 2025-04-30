@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.17.0
+#       jupytext_version: 1.16.7
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -14,6 +14,19 @@
 # ---
 
 # %% [markdown]
+# CONTENTS:
+#   - [Comparing Performances for the Interns](#comparing-performances-for-the-interns)
+#   - [Setup](#setup)
+#     - [Install required libraries](#install-required-libraries)
+#     - [Import Required Modules](#import-required-modules)
+#     - [Set Up GitHub Authentication](#set-up-github-authentication)
+#   - [Define Config](#define-config)
+#   - [Initialize GitHub Client](#initialize-github-client)
+#   - [Comparing the Performances](#comparing-the-performances)
+#   - [Visualization](#visualization)
+
+# %% [markdown]
+# <a name='comparing-performances-for-the-interns'></a>
 # ## Comparing Performances for the Interns
 #
 # In this notebook, we will compare six developers' performance based on:
@@ -24,6 +37,7 @@
 # The results will be displayed using interactive Plotly bar charts.
 
 # %% [markdown]
+# <a name='setup'></a>
 # ## Setup
 #
 # Before proceeding with API calls, ensure that your environment is correctly set up.
@@ -33,33 +47,35 @@
 # !jupyter labextension enable
 
 # %% [markdown]
+# <a name='install-required-libraries'></a>
 # ### Install required libraries
-# Install the required libraries: 
+# Install the required libraries:
 
 # %%
 # Install plotly.
 # !sudo /venv/bin/pip install plotly
 
 # %% [markdown]
+# <a name='import-required-modules'></a>
 # ### Import Required Modules
 # Import the necessary libraries:
 
 # %%
-import os
 import logging
+import os
+from datetime import datetime
+
 import github_utils
 import pandas as pd
-import time
-from github import Github
-from datetime import datetime, timedelta, timezone
 import plotly.express as px
-from itertools import chain
+from github import Github
 
 # Enable logging.
 logging.basicConfig(level=logging.INFO)
 _LOG = logging.getLogger(__name__)
 
 # %% [markdown]
+# <a name='set-up-github-authentication'></a>
 # ### Set Up GitHub Authentication
 # Store your **GitHub Personal Access Token (PAT)** as an environment variable for security. You can do this in your terminal:
 #
@@ -78,9 +94,12 @@ access_token = os.getenv("GITHUB_ACCESS_TOKEN")
 
 # Ensure the token is set correctly.
 if not access_token:
-    raise ValueError("GitHub Access Token is not set. Please configure it before proceeding.")
+    raise ValueError(
+        "GitHub Access Token is not set. Please configure it before proceeding."
+    )
 
 # %% [markdown]
+# <a name='define-config'></a>
 # Now, you're ready to interact with the GitHub API!
 #
 # ## Define Config
@@ -93,14 +112,15 @@ if not access_token:
 # Define the configuration settings.
 config = {
     # Replace with actual GitHub organization or username.
-    "org_name": "causify-ai",  
+    "org_name": "causify-ai",
     "start_date": (datetime(2025, 2, 1)),
     "end_date": (datetime(2025, 4, 29)),
     # Load from environment variable.
-    "access_token": access_token,  
+    "access_token": access_token,
 }
 
 # %% [markdown]
+# <a name='initialize-github-client'></a>
 # ## Initialize GitHub Client
 
 # %%
@@ -115,11 +135,19 @@ except Exception as e:
     print(f"Authentication failed: {e}")
 
 # %% [markdown]
+# <a name='comparing-the-performances'></a>
 # ## Comparing the Performances
 
 # %%
 # Define developer GitHub usernames.
-usernames = ["aangelo9", "allenmatt10", "indrayudd", "neomisule", "Peeyush4", "sandeepthalapanane"]
+usernames = [
+    "aangelo9",
+    "allenmatt10",
+    "indrayudd",
+    "neomisule",
+    "Peeyush4",
+    "sandeepthalapanane",
+]
 
 # Define Repositories to search
 repos = ["helpers", "tutorials"]
@@ -129,7 +157,7 @@ results = github_utils.collect_user_statistics(
     usernames=usernames,
     org_name=config["org_name"],
     period=(config["start_date"], config["end_date"]),
-    repo_names=repos
+    repo_names=repos,
 )
 
 df_comparison = pd.DataFrame(results)
@@ -140,14 +168,18 @@ df_master_commits = github_utils.extract_commits_to_master(df_comparison)
 df_master_commits
 
 # %% [markdown]
+# <a name='visualization'></a>
 # ## Visualization
 
 # %%
 # Commits Comparison.
 fig_total_commits = px.bar(
-    df_comparison, x="Username", y="Total Commits",
+    df_comparison,
+    x="Username",
+    y="Total Commits",
     title="Total Commits per Developer",
-    text="Total Commits", color="Username"
+    text="Total Commits",
+    color="Username",
 )
 fig_total_commits.show()
 
@@ -159,22 +191,28 @@ fig = px.bar(
     color="Repository",
     barmode="group",
     title="Commits to Master Branch per Repository by Developer",
-    text="Commits to Master"
+    text="Commits to Master",
 )
 fig.show()
 
 # Total Line changes.
 fig_total_changes = px.bar(
-    df_comparison, x="Username", y="Total Changes",
+    df_comparison,
+    x="Username",
+    y="Total Changes",
     title="Total Lines Changed per Developer",
-    text="Total Changes", color="Username"
+    text="Total Changes",
+    color="Username",
 )
 fig_total_changes.show()
 
 # PRs Comparison.
 fig_prs = px.bar(
-    df_comparison, x="Username", y="Total PRs",
+    df_comparison,
+    x="Username",
+    y="Total PRs",
     title="Total PRs per Developer",
-    text="Total PRs", color="Username"
+    text="Total PRs",
+    color="Username",
 )
 fig_prs.show()
