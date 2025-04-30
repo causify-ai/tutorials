@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.17.0
+#       jupytext_version: 1.16.7
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -34,7 +34,7 @@
 # # Exploratory Data Analysis: Gridstatus metadata
 
 # %% [markdown]
-# This notebook analyzes the metadata of 268 time series datasets available on GridStatus.io. The metadata is loaded from the AWS S3 bucket `causify-data-collaborators` using helper functions from `hs3.py`. The goal is to explore the variety, coverage, and quality of the available time series data.
+# This notebook analyzes the metadata of time series datasets available on GridStatus.io. The goal is to explore the variety, coverage, and quality of the available time series data.
 
 # %%
 # Imports.
