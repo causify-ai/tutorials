@@ -73,8 +73,3 @@ This project contains the following files
 ### Environment Setup
 todo
 
-###
-
-Questions:
-1. End product
-2. Persistent Storage (Slow KnowledgeGraphIndex construction)

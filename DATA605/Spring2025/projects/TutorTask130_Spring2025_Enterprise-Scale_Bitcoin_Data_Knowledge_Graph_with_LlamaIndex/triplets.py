@@ -1127,8 +1127,8 @@ class TripletGenerator:
                             target_id=metric_id,
                             label="CORRELATES_WITH",
                             properties={
-                                'correlation': 0.0,  # Placeholder, would be calculated
-                                'p_value': 0.05,     # Placeholder
+                                'correlation': 0.0,  # todo: placeholder to be calculated
+                                'p_value': 0.05,
                                 'time_period': date_str,
                                 'indicator_value': indicator_node.properties.get('value', 0),
                                 'metric_value': metric_node.properties.get('value', 0)
