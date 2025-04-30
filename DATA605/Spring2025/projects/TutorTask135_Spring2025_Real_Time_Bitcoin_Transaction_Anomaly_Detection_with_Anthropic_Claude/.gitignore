@@ -6,4 +6,4 @@ __pycache__/
 data/
 *.json
 *.log
-.DS_Store
+.DS_Store.env.txt
