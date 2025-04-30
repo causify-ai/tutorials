@@ -145,6 +145,7 @@ various GitHub resources:
    filtering.
 4. **Structured Outputs**: Returns data in dictionary or DataFrame format for
    seamless integration into analysis workflows.
+5. **Repository Filtering**: Accepts an optional list of repository names to narrow down metrics queries and improve performance.
 
 ## Conclusion
 

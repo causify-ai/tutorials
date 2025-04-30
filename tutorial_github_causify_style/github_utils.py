@@ -1,4 +1,5 @@
 import datetime
+import time
 import logging
 import os
 from typing import Any, Dict, List, Optional, Tuple
@@ -133,7 +134,6 @@ def normalize_period_to_utc(
         for dt in period
     )
 
-
 # #############################################################################
 # Global Metrics APIs
 # #############################################################################
@@ -144,6 +144,7 @@ def get_total_commits(
     org_name: str,
     usernames: Optional[List[str]] = None,
     period: Optional[Tuple[datetime.datetime, datetime.datetime]] = None,
+    repo_names: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """
     Fetch the number of commits made in the repositories of the specified
@@ -155,16 +156,22 @@ def get_total_commits(
     :param usernames: GitHub usernames to filter commits; if None, fetches for
         all users
     :param period: start and end datetime for filtering commits
+    :param repo_names: repository names to fetch commits from; if None, fetches
+        from all repositories in the organization
     :return: a dictionary containing:
         - total_commits (int): total number of commits across all repositories
         - period (str): the time range considered
-        - commits_per_repository (Dict[str, int]): repository names as keys and
-          commit counts as values
+        - commits_per_repository (Dict[str, Any]): repository 
+            names mapped to branch names mapped to commit, addition, deletion, and 
+            total change counts
     """
     try:
-        # Retrieve repositories for the specified organization.
-        repos_info = get_repo_names(client, org_name)
-        repositories = repos_info.get("repositories", [])
+        if not repo_names:
+            # Retrieve repositories for the specified organization.
+            repos_info = get_repo_names(client, org_name)
+            repositories = repos_info.get("repositories", [])
+        else:
+            repositories = repo_names
     except Exception as e:
         _LOG.error(
             "Error retrieving repositories for '%s': %s", org_name, e
@@ -183,30 +190,46 @@ def get_total_commits(
     ):
         try:
             repo = client.get_repo(f"{org_name}/{repo_name}")
-            repo_commit_count = 0
-            if usernames:
-                for username in usernames:
-                    commits = repo.get_commits(
-                        author=username, since=since, until=until
-                    )
-                    repo_commit_count += commits.totalCount
-            else:
-                commits = repo.get_commits(since=since, until=until)
-                repo_commit_count = commits.totalCount
-            commits_per_repository[repo_name] = repo_commit_count
-            total_commits += repo_commit_count
+            branch_commit_counts = {}
+            for branch in repo.get_branches():
+                branch_commit_count = 0
+                branch_additions = 0
+                branch_deletions = 0
+                if usernames:
+                    for username in usernames:
+                        commits = repo.get_commits(
+                            sha=branch.name, author=username, since=since, until=until
+                        )
+                        for commit in commits:
+                            if commit.stats:
+                                branch_commit_count += 1
+                                branch_additions += commit.stats.additions
+                                branch_deletions += commit.stats.deletions
+                else:
+                    commits = repo.get_commits(sha=branch.name, since=since, until=until)
+                    for commit in commits:
+                        if commit.stats:
+                            branch_commit_count += 1
+                            branch_additions += commit.stats.additions
+                            branch_deletions += commit.stats.deletions
+                if branch_commit_count > 0:
+                    branch_commit_counts[branch.name] = {
+                        "commits": branch_commit_count,
+                        "additions": branch_additions,
+                        "deletions": branch_deletions,
+                        "total_changes": branch_additions + branch_deletions,
+                    }
+                    total_commits += branch_commit_count
+                if branch_commit_counts:
+                    commits_per_repository[repo_name] = branch_commit_counts
         except Exception as e:
-            _LOG.error(
-                "Error accessing commits for repository '%s': %s", repo_name, e
-            )
-            commits_per_repository[repo_name] = 0
-    result = {
+            _LOG.error("Error accessing commits for repository '%s': %s", repo_name, e)
+
+    return {
         "total_commits": total_commits,
         "period": f"{since} to {until}" if since and until else "All time",
         "commits_per_repository": commits_per_repository,
     }
-
-    return result
 
 
 def get_total_prs(
@@ -215,6 +238,7 @@ def get_total_prs(
     usernames: Optional[List[str]] = None,
     period: Optional[Tuple[datetime.datetime, datetime.datetime]] = None,
     state: str = "open",
+    repo_names: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """
     Fetch the number of pull requests made in the repositories of the specified
@@ -227,6 +251,8 @@ def get_total_prs(
         for all users
     :param period: start and end datetime for filtering pull requests
     :param state: the state of the pull requests to fetch; can be 'open', 'closed', or 'all'
+    :param repo_names: repository names to fetch PRs from; if None, fetches
+        from all repositories in the organization
     :return: a dictionary containing:
         - total_prs (int): total number of pull requests
         - period (str): the time range considered
@@ -234,9 +260,12 @@ def get_total_prs(
             request counts as values
     """
     try:
-        # Retrieve repositories for the specified organization.
-        repos_info = get_repo_names(client, org_name)
-        repositories = repos_info.get("repositories", [])
+        if not repo_names:
+            # Retrieve repositories for the specified organization.
+            repos_info = get_repo_names(client, org_name)
+            repositories = repos_info.get("repositories", [])
+        else:
+            repositories = repo_names
     except Exception as e:
         _LOG.error(
             "Error retrieving repositories for '%s': %s", org_name, e
@@ -299,6 +328,7 @@ def get_prs_not_merged(
     org_name: str,
     usernames: Optional[List[str]] = None,
     period: Optional[Tuple[datetime.datetime, datetime.datetime]] = None,
+    repo_names: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """
     Fetch the count of closed but unmerged pull requests in the specified repositories
@@ -308,6 +338,8 @@ def get_prs_not_merged(
     :param org_name: name of the GitHub organization
     :param usernames: GitHub usernames to filter pull requests; if None, fetches for all users
     :param period: start and end datetime for filtering pull requests
+    :param repo_names: repository names to fetch PRs from; if None, fetches
+        from all repositories in the organization
     :return: a dictionary containing:
         - prs_not_merged (int): total number of closed but unmerged pull requests
         - period (str): the time range considered
@@ -315,9 +347,12 @@ def get_prs_not_merged(
             unmerged pull request counts as values
     """
     try:
-        # Retrieve repositories for the specified organization.
-        repos_info = get_repo_names(client, org_name)
-        repositories = repos_info.get("repositories", [])
+        if not repo_names:
+            # Retrieve repositories for the specified organization.
+            repos_info = get_repo_names(client, org_name)
+            repositories = repos_info.get("repositories", [])
+        else:
+            repositories = repo_names
     except Exception as e:
         _LOG.error(
             "Error retrieving repositories for '%s': %s", org_name, e
@@ -599,6 +634,7 @@ def get_commits_by_person(
     username: str,
     org_name: str,
     period: Optional[Tuple[datetime.datetime, datetime.datetime]] = None,
+    repo_names: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """
     Retrieve the number of commits made by a specific GitHub user.
@@ -607,6 +643,8 @@ def get_commits_by_person(
     :param username: GitHub username to fetch commit data for
     :param org_name: name of the GitHub organization
     :param period: start and end datetime for filtering commits
+    :param repo_names: repository names to fetch commits from; if None, fetches
+        from all repositories in the organization
     :return: a dictionary containing:
         - user (str): GitHub username
         - total_commits (int): total number of commits made by the user
@@ -615,7 +653,7 @@ def get_commits_by_person(
           commit counts as values
     """
     result = get_total_commits(
-        client=client, org_name=org_name, usernames=[username], period=period
+        client=client, org_name=org_name, usernames=[username], period=period, repo_names=repo_names
     )
     return {
         "user": username,
@@ -631,6 +669,7 @@ def get_prs_by_person(
     org_name: str,
     period: Optional[Tuple[datetime.datetime, datetime.datetime]] = None,
     state: str = "open",
+    repo_names: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """
     Fetch the number of pull requests created by a specific GitHub user
@@ -642,6 +681,8 @@ def get_prs_by_person(
     :param period: start and end datetime for filtering pull requests
     :param state: state of the pull requests to fetch; can be 'open', 'closed',
         or 'all'
+    :param repo_names: repository names to fetch commits from; if None, fetches
+        from all repositories in the organization
     :return: a dictionary containing:
         - user (str): GitHub username
         - total_prs (int): total number of pull requests created
@@ -655,6 +696,7 @@ def get_prs_by_person(
         usernames=[username],
         period=period,
         state=state,
+        repo_names=repo_names
     )
     return {
         "user": username,
@@ -669,6 +711,7 @@ def get_prs_not_merged_by_person(
     username: str,
     org_name: str,
     period: Optional[Tuple[datetime.datetime, datetime.datetime]] = None,
+    repo_names: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     """
     Fetch the number of closed but unmerged pull requests created by a specific
@@ -678,6 +721,8 @@ def get_prs_not_merged_by_person(
     :param username: GitHub username to fetch unmerged pull request data for
     :param org_name: name of the GitHub organization
     :param period: start and end datetime for filtering pull requests
+    :param repo_names: repository names to fetch commits from; if None, fetches
+        from all repositories in the organization
     :return: a dictionary containing:
         - user (str): GitHub username
         - prs_not_merged (int): total number of closed but unmerged pull requests
@@ -686,7 +731,7 @@ def get_prs_not_merged_by_person(
           unmerged PR counts as values
     """
     result = get_prs_not_merged(
-        client=client, org_name=org_name, usernames=[username], period=period
+        client=client, org_name=org_name, usernames=[username], period=period, repo_names=repo_names
     )
     return {
         "user": username,
