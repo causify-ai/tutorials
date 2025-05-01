@@ -1,0 +1,5 @@
+pykafka==2.8.0
+requests==2.31.0
+matplotlib==3.7.2
+plotly==5.15.0
+
