@@ -35,17 +35,32 @@ def save(timestamp, price):
 
 
 def data_ingest(minutes):
-    for _ in range(minutes):
-    # for _ in range(60):  # Collect for x minutes
-    # while True:  # Collect indefinitely
-        timestamp = pd.Timestamp.now()
-        price = fetch_price()
+    if minutes:
+        for _ in range(minutes):
+        # for _ in range(60):  # Collect for x minutes
+        # while True:  # Collect indefinitely
+            timestamp = pd.Timestamp.now()
+            price = fetch_price()
 
-        if timestamp and price:
-            logger.info(f"Time: {timestamp} | Price: {price}")
-            save(timestamp, price)
-        else:
-            logger.info("No record found")
-            
-        time.sleep(60)  # Scraping data after every 60 seconds
-    logger.info("Data Ingestion Module Completed")
+            if timestamp and price:
+                logger.info(f"Time: {timestamp} | Price: {price}")
+                save(timestamp, price)
+            else:
+                logger.info("No record found")
+                
+            time.sleep(60)  # Scraping data after every 60 seconds
+        logger.info("Data Ingestion Module Completed")
+    else:
+        logger.info("Entered Data Ingestion Module")
+        while True:  # Collect indefinitely
+            timestamp = pd.Timestamp.now()
+            price = fetch_price()
+
+            if timestamp and price:
+                logger.info(f"Time: {timestamp} | Price: {price}")
+                save(timestamp, price)
+            else:
+                logger.info("No record found")
+                
+            time.sleep(60)  # Scraping data after every 60 seconds
+        logger.info("Data Ingestion Module Completed")

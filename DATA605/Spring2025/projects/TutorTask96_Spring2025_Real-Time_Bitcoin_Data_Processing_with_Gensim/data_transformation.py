@@ -3,6 +3,10 @@ import numpy as np
 from loguru import logger
 
 def data_transform(df, window):
+    '''
+    We can change percentage definition based on use cases 
+    More definition = More accurate decision
+    '''
     df = df.sort_values(by=['date','time'])
     # Calculate precentage price change (delta)
     df['perc_change'] = df['price'].pct_change() * 100
