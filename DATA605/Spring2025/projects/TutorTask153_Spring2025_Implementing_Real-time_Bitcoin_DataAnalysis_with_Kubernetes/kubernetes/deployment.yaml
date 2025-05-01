@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bitcoin-fetcher
+  labels:
+    app: bitcoin-fetcher
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bitcoin-fetcher
+  template:
+    metadata:
+      labels:
+        app: bitcoin-fetcher
+    spec:
+      containers:
+      - name: bitcoin-fetcher
+        image: bitcoin-fetcher:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: FETCH_INTERVAL
+          value: "60"
+        - name: CHARTS_DIR
+          value: "/data/charts"
+        - name: API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: bitcoin-fetcher-config
+              key: api_url
+        - name: DB_HOST
+          value: "postgres"
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_NAME
+          value: "bitcoin_data"
+        - name: DB_USER
+          value: "postgres"
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: postgres-password
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "250m"
+        volumeMounts:
+        - name: charts-volume
+          mountPath: /data/charts
+      volumes:
+      - name: charts-volume
+        persistentVolumeClaim:
+          claimName: bitcoin-data-pvc
