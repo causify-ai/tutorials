@@ -44,6 +44,13 @@ RUN pip3 install \
     
 RUN mkdir /install
 
+# Copy helpers_root from parent directory into image
+COPY helpers /workspace/helpers
+
+
+# Add helpers_root to the Python path
+ENV PYTHONPATH="/workspace"
+
 # Install Jupyter extensions.
 ADD install_jupyter_extensions.sh /install
 RUN /install/install_jupyter_extensions.sh
