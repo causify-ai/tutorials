@@ -9,6 +9,7 @@ A streamlined document search engine that leverages AI embeddings to enable sema
 - **Privacy-Focused**: All processing happens locally on your machine
 - **User-Friendly Interface**: Simple Streamlit UI for easy interaction
 - **Efficient Search**: Fast retrieval using FAISS vector database
+- **Multithreaded Indexing**: Parallel processing for faster document indexing
 
 ## Requirements
 

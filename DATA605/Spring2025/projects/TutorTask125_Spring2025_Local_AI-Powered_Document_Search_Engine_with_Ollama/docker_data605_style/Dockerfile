@@ -1,6 +1,6 @@
 FROM ubuntu:22.04
 
-# Install build tools
+# Install build tools and dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     wget \
@@ -12,7 +12,10 @@ RUN apt-get update && apt-get install -y \
     libffi-dev \
     curl \
     git \
-    vim
+    vim \
+    ca-certificates \
+    gnupg \
+    lsb-release
 
 # Install Python 3.13.1 from source
 RUN wget https://www.python.org/ftp/python/3.13.1/Python-3.13.1.tgz && \
@@ -26,17 +29,27 @@ RUN wget https://www.python.org/ftp/python/3.13.1/Python-3.13.1.tgz && \
 RUN ln -s /usr/local/bin/python3.13 /usr/bin/python && \
     ln -s /usr/local/bin/pip3.13 /usr/bin/pip
 
+# Install Ollama
+RUN curl -fsSL https://ollama.com/install.sh | sh
+
 # Setup app
 WORKDIR /app
 COPY . /app
 
+# Install Python dependencies
 RUN pip install --no-cache-dir \
     faiss-cpu \
     sentence-transformers \
     streamlit \
     PyMuPDF \
     python-docx \
-    requests
+    requests \
+    ollama \
+    langchain \
+    langchain-community
 
-EXPOSE 8501
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+# Expose ports for Streamlit and Ollama
+EXPOSE 8501 11434
+
+# Start Ollama service and run the Streamlit app
+CMD ["bash", "-c", "ollama serve & streamlit run app.py --server.port=8501 --server.address=0.0.0.0"]
