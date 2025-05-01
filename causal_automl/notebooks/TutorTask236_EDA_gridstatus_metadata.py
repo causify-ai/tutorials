@@ -16,13 +16,16 @@
 # %% [markdown]
 # CONTENTS:
 # - [Exploratory Data Analysis: Gridstatus metadata](#exploratory-data-analysis:-gridstatus-metadata)
-#     - [Missing Value Summary](#missing-value-summary)
+#   - [Imports](#imports)
+#   - [Load Data](#load-data)
+#   - [Initial observation](#initial-observation)
+#   - [Missing Value Summary](#missing-value-summary)
 #       - [Exploring Gaps in Metadata Coverage](#exploring-gaps-in-metadata-coverage)
-#     - [Exploratory Analysis](#exploratory-analysis)
+#   - [Exploratory Analysis](#exploratory-analysis)
 #       - [Source Distribution](#source-distribution)
 #       - [Frequency Distribution](#frequency-distribution)
 #       - [Category Distribution](#category-distribution)
-#       - [How far the data goes back](#how-far-the-data-goes-back)
+#       - [Lookback Period](#lookback-period)
 #       - [Dataset Coverage Distribution](#dataset-coverage-distribution)
 #       - [Coverage Insights by Frequency and Snowflake Ingestion](#coverage-insights-by-frequency-and-snowflake-ingestion)
 #       - [Snowflake Ingestion Insights by Table Type](#snowflake-ingestion-insights-by-table-type)
@@ -36,11 +39,19 @@
 # %% [markdown]
 # This notebook analyzes the metadata of time series datasets available on GridStatus.io. The goal is to explore the variety, coverage, and quality of the available time series data.
 
+# %% [markdown]
+# <a name='imports'></a>
+# ## Imports
+
 # %%
-# Imports.
 import io
+import logging
 import re
 
+import helpers.hdbg as hdbg
+import helpers.henv as henv
+import helpers.hpandas as hpandas
+import helpers.hprint as hprint
 import helpers.hs3 as hs3
 import IPython.display as disp
 import matplotlib.pyplot as plt
@@ -48,154 +59,46 @@ import pandas as pd
 import seaborn as sns
 
 # %%
-# Load Data.
-file_path = "s3://causify-data-collaborators/causal_automl/metadata/gridstatus_metadata_v1.0.csv"
-file = hs3.from_file(file_path, aws_profile="ck")
-gs_meta = pd.read_csv(io.StringIO(file))
+# Configure logger.
+hdbg.init_logger(verbosity=logging.INFO)
+_LOG = logging.getLogger(__name__)
+
+# Print system signature.
+_LOG.info("%s", henv.get_system_signature()[0])
+
+# Configure the notebook style.
+hprint.config_notebook()
+
+
+# %% [markdown]
+# <a name='load-data'></a>
+# ## Load Data
+
 
 # %%
 # Display structure of dataframe.
-print(gs_meta.shape)
-print(gs_meta.columns)
-disp.display(gs_meta.head())
-
-
-# %%
-# Helper function to create plot.
-def _make_plots(
-    title=None,
-    x_label=None,
-    y_label=None,
-    legend=None,
-    x_rotation=None,
-    y_rotation=None,
-    grid=False,
-) -> None:
+def _load_data(file_path: str) -> pd.DataFrame:
     """
-    Generate a plot with the given parameters.
+    Load data from file path to a dataframe.
 
-    :param title: title of the plot
-    :param x_label: x-axis label
-    :param y_label: y-axis label
-    :param legend: legend title
-    :param x_rotation: rotation angle for x-axis labels
-    :param y_rotation: rotation angle for y-axis labels
-    :param grid: display grid if True
+    :param file_path: path of the data to load from
+    :return: dataframe of the loaded data
     """
-    if title:
-        plt.title(title)
-    if x_label:
-        plt.xlabel(x_label)
-    if y_label:
-        plt.ylabel(y_label)
-    if legend:
-        plt.legend(title=legend)
-    if x_rotation is not None:
-        plt.xticks(rotation=x_rotation)
-    if y_rotation is not None:
-        plt.yticks(rotation=y_rotation)
-    if grid:
-        plt.grid(grid)
-    plt.show()
+    file = hs3.from_file(file_path, aws_profile="ck")
+    df = pd.read_csv(io.StringIO(file))
+    _LOG.info("Shape: %s", df.shape)
+    _LOG.info("Columns: %s", df.columns)
+    hpandas.df_to_str(df, log_level=logging.INFO)
+    return df
 
 
-# Helper function to display percentage on bar plots.
-def _display_percentage_plot(column) -> None:
-    """
-    Generate bar plot with percentage distribution.
+file_path = "s3://causify-data-collaborators/causal_automl/metadata/gridstatus_metadata_v1.0.csv"
+gs_meta = _load_data(file_path)
 
-    :param column: column to visualize as a percentage distribution
-    """
-    column_counts = gs_meta[column].value_counts()
-    ax = column_counts.plot(kind="bar", figsize=(9, 5))
-    for index, percentage in enumerate(column_counts / len(gs_meta) * 100):
-        ax.text(
-            index,
-            column_counts.iloc[index],
-            f"{percentage:.1f}%",
-            ha="center",
-            va="bottom",
-            fontsize=9,
-        )
-
-
-# %%
-# Add a new category by parsing the description to match common categories.
-category_keywords = [
-    ("Energy", r"\b(load|energy)\b"),
-    ("Renewables", r"\b(renewable|solar|wind|hydro)\b"),
-    ("Non-renewables", r"\bnatural gas\b"),
-    ("Fuel Mix", r"\bfuel\b"),
-    ("Prices", r"\b(price|prices|pricing|spp|lmp)\b"),
-    ("Power", r"\b(power|electric|outages)\b"),
-    ("Emissions", r"\b(emission|emissions)\b"),
-    ("Weather", r"\b(weather|temperature)\b"),
-    ("Capacity", r"\b(capacity)\b"),
-    ("Records", r"\b(record|records|statistics)\b"),
-    ("Time Frequency", r"\b(day|daily|hour|hourly|minute|min)\b"),
-]
-
-
-def _categorize_metadata(name) -> str:
-    """
-    Categorize a dataset based on keywords in its name.
-
-    :param name: name of the dataset
-    :return: category label
-    """
-    name = str(name).lower()
-    for category, keyword in category_keywords:
-        # Match common keys to a known category.
-        if re.search(keyword, name):
-            return category
-    return "Other"
-
-
-gs_meta["category"] = gs_meta["name"].apply(_categorize_metadata)
-disp.display(gs_meta.head())
 
 # %% [markdown]
-# <a name='missing-value-summary'></a>
-# ### Missing Value Summary
-#
-# The table below shows the number of missing (null) values in each metadata field, helping identify potential data quality issues.
-
-# %%
-# Display missing metadata statistics.
-missing_count = gs_meta.isna().sum().sort_values(ascending=False)
-missing_percent = (
-    (gs_meta.isna().mean() * 100).sort_values(ascending=False).round(2)
-)
-missing_gs_meta = pd.DataFrame(
-    {"Missing Count": missing_count, "Missing %": missing_percent}
-)
-missing_gs_meta = missing_gs_meta[missing_gs_meta["Missing Count"] > 0]
-disp.display(missing_gs_meta)
-
-# %%
-# Plot missing metadata statistics.
-missing_gs_meta[missing_gs_meta["Missing Count"] > 0].sort_values(
-    "Missing %", ascending=True
-)["Missing %"].plot(
-    kind="barh", figsize=(9, 5), title="Missing Metadata percentage"
-)
-_make_plots(x_label="Missing %", grid=True)
-
-# %% [markdown]
-# <a name='exploring-gaps-in-metadata-coverage'></a>
-# #### Exploring Gaps in Metadata Coverage
-#
-# Metadata gaps usually happen because different datasets have different structures or ways of getting data. Understanding these gaps helps us evaluate how complete and reliable the dataset catalog is, ensuring that the metadata is useful for analysis and decision-making.
-#
-# - Fields with the most gaps are publication_frequency (99.63%), publish_time_column (73.88%), subseries_index_column (60.07%). The large number of missing values probably means that these fields just do not apply to most datasets. The `NaN` values likely are not due to scraping issues, but rather that the data was not available in the first place. It is also possible that these columns were only added later, so older entries do not have them. This is confirmed by cross-checking these fields on the gridstatus website.
-#
-# - Some source URLs (13.81%) may be missing, but since the `source` field still identifies the origin of the dataset, their absence does not significantly hinder metadata interpretation.
-#
-# - The remaining fields have only a small number of missing values. This likely means that some data just genuinely does not exist or not available, so it is not necessarily a scraping issue. This is confirmed by cross-checking fields like earliest_available_time_utc, latest_available_time_utc, data_frequency and description.
-
-# %% [markdown]
-# <a name='exploratory-analysis'></a>
-# ### Exploratory Analysis
+# <a name='initial-observation'></a>
+# ## Initial observation
 #
 # From the 19 columns available in the GridStatus metadata, the following are most relevant for initial exploratory analysis:
 #
@@ -218,11 +121,156 @@ _make_plots(x_label="Missing %", grid=True)
 # - `is_published` is consistently `True` for all records (unless the metadata is updated) and therefore not relevant for analysis.
 # - `publication_frequency` is null for all records except one, and as a result, it is excluded from the analysis.
 
+
+# %%
+def _make_plots(
+    title: str = None,
+    x_label: str = None,
+    y_label: str = None,
+    legend: str = None,
+    x_rotation: int = None,
+    y_rotation: int = None,
+    grid: bool = False,
+) -> None:
+    """
+    Generate a plot with the given parameters.
+
+    :param title: title of the plot
+    :param x_label: x-axis label
+    :param y_label: y-axis label
+    :param legend: legend title
+    :param x_rotation: rotation angle for x-axis labels
+    :param y_rotation: rotation angle for y-axis labels
+    :param grid: display grid if True
+    """
+    if title is not None:
+        plt.title(title)
+    if x_label is not None:
+        plt.xlabel(x_label)
+    if y_label is not None:
+        plt.ylabel(y_label)
+    if legend is not None:
+        plt.legend(title=legend)
+    if x_rotation is not None:
+        plt.xticks(rotation=x_rotation)
+    if y_rotation is not None:
+        plt.yticks(rotation=y_rotation)
+    if grid is not None:
+        plt.grid(grid)
+    plt.show()
+
+
+def _display_percentage_plot(column: str) -> None:
+    """
+    Generate bar plot with percentage distribution.
+
+    :param column: column to visualize as a percentage distribution
+    """
+    column_counts = gs_meta[column].value_counts()
+    ax = column_counts.plot(kind="bar", figsize=(9, 5))
+    for index, percentage in enumerate(column_counts / len(gs_meta) * 100):
+        ax.text(
+            index,
+            column_counts.iloc[index],
+            f"{percentage:.1f}%",
+            ha="center",
+            va="bottom",
+            fontsize=9,
+        )
+
+
+def _get_missing_count(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Summarize missing values per column.
+
+    :param df: data to check for missing values
+    :return: data with count and percentage of missing values
+    """
+    missing_count = df.isna().sum().sort_values(ascending=False)
+    missing_percent = (
+        (df.isna().mean() * 100).sort_values(ascending=False).round(2)
+    )
+    missing_columns_count = pd.DataFrame(
+        {"Missing Count": missing_count, "Missing %": missing_percent}
+    )
+    missing_columns_df = missing_columns_count[
+        missing_columns_count["Missing Count"] > 0
+    ]
+    return missing_columns_df
+
+
+# %%
+# Categorize items by matching names to keyword patterns.
+category_keywords = {
+    "Energy": r"\b(load|energy)\b",
+    "Renewables": r"\b(renewable|solar|wind|hydro)\b",
+    "Non-renewables": r"\bnatural gas\b",
+    "Fuel Mix": r"\bfuel\b",
+    "Prices": r"\b(price|prices|pricing|spp|lmp)\b",
+    "Power": r"\b(power|electric|outages)\b",
+    "Emissions": r"\b(emission|emissions)\b",
+    "Weather": r"\b(weather|temperature)\b",
+    "Capacity": r"\b(capacity)\b",
+    "Records": r"\b(record|records|statistics)\b",
+    "Time Frequency": r"\b(day|daily|hour|hourly|minute|min)\b",
+}
+
+
+def _categorize_series(name: str) -> str:
+    """
+    Categorize a dataset based on keywords in its name.
+
+    :param name: name of the time series
+    :return: category label
+    """
+    name = str(name).lower()
+    for category, keyword in category_keywords.items():
+        # Match name to category keyword pattern.
+        if re.search(keyword, name):
+            return category
+    return "Other"
+
+
+gs_meta["category"] = gs_meta["name"].apply(_categorize_series)
+disp.display(gs_meta.head())
+
+# %% [markdown]
+# <a name='missing-value-summary'></a>
+# ## Missing Value Summary
+#
+# The table below shows the number of missing (null) values in each metadata field, helping identify potential data quality issues.
+
+# %%
+# Display missing metadata statistics.
+missing_gs_meta = _get_missing_count(gs_meta)
+disp.display(missing_gs_meta)
+# Plot missing metadata statistics.
+missing_gs_meta[missing_gs_meta["Missing Count"] > 0].sort_values(
+    "Missing %", ascending=True
+)["Missing %"].plot(
+    kind="barh", figsize=(9, 5), title="Missing Metadata percentage"
+)
+_make_plots(x_label="Missing %", grid=True)
+
+# %% [markdown]
+# <a name='exploring-gaps-in-metadata-coverage'></a>
+# #### Exploring Gaps in Metadata Coverage
+#
+# - The metadata gaps are due to data unavailability, not scraping issues. This is confirmed by cross-checking with the GridStatus website.
+# - Fields with the most gaps are publication_frequency (99.63%), publish_time_column (73.88%), subseries_index_column (60.07%).
+# - Some source URLs (13.81%) may be missing, but since the `source` field still identifies the origin of the dataset, their absence does not significantly hinder metadata interpretation.
+# - The remaining fields have only a small number of missing values, upto 4%.
+
+# %% [markdown]
+# <a name='exploratory-analysis'></a>
+# ## Exploratory Analysis
+#
+
 # %% [markdown]
 # <a name='source-distribution'></a>
 # #### Source Distribution
 #
-# Most of the datasets come from ERCOT, PJM, and CAISO, which are among the most active grid operators. Together, they account for over 50% of all datasets, showing a strong focus on these sources, possibly due to better data availability, higher reliability, or their overall importance in grid operations.
+# Over 50% of all datasets come from ERCOT, PJM, and CAISO, indicating better data availability, reliability, or greater importance in grid operations.
 
 # %%
 # Plot the distribution of entries by source from the dataframe.
@@ -249,7 +297,7 @@ _make_plots(
 # <a name='category-distribution'></a>
 # #### Category Distribution
 #
-# Around 60% of the dataset fall under the category of Price, Energy and Time Frequency. Categories such as Capacity, Emissions, Non-renewables and Weather account to less than 3% of the dataset. Additionally, nearly 10% of the dataset does not fall under any defined category. This can be reduced by fine-tuning the categorization process, by using different parameters, such as description.
+# Around 60% of the dataset fall under the category of Price, Energy and Time Frequency. Categories such as Capacity, Emissions, Non-renewables and Weather account to less than 3% of the dataset. Additionally, nearly 10% of the dataset does not fall under any defined category. This can be reduced by fine-tuning the categorization process, by using a different metadata field, such as description.
 
 # %%
 # Plot the distribution of entries by category from the dataframe.
@@ -259,8 +307,8 @@ _make_plots(
 )
 
 # %% [markdown]
-# <a name='how-far-the-data-goes-back'></a>
-# #### How far the data goes back
+# <a name='lookback-period'></a>
+# #### Lookback Period
 #
 # The earliest available datasets indicate a few sources with historical data dating back to 1993 and the early 2000s, suggesting the presence of long-term historical records. However, the majority of datasets begin around 2010 or later, with a noticeable drop in availability after 2020. This gap could be attributed to several factors: a reduction in new data collection, shifts in collection focus, or the global impact of COVID-19, potentially disrupting data collection efforts during the pandemic. As organizations focused on the immediate needs of the crisis, some data streams may have been paused or limited.
 
@@ -372,6 +420,7 @@ _make_plots(
 # This plot visualizes the number of time series grouped by the number of days since their most recent data point ```latest_available_time_utc```. Time series with a high number of days since the last update may indicate that the datasets are potentially discontinued or inactive. A threshold of 120 days has been set to flag series that are potentially outdated, helping to identify datasets that may require further review for reactivation, archival, or removal. This approach provides a proactive way to monitor the health and relevance of time series in the data pipeline.
 
 # %%
+# Identify and display discontinued datasets.
 gs_meta["days_since_latest_data"] = (
     pd.Timestamp.utcnow() - gs_meta["latest_available_time_utc"]
 ).dt.days
@@ -401,7 +450,7 @@ _make_plots(
 # <a name='coverage-by-source-and-category'></a>
 # #### Coverage by Source and Category
 #
-# The following heatmap shows the most popular categories across different data sources. ERCOT stands out with a wide range of categories, with Energy being the most popular among them. Across all sources, Prices category is the most frequently.
+# The following heatmap shows the most popular categories across different data sources. ERCOT stands out with a wide range of categories, with Energy being the most popular among them. Across all sources, Prices category is the most frequent.
 #
 # Categorization can be further fine-tuned using a larger number of records and more detailed metadata fields, such as descriptions, to have a better understanding of this coverage.
 
