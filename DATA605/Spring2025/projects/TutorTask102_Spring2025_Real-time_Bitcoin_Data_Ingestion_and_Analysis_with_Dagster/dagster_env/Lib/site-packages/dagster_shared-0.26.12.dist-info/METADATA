@@ -1,0 +1,23 @@
+Metadata-Version: 2.1
+Name: dagster-shared
+Version: 0.26.12
+Summary: Shared code between dagster and dagster-dg.
+Home-page: https://github.com/dagster-io/dagster/tree/master/python_modules/libraries/dagster-shared
+Author: Dagster Labs
+Author-email: hello@dagsterlabs.com
+License: Apache-2.0
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: OS Independent
+License-File: LICENSE
+Requires-Dist: PyYAML >=5.1
+Requires-Dist: packaging >=20.9
+Requires-Dist: pydantic <3.0.0,>=2
+Requires-Dist: typing-extensions <5,>=4.10.0
+Requires-Dist: tomlkit
+Provides-Extra: test
+Requires-Dist: pytest ; extra == 'test'
+

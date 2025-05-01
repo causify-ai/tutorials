@@ -1,0 +1,44 @@
+Metadata-Version: 2.1
+Name: dagster-webserver
+Version: 1.10.12
+Summary: Web UI for dagster.
+Home-page: https://github.com/dagster-io/dagster
+Author: Dagster Labs
+Author-email: hello@dagsterlabs.com
+License: Apache-2.0
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.9,<3.13
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: click <9.0,>=7.0
+Requires-Dist: dagster ==1.10.12
+Requires-Dist: dagster-graphql ==1.10.12
+Requires-Dist: starlette !=0.36.0
+Requires-Dist: uvicorn[standard]
+Provides-Extra: notebook
+Requires-Dist: nbconvert ; extra == 'notebook'
+Provides-Extra: test
+Requires-Dist: starlette[full] ; extra == 'test'
+
+============
+Dagster Webserver
+============
+
+Usage
+~~~~~
+Eg in dagster_examples
+
+.. code-block:: sh
+
+  dagster-webserver -p 3333
+
+Running dev ui:
+
+.. code-block:: sh
+  NEXT_PUBLIC_BACKEND_ORIGIN="http://localhost:3333" yarn start
+

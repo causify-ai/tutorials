@@ -1,0 +1,24 @@
+Metadata-Version: 2.1
+Name: dagster-graphql
+Version: 1.10.12
+Summary: The GraphQL frontend to python dagster.
+Home-page: https://github.com/dagster-io/dagster/tree/master/python_modules/dagster-graphql
+Author: Dagster Labs
+Author-email: hello@dagsterlabs.com
+License: Apache-2.0
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.9,<3.13
+License-File: LICENSE
+Requires-Dist: dagster ==1.10.12
+Requires-Dist: graphene <4,>=3
+Requires-Dist: gql[requests] <4,>=3
+Requires-Dist: requests
+Requires-Dist: starlette
+Provides-Extra: test
+Requires-Dist: dagster-test ; extra == 'test'
+

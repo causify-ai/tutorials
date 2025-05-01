@@ -1,0 +1,3 @@
+[console_scripts]
+dagster-webserver = dagster_webserver.cli:main
+dagster-webserver-debug = dagster_webserver.debug:main

@@ -1,0 +1,3 @@
+[console_scripts]
+dagit = dagster_webserver.cli:main
+dagit-debug = dagster_webserver.debug:main
