@@ -15,6 +15,8 @@ from datetime import timedelta
 from datetime import datetime
 from typing import List, Tuple
 import json
+import asyncio
+from IPython.display import display, clear_output
 
 ###################
 # Data Connectors #
@@ -108,12 +110,42 @@ class LlamaAgents:
             agents = self.agents,
             root_agent=self.agents[0].name # MasterAgent
         )
-    
-    def query(self, query: str) -> str:
+
+    async def query(self, query: str) -> str:
         """
-        Function to query Knowledge Graph using LlamaIndex Agents
+        Function to query Knowledge Graph using LlamaIndex Agents with a dynamic progress indicator
         """
-        return self.agent_workflow.run(user_msg=query)
+        # Create a task to show progress indicator
+        stop_progress = False
+        
+        # Purely for looks :)
+        async def progress_indicator():
+            stages = ["Thinking", "Analyzing knowledge graph", "Finding relevant information", "Synthesizing answer"]
+            stage_idx = 0
+            dots = 0
+            while not stop_progress:
+                current_stage = stages[stage_idx % len(stages)]
+                clear_output(wait=True)
+                print(f"{current_stage}{' .' * dots}")
+                dots = (dots + 1) % 4
+                if dots == 0:
+                    stage_idx += 1
+                await asyncio.sleep(0.3)
+        
+        # Start progress indicator task
+        progress_task = asyncio.create_task(progress_indicator())
+        
+        try:
+            # Run the actual query
+            response = await self.agent_workflow.run(user_msg=query)
+            result = response.response.blocks[0].text
+        finally:
+            # Stop the progress indicator
+            stop_progress = True
+            await progress_task
+            clear_output(wait=True)
+        
+        return result
 
     # Function Tools for enabling Agents to perform Cypher queries, Vector Search, etc.
     def query_indicator_on_date(self, indicator_name: str, date: str) -> str:
@@ -130,7 +162,6 @@ class LlamaAgents:
         
         params = {"indicator_name": indicator_name, "date": date}
         return str(self.kg_index.property_graph_store.structured_query(cypher_query, params))
-
 
     def query_blocks_by_timeperiod(self, start_timestamp: int, end_timestamp: int, limit: int = 10) -> str:
         """Useful for finding Bitcoin blocks mined within a specific time period.
@@ -149,7 +180,6 @@ class LlamaAgents:
         params = {"start_timestamp": start_timestamp, "end_timestamp": end_timestamp, "limit": limit}
         return str(self.kg_index.property_graph_store.structured_query(cypher_query, params))
 
-
     def query_address_transactions(self, address: str, limit: int = 20) -> str:
         """Useful for finding transactions associated with a specific Bitcoin address.
         address: The Bitcoin address to search transactions for.
@@ -158,11 +188,19 @@ class LlamaAgents:
         cypher_query = """
         MATCH (a:Address {address: $address})
         MATCH (t:Transaction)-[r:SENDS_TO]->(a)
-        RETURN t.txid as transaction_id, t.datetime as datetime, r.value as received_value, t.block_height as block_height
+        RETURN t.txid AS transaction_id, 
+            t.datetime AS datetime, 
+            r.value AS value, 
+            'received' AS direction, 
+            t.block_height AS block_height
         UNION
         MATCH (a:Address {address: $address})
         MATCH (a)-[r:SPENDS_FROM]->(t:Transaction)
-        RETURN t.txid as transaction_id, t.datetime as datetime, r.value as sent_value, t.block_height as block_height
+        RETURN t.txid AS transaction_id, 
+            t.datetime AS datetime, 
+            r.value AS value, 
+            'sent' AS direction, 
+            t.block_height AS block_height
         ORDER BY datetime DESC
         LIMIT $limit;
         """
@@ -170,11 +208,10 @@ class LlamaAgents:
         params = {"address": address, "limit": limit}
         return str(self.kg_index.property_graph_store.structured_query(cypher_query, params))
 
-
     def query_high_volume_economic_context(self, volume_threshold: float, indicators: list, limit: int = 20) -> str:
         """Useful for finding economic indicators during periods of high Bitcoin transaction volume.
         volume_threshold: Minimum transaction volume threshold to consider 'high volume'.
-        indicators: List of economic indicators to analyze (e.g., 'federal_funds_rate', 'sp500').
+        indicators: List of economic indicators to analyze (federal_funds_rate, cpi, real_gdp_growth, unemployment_rate, sp500, dollar_index, m2_money_supply).
         limit: Maximum number of records to return (default: 20)."""
         
         cypher_query = """
@@ -192,10 +229,9 @@ class LlamaAgents:
         params = {"volume_threshold": volume_threshold, "indicators": indicators, "limit": limit}
         return str(self.kg_index.property_graph_store.structured_query(cypher_query, params))
 
-
     def query_metrics_timeseries(self, metrics: list, start_timestamp: int, end_timestamp: int) -> str:
         """Useful for tracking Bitcoin metrics over a specific time period.
-        metrics: List of Bitcoin metrics to track (e.g., 'hash_rate', 'difficulty', 'active_addresses').
+        metrics: List of Bitcoin metrics to track (transaction_volume_btc, transaction_volume_usd, active_addresses, transaction_fees, mempool_size, hash_rate, difficulty, utxo_set_size).
         start_timestamp: The starting Unix timestamp to search from.
         end_timestamp: The ending Unix timestamp to search until."""
         
@@ -209,11 +245,10 @@ class LlamaAgents:
         params = {"metrics": metrics, "start_timestamp": start_timestamp, "end_timestamp": end_timestamp}
         return str(self.kg_index.property_graph_store.structured_query(cypher_query, params))
 
-
     def query_correlation_analysis(self, indicator: str, metric: str, limit: int = 20) -> str:
         """Useful for analyzing correlations between economic indicators and Bitcoin metrics.
-        indicator: The economic indicator to analyze (e.g., 'federal_funds_rate', 'sp500').
-        metric: The Bitcoin metric to analyze (e.g., 'hash_rate', 'transaction_volume_btc').
+        indicator: The economic indicator to analyze (federal_funds_rate, cpi, real_gdp_growth, unemployment_rate, sp500, dollar_index, m2_money_supply).
+        metric: The Bitcoin metric to analyze (transaction_volume_btc, transaction_volume_usd, active_addresses, transaction_fees, mempool_size, hash_rate, difficulty, utxo_set_size).
         limit: Maximum number of correlation records to return (default: 20)."""
         
         cypher_query = """
@@ -228,7 +263,6 @@ class LlamaAgents:
         
         params = {"indicator": indicator, "metric": metric, "limit": limit}
         return str(self.kg_index.property_graph_store.structured_query(cypher_query, params))
-
 
     def query_block_transaction_analysis(self, block_height: int, limit: int = 50) -> str:
         """Useful for analyzing transactions in a specific Bitcoin block.
@@ -245,7 +279,6 @@ class LlamaAgents:
         
         params = {"block_height": block_height, "limit": limit}
         return str(self.kg_index.property_graph_store.structured_query(cypher_query, params))
-
 
     def query_high_value_transactions(self, min_value: float, start_timestamp: int, end_timestamp: int, limit: int = 20) -> str:
         """Useful for finding high-value Bitcoin transactions within a time period.
@@ -265,10 +298,10 @@ class LlamaAgents:
         params = {"min_value": min_value, "start_timestamp": start_timestamp, "end_timestamp": end_timestamp, "limit": limit}
         return str(self.kg_index.property_graph_store.structured_query(cypher_query, params))
 
-
     def query_block_economic_context(self, block_height: int) -> str:
         """Useful for finding economic context for a specific Bitcoin block.
-        block_height: The block height to find economic context for."""
+        block_height: The block height to find economic context for.
+        Returns indicators (federal_funds_rate, cpi, real_gdp_growth, unemployment_rate, sp500, dollar_index, m2_money_supply) at the time of the block."""
         
         cypher_query = """
         MATCH (b:Block {height: $block_height})-[:HAS_ECONOMIC_CONTEXT]->(i:IndicatorValue)
@@ -281,10 +314,9 @@ class LlamaAgents:
         params = {"block_height": block_height}
         return str(self.kg_index.property_graph_store.structured_query(cypher_query, params))
 
-
     def query_metric_on_date(self, metric_name: str, date: str) -> str:
         """Useful for finding a Bitcoin metric's value on a specific date.
-        metric_name: The name of the Bitcoin metric to find (e.g., 'hash_rate', 'transaction_volume_btc', 'active_addresses').
+        metric_name: The name of the Bitcoin metric to find (transaction_volume_btc, transaction_volume_usd, active_addresses, transaction_fees, mempool_size, hash_rate, difficulty, utxo_set_size).
         date: The date in YYYY-MM-DD format."""
         
         cypher_query = """
@@ -296,7 +328,6 @@ class LlamaAgents:
         
         params = {"metric_name": metric_name, "date": date}
         return str(self.kg_index.property_graph_store.structured_query(cypher_query, params))
-
 
     def query_transaction_details(self, txid: str) -> str:
         """Useful for getting detailed information about a specific Bitcoin transaction.
@@ -312,7 +343,6 @@ class LlamaAgents:
         params = {"txid": txid}
         return str(self.kg_index.property_graph_store.structured_query(cypher_query, params))
 
-
     def query_transaction_sent_amount(self, txid: str) -> str:
         """Useful for finding BTC amounts sent in a specific transaction.
         txid: The transaction ID (txid) to look up."""
@@ -326,40 +356,6 @@ class LlamaAgents:
         
         params = {"txid": txid}
         return str(self.kg_index.property_graph_store.structured_query(cypher_query, params))
-
-
-    def query_block_info(self, height: int) -> str:
-        """Useful for getting basic information about a Bitcoin block by height.
-        height: The block height to look up."""
-        
-        cypher_query = """
-        MATCH (b:Block {height: $height})
-        RETURN b.height as block_height, b.hash as block_hash, 
-            b.datetime as datetime, b.difficulty as difficulty,
-            b.transaction_count as transaction_count, b.size as block_size
-        """
-        
-        params = {"height": height}
-        return str(self.kg_index.property_graph_store.structured_query(cypher_query, params))
-
-
-    def query_address_balance(self, address: str) -> str:
-        """Useful for getting total BTC sent and received by a Bitcoin address.
-        address: The Bitcoin address to look up."""
-        
-        cypher_query = """
-        MATCH (a:Address {address: $address})
-        OPTIONAL MATCH (t:Transaction)-[r1:SENDS_TO]->(a)
-        WITH a, SUM(r1.value) as total_received
-        OPTIONAL MATCH (a)-[r2:SPENDS_FROM]->(t:Transaction)
-        RETURN a.address as address, total_received, 
-            SUM(r2.value) as total_sent,
-            total_received - SUM(r2.value) as balance
-        """
-        
-        params = {"address": address}
-        return str(self.kg_index.property_graph_store.structured_query(cypher_query, params))
-
 
     def query_latest_block(self, ) -> str:
         """Useful for getting information about the latest Bitcoin block in the database."""
@@ -375,11 +371,10 @@ class LlamaAgents:
         
         return str(self.kg_index.property_graph_store.structured_query(cypher_query, {}))
 
-
     def query_compare_metrics(self, metric1: str, metric2: str, date: str) -> str:
         """Useful for comparing two Bitcoin metrics on a specific date.
-        metric1: First Bitcoin metric to compare (e.g., 'hash_rate', 'transaction_volume_btc').
-        metric2: Second Bitcoin metric to compare (e.g., 'active_addresses', 'difficulty').
+        metric1: First Bitcoin metric to compare (transaction_volume_btc, transaction_volume_usd, active_addresses, transaction_fees, mempool_size, hash_rate, difficulty, utxo_set_size).
+        metric2: Second Bitcoin metric to compare (transaction_volume_btc, transaction_volume_usd, active_addresses, transaction_fees, mempool_size, hash_rate, difficulty, utxo_set_size).
         date: The date in YYYY-MM-DD format."""
         
         cypher_query = """
@@ -395,7 +390,6 @@ class LlamaAgents:
         params = {"metric1": metric1, "metric2": metric2, "date": date}
         return str(self.kg_index.property_graph_store.structured_query(cypher_query, params))
 
-
     def query_block_transactions(self, height: int, limit: int = 10) -> str:
         """Useful for getting transactions in a specific Bitcoin block.
         height: The block height to look up.
@@ -410,7 +404,6 @@ class LlamaAgents:
         
         params = {"height": height, "limit": limit}
         return str(self.kg_index.property_graph_store.structured_query(cypher_query, params))
-
 
     def query_blocks_on_date(self, date: str) -> str:
         """Useful for finding Bitcoin blocks mined on a specific date.
@@ -428,8 +421,9 @@ class LlamaAgents:
         return str(self.kg_index.property_graph_store.structured_query(cypher_query, params))
 
     def query_vector_search(self, query: str) -> str:
-        """Useful for fetching user query specific data through vector search
-        query: User Query optimized for vector similarity search """
+        """Useful for fetching user query specific data through vector search.
+        query: User query optimized for vector similarity search of Bitcoin blockchain data, economic indicators (federal_funds_rate, cpi, real_gdp_growth, unemployment_rate, sp500, dollar_index, m2_money_supply), and metrics (transaction_volume_btc, transaction_volume_usd, active_addresses, transaction_fees, mempool_size, hash_rate, difficulty, utxo_set_size)."""
+        
         vector_retriever = VectorContextRetriever(
             self.kg_index.property_graph_store,
             include_text=False,
@@ -439,7 +433,20 @@ class LlamaAgents:
         retriever = self.kg_index.as_retriever(sub_retrievers=[vector_retriever])
 
         return str(retriever.retrieve(query))
+
+    def query_cypher_query(self, query: str) -> str:
+        """Useful for fetching user query specific data by creating a Cypher Query.
+        query: User query optimized for enabling an LLM to create a Cypher query for Bitcoin blockchain data, economic indicators (federal_funds_rate, cpi, real_gdp_growth, unemployment_rate, sp500, dollar_index, m2_money_supply), and metrics (transaction_volume_btc, transaction_volume_usd, active_addresses, transaction_fees, mempool_size, hash_rate, difficulty, utxo_set_size)."""
+        
+        cypher_retriever = TextToCypherRetriever(
+            self.kg_index.property_graph_store,
+            llm=self.llm,
+        )
+        
+        retriever = self.kg_index.as_retriever(sub_retrievers=[cypher_retriever])
+        return str(retriever.retrieve(query))
     
+    # LlamaIndex Agents
     def get_agents(self, ) -> List:
         """
         Returns a list of FunctionAgent
@@ -447,324 +454,263 @@ class LlamaAgents:
         # Master Agent which can handoff tasks to appropriate Slave Agent
         master_agent = FunctionAgent(
             name="MasterAgent",
-            description="Useful as a Master Agent to route to Slave Agents",
+            description="Routes queries to specialized Bitcoin knowledge graph agents",
             system_prompt=(
-                "You are a Master Agent that is responsible for handing off tasks to correct Slave Agents. "
-                "Carefully analyze the user query and decide which SlaveAgent to handoff to based on the nature of the query: "
-                "\n- For queries about blocks in a time period, use SlaveAgentBlocksByTimeperiod"
-                "\n- For queries about transactions related to an address, use SlaveAgentAddressTransactions"
-                "\n- For queries about economic indicators during high transaction periods, use SlaveAgentHighVolumeEconomicContext"
-                "\n- For queries about Bitcoin metrics over time, use SlaveAgentMetricsTimeseries"
-                "\n- For queries about correlations between indicators and metrics, use SlaveAgentCorrelationAnalysis"
-                "\n- For analyzing transactions in a specific block, use SlaveAgentBlockTransactionAnalysis"
-                "\n- For finding high-value transactions, use SlaveAgentHighValueTransactions"
-                "\n- For economic context of a block, use SlaveAgentBlockEconomicContext"
-                "\n- For Bitcoin metric values on a specific date, use SlaveAgentMetricOnDate"
-                "\n- For economic indicator values on a specific date, use SlaveAgentQueryIndicatorOnDate"
-                "\n- For detailed information about a transaction, use SlaveAgentTransactionDetails"
-                "\n- For BTC amounts sent in a transaction, use SlaveAgentTransactionSentAmount"
-                "\n- For basic information about a block, use SlaveAgentBlockInfo"
-                "\n- For address balance information, use SlaveAgentAddressBalance"
-                "\n- For latest block information, use SlaveAgentLatestBlock"
-                "\n- For comparing two metrics on a date, use SlaveAgentCompareMetrics"
-                "\n- For transactions in a block, use SlaveAgentBlockTransactions"
-                "\n- For blocks mined on a specific date, use SlaveAgentBlocksOnDate"
-                "\n- For general queries that do not fit any of the previous Agents, use SlaveAgentVectorSearch"
+                "You are a Master Agent responsible for routing user queries to specialized Bitcoin knowledge graph agents. "
+                "Analyze each query carefully and route to the most appropriate agent. Make sure to pass the exact user query as the reason while routing to the appropriate agent:\n\n"
+                
+                "1. SlaveAgentBitcoinRPC - For all blockchain data queries:\n"
+                "   • Block information (height, hash, timestamp, difficulty)\n"
+                "   • Transaction details (inputs, outputs, fees, values)\n"
+                "   • Address activities (sent/received transactions, balances)\n"
+                "   • Time-based block queries (blocks by date or time period)\n"
+                "   • Latest block information\n"
+                "   • High-value transaction analysis\n"
+                "   • Individual transaction tracing\n"
+                
+                "2. SlaveAgentEconomicIndicator - For economic data queries:\n"
+                "   • Federal Funds Rate values on specific dates\n"
+                "   • CPI (Consumer Price Index) data\n"
+                "   • GDP growth information\n"
+                "   • Unemployment rate data\n"
+                "   • S&P 500 index values\n"
+                "   • Dollar index information\n"
+                "   • M2 money supply data\n"
+                
+                "3. SlaveAgentOnChainMetrics - For Bitcoin network metrics:\n"
+                "   • Hash rate information\n"
+                "   • Transaction volume (BTC and USD)\n"
+                "   • Active addresses count\n"
+                "   • Metrics over time periods (timeseries)\n"
+                "   • Metric values on specific dates\n"
+                "   • Comparing multiple metrics\n"
+                "   • Network difficulty data\n"
+                
+                "4. SlaveAgentCrossDomain - For cross-domain analysis:\n"
+                "   • Economic indicators during high BTC transaction periods\n"
+                "   • Correlations between economic indicators and Bitcoin metrics\n"
+                "   • Economic context for specific Bitcoin blocks\n"
+                "   • Impact analysis of economic events on Bitcoin\n"
+                "   • Relationship studies between markets and blockchain data\n"
+                
+                "5. SlaveAgentGeneralist - For general or complex queries:\n"
+                "   • Questions requiring direct Cypher queries or semantic vector search\n"
+                "   • Exploration of relationships not covered by pre-defined query functions\n"
+                "   • Complex pattern matching across the knowledge graph\n"
+                "   • Aggregate analysis (counts, averages, maximums) across entities\n"
+                "   • Path finding between different entity types\n"
+                "   • Questions about specific metrics (transaction_volume_btc, transaction_volume_usd, active_addresses, transaction_fees, mempool_size, hash_rate, difficulty, utxo_set_size)\n"
+                "   • Questions about specific indicators (federal_funds_rate, cpi, real_gdp_growth, unemployment_rate, sp500, dollar_index, m2_money_supply)\n"
+                "   • Questions requiring semantic understanding rather than exact matches\n"
+                "   • Fallback for specialized queries that other agents couldn't handle\n\n"
+
+                "Always select the most specific agent that can handle the query based on the domain (blockchain, economics, metrics, or cross-domain analysis). Use SlaveAgentGeneralist for queries that require flexible exploration of the knowledge graph through Cypher or vector search, especially when they don't fit neatly into the other agents' specialized functions."
             ),
             llm=self.llm,
             can_handoff_to=[
-                "SlaveAgentQueryIndicatorOnDate",
-                "SlaveAgentBlocksByTimeperiod",
-                "SlaveAgentAddressTransactions",
-                "SlaveAgentHighVolumeEconomicContext",
-                "SlaveAgentMetricsTimeseries",
-                "SlaveAgentCorrelationAnalysis",
-                "SlaveAgentBlockTransactionAnalysis",
-                "SlaveAgentHighValueTransactions",
-                "SlaveAgentBlockEconomicContext",
-                "SlaveAgentMetricOnDate",
-                "SlaveAgentTransactionDetails",
-                "SlaveAgentTransactionSentAmount",
-                "SlaveAgentBlockInfo",
-                "SlaveAgentAddressBalance",
-                "SlaveAgentLatestBlock",
-                "SlaveAgentCompareMetrics",
-                "SlaveAgentBlockTransactions",
-                "SlaveAgentBlocksOnDate",
-                "SlaveAgentVectorSearch"
+                "SlaveAgentBitcoinRPC",
+                "SlaveAgentEconomicIndicator",
+                "SlaveAgentOnChainMetrics", 
+                "SlaveAgentCrossDomain",
+                "SlaveAgentGeneralist"
             ]
         )
 
-        # Slave Agents that can perform specifc Graph Retrieval
-        slave_agent_query_indicator_on_date = FunctionAgent(
-            name="SlaveAgentQueryIndicatorOnDate",
-            description="Useful as a Slave Agent to query indicator on date",
+        # 1. Bitcoin RPC Agent - Handles blocks and transactions
+        slave_agent_bitcoin_rpc = FunctionAgent(
+            name="SlaveAgentBitcoinRPC",
+            description="Bitcoin blockchain data specialist",
             system_prompt=(
-                "You are an Agent that is responsible for providing the user with the value of an economic indicator for a specific date"
-                "You will call the query_indicator_on_date to fetch the raw output and parse the raw output to provide a friendly response"
+                "You are a Bitcoin blockchain data specialist that provides detailed information about blocks, transactions, and addresses. "
+                "For each query type, use the appropriate tool:\n\n"
+                
+                "• For blocks in a time period: Use query_blocks_by_timeperiod (convert user timestamps to Unix timestamps first)\n"
+                "• For transactions linked to an address: Use query_address_transactions (present received vs. sent transactions clearly)\n"
+                "• For analyzing transactions in a block: Use query_block_transaction_analysis (summarize regular vs. coinbase transactions)\n"
+                "• For high-value transactions: Use query_high_value_transactions (convert timestamps and provide context on values)\n"
+                "• For specific transaction details: Use query_transaction_details (explain each field's meaning in Bitcoin context)\n"
+                "• For amounts sent in a transaction: Use query_transaction_sent_amount (summarize recipients and total value)\n"
+                "• For basic block information: Use query_block_info when available (explain each field's significance)\n"
+                "• For address balance information: Use query_address_balance when available (explain transaction history significance)\n"
+                "• For latest block data: Use query_latest_block (remind user this may not be latest on the network)\n"
+                "• For transactions in a block: Use query_block_transactions (summarize transaction value distribution)\n"
+                "• For blocks on a specific date: Use query_blocks_on_date (summarize mining activity for the day)\n\n"
+                
+                "Always present results clearly, converting technical data to human-readable formats. "
+                "Explain technical terms when appropriate. For time-based queries, convert Unix timestamps to readable dates. "
+                "Organize your response with logical sections and highlight key information. "
+                "Parse raw query results into friendly, informative responses."
             ),
             llm=self.llm,
-            tools=[self.query_indicator_on_date],
+            tools=[
+                self.query_blocks_by_timeperiod,
+                self.query_address_transactions,
+                self.query_block_transaction_analysis,
+                self.query_high_value_transactions,
+                self.query_transaction_details,
+                self.query_transaction_sent_amount,
+                self.query_latest_block,
+                self.query_block_transactions,
+                self.query_blocks_on_date
+            ],
         )
 
-        slave_agent_blocks_by_timeperiod = FunctionAgent(
-            name="SlaveAgentBlocksByTimeperiod",
-            description="Useful as a Slave Agent to query Bitcoin blocks by time period",
+        # 2. Economic Indicators Agent
+        slave_agent_economic_indicator = FunctionAgent(
+            name="SlaveAgentEconomicIndicator",
+            description="Economic indicators specialist",
             system_prompt=(
-                "You are an Agent that is responsible for providing the user with Bitcoin blocks mined within a specific time period. "
-                "You will call the query_blocks_by_timeperiod function to fetch the raw output and parse it to provide a friendly response. "
-                "You should convert Unix timestamps to human-readable dates when asking for input parameters. "
-                "Present the results in a clear, organized manner, highlighting key information like block heights, hashes, timestamps, and transaction counts."
+                "You are a specialist in economic indicators and their relationship to Bitcoin. "
+                "Use query_indicator_on_date to retrieve economic data for specific dates. Available indicators include:\n\n"
+                
+                "• federal_funds_rate: The Federal Reserve's target interest rate\n"
+                "• cpi: Consumer Price Index, a measure of inflation\n"
+                "• real_gdp_growth: Real Gross Domestic Product growth rate\n"
+                "• unemployment_rate: Percentage of the workforce without employment\n"
+                "• sp500: S&P 500 stock market index value\n"
+                "• dollar_index: Measure of USD strength against a basket of currencies\n"
+                "• m2_money_supply: Measure of money supply including cash, checking deposits, and easily convertible near money\n\n"
+                
+                "When receiving date-related queries, verify the date format is YYYY-MM-DD. If user provides dates in other formats, "
+                "convert them appropriately. If a date is outside our database range, inform the user.\n\n"
+                
+                "For each indicator, provide context on whether values are high, low, or average compared to historical norms. "
+                "When presenting indicator values, always include the unit of measurement and explain what the value means "
+                "in economic terms. Parse raw query results into friendly, informative responses that help users understand "
+                "the economic conditions represented by the data."
             ),
             llm=self.llm,
-            tools=[self.query_blocks_by_timeperiod],
+            tools=[
+                self.query_indicator_on_date
+            ],
         )
 
-        slave_agent_address_transactions = FunctionAgent(
-            name="SlaveAgentAddressTransactions",
-            description="Useful as a Slave Agent to query transactions associated with a Bitcoin address",
+        # 3. On-Chain Metrics Agent
+        slave_agent_onchain_metrics = FunctionAgent(
+            name="SlaveAgentOnChainMetrics",
+            description="Bitcoin network metrics specialist",
             system_prompt=(
-                "You are an Agent that is responsible for providing the user with transactions associated with a specific Bitcoin address. "
-                "You will call the query_address_transactions function to fetch the raw output and parse it to provide a friendly response. "
-                "Be sure to distinguish between incoming (received) and outgoing (sent) transactions. "
-                "Present the results in a clear, organized manner, highlighting key information like transaction IDs, timestamps, values, and block heights."
+                "You are a specialist in Bitcoin network metrics analysis. Choose the appropriate tool based on the query type:\n\n"
+                
+                "• For metrics over time periods: Use query_metrics_timeseries (convert user timestamps to Unix timestamps)\n"
+                "• For metric values on specific dates: Use query_metric_on_date (ensure date is in YYYY-MM-DD format)\n"
+                "• For comparing multiple metrics: Use query_compare_metrics (explain relationships between metrics)\n\n"
+                
+                "Available metrics include:\n"
+                "• hash_rate: Total computational power of the Bitcoin network\n"
+                "• transaction_volume_btc: Total Bitcoin transaction volume\n"
+                "• transaction_volume_usd: Bitcoin transaction volume in USD\n"
+                "• active_addresses: Number of active Bitcoin addresses\n"
+                "• transaction_fees: Total transaction fees paid to miners\n"
+                "• mempool_size: Size of unconfirmed transaction pool\n"
+                "• difficulty: Network mining difficulty\n"
+                "• utxo_set_size: Size of the unspent transaction output set\n\n"
+                
+                "When analyzing time-series data, highlight trends (increasing, decreasing, stable) and significant changes. "
+                "When comparing metrics, explain the relationship between them and why they might correlate or diverge. "
+                "For date-specific values, provide context on whether they're high, low, or typical. "
+                "Always include units of measurement and what the values signify about network health or activity. "
+                "Parse raw query results into friendly, informative responses."
             ),
             llm=self.llm,
-            tools=[self.query_address_transactions],
+            tools=[
+                self.query_metrics_timeseries,
+                self.query_metric_on_date,
+                self.query_compare_metrics
+            ],
         )
 
-        slave_agent_high_volume_economic_context = FunctionAgent(
-            name="SlaveAgentHighVolumeEconomicContext",
-            description="Useful as a Slave Agent to query economic indicators during periods of high Bitcoin transaction volume",
+        # 4. Cross-Domain Analysis Agent
+        slave_agent_cross_domain = FunctionAgent(
+            name="SlaveAgentCrossDomain",
+            description="Cross-domain relationship analyst",
             system_prompt=(
-                "You are an Agent that is responsible for providing the user with economic indicators during periods of high Bitcoin transaction volume. "
-                "You will call the query_high_volume_economic_context function to fetch the raw output and parse it to provide a friendly response. "
-                "Help the user understand the relationship between high transaction volume periods and the state of various economic indicators. "
-                "Present the results in a clear, organized manner, highlighting key information like dates, transaction volumes, indicator names, and values."
+                "You are a specialist in analyzing relationships between economic indicators and Bitcoin metrics. "
+                "Choose the appropriate tool based on the query type:\n\n"
+                
+                "• For economic indicators during high transaction periods: Use query_high_volume_economic_context (set appropriate volume threshold)\n"
+                "• For correlation analysis between indicators and metrics: Use query_correlation_analysis (remind users correlation doesn't imply causation)\n"
+                "• For economic context of specific blocks: Use query_block_economic_context (explain economic conditions at block mining time)\n\n"
+                
+                "When analyzing high-volume periods, explain the possible relationships between transaction activity and economic conditions. "
+                "For correlation analysis, explain correlation strength (weak: 0-0.3, moderate: 0.3-0.7, strong: 0.7-1.0) and direction (positive/negative). "
+                "When providing economic context for blocks, interpret what the economic conditions might have meant for Bitcoin at that time.\n\n"
+                
+                "Always present relationships clearly, highlighting potential causes and effects while acknowledging limitations in deterministic conclusions. "
+                "Organize multi-faceted analyses into clear sections with summaries of key findings. "
+                "Parse raw query results into friendly, informative responses that help users understand complex cross-domain relationships."
             ),
             llm=self.llm,
-            tools=[self.query_high_volume_economic_context],
+            tools=[
+                self.query_high_volume_economic_context,
+                self.query_correlation_analysis,
+                self.query_block_economic_context
+            ],
         )
 
-        slave_agent_metrics_timeseries = FunctionAgent(
-            name="SlaveAgentMetricsTimeseries",
-            description="Useful as a Slave Agent to query Bitcoin metrics over time",
+        # 5. Generalist Agent
+        slave_agent_generalist = FunctionAgent(
+            name="SlaveAgentGeneralist",
+            description="Generalist search specialist",
             system_prompt=(
-                "You are an Agent that is responsible for providing the user with Bitcoin metrics over a specific time period. "
-                "You will call the query_metrics_timeseries function to fetch the raw output and parse it to provide a friendly response. "
-                "You should convert Unix timestamps to human-readable dates when asking for input parameters. "
-                "Present the results in a clear, organized manner, highlighting trends and patterns in the metrics over time. "
-                "If possible, describe whether metrics are increasing, decreasing, or stable over the requested period."
+                """You are a generalist knowledge graph specialist that can retrieve information through both semantic vector search and Cypher queries. You have access to a comprehensive Bitcoin knowledge graph with blockchain data, economic indicators, and on-chain metrics.
+
+                Analyze each query to determine the best retrieval approach:
+
+                - For questions seeking specific patterns, relationships, or aggregate information:
+                - Use query_cypher_query to generate precise Neo4j Cypher queries
+                - Consider the knowledge graph schema with entities (Block, Transaction, Address, Indicator, Metric) and relationships (CONTAINS, FOLLOWS, SENDS_TO, CORRELATES_WITH, etc.)
+                - Format complex parameters correctly, especially dates and numeric thresholds
+                - Include appropriate filters and sorting to retrieve the most relevant results
+                - Use aggregations (COUNT, AVG, MAX, MIN) when statistics are requested
+
+                - For broader questions requiring semantic understanding or context:
+                - Use query_vector_search to retrieve information based on conceptual similarity
+                - Optimize the search query to focus on core concepts rather than exact wording
+                - Consider domain-specific terminology that might exist in the knowledge graph
+                - Use this approach for questions where precise relationships aren't known
+
+                The knowledge graph contains specific metrics and indicators:
+
+                METRICS:
+                - transaction_volume_btc: Total Bitcoin transaction volume in BTC
+                - transaction_volume_usd: Total Bitcoin transaction volume in USD
+                - active_addresses: Number of unique active Bitcoin addresses
+                - transaction_fees: Fees paid to miners in BTC
+                - mempool_size: Size of unconfirmed transaction pool in bytes
+                - hash_rate: Network mining power in TH/s
+                - difficulty: Bitcoin mining difficulty
+                - utxo_set_size: Count of unspent transaction outputs
+
+                INDICATORS:
+                - federal_funds_rate: Federal Reserve interest rate target (%)
+                - cpi: Consumer Price Index measuring inflation
+                - real_gdp_growth: Real Gross Domestic Product growth rate (%)
+                - unemployment_rate: Percentage of workforce without employment (%)
+                - sp500: S&P 500 stock market index value
+                - dollar_index: Measure of USD strength against currency basket
+                - m2_money_supply: Broad measure of money supply in trillions USD
+
+                Begin by determining if the query requires specific graph patterns and relationships (use Cypher) or broader conceptual understanding (use vector search). For complex queries, you may need to use both approaches sequentially.
+
+                After retrieving information:
+                - Organize results logically with clear structure
+                - Explain technical concepts in accessible terms
+                - Highlight the most important findings first
+                - Synthesize information from multiple sources when appropriate
+                - Acknowledge limitations in the data when present
+
+                The knowledge graph connects blockchain data, economic indicators, and on-chain metrics, allowing you to answer questions that explore relationships across these domains."""
             ),
             llm=self.llm,
-            tools=[self.query_metrics_timeseries],
+            tools=[self.query_vector_search, self.query_cypher_query],
         )
 
-        slave_agent_correlation_analysis = FunctionAgent(
-            name="SlaveAgentCorrelationAnalysis",
-            description="Useful as a Slave Agent to analyze correlations between economic indicators and Bitcoin metrics",
-            system_prompt=(
-                "You are an Agent that is responsible for providing the user with analysis of correlations between economic indicators and Bitcoin metrics. "
-                "You will call the query_correlation_analysis function to fetch the raw output and parse it to provide a friendly response. "
-                "Help the user understand the strength and direction of correlations, explaining what the correlation values mean. "
-                "Present the results in a clear, organized manner, highlighting dates and correlation strengths. "
-                "Remember that correlation does not imply causation, and include this caveat in your explanations where appropriate."
-            ),
-            llm=self.llm,
-            tools=[self.query_correlation_analysis],
-        )
-
-        slave_agent_block_transaction_analysis = FunctionAgent(
-            name="SlaveAgentBlockTransactionAnalysis",
-            description="Useful as a Slave Agent to analyze transactions in a specific Bitcoin block",
-            system_prompt=(
-                "You are an Agent that is responsible for providing the user with analysis of transactions in a specific Bitcoin block. "
-                "You will call the query_block_transaction_analysis function to fetch the raw output and parse it to provide a friendly response. "
-                "Present the results in a clear, organized manner, distinguishing between regular and coinbase transactions. "
-                "Highlight key information like transaction IDs, input/output counts, values, and fees. "
-                "Provide a summary of the block's transaction activity, like average transaction value and fee rates."
-            ),
-            llm=self.llm,
-            tools=[self.query_block_transaction_analysis],
-        )
-
-        slave_agent_high_value_transactions = FunctionAgent(
-            name="SlaveAgentHighValueTransactions",
-            description="Useful as a Slave Agent to query high-value Bitcoin transactions",
-            system_prompt=(
-                "You are an Agent that is responsible for providing the user with high-value Bitcoin transactions within a specific time period. "
-                "You will call the query_high_value_transactions function to fetch the raw output and parse it to provide a friendly response. "
-                "You should convert Unix timestamps to human-readable dates when asking for input parameters. "
-                "Present the results in a clear, organized manner, highlighting transaction IDs, timestamps, values, and block heights. "
-                "Put values in perspective by comparing them to average transaction values or the Bitcoin price at that time if available."
-            ),
-            llm=self.llm,
-            tools=[self.query_high_value_transactions],
-        )
-
-        slave_agent_block_economic_context = FunctionAgent(
-            name="SlaveAgentBlockEconomicContext",
-            description="Useful as a Slave Agent to query economic context for a specific Bitcoin block",
-            system_prompt=(
-                "You are an Agent that is responsible for providing the user with economic context for a specific Bitcoin block. "
-                "You will call the query_block_economic_context function to fetch the raw output and parse it to provide a friendly response. "
-                "Help the user understand the economic conditions at the time this block was mined. "
-                "Present the results in a clear, organized manner, highlighting indicator names, values, and units. "
-                "When possible, provide context about whether these economic conditions were favorable or unfavorable for Bitcoin."
-            ),
-            llm=self.llm,
-            tools=[self.query_block_economic_context],
-        )
-
-        slave_agent_metric_on_date = FunctionAgent(
-            name="SlaveAgentMetricOnDate",
-            description="Useful as a Slave Agent to query Bitcoin metric values on a specific date",
-            system_prompt=(
-                "You are an Agent that is responsible for providing the user with the value of a Bitcoin metric for a specific date. "
-                "You will call the query_metric_on_date function to fetch the raw output and parse it to provide a friendly response. "
-                "Make sure to clearly state the metric name, value, unit, and date in your response. "
-                "If possible, provide context about whether this value was high, low, or typical compared to other times."
-            ),
-            llm=self.llm,
-            tools=[self.query_metric_on_date],
-        )
-
-        slave_agent_transaction_details = FunctionAgent(
-            name="SlaveAgentTransactionDetails",
-            description="Useful as a Slave Agent to query details of a specific Bitcoin transaction",
-            system_prompt=(
-                "You are an Agent that is responsible for providing the user with detailed information about a specific Bitcoin transaction. "
-                "You will call the query_transaction_details function to fetch the raw output and parse it to provide a friendly response. "
-                "Present the results in a clear, organized manner, highlighting key transaction details like timestamp, input/output counts, values, and fees. "
-                "Explain what each of these values means in the context of Bitcoin transactions."
-            ),
-            llm=self.llm,
-            tools=[self.query_transaction_details],
-        )
-
-        slave_agent_transaction_sent_amount = FunctionAgent(
-            name="SlaveAgentTransactionSentAmount",
-            description="Useful as a Slave Agent to query BTC amounts sent in a specific transaction",
-            system_prompt=(
-                "You are an Agent that is responsible for providing the user with information about BTC amounts sent in a specific transaction. "
-                "You will call the query_transaction_sent_amount function to fetch the raw output and parse it to provide a friendly response. "
-                "Present the results in a clear, organized manner, highlighting recipient addresses and the amounts sent to each. "
-                "If appropriate, summarize the total number of recipients and the total BTC sent in the transaction."
-            ),
-            llm=self.llm,
-            tools=[self.query_transaction_sent_amount],
-        )
-
-        slave_agent_block_info = FunctionAgent(
-            name="SlaveAgentBlockInfo",
-            description="Useful as a Slave Agent to query basic information about a Bitcoin block",
-            system_prompt=(
-                "You are an Agent that is responsible for providing the user with basic information about a specific Bitcoin block. "
-                "You will call the query_block_info function to fetch the raw output and parse it to provide a friendly response. "
-                "Present the results in a clear, organized manner, highlighting key block information like height, hash, timestamp, difficulty, transaction count, and size. "
-                "Explain what each of these values means in the context of Bitcoin blocks."
-            ),
-            llm=self.llm,
-            tools=[self.query_block_info],
-        )
-
-        slave_agent_address_balance = FunctionAgent(
-            name="SlaveAgentAddressBalance",
-            description="Useful as a Slave Agent to query total BTC sent and received by a Bitcoin address",
-            system_prompt=(
-                "You are an Agent that is responsible for providing the user with information about the total BTC sent and received by a specific Bitcoin address. "
-                "You will call the query_address_balance function to fetch the raw output and parse it to provide a friendly response. "
-                "Present the results in a clear, organized manner, highlighting the address, total received, total sent, and current balance. "
-                "If appropriate, help the user understand the significance of the address's transaction history."
-            ),
-            llm=self.llm,
-            tools=[self.query_address_balance],
-        )
-
-        slave_agent_latest_block = FunctionAgent(
-            name="SlaveAgentLatestBlock",
-            description="Useful as a Slave Agent to query information about the latest Bitcoin block",
-            system_prompt=(
-                "You are an Agent that is responsible for providing the user with information about the latest Bitcoin block in the database. "
-                "You will call the query_latest_block function to fetch the raw output and parse it to provide a friendly response. "
-                "Present the results in a clear, organized manner, highlighting key block information like height, hash, timestamp, difficulty, and transaction count. "
-                "Remind the user that this is the latest block in our database, which may not be the latest block on the Bitcoin network."
-            ),
-            llm=self.llm,
-            tools=[self.query_latest_block],
-        )
-
-        slave_agent_compare_metrics = FunctionAgent(
-            name="SlaveAgentCompareMetrics",
-            description="Useful as a Slave Agent to compare two Bitcoin metrics on a specific date",
-            system_prompt=(
-                "You are an Agent that is responsible for providing the user with a comparison of two Bitcoin metrics on a specific date. "
-                "You will call the query_compare_metrics function to fetch the raw output and parse it to provide a friendly response. "
-                "Present the results in a clear, organized manner, highlighting both metrics' names, values, and units. "
-                "Help the user understand the relationship between these metrics and what their values signify about Bitcoin's state on that date."
-            ),
-            llm=self.llm,
-            tools=[self.query_compare_metrics],
-        )
-
-        slave_agent_block_transactions = FunctionAgent(
-            name="SlaveAgentBlockTransactions",
-            description="Useful as a Slave Agent to query transactions in a specific Bitcoin block",
-            system_prompt=(
-                "You are an Agent that is responsible for providing the user with transactions in a specific Bitcoin block. "
-                "You will call the query_block_transactions function to fetch the raw output and parse it to provide a friendly response. "
-                "Present the results in a clear, organized manner, highlighting transaction IDs and values. "
-                "If appropriate, summarize the distribution of transaction values in the block (e.g., largest transaction, smallest transaction, average)."
-            ),
-            llm=self.llm,
-            tools=[self.query_block_transactions],
-        )
-
-        slave_agent_blocks_on_date = FunctionAgent(
-            name="SlaveAgentBlocksOnDate",
-            description="Useful as a Slave Agent to query Bitcoin blocks mined on a specific date",
-            system_prompt=(
-                "You are an Agent that is responsible for providing the user with Bitcoin blocks mined on a specific date. "
-                "You will call the query_blocks_on_date function to fetch the raw output and parse it to provide a friendly response. "
-                "Present the results in a clear, organized manner, highlighting block heights, hashes, timestamps, and transaction counts. "
-                "If appropriate, summarize the mining activity on that day (e.g., number of blocks, total transactions, mining difficulty)."
-            ),
-            llm=self.llm,
-            tools=[self.query_blocks_on_date],
-        )
-
-        # todo: Set SlaveAgentVectorSearch as fallback handoff for specific query agents
-        slave_agent_vector_search = FunctionAgent(
-            name="SlaveAgentVectorSearch",
-            description="Useful as a Slave Agent to assist with general queries using vector search",
-            system_prompt=(
-                "You are an Agent that is responsible for answering general queries of User"
-                "You will call the query_vector_search function to fetch the raw output and parse it to provide a friendly response. "
-                "Make sure to optimize user's query for more accurate vector similarity search"
-                "Present the results in a clear, organized manner, highlighting key information."
-            ),
-            llm=self.llm,
-            tools=[self.query_vector_search],
-        )
-
-        return [master_agent,
-                slave_agent_query_indicator_on_date,
-                slave_agent_blocks_by_timeperiod,
-                slave_agent_address_transactions,
-                slave_agent_high_volume_economic_context,
-                slave_agent_metrics_timeseries,
-                slave_agent_correlation_analysis,
-                slave_agent_block_transaction_analysis,
-                slave_agent_high_value_transactions,
-                slave_agent_block_economic_context,
-                slave_agent_metric_on_date,
-                slave_agent_transaction_details,
-                slave_agent_transaction_sent_amount,
-                slave_agent_block_info,
-                slave_agent_address_balance,
-                slave_agent_latest_block,
-                slave_agent_compare_metrics,
-                slave_agent_block_transactions,
-                slave_agent_blocks_on_date,
-                slave_agent_vector_search
-            ]
+        return [
+            master_agent,
+            slave_agent_bitcoin_rpc,
+            slave_agent_economic_indicator,
+            slave_agent_onchain_metrics,
+            slave_agent_cross_domain,
+            slave_agent_generalist
+        ]
