@@ -10,3 +10,4 @@ PyYAML
 tqdm
 absl-py
 scikit-learn
+pytest
