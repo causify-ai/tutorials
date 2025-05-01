@@ -1,0 +1,7 @@
+huey
+requests
+praw
+nltk
+prometheus_client
+python-dotenv
+websocket-client

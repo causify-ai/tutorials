@@ -1,0 +1,3 @@
+#!/bin/bash
+docker tag btc_pipeline_image your_dockerhub_username/btc_pipeline_image
+docker push your_dockerhub_username/btc_pipeline_image

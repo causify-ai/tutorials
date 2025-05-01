@@ -1,0 +1,27 @@
+# Ignore Git repo metadata
+.git
+.gitignore
+
+# Ignore local environment files
+.env
+.env.*
+
+# Ignore system files
+*.log
+.DS_Store
+Thumbs.db
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore development scripts if not needed inside image
+docker_build.version.log
+
+# Ignore VSCode settings if any
+.vscode/
