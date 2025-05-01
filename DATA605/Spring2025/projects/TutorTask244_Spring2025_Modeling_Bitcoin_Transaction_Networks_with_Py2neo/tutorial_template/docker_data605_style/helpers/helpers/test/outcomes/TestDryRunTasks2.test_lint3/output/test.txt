@@ -1,1 +1,0 @@
-call('./linters/base.py  --files /app/amp/helpers/test/test_lib_tasks.py')
