@@ -1,19 +1,254 @@
-"""
-A brief overview of what the script does in one line.
+# # Enterprise-Scale Bitcoin Data Knowledge Graph with LlamaIndex
 
-1. Make sure to include the citations here (code and research)
-2. Make sure to run the linter on the script before committing changes.
-    - Many changes would be pointed out by the linter to maintain consistency
-      with coding style.
-3. Provide here the reference to the documentation that explains the system in
-   detail. (e.g., pycaret.API.md)
+# This scripts demonstrates the following
+# 1. Ingest Raw Bitcoin Blocks, Economic Indicators and On-Chain Metrics
+# 2. Building a Knowledge Graph in LlamaIndex with a Neo4J Graph Store
+# 3. Intelligent querying using LlamaIndex Agents
 
-This script is how you use (customize) the API in the project. The
-naming should be as follows:
- - if the project is on `pycaret`, then it is `pycaret.example.py`
+# ## Pre-requisites
+# Generate and set the API Key env variables in devops/env/default.env <br>
+# FRED_API_KEY -> https://fred.stlouisfed.org/docs/api/api_key.html <br>
+# BTC_PUBLIC_TOKEN -> https://www.allnodes.com/ <br>
+# OPENAI_API_KEY -> https://platform.openai.com/api-keys <br>
 
- Follow the reference on coding style guide to write clean and readable code.
-- https://github.com/causify-ai/helpers/blob/master/docs/coding/all.coding_style.how_to_guide.md
-"""
+# You will also need to setup Neo4j locally, if already setup just run docker start neo4j-apoc:
+# ```bash
+# docker run \
+#     -p 7474:7474 -p 7687:7687 \
+#     -v $PWD/data:/data -v $PWD/plugins:/plugins \
+#     --name neo4j-apoc \
+#     -e NEO4J_apoc_export_file_enabled=true \
+#     -e NEO4J_apoc_import_file_enabled=true \
+#     -e NEO4J_apoc_import_file_use__neo4j__config=true \
+#     -e NEO4JLABS_PLUGINS=\[\"apoc\"\] \
+#     neo4j:latest
+# ```
+# From here, you can open the db at http://localhost:7474/. On this page, you will be asked to sign in. Use the default username/password of neo4j/neo4j. Once you login for the first time, you will be asked to change the password.
 
-# Same as tutorial_template/template.API.py
+###################################################
+# Refer to llamaindex.example.md for more details #
+
+import logging
+from llamaindex_utils import (
+    ingest_raw_block_data, 
+    ingest_onchain_metrics, 
+    ingest_economic_indicators,
+    get_raw_block_data,
+    get_onchain_metrics,
+    get_economic_indicators)
+from datetime import timedelta, datetime
+from triplets import TripletGenerator
+from dotenv import load_dotenv
+import os
+from llama_index.llms.openai import OpenAI
+from llama_index.core import Settings
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+from llamaindex_utils import get_neo4j_graph_store
+from llama_index.core import PropertyGraphIndex
+from llamaindex_utils import LlamaAgents
+from typing import List, Optional, Tuple
+from llama_index.core.graph_stores.types import (
+    LabelledNode,
+    Relation
+)
+from llama_index.core.schema import TextNode
+import sys
+import asyncio
+
+# Configure logging
+for handler in logging.root.handlers[:]:
+    logging.root.removeHandler(handler)
+logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
+logger = logging.getLogger(__name__) 
+
+# Specifically suppress HTTP request logs
+for logger_name in ['httpx', 'openai', 'llama_index', 'urllib3']:
+    logging.getLogger(logger_name).setLevel(logging.WARNING)
+
+# Global Settings
+load_dotenv("devops/env/default.env")
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+
+embed_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
+llm = OpenAI(model="gpt-4.1-mini", 
+             temperature=0,
+             api_key=OPENAI_API_KEY)
+Settings.llm = llm
+Settings.embed_model = embed_model
+
+# Ingest Data from multiple sources
+def ingest_data(td: timedelta) -> None:
+   """
+   Ingest and save raw bitcoin blocks, economic indicators and on-chain metrics
+   """
+   ingest_raw_block_data(td)
+   ingest_economic_indicators(td)
+   ingest_onchain_metrics(td)
+   logger.info(f"Data Ingestion complete...")
+
+# Build Graph Structure with Triplets
+def generate_triplets() -> Tuple[List[LabelledNode], List[Relation], List[TextNode]]:
+   """
+   Generate Triplets in the form of Node and Relationships
+   """
+   blocks_data = get_raw_block_data()
+   economic_data = get_onchain_metrics()
+   onchain_data = get_economic_indicators()
+
+   triplet_generator = TripletGenerator()
+   nodes, relations, text_nodes = triplet_generator.load_and_process_data(blocks_data, economic_data, onchain_data)
+   logger.info(f"Generated {len(nodes)} nodes")
+   logger.info(f"Generated {len(relations)} relations")
+   return nodes, relations, text_nodes
+
+# Batch embed nodes for insertion
+def embed_triplets(nodes: List[LabelledNode], text_nodes: List[TextNode]) -> None:
+   """
+   Create a node string based on key and properties and batch embed it
+   """
+   # based on BaseNode embedding texts
+   node_texts = []
+   for node in nodes:
+      node_texts.append("\n".join([f"{key}: {node.properties[key]}" for key in node.properties.keys()]))
+      
+
+   node_embeddings = embed_model.get_text_embedding_batch(node_texts)
+   text_embeddings = embed_model.get_text_embedding_batch([text_node.text for text_node in text_nodes])
+   for node, embedding in zip(nodes, node_embeddings):
+      node.embedding = embedding
+   for text_node, embedding in zip(text_nodes, text_embeddings):
+      text_node.embedding = embedding
+
+   logger.info(f"Embedded {len(nodes)} nodes")
+   return nodes, text_nodes
+
+# Create a new Knowledge Graph
+def build_knowledge_graph(nodes: List[LabelledNode] = None, relations: List[Relation] = None, text_nodes: List[TextNode] = None) -> PropertyGraphIndex:
+   """
+   Connect to Neo4j Graph Store, Add Triplets and Create a PropertyGraphIndex
+   """
+   # You may pass your username/password/url here
+   graph_store = get_neo4j_graph_store()
+   
+   if nodes:
+   # Add Nodes, Relations and TextNodes to the Graph Store
+      graph_store.upsert_nodes(nodes)
+      graph_store.upsert_relations(relations)
+      graph_store.upsert_llama_nodes(text_nodes)
+
+   # Initialize Graph Index with the Graph Store
+   kg_index = PropertyGraphIndex.from_existing(
+      property_graph_store=graph_store,
+      llm=llm
+   )
+
+   logger.info(f"PropertyGraphIndex created with schema: \n{str(kg_index.property_graph_store.structured_schema)[:1000]}...")
+   return kg_index
+
+
+###################
+# Command Line UI #
+class BTCKnowledgeGraphUI:
+   """
+   Simple class for command line UI
+   """
+   def __init__(self, agents: LlamaAgents):
+      self.agents = agents
+         
+   def display_banner(self):
+      """Display welcome banner"""
+      banner = """
+      ╔═══════════════════════════════════════════════════════════╗
+      ║        Enterprise-Scale Bitcoin Data Knowledge Graph      ║
+      ║             Powered by LlamaIndex & Neo4j                 ║
+      ╚═══════════════════════════════════════════════════════════╝
+
+      Ask me anything about Bitcoin blocks, transactions, addresses,
+      economic indicators, or on-chain metrics!
+
+      Type 'help' for examples, 'exit' or 'quit' to leave.
+      """
+      print(banner)
+      
+   def display_help(self):
+      """Display help menu with example queries"""
+      help_text = """
+            Example queries you can ask:
+
+            Blockchain queries:
+            - "When was block 894214 created?"
+            - "Show me high-value transactions in the last week"
+            - "What transactions are in block 890000?"
+            - "What's the balance of address bc1..."
+
+            Economic queries:
+            - "What was the S&P 500 value on April 24, 2025?"
+            - "How did the Federal Funds Rate change last month?"
+            - "Show me CPI values for Q1 2025"
+
+            Metrics queries:
+            - "What was the Bitcoin hash rate last week?"
+            - "Compare transaction volume in BTC vs USD for today"
+            - "Show me active addresses over the past month"
+
+            Cross-domain analysis:
+            - "How did economic indicators correlate with Bitcoin price?"
+            - "Show me high transaction volume periods and related economic data"
+            - "What was the economic context when block 900000 was mined?"
+
+            For the best results, be specific with dates and include
+            relevant identifiers (block heights, transaction hashes, addresses).
+            """
+      print(help_text)
+     
+   async def run(self):
+      """Main CLI loop"""
+      self.display_banner()
+      
+      while True:
+         try:
+               # Get user input
+               query = input("\n> ").strip()
+               
+               # Check for exit commands
+               if query.lower() in ['exit', 'quit', 'q']:
+                  print("\nGoodbye!")
+                  break
+               
+               # Check for help command
+               if query.lower() == 'help':
+                  self.display_help()
+                  continue
+               
+               # Skip empty queries
+               if not query:
+                  continue
+               
+               # Process and display query result
+               response = await self.agents.query(query)
+               if response:
+                  print(f"\n{response}\n")
+               
+         except KeyboardInterrupt:
+               print("\nUse 'exit' or 'quit' to leave.")
+         except Exception as e:
+               print(f"\nError: {str(e)}")
+
+
+# Putting it all together 
+async def main():
+   """Build and query Knowledge Graph"""
+   td = timedelta(days=10)
+   ingest_data(td)
+   nodes, relations, text_nodes = None, None, None
+   nodes, relations, text_nodes = generate_triplets()
+   nodes, text_nodes = embed_triplets(nodes, text_nodes)
+   kg_index = build_knowledge_graph(nodes, relations, text_nodes)
+   llama_agents = LlamaAgents(kg_index=kg_index)
+
+   # UI
+   cli = BTCKnowledgeGraphUI(llama_agents)
+   await cli.run()
+
+if __name__ == "__main__":
+   asyncio.run(main())

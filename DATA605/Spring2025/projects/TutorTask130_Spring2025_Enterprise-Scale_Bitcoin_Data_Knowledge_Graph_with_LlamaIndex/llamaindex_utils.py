@@ -17,6 +17,19 @@ from typing import List, Tuple
 import json
 import asyncio
 from IPython.display import display, clear_output
+from IPython import get_ipython
+import sys
+import logging
+
+# Configure logging
+for handler in logging.root.handlers[:]:
+    logging.root.removeHandler(handler)
+logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
+logger = logging.getLogger(__name__) 
+
+# Specifically suppress HTTP request logs
+for logger_name in ['httpx', 'openai', 'llama_index', 'urllib3']:
+    logging.getLogger(logger_name).setLevel(logging.WARNING)
 
 ###################
 # Data Connectors #
@@ -115,24 +128,25 @@ class LlamaAgents:
         """
         Function to query Knowledge Graph using LlamaIndex Agents with a dynamic progress indicator
         """
-        # Create a task to show progress indicator
         stop_progress = False
         
-        # Purely for looks :)
         async def progress_indicator():
             stages = ["Thinking", "Analyzing knowledge graph", "Finding relevant information", "Synthesizing answer"]
             stage_idx = 0
-            dots = 0
-            while not stop_progress:
-                current_stage = stages[stage_idx % len(stages)]
-                clear_output(wait=True)
-                print(f"{current_stage}{' .' * dots}")
-                dots = (dots + 1) % 4
-                if dots == 0:
+            
+            from tqdm import tqdm
+            import time
+            
+            # Create a progress bar
+            with tqdm(total=100, desc=stages[0], ncols=75, bar_format='{desc}: {bar}', leave=False) as pbar:
+                while not stop_progress:
+                    current_stage = stages[stage_idx % len(stages)]
+                    pbar.set_description(current_stage)
+                    pbar.update(1)
                     stage_idx += 1
-                await asyncio.sleep(0.3)
+                    await asyncio.sleep(0.5)
         
-        # Start progress indicator task
+        # Start progress task
         progress_task = asyncio.create_task(progress_indicator())
         
         try:
@@ -143,7 +157,6 @@ class LlamaAgents:
             # Stop the progress indicator
             stop_progress = True
             await progress_task
-            clear_output(wait=True)
         
         return result
 
