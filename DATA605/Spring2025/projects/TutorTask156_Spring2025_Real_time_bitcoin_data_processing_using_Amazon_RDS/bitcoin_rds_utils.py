@@ -35,7 +35,7 @@ RDS_HOST = "bitcoin-price-db.cf8q8ya0ca68.us-east-2.rds.amazonaws.com"
 RDS_PORT = 5432
 RDS_DATABASE = "bitcoin_db"
 RDS_USERNAME = "bitcoin" 
-RDS_PASSWORD = "Oyl19990706"  
+RDS_PASSWORD = ""  
 
 # -----------------------------------------------------------------------------
 # Database Connection Functions
