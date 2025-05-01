@@ -38,8 +38,8 @@
 
 - The `tutorial_github` example has been implemented in both environments for you
   to refer to:
-  - `tutorial_github_data605` uses the simpler DATA605 approach
-  - `tutorial_github_causify` uses the more complex Causify approach
+  - `tutorial_github_data605_style` uses the simpler DATA605 approach
+  - `tutorial_github_causify_style` uses the more complex Causify approach
 
 - Choose the approach that best fits your comfort level and project needs. Both
   are valid depending on your use case.

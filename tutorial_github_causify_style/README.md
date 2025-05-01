@@ -9,8 +9,8 @@
 
 # Project files
 
-- Author:
-- Date:
+- Author: Prahar Modi
+- Date: 09 Apr, 2025
 
 This project contains the following files
 
@@ -43,15 +43,11 @@ This project contains the following files
 
 - Go to the top of the repo
   ```
-  > cd $GIT_ROOT
+  > cd $GIT_ROOT/tutorial_github_causify_style
   ```
 - Build the thin environment
   ```bash
-  > dev_scripts_tutorial_github/thin_client/build.py
-  ```
-- Go to the project dir
-  ```
-  > cd tutorial_github_causify_style
+  > ./dev_scripts_tutorial_github/thin_client/setenv.sh
   ```
 - Activate virtual environment:
   ```bash
@@ -69,12 +65,3 @@ This project contains the following files
   ```bash
   > i docker_jupyter --skip-pull --stage local --version 1.0.0 -d
   ```
-
-### Environment Setup
-
-Set the `OPENAI_API_KEY` environment variable for API access:
-
-```python
-import os
-os.environ["OPENAI_API_KEY"] = "<your_openai_api_key>"
-```
