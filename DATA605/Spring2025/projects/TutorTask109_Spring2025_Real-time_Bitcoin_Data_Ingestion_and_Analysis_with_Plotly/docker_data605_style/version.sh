@@ -1,11 +1,6 @@
 #!/bin/bash
-echo "# Pytho3"
-python3 --version
-echo "# pip3"
-pip3 --version
-echo "# jupyter"
-jupyter --version
-echo "# Python packages"
-pip3 list
-echo "# mongo"
-mongod --version
+# Print project version and date
+
+echo "Project: Real-Time Bitcoin Blockchain Metrics Visualization"
+echo "Version: 1.0.0"
+echo "Build Date: $(date)"

@@ -1,1 +1,2 @@
-../../../docker_common/etc_sudoers
+# Allow jupyter user passwordless sudo access
+jupyter ALL=(ALL) NOPASSWD:ALL

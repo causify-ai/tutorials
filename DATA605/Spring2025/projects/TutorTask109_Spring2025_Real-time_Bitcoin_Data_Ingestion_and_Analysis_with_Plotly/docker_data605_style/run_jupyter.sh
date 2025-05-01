@@ -1,7 +1,10 @@
-#!/bin/bash -xe
+#!/bin/bash
+# Run the Docker container and mount the parent folder (safe for spaces)
 
-jupyter-notebook \
-    --port=8888 \
-    --no-browser --ip=0.0.0.0 \
-    --allow-root \
-    --NotebookApp.token='' --NotebookApp.password=''
+PARENT_DIR="$(cd .. && pwd)"
+
+docker run -it \
+  --name bitcoin_container \
+  -p 8888:8888 \
+  -v "${PARENT_DIR}:/workspace" \
+  bitcoin-viz
