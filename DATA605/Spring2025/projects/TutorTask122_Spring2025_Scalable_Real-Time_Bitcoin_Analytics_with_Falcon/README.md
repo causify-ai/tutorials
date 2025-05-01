@@ -9,14 +9,14 @@
 
 <Describe all the files in the projects>
 
-This project contains the following template files
+## This project contains the following template files
 
-- `template`.API.ipynb: a notebook describing the native API of Flacon
-- `template`.API.md: a description of the native API of Falcon
-- `template`.API.py: code for using API of Falcon
-- `template`.example.ipynb: a notebook implementing a project using <Package>
-- `template`.example.md: a markdown description of the project
-- `template`.example.py: code for implementing the project
+- `Falcon`.API.ipynb: a notebook describing the native API of Flacon
+- `Falcon`.API.md: a description of the native API of Falcon
+- `Falcon`.API.py: code for using API of Falcon
+- `Falcon`.example.ipynb: a notebook implementing a project using <Package>
+- `Falcon`.example.md: a markdown description of the project
+- `Falcon`.example.py: code for implementing the project
 
 This project contains the following working files
 - `falcon_server`.API.md: a description of the native API of Falcon

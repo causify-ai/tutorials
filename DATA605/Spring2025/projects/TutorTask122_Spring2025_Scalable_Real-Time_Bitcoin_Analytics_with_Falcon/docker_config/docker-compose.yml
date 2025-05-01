@@ -1,0 +1,9 @@
+services:
+  capstone:
+    container_name: falcon_container
+    image: umd_data605/umd_data605_template 
+    build: .
+    volumes:
+      - ../app:/app
+    command: tail -f /dev/null
+
