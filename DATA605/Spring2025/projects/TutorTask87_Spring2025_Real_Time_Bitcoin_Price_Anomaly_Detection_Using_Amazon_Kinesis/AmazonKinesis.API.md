@@ -70,7 +70,7 @@ You can create a stream from the AWS console or CLI:
 
 ```bash
 aws kinesis create-stream --stream-name btc-stream --shard-count 1
-
+```
 ### Producing Data
 
 Data can be produced using the AWS SDK:
@@ -92,3 +92,67 @@ client.put_record(
     Data=json.dumps(data),
     PartitionKey="btc"
 )
+```
+
+## Apache Flink (Managed Service)
+
+Apache Flink is a powerful open-source framework for stateful stream processing. AWS provides a **managed service** that eliminates the complexity of infrastructure setup.
+
+### Application Setup
+
+1. Go to **Kinesis Data Analytics → Apache Flink**.
+2. Click **Create Application**.
+3. Upload a **JAR file** containing your Flink job.
+4. Assign the required **IAM role**.
+5. Define:
+   - Source: your Kinesis Data Stream (e.g., `btc-stream`)
+   - Sink: S3 or another Kinesis stream
+   - Parallelism and Flink configuration
+
+### Example Use Case
+
+A common Flink job might:
+- Read from a Kinesis stream.
+- Apply windowing logic to compute a rolling average.
+- Compare the latest value to the rolling statistics.
+- Flag anomalies that deviate beyond 3σ (standard deviations).
+
+Flink offers time-based windows (`Time.minutes(1)`), key-based partitioning, and native integration with AWS Kinesis connectors.
+
+
+## Amazon S3
+
+Amazon S3 is a highly durable, scalable object store. It’s often used as a sink in streaming jobs for archiving processed outputs or anomaly flags.
+
+### Sink Integration
+
+Flink provides `StreamingFileSink`:
+
+```java
+StreamingFileSink<String> s3Sink = StreamingFileSink
+    .forRowFormat(new Path("s3://your-bucket/your-prefix/"),
+        new SimpleStringEncoder<String>("UTF-8"))
+    .build();
+
+anomalies.addSink(s3Sink);
+```
+
+Flink will handle batching, file rolling, and delivery guarantees when writing to S3.
+
+To enable Flink → S3 writes:
+
+- Attach s3:PutObject permissions to your application role.
+
+- Enable checkpointing in Flink for better durability.
+
+## Usage in This Project
+
+We use these services together as follows:
+
+- **Kinesis** streams real-time Bitcoin price and volume data.
+- **Flink**, deployed via the Managed Service, processes this data:
+  - Applies 1-minute tumbling windows.
+  - Flags outliers where price deviates > 3σ (standard deviations).
+- **S3** stores the flagged anomalies in JSON format for inspection or downstream analytics.
+
+This architecture is scalable, cloud-native, and ideal for real-time anomaly detection in financial data or IoT monitoring.
