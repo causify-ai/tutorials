@@ -1,0 +1,6 @@
+spacy==3.7.2
+pandas
+matplotlib
+wordcloud
+requests
+jupyter
