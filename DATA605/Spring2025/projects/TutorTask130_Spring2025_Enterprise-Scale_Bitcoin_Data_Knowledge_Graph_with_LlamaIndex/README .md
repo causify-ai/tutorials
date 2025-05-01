@@ -71,5 +71,22 @@ This project contains the following files
   ```
 
 ### Environment Setup
-todo
+Generate and set the API Key env variables in devops/env/default.env <br>
+FRED_API_KEY -> https://fred.stlouisfed.org/docs/api/api_key.html <br>
+BTC_PUBLIC_TOKEN -> https://www.allnodes.com/ <br>
+OPENAI_API_KEY -> https://platform.openai.com/api-keys <br>
 
+You will also need to setup Neo4j locally - 
+if already setup just run *docker start neo4j-apoc*
+```bash
+docker run \
+    -p 7474:7474 -p 7687:7687 \
+    -v $PWD/data:/data -v $PWD/plugins:/plugins \
+    --name neo4j-apoc \
+    -e NEO4J_apoc_export_file_enabled=true \
+    -e NEO4J_apoc_import_file_enabled=true \
+    -e NEO4J_apoc_import_file_use__neo4j__config=true \
+    -e NEO4JLABS_PLUGINS=\[\"apoc\"\] \
+    neo4j:latest
+```
+From here, you can open the db at http://localhost:7474/. On this page, you will be asked to sign in. Use the default username/password of neo4j/neo4j. Once you login for the first time, you will be asked to change the password.

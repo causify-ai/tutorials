@@ -5,26 +5,6 @@
 # 2. Building a Knowledge Graph in LlamaIndex with a Neo4J Graph Store
 # 3. Intelligent querying using LlamaIndex Agents
 
-# ## Pre-requisites
-# Generate and set the API Key env variables in devops/env/default.env <br>
-# FRED_API_KEY -> https://fred.stlouisfed.org/docs/api/api_key.html <br>
-# BTC_PUBLIC_TOKEN -> https://www.allnodes.com/ <br>
-# OPENAI_API_KEY -> https://platform.openai.com/api-keys <br>
-
-# You will also need to setup Neo4j locally, if already setup just run docker start neo4j-apoc:
-# ```bash
-# docker run \
-#     -p 7474:7474 -p 7687:7687 \
-#     -v $PWD/data:/data -v $PWD/plugins:/plugins \
-#     --name neo4j-apoc \
-#     -e NEO4J_apoc_export_file_enabled=true \
-#     -e NEO4J_apoc_import_file_enabled=true \
-#     -e NEO4J_apoc_import_file_use__neo4j__config=true \
-#     -e NEO4JLABS_PLUGINS=\[\"apoc\"\] \
-#     neo4j:latest
-# ```
-# From here, you can open the db at http://localhost:7474/. On this page, you will be asked to sign in. Use the default username/password of neo4j/neo4j. Once you login for the first time, you will be asked to change the password.
-
 ###################################################
 # Refer to llamaindex.example.md for more details #
 
@@ -61,7 +41,7 @@ for handler in logging.root.handlers[:]:
 logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
 logger = logging.getLogger(__name__) 
 
-# Specifically suppress HTTP request logs
+# Specifically suppress those pesky OpenAI API logs
 for logger_name in ['httpx', 'openai', 'llama_index', 'urllib3']:
     logging.getLogger(logger_name).setLevel(logging.WARNING)
 
@@ -158,15 +138,15 @@ class BTCKnowledgeGraphUI:
    def display_banner(self):
       """Display welcome banner"""
       banner = """
-      ╔═══════════════════════════════════════════════════════════╗
-      ║        Enterprise-Scale Bitcoin Data Knowledge Graph      ║
-      ║             Powered by LlamaIndex & Neo4j                 ║
-      ╚═══════════════════════════════════════════════════════════╝
+               ╔═══════════════════════════════════════════════════════════╗
+               ║        Enterprise-Scale Bitcoin Data Knowledge Graph      ║
+               ║             Powered by LlamaIndex & Neo4j                 ║
+               ╚═══════════════════════════════════════════════════════════╝
 
-      Ask me anything about Bitcoin blocks, transactions, addresses,
-      economic indicators, or on-chain metrics!
+               Ask me anything about Bitcoin blocks, transactions, addresses,
+               economic indicators, or on-chain metrics!
 
-      Type 'help' for examples, 'exit' or 'quit' to leave.
+               Type 'help' for examples, 'exit' or 'quit' to leave.
       """
       print(banner)
       
