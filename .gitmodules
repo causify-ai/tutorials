@@ -1,3 +1,0 @@
-[submodule "helpers_root"]
-	path = helpers_root
-	url = git@github.com:kaizen-ai/helpers.git
