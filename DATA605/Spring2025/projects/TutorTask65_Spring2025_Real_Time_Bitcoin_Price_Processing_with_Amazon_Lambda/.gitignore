@@ -1,3 +1,19 @@
 .DS_Store
 docker_data605_style/docker_build.log
 docker_data605_style/tmp.build/
+
+# Ignore local aws_lambda_package dependencies
+aws_lambda_package/__pycache__/
+aws_lambda_package/bin/
+aws_lambda_package/boto3*/
+aws_lambda_package/botocore*/
+aws_lambda_package/requests*/
+aws_lambda_package/urllib3*/
+aws_lambda_package/s3transfer*/
+aws_lambda_package/certifi*/
+aws_lambda_package/idna*/
+aws_lambda_package/charset_normalizer*/
+aws_lambda_package/six*
+aws_lambda_package/jmespath*/
+aws_lambda_package/python_dateutil*/
+aws_lambda_package/*.dist-info/
