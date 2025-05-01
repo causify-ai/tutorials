@@ -30,17 +30,14 @@ if __name__ == "__main__":
             [train_df, validation_df, test_df], normalize_params
         )
         train_df = train_df[
-            ["Date", "Log_Returns", "Price_SMA_20", "Volume_SMA_20", "Volume"]
+            ["Close", "Log_Returns", "Price_SMA_20", "Volume_SMA_20", "Volume"]
         ]
         validation_df = validation_df[
-            ["Date", "Log_Returns", "Price_SMA_20", "Volume_SMA_20", "Volume"]
+            ["Close", "Log_Returns", "Price_SMA_20", "Volume_SMA_20", "Volume"]
         ]
         test_df = test_df[
-            ["Date", "Log_Returns", "Price_SMA_20", "Volume_SMA_20", "Volume"]
+            ["Close", "Log_Returns", "Price_SMA_20", "Volume_SMA_20", "Volume"]
         ]
-        train_df.set_index("Date", inplace=True)
-        validation_df.set_index("Date", inplace=True)
-        test_df.set_index("Date", inplace=True)
         utils.save_to_csv(train_df, "data/train_data_normalized.csv")
         utils.save_to_csv(validation_df, "data/validation_data_normalized.csv")
         utils.save_to_csv(test_df, "data/test_data_normalized.csv")
