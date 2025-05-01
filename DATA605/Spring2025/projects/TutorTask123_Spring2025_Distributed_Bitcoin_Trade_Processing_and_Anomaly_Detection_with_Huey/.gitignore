@@ -1,0 +1,33 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.log
+
+# Environment variables
+.env
+.env.*
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Virtual environment folders
+venv/
+env/
+.venv/
+
+# System-specific files
+.DS_Store
+Thumbs.db
+
+# Docker build artifacts
+*.tar
+docker_build.version.log
+
+# VS Code settings (optional, if you use VS Code)
+.vscode/
+
+# Redis dump files (in case)
+dump.rdb
