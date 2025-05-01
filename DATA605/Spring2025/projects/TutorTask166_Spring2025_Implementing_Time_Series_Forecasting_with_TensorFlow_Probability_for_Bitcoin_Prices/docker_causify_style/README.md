@@ -43,3 +43,20 @@
 
 - Choose the approach that best fits your comfort level and project needs. Both
   are valid depending on your use case.
+
+---
+
+## data source choosing
+
+Those two rows really are for the same asset (the original Bitcoin, ticker BTC-USD on Yahoo and ID bitcoin on CoinGecko), but they come from very different pipelines—so it’s normal to see discrepancies. Here are the main reasons:
+	1.	Different data sources & exchange coverage
+	•	CoinGecko aggregates trades from dozens of spot exchanges, then computes daily open/high/low/close from that combined feed.
+	•	Yahoo Finance feeds (via yfinance.download("BTC-USD")) often draw from a specific subset of venues (and may even include derivative markets), so you’re not seeing the full global volume.
+	2.	Time‐stamp & time-zone alignment
+	•	CoinGecko’s daily bars are aligned to 00:00 UTC (so “2025-02-05” really means the 24 hours from 00:00 UTC on the 5th to 00:00 UTC on the 6th).
+	•	Yahoo Finance will often use the local market close (for crypto it can actually default to UTC nevertheless, but the sample time can differ slightly), so your “open” price may be the last trade on Feb 4 at 23:59 UTC rather than the first Feb 5 price at 00:00 UTC.
+	3.	Definition of “volume”
+	•	CoinGecko’s total_volume is the USD-value of all spot trades on all exchanges over the 24 hours.
+	•	Yahoo’s Volume column for crypto also reports a USD figure but only across its data partners—which can be a different subset of venues.
+	4.	No merge bug—just apples vs. oranges
+We did in fact pull BTC in both scripts (CoinGecko’s ID was hard-coded to "bitcoin", and yfinance downloaded "BTC-USD"), so there’s no accidental “other coin” slipping in. The difference you’re seeing is simply because the two services measure and timestamp their daily bars differently.
