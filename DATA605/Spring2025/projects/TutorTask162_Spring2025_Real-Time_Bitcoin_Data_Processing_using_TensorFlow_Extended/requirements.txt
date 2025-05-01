@@ -1,0 +1,5 @@
+tfx==1.15.1
+tensorflow==2.15.1
+pandas
+matplotlib
+requests

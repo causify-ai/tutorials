@@ -1,0 +1,12 @@
+version: "3.13"
+
+services:
+  bitcoin_tfx:
+    build:
+      context: .
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/app
+    working_dir: /app
+    container_name: bitcoin_tfx_env
