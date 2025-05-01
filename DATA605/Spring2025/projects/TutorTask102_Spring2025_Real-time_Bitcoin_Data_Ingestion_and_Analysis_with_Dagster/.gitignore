@@ -3,3 +3,7 @@ __pycache__/
 *.pyc
 *.db
 *.csv
+dagster_env/
+tmp.build/
+.dagster_home/
+
