@@ -49,7 +49,7 @@ import seaborn as sns
 
 # %%
 # Load Data.
-file_path = "s3://causify-data-collaborators/causal_automl/metadata/gridstatus_metadata.csv"
+file_path = "s3://causify-data-collaborators/causal_automl/metadata/gridstatus_metadata_v1.0.csv"
 file = hs3.from_file(file_path, aws_profile="ck")
 gs_meta = pd.read_csv(io.StringIO(file))
 
