@@ -1,7 +1,6 @@
-# data/raw_data_ingest.py
+# data/raw_data/bitcoin_features.py
 
 import os
-import json
 import requests
 import pandas as pd
 from datetime import datetime
@@ -9,87 +8,57 @@ from datetime import datetime
 RAW_DIR = "data/raw_data"
 os.makedirs(RAW_DIR, exist_ok=True)
 
-def fetch_bitcoin_history(days: int = 3650) -> dict:
+def fetch_bitcoin_features(days: int = 365) -> pd.DataFrame:
     """
-    Fetch & save historical Bitcoin prices for the past `days` days.
-    Returns metadata including file paths, record count, and date range.
+    Fetch Bitcoin OHLC + price + market cap + 24h volume for the past `days` days.
+    Returns a DataFrame with columns:
+      timestamp, open, high, low, close, price, market_cap, total_volume
     """
-    url = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart"
-    params = {"vs_currency": "usd", "days": days}
-    resp = requests.get(url, params=params)
-    resp.raise_for_status()
-    data = resp.json()["prices"]  # list of [ms_timestamp, price]
+    coin_id = "bitcoin"
+    vs_currency = "usd"
 
-    # Build DataFrame
-    df = pd.DataFrame(data, columns=["timestamp_ms", "price_usd"])
-    df["timestamp"] = pd.to_datetime(df["timestamp_ms"], unit="ms")
-    df = df[["timestamp", "price_usd"]]
+    # 1) Historical chart data (price, market cap, 24h volume)
+    url_mc = f"https://api.coingecko.com/api/v3/coins/{coin_id}/market_chart"
+    params_mc = {"vs_currency": vs_currency, "days": days}
+    resp_mc = requests.get(url_mc, params=params_mc)
+    resp_mc.raise_for_status()
+    mc = resp_mc.json()
+    # prices, market_caps, total_volumes are lists of [timestamp_ms, value]
+    df_price = pd.DataFrame(mc["prices"], columns=["ts", "price"])
+    df_cap   = pd.DataFrame(mc["market_caps"], columns=["ts", "market_cap"])
+    df_vol   = pd.DataFrame(mc["total_volumes"], columns=["ts", "total_volume"])
 
-    # File naming
-    csv_path = os.path.join(RAW_DIR, f"bitcoin_history_{days}d.csv")
-    meta_path = os.path.join(RAW_DIR, f"bitcoin_history_{days}d.metadata.json")
+    # 2) OHLC data
+    url_ohlc = f"https://api.coingecko.com/api/v3/coins/{coin_id}/ohlc"
+    params_ohlc = {"vs_currency": vs_currency, "days": days}
+    resp_ohlc = requests.get(url_ohlc, params=params_ohlc)
+    resp_ohlc.raise_for_status()
+    ohlc = resp_ohlc.json()
+    # each entry: [timestamp_ms, open, high, low, close]
+    df_ohlc = pd.DataFrame(ohlc, columns=["ts", "open", "high", "low", "close"])
 
-    # Save CSV
-    df.to_csv(csv_path, index=False)
+    # 3) Merge on timestamp (ms)
+    df = (
+        df_ohlc
+        .merge(df_price, on="ts", how="left")
+        .merge(df_cap,   on="ts", how="left")
+        .merge(df_vol,   on="ts", how="left")
+    )
 
-    # Build & save metadata
-    metadata = {
-        "source": url,
-        "params": params,
-        "output_csv": csv_path,
-        "records": len(df),
-        "start_date": df["timestamp"].min().isoformat(),
-        "end_date":   df["timestamp"].max().isoformat(),
-        "fetched_at": datetime.utcnow().isoformat()
-    }
-    with open(meta_path, "w") as f:
-        json.dump(metadata, f, indent=2)
+    # 4) Convert to datetime and clean up
+    df["timestamp"] = pd.to_datetime(df["ts"], unit="ms")
+    df = df[["timestamp", "open", "high", "low", "close", "price", "market_cap", "total_volume"]]
+    df.sort_values("timestamp", inplace=True)
+    df.reset_index(drop=True, inplace=True)
 
-    return metadata
+    # 5) Save to CSV with descriptive filename
+    out_csv = os.path.join(RAW_DIR, f"bitcoin_features_{days}d.csv")
+    df.to_csv(out_csv, index=False)
 
-
-def fetch_snapshot(date_str: str = "30-12-2020") -> dict:
-    """
-    Fetch & save a single-day Bitcoin snapshot (DD-MM-YYYY).
-    Returns metadata including file paths and key metrics.
-    """
-    url = "https://api.coingecko.com/api/v3/coins/bitcoin/history"
-    params = {"date": date_str, "localization": "false"}
-    resp = requests.get(url, params=params)
-    resp.raise_for_status()
-    market_data = resp.json().get("market_data", {})
-
-    # Normalize date for filename
-    dt = datetime.strptime(date_str, "%d-%m-%Y")
-    filename_date = dt.strftime("%Y%m%d")
-
-    json_path = os.path.join(RAW_DIR, f"bitcoin_snapshot_{filename_date}.json")
-    meta_path = os.path.join(RAW_DIR, f"bitcoin_snapshot_{filename_date}.metadata.json")
-
-    # Save full snapshot JSON
-    with open(json_path, "w") as f:
-        json.dump(market_data, f, indent=2)
-
-    # Extract key metadata
-    metadata = {
-        "source": url,
-        "params": params,
-        "output_json": json_path,
-        "current_price_usd": market_data.get("current_price", {}).get("usd"),
-        "market_cap_usd":    market_data.get("market_cap", {}).get("usd"),
-        "total_volume_usd":  market_data.get("total_volume", {}).get("usd"),
-        "fetched_at":        datetime.utcnow().isoformat()
-    }
-    with open(meta_path, "w") as f:
-        json.dump(metadata, f, indent=2)
-
-    return metadata
-
+    print(f"Wrote {len(df)} records ➜ {out_csv}")
+    return df
 
 if __name__ == "__main__":
-    # Example usage:
-    hist_meta = fetch_bitcoin_history(days=365)
-    print("History metadata:", hist_meta)
-
-    snap_meta = fetch_snapshot("01-01-2021")
-    print("Snapshot metadata:", snap_meta)
+    # Example: pull last 365 days
+    df = fetch_bitcoin_features(days=365)
+    print(df.head())
