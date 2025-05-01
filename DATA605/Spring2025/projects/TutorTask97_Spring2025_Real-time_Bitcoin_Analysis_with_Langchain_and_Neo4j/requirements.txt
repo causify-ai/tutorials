@@ -1,0 +1,7 @@
+langchain_neo4j
+openai
+requests
+websocket-client
+urllib3
+numpy
+tqdm
