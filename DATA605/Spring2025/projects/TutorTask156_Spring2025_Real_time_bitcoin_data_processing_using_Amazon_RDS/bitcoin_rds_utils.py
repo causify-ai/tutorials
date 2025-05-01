@@ -30,8 +30,7 @@ logger = logging.getLogger(__name__)
 # Database Configuration
 # -----------------------------------------------------------------------------
 
-# Store these in a separate config.py file in production
-RDS_HOST = "bitcoin-price-db.cf8q8ya0ca68.us-east-2.rds.amazonaws.com"
+RDS_HOST = "my aws host"
 RDS_PORT = 5432
 RDS_DATABASE = "bitcoin_db"
 RDS_USERNAME = "bitcoin" 
