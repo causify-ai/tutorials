@@ -11,8 +11,8 @@ Welcome to my capstone project for DATA605: an end-to-end Bitcoin forecasting sy
 3. [Architecture Overview](#-architecture-overview)
 4. [Technologies & Libraries Used](#-technologies--libraries-used)
 5. [Dataset Sources](#-dataset-sources)
-6. [Exploratory Data Analysis (EDA)](#-exploratory-data-analysis-eda)
-7. [Utility Functions Explained](#-utility-functions-explained-utilspy)
+6. [Utility Functions Explained](#-utility-functions-explained-utilspy)
+7. [Exploratory Data Analysis (EDA)](#-exploratory-data-analysis-eda)
 8. [Project Status](#-project-status)
 
 ---
@@ -21,32 +21,7 @@ Welcome to my capstone project for DATA605: an end-to-end Bitcoin forecasting sy
 
 Forecasting cryptocurrency prices, particularly Bitcoin, is a challenging yet valuable task due to the asset’s high volatility and market sensitivity. Investors, analysts, and trading platforms rely on timely insights to make informed decisions. This project seeks to develop a reliable, real-time forecasting system that predicts short-term Bitcoin price movements using both historical and live data. Leveraging Facebook Prophet, a time series forecasting tool, the project is designed to process noisy and irregular financial data, model seasonality and trends, and produce accurate, interpretable forecasts. The system is also built to be robust against missing data, customizable for future improvements, and scalable for real-time applications.
 
----
-
-## Technologies & Libraries Using in The Project
-
-| Component     | Libraries/Tools             |
-| ------------- | --------------------------- |
-| Forecasting   | Facebook Prophet            |
-| Data Handling | pandas, numpy               |
-| API Ingestion | requests, json              |
-| Visualization | matplotlib, seaborn, plotly |
-| Evaluation    | sklearn.metrics             |
-| Dashboard     | streamlit (optional)        |
-
----
-
-## Architecture Overview
-
-1. **Data Ingestion**: Load historical CSV, fetch live API data
-2. **Preprocessing**: Merge, clean, and validate continuity
-3. **EDA**: Trend analysis, seasonality, volatility
-4. **Modeling**: Prophet training
-5. **Forecasting**: 7–30 day predictions
-6. **Evaluation**: RMSE, MAE (planned)
-7. **Deployment**:  Streamlit dashboard
-
----
+-----
 
 ## General Guidelines
 
@@ -63,6 +38,45 @@ This section outlines general project practices followed to ensure a clean, repr
   * Weekly seasonality disabled due to flat weekly trends.
   * Changepoint detection and log return analysis are used.
 * **Deployment**: Streamlit used for an optional interactive forecast dashboard.
+
+---
+
+## Architecture Overview
+
+1. **Data Ingestion**: Load historical CSV, fetch live API data
+2. **Preprocessing**: Merge, clean, and validate continuity
+3. **EDA**: Trend analysis, seasonality, volatility
+4. **Modeling**: Prophet training
+5. **Forecasting**: 7–30 day predictions
+6. **Evaluation**: RMSE, MAE (planned)
+7. **Deployment**:  Streamlit dashboard
+
+---
+
+## Technologies & Libraries Using in The Project
+
+| Component     | Libraries/Tools             |
+| ------------- | --------------------------- |
+| Forecasting   | Facebook Prophet            |
+| Data Handling | pandas, numpy               |
+| API Ingestion | requests, json              |
+| Visualization | matplotlib, seaborn, plotly |
+| Evaluation    | sklearn.metrics             |
+| Dashboard     | streamlit (optional)        |
+
+---
+
+## Dataset Sources
+
+### Historical Data
+
+* **Source**: [Kaggle BTC Historical Dataset](https://www.kaggle.com/datasets/mczielinski/bitcoin-historical-data) (2012–2025)
+* **Transformed**: `Date → ds`, `Close → y`
+
+### Real-Time Data
+
+* **Source**: CoinGecko API (`/coins/bitcoin/market_chart`)
+* **Used**: Last 365 days’ prices for live forecasting
 
 ---
 
@@ -95,22 +109,6 @@ Generates a DataFrame with future dates and forecasts values for a given period.
 ### `plot_forecast(model, forecast)`
 
 Visualizes the forecast using Prophet’s built-in plotting functions. Displays overall trend, seasonality components, and prediction intervals.
-
----
-
-## Dataset Sources
-
-### Historical Data
-
-* **Source**: [Kaggle BTC Historical Dataset](https://www.kaggle.com/datasets/mczielinski/bitcoin-historical-data) (2012–2025)
-* **Transformed**: `Date → ds`, `Close → y`
-
-### Real-Time Data
-
-* **Source**: CoinGecko API (`/coins/bitcoin/market_chart`)
-* **Used**: Last 30 days’ prices for live forecasting
-
----
 
 ---
 
@@ -195,8 +193,6 @@ After identifying these key inflection points through trend and volatility analy
 
 ---
 
----
-
 ## ✅ Project Status
 
 | Phase         | Status | Notes                         |
@@ -207,5 +203,3 @@ After identifying these key inflection points through trend and volatility analy
 | Forecasting   | To Do  | Forecast generated            |
 | Evaluation    | To Do  | Metrics computation upcoming  |
 | Streamlit App | To Do  | Web app development           |
-
-
