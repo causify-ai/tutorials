@@ -1,8 +1,12 @@
 from confluent_kafka import Producer
 import logging
 import time
-from template_utils import serialize_to_avro
-from template_API import BitcoinAPI
+from utils import serialize_to_avro
+from Gecko_API import BitcoinAPI
+
+
+api = BitcoinAPI()
+data = api.fetch_bitcoin_price()
 
 _LOG = logging.getLogger(__name__)
 
@@ -17,7 +21,8 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
 
     # Initialize Kafka producer
-    producer = Producer({'bootstrap.servers': 'localhost:9092'})
+    producer = Producer({'bootstrap.servers': 'host.docker.internal:9093'})
+    print("Kafka Bootstrap Server:", producer)
 
     # Initialize API
     api = BitcoinAPI()
