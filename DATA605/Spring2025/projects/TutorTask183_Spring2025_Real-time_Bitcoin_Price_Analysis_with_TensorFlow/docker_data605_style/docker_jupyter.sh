@@ -56,6 +56,6 @@ run "docker run \
     --rm -ti \
     --name $CONTAINER_NAME \
     $DOCKER_RUN_OPTS \
-    -v $(pwd):/curr_dir \
+    -v $(dirname $(pwd)):/curr_dir \
     $FULL_IMAGE_NAME \
     $CMD"

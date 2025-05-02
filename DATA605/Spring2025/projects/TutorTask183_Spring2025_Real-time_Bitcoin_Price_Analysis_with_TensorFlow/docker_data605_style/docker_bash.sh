@@ -12,5 +12,5 @@ docker run --rm -ti \
   --name "$CONTAINER_NAME" \
   --entrypoint /bin/bash \
   -p 8888:8888 \
-  -v "$(pwd)":/data \
+  -v "$(dirname "$(pwd)")":/data \
   "$FULL_IMAGE_NAME"
