@@ -35,3 +35,35 @@ A Dockerized MCP server and client toolkit that fetches live and historical Bitc
 - Internet access to `api.coingecko.com`  
 
 ---
+   
+2.	**Configure environment variables**
+Create a .env file with the following:
+```bash
+FETCH_INTERVAL=60
+PRICE_ALERT_THRESHOLD=500
+```
+
+3.	**Build and run the Docker container**
+
+4.	**Open your browser**
+Navigate to http://localhost:8888 to explore the notebook.
+
+---
+
+📊 **Example Use Cases**
+- Track short-term price surges or drops in Bitcoin.
+- Visualize hourly or daily fluctuations.
+- Automate insights via Anthropic MCP for downstream alerts or recommendations.
+
+ ---
+
+📚 **References**
+- [CoinGecko API Documentation](https://www.coingecko.com/en/api)
+- Anthropic MCP
+- Statsmodels Time Series API
+
+ ---
+
+📄 **License**
+
+This project is for educational purposes. Please ensure compliance with CoinGecko and Anthropic API terms of service for commercial or large-scale usage.
