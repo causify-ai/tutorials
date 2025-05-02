@@ -17,7 +17,9 @@
 # CONTENTS:
 # - [Exploratory Data Analysis: Gridstatus metadata](#exploratory-data-analysis:-gridstatus-metadata)
 #   - [Imports](#imports)
+#   - [Helper Functions](#helper-functions)
 #   - [Load Data](#load-data)
+#   - [Create Dataset Categories](#create-dataset-categories)
 #   - [Initial observation](#initial-observation)
 #   - [Missing Value Summary](#missing-value-summary)
 #       - [Exploring Gaps in Metadata Coverage](#exploring-gaps-in-metadata-coverage)
@@ -47,13 +49,14 @@
 import io
 import logging
 import re
+from typing import Optional
 
 import helpers.hdbg as hdbg
 import helpers.henv as henv
 import helpers.hpandas as hpandas
 import helpers.hprint as hprint
 import helpers.hs3 as hs3
-import IPython.display as disp
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
@@ -71,65 +74,34 @@ hprint.config_notebook()
 
 
 # %% [markdown]
-# <a name='load-data'></a>
-# ## Load Data
+# <a name='helper-functions'></a>
+# ## Helper Functions
 
 
 # %%
-# Display structure of dataframe.
-def _load_data(file_path: str) -> pd.DataFrame:
+def _categorize_series(name: str) -> str:
     """
-    Load data from file path to a dataframe.
+    Categorize a dataset based on keywords in its name.
 
-    :param file_path: path of the data to load from
-    :return: dataframe of the loaded data
+    :param name: name of the time series
+    :return: category label
     """
-    file = hs3.from_file(file_path, aws_profile="ck")
-    df = pd.read_csv(io.StringIO(file))
-    _LOG.info("Shape: %s", df.shape)
-    _LOG.info("Columns: %s", df.columns)
-    hpandas.df_to_str(df, log_level=logging.INFO)
-    return df
+    name = str(name).lower()
+    for category, keyword in category_keywords.items():
+        # Match name to category keyword pattern.
+        if re.search(keyword, name):
+            return category
+    return "Other"
 
 
-file_path = "s3://causify-data-collaborators/causal_automl/metadata/gridstatus_metadata_v1.0.csv"
-gs_meta = _load_data(file_path)
-
-
-# %% [markdown]
-# <a name='initial-observation'></a>
-# ## Initial observation
-#
-# From the 19 columns available in the GridStatus metadata, the following are most relevant for initial exploratory analysis:
-#
-# - `source` : Identifies the origin of each dataset.
-# - `data_frequency` : Describes the granularity of data (e.g. 5 minutes, 1 hour, 1 day, etc).
-# - `is_in_snowflake` : Indicates whether the dataset is already ingested into the internal Snowflake warehouse.
-# - `table_type` : Helps categorize datasets by their structure or intended purpose (table, view, materialized view).
-# - `earliest_available_time_utc` : Indicates the starting point of data availability for each dataset.
-# - `latest_available_time_utc` : Indicates the most recent timestamp available in each dataset.
-#
-#
-# Several other metadata fields are available but were excluded from the initial analysis for the following reasons:
-#
-# - Columns like `id`, `name`, and `description` are identifiers or unstructured text, making them unsuitable for analysis.
-# - Fields like `primary_key_columns`, `publish_time_column`, `subseries_index_column`, and `all_columns` are helpful for database structure but not very useful for analyzing overall metadata patterns.
-# - Fields like `last_checked_time_utc` are useful for monitoring and tracking system activity.
-# - `source_url` is a similar to `source`, as it includes a direct link to the data source, but it contains some null values and may not always be available.
-# - `number_of_rows_approximate` can be leveraged in future analytical processes to perform dataset size comparisons, enabling scalability assessments and optimization strategies.
-# - `time_index_column` indicates the name of the column containing timestamps, making it useful for dataset structure but not for actual time-based analysis.
-# - `is_published` is consistently `True` for all records (unless the metadata is updated) and therefore not relevant for analysis.
-# - `publication_frequency` is null for all records except one, and as a result, it is excluded from the analysis.
-
-
-# %%
 def _make_plots(
-    title: str = None,
-    x_label: str = None,
-    y_label: str = None,
-    legend: str = None,
-    x_rotation: int = None,
-    y_rotation: int = None,
+    *,
+    title: Optional[str] = None,
+    x_label: Optional[str] = None,
+    y_label: Optional[str] = None,
+    x_rotation: Optional[int] = None,
+    y_rotation: Optional[int] = None,
+    legend: Optional[str] = None,
     grid: bool = False,
 ) -> None:
     """
@@ -149,13 +121,13 @@ def _make_plots(
         plt.xlabel(x_label)
     if y_label is not None:
         plt.ylabel(y_label)
-    if legend is not None:
-        plt.legend(title=legend)
     if x_rotation is not None:
         plt.xticks(rotation=x_rotation)
     if y_rotation is not None:
         plt.yticks(rotation=y_rotation)
-    if grid is not None:
+    if legend is not None:
+        plt.legend(title=legend)
+    if grid:
         plt.grid(grid)
     plt.show()
 
@@ -199,8 +171,40 @@ def _get_missing_count(df: pd.DataFrame) -> pd.DataFrame:
     return missing_columns_df
 
 
+# %% [markdown]
+# <a name='load-data'></a>
+# ## Load Data
+
+
 # %%
-# Categorize items by matching names to keyword patterns.
+# Display structure of dataframe.
+def _load_data(file_path: str) -> pd.DataFrame:
+    """
+    Load data from file path to a dataframe.
+
+    :param file_path: path of the data to load from
+    :return: dataframe of the loaded data
+    """
+    file = hs3.from_file(file_path, aws_profile="ck")
+    df = pd.read_csv(io.StringIO(file))
+    _LOG.info("shape: %s", df.shape)
+    _LOG.info("columns: %s", df.columns)
+    _LOG.info("df: \n %s", hpandas.df_to_str(df, log_level=logging.INFO))
+    return df
+
+
+file_path = "s3://causify-data-collaborators/causal_automl/metadata/gridstatus_metadata_v1.0.csv"
+gs_meta = _load_data(file_path)
+
+
+# %% [markdown]
+# <a name='create-dataset-categories'></a>
+# ## Create Dataset Categories
+#
+# Categorize datasets by matching names to keyword patterns.
+
+# %%
+# Define categories.
 category_keywords = {
     "Energy": r"\b(load|energy)\b",
     "Renewables": r"\b(renewable|solar|wind|hydro)\b",
@@ -214,25 +218,37 @@ category_keywords = {
     "Records": r"\b(record|records|statistics)\b",
     "Time Frequency": r"\b(day|daily|hour|hourly|minute|min)\b",
 }
-
-
-def _categorize_series(name: str) -> str:
-    """
-    Categorize a dataset based on keywords in its name.
-
-    :param name: name of the time series
-    :return: category label
-    """
-    name = str(name).lower()
-    for category, keyword in category_keywords.items():
-        # Match name to category keyword pattern.
-        if re.search(keyword, name):
-            return category
-    return "Other"
-
-
 gs_meta["category"] = gs_meta["name"].apply(_categorize_series)
-disp.display(gs_meta.head())
+_LOG.info(
+    "metadata with categories: \n %s",
+    hpandas.df_to_str(gs_meta, log_level=logging.INFO),
+)
+
+# %% [markdown]
+# <a name='initial-observation'></a>
+# ## Initial observation
+#
+# From the 19 columns available in the GridStatus metadata, the following are most relevant for initial exploratory analysis:
+#
+# - `source` : Identifies the origin of each dataset.
+# - `data_frequency` : Describes the granularity of data (e.g. 5 minutes, 1 hour, 1 day, etc).
+# - `is_in_snowflake` : Indicates whether the dataset is already ingested into the internal Snowflake warehouse.
+# - `table_type` : Helps categorize datasets by their structure or intended purpose (table, view, materialized view).
+# - `earliest_available_time_utc` : Indicates the starting point of data availability for each dataset.
+# - `latest_available_time_utc` : Indicates the most recent timestamp available in each dataset.
+#
+#
+# Several other metadata fields are available but were excluded from the initial analysis for the following reasons:
+#
+# - Columns like `id`, `name`, and `description` are identifiers or unstructured text, making them unsuitable for analysis.
+# - Fields like `primary_key_columns`, `publish_time_column`, `subseries_index_column`, and `all_columns` are helpful for database structure but not very useful for analyzing overall metadata patterns.
+# - Fields like `last_checked_time_utc` are useful for monitoring and tracking system activity.
+# - `source_url` is a similar to `source`, as it includes a direct link to the data source, but it contains some null values and may not always be available.
+# - `number_of_rows_approximate` can be leveraged in future analytical processes to perform dataset size comparisons, enabling scalability assessments and optimization strategies.
+# - `time_index_column` indicates the name of the column containing timestamps, making it useful for dataset structure but not for actual time-based analysis.
+# - `is_published` is consistently `True` for all records (unless the metadata is updated) and therefore not relevant for analysis.
+# - `publication_frequency` is null for all records except one, and as a result, it is excluded from the analysis.
+
 
 # %% [markdown]
 # <a name='missing-value-summary'></a>
@@ -243,7 +259,10 @@ disp.display(gs_meta.head())
 # %%
 # Display missing metadata statistics.
 missing_gs_meta = _get_missing_count(gs_meta)
-disp.display(missing_gs_meta)
+_LOG.info(
+    "missing data: \n%s",
+    hpandas.df_to_str(missing_gs_meta, log_level=logging.INFO),
+)
 # Plot missing metadata statistics.
 missing_gs_meta[missing_gs_meta["Missing Count"] > 0].sort_values(
     "Missing %", ascending=True
@@ -338,7 +357,10 @@ earliest_rows = gs_meta[
     == gs_meta["earliest_available_time_utc"].min()
 ]
 print("Earliest available dataset(s):")
-disp.display(earliest_rows)
+_LOG.info(
+    "earliest available dataset(s): \n%s",
+    hpandas.df_to_str(earliest_rows, log_level=logging.INFO),
+)
 
 # %% [markdown]
 # <a name='dataset-coverage-distribution'></a>
@@ -420,7 +442,7 @@ _make_plots(
 # This plot visualizes the number of time series grouped by the number of days since their most recent data point ```latest_available_time_utc```. Time series with a high number of days since the last update may indicate that the datasets are potentially discontinued or inactive. A threshold of 120 days has been set to flag series that are potentially outdated, helping to identify datasets that may require further review for reactivation, archival, or removal. This approach provides a proactive way to monitor the health and relevance of time series in the data pipeline.
 
 # %%
-# Identify and display discontinued datasets.
+# Identify discontinued datasets.
 gs_meta["days_since_latest_data"] = (
     pd.Timestamp.utcnow() - gs_meta["latest_available_time_utc"]
 ).dt.days
@@ -428,7 +450,10 @@ discontinued_threshold = 120
 discontinued_data = gs_meta[
     gs_meta["days_since_latest_data"] > discontinued_threshold
 ]
-display(discontinued_data)
+_LOG.info(
+    "discontinued data: \n%s",
+    hpandas.df_to_str(discontinued_data, log_level=logging.INFO),
+)
 
 # %%
 # Plot the distribution of days since the latest data point.
