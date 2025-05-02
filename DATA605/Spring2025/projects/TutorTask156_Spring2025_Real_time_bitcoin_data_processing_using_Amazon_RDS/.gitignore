@@ -1,0 +1,6 @@
+# Ignore all files inside the aws/ folder
+aws/*
+
+# But don't ignore the folder itself
+!aws/.gitkeep
+
