@@ -1,36 +1,51 @@
 # Data paths
-paths:
-  instant_raw_csv: "data/raw_data/instant_data/coinbase_1s_ohlc.csv"
-  history_raw_csv: "data/raw_data/bitcoin_history_365d.csv"
+data:
+  raw_data:
+    instant_data:
+      file: "/app/data/raw_data/instant_data/coinbase_1s_ohlc.csv"
+  predictions:
+    instant_data:
+      predictions_file: "/app/data/predictions/instant_pred.csv"
+      metrics_file: "/app/data/predictions/instant_metrics.csv"
+    history_data:
+      predictions_file: "/app/data/predictions/history_data/history_predictions.csv"
+      metrics_file: "/app/data/predictions/history_data/history_metrics.csv"
 
-instant:
-  # Instant (5-min) feature settings
-  resample_freq: "1T"            # 1-minute bars
-  feature_windows:
-    log_return: 1                # lag in minutes
-    vol_rolling: [5, 15]         # rolling vol windows in minutes
-    ma_short: 5                  # moving average window in minutes
-    ma_long: 15                  # moving average window in minutes
+# Kafka configuration
+kafka:
+  bootstrap_servers: "kafka:9092"
+  topic: "bitcoin-prices"
+  consumer_group: "bitcoin-dashboard"
 
-  # Instant (5-min) model settings
-  vi_steps: 200                  # VI training steps
-  learning_rate: 0.1             # Adam LR
-  num_samples: 50                # posterior samples to draw
-  forecast_horizon: 5            # predict next 5 minutes
-
-history:
-  # History (7-day) feature settings
-  rolling_vol: 7                 # 7-day volatility window
-  seasonal_period: 7             # weekly seasonality (7 days)
-
-  # History (7-day) model settings
-  num_seasons: 7                 # e.g. 7 days in a week
-  vi_steps: 200                  # VI training steps
-  learning_rate: 0.1             # Adam LR
-  num_samples: 50                # posterior samples to draw
-  forecast_horizon: 7            # predict next 7 days
-
-# Model hyperparameters
+# Model configuration
 model:
-  vi_steps: 200
-  vi_lr: 0.05
+  instant:
+    evaluation_window: 12  # hours (reduced from 24)
+    forecast_horizon: 6    # steps (reduced from 12)
+    learning_rate: 0.01    # Learning rate for model training
+    vi_steps: 500         # Number of variational inference steps (reduced from 1000)
+    num_samples: 100      # Number of samples for forecasting (reduced from 1000)
+    feature_windows:       # Feature windows configuration
+      log_return: 5        # 5-minute window for log returns
+      vol_rolling: [15, 30, 60]  # List of windows for volatility rolling window
+      ma_short: 30         # 30-minute window for short-term moving average
+      ma_long: 120         # 2-hour window for long-term moving average
+    resample_freq: "5T"    # 5-minute intervals
+    lookback: 120          # Lookback period for features
+  history:
+    evaluation_window: 168 # hours (1 week)
+    forecast_horizon: 24   # steps
+    learning_rate: 0.01    # Learning rate for model training
+    vi_steps: 1000         # Number of variational inference steps
+    num_samples: 1000      # Number of samples for forecasting
+    num_seasons: 7         # Number of seasons for seasonal model
+    rolling_vol: 7         # Days for rolling volatility calculation
+    seasonal_period: 24    # Hours in a seasonal period
+
+# Dashboard configuration
+dashboard:
+  refresh_interval: 5      # seconds
+  default_time_range_days: 1  # reduced from 7
+  chart_height: 600
+  theme: "plotly_white"
+  data_aggregation: "1H"   # Aggregate data to hourly intervals

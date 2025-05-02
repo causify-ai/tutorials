@@ -79,11 +79,13 @@ Run ```./scripts/run_instant.sh``` or ```./scripts/run_history.sh``` to kick off
 ## Docker
 
 ```bash
-docker stop bitcoin-forecast-app && docker rm bitcoin-forecast-app && docker rmi docker_causify_style-bitcoin-forecast:latest
+docker rm -f $(docker ps -aq)
+docker rmi $(docker images -q | grep -v "^$(docker images ubuntu:20.04 -q)$")
+# docker stop bitcoin-forecast-app && docker rm bitcoin-forecast-app && docker rmi docker_causify_style-bitcoin-forecast:latest
 ```
 
 ```bash
-docker-compose build --no-cache
+docker-compose build --no-cache  # docker-compose build bitcoin-forecast-app dashboard
 docker-compose up -d
 docker-compose logs -f
 ```

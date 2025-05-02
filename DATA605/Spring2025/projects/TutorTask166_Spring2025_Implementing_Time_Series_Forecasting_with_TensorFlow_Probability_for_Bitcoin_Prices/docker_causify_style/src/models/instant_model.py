@@ -26,16 +26,16 @@ class InstantForecastModel:
             target_log_prob_fn=target_log_prob_fn,
             surrogate_posterior=surrogate,
             optimizer=tf.optimizers.Adam(
-                learning_rate=self.config['instant']['learning_rate']
+                learning_rate=self.config['model']['instant']['learning_rate']
             ),
-            num_steps=self.config['instant']['vi_steps']
+            num_steps=self.config['model']['instant']['vi_steps']
         )
 
         self.posterior = surrogate
         return surrogate
 
     def forecast(self, steps: int):
-        samples = self.posterior.sample(self.config['instant']['num_samples'])
+        samples = self.posterior.sample(self.config['model']['instant']['num_samples'])
         return tfp.sts.forecast(
             model=self.model,
             observed_time_series=self.observed_time_series,

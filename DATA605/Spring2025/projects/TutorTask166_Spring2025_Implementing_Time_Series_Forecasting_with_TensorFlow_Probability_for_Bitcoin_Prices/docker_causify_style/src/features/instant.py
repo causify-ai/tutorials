@@ -4,7 +4,7 @@ from .base import FeatureEngineer
 
 class InstantFeatureEngineer(FeatureEngineer):
     def __init__(self, config: dict):
-        inst = config['instant']
+        inst = config['model']['instant']
         self.freq = inst['resample_freq'].replace('T', 'min')
         fw = inst['feature_windows']
         self.log_lag = fw['log_return']

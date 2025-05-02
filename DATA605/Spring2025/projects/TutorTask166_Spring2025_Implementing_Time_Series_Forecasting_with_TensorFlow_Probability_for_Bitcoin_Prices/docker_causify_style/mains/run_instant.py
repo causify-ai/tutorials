@@ -7,9 +7,9 @@ from src.models.instant_model import InstantForecastModel
 from src.trainers.instant_trainer import InstantTrainer
 
 def main():
-    config = load_config('configs/config.yaml')
+    config = load_config('/app/configs/config.yaml')
     logger = get_logger('instant')
-    loader = InstantCSVLoader(config['paths']['instant_raw_csv'])
+    loader = InstantCSVLoader(config['data']['raw_data']['instant_data']['file'])
     fe     = InstantFeatureEngineer(config)
     model  = InstantForecastModel(config)
     trainer = InstantTrainer(loader, fe, model, logger, config)
