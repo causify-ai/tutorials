@@ -1,5 +1,0 @@
-# Ignore Python bytecode files
-__pycache__
-
-# Ignore log files
-*.log

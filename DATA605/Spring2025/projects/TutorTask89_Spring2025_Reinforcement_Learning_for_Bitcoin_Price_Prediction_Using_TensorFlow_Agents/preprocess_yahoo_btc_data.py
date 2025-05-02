@@ -11,7 +11,6 @@ _LOG = utils.logging_setup(log_file="preprocess_yahoo_btc_data.log")
 
 if __name__ == "__main__":
     try:
-        # Load the data
         train_df = pd.read_csv(
             "data/train_data.csv",
         )

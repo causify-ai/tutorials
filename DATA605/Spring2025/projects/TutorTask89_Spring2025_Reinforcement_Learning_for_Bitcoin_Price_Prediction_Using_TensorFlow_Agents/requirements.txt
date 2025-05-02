@@ -1,13 +1,10 @@
 tensorflow
 tf-agents
-gymnasium
 numpy
 pandas
 matplotlib
 yfinance
 python-dotenv
-PyYAML
-tqdm
 absl-py
 scikit-learn
 pytest
