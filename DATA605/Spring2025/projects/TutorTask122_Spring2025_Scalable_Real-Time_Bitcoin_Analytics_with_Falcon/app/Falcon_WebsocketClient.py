@@ -66,7 +66,7 @@ class WebSocketClient:
     def __init__(self, url: str, platform: str):
  
         self.ws_url = url
-        self.platform = platform
+        self.platform = platform.lower()
         self.websocket = None
         self.running = False
         self.loop = None
@@ -161,11 +161,11 @@ class WebSocketClient:
         if self.platform == "coinbase":
             subscribe_message ={
                 "type": "subscribe",
-                "channel" : "ticker",
+                "channels" : ["ticker"],
                 "product_ids": ["BTC-USD"]
             }
             await self.websocket.send(json.dumps(subscribe_message))
-            print("Subscription message sent to {self.ws_url}")
+            print(f"Subscription message sent to {self.ws_url}")
         elif self.platform == "binance":
             print("Binance connection open")
         else:

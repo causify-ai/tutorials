@@ -22,3 +22,6 @@ docker run -it <image_name_here> /bin/bash
 docker run -it umd_data605/umd_data605_template /bin/bash
 get interactive in containers with mounted directory
 docker run -it -v "$(pwd)/../app":/app umd_data605/umd_data605_template /bin/bash
+
+### get a secondary shell on a running container
+docker exec -it <container id from docker ps> /bin/bash
