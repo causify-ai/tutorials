@@ -45,3 +45,24 @@ def save_market_data(df, folder="data"):
     df.to_csv(path, index=False)
     print(f"Saved market data to {path}")
     return path
+
+
+def load_realtime_btc_data(days: int = 30, currency: str = "usd") -> pd.DataFrame:
+    """
+    Fetch real-time Bitcoin market chart data using CoinGecko API.
+
+    Args:
+        days (int): Number of past days to retrieve (default 30)
+        currency (str): Quoted currency (default 'usd')
+
+    Returns:
+        pd.DataFrame: DataFrame with timestamp, price, market cap, volume
+    """
+    config = {
+        "api": {
+            "base_url": "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart",
+            "vs_currency": currency,
+            "days": days
+        }
+    }
+    return fetch_market_chart_data(config)
