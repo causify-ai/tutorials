@@ -1,14 +1,13 @@
-#!/bin/bash -xe
+#!/bin/bash
 
-REPO_NAME=umd_data605
-IMAGE_NAME=umd_data605_template
-FULL_IMAGE_NAME=$REPO_NAME/$IMAGE_NAME
+IMAGE_NAME="faust-bitcoin-analysis"
+CONTAINER_NAME="faust-bitcoin-dev"
 
-docker image ls $FULL_IMAGE_NAME
-
-CONTAINER_NAME=$IMAGE_NAME
-docker run --rm -ti \
-    --name $CONTAINER_NAME \
-    -p 8888:8888 \
-    -v $(pwd):/data \
-    $FULL_IMAGE_NAME
+echo "🐳 Running container $CONTAINER_NAME from image $IMAGE_NAME..."
+docker run -it --rm \
+  --name $CONTAINER_NAME \
+  -p 8888:8888 \      # Jupyter
+  -p 6066:6066 \      # Faust monitoring (if used)
+  -v $(pwd):/app \    # Mount local project into container
+  $IMAGE_NAME \
+  /bin/bash

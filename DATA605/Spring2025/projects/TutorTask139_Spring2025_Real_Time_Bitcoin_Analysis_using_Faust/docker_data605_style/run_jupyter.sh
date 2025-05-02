@@ -1,7 +1,10 @@
-#!/bin/bash -xe
+#!/bin/bash
 
-jupyter-notebook \
-    --port=8888 \
-    --no-browser --ip=0.0.0.0 \
-    --allow-root \
-    --NotebookApp.token='' --NotebookApp.password=''
+echo "🚀 Starting JupyterLab..."
+
+jupyter lab \
+  --ip=0.0.0.0 \
+  --port=8888 \
+  --NotebookApp.token='' \
+  --NotebookApp.password='' \
+  --allow-root

@@ -1,9 +1,17 @@
-#!/bin/bash -e
+#!/bin/bash
 
-GIT_ROOT=$(git rev-parse --show-toplevel)
-source $GIT_ROOT/tutorial_github_simple/docker_common/utils.sh
+echo "🧹 Cleaning up Docker containers and images..."
 
-REPO_NAME=umd_data605
-IMAGE_NAME=umd_data605_template
+# Stop all running containers
+docker ps -q | xargs -r docker stop
 
-remove_container_image
+# Remove all containers
+docker ps -a -q | xargs -r docker rm
+
+# Remove all dangling images
+docker images -f "dangling=true" -q | xargs -r docker rmi
+
+# Remove all unused volumes (optional)
+docker volume prune -f
+
+echo "✅ Docker cleanup complete."

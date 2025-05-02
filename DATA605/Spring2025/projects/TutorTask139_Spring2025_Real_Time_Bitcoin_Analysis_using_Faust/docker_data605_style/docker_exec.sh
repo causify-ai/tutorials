@@ -1,9 +1,7 @@
-#!/bin/bash -e
+#!/bin/bash
 
-GIT_ROOT=$(git rev-parse --show-toplevel)
-source $GIT_ROOT/tutorial_github_simple/docker_common/utils.sh
+# Name or ID of the container (use 'docker ps' to find this if needed)
+CONTAINER_NAME="faust-bitcoin-container"
 
-REPO_NAME=umd_data605
-IMAGE_NAME=umd_data605_template
-
-exec_container
+echo "🔍 Attaching to container: $CONTAINER_NAME"
+docker exec -it $CONTAINER_NAME /bin/bash

@@ -1,12 +1,14 @@
-#!/bin/bash -e
+#!/bin/bash
 
-GIT_ROOT=$(git rev-parse --show-toplevel)
-source $GIT_ROOT/docker_common/utils.sh
+# Name of the image
+IMAGE_NAME="faust-bitcoin-analysis"
 
-REPO_NAME=umd_data605
-IMAGE_NAME=umd_data605_template
+echo "🚀 Building Docker image: $IMAGE_NAME"
+docker build -t $IMAGE_NAME .
 
-# Build container.
-export DOCKER_BUILDKIT=1
-#export DOCKER_BUILDKIT=0
-build_container_image
+if [ $? -eq 0 ]; then
+    echo "✅ Build successful!"
+else
+    echo "❌ Build failed."
+    exit 1
+fi
