@@ -1,0 +1,1 @@
+source dev_scripts_tutorials/thin_client/setenv.sh
