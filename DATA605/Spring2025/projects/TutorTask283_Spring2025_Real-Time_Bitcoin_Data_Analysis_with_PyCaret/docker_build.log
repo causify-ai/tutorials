@@ -1,0 +1,95 @@
+#1 [internal] load build definition from Dockerfile
+#1 sha256:466c20ee23940abb1cd136a092d607efd8111c49d47e236ead4ceab3fd12164e
+#1 transferring dockerfile: 1.40kB 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load .dockerignore
+#2 sha256:a38eb5e848ac259f92c4a2a1ddee49efac0543fb10dca2135688ffb14b95c6c2
+#2 transferring context: 2B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/ubuntu:20.04
+#3 sha256:cd9ed232facd22264e9246054f9c3d7a9c42bdb414a225d8f8215114646e640c
+#3 DONE 0.7s
+
+#4 [ 1/17] FROM docker.io/library/ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214
+#4 sha256:7eacb91cc387f0a7fe01eea1d9d4cfb581cce4fccd592c56320178e77208595d
+#4 DONE 0.0s
+
+#14 [internal] load build context
+#14 sha256:b1564be36ccfb05d34b30a617df1e1c8c95d2df3b2cd73d3ec27a2376ceb6d1d
+#14 transferring context: 2.42kB 0.0s done
+#14 DONE 0.0s
+
+#17 [13/17] ADD etc_sudoers /install/
+#17 sha256:5c60c4775e2a8137d8f6877d08b6479ebc63efe051e3b6b5b21bcf74e47304c6
+#17 CACHED
+
+#11 [ 8/17] RUN pip3 install pycaret pandas requests plotly
+#11 sha256:4dda8a2171df218872b1c8652ae04b6b662c111a4f9975363afd380d5bb9bcdd
+#11 CACHED
+
+#18 [14/17] COPY etc_sudoers /etc/sudoers
+#18 sha256:41cd327e899c0e40d0e427a01632d0147fa7ef55b893bfc1edf2ac59abb056b2
+#18 CACHED
+
+#19 [15/17] COPY bashrc /root/.bashrc
+#19 sha256:596b25257f59c71c8e4c5c73c2f1d912e8002544c2aa25de4410611d98e74b4a
+#19 CACHED
+
+#15 [11/17] ADD install_jupyter_extensions.sh /install
+#15 sha256:9c85b9515d9fad4e12b2a9fe162e93334a3314deb4c8c884b2c5848f5f8b6af5
+#15 CACHED
+
+#16 [12/17] RUN /install/install_jupyter_extensions.sh
+#16 sha256:a5dc4edf01e508e98a299b0e15ffb7fe2889926fd5df52f56d008538d26e2010
+#16 CACHED
+
+#12 [ 9/17] RUN pip3 install     ipython     tornado==6.1     jupyter-client==7.3.2     jupyter-contrib-core     jupyter-contrib-nbextensions     psycopg2-binary     yapf
+#12 sha256:65413edffb2cd061c001cc69e7a905ec5eda10e989dfb97ba8932e7c2e00f798
+#12 CACHED
+
+#13 [10/17] RUN mkdir /install
+#13 sha256:4af0e22edad3d320d0d445c98858352888af8c87681259c1b3f4bba0bcbce8a5
+#13 CACHED
+
+#7 [ 4/17] RUN apt install -y --no-install-recommends     sudo     curl     systemctl     gnupg     git     vim
+#7 sha256:ef364a865483b483aaac6030a2769b49fdd879e36dd678a3631af96f2d71f951
+#7 CACHED
+
+#20 [16/17] ADD version.sh /install/
+#20 sha256:b35a797dcc5053f1235f920e861d931cecaa75ef0b2bedfa10a0d6e94e60b958
+#20 CACHED
+
+#5 [ 2/17] RUN apt-get -y update
+#5 sha256:7f7f20f487d860ee525fdd70b100c074d137be583200c0ac2d573e0d2cfc026f
+#5 CACHED
+
+#9 [ 6/17] RUN python3 -m pip install --upgrade pip
+#9 sha256:6bfb600bbcb3e5125f756b77c61215891c3ca2455decd2049271f6bf2ebe08fd
+#9 CACHED
+
+#8 [ 5/17] RUN apt install -y --no-install-recommends     python3     python3-pip     python3-dev
+#8 sha256:06f959792488024dee0df70fb8a6b2b75f9d04a2e895874042aa1c08c3b0fc52
+#8 CACHED
+
+#6 [ 3/17] RUN apt-get -y upgrade
+#6 sha256:d1eb86328ae056e2ff2476333ac023d93dbcea99c4693f405dd752a747f2d381
+#6 CACHED
+
+#10 [ 7/17] RUN pip3 install --upgrade pip
+#10 sha256:4024b6c96aa292d5291a578fb9d6b1582940ab1683a3114753df9e63b0aca1f8
+#10 CACHED
+
+#21 [17/17] RUN /install/version.sh 2>&1 | tee version.log
+#21 sha256:dad508edde5c2bdb484ee457c9a260f2d090f2115300f00480a64d62a0515fcb
+#21 CACHED
+
+#22 exporting to image
+#22 sha256:e8c613e07b0b7ff33893b694f7759a10d42e180f2b4dc349fb57dc6b71dcab00
+#22 exporting layers done
+#22 writing image sha256:76ecb92e8f0dd228973e620db48020b82a7701e48018ddc007626ea774fcc857 done
+#22 naming to docker.io/umd_data605/umd_data605_template done
+#22 DONE 0.0s
+
+Use 'docker scan' to run Snyk tests against images to find vulnerabilities and learn how to fix them

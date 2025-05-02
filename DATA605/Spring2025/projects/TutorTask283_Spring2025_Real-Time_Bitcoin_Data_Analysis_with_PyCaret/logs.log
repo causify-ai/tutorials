@@ -1,0 +1,158 @@
+2025-04-25 00:42:38,101:WARNING:
+'prophet' is a soft dependency and not included in the pycaret installation. Please run: `pip install prophet` to install.
+2025-04-30 04:00:58,670:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2025-04-30 04:00:58,675:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2025-04-30 04:00:58,676:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2025-04-30 04:00:58,679:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2025-04-30 04:00:59,123:WARNING:
+'prophet' is a soft dependency and not included in the pycaret installation. Please run: `pip install prophet` to install.
+2025-04-30 04:00:59,383:INFO:PyCaret TSForecastingExperiment
+2025-04-30 04:00:59,385:INFO:Logging name: ts-default-name
+2025-04-30 04:00:59,386:INFO:ML Usecase: MLUsecase.TIME_SERIES
+2025-04-30 04:00:59,387:INFO:version 3.0.0
+2025-04-30 04:00:59,388:INFO:Initializing setup()
+2025-04-30 04:00:59,392:INFO:self.USI: 0bc4
+2025-04-30 04:00:59,394:INFO:self._variable_keys: {'X_test_transformed', 'idx', '_ml_usecase', 'y_train_transformed', 'y_transformed', 'fold_generator', 'significant_sps_no_harmonics', 'fold_param', 'X_train', 'candidate_sps', 'y_test_transformed', 'gpu_param', 'log_plots_param', 'all_sps_to_use', 'USI', 'model_engines', 'pipeline', 'seasonality_present', 'y', 'n_jobs_param', 'significant_sps', 'enforce_pi', 'seed', 'exp_name_log', 'primary_sp_to_use', 'X_train_transformed', 'enforce_exogenous', 'logging_param', 'strictly_positive', 'data', 'approach_type', 'y_train', 'html_param', 'X_transformed', 'y_test', 'fh', 'X', 'X_test', '_available_plots', 'memory', 'exp_id', 'exogenous_present', 'index_type', 'gpu_n_jobs_param'}
+2025-04-30 04:00:59,396:INFO:Checking environment
+2025-04-30 04:00:59,398:INFO:python_version: 3.8.10
+2025-04-30 04:00:59,399:INFO:python_build: ('default', 'Mar 18 2025 20:04:55')
+2025-04-30 04:00:59,400:INFO:machine: aarch64
+2025-04-30 04:00:59,401:INFO:platform: Linux-5.10.76-linuxkit-aarch64-with-glibc2.29
+2025-04-30 04:00:59,402:INFO:Memory: svmem(total=2085294080, available=1128411136, percent=45.9, used=595238912, free=34971648, active=459395072, inactive=1313083392, buffers=92512256, cached=1362571264, shared=273100800, slab=234074112)
+2025-04-30 04:00:59,405:INFO:Physical Core: 4
+2025-04-30 04:00:59,407:INFO:Logical Core: 4
+2025-04-30 04:00:59,410:INFO:Checking libraries
+2025-04-30 04:00:59,412:INFO:System:
+2025-04-30 04:00:59,413:INFO:    python: 3.8.10 (default, Mar 18 2025, 20:04:55)  [GCC 9.4.0]
+2025-04-30 04:00:59,415:INFO:executable: /usr/bin/python3
+2025-04-30 04:00:59,416:INFO:   machine: Linux-5.10.76-linuxkit-aarch64-with-glibc2.29
+2025-04-30 04:00:59,418:INFO:PyCaret required dependencies:
+2025-04-30 08:26:56,426:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2025-04-30 08:26:56,429:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2025-04-30 08:26:56,430:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2025-04-30 08:26:56,432:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2025-04-30 08:26:56,706:WARNING:
+'prophet' is a soft dependency and not included in the pycaret installation. Please run: `pip install prophet` to install.
+2025-04-30 08:45:28,109:INFO:PyCaret TSForecastingExperiment
+2025-04-30 08:45:28,111:INFO:Logging name: ts-default-name
+2025-04-30 08:45:28,113:INFO:ML Usecase: MLUsecase.TIME_SERIES
+2025-04-30 08:45:28,114:INFO:version 3.0.0
+2025-04-30 08:45:28,115:INFO:Initializing setup()
+2025-04-30 08:45:28,116:INFO:self.USI: 00cf
+2025-04-30 08:45:28,118:INFO:self._variable_keys: {'significant_sps', 'index_type', 'exp_name_log', 'idx', 'y_train', 'X_transformed', 'enforce_pi', 'strictly_positive', '_available_plots', 'model_engines', 'gpu_param', 'seasonality_present', 'enforce_exogenous', 'data', 'fh', 'gpu_n_jobs_param', 'y_train_transformed', '_ml_usecase', 'seed', 'y_test_transformed', 'significant_sps_no_harmonics', 'exp_id', 'exogenous_present', 'y_test', 'primary_sp_to_use', 'X', 'fold_param', 'n_jobs_param', 'pipeline', 'approach_type', 'USI', 'log_plots_param', 'html_param', 'all_sps_to_use', 'logging_param', 'memory', 'y_transformed', 'y', 'candidate_sps', 'X_test_transformed', 'X_train', 'X_test', 'fold_generator', 'X_train_transformed'}
+2025-04-30 08:45:28,121:INFO:Checking environment
+2025-04-30 08:45:28,121:INFO:python_version: 3.8.10
+2025-04-30 08:45:28,123:INFO:python_build: ('default', 'Mar 18 2025 20:04:55')
+2025-04-30 08:45:28,124:INFO:machine: aarch64
+2025-04-30 08:45:28,125:INFO:platform: Linux-5.10.76-linuxkit-aarch64-with-glibc2.29
+2025-04-30 08:45:28,130:INFO:Memory: svmem(total=2085294080, available=1188159488, percent=43.0, used=612061184, free=43089920, active=568868864, inactive=1214545920, buffers=136294400, cached=1293848576, shared=196620288, slab=213663744)
+2025-04-30 08:45:28,134:INFO:Physical Core: 4
+2025-04-30 08:45:28,135:INFO:Logical Core: 4
+2025-04-30 08:45:28,136:INFO:Checking libraries
+2025-04-30 08:45:28,137:INFO:System:
+2025-04-30 08:45:28,138:INFO:    python: 3.8.10 (default, Mar 18 2025, 20:04:55)  [GCC 9.4.0]
+2025-04-30 08:45:28,139:INFO:executable: /usr/bin/python3
+2025-04-30 08:45:28,141:INFO:   machine: Linux-5.10.76-linuxkit-aarch64-with-glibc2.29
+2025-04-30 08:45:28,142:INFO:PyCaret required dependencies:
+2025-04-30 08:54:30,364:INFO:PyCaret TSForecastingExperiment
+2025-04-30 08:54:30,366:INFO:Logging name: ts-default-name
+2025-04-30 08:54:30,367:INFO:ML Usecase: MLUsecase.TIME_SERIES
+2025-04-30 08:54:30,369:INFO:version 3.0.0
+2025-04-30 08:54:30,370:INFO:Initializing setup()
+2025-04-30 08:54:30,371:INFO:self.USI: 07b7
+2025-04-30 08:54:30,373:INFO:self._variable_keys: {'significant_sps', 'index_type', 'exp_name_log', 'idx', 'y_train', 'X_transformed', 'enforce_pi', 'strictly_positive', '_available_plots', 'model_engines', 'gpu_param', 'seasonality_present', 'enforce_exogenous', 'data', 'fh', 'gpu_n_jobs_param', 'y_train_transformed', '_ml_usecase', 'seed', 'y_test_transformed', 'significant_sps_no_harmonics', 'exp_id', 'exogenous_present', 'y_test', 'primary_sp_to_use', 'X', 'fold_param', 'n_jobs_param', 'pipeline', 'approach_type', 'USI', 'log_plots_param', 'html_param', 'all_sps_to_use', 'logging_param', 'memory', 'y_transformed', 'y', 'candidate_sps', 'X_test_transformed', 'X_train', 'X_test', 'fold_generator', 'X_train_transformed'}
+2025-04-30 08:54:30,374:INFO:Checking environment
+2025-04-30 08:54:30,375:INFO:python_version: 3.8.10
+2025-04-30 08:54:30,376:INFO:python_build: ('default', 'Mar 18 2025 20:04:55')
+2025-04-30 08:54:30,377:INFO:machine: aarch64
+2025-04-30 08:54:30,379:INFO:platform: Linux-5.10.76-linuxkit-aarch64-with-glibc2.29
+2025-04-30 08:54:30,380:INFO:Memory: svmem(total=2085294080, available=1159491584, percent=44.4, used=640966656, free=39477248, active=568225792, inactive=1220694016, buffers=135385088, cached=1269465088, shared=196374528, slab=211832832)
+2025-04-30 08:54:30,383:INFO:Physical Core: 4
+2025-04-30 08:54:30,384:INFO:Logical Core: 4
+2025-04-30 08:54:30,386:INFO:Checking libraries
+2025-04-30 08:54:30,387:INFO:System:
+2025-04-30 08:54:30,388:INFO:    python: 3.8.10 (default, Mar 18 2025, 20:04:55)  [GCC 9.4.0]
+2025-04-30 08:54:30,389:INFO:executable: /usr/bin/python3
+2025-04-30 08:54:30,390:INFO:   machine: Linux-5.10.76-linuxkit-aarch64-with-glibc2.29
+2025-04-30 08:54:30,391:INFO:PyCaret required dependencies:
+2025-04-30 09:01:30,415:INFO:PyCaret TSForecastingExperiment
+2025-04-30 09:01:30,418:INFO:Logging name: ts-default-name
+2025-04-30 09:01:30,419:INFO:ML Usecase: MLUsecase.TIME_SERIES
+2025-04-30 09:01:30,420:INFO:version 3.0.0
+2025-04-30 09:01:30,422:INFO:Initializing setup()
+2025-04-30 09:01:30,423:INFO:self.USI: a365
+2025-04-30 09:01:30,425:INFO:self._variable_keys: {'significant_sps', 'index_type', 'exp_name_log', 'idx', 'y_train', 'X_transformed', 'enforce_pi', 'strictly_positive', '_available_plots', 'model_engines', 'gpu_param', 'seasonality_present', 'enforce_exogenous', 'data', 'fh', 'gpu_n_jobs_param', 'y_train_transformed', '_ml_usecase', 'seed', 'y_test_transformed', 'significant_sps_no_harmonics', 'exp_id', 'exogenous_present', 'y_test', 'primary_sp_to_use', 'X', 'fold_param', 'n_jobs_param', 'pipeline', 'approach_type', 'USI', 'log_plots_param', 'html_param', 'all_sps_to_use', 'logging_param', 'memory', 'y_transformed', 'y', 'candidate_sps', 'X_test_transformed', 'X_train', 'X_test', 'fold_generator', 'X_train_transformed'}
+2025-04-30 09:01:30,427:INFO:Checking environment
+2025-04-30 09:01:30,428:INFO:python_version: 3.8.10
+2025-04-30 09:01:30,429:INFO:python_build: ('default', 'Mar 18 2025 20:04:55')
+2025-04-30 09:01:30,430:INFO:machine: aarch64
+2025-04-30 09:01:30,431:INFO:platform: Linux-5.10.76-linuxkit-aarch64-with-glibc2.29
+2025-04-30 09:01:30,433:INFO:Memory: svmem(total=2085294080, available=1154985984, percent=44.6, used=645480448, free=34840576, active=568713216, inactive=1224790016, buffers=135491584, cached=1269481472, shared=196374528, slab=211738624)
+2025-04-30 09:01:30,434:INFO:Physical Core: 4
+2025-04-30 09:01:30,435:INFO:Logical Core: 4
+2025-04-30 09:01:30,437:INFO:Checking libraries
+2025-04-30 09:01:30,439:INFO:System:
+2025-04-30 09:01:30,440:INFO:    python: 3.8.10 (default, Mar 18 2025, 20:04:55)  [GCC 9.4.0]
+2025-04-30 09:01:30,442:INFO:executable: /usr/bin/python3
+2025-04-30 09:01:30,444:INFO:   machine: Linux-5.10.76-linuxkit-aarch64-with-glibc2.29
+2025-04-30 09:01:30,446:INFO:PyCaret required dependencies:
+2025-04-30 09:09:46,068:INFO:PyCaret TSForecastingExperiment
+2025-04-30 09:09:46,071:INFO:Logging name: ts-default-name
+2025-04-30 09:09:46,073:INFO:ML Usecase: MLUsecase.TIME_SERIES
+2025-04-30 09:09:46,074:INFO:version 3.0.0
+2025-04-30 09:09:46,075:INFO:Initializing setup()
+2025-04-30 09:09:46,077:INFO:self.USI: b0f4
+2025-04-30 09:09:46,078:INFO:self._variable_keys: {'significant_sps', 'index_type', 'exp_name_log', 'idx', 'y_train', 'X_transformed', 'enforce_pi', 'strictly_positive', '_available_plots', 'model_engines', 'gpu_param', 'seasonality_present', 'enforce_exogenous', 'data', 'fh', 'gpu_n_jobs_param', 'y_train_transformed', '_ml_usecase', 'seed', 'y_test_transformed', 'significant_sps_no_harmonics', 'exp_id', 'exogenous_present', 'y_test', 'primary_sp_to_use', 'X', 'fold_param', 'n_jobs_param', 'pipeline', 'approach_type', 'USI', 'log_plots_param', 'html_param', 'all_sps_to_use', 'logging_param', 'memory', 'y_transformed', 'y', 'candidate_sps', 'X_test_transformed', 'X_train', 'X_test', 'fold_generator', 'X_train_transformed'}
+2025-04-30 09:09:46,080:INFO:Checking environment
+2025-04-30 09:09:46,081:INFO:python_version: 3.8.10
+2025-04-30 09:09:46,083:INFO:python_build: ('default', 'Mar 18 2025 20:04:55')
+2025-04-30 09:09:46,084:INFO:machine: aarch64
+2025-04-30 09:09:46,085:INFO:platform: Linux-5.10.76-linuxkit-aarch64-with-glibc2.29
+2025-04-30 09:09:46,087:INFO:Memory: svmem(total=2085294080, available=1149259776, percent=44.9, used=651186176, free=31719424, active=569413632, inactive=1226625024, buffers=135475200, cached=1266913280, shared=196374528, slab=212013056)
+2025-04-30 09:09:46,089:INFO:Physical Core: 4
+2025-04-30 09:09:46,091:INFO:Logical Core: 4
+2025-04-30 09:09:46,092:INFO:Checking libraries
+2025-04-30 09:09:46,095:INFO:System:
+2025-04-30 09:09:46,096:INFO:    python: 3.8.10 (default, Mar 18 2025, 20:04:55)  [GCC 9.4.0]
+2025-04-30 09:09:46,097:INFO:executable: /usr/bin/python3
+2025-04-30 09:09:46,098:INFO:   machine: Linux-5.10.76-linuxkit-aarch64-with-glibc2.29
+2025-04-30 09:09:46,100:INFO:PyCaret required dependencies:
+2025-04-30 09:11:40,122:INFO:PyCaret TSForecastingExperiment
+2025-04-30 09:11:40,125:INFO:Logging name: ts-default-name
+2025-04-30 09:11:40,126:INFO:ML Usecase: MLUsecase.TIME_SERIES
+2025-04-30 09:11:40,128:INFO:version 3.0.0
+2025-04-30 09:11:40,130:INFO:Initializing setup()
+2025-04-30 09:11:40,133:INFO:self.USI: 8e89
+2025-04-30 09:11:40,134:INFO:self._variable_keys: {'significant_sps', 'index_type', 'exp_name_log', 'idx', 'y_train', 'X_transformed', 'enforce_pi', 'strictly_positive', '_available_plots', 'model_engines', 'gpu_param', 'seasonality_present', 'enforce_exogenous', 'data', 'fh', 'gpu_n_jobs_param', 'y_train_transformed', '_ml_usecase', 'seed', 'y_test_transformed', 'significant_sps_no_harmonics', 'exp_id', 'exogenous_present', 'y_test', 'primary_sp_to_use', 'X', 'fold_param', 'n_jobs_param', 'pipeline', 'approach_type', 'USI', 'log_plots_param', 'html_param', 'all_sps_to_use', 'logging_param', 'memory', 'y_transformed', 'y', 'candidate_sps', 'X_test_transformed', 'X_train', 'X_test', 'fold_generator', 'X_train_transformed'}
+2025-04-30 09:11:40,136:INFO:Checking environment
+2025-04-30 09:11:40,137:INFO:python_version: 3.8.10
+2025-04-30 09:11:40,138:INFO:python_build: ('default', 'Mar 18 2025 20:04:55')
+2025-04-30 09:11:40,140:INFO:machine: aarch64
+2025-04-30 09:11:40,141:INFO:platform: Linux-5.10.76-linuxkit-aarch64-with-glibc2.29
+2025-04-30 09:11:40,143:INFO:Memory: svmem(total=2085294080, available=1147183104, percent=45.0, used=653283328, free=35880960, active=569683968, inactive=1222254592, buffers=135450624, cached=1260679168, shared=196374528, slab=211144704)
+2025-04-30 09:11:40,144:INFO:Physical Core: 4
+2025-04-30 09:11:40,146:INFO:Logical Core: 4
+2025-04-30 09:11:40,147:INFO:Checking libraries
+2025-04-30 09:11:40,149:INFO:System:
+2025-04-30 09:11:40,150:INFO:    python: 3.8.10 (default, Mar 18 2025, 20:04:55)  [GCC 9.4.0]
+2025-04-30 09:11:40,151:INFO:executable: /usr/bin/python3
+2025-04-30 09:11:40,152:INFO:   machine: Linux-5.10.76-linuxkit-aarch64-with-glibc2.29
+2025-04-30 09:11:40,153:INFO:PyCaret required dependencies:
+2025-05-01 23:23:12,684:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2025-05-01 23:23:12,687:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2025-05-01 23:23:12,688:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2025-05-01 23:23:12,690:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2025-05-01 23:23:12,900:WARNING:
+'prophet' is a soft dependency and not included in the pycaret installation. Please run: `pip install prophet` to install.
