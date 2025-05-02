@@ -1,4 +1,6 @@
 import logging
+import tensorflow as tf
+import tensorflow_probability as tfp
 
 class HistoryTrainer:
     def __init__(
@@ -30,9 +32,12 @@ class HistoryTrainer:
         forecast_dist = self.model.forecast(self.horizon)
         self.logger.info(f"Forecasted next {self.horizon} days")
 
-        mean  = forecast_dist.mean().numpy()
-        lower = forecast_dist.quantile(0.1).numpy()
-        upper = forecast_dist.quantile(0.9).numpy()
+        # Extract stats using samples since quantile is not implemented
+        samples = forecast_dist.sample(1000)  # Get 1000 samples for better estimation
+        mean = tf.reduce_mean(samples, axis=0).numpy()
+        lower = tfp.stats.percentile(samples, 10.0, axis=0).numpy()
+        upper = tfp.stats.percentile(samples, 90.0, axis=0).numpy()
+        
         self.logger.info(f"Mean (head): {mean[:5]}")
         self.logger.info(f"90% CI lower (head): {lower[:5]}")
         self.logger.info(f"90% CI upper (head): {upper[:5]}")
