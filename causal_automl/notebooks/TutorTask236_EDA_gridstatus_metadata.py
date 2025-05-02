@@ -79,11 +79,12 @@ hprint.config_notebook()
 
 
 # %%
-def _categorize_series(name: str) -> str:
+def _categorize_series(name: str, category_keywords: dict) -> str:
     """
     Categorize a dataset based on keywords in its name.
 
     :param name: name of the time series
+    :param category_keywords: keywords mapped to categories
     :return: category label
     """
     name = str(name).lower()
@@ -132,15 +133,16 @@ def _make_plots(
     plt.show()
 
 
-def _display_percentage_plot(column: str) -> None:
+def _display_percentage_plot(df: pd.DataFrame, column: str) -> None:
     """
     Generate bar plot with percentage distribution.
 
     :param column: column to visualize as a percentage distribution
+    :param df: input dataframe
     """
-    column_counts = gs_meta[column].value_counts()
+    column_counts = df[column].value_counts()
     ax = column_counts.plot(kind="bar", figsize=(9, 5))
-    for index, percentage in enumerate(column_counts / len(gs_meta) * 100):
+    for index, percentage in enumerate(column_counts / len(df) * 100):
         ax.text(
             index,
             column_counts.iloc[index],
@@ -177,7 +179,7 @@ def _get_missing_count(df: pd.DataFrame) -> pd.DataFrame:
 
 
 # %%
-# Display structure of dataframe.
+# Display structure of the data.
 def _load_data(file_path: str) -> pd.DataFrame:
     """
     Load data from file path to a dataframe.
@@ -218,7 +220,9 @@ category_keywords = {
     "Records": r"\b(record|records|statistics)\b",
     "Time Frequency": r"\b(day|daily|hour|hourly|minute|min)\b",
 }
-gs_meta["category"] = gs_meta["name"].apply(_categorize_series)
+gs_meta["category"] = gs_meta["name"].apply(
+    lambda name: _categorize_series(name, category_keywords)
+)
 _LOG.info(
     "metadata with categories: \n %s",
     hpandas.df_to_str(gs_meta, log_level=logging.INFO),
@@ -243,7 +247,7 @@ _LOG.info(
 # - Columns like `id`, `name`, and `description` are identifiers or unstructured text, making them unsuitable for analysis.
 # - Fields like `primary_key_columns`, `publish_time_column`, `subseries_index_column`, and `all_columns` are helpful for database structure but not very useful for analyzing overall metadata patterns.
 # - Fields like `last_checked_time_utc` are useful for monitoring and tracking system activity.
-# - `source_url` is a similar to `source`, as it includes a direct link to the data source, but it contains some null values and may not always be available.
+# - `source_url` is similar to `source`, as it includes a direct link to the data source, but it contains some null values and may not always be available.
 # - `number_of_rows_approximate` can be leveraged in future analytical processes to perform dataset size comparisons, enabling scalability assessments and optimization strategies.
 # - `time_index_column` indicates the name of the column containing timestamps, making it useful for dataset structure but not for actual time-based analysis.
 # - `is_published` is consistently `True` for all records (unless the metadata is updated) and therefore not relevant for analysis.
@@ -292,8 +296,8 @@ _make_plots(x_label="Missing %", grid=True)
 # Over 50% of all datasets come from ERCOT, PJM, and CAISO, indicating better data availability, reliability, or greater importance in grid operations.
 
 # %%
-# Plot the distribution of entries by source from the dataframe.
-_display_percentage_plot(column="source")
+# Plot the distribution of entries by source.
+_display_percentage_plot(gs_meta, column="source")
 _make_plots(
     title="Distribution by Source", y_label="Number of Datasets", x_rotation=45
 )
@@ -303,11 +307,11 @@ _make_plots(
 # <a name='frequency-distribution'></a>
 # #### Frequency Distribution
 #
-# Most of the datasets in GridStatus are updated frequently, with the majority (almost 75% of the dataset) being hourly or every 5 minutes. This suggests that the system is focused on providing up-to-date, real-time data, while fewer datasets cater to more specialized or less frequent data needs.
+# Most of the datasets in GridStatus are updated frequently, with the majority (almost 75% of the dataset) being updated hourly or every 5 minutes. This suggests that the system is focused on providing up-to-date, real-time data, while fewer datasets cater to more specialized or less frequent data needs.
 
 # %%
-# Plot the distribution of entries by frequency from the dataframe.
-_display_percentage_plot(column="data_frequency")
+# Plot the distribution of entries by frequency.
+_display_percentage_plot(gs_meta, column="data_frequency")
 _make_plots(
     title="Distribution by Frequency", y_label="Number of Datasets", x_rotation=45
 )
@@ -319,8 +323,8 @@ _make_plots(
 # Around 60% of the dataset fall under the category of Price, Energy and Time Frequency. Categories such as Capacity, Emissions, Non-renewables and Weather account to less than 3% of the dataset. Additionally, nearly 10% of the dataset does not fall under any defined category. This can be reduced by fine-tuning the categorization process, by using a different metadata field, such as description.
 
 # %%
-# Plot the distribution of entries by category from the dataframe.
-_display_percentage_plot(column="category")
+# Plot the distribution of entries by category.
+_display_percentage_plot(gs_meta, column="category")
 _make_plots(
     title="Distribution by Category", y_label="Number of Datasets", x_rotation=60
 )
@@ -329,7 +333,7 @@ _make_plots(
 # <a name='lookback-period'></a>
 # #### Lookback Period
 #
-# The earliest available datasets indicate a few sources with historical data dating back to 1993 and the early 2000s, suggesting the presence of long-term historical records. However, the majority of datasets begin around 2010 or later, with a noticeable drop in availability after 2020. This gap could be attributed to several factors: a reduction in new data collection, shifts in collection focus, or the global impact of COVID-19, potentially disrupting data collection efforts during the pandemic. As organizations focused on the immediate needs of the crisis, some data streams may have been paused or limited.
+# The earliest available datasets indicate a few sources with historical data dating back to 1993 and the early 2000s, suggesting the presence of long-term historical records. However, the majority of datasets begin around 2010 or later, with a noticeable drop in availability in 2020.
 
 # %%
 # Convert timestamps to DateTime format.
@@ -415,7 +419,6 @@ _make_plots(
 #
 # The analysis of Snowflake ingestion shows some interesting patterns across different data types. All `materialized_view` entries and around 90% of `view` entries are not ingested into Snowflake. On the other hand, around 95% of `table_view` entries are successfully ingested into Snowflake, showing that most structured data is already in the system.
 #
-# The limited Snowflake ingestion of `view` and `materialized_view` types may indicate that these datasets are not yet considered part of the core analytics workflow. The high ingestion rate of `table_view` entries could suggest a focus on integrating well-structured datasets into Snowflake. This shows possible gaps in the data pipeline and raises the question of whether configuring more `table_view` could better support analysis.
 
 # %%
 # Plot a normalized stacked bar chart of Snowflake ingestion by table type.
@@ -475,7 +478,7 @@ _make_plots(
 # <a name='coverage-by-source-and-category'></a>
 # #### Coverage by Source and Category
 #
-# The following heatmap shows the most popular categories across different data sources. ERCOT stands out with a wide range of categories, with Energy being the most popular among them. Across all sources, Prices category is the most frequent.
+# The following heatmap shows the most popular categories across different data sources. ERCOT and GridStatus both stand out for their wide range of categories, with Energy and Records being the most popular respectively. Across all sources, Prices category is the most frequent.
 #
 # Categorization can be further fine-tuned using a larger number of records and more detailed metadata fields, such as descriptions, to have a better understanding of this coverage.
 
