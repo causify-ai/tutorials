@@ -1,0 +1,6 @@
+# .bashrc for Docker container
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+export EDITOR=vim
+export PATH="$HOME/.local/bin:$PATH"

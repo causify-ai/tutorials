@@ -1,1 +1,3 @@
-../../../docker_common/install_jupyter_extensions.sh
+#!/bin/bash
+jupyter contrib nbextension install --user
+jupyter nbextensions_configurator enable --user

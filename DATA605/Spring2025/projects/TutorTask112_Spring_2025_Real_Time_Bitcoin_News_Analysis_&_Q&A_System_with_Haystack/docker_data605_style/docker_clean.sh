@@ -1,9 +1,5 @@
-#!/bin/bash -e
-
-GIT_ROOT=$(git rev-parse --show-toplevel)
-source $GIT_ROOT/tutorial_github_simple/docker_common/utils.sh
-
-REPO_NAME=umd_data605
-IMAGE_NAME=umd_data605_template
-
-remove_container_image
+#!/bin/bash
+echo " Stopping and removing containers..."
+docker stop bitcoin-haystack es-bitcoin
+docker rm bitcoin-haystack es-bitcoin
+docker system prune -f

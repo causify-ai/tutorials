@@ -1,12 +1,5 @@
-#!/bin/bash -e
-
-GIT_ROOT=$(git rev-parse --show-toplevel)
-source $GIT_ROOT/docker_common/utils.sh
-
-REPO_NAME=umd_data605
-IMAGE_NAME=umd_data605_template
-
-# Build container.
-export DOCKER_BUILDKIT=1
-#export DOCKER_BUILDKIT=0
-build_container_image
+#!/bin/bash
+FULL_IMAGE_NAME=bitcoin_haystack:latest
+echo "🔨 Building Docker image: $FULL_IMAGE_NAME"
+docker build -t $FULL_IMAGE_NAME .
+echo "✅ Build complete."
