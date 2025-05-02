@@ -1,19 +1,16 @@
-"""
-A brief overview of what the script does in one line.
+import time
+from prepare_finetune_data import fetch_prices
+from ollama_API import generate_forecast
 
-1. Make sure to include the citations here (code and research)
-2. Make sure to run the linter on the script before committing changes.
-    - Many changes would be pointed out by the linter to maintain consistency
-      with coding style.
-3. Provide here the reference to the documentation that explains the system in
-   detail. (e.g., pycaret.API.md)
+if __name__ == "__main__":
+    now = int(time.time())
+    # last 12 points = 1 hour at 5-min resolution
+    series = fetch_prices(now - 12 * 300, now)
+    vals   = series.tolist()
 
-This script is how you use (customize) the API in the project. The
-naming should be as follows:
- - if the project is on `pycaret`, then it is `pycaret.example.py`
-
- Follow the reference on coding style guide to write clean and readable code.
-- https://github.com/causify-ai/helpers/blob/master/docs/coding/all.coding_style.how_to_guide.md
-"""
-
-# Same as tutorial_template/template.API.py
+    prompt = (
+        "Here are twelve 5-minute Bitcoin prices (USD):\n"
+        + ", ".join(f"{v:.2f}" for v in vals)
+        + "\n\nPlease predict the next 5-minute price."
+    )
+    print("Forecast:", generate_forecast(prompt))
