@@ -56,7 +56,6 @@ run "docker run \
     --rm -ti \
     --name $CONTAINER_NAME \
     $DOCKER_RUN_OPTS \
-    -v $HOME/src/tutorials1:/home/DATA605 \
     -v $(pwd):/curr_dir \
     $FULL_IMAGE_NAME \
     $CMD"

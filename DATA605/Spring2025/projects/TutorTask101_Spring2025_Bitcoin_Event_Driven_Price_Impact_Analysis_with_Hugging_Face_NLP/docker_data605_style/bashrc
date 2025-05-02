@@ -1,0 +1,9 @@
+# ~/.bashrc
+
+# Activate venv if it exists
+if [ -d "/root/.venv" ]; then
+    source /root/.venv/bin/activate
+fi
+
+alias ll='ls -lah'
+alias gs='git status'
