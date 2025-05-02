@@ -12,8 +12,9 @@ This file contains utility functions that support the tutorial notebooks.
 import pandas as pd
 import logging
 from sklearn.model_selection import train_test_split
-from pycaret.classification import compare_models
-
+#from pycaret.classification import compare_models
+import time
+import requests
 # -----------------------------------------------------------------------------
 # Logging
 # -----------------------------------------------------------------------------
@@ -63,3 +64,31 @@ def run_pycaret_classification(df: pd.DataFrame, target_column: str) -> pd.DataF
     return results
 
 
+#--------------------------------------------------------------------------------------
+# Function to get bitcoin price 
+#----------------------------------------------------------------------------------------
+def get_bitcoin_price():
+    """
+    Fetch the current Bitcoin price in USD from the CoinGecko API.
+    :return: float or None if the API fails
+    """
+    for attempt in range(3):  # retry logic
+        try:
+            response = requests.get(
+                "https://api.coingecko.com/api/v3/simple/price",
+                params={"ids": "bitcoin", "vs_currencies": "usd"}
+            )
+            response.raise_for_status()
+            data = response.json()
+            return data["bitcoin"]["usd"]
+        except requests.exceptions.HTTPError as e:
+            if response.status_code == 429:
+                logger.warning("Rate limit hit. Sleeping before retry...")
+                time.sleep(10)  # backoff time
+            else:
+                logger.warning(f"HTTP error occurred: {e}")
+                return None
+        except Exception as e:
+            logger.warning(f"Failed to fetch Bitcoin price: {e}")
+            return None
+    return None

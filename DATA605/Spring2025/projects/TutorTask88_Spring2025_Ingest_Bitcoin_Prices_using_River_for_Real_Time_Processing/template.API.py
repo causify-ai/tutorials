@@ -20,6 +20,7 @@ The name of this script should in the following format:
 # Import libraries in this section.
 # Avoid imports like import *, from ... import ..., from ... import *, etc.
 import logging
+import time
 
 # Following is a useful library for typehinting.
 # For typehints like list, dict, etc. you can use the following:
@@ -29,6 +30,10 @@ from typing import List
 
 import pandas as pd
 import numpy as np
+from river import linear_model, metrics, optim
+from template_utils import get_bitcoin_price
+
+_LOG = logging.getLogger(__name__)
 
 # Prefer using logger over print statements.
 # You can use logger in the following manner:
@@ -50,41 +55,52 @@ _LOG = logging.getLogger(__name__)
 
 class Template:
     """
-    Brief imperative description of what the class does in one line, if needed.
+    A class to stream Bitcoin prices and perform online learning using River.
     """
 
     def __init__(self):
-        pass
-
-    def method1(self, arg1: int) -> None:
         """
-        Brief imperative description of what the method does in one line.
-
-        You can elaborate more in the method docstring in this section, for
-        e.g. explaining the formula/algorithm. Every method/function should
-        have a docstring, typehints and include the parameters and return as
-        follows:
-
-        :param arg1: description of arg1
-        :return: description of return
+        Initializes the linear regression model and MAE metric.
         """
-        # Code bloks go here.
-        # Make sure to include comments to explain what the code is doing.
-        # No empty lines between code blocks.
+        self.model = linear_model.LinearRegression(optimizer=optim.SGD(0.01))
+        self.metric = metrics.MAE()
+        self.prev_price: Optional[float] = get_bitcoin_price()
+
+    def method1(self, steps: int = 30) -> None:
+        """
+        Runs the online learning loop for a given number of steps.
+
+        :param steps: Number of streaming data points to train on.
+        :return: None
+        """
+        for step in range(steps):
+            current_price = get_bitcoin_price()
+            if current_price is None or self.prev_price is None:
+                _LOG.warning("Skipping due to missing price data.")
+                continue
+
+            prediction = self.model.predict_one({'prev_price': self.prev_price})
+            self.model.learn_one({'prev_price': self.prev_price}, current_price)
+            self.metric.update(current_price, prediction)
+
+            print(
+                f"Step {step + 1}: Actual = {current_price} | "
+                f"Predicted = {prediction:.2f} | MAE = {self.metric.get():.2f}"
+            )
+
+            self.prev_price = current_price
+            time.sleep(10)
 
 
 def template_function(arg1: int) -> None:
     """
-    Brief imperative description of what the function does in one line.
+    Placeholder function for demonstration purposes.
 
-    You can elaborate more in the function docstring in this section, for e.g.
-    explaining the formula/algorithm. Every function should have a docstring,
-    typehints and include the parameters and return as follows:
-
-    :param arg1: description of arg1
-    :return: description of return
+    :param arg1: An integer argument (unused here).
+    :return: None
     """
-    # Code bloks go here.
-    # Make sure to include comments to explain what the code is doing.
-    # No empty lines between code blocks.
-    pass
+    print(f"This is a placeholder function. Received arg1 = {arg1}")
+
+
+if __name__ == "__main__":
+    Template().method1()
