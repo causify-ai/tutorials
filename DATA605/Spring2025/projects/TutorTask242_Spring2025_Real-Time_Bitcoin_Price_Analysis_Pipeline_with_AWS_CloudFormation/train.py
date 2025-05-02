@@ -2,7 +2,7 @@ import os, io, json, pickle
 import boto3, pandas as pd
 from prophet import Prophet
 from datetime import datetime, timedelta
-
+import numpy as np
 RAW_BUCKET   = os.environ['RAW_BUCKET']
 MODEL_BUCKET = os.environ['MODEL_BUCKET']
 s3 = boto3.client('s3')
@@ -28,3 +28,4 @@ def handler(event, context):
     s3.put_object(Bucket=MODEL_BUCKET,
                   Key='model.pkl',
                   Body=buf.read())
+    
