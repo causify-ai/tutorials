@@ -4,7 +4,7 @@ Welcome to my capstone project for DATA605: an end-to-end Bitcoin forecasting sy
 
 ---
 
-## 🧾 Table of Contents
+## Table of Contents
 
 1. [Project Objective](#project-objective)
 2. [General Guidelines](#-general-guidelines)
@@ -193,7 +193,7 @@ After identifying these key inflection points through trend and volatility analy
 
 ---
 
-## ✅ Project Status
+## Project Status
 
 | Phase         | Status | Notes                         |
 | ------------- | ------ | ----------------------------- |
