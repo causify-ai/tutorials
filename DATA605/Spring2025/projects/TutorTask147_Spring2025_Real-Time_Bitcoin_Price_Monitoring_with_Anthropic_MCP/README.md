@@ -1,54 +1,40 @@
-# Real-Time Bitcoin Price Monitoring with Anthropic MCP
+# Real‑Time Bitcoin Price Monitoring with Anthropic MCP
 
-This project builds a real-time Bitcoin price monitoring system using Python and Anthropic MCP (Machine Learning and Conversational Platform). It focuses on ingesting, processing, and analyzing live cryptocurrency price data to detect trends, identify anomalies, and trigger automated alerts based on user-defined thresholds.
-
----
-
-## 🚀 Project Objectives
-
-- Collect real-time Bitcoin price data from public APIs (e.g., CoinGecko).
-- Perform time series analysis using statistical methods.
-- Visualize short-term and long-term trends.
-- Integrate with Anthropic MCP for automation and real-time insights.
-- Trigger alerts when price fluctuations exceed defined thresholds.
+A Dockerized MCP server and client toolkit that fetches live and historical Bitcoin data via the CoinGecko API, exposes it as MCP resources and tools, runs automated threshold alerts and time‑series trend analysis, and generates interactive visualizations.
 
 ---
 
-## 🧰 Technologies Used
+## Features
 
-| Tool / Library | Purpose |
-|----------------|---------|
-| **Python**         | Core programming language |
-| **requests / aiohttp** | Fetch real-time data from APIs |
-| **pandas**          | Data manipulation and time series analysis |
-| **statsmodels**     | Statistical modeling and trend analysis |
-| **matplotlib / plotly** | Interactive data visualization |
-| **schedule**        | Periodic task automation |
-| **Anthropic MCP**   | Data processing, automation, and analytics platform (if available) |
+- **MCP Resources & Tools**  
+  - `crypto://price` – current BTC price in USD  
+  - `get_ohlc(days)` – OHLC data for the past N days  
+  - `get_history(date)` – historical snapshot for a given date  
+  - `alert://price_change` – automatic threshold alerts  
+  - `detect_trend(days)` – ARIMA‑based trend forecast  
+  - `plot_price(days)` – saves a Plotly HTML chart  
+
+- **Data Processing**  
+  - Real‑time ingestion via CoinGecko’s REST API :contentReference[oaicite:0]{index=0}  
+  - Time‑series analysis with Pandas & Statsmodels  
+  - Interactive plotting with Plotly  
+
+- **Containerized Deployment**  
+  - Dockerfile for reproducible environments  
+  - STDIO and TCP transports supported  
+
+- **CLI Demonstration**  
+  - Self‑contained Python script to exercise all endpoints  
 
 ---
 
-## 📁 Project Structure
-```bash
-project/
-├── notebooks/
-│   └── coingecko.API.ipynb          # Jupyter notebook for development and testing
-├── scripts/
-│   └── fetch_and_monitor.py         # Script to fetch and process price data
-├── Dockerfile                       # Container setup for reproducibility
-├── .env                             # API keys and environment variables
-├── requirements.txt                 # Python dependencies (optional)
-└── README.md                        # Project documentation
+## Prerequisites
+
+- **Docker** (version 20.10+)  
+- **Python** 3.10+ (for local dev)  
+- Internet access to `api.coingecko.com`  
+
 ---
-```
-
-## 🔧 Setup Instructions
-
-1. **Clone this repository**
-```bash
-git clone https://github.com/your-repo/bitcoin-monitoring.git
-cd bitcoin-monitoring
-```
    
 2.	**Configure environment variables**
 Create a .env file with the following:
