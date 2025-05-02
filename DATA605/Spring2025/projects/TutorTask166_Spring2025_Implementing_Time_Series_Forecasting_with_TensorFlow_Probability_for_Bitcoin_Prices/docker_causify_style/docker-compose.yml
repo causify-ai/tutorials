@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  bitcoin-forecast:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bitcoin-forecast-app
+    # Bind-mount only your raw_data folder so it never gets deleted
+    volumes:
+      - ./data/raw_data:/usr/src/app/data/raw_data:rw
+    working_dir: /usr/src/app
+    # Override ENTRYPOINT at runtime if you want history instead:
+    # command: ["bash", "-lc", "./scripts/run_history.sh"]
+    restart: unless-stopped

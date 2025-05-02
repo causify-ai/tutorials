@@ -60,3 +60,30 @@ Those two rows really are for the same asset (the original Bitcoin, ticker BTC-U
 	•	Yahoo’s Volume column for crypto also reports a USD figure but only across its data partners—which can be a different subset of venues.
 	4.	No merge bug—just apples vs. oranges
 We did in fact pull BTC in both scripts (CoinGecko’s ID was hard-coded to "bitcoin", and yfinance downloaded "BTC-USD"), so there’s no accidental “other coin” slipping in. The difference you’re seeing is simply because the two services measure and timestamp their daily bars differently.
+
+--
+
+## Entrypoint
+
+Run ```./scripts/run_instant.sh``` or ```./scripts/run_history.sh``` to kick off each pipeline.
+
+	•	Load raw CSVs
+	•	Resample/aggregate into features
+	•	Fit probabilistic STS models
+	•	Forecast with uncertainty
+	•	Log each step
+	•	Configure via a single YAML
+
+---
+
+## Docker
+
+```bash
+docker stop bitcoin-forecast-app && docker rm bitcoin-forecast-app && docker rmi docker_causify_style-bitcoin-forecast:latest
+```
+
+```bash
+docker-compose build --no-cache
+docker-compose up -d
+docker-compose logs -f
+```

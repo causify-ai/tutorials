@@ -1,0 +1,36 @@
+# Data paths
+paths:
+  instant_raw_csv: "data/raw_data/instant_data/coinbase_1s_ohlc.csv"
+  history_raw_csv: "data/raw_data/bitcoin_history_365d.csv"
+
+instant:
+  # Instant (5-min) feature settings
+  resample_freq: "1T"            # 1-minute bars
+  feature_windows:
+    log_return: 1                # lag in minutes
+    vol_rolling: [5, 15]         # rolling vol windows in minutes
+    ma_short: 5                  # moving average window in minutes
+    ma_long: 15                  # moving average window in minutes
+
+  # Instant (5-min) model settings
+  vi_steps: 200                  # VI training steps
+  learning_rate: 0.1             # Adam LR
+  num_samples: 50                # posterior samples to draw
+  forecast_horizon: 5            # predict next 5 minutes
+
+history:
+  # History (7-day) feature settings
+  rolling_vol: 7                 # 7-day volatility window
+  seasonal_period: 7             # weekly seasonality (7 days)
+
+  # History (7-day) model settings
+  num_seasons: 7                 # e.g. 7 days in a week
+  vi_steps: 200                  # VI training steps
+  learning_rate: 0.1             # Adam LR
+  num_samples: 50                # posterior samples to draw
+  forecast_horizon: 7            # predict next 7 days
+
+# Model hyperparameters
+model:
+  vi_steps: 200
+  vi_lr: 0.05
