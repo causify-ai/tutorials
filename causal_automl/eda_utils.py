@@ -1,7 +1,7 @@
 import re
 import textwrap
 from collections import Counter, defaultdict
-from typing import Any, Dict, List, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
 import helpers.hopenai as hopenai
 import matplotlib
@@ -13,7 +13,7 @@ from matplotlib.collections import PatchCollection
 from matplotlib.patches import Polygon
 from matplotlib.ticker import FuncFormatter
 
-# Notebook styling
+# Notebook styling.
 sns.set_theme(style="whitegrid")
 
 # #############################################################################
@@ -21,7 +21,9 @@ sns.set_theme(style="whitegrid")
 # #############################################################################
 
 
-def _infer_country(row: pd.Series, country2cont: Dict[str, str]) -> Optional[str]:
+def _infer_country(
+    row: pd.Series, country2cont: Dict[str, str]
+) -> Optional[Union[str, float]]:
     """
     Determine the country corresponding to the given row.
 
@@ -44,12 +46,15 @@ def _infer_country(row: pd.Series, country2cont: Dict[str, str]) -> Optional[str
     return np.nan
 
 
-def preprocess_fred(df: pd.DataFrame, cc: pd.DataFrame) -> pd.DataFrame:
+def preprocess_fred(
+    df: pd.DataFrame, country_continent_df: pd.DataFrame
+) -> pd.DataFrame:
     """
     Preprocessing function.
 
     :param df: FRED metadata
-    :param cc: country -> continent dataset
+    :param country_continent_df: DataFrame mapping countries to
+        continents
     :return: preprocessed data
     """
     df = df.copy()
@@ -100,9 +105,18 @@ def preprocess_fred(df: pd.DataFrame, cc: pd.DataFrame) -> pd.DataFrame:
     df["duration_years"] = np.nan
     df.loc[mask, "duration_years"] = dur_days / 365.0
     # Infer country & continent.
-    cc["Country_Name"] = cc["Country_Name"].str.strip()
-    cc["Continent_Name"] = cc["Continent_Name"].str.strip()
-    country2cont = dict(zip(cc["Country_Name"], cc["Continent_Name"]))
+    country_continent_df["Country_Name"] = country_continent_df[
+        "Country_Name"
+    ].str.strip()
+    country_continent_df["Continent_Name"] = country_continent_df[
+        "Continent_Name"
+    ].str.strip()
+    country2cont = dict(
+        zip(
+            country_continent_df["Country_Name"],
+            country_continent_df["Continent_Name"],
+        )
+    )
     df["country"] = df.apply(
         lambda row: _infer_country(row, country2cont), axis=1
     )
@@ -117,6 +131,8 @@ def preprocess_fred(df: pd.DataFrame, cc: pd.DataFrame) -> pd.DataFrame:
 # #############################################################################
 # Visaulization Functions
 # #############################################################################
+
+
 def plot_top_n_annotated_bar(
     counts: pd.Series,
     total: int,
@@ -149,7 +165,7 @@ def plot_top_n_annotated_bar(
     :param counts: count values keyed by label
     :param total: total to compute percentages against
     :param top_n: number of top entries to plot
-    :param wrap_width: value to wrap long labels; if None, no wrapping
+    :param wrap_width: value to wrap long labels
     :param cmap: colormap for bars
     :param figsize: dimensions of the figure
     :param dpi: resolution of the figure
@@ -422,7 +438,7 @@ def plot_donut(
 
 def plot_cumulative_coverage(
     cum_coverage: pd.Series,
-    N: int,
+    cutoff_index: int,
     xlabel: str,
     ylabel: str,
     title: str,
@@ -434,16 +450,17 @@ def plot_cumulative_coverage(
     grid_alpha: float = 0.7,
 ) -> Tuple[matplotlib.figure.Figure, matplotlib.axes.Axes]:
     """
-    Plot cumulative coverage curve and highlight the top-n cutoff.
+    Plot cumulative coverage curve and highlight the cutoff for the top
+    categories.
 
     :param cum_coverage: cumulative coverage values sorted descending
-    :param N: index at which to draw and label the horizontal cutoff
-        line
-    :param xlabel: label for the x axis
-    :param ylabel: label for the y axis
+    :param cutoff_index: index at which to draw and label the horizontal
+        cutoff line
+    :param xlabel: label for the x-axis
+    :param ylabel: label for the y-axis
     :param title: title of the plot
     :param highlight_color: color of the cutoff line
-    :param linestyle: linestyle of the cutoff line]
+    :param linestyle: linestyle of the cutoff line
     :param figsize: size of the figure
     :param dpi: figure dpi
     :param grid_alpha: alpha transparency for the horizontal grid
@@ -452,7 +469,7 @@ def plot_cumulative_coverage(
     # Define x-axis positions.
     x = np.arange(1, len(cum_coverage) + 1)
     # Determine cutoff value.
-    cutoff = cum_coverage.iloc[N - 1]
+    cutoff = cum_coverage.iloc[cutoff_index - 1]
     # Create figure and axes.
     fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
     ax.plot(x, cum_coverage.values, linewidth=2)
@@ -460,7 +477,7 @@ def plot_cumulative_coverage(
         cutoff,
         color=highlight_color,
         linestyle=linestyle,
-        label=f"Top {N} Coverage: {cutoff:.1f}%",
+        label=f"Top {cutoff_index} Coverage: {cutoff:.1f}%",
     )
     # Set labels and title.
     ax.set_xlabel(xlabel, fontsize=13)
@@ -488,7 +505,7 @@ def plot_cumulative_count(
     fontsize_labels: int = 12,
 ) -> Tuple[matplotlib.figure.Figure, matplotlib.axes.Axes]:
     """
-    Plot cumulative values of a Series as a line graph with grid and labels.
+    Plot cumulative values as a line graph with grid and labels.
 
     :param series: the Series with a sortable index to plot
     :param xlabel: the label for the x-axis
@@ -534,7 +551,7 @@ def plot_grouped_bars(
     fontsize_labels: int = 13,
     fontsize_annotation: int = 9,
     grid: bool = True,
-    grid_kwargs: Optional[dict] = None,
+    grid_kwargs: Optional[Dict[str, Any]] = None,
     figsize: tuple = (10, 5),
     dpi: int = 100,
     legend_title: Optional[str] = None,
@@ -592,57 +609,10 @@ def plot_grouped_bars(
     return fig, ax
 
 
-def _print_sub(
-    root: str,
-    rc: int,
-    child_ct: Counter,
-    grand_ct: dict,
-    total: int,
-    indent_str: str,
-    pct_fmt: str,
-) -> None:
-    """
-    Print details of a single root category in the hierarchy.
-
-    :param root: name of the root category
-    :param rc: count of the root category
-    :param child_ct: count of children under the root
-    :param grand_ct: count of grandchildren under the child categories
-    :param total: overall count
-    :param indent_str: character used for indentation
-    :param pct_fmt: format for percentages
-    :return: None
-    """
-    # Compute root percentage.
-    pct_root = pct_fmt.format(rc / total * 100)
-    print(f"{root} ({pct_root})")
-    # Process top 2 children.
-    cc = child_ct.get(root, Counter())
-    top2_c = cc.most_common(2)
-    for child, ccnt in top2_c:
-        pct_c = pct_fmt.format(ccnt / total * 100)
-        print(f"{indent_str}├─ {child} ({pct_c})")
-        gc = grand_ct.get((root, child), Counter())
-        top2_g = gc.most_common(2)
-        for grand, gcnt in top2_g:
-            pct_g = pct_fmt.format(gcnt / total * 100)
-            print(f"{indent_str * 2}│   ├─ {grand} ({pct_g})")
-        others_g = ccnt - sum(g for _, g in top2_g)
-        if others_g > 0:
-            pct_og = pct_fmt.format(others_g / total * 100)
-            print(f"{indent_str * 2}│   └─ Others ({pct_og})")
-    others_c = rc - sum(c for _, c in top2_c)
-    if others_c > 0:
-        pct_oc = pct_fmt.format(others_c / total * 100)
-        print(f"{indent_str}└─ Others ({pct_oc})")
-    # Print blank line.
-    print()
-
-
 def print_category_hierarchy(
     root_ct: Counter,
-    child_ct: dict,
-    grand_ct: dict,
+    child_ct: Dict[str, Counter],
+    grand_ct: Dict[Tuple[str, str], Counter],
     total: int,
     *,
     top_n: int = 20,
@@ -652,6 +622,13 @@ def print_category_hierarchy(
     """
     Print a tree of the top N roots, their top-2 children, and so on.
 
+   E.g.: CategoryA (45.0%)
+          ├─ SubCategory1 (25.0%)   
+          │   
+          ├─ Detail1 (15.0%)   
+          │   └─ SubDetail1 (10.0%)   
+          └─ Others (20.0%)
+
     :param root_ct: counts for root categories
     :param child_ct: counts for children under each root
     :param grand_ct: counts for grandchildren under each child
@@ -659,10 +636,37 @@ def print_category_hierarchy(
     :param top_n: number of root categories to print
     :param indent_str: character for indentation
     :param pct_fmt: format for percentages
-    :return: None.
     """
     for root, rc in root_ct.most_common(top_n):
-        _print_sub(root, rc, child_ct, grand_ct, total, indent_str, pct_fmt)
+        # Compute root percentage.
+        pct_root = pct_fmt.format(rc / total * 100)
+        print(f"{root} ({pct_root})")
+        # Process top 2 children.
+        cc = child_ct.get(root, Counter())
+        top2_c = cc.most_common(2)
+        for child, ccnt in top2_c:
+            # Calculate and format the percentage for the child.
+            pct_c = pct_fmt.format(ccnt / total * 100)
+            print(f"{indent_str}├─ {child} ({pct_c})")
+            # Retrieve the grandchild counts for this child.
+            gc = grand_ct.get((root, child), Counter())
+            top2_g = gc.most_common(2)
+            for grand, gcnt in top2_g:
+                # Calculate and format the percentage for the grandchild.
+                pct_g = pct_fmt.format(gcnt / total * 100)
+                print(f"{indent_str * 2}│   ├─ {grand} ({pct_g})")
+            # Compute the count for remaining grandchildren.
+            others_g = ccnt - sum(g for _, g in top2_g)
+            if others_g > 0:
+                pct_og = pct_fmt.format(others_g / total * 100)
+                print(f"{indent_str * 2}│   └─ Others ({pct_og})")
+        # Compute the count for remaining children not in the top 2.
+        others_c = rc - sum(c for _, c in top2_c)
+        if others_c > 0:
+            pct_oc = pct_fmt.format(others_c / total * 100)
+            print(f"{indent_str}└─ Others ({pct_oc})")
+        # Print blank line.
+        print()
 
 
 def plot_choropleth_map(
@@ -747,7 +751,6 @@ def plot_choropleth_map(
                 else title_kwargs
             ),
         )
-
     ax.set_aspect("equal")
     ax.axis("off")
     plt.tight_layout()
@@ -839,6 +842,8 @@ def plot_scatterplot(
 # #############################################################################
 # Filtering Functions
 # #############################################################################
+
+
 def prepare_top_counts(
     df: pd.DataFrame,
     column: str,
@@ -848,7 +853,7 @@ def prepare_top_counts(
     explode: bool = False,
     split: Optional[Tuple[str, int]] = None,
     drop: Sequence[str] = (),
-    rename: dict = {},
+    rename: Optional[Dict[str, str]] = None,
     threshold: Optional[int] = None,
     include_other: bool = False,
     other_label: str = "Other",
@@ -863,14 +868,14 @@ def prepare_top_counts(
     :param explode: if True, column must be list‐like and will be exploded first
     :param split: (separator, level) to split strings, e.g. (";", 0) for root
     :param drop: indices to drop
-    :param rename:i ndex renames
+    :param rename: index renames
     :param threshold: if set, group any value with count < threshold into a single cell
     :param include_other: if True and top_n is set, append “Other” containing everything below top_n
     :param other_label: the label for that combined bucket
 
     :return:
-             - counts: categories, with integer counts
-             - total: total count over which percentages should be computed
+        - counts: categories, with counts
+        - total: total count over which percentages should be computed
     """
     # Get series, filter if needed.
     s = df[column]
@@ -900,7 +905,7 @@ def prepare_top_counts(
     if drop:
         counts.index = counts.index.str.strip()
         counts = counts.drop(index=drop, errors="ignore")
-    if rename:
+    if rename is not None:
         counts = counts.rename(index=rename)
     # Set total count and group minor values.
     total = len(s)
@@ -924,7 +929,7 @@ def get_binary_counts(
     mask: Optional[pd.Series] = None,
     pattern: Optional[str] = None,
     search_cols: Optional[List[str]] = None,
-    labels: List[str] = ["True", "False"],
+    labels: Optional[List[str]] = None,
 ) -> Tuple[List[str], List[int]]:
     """
     Return binary counts from dataframe.
@@ -938,6 +943,8 @@ def get_binary_counts(
     :return: labels and a two-element list with counts for positive and
         negative cases
     """
+    if labels is None:
+        labels = ["True", "False"]
     if mask is None:
         if pattern is None or not search_cols:
             raise ValueError(
@@ -977,9 +984,9 @@ def prepare_crosstab(
     :param index_col: field to group as rows
     :param pivot_col: field to pivot as columns
     :param top_n: number of top values of index_col to include
-    :param index_list: exact list of index values to include
-    :param wrap_width: number of characters before wrapping labels
-    :return: the reindexed table and list of wrapped labels
+    :param index_list: specific index values to include
+    :param wrap_width: number of letters before wrapping labels
+    :return: the reindexed table and wrapped labels
     """
     # Check if index list is provided.
     if index_list is not None:
@@ -995,41 +1002,30 @@ def prepare_crosstab(
     return ct, labels
 
 
-def prepare_last_year_data(fred: pd.DataFrame) -> Tuple:
-    """
-    Extract last updated years and compute histogram bins and tick marks.
-
-    :param fred: relevant data
-    :return: filtered year series, bin edges for each year, and ticks
-        for each year
-    """
-    years_series = fred["last_year"].dropna().astype(int)
-    year_min, year_max = years_series.min(), years_series.max()
-    bin_edges = np.arange(year_min, year_max + 2)
-    ticks = np.arange(year_min, year_max + 1, 1)
-    return years_series, bin_edges, ticks
-
-
 def build_category_hierarchy_counts(
-    cat_series: pd.Series,
+    cat_series: pd.Series, *, delimiter: str = ";"
 ) -> Tuple[Counter, Dict[str, Counter], Dict[Tuple[str, str], Counter], int]:
     """
-    Process a Series of semicolon-delimited category paths to build
-    hierarchical count structures.
+    Build hierarchical count structures from category paths.
 
-    :param cat_series: a series of semicolon delimited category paths
-    :return: count of roots, a mapping of child counts per root, a
-        mapping of grandchild counts per root and child, and the total
-        count
+    :param cat_series: delimited category paths
+    :param delimiter: delimiter used in the category paths
+    :return:
+        - count of roots
+        - a mapping of child counts per root
+        - a mapping of grandchild counts per root and child
+        - the total count
     """
     # Process category paths.
     paths = (
         cat_series.fillna("")
-        .str.split(";")
+        .str.split(delimiter)
         .apply(lambda L: [p.strip() for p in L if p.strip()])
     )
     # Initialize counters.
-    root_ct, child_ct, grand_ct = Counter(), {}, {}
+    root_ct: Counter[str] = Counter()
+    child_ct: Dict[str, Counter[str]] = {}
+    grand_ct: Dict[Tuple[str, str], Counter[str]] = {}
     for path in paths:
         if not path:
             continue
@@ -1057,14 +1053,16 @@ def get_top_tags_by_root(
     """
     For each root category, find the top-N most common tags.
 
-    Exclude redundancy.
+    Find the most common tags up to a maximum of top_n per category and
+    exclude redundant tags based on the provided parameter.
 
     :param df: the source data containing category and tags columns
     :param categories_col: the name of the column with category data
-    :param tags_col: the name of the column with tags list
-    :param redundant: the set of tags to exclude from the counts
-    :param top_n: the maximum number of tags to return per root category
-    :return: columns root, tag, count
+    :param tags_col: the name of the column with tags
+    :param redundant: tags to exclude from the counts
+    :param top_n: the maximum number of tags to return for each root
+        category
+    :return: results organized by root with associated tags and counts
     """
     if redundant is None:
         redundant = set()
@@ -1104,12 +1102,12 @@ def get_top_tags_by_root(
 
 
 def get_patches_and_values(
-    geo: Dict, fred: pd.DataFrame
+    geo: Dict[str, Any], fred: pd.DataFrame
 ) -> Tuple[List[Polygon], List[int]]:
     """
-    Compute and return patches and values for a US choropleth map.
+    Map state count data to geographic patches from the GeoJSON.
 
-    :param geo: the GeoJSON file
+    :param geo: mapping from the GeoJSON file
     :param fred: data to compute state counts
     :return: states and corresponding values
     """
@@ -1149,8 +1147,11 @@ def categorize_tags(
     SYSTEM_PROMPT = (
         "You are an expert economist. For each input tag, "
         "assign it to one of the following broad categories: "
-        "Geography, Frequency, Data Source, Entity, Meta, Other. "
-        "Respond in the format “1: Category” for each numbered tag."
+        "Geography, Administrative Unit, Frequency & Time, Entity / Concept, "
+        "Metric / Measure, Organization / Source, Demographics & Populations, "
+        "Financial Instrument, Product / Commodity, Flags & Qualifiers. "
+        "Don't add any new categories other than the ones mentioned."
+        "Respond in the format “<index>: <Category>” for each numbered tag"
     )
     # Extract unique tags.
     unique_tags = list({tag.strip() for tags in column.dropna() for tag in tags})

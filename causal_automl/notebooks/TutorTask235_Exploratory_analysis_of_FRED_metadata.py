@@ -36,7 +36,6 @@
 #     - [Base Frequency by Data Source](#base-frequency-by-data-source)
 #   - [Seasonal Adjustment Analysis](#seasonal-adjustment-analysis)
 #   - [Analyses on Categories and Tags](#analyses-on-categories-and-tags)
-#     - [Categories Distribution](#categories-distribution)
 #     - [Hierarchical Categorical Analyses](#hierarchical-categorical-analyses)
 #     - [Tags Distribution](#tags-distribution)
 #     - [Distribution of Tag Categories](#distribution-of-tag-categories)
@@ -72,20 +71,22 @@ import json
 
 import helpers.hs3 as hs3
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
 from matplotlib.ticker import FuncFormatter
 
 import causal_automl.eda_utils as caueduti
 
-# Notebook styling
+# Notebook styling.
 sns.set_theme(style="whitegrid")
 
 # %%
 # Set configurations.
-fred_path = "s3://causify-data-collaborators/causal_automl/metadata/fred_series_metadata_v1.0.csv"
-country_continent_path = "s3://causify-data-collaborators/causal_automl/supplemental_data/country_continent.csv"
-us_states_path = "s3://causify-data-collaborators/causal_automl/supplemental_data/us_states.geojson"
+s3_path = "s3://causify-data-collaborators/causal_automl"
+fred_path = f"{s3_path}/metadata/fred_series_metadata_v1.0.csv"
+country_continent_path = f"{s3_path}/supplemental_data/country_continent.csv"
+us_states_path = f"{s3_path}/supplemental_data/us_states.geojson"
 # Set top N for bar charts.
 N = 20
 
@@ -94,6 +95,7 @@ N = 20
 # ## Load Data
 
 # %%
+# Load the FRED metadata.
 s3 = hs3.get_s3fs("ck")
 stream = s3.open(fred_path, mode="r")
 fred = pd.read_csv(stream, engine="python", on_bad_lines="skip")
@@ -139,6 +141,11 @@ fred.head(5)
 # %%
 fred = caueduti.preprocess_fred(fred, cc)
 
+
+# %%
+print(fred.shape)
+print(fred.columns)
+fred.head(5)
 
 # %% [markdown]
 # <a name='introductory-analytics'></a>
@@ -270,9 +277,10 @@ src_counts = fred["data_source"].value_counts()
 cum_src_coverage = (
     src_counts.sort_values(ascending=False).cumsum() / src_counts.sum() * 100
 )
+# Plot.
 caueduti.plot_cumulative_coverage(
     cum_coverage=cum_src_coverage,
-    N=N,
+    cutoff_index=N,
     xlabel="Top N Data Sources",
     ylabel="Coverage (%)",
     title=f"Coverage vs Top {N} Data Sources",
@@ -337,7 +345,10 @@ caueduti.plot_histograms(
 # %%
 
 # Prepare data.
-years_series, bin_edges, ticks = caueduti.prepare_last_year_data(fred)
+years_series = fred["last_year"].dropna().astype(int)
+year_min, year_max = years_series.min(), years_series.max()
+bin_edges = np.arange(year_min, year_max + 2)
+ticks = np.arange(year_min, year_max + 1, 1)
 # Plot.
 fig, ax = caueduti.plot_histograms(
     data_series=[years_series],
@@ -466,7 +477,7 @@ caueduti.plot_top_n_annotated_bar(
 # %%
 # Prepare data.
 labels, sizes = caueduti.get_binary_counts(
-    fred, mask=fred["is_discontinued"], labels=["Active", "Discontinued"]
+    fred, mask=fred["is_discontinued"], labels=["Dicontinued", "Active"]
 )
 # Plot.
 caueduti.plot_donut(
@@ -641,8 +652,8 @@ plt.show()
 
 # %% [markdown]
 # **Active vs. Discontinued Series**
-# - 93.6% of all time series are discontinued
-# - Only 6.4% remain active
+# - 93.6% of all time series are active
+# - Only 6.4% remain discontinued
 #
 # **Active vs. Discontinued by Data Source**
 # - The U.S. Census Bureau leads with ~220 k active and a small discontinued tail
@@ -799,68 +810,10 @@ plt.show()
 # - **Overwhelming majority unadjusted** – about 90% of series are published “Not Seasonally Adjusted,” indicating raw data is the default for most indicators.
 # - **Seasonal adjustment still significant** – roughly 8% of series are adjusted for seasonal effects, reflecting key economic indicators (e.g., employment, inflation) where removing seasonal noise is critical.
 # - **Annual‐rate adjustments rare** – only about 1.2% use a “Seasonally Adjusted Annual Rate” format, and virtually none (<0.1%) employ smoothed or annual‐rate variants, suggesting specialized use cases.
-# - **Action point** – users seeking trend‐cleansed data will find a modest but not exhaustive selection of seasonally adjusted series; expanding adjustment coverage could benefit comparability across more datasets.
 
 # %% [markdown]
 # <a name='analyses-on-categories-and-tags'></a>
 # ## Analyses on Categories and Tags
-
-# %% [markdown]
-# <a name='categories-distribution'></a>
-# ### Categories Distribution
-
-# %%
-# Prepare Data.
-cat_counts, _ = caueduti.prepare_top_counts(
-    fred, "categories_list", explode=True, top_n=20
-)
-# Plot.
-caueduti.plot_top_n_annotated_bar(
-    counts=cat_counts,
-    total=total,
-    top_n=N,
-    wrap_width=25,
-    figsize=(12, 8),
-    dpi=100,
-    xlabel="Category",
-    ylabel="Series Count",
-    title=f"Top {N} Categories by Series Count",
-    rotation=90,
-    fontsize_title=16,
-    fontsize_labels=10,
-    fontsize_annotation=10,
-    fontsize_note=11,
-    formatter=FuncFormatter(lambda y, pos: f"{int(y):,}"),
-    show_coverage_note=False,
-)
-plt.tight_layout()
-plt.show()
-
-# %%
-# Coverage vs Top 20 Categories.
-# Prepare data.
-cat_counts = fred["categories_list"].explode().value_counts()
-cum_cat_coverage = (
-    cat_counts.sort_values(ascending=False).cumsum() / cat_counts.sum() * 100
-)
-# Plot.
-caueduti.plot_cumulative_coverage(
-    cum_coverage=cum_cat_coverage,
-    N=N,
-    xlabel="Top N Categories",
-    ylabel="Coverage (%)",
-    title=f"Coverage vs Top {N} Categories",
-)
-
-
-# %% [markdown]
-# - **Highly concentrated**
-#   The top 20 categories account for roughly **63 %** of all category assignments.
-#   - The single largest category, **U.S. Regional Data**, alone represents nearly 17 % of all series.
-#   - The next two (**States** and **Counties**) each contribute over 11 %.
-#
-# - **Long tail**
-#   Beyond the top 20, coverage climbs very slowly toward 100 % as you include more categories. Thousands of categories are needed before capturing the remaining ~37 % of assignments.
 
 # %% [markdown]
 # <a name='hierarchical-categorical-analyses'></a>
@@ -945,6 +898,7 @@ tag_counts, total_tags = caueduti.prepare_top_counts(
     drop=[
         "St. Louis Fed",
         "Federal Reserve",
+        "Economic Data",
         "FRED",
         "nsa",
         "usa",
@@ -1009,25 +963,16 @@ fig, ax = caueduti.plot_top_n_annotated_bar(
     fontsize_labels=10,
     fontsize_annotation=10,
     show_coverage_note=False,
-    annotation_fmt="{pct:.1f}%",
+    annotation_fmt="{pct:.2f}%",
 )
 plt.show()
 
 # %% [markdown]
-# - **Geography dominates (~60%)**
-#   Most tags refer to places (states, counties, regions, countries, Fed districts, etc.), reflecting that FRED series are often keyed to specific locations.
+# - **Geographic diversity is highest**
+#   Nearly half of the tags are geography-related, reflecting a rich variety of locations (countries, states, counties, cities, regions) within the taxonomy.
 #
-# - **“Other” is the next largest bucket (~27%)**
-#   This catch-all contains tags that didn’t cleanly fit any of the six categories—mixed jargon, ambiguous terms, industry labels, etc.—so there may be room to refine or split this group further.
-#
-# - **Entity tags are modest (~6%)**
-#   These cover named organizations, agencies, instruments or corporate/people names. Their smaller share suggests metadata focuses more on where than who or what.
-#
-# - **Data source (~3%) and frequency (~3%) are underrepresented**
-#   Despite being important metadata dimensions, tags like “monthly”, “quarterly”, or “CPI” appear relatively infrequently—perhaps because frequency and source are captured elsewhere in structured columns.
-#
-# - **Meta (“citation required”, “not seasonally adjusted”, etc.) is tiny (<1%)**
-#   Very few tags convey processing status or quality notes; tagging conventions here may be inconsistent or sparse.
+# - **Administrative units also exhibit strong variation**
+#   Federal Reserve districts, BEA regions, census divisions, etc., form a distant second-largest pool of distinct tags, demonstrating comprehensive coverage of specialized geographies.
 
 # %% [markdown]
 # <a name='count-of-tags-and-categories-per-series'></a>
@@ -1063,6 +1008,7 @@ caueduti.plot_histograms(
 # Drop duplicate tags that show up in the plot.
 REDUNDANT = {
     "Federal Reserve",
+    "Economic Data",
     "FRED",
     "nsa",
     "usa",
@@ -1124,21 +1070,11 @@ for root, grp in top10.groupby("root"):
     plt.show()
 
 # %% [markdown]
-# 1. **“Economic Data” is everywhere**
-#    - Ranks #1 in all root categories
-#    - Covers **68%** of U.S. Regional Data, **15%** of International Data, but still appears in ~6–7% of specialized areas like Production & Business Activity and Money, Banking & Finance
+# - **U.S. Regional Data** exhibits extreme concentration: the top five tags account for a majority of all entries, underscoring a heavy reliance on geographic, licensing and annual metadata.
+# - **Core metadata qualifiers**—“United States of America”, “public domain: citation requested”, “Not Seasonally Adjusted”—recur across nearly every domain, reflecting standardized categorization practices.
+# - **Prices** is notably diverse: with the top 10 tags evenly being used.
+# - **National Accounts** align closely with a single provider (“Bureau of Economic Analysis”) and domestic focus (“United States of America”).
 #
-# 2. **Common metadata tags dominate**
-#    - **Not Seasonally Adjusted**, **public domain: citation requested**, **United States of America** all sit in the top 4 for most categories
-#    - Their prevalence ranges from 60 +% in U.S.‐centric feeds down to ~1–2% in niche domains
-#
-# 3. **Concentration vs. dispersion**
-#    - **U.S. Regional Data** and **International Data** show “head” models: a handful of tags cover the majority, then a steep drop‐off
-#    - **Prices**, **National Accounts**, etc. display a flatter top 10 (each tag ~1–2%), indicating a long tail of descriptors
-#
-# 4. **Category-specific spikes**
-#    - **International Data**: “Economic Data” hits ~15%, double its share elsewhere
-#    - **Population, Employment & Labor Markets**: top tags cluster around ~2.5%, reflecting very diverse labeling
 #
 
 # %% [markdown]
@@ -1194,8 +1130,8 @@ plt.show()
 
 # %% [markdown]
 # - **Asia Second**
-#   Besides North America, the most data recorded pertains to Asia, Europe, Africa, Oceania and Anatarctica respectively.
 #
+#   Besides North America, the most data recorded pertains to Asia, which is a distant second.
 
 # %% [markdown]
 # <a name='distribution-of-data-by-state'></a>
