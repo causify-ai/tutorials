@@ -1,9 +1,9 @@
-venv/
-__pycache__/
-*.pyc
-*.db
 *.csv
+*.db
+*.pyc
+__pycache__/
+*.ipynb_checkpoints
+*.ipynb_checkpoints/
+*.log
 dagster_env/
-tmp.build/
-.dagster_home/
-.vs/
+venv/
