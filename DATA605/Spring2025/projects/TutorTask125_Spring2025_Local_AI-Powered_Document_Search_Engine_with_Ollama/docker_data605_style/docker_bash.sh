@@ -2,13 +2,14 @@
 
 REPO_NAME=umd_data605
 IMAGE_NAME=umd_data605_template
-FULL_IMAGE_NAME=$REPO_NAME/$IMAGE_NAME
+FULL_IMAGE_NAME=document_search_engine
 
 docker image ls $FULL_IMAGE_NAME
 
-CONTAINER_NAME=$IMAGE_NAME
-docker run --rm -ti \
+CONTAINER_NAME=doc-search
+docker run -d \
     --name $CONTAINER_NAME \
-    -p 8888:8888 \
-    -v $(pwd):/data \
+    -p 8501:8501 \
+    -p 11434:11434 \
+    -v ${PWD}:/app \
     $FULL_IMAGE_NAME

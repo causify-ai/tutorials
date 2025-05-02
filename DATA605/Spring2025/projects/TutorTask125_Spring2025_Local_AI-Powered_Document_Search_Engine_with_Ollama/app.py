@@ -4,7 +4,6 @@ from utils.build_index import build_faiss_index
 from utils.processing import extract_text  # Import extract_text function
 import os
 import subprocess
-import multiprocessing
 
 # Initialize session state variables if they don't exist
 if 'search_results' not in st.session_state:
@@ -26,16 +25,6 @@ st.title("📁 Document Search Engine")
 
 st.sidebar.title("📁 Indexing Configuration")
 user_path = st.sidebar.text_input("Enter the directory or drive to index:", "C:/Users/YOUR_USERNAME/")
-
-# Add CPU threads selector for multithreaded indexing
-cpu_count = multiprocessing.cpu_count()
-max_workers = st.sidebar.slider(
-    "CPU Threads for Indexing", 
-    min_value=1, 
-    max_value=cpu_count*2, 
-    value=cpu_count, 
-    help=f"Your system has {cpu_count} CPU cores. More threads can speed up indexing but may use more resources."
-)
 
 # Step 1: Scan files
 if st.sidebar.button("🔍 Scan Files"):
@@ -78,7 +67,7 @@ if 'found_files' in st.session_state:
                         st.session_state['indexing_message'] = message
                     
                     # Call build_faiss_index with the progress callback and max_workers
-                    build_faiss_index(found_files, progress_callback=update_progress, max_workers=max_workers)
+                    build_faiss_index(found_files, progress_callback=update_progress)
                     st.session_state['indexed_files_count'] = total_files
                     
                     # Increment index version to invalidate cache
@@ -125,7 +114,7 @@ if 'found_files' in st.session_state:
                         st.session_state['indexing_message'] = message
                     
                     # Call build_faiss_index with the progress callback and max_workers
-                    build_faiss_index(found_files, progress_callback=update_progress, max_workers=max_workers)
+                    build_faiss_index(found_files, progress_callback=update_progress)
                     
                     # Increment index version to invalidate cache
                     st.session_state['index_version'] += 1
