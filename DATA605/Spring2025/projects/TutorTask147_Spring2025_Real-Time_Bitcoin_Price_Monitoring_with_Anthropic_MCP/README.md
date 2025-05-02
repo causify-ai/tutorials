@@ -1,45 +1,37 @@
-# Tutorial Template: Two Docker Approaches
+# Real‑Time Bitcoin Price Monitoring with Anthropic MCP
 
-- This directory provides two versions of the same tutorial setup to help you
-  work with Jupyter notebooks and Python scripts inside Docker environments
+A Dockerized MCP server and client toolkit that fetches live and historical Bitcoin data via the CoinGecko API, exposes it as MCP resources and tools, runs automated threshold alerts and time‑series trend analysis, and generates interactive visualizations.
 
-- Both versions run the same code but use different Docker approaches, with
-  different level of complexity and maintainability
+---
 
-## 1. `data605_style` (Simple Docker Environment)
+## Features
 
-- This version is modeled after the setup used in DATA605 tutorials
-- This template provides a ready-to-run environment, including scripts to build,
-  run, and clean the Docker container.
+- **MCP Resources & Tools**  
+  - `crypto://price` – current BTC price in USD  
+  - `get_ohlc(days)` – OHLC data for the past N days  
+  - `get_history(date)` – historical snapshot for a given date  
+  - `alert://price_change` – automatic threshold alerts  
+  - `detect_trend(days)` – ARIMA‑based trend forecast  
+  - `plot_price(days)` – saves a Plotly HTML chart  
 
-- For your specific project, you should:
-  - Modify the Dockerfile to add project-specific dependencies
-  - Update bash/scripts accordingly
-  - Expose additional ports if your project requires them
+- **Data Processing**  
+  - Real‑time ingestion via CoinGecko’s REST API :contentReference[oaicite:0]{index=0}  
+  - Time‑series analysis with Pandas & Statsmodels  
+  - Interactive plotting with Plotly  
 
-## 2. `causify_style` (Causify AI dev-system)
+- **Containerized Deployment**  
+  - Dockerfile for reproducible environments  
+  - STDIO and TCP transports supported  
 
-- This setup reflects the approach commonly used in Causify AI dev-system
-- **Recommended** for students familiar with Docker or those wishing to explore a
-  production-like setup
-- Pros
-  - Docker layer written in Python to make it easy to extend and test
-  - Less redundant since code is factored out
-  - Used for real-world development, production workflows
-  - Used for all internships, RA / TA, full-time at UMD DATA605 / MSML610 /
-    Causify 
-- Cons
-  - It is more complex to use and configure
-  - More dependencies from the 
-- For thin environment setup instructions, refer to:  
-  [How to Set Up Development on Laptop](https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
+- **CLI Demonstration**  
+  - Self‑contained Python script to exercise all endpoints  
 
-## Reference Tutorials
+---
 
-- The `tutorial_github` example has been implemented in both environments for you
-  to refer to:
-  - `tutorial_github_data605` uses the simpler DATA605 approach
-  - `tutorial_github_causify` uses the more complex Causify approach
+## Prerequisites
 
-- Choose the approach that best fits your comfort level and project needs. Both
-  are valid depending on your use case.
+- **Docker** (version 20.10+)  
+- **Python** 3.10+ (for local dev)  
+- Internet access to `api.coingecko.com`  
+
+---

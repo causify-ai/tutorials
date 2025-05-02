@@ -1,33 +1,21 @@
-FROM ubuntu:20.04
+FROM python:3.10-slim
+
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get -y update
-RUN apt-get -y upgrade
-
-# Install system utilities.
-RUN apt install -y --no-install-recommends \
-    sudo \
+# Install system utilities
+RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
-    systemctl \
-    gnupg \
     git \
-    vim
+    vim \
+    sudo \
+    gnupg \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install Python.
-RUN apt install -y --no-install-recommends \
-    python3 \
-    python3-pip \
-    python3-dev
+# Upgrade pip
+RUN pip install --upgrade pip
 
-RUN python3 -m pip install --upgrade pip
-    
-# Install Python packages.
-# There is a bug:
-#   File "/opt/homebrew/lib/python3.10/site-packages/tornado/iostream.py", line 182, in advance
-#   assert 0 < size <= self._size
-# for tornado==6.2 and jupyter-client==8.0.2.
-# https://discourse.jupyter.org/t/jupyter-notebook-zmq-message-arrived-on-closed-channel-error/17869/10
-RUN pip3 install \
+# Install Python packages
+RUN pip install \
     ipython \
     tornado==6.1 \
     jupyter-client==7.3.2 \
@@ -35,36 +23,37 @@ RUN pip3 install \
     jupyter-contrib-nbextensions \
     psycopg2-binary \
     yapf \
-    # Install data ingestion, analysis, and visualization packages
-    requests \  
-    aiohttp \ 
-    pandas \ 
+    requests \
+    aiohttp \
+    pandas \
     statsmodels \
     matplotlib \
     plotly \
     schedule \
     tqdm \
-    ipywidgets
+    ipywidgets \
+    --no-cache-dir "mcp[cli]" 
+    # jupyter-mcp-server 
 
-
+# Create working directory for installations
 RUN mkdir /install
 
-# Install Jupyter extensions.
+# Copy and run Jupyter extensions install script
 ADD install_jupyter_extensions.sh /install
 RUN /install/install_jupyter_extensions.sh
 
-# Config.
+# System config and user settings
 ADD etc_sudoers /install/
 COPY etc_sudoers /etc/sudoers
 COPY bashrc /root/.bashrc
 
-# Report package versions.
+# Version logging (optional)
 ADD version.sh /install/
 RUN /install/version.sh 2>&1 | tee version.log
 
-# Jupyter.
-EXPOSE 8888
-
-# copy your Jupyter launch script in and make it executable
+# Copy Jupyter startup script
 COPY run_jupyter.sh /usr/local/bin/run_jupyter.sh
 RUN chmod +x /usr/local/bin/run_jupyter.sh
+
+# Expose Jupyter port
+EXPOSE 8888
