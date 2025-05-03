@@ -49,16 +49,17 @@
 import io
 import logging
 import re
-from typing import Dict, Optional
+from typing import Optional
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
 
 import helpers.hdbg as hdbg
 import helpers.henv as henv
 import helpers.hpandas as hpandas
 import helpers.hprint as hprint
 import helpers.hs3 as hs3
-import matplotlib.pyplot as plt
-import pandas as pd
-import seaborn as sns
 
 # %%
 # Configure logger.
