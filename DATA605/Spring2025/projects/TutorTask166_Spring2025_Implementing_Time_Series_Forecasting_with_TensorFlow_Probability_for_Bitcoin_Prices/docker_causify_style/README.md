@@ -78,6 +78,14 @@ Run ```./scripts/run_instant.sh``` or ```./scripts/run_history.sh``` to kick off
 
 ## Docker
 
+### when script changes, fastest way to update
+
+```bash
+docker-compose down
+docker-compose build
+```
+
+### delete all containers and images
 ```bash
 docker rm -f $(docker ps -aq)
 docker rmi $(docker images -q | grep -v "^$(docker images ubuntu:20.04 -q)$")

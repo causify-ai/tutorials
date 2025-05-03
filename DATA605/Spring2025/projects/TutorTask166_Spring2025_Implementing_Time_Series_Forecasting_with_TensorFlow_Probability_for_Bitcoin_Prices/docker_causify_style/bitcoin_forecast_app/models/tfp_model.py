@@ -29,6 +29,9 @@ class BitcoinForecastModel:
         # Set default dtype to float64 for all tensors
         tf.keras.backend.set_floatx('float64')
         
+        # Initialize optimizer with legacy version for better compatibility
+        self.optimizer = tf.keras.optimizers.legacy.Adam(learning_rate=0.2)
+        
     def build_model(self, observed_time_series):
         """
         Build the structural time series model.
@@ -36,18 +39,47 @@ class BitcoinForecastModel:
         Args:
             observed_time_series: Tensor of observed Bitcoin prices
         """
-        # Convert input to float64
-        observed_time_series = tf.cast(observed_time_series, tf.float64)
+        # Convert input to float64 tensor
+        observed_time_series = tf.convert_to_tensor(observed_time_series, dtype=tf.float64)
         
-        # Local linear trend component
-        local_linear_trend = tfs.LocalLinearTrend(
-            observed_time_series=observed_time_series
+        # Create priors with explicit float64 dtype
+        level_scale_prior = tfd.LogNormal(
+            loc=tf.constant(0., dtype=tf.float64),
+            scale=tf.constant(1., dtype=tf.float64)
+        )
+        slope_scale_prior = tfd.LogNormal(
+            loc=tf.constant(0., dtype=tf.float64),
+            scale=tf.constant(1., dtype=tf.float64)
+        )
+        initial_level_prior = tfd.Normal(
+            loc=observed_time_series[0],
+            scale=tf.constant(1000., dtype=tf.float64)
+        )
+        initial_slope_prior = tfd.Normal(
+            loc=tf.constant(0., dtype=tf.float64),
+            scale=tf.constant(100., dtype=tf.float64)
         )
         
-        # Seasonal component (hourly seasonality)
+        # Local linear trend component with explicit float64 priors
+        local_linear_trend = tfs.LocalLinearTrend(
+            observed_time_series=observed_time_series,
+            level_scale_prior=level_scale_prior,
+            slope_scale_prior=slope_scale_prior,
+            initial_level_prior=initial_level_prior,
+            initial_slope_prior=initial_slope_prior
+        )
+        
+        # Create seasonal prior with explicit float64 dtype
+        drift_scale_prior = tfd.LogNormal(
+            loc=tf.constant(0., dtype=tf.float64),
+            scale=tf.constant(1., dtype=tf.float64)
+        )
+        
+        # Seasonal component with explicit float64 prior
         seasonal = tfs.Seasonal(
             num_seasons=self.num_seasons,
-            observed_time_series=observed_time_series
+            observed_time_series=observed_time_series,
+            drift_scale_prior=drift_scale_prior
         )
         
         # Combine components
@@ -58,7 +90,7 @@ class BitcoinForecastModel:
         
         return self.model
     
-    def fit(self, observed_time_series, num_variational_steps=100):
+    def fit(self, observed_time_series, num_variational_steps=50):
         """
         Fit the model to the observed time series.
         
@@ -70,7 +102,7 @@ class BitcoinForecastModel:
             self.build_model(observed_time_series)
         
         # Convert to tensor and ensure float64
-        self.observed_time_series = tf.cast(observed_time_series, tf.float64)
+        self.observed_time_series = tf.convert_to_tensor(observed_time_series, dtype=tf.float64)
         
         # Build surrogate posterior
         surrogate = tfs.build_factored_surrogate_posterior(model=self.model)
@@ -81,11 +113,11 @@ class BitcoinForecastModel:
                 observed_time_series=self.observed_time_series
             ).log_prob(**params)
         
-        # Fit the surrogate posterior
+        # Fit the surrogate posterior with fewer steps for faster updates
         losses = tfp.vi.fit_surrogate_posterior(
             target_log_prob_fn=target_log_prob_fn,
             surrogate_posterior=surrogate,
-            optimizer=tf.optimizers.Adam(learning_rate=0.1),
+            optimizer=self.optimizer,
             num_steps=num_variational_steps
         )
         
@@ -105,8 +137,8 @@ class BitcoinForecastModel:
         if self.posterior is None:
             raise ValueError("Model must be fit before forecasting")
         
-        # Sample from the posterior
-        samples = self.posterior.sample(100)
+        # Sample from the posterior (fewer samples for faster predictions)
+        samples = self.posterior.sample(50)
         
         # Generate forecasts
         forecast_dist = tfs.forecast(
@@ -124,7 +156,7 @@ class BitcoinForecastModel:
         lower_bound = mean - 1.96 * stddev
         upper_bound = mean + 1.96 * stddev
         
-        # Convert back to float32 for compatibility with other parts of the system
+        # Convert back to float64 for consistency
         return float(mean[-1]), float(lower_bound[-1]), float(upper_bound[-1])
     
     def update(self, new_observation):
@@ -135,7 +167,7 @@ class BitcoinForecastModel:
             new_observation: New Bitcoin price observation
         """
         # Convert to tensor and ensure float64
-        new_observation = tf.cast(new_observation, tf.float64)
+        new_observation = tf.convert_to_tensor(new_observation, dtype=tf.float64)
         
-        # Update model with new observation
+        # Update model with new observation (fewer steps for faster updates)
         self.fit(new_observation, num_variational_steps=10) 

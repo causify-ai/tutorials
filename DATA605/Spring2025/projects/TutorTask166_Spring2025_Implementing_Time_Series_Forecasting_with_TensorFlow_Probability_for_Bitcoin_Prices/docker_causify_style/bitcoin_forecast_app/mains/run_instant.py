@@ -12,6 +12,7 @@ import numpy as np
 from datetime import datetime, timedelta
 from kafka import KafkaConsumer
 import sys
+import time
 
 # Add the models directory to the Python path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -52,6 +53,9 @@ class BitcoinForecastApp:
         # Initialize the TensorFlow Probability model
         self.model = BitcoinForecastModel()
         
+        # Initialize last prediction time
+        self.last_prediction_time = None
+        
         logger.info(f"Initialized BitcoinForecastApp")
         logger.info(f"Data file: {self.data_file}")
         logger.info(f"Predictions file: {self.predictions_file}")
@@ -65,6 +69,8 @@ class BitcoinForecastApp:
             df = pd.read_csv(self.data_file)
             df['timestamp'] = pd.to_datetime(df['timestamp'])
             df.set_index('timestamp', inplace=True)
+            # Ensure close price is float64
+            df['close'] = df['close'].astype(np.float64)
             return df
         except Exception as e:
             logger.error(f"Error loading historical data: {e}")
@@ -119,18 +125,14 @@ class BitcoinForecastApp:
         except Exception as e:
             logger.error(f"Error saving metrics: {e}")
 
-    def process_new_data(self, message):
-        """Process new data from Kafka message."""
+    def make_prediction(self, timestamp, actual_price):
+        """Make a prediction for the current timestamp."""
         try:
-            data = message.value
-            timestamp = pd.to_datetime(data['timestamp'])
-            actual_price = float(data['close'])
-            
             # Get historical data for model input
             historical_data = self.load_historical_data()
             if not historical_data.empty:
                 # Convert to numpy array for model input
-                price_series = historical_data['close'].values.astype(np.float64)
+                price_series = historical_data['close'].values
                 
                 # Update model with new data
                 self.model.update(price_series)
@@ -148,9 +150,25 @@ class BitcoinForecastApp:
                 self.save_prediction(timestamp, actual_price, predicted_price, confidence_interval)
                 self.save_metrics(timestamp, mae, rmse, mape)
                 
-                logger.info(f"Processed data for {timestamp}: Actual={actual_price:.2f}, Predicted={predicted_price:.2f}")
+                logger.info(f"Made prediction for {timestamp}: Actual={actual_price:.2f}, Predicted={predicted_price:.2f}")
+                return True
             else:
                 logger.warning("No historical data available for prediction")
+                return False
+            
+        except Exception as e:
+            logger.error(f"Error making prediction: {e}")
+            return False
+
+    def process_new_data(self, message):
+        """Process new data from Kafka message."""
+        try:
+            data = message.value
+            timestamp = pd.to_datetime(data['timestamp'])
+            actual_price = np.float64(data['close'])  # Ensure float64
+            
+            # Make prediction
+            self.make_prediction(timestamp, actual_price)
             
         except Exception as e:
             logger.error(f"Error processing message: {e}")
@@ -164,7 +182,7 @@ class BitcoinForecastApp:
             historical_data = self.load_historical_data()
             if not historical_data.empty:
                 # Initialize model with historical data
-                price_series = historical_data['close'].values.astype(np.float64)
+                price_series = historical_data['close'].values
                 self.model.fit(price_series)
                 logger.info(f"Initialized model with {len(historical_data)} historical records")
             else:
