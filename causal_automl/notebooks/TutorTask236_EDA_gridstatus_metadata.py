@@ -49,17 +49,16 @@
 import io
 import logging
 import re
-from typing import Optional
-
-import matplotlib.pyplot as plt
-import pandas as pd
-import seaborn as sns
+from typing import Dict, Optional
 
 import helpers.hdbg as hdbg
 import helpers.henv as henv
 import helpers.hpandas as hpandas
 import helpers.hprint as hprint
 import helpers.hs3 as hs3
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
 
 # %%
 # Configure logger.
@@ -79,7 +78,7 @@ hprint.config_notebook()
 
 
 # %%
-def _categorize_series(name: str, category_keywords: dict) -> str:
+def _categorize_series(name: str, category_keywords: Dict[str, str]) -> str:
     """
     Categorize a dataset based on keywords in its name.
 
@@ -137,8 +136,8 @@ def _display_percentage_plot(df: pd.DataFrame, column: str) -> None:
     """
     Generate bar plot with percentage distribution.
 
-    :param column: column to visualize as a percentage distribution
     :param df: input dataframe
+    :param column: column to visualize as a percentage distribution
     """
     column_counts = df[column].value_counts()
     ax = column_counts.plot(kind="bar", figsize=(9, 5))
@@ -307,7 +306,7 @@ _make_plots(
 # <a name='frequency-distribution'></a>
 # #### Frequency Distribution
 #
-# Most of the datasets in GridStatus are updated frequently, with the majority (almost 75% of the dataset) being updated hourly or every 5 minutes. This suggests that the system is focused on providing up-to-date, real-time data, while fewer datasets cater to more specialized or less frequent data needs.
+# Most of the datasets in GridStatus are updated frequently, with the majority (almost 75% of the datasets) being updated hourly or every 5 minutes. This suggests that the system is focused on providing up-to-date, real-time data, while fewer datasets cater to more specialized or less frequent data needs.
 
 # %%
 # Plot the distribution of entries by frequency.
@@ -478,7 +477,10 @@ _make_plots(
 # <a name='coverage-by-source-and-category'></a>
 # #### Coverage by Source and Category
 #
-# The following heatmap shows the most popular categories across different data sources. ERCOT and GridStatus both stand out for their wide range of categories, with Energy and Records being the most popular respectively. Across all sources, Prices category is the most frequent.
+# The following heatmap shows the most popular categories across different data sources.
+# - ERCOT stands out for its wide range of categories, with Energy being the most popular
+# - GridStatus is strongly associated with the Records category
+# - Across all sources, Prices category is the most frequent
 #
 # Categorization can be further fine-tuned using a larger number of records and more detailed metadata fields, such as descriptions, to have a better understanding of this coverage.
 
