@@ -12,11 +12,12 @@ import json
 import csv
 import logging
 from datetime import datetime
-
 import websockets
-
+import yaml
 # Configuration
-OUTPUT_CSV = "data/raw_data/instant_data/coinbase_1s_ohlc.csv"
+with open("/app/configs/config.yaml", "r") as f:
+        config = yaml.safe_load(f)
+OUTPUT_CSV = config['data']['raw_data']['instant_data']['file']
 os.makedirs(os.path.dirname(OUTPUT_CSV), exist_ok=True)
 
 # Logger setup
@@ -30,11 +31,14 @@ async def stream_1s_ohlc():
     # Use the non-deprecated Coinbase Exchange WebSocket endpoint
     uri = "wss://ws-feed.exchange.coinbase.com"
 
-    # Write CSV header once
-    with open(OUTPUT_CSV, "w", newline="") as f:
+    # Determine whether we need to write the header
+    file_existed = os.path.isfile(OUTPUT_CSV)
+    with open(OUTPUT_CSV, "a", newline="") as f:
         writer = csv.writer(f)
-        writer.writerow(["timestamp", "open", "high", "low", "close", "volume"])
-
+        if not file_existed:
+            writer.writerow(["timestamp", "open", "high", "low", "close", "volume"])
+            logger.info(f"Created new CSV and wrote header: {OUTPUT_CSV}")
+            
     curr_sec = None
     o = h = l = c = v = None
 

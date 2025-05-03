@@ -13,18 +13,23 @@ setup(
         "tensorflow==2.18.0",
         "tensorflow-probability[tf]==0.25.0",
         # data handling
-        "pandas>=2.0.0",
-        "numpy>=1.23.5,<2.0.0",
+        "pandas==2.2.1",
+        "numpy==1.26.4",
+        "scikit-learn==1.4.1",
         # visualization
-        "matplotlib>=3.5.0",
-        "seaborn>=0.12.0",
+        "matplotlib==3.8.3",
+        "seaborn==0.13.2",
+        "plotly==5.19.0",
+        "streamlit==1.32.2",
         # HTTP client & streaming
-        "requests>=2.28.0",
-        "websockets>=15.0.1",
+        "requests==2.31.0",
+        "websockets==12.0",
+        "kafka-python==2.0.2",
         # config + utilities
-        "PyYAML>=6.0",
+        "PyYAML==6.0.1",
+        "python-dotenv==1.0.1",
         # bitcoin data
-        "yfinance==0.2.57",
+        "yfinance==0.2.36",
     ],
     entry_points={
         "console_scripts": [

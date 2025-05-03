@@ -1,0 +1,6 @@
+kafka-python==2.0.2
+pyyaml==6.0.1
+tensorflow==2.15.0
+tensorflow-probability==0.23.0
+pandas==2.1.4
+numpy==1.24.3 

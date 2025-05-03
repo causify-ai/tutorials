@@ -49,4 +49,4 @@ dashboard:
   default_time_range_days: 1  # reduced from 7
   chart_height: 600
   theme: "plotly_white"
-  data_aggregation: "1H"   # Aggregate data to hourly intervals
+  data_aggregation: "1H"   # Aggregate data to hourly intervals 

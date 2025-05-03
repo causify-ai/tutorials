@@ -5,6 +5,11 @@ import tensorflow as tf
 import tensorflow_probability as tfp
 import pandas as pd
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from datetime import datetime, timedelta
+import os
+import time
+from kafka import KafkaProducer
+import json
 
 class InstantTrainer:
     def __init__(
@@ -21,10 +26,13 @@ class InstantTrainer:
         self.logger = logger
         self.config = config
         
-        # Update config access to match new structure
+        # Get file paths from config
         self.predictions_file = config['data']['predictions']['instant_data']['predictions_file']
         self.metrics_file = config['data']['predictions']['instant_data']['metrics_file']
-        self.raw_data_file = config['data']['raw_data']['instant_data']['file']
+        
+        # Ensure directories exist
+        os.makedirs(os.path.dirname(self.predictions_file), exist_ok=True)
+        os.makedirs(os.path.dirname(self.metrics_file), exist_ok=True)
         
         # Model parameters
         self.evaluation_window = config['model']['instant']['evaluation_window']
@@ -33,6 +41,15 @@ class InstantTrainer:
         # Kafka settings
         self.kafka_bootstrap_servers = config['kafka']['bootstrap_servers']
         self.kafka_topic = config['kafka']['topic']
+
+        # Initialize Kafka producer
+        self.producer = KafkaProducer(
+            bootstrap_servers=self.kafka_bootstrap_servers,
+            value_serializer=lambda x: json.dumps(x).encode('utf-8')
+        )
+        
+        self.logger.info(f"Initialized trainer with predictions file: {self.predictions_file}")
+        self.logger.info(f"Initialized trainer with metrics file: {self.metrics_file}")
 
     def evaluate_model(self, series: pd.DataFrame, forecast_dist) -> Dict[str, float]:
         """
@@ -71,40 +88,75 @@ class InstantTrainer:
         })
         df.to_csv(self.predictions_file, mode='a', header=not pd.io.common.file_exists(self.predictions_file), index=False)
 
-    def run(self) -> Dict[str, float]:
-        # 1) load raw
-        raw = self.loader.fetch()
-        self.logger.info(f"Loaded {len(raw)} raw instant rows")
+    def append_to_csv(self, data, filename):
+        """Append data to CSV file, creating it if it doesn't exist."""
+        try:
+            df = pd.DataFrame([data])
+            if not os.path.exists(filename):
+                df.to_csv(filename, index=False)
+                self.logger.info(f"Created new file: {filename}")
+            else:
+                df.to_csv(filename, mode='a', header=False, index=False)
+                self.logger.debug(f"Appended data to: {filename}")
+        except Exception as e:
+            self.logger.error(f"Error appending to {filename}: {str(e)}")
 
-        # 2) features
-        series = self.fe.transform(raw)
-        self.logger.info(f"Transformed into {len(series)} feature rows")
-
-        # 3) fit model using TFP's VI
-        self.model.fit(series)
-        self.logger.info("Instant model fit complete")
-
-        # 4) forecast
-        forecast_dist = self.model.forecast(self.forecast_horizon)
-        self.logger.info(f"Forecasted next {self.forecast_horizon} steps")
-
-        # 5) extract stats using samples
-        samples = forecast_dist.sample(1000)  # Shape: (1000, forecast_horizon, 1)
-        mean = tf.reduce_mean(samples, axis=0).numpy()[:self.forecast_horizon, 0]  # Take first dimension
-        lower = tfp.stats.percentile(samples, 10.0, axis=0).numpy()[:self.forecast_horizon, 0]
-        upper = tfp.stats.percentile(samples, 90.0, axis=0).numpy()[:self.forecast_horizon, 0]
+    def run(self):
+        """Run continuous predictions."""
+        self.logger.info("Starting continuous predictions...")
         
-        # 6) Evaluate model performance (separate from training)
-        metrics = self.evaluate_model(series, forecast_dist)
-        self.logger.info(f"Model Evaluation Metrics: {metrics}")
-        self.save_metrics(metrics)
-        
-        # 7) Save predictions
-        predictions = {'mean': mean, 'lower': lower, 'upper': upper}
-        self.save_predictions(predictions)
-        
-        self.logger.info(f"Mean (head): {mean[:5]}")
-        self.logger.info(f"90% CI lower (head): {lower[:5]}")
-        self.logger.info(f"90% CI upper (head): {upper[:5]}")
+        while True:
+            try:
+                # Get current time
+                current_time = datetime.now()
+                
+                # Get latest data
+                series = self.loader.load_latest_data()
+                if series is None:
+                    self.logger.info("Waiting for more data...")
+                    time.sleep(1)
+                    continue
 
-        return predictions
+                # Make prediction
+                forecast_result = self.model.forecast(current_time)
+                if forecast_result is None:
+                    self.logger.warning("No forecast result available")
+                    time.sleep(1)
+                    continue
+
+                # Extract distribution and metadata
+                forecast_dist = forecast_result['distribution']
+                metadata = forecast_result['metadata']
+
+                # Get samples for metrics calculation
+                samples = forecast_dist.sample(1000)  # Shape: (1000, 1, 1)
+                samples = samples.numpy().squeeze()  # Shape: (1000,)
+
+                # Calculate metrics
+                metrics = {
+                    'timestamp': metadata['timestamp'],
+                    'mean': metadata['mean'],
+                    'std': metadata['std'],
+                    'lower': metadata['lower'],
+                    'upper': metadata['upper'],
+                    'mae': float(np.mean(np.abs(samples - metadata['mean']))),
+                    'rmse': float(np.sqrt(np.mean((samples - metadata['mean'])**2)))
+                }
+
+                # Append predictions and metrics to CSV files
+                self.append_to_csv(metadata, self.predictions_file)
+                self.append_to_csv(metrics, self.metrics_file)
+
+                # Send to Kafka
+                self.producer.send(self.kafka_topic, value=metadata)
+                self.producer.flush()
+
+                self.logger.info(f"Prediction made for {current_time}: mean={metadata['mean']:.2f}, std={metadata['std']:.2f}")
+                
+                # Wait for next second
+                time.sleep(1)
+
+            except Exception as e:
+                self.logger.error(f"Error in prediction loop: {str(e)}")
+                time.sleep(1)
+                continue

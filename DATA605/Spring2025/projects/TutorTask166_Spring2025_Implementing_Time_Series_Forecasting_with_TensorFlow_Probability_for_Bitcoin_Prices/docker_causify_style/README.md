@@ -89,3 +89,33 @@ docker-compose build --no-cache  # docker-compose build bitcoin-forecast-app das
 docker-compose up -d
 docker-compose logs -f
 ```
+
+```bash
+docker-compose restart bitcoin-forecast-app dashboard
+docker-compose logs -f
+```
+
+```bash
+# docker-compose down -v && docker-compose up -d && docker-compose logs -f
+docker-compose down
+docker-compose build
+docker-compose up -d
+docker-compose logs -f
+```
+
+```bash
+tail -f data/raw_data/bitcoin_prices.csv
+tail -f data/predictions/instant_predictions.csv
+
+# Monitor data collection
+docker logs -f data-collector
+
+# Monitor predictions
+docker logs -f bitcoin-forecast-app
+
+# Monitor dashboard
+docker logs -f dashboard
+
+# Check data files
+./scripts/monitor_data.sh
+```

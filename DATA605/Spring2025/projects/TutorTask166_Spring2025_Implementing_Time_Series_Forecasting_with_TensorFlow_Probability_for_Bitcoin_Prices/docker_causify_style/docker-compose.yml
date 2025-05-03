@@ -9,17 +9,19 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
       ZOOKEEPER_INIT_LIMIT: 5
       ZOOKEEPER_SYNC_LIMIT: 2
+    ports:
+      - "2181:2181"
     healthcheck:
-      test: ["CMD", "bash", "-c", "echo srvr | nc localhost 2181"]
+      test: ["CMD-SHELL", "echo ruok | nc localhost 2181 || exit 1"]
       interval: 10s
       timeout: 5s
-      retries: 3
-      start_period: 30s
+      retries: 5
     volumes:
       - zookeeper-data:/var/lib/zookeeper/data
       - zookeeper-log:/var/lib/zookeeper/log
     networks:
       - kafka-network
+    restart: unless-stopped
 
   kafka:
     image: confluentinc/cp-kafka:7.3.0
@@ -29,23 +31,32 @@ services:
         condition: service_healthy
     ports:
       - "9092:9092"
+      - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 300000
+      KAFKA_LOG_SEGMENT_BYTES: 1073741824
+      KAFKA_LOG_RETENTION_BYTES: -1
+      KAFKA_LOG_CLEANUP_POLICY: "delete"
     volumes:
       - kafka-data:/var/lib/kafka/data
     networks:
       - kafka-network
     healthcheck:
-      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server=localhost:9092"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
+      test: ["CMD-SHELL", "kafka-topics --bootstrap-server localhost:9092 --list"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
 
   kafka-setup:
     image: confluentinc/cp-kafka:7.3.0
@@ -55,53 +66,71 @@ services:
         condition: service_healthy
     command: >
       bash -c "
-        apt-get update && apt-get install -y netcat-openbsd &&
-        while ! nc -z kafka 9092; do
-          echo 'Waiting for Kafka...';
-          sleep 1;
-        done;
-        kafka-topics --create --if-not-exists --bootstrap-server kafka:9092 --topic bitcoin-prices --partitions 1 --replication-factor 1
+        echo 'Waiting for Kafka to be ready...' &&
+        cub kafka-ready -b kafka:29092 1 30 &&
+        kafka-topics --create --if-not-exists --bootstrap-server kafka:29092 --topic bitcoin-prices --partitions 1 --replication-factor 1
       "
     networks:
       - kafka-network
+    restart: "no"
 
-  bitcoin-forecast-app:
+  data-collector:
     build:
-      context: .
+      context: ./data_collector
       dockerfile: Dockerfile
-    container_name: bitcoin-forecast-app
+    container_name: data-collector
     volumes:
-      - ./configs:/app/configs
       - ./data:/app/data
-    working_dir: /app
+      - ./data_collector/configs:/app/configs
+      - ./data_collector/scripts:/app/scripts
     depends_on:
       kafka:
         condition: service_healthy
+    environment:
+      - PYTHONUNBUFFERED=1
     networks:
       - kafka-network
+    restart: unless-stopped
+
+  bitcoin-forecast-app:
+    build:
+      context: ./bitcoin_forecast_app
+      dockerfile: Dockerfile
+    container_name: bitcoin-forecast-app
+    volumes:
+      - ./data:/app/data
+      - ./configs:/app/configs
+    depends_on:
+      kafka:
+        condition: service_healthy
     environment:
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-      - KAFKA_TOPIC=bitcoin-prices
+      - PYTHONUNBUFFERED=1
+    networks:
+      - kafka-network
+    restart: unless-stopped
 
   dashboard:
     build:
-      context: .
+      context: ./dashboard
       dockerfile: Dockerfile
     container_name: dashboard
     volumes:
-      - ./configs:/app/configs
       - ./data:/app/data
-    working_dir: /app
+      - ./configs:/app/configs
     ports:
       - "8501:8501"
     depends_on:
       kafka:
         condition: service_healthy
-    networks:
-      - kafka-network
     environment:
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-      - KAFKA_TOPIC=bitcoin-prices
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8501/_stcore/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
@@ -114,9 +143,10 @@ services:
     networks:
       - kafka-network
     environment:
-      - KAFKA_CLUSTERS_0_NAME=local
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
-      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+    restart: unless-stopped
 
 volumes:
   zookeeper-data:

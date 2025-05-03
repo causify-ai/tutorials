@@ -1,5 +1,8 @@
 import tensorflow as tf
 import tensorflow_probability as tfp
+import numpy as np
+from datetime import datetime, timedelta
+import pandas as pd
 
 class InstantForecastModel:
     def __init__(self, config):
@@ -7,21 +10,24 @@ class InstantForecastModel:
         self.model = None
         self.posterior = None
         self.observed_time_series = None
+        self.observed_timestamps = None  # Store timestamps separately
+        self.window_size = timedelta(minutes=5)  # 5-minute window for predictions
+        self.last_prediction_time = None
 
-    def fit(self, series):
+    def fit(self, series, timestamps=None):
+        """Fit the model with the given time series data."""
         self.observed_time_series = series
+        self.observed_timestamps = timestamps
         sts_model = tfp.sts.LocalLinearTrend(observed_time_series=series)
         self.model = sts_model
 
         surrogate = tfp.sts.build_factored_surrogate_posterior(model=sts_model)
 
-        # Define joint_log_prob fn using the new API
         def target_log_prob_fn(**params):
             return self.model.joint_distribution(
                 observed_time_series=series
             ).log_prob(**params)
 
-        # Fit the surrogate posterior
         losses = tfp.vi.fit_surrogate_posterior(
             target_log_prob_fn=target_log_prob_fn,
             surrogate_posterior=surrogate,
@@ -34,11 +40,75 @@ class InstantForecastModel:
         self.posterior = surrogate
         return surrogate
 
-    def forecast(self, steps: int):
+    def should_predict(self, current_time):
+        """Check if we should make a new prediction based on the current time."""
+        if self.last_prediction_time is None:
+            return True
+        
+        # Convert current_time to datetime if it's a timestamp
+        if isinstance(current_time, (int, float)):
+            current_time = pd.Timestamp(current_time, unit='s')
+        
+        # Convert last_prediction_time to datetime if it's a timestamp
+        if isinstance(self.last_prediction_time, (int, float)):
+            self.last_prediction_time = pd.Timestamp(self.last_prediction_time, unit='s')
+        
+        # Make a new prediction every second
+        return (current_time - self.last_prediction_time).total_seconds() >= 1
+
+    def forecast(self, current_time):
+        """Make a single-step forecast for the next second."""
+        # Convert current_time to pandas Timestamp if it's a Unix timestamp
+        if isinstance(current_time, (int, float)):
+            current_time = pd.Timestamp(current_time, unit='s')
+
+        if not self.should_predict(current_time):
+            return None
+
+        # Calculate window start time
+        window_start = current_time - self.window_size
+        
+        # If we have timestamps, filter the data
+        if self.observed_timestamps is not None:
+            # Convert timestamps to pandas Timestamps if they aren't already
+            if not isinstance(self.observed_timestamps[0], pd.Timestamp):
+                timestamps = pd.to_datetime(self.observed_timestamps, unit='s')
+            else:
+                timestamps = self.observed_timestamps
+            
+            # Get indices of data points within the window
+            mask = timestamps >= window_start
+            window_data = self.observed_time_series[mask]
+        else:
+            # If no timestamps, use all available data
+            window_data = self.observed_time_series
+
+        if len(window_data) < 2:  # Need at least 2 points for prediction
+            return None
+
+        # Fit the model with the window data
+        self.fit(window_data)
+
+        # Make a single-step forecast
         samples = self.posterior.sample(self.config['model']['instant']['num_samples'])
-        return tfp.sts.forecast(
+        forecast_dist = tfp.sts.forecast(
             model=self.model,
-            observed_time_series=self.observed_time_series,
+            observed_time_series=window_data,
             parameter_samples=samples,
-            num_steps_forecast=steps
+            num_steps_forecast=1
         )
+
+        # Update last prediction time
+        self.last_prediction_time = current_time
+
+        # Return both the distribution and metadata
+        return {
+            'distribution': forecast_dist,
+            'metadata': {
+                'timestamp': int(current_time.timestamp()),
+                'mean': float(forecast_dist.mean()[0]),
+                'std': float(forecast_dist.stddev()[0]),
+                'lower': float(forecast_dist.mean()[0] - 1.645 * forecast_dist.stddev()[0]),
+                'upper': float(forecast_dist.mean()[0] + 1.645 * forecast_dist.stddev()[0])
+            }
+        }

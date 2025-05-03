@@ -8,6 +8,7 @@ RUN apt-get update \
       git \
       curl \
       bash \
+      yq \
  && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
@@ -23,9 +24,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Make sure our scripts are executable
-RUN chmod +x scripts/*.sh mains/*.py
+RUN chmod +x scripts/*.sh scripts/*.py mains/*.py
 
 RUN pip install -e .
 
-# Default command: run the instant (5-min) forecast loop
-ENTRYPOINT ["bash", "-lc", "./scripts/run_instant.sh"]
+# No default entrypoint - let docker-compose.yml specify the command

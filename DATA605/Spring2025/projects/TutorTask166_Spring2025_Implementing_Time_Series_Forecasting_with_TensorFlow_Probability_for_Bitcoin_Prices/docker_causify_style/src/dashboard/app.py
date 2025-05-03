@@ -18,9 +18,9 @@ class BitcoinDashboard:
         self.kafka_topic = config['kafka']['topic']
         self.kafka_consumer_group = config['kafka']['consumer_group']
         self.refresh_interval = config['dashboard']['refresh_interval']
-        self.default_time_range_days = config['dashboard']['default_time_range_days']
         self.chart_height = config['dashboard']['chart_height']
         self.theme = config['dashboard']['theme']
+        self.window_size = timedelta(minutes=5)  # Show last 5 minutes of data
         
     def load_data(self):
         """Load the latest data from CSV files and Kafka."""
@@ -33,25 +33,25 @@ class BitcoinDashboard:
             # Convert timestamps to datetime
             for df in [raw_data, predictions, metrics]:
                 if df is not None and 'timestamp' in df.columns:
-                    df['timestamp'] = pd.to_datetime(df['timestamp'])
+                    df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s')
             
-            # Aggregate data to reduce memory usage
+            # Get the latest timestamp
+            latest_time = max(
+                raw_data['timestamp'].max() if raw_data is not None else pd.Timestamp.min,
+                predictions['timestamp'].max() if predictions is not None else pd.Timestamp.min
+            )
+            
+            # Filter data to show only the last 5 minutes
+            start_time = latest_time - self.window_size
+            
             if raw_data is not None:
-                raw_data = raw_data.set_index('timestamp')
-                raw_data = raw_data.resample(self.config['dashboard']['data_aggregation']).agg({
-                    'open': 'first',
-                    'high': 'max',
-                    'low': 'min',
-                    'close': 'last',
-                    'volume': 'sum'
-                }).reset_index()
+                raw_data = raw_data[raw_data['timestamp'] >= start_time]
             
             if predictions is not None:
-                predictions = predictions.set_index('timestamp')
-                predictions = predictions.resample(self.config['dashboard']['data_aggregation']).agg({
-                    'mean': 'mean',
-                    'std': 'mean'
-                }).reset_index()
+                predictions = predictions[predictions['timestamp'] >= start_time]
+            
+            if metrics is not None:
+                metrics = metrics[metrics['timestamp'] >= start_time]
             
             # Load real-time data from Kafka
             consumer = KafkaConsumer(
@@ -66,7 +66,7 @@ class BitcoinDashboard:
             latest_message = next(consumer)
             if latest_message:
                 real_time_data = pd.DataFrame([latest_message.value])
-                real_time_data['timestamp'] = pd.to_datetime(real_time_data['timestamp'])
+                real_time_data['timestamp'] = pd.to_datetime(real_time_data['timestamp'], unit='s')
                 return raw_data, predictions, metrics, real_time_data
             
             return raw_data, predictions, metrics, None
@@ -75,55 +75,50 @@ class BitcoinDashboard:
             st.error(f"Error loading data: {str(e)}")
             return None, None, None, None
 
-    def create_price_chart(self, raw_data, predictions, time_range=None):
+    def create_price_chart(self, raw_data, predictions, real_time_data=None):
         """Create an interactive price chart with predictions and actual values."""
         fig = go.Figure()
-
-        if time_range:
-            start_time, end_time = time_range
-            raw_data = raw_data[(raw_data['timestamp'] >= start_time) & 
-                               (raw_data['timestamp'] <= end_time)]
-            if predictions is not None:
-                predictions = predictions[(predictions['timestamp'] >= start_time) & 
-                                        (predictions['timestamp'] <= end_time)]
 
         # Add actual price line
         if raw_data is not None:
             fig.add_trace(go.Scatter(
                 x=raw_data['timestamp'],
-                y=raw_data['close'],  # Using close price from OHLC data
+                y=raw_data['close'],
                 name='Actual Price',
                 line=dict(color='blue')
             ))
 
         # Add predicted price line with confidence interval
         if predictions is not None:
-            # Group predictions by timestamp to handle multiple predictions
-            grouped_predictions = predictions.groupby('timestamp').agg({
-                'mean': 'mean',
-                'lower': 'min',
-                'upper': 'max'
-            }).reset_index()
-            
             fig.add_trace(go.Scatter(
-                x=grouped_predictions['timestamp'],
-                y=grouped_predictions['mean'],
+                x=predictions['timestamp'],
+                y=predictions['mean'],
                 name='Predicted Price',
                 line=dict(color='green')
             ))
             
             # Add confidence interval
             fig.add_trace(go.Scatter(
-                x=grouped_predictions['timestamp'].tolist() + grouped_predictions['timestamp'].tolist()[::-1],
-                y=grouped_predictions['upper'].tolist() + grouped_predictions['lower'].tolist()[::-1],
+                x=predictions['timestamp'].tolist() + predictions['timestamp'].tolist()[::-1],
+                y=predictions['upper'].tolist() + predictions['lower'].tolist()[::-1],
                 fill='toself',
                 fillcolor='rgba(0,100,80,0.2)',
                 line=dict(color='rgba(255,255,255,0)'),
                 name='90% Confidence Interval'
             ))
 
+        # Add real-time data if available
+        if real_time_data is not None:
+            fig.add_trace(go.Scatter(
+                x=real_time_data['timestamp'],
+                y=real_time_data['mean'],
+                name='Latest Prediction',
+                mode='markers',
+                marker=dict(color='red', size=10)
+            ))
+
         fig.update_layout(
-            title='Bitcoin Price Prediction',
+            title='Bitcoin Price Prediction (Last 5 Minutes)',
             xaxis_title='Time',
             yaxis_title='Price (USD)',
             hovermode='x unified',
@@ -135,6 +130,11 @@ class BitcoinDashboard:
                 y=1.02,
                 xanchor="right",
                 x=1
+            ),
+            xaxis=dict(
+                rangeslider=dict(visible=False),
+                type='date',
+                range=[datetime.now() - self.window_size, datetime.now()]
             )
         )
         return fig
@@ -143,24 +143,9 @@ class BitcoinDashboard:
         st.set_page_config(page_title="Bitcoin Price Prediction Dashboard", layout="wide")
         st.title("Bitcoin Price Prediction Dashboard")
 
-        # Add time range selector
-        col1, col2 = st.columns(2)
-        with col1:
-            start_date = st.date_input(
-                "Start Date", 
-                value=datetime.now() - timedelta(days=self.default_time_range_days)
-            )
-        with col2:
-            end_date = st.date_input("End Date", value=datetime.now())
-        
-        start_time = datetime.combine(start_date, datetime.min.time())
-        end_time = datetime.combine(end_date, datetime.max.time())
-        time_range = (start_time, end_time)
-
         # Create placeholders
         chart_placeholder = st.empty()
         metrics_placeholder = st.empty()
-        trend_placeholder = st.empty()
 
         # Add auto-refresh toggle
         auto_refresh = st.checkbox("Auto-refresh", value=True)
@@ -175,16 +160,12 @@ class BitcoinDashboard:
             
             if raw_data is not None and predictions is not None and metrics is not None:
                 # Update chart
-                fig = self.create_price_chart(raw_data, predictions, time_range)
+                fig = self.create_price_chart(raw_data, predictions, real_time_data)
                 chart_placeholder.plotly_chart(fig, use_container_width=True)
                 
                 # Update metrics
                 with metrics_placeholder.container():
-                    self.create_metrics_display(metrics, time_range)
-                
-                # Update trend chart
-                with trend_placeholder.container():
-                    self.create_metrics_trend(metrics, time_range)
+                    self.create_metrics_display(metrics)
             
             if not auto_refresh:
                 break
