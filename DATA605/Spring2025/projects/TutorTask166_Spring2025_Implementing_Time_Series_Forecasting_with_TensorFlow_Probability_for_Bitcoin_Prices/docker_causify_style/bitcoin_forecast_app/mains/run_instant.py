@@ -82,11 +82,24 @@ class BitcoinForecastApp:
     def load_historical_data(self):
         """Load historical data from CSV file."""
         try:
-            df = pd.read_csv(self.data_file)
-            df['timestamp'] = pd.to_datetime(df['timestamp'])
-            df.set_index('timestamp', inplace=True)
-            # Ensure close price is float64
-            df['close'] = df['close'].astype(np.float64)
+            # Read CSV with proper column names
+            df = pd.read_csv(
+                self.data_file,
+                names=['timestamp', 'open', 'high', 'low', 'close', 'volume'],
+                skiprows=1  # Skip header row
+            )
+            
+            # Convert timestamp to datetime
+            df['timestamp'] = pd.to_datetime(df['timestamp'], format='%Y-%m-%dT%H:%M:%S')
+            
+            # Ensure numeric columns are float64
+            numeric_columns = ['open', 'high', 'low', 'close', 'volume']
+            for col in numeric_columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce')
+            
+            # Sort by timestamp
+            df = df.sort_values('timestamp')
+            
             return df
         except Exception as e:
             logger.error(f"Error loading historical data: {e}")
@@ -95,27 +108,26 @@ class BitcoinForecastApp:
     def save_prediction(self, timestamp, actual_price, predicted_price, confidence_interval):
         """Save prediction to CSV file."""
         try:
+            # Format timestamp in ISO8601 format
+            formatted_timestamp = pd.Timestamp(timestamp).strftime('%Y-%m-%dT%H:%M:%S')
+            
+            # Create prediction data
             prediction_data = {
-                'timestamp': timestamp,
+                'timestamp': formatted_timestamp,
                 'actual_price': float(actual_price),
                 'predicted_price': float(predicted_price),
                 'lower_bound': float(confidence_interval[0]),
                 'upper_bound': float(confidence_interval[1])
             }
             
-            # Create DataFrame
+            # Save to CSV
             df = pd.DataFrame([prediction_data])
+            df.to_csv(self.predictions_file, mode='a', header=not os.path.exists(self.predictions_file), index=False)
             
-            # Append to file if it exists, otherwise create new file
-            if os.path.exists(self.predictions_file):
-                df.to_csv(self.predictions_file, mode='a', header=False, index=False)
-            else:
-                df.to_csv(self.predictions_file, index=False)
-            
-            logger.info(f"Saved prediction for {timestamp}")
-            
+            logger.info(f"Saved prediction for {formatted_timestamp}")
         except Exception as e:
-            logger.error(f"Error saving prediction: {e}")
+            logger.error(f"Error saving prediction: {str(e)}")
+            raise
 
     def save_metrics(self, timestamp, mae, rmse, mape):
         """Save prediction metrics to CSV file."""
@@ -192,7 +204,7 @@ class BitcoinForecastApp:
         """Save prediction and metrics in a single operation."""
         try:
             # Format the timestamp to match the data format
-            formatted_ts = ts_make_prediction.strftime('%Y-%m-%d %H:%M:%S.%f')
+            formatted_ts = ts_make_prediction.strftime('%Y-%m-%dT%H:%M:%S')
             
             # Prepare data with formatted timestamp
             prediction_data = {
@@ -218,11 +230,11 @@ class BitcoinForecastApp:
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 futures = [
                     executor.submit(
-                        lambda df, file: df.to_csv(file, mode='a', header=False, index=False),
+                        lambda df, file: df.to_csv(file, mode='a', header=not os.path.exists(file), index=False),
                         pred_df, self.predictions_file
                     ),
                     executor.submit(
-                        lambda df, file: df.to_csv(file, mode='a', header=False, index=False),
+                        lambda df, file: df.to_csv(file, mode='a', header=not os.path.exists(file), index=False),
                         metrics_df, self.metrics_file
                     )
                 ]

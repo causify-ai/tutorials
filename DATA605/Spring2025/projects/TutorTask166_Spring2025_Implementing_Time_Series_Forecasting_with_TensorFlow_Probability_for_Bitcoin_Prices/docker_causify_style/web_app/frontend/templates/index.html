@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bitcoin Price Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .metric-card {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .metric-label {
+            color: #666;
+        }
+        #recent-chart {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bitcoin Price Dashboard</h1>
+        
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-label">Current Price</div>
+                <div class="metric-value" id="current-price">$0.00</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Predicted Price</div>
+                <div class="metric-value" id="predicted-price">$0.00</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">MAE</div>
+                <div class="metric-value" id="mae">$0.00</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">MAPE</div>
+                <div class="metric-value" id="mape">0.00%</div>
+            </div>
+        </div>
+        
+        <div id="recent-chart"></div>
+    </div>
+
+    <script>
+        function updateChart(data) {
+            const trace1 = {
+                x: data.recent_data.timestamps,
+                y: data.recent_data.actual_prices,
+                name: 'Actual Price',
+                type: 'scatter',
+                line: {color: 'blue', width: 2}
+            };
+            
+            const trace2 = {
+                x: data.recent_data.timestamps,
+                y: data.recent_data.predicted_prices,
+                name: 'Predicted Price',
+                type: 'scatter',
+                line: {color: 'red', width: 2}
+            };
+            
+            const trace3 = {
+                x: data.recent_data.timestamps,
+                y: data.recent_data.upper_bounds,
+                name: 'Upper Bound',
+                type: 'scatter',
+                line: {color: 'rgba(255,0,0,0.2)'},
+                showlegend: false
+            };
+            
+            const trace4 = {
+                x: data.recent_data.timestamps,
+                y: data.recent_data.lower_bounds,
+                name: 'Lower Bound',
+                type: 'scatter',
+                fill: 'tonexty',
+                line: {color: 'rgba(255,0,0,0.2)'},
+                showlegend: false
+            };
+            
+            const layout = {
+                title: '5-Minute Price Changes',
+                yaxis: {title: 'Price (USD)'},
+                xaxis: {tickangle: 45},
+                height: 400,
+                showlegend: true,
+                legend: {
+                    orientation: "h",
+                    yanchor: "bottom",
+                    y: 1.02,
+                    xanchor: "right",
+                    x: 1
+                }
+            };
+            
+            Plotly.newPlot('recent-chart', [trace1, trace2, trace3, trace4], layout);
+        }
+
+        function updateMetrics(data) {
+            document.getElementById('current-price').textContent = `$${data.current_price.toFixed(2)}`;
+            document.getElementById('predicted-price').textContent = `$${data.predicted_price.toFixed(2)}`;
+            document.getElementById('mae').textContent = `$${data.mae.toFixed(2)}`;
+            document.getElementById('mape').textContent = `${data.mape.toFixed(2)}%`;
+        }
+
+        function fetchData() {
+            fetch('/api/data')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.error) {
+                        updateMetrics(data);
+                        updateChart(data);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Update data every second
+        setInterval(fetchData, 1000);
+        fetchData(); // Initial fetch
+    </script>
+</body>
+</html> 

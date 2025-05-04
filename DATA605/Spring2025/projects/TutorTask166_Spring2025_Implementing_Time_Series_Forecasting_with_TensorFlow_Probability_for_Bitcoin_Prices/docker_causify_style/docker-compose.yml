@@ -140,14 +140,20 @@ services:
     build:
       context: ./web_app/frontend
       dockerfile: Dockerfile
+    container_name: web-frontend
     ports:
-      - "3000:3000"
+      - "5001:5000"
     volumes:
-      - ./web_app/frontend:/app
-    environment:
-      - REACT_APP_WS_URL=ws://localhost:8000
+      - ./data:/app/data
+      - ./web_app/frontend/configs:/app/configs
+    networks:
+      - kafka-network
     depends_on:
-      - web-backend
+      - data-collector
+      - bitcoin-forecast-app
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
     restart: unless-stopped
 
   dashboard:

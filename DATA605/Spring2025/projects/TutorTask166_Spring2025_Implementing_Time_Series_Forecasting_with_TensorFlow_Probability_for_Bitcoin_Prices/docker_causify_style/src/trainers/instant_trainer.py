@@ -77,16 +77,46 @@ class InstantTrainer:
         df['timestamp'] = pd.Timestamp.now()
         df.to_csv(self.metrics_file, mode='a', header=not pd.io.common.file_exists(self.metrics_file), index=False)
 
-    def save_predictions(self, predictions: Dict[str, np.ndarray]):
-        """Save predictions to CSV file."""
-        # Create a single row with the current timestamp and the first prediction values
-        df = pd.DataFrame({
-            'timestamp': [pd.Timestamp.now()],
-            'mean': [predictions['mean'][0]],  # Take first value
-            'lower': [predictions['lower'][0]],  # Take first value
-            'upper': [predictions['upper'][0]]  # Take first value
-        })
-        df.to_csv(self.predictions_file, mode='a', header=not pd.io.common.file_exists(self.predictions_file), index=False)
+    def save_prediction(self, timestamp, actual_price, predicted_price, confidence_interval):
+        """Save prediction to CSV file."""
+        try:
+            # Create a DataFrame with the prediction data
+            prediction_data = {
+                'timestamp': pd.Timestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S'),  # Remove microseconds
+                'actual_price': float(actual_price),
+                'predicted_price': float(predicted_price),
+                'lower_bound': float(confidence_interval[0]),
+                'upper_bound': float(confidence_interval[1])
+            }
+            
+            # Create DataFrame with proper column order
+            df = pd.DataFrame([prediction_data], columns=[
+                'timestamp', 'actual_price', 'predicted_price', 'lower_bound', 'upper_bound'
+            ])
+            
+            # Ensure directory exists
+            os.makedirs(os.path.dirname(self.predictions_file), exist_ok=True)
+            
+            # Write to file with proper locking
+            with open(self.predictions_file, 'a' if os.path.exists(self.predictions_file) else 'w') as f:
+                # Get file lock
+                import fcntl
+                fcntl.flock(f, fcntl.LOCK_EX)
+                try:
+                    # Write header if file is new
+                    if f.tell() == 0:
+                        df.to_csv(f, index=False)
+                    else:
+                        df.to_csv(f, mode='a', header=False, index=False)
+                finally:
+                    # Release lock
+                    fcntl.flock(f, fcntl.LOCK_UN)
+            
+            self.logger.info(f"Saved prediction for {timestamp}")
+            
+        except Exception as e:
+            self.logger.error(f"Error saving prediction: {e}")
+            raise
 
     def append_to_csv(self, data, filename):
         """Append data to CSV file, creating it if it doesn't exist."""

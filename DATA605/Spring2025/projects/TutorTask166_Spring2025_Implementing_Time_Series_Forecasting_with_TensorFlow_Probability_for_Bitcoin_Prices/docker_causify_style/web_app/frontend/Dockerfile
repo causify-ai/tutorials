@@ -1,5 +1,7 @@
+# Use Python 3.9 as the base image
 FROM python:3.9-slim
 
+# Set the working directory
 WORKDIR /app
 
 # Install system dependencies
@@ -15,10 +17,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expose the port
-EXPOSE 8501
+EXPOSE 5000
 
 # Set environment variables
-ENV PYTHONUNBUFFERED=1
+ENV FLASK_APP=app.py
+ENV FLASK_ENV=development
 
 # Run the application
-CMD ["streamlit", "run", "app.py"] 
+CMD ["python", "app.py"] 

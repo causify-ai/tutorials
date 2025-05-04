@@ -2,16 +2,47 @@
 data:
   raw_data:
     instant_data:
-      file: /app/data/raw/instant_data.csv
+      file: data/raw/instant_data.csv
     historical_data:
-      file: /app/data/raw/historical_data.csv
+      file: data/raw/historical_data.csv
   predictions:
     instant_data:
-      predictions_file: /app/data/predictions/instant_predictions.csv
-      metrics_file: /app/data/predictions/instant_metrics.csv
+      predictions_file: data/predictions/instant_predictions.csv
+      metrics_file: data/predictions/instant_metrics.csv
     history_data:
-      predictions_file: "/app/data/predictions/history_data/history_predictions.csv"
-      metrics_file: "/app/data/predictions/history_data/history_metrics.csv"
+      predictions_file: data/predictions/history_data/history_predictions.csv
+      metrics_file: data/predictions/history_data/history_metrics.csv
+
+# Data format configuration
+data_format:
+  timestamp:
+    format: "%Y-%m-%dT%H:%M:%S"  # ISO8601 format
+    timezone: "UTC"
+  columns:
+    raw_data:
+      names: ['timestamp', 'open', 'high', 'low', 'close', 'volume']
+      dtypes:
+        timestamp: 'datetime64[ns]'
+        open: 'float64'
+        high: 'float64'
+        low: 'float64'
+        close: 'float64'
+        volume: 'float64'
+    predictions:
+      names: ['timestamp', 'actual_price', 'predicted_price', 'lower_bound', 'upper_bound']
+      dtypes:
+        timestamp: 'datetime64[ns]'
+        actual_price: 'float64'
+        predicted_price: 'float64'
+        lower_bound: 'float64'
+        upper_bound: 'float64'
+    metrics:
+      names: ['timestamp', 'mae', 'rmse', 'mape']
+      dtypes:
+        timestamp: 'datetime64[ns]'
+        mae: 'float64'
+        rmse: 'float64'
+        mape: 'float64'
 
 # Kafka configuration
 kafka:
@@ -25,16 +56,17 @@ model:
     evaluation_window: 300  # 5 minutes in seconds
     forecast_horizon: 1     # 1 second ahead
     learning_rate: 0.01    # Learning rate for model training
-    vi_steps: 500         # Number of variational inference steps (reduced from 1000)
-    num_samples: 100      # Number of samples for forecasting (reduced from 1000)
+    vi_steps: 100         # Reduced from 500 for faster initialization
+    num_samples: 50       # Reduced from 100 for faster initialization
     feature_windows:       # Feature windows configuration
       log_return: 5        # 5-minute window for log returns
       vol_rolling: [15, 30, 60]  # List of windows for volatility rolling window
       ma_short: 30         # 30-minute window for short-term moving average
       ma_long: 120         # 2-hour window for long-term moving average
     resample_freq: "5T"    # 5-minute intervals
-    lookback: 120          # Lookback period for features
+    lookback: 60          # Reduced from 120 for faster initialization
     window_size: 300       # 5 minutes in seconds
+    initial_data_points: 1000  # Limit initial data load
   history:
     evaluation_window: 168 # hours (1 week)
     forecast_horizon: 24   # steps
@@ -47,8 +79,14 @@ model:
 
 # Dashboard configuration
 dashboard:
-  refresh_interval: 5      # seconds
-  default_time_range_days: 1  # reduced from 7
+  refresh_interval: 1      # seconds
+  default_time_range_days: 1
   chart_height: 600
   theme: "plotly_white"
-  data_aggregation: "1H"   # Aggregate data to hourly intervals
+  data_aggregation: "1T"   # 1-minute intervals for candlestick chart
+  colors:
+    actual_up: "#2ecc71"   # Green for price increase
+    actual_down: "#e74c3c" # Red for price decrease
+    predicted: "#f39c12"   # Orange for predictions
+    actual: "#3498db"      # Blue for actual prices
+    confidence: "rgba(243, 156, 18, 0.2)"  # Semi-transparent orange for confidence intervals
