@@ -2,7 +2,9 @@
 data:
   raw_data:
     instant_data:
-      file: /app/data/raw_data/instant_data/bitcoin_prices.csv
+      file: /app/data/raw/instant_data.csv
+    historical_data:
+      file: /app/data/raw/historical_data.csv
   predictions:
     instant_data:
       predictions_file: /app/data/predictions/instant_predictions.csv

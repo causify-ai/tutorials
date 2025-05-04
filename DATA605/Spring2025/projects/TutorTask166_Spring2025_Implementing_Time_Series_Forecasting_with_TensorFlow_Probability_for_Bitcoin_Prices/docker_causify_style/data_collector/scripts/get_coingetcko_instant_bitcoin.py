@@ -28,8 +28,12 @@ class BitcoinDataCollector:
             config = yaml.safe_load(f)
         
         self.data_file = config['data']['raw_data']['instant_data']['file']
-        self.kafka_bootstrap_servers = config['kafka']['bootstrap_servers']
-        self.kafka_topic = config['kafka']['topic']
+        
+        # Use environment variables as fallback for Kafka configuration
+        self.kafka_bootstrap_servers = os.getenv('KAFKA_BOOTSTRAP_SERVERS', 
+                                               config['kafka']['bootstrap_servers'])
+        self.kafka_topic = os.getenv('KAFKA_TOPIC', 
+                                   config['kafka']['topic'])
         
         # Initialize Kafka producer
         self.producer = KafkaProducer(

@@ -13,6 +13,7 @@ from datetime import datetime, timedelta
 from kafka import KafkaConsumer
 import sys
 import time
+import concurrent.futures
 
 # Add the models directory to the Python path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -35,8 +36,12 @@ class BitcoinForecastApp:
         self.data_file = self.config['data']['raw_data']['instant_data']['file']
         self.predictions_file = self.config['data']['predictions']['instant_data']['predictions_file']
         self.metrics_file = self.config['data']['predictions']['instant_data']['metrics_file']
-        self.kafka_bootstrap_servers = self.config['kafka']['bootstrap_servers']
-        self.kafka_topic = self.config['kafka']['topic']
+        
+        # Use environment variables as fallback for Kafka configuration
+        self.kafka_bootstrap_servers = os.getenv('KAFKA_BOOTSTRAP_SERVERS', 
+                                               self.config['kafka']['bootstrap_servers'])
+        self.kafka_topic = os.getenv('KAFKA_TOPIC', 
+                                   self.config['kafka']['topic'])
         
         # Ensure predictions directory exists
         os.makedirs(os.path.dirname(self.predictions_file), exist_ok=True)
@@ -47,7 +52,18 @@ class BitcoinForecastApp:
             bootstrap_servers=self.kafka_bootstrap_servers,
             value_deserializer=lambda x: json.loads(x.decode('utf-8')),
             auto_offset_reset='latest',
-            enable_auto_commit=True
+            enable_auto_commit=True,
+            group_id='bitcoin-forecast-group',
+            session_timeout_ms=60000,
+            heartbeat_interval_ms=20000,
+            max_poll_interval_ms=600000,
+            retry_backoff_ms=1000,
+            reconnect_backoff_ms=1000,
+            reconnect_backoff_max_ms=5000,
+            max_poll_records=100,
+            fetch_max_wait_ms=500,
+            fetch_min_bytes=1,
+            fetch_max_bytes=52428800
         )
         
         # Initialize the TensorFlow Probability model
@@ -134,8 +150,11 @@ class BitcoinForecastApp:
                 # Convert to numpy array for model input
                 price_series = historical_data['close'].values
                 
-                # Update model with new data
-                self.model.update(price_series)
+                # Only update model if we have new data
+                if self.last_prediction_time is None or \
+                   (timestamp - self.last_prediction_time).total_seconds() >= 60:  # Update every minute
+                    self.model.update(price_series)
+                    self.last_prediction_time = timestamp
                 
                 # Generate forecast
                 predicted_price, lower_bound, upper_bound = self.model.forecast()
@@ -146,11 +165,20 @@ class BitcoinForecastApp:
                 rmse = np.sqrt(mae ** 2)
                 mape = abs((predicted_price - actual_price) / actual_price) * 100
                 
-                # Save prediction and metrics
-                self.save_prediction(timestamp, actual_price, predicted_price, confidence_interval)
-                self.save_metrics(timestamp, mae, rmse, mape)
-                
+                # Log the prediction with the timestamp
                 logger.info(f"Made prediction for {timestamp}: Actual={actual_price:.2f}, Predicted={predicted_price:.2f}")
+                
+                # Save prediction and metrics in a single operation
+                self.save_prediction_and_metrics(
+                    timestamp,  # Use the same timestamp for saving
+                    actual_price,
+                    predicted_price,
+                    confidence_interval,
+                    mae,
+                    rmse,
+                    mape
+                )
+                
                 return True
             else:
                 logger.warning("No historical data available for prediction")
@@ -160,15 +188,61 @@ class BitcoinForecastApp:
             logger.error(f"Error making prediction: {e}")
             return False
 
+    def save_prediction_and_metrics(self, ts_make_prediction, actual_price, predicted_price, confidence_interval, mae, rmse, mape):
+        """Save prediction and metrics in a single operation."""
+        try:
+            # Format the timestamp to match the data format
+            formatted_ts = ts_make_prediction.strftime('%Y-%m-%d %H:%M:%S.%f')
+            
+            # Prepare data with formatted timestamp
+            prediction_data = {
+                'timestamp': formatted_ts,  # Use formatted timestamp
+                'actual_price': float(actual_price),
+                'predicted_price': float(predicted_price),
+                'lower_bound': float(confidence_interval[0]),
+                'upper_bound': float(confidence_interval[1])
+            }
+            
+            metrics_data = {
+                'timestamp': formatted_ts,  # Use formatted timestamp
+                'mae': float(mae),
+                'rmse': float(rmse),
+                'mape': float(mape)
+            }
+            
+            # Create DataFrames
+            pred_df = pd.DataFrame([prediction_data])
+            metrics_df = pd.DataFrame([metrics_data])
+            
+            # Save both files in parallel
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                futures = [
+                    executor.submit(
+                        lambda df, file: df.to_csv(file, mode='a', header=False, index=False),
+                        pred_df, self.predictions_file
+                    ),
+                    executor.submit(
+                        lambda df, file: df.to_csv(file, mode='a', header=False, index=False),
+                        metrics_df, self.metrics_file
+                    )
+                ]
+                concurrent.futures.wait(futures)
+            
+            logger.info(f"Saved prediction and metrics for {formatted_ts}")
+            
+        except Exception as e:
+            logger.error(f"Error saving prediction and metrics: {e}")
+
     def process_new_data(self, message):
         """Process new data from Kafka message."""
         try:
             data = message.value
-            timestamp = pd.to_datetime(data['timestamp'])
+            # Capture the timestamp when we receive the message
+            ts_make_prediction = datetime.now()
             actual_price = np.float64(data['close'])  # Ensure float64
             
-            # Make prediction
-            self.make_prediction(timestamp, actual_price)
+            # Make prediction with the captured timestamp
+            self.make_prediction(ts_make_prediction, actual_price)
             
         except Exception as e:
             logger.error(f"Error processing message: {e}")
