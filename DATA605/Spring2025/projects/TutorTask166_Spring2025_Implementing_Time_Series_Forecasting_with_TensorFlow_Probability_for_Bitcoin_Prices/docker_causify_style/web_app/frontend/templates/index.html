@@ -13,33 +13,40 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .metrics {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            display: flex;
+            justify-content: space-around;
             margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
         }
-        .metric-card {
-            background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        .metric {
+            text-align: center;
         }
         .metric-value {
             font-size: 24px;
             font-weight: bold;
-            margin: 10px 0;
+            color: #2c3e50;
         }
         .metric-label {
-            color: #666;
+            font-size: 14px;
+            color: #7f8c8d;
         }
-        #recent-chart {
-            background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        .chart-container {
             margin-bottom: 20px;
+        }
+        .error {
+            color: #e74c3c;
+            padding: 10px;
+            background-color: #fadbd8;
+            border-radius: 4px;
+            margin: 10px 0;
         }
     </style>
 </head>
@@ -48,104 +55,141 @@
         <h1>Bitcoin Price Dashboard</h1>
         
         <div class="metrics">
-            <div class="metric-card">
-                <div class="metric-label">Current Price</div>
-                <div class="metric-value" id="current-price">$0.00</div>
+            <div class="metric">
+                <div class="metric-value" id="current-price">-</div>
+                <div class="metric-label">Current Price (USD)</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-label">Predicted Price</div>
-                <div class="metric-value" id="predicted-price">$0.00</div>
+            <div class="metric">
+                <div class="metric-value" id="predicted-price">-</div>
+                <div class="metric-label">Predicted Price (USD)</div>
             </div>
-            <div class="metric-card">
+            <div class="metric">
+                <div class="metric-value" id="mae">-</div>
                 <div class="metric-label">MAE</div>
-                <div class="metric-value" id="mae">$0.00</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-label">MAPE</div>
-                <div class="metric-value" id="mape">0.00%</div>
+            <div class="metric">
+                <div class="metric-value" id="mape">-</div>
+                <div class="metric-label">MAPE (%)</div>
             </div>
         </div>
+
+        <div class="chart-container">
+            <div id="price-chart"></div>
+        </div>
         
-        <div id="recent-chart"></div>
+        <div class="chart-container">
+            <div id="prediction-chart"></div>
+        </div>
     </div>
 
     <script>
-        function updateChart(data) {
-            const trace1 = {
-                x: data.recent_data.timestamps,
-                y: data.recent_data.actual_prices,
-                name: 'Actual Price',
-                type: 'scatter',
-                line: {color: 'blue', width: 2}
-            };
-            
-            const trace2 = {
-                x: data.recent_data.timestamps,
-                y: data.recent_data.predicted_prices,
-                name: 'Predicted Price',
-                type: 'scatter',
-                line: {color: 'red', width: 2}
-            };
-            
-            const trace3 = {
-                x: data.recent_data.timestamps,
-                y: data.recent_data.upper_bounds,
-                name: 'Upper Bound',
-                type: 'scatter',
-                line: {color: 'rgba(255,0,0,0.2)'},
-                showlegend: false
-            };
-            
-            const trace4 = {
-                x: data.recent_data.timestamps,
-                y: data.recent_data.lower_bounds,
-                name: 'Lower Bound',
-                type: 'scatter',
-                fill: 'tonexty',
-                line: {color: 'rgba(255,0,0,0.2)'},
-                showlegend: false
-            };
-            
-            const layout = {
-                title: '5-Minute Price Changes',
-                yaxis: {title: 'Price (USD)'},
-                xaxis: {tickangle: 45},
-                height: 400,
-                showlegend: true,
-                legend: {
-                    orientation: "h",
-                    yanchor: "bottom",
-                    y: 1.02,
-                    xanchor: "right",
-                    x: 1
-                }
-            };
-            
-            Plotly.newPlot('recent-chart', [trace1, trace2, trace3, trace4], layout);
+        function formatPrice(price) {
+            return '$' + parseFloat(price).toFixed(2);
         }
 
-        function updateMetrics(data) {
-            document.getElementById('current-price').textContent = `$${data.current_price.toFixed(2)}`;
-            document.getElementById('predicted-price').textContent = `$${data.predicted_price.toFixed(2)}`;
-            document.getElementById('mae').textContent = `$${data.mae.toFixed(2)}`;
-            document.getElementById('mape').textContent = `${data.mape.toFixed(2)}%`;
+        function formatMetric(value) {
+            return parseFloat(value).toFixed(4);
+        }
+
+        function updateCharts(data) {
+            // Update metrics
+            document.getElementById('current-price').textContent = formatPrice(data.current_price);
+            document.getElementById('predicted-price').textContent = formatPrice(data.predicted_price);
+            document.getElementById('mae').textContent = formatMetric(data.mae);
+            document.getElementById('mape').textContent = formatMetric(data.mape) + '%';
+
+            // Create price chart
+            const priceTrace = {
+                x: data.recent_data.timestamps,
+                y: data.recent_data.actual_prices,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Actual Price',
+                line: {color: '#3498db'}
+            };
+
+            const priceLayout = {
+                title: 'Bitcoin Price',
+                xaxis: {title: 'Time'},
+                yaxis: {title: 'Price (USD)'},
+                height: 400
+            };
+
+            Plotly.newPlot('price-chart', [priceTrace], priceLayout);
+
+            // Create prediction chart
+            const actualTrace = {
+                x: data.recent_data.timestamps,
+                y: data.recent_data.actual_prices,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Actual Price',
+                line: {color: '#3498db'}
+            };
+
+            const predictedTrace = {
+                x: data.recent_data.timestamps,
+                y: data.recent_data.predicted_prices,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Predicted Price',
+                line: {color: '#f39c12'}
+            };
+
+            const upperBoundTrace = {
+                x: data.recent_data.timestamps,
+                y: data.recent_data.upper_bounds,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Upper Bound',
+                line: {color: 'rgba(243, 156, 18, 0.2)'},
+                fill: 'tonexty'
+            };
+
+            const lowerBoundTrace = {
+                x: data.recent_data.timestamps,
+                y: data.recent_data.lower_bounds,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Lower Bound',
+                line: {color: 'rgba(243, 156, 18, 0.2)'}
+            };
+
+            const predictionLayout = {
+                title: 'Price Predictions vs Actual',
+                xaxis: {title: 'Time'},
+                yaxis: {title: 'Price (USD)'},
+                height: 400,
+                showlegend: true
+            };
+
+            Plotly.newPlot('prediction-chart', 
+                [actualTrace, predictedTrace, upperBoundTrace, lowerBoundTrace], 
+                predictionLayout);
         }
 
         function fetchData() {
             fetch('/api/data')
                 .then(response => response.json())
                 .then(data => {
-                    if (!data.error) {
-                        updateMetrics(data);
-                        updateChart(data);
+                    if (data.error) {
+                        document.querySelector('.container').innerHTML += 
+                            `<div class="error">${data.message}</div>`;
+                    } else {
+                        updateCharts(data);
                     }
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    document.querySelector('.container').innerHTML += 
+                        `<div class="error">Error fetching data: ${error}</div>`;
+                });
         }
 
-        // Update data every second
-        setInterval(fetchData, 1000);
-        fetchData(); // Initial fetch
+        // Initial data fetch
+        fetchData();
+
+        // Update data every 5 seconds
+        setInterval(fetchData, 5000);
     </script>
 </body>
 </html> 
