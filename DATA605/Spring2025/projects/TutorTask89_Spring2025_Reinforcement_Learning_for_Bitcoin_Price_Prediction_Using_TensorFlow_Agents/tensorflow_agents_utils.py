@@ -20,7 +20,6 @@ import pandas as pd
 import yfinance as yf
 
 from typing import Optional, List, Union
-from tf_agents.environments import py_environment
 from tf_agents.environments import tf_py_environment
 from bitcoin_trading_env import BitcoinTradingEnv
 
@@ -478,8 +477,9 @@ def create_dqn_agent(
     optimizer: tf.keras.optimizers.Optimizer,
     train_step_counter: tf.Variable,
     gamma: float = config.GAMMA,
-    target_update_period: int = config.TARGET_UPDATE_PERIOD,
+    target_update_tau: Optional[float] = config.TARGET_UPDATE_TAU,
     td_errors_loss_fn: Any = dqn_agent.common.element_wise_huber_loss,
+    gradient_clipping: Optional[float] = config.GRADIENT_CLIPPING_NORM,
 ) -> dqn_agent.DqnAgent:
     """
     Creates and initializes a TF-Agents DqnAgent.
@@ -495,15 +495,22 @@ def create_dqn_agent(
         time_step_spec: A tf_agents.trajectories.time_step.TimeStep spec.
         action_spec: A tf.TensorSpec for actions.
         q_net: The Q-Network instance.
-        optimizer: The optimizer for training the Q-Network.
+        optimizer: A tf.keras.optimizers.Optimizer instance.
         train_step_counter: A tf.Variable to count training steps.
         gamma: Discount factor for future rewards.
-        target_update_period: Frequency for updating the target network.
+        target_update_tau: (Optional) The soft update factor (tau). If None, hard updates are used.
         td_errors_loss_fn: Loss function for TD errors.
+        gradient_clipping: (Optional) If not None, gradients are clipped to this norm.
+                           Defaults to 1.0.
 
     Returns:
         An initialized instance of tf_agents.agents.dqn.dqn_agent.DqnAgent.
     """
+    target_update_period = (
+        config.TARGET_UPDATE_PERIOD_WITH_TAU
+        if target_update_tau is not None
+        else config.TARGET_UPDATE_PERIOD_WITHOUT_TAU
+    )
     agent = dqn_agent.DqnAgent(
         time_step_spec=time_step_spec,
         action_spec=action_spec,
@@ -512,7 +519,9 @@ def create_dqn_agent(
         td_errors_loss_fn=td_errors_loss_fn,
         gamma=gamma,
         target_update_period=target_update_period,
+        target_update_tau=target_update_tau,
         train_step_counter=train_step_counter,
+        gradient_clipping=gradient_clipping,
         # Epsilon for exploration will be handled by a wrapper policy during data collection.
     )
     agent.initialize()
@@ -681,7 +690,6 @@ def initial_collect(
 def train_one_iteration(
     dataset_iterator: Any,  # Iterator for the training dataset
     tf_agent: tfa_dqn_agent.DqnAgent,
-    train_step_counter: tf.Variable,
 ) -> tf.Tensor:  # Returns the training loss
     """
     Performs one iteration of training the agent.
@@ -695,7 +703,7 @@ def train_one_iteration(
         The training loss for this iteration.
     """
     experience, _ = next(dataset_iterator)  # Get a batch of experience
-    # The agent's train method updates its Q-network and returns loss information.
-    # train_step_counter is incremented by the agent's train method.
-    loss_info = tf_agent.train(experience)
+    batch_size = config.BATCH_SIZE
+    weights = tf.constant(1.0 / batch_size, shape=(batch_size,), dtype=tf.float32)
+    loss_info = tf_agent.train(experience, weights=weights)
     return loss_info.loss

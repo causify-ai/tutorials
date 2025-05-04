@@ -7,7 +7,6 @@ and executes the training loop using an in-memory TFUniformReplayBuffer.
 """
 
 import tensorflow as tf
-from typing import Any  # For type hinting the dataset iterator
 from tf_agents.environments import tf_environment  # For type hinting
 from tf_agents.policies import random_tf_policy  # For initial collect
 from tf_agents.utils import common  # For create_variable
@@ -25,7 +24,7 @@ if __name__ == "__main__":
     _LOG.info("Creating training and evaluation environments...")
     try:
         train_tf_env: tf_environment.TFEnvironment = utils.create_btc_env(
-            data_path=config.TRAIN_DATA_PATH,
+            data_path=config.NORM_TRAIN_DATA_PATH,
             window_size=config.WINDOW_SIZE,
             fee=config.FEE,
             feature_columns=None,
@@ -33,7 +32,7 @@ if __name__ == "__main__":
         )
         eval_tf_env: tf_environment.TFEnvironment = (
             utils.create_btc_env(  # For later evaluation
-                data_path=config.VALIDATION_DATA_PATH,
+                data_path=config.NORM_VALIDATION_DATA_PATH,
                 window_size=config.WINDOW_SIZE,
                 fee=config.FEE,
                 feature_columns=None,
@@ -55,12 +54,15 @@ if __name__ == "__main__":
             observation_spec=train_tf_env.observation_spec(),
             action_spec=train_tf_env.action_spec(),
         )
+        optimizer_instance = tf.keras.optimizers.Adam(
+            learning_rate=config.LEARNING_RATE
+        )
         agent = utils.create_dqn_agent(
             time_step_spec=train_tf_env.time_step_spec(),
             action_spec=train_tf_env.action_spec(),
             q_net=q_net,
-            optimizer=tf.keras.optimizers.Adam(learning_rate=config.LEARNING_RATE),
             train_step_counter=train_step_counter,
+            optimizer=optimizer_instance,
         )
     except Exception as e:
         _LOG.error(f"Failed to create DQN agent: {e}", exc_info=True)
@@ -83,6 +85,10 @@ if __name__ == "__main__":
             trainable=False,
             name="CurrentEpsilon",
         )
+
+        epsilon_decay_rate = (
+            config.INITIAL_EPSILON - config.MIN_EPSILON
+        ) / config.EPSILON_DECAY_TRAINING_STEPS
 
         def get_current_epsilon_fn() -> tf.Tensor:
             return current_epsilon_tf_var.value()
@@ -151,18 +157,57 @@ if __name__ == "__main__":
         time_step = train_tf_env.reset()
         for iteration in range(config.NUM_TRAINING_ITERATIONS):
             time_step, _ = training_collect_driver.run(time_step=time_step)
+            if time_step.is_last():
+                time_step = train_tf_env.reset()
             train_loss = utils.train_one_iteration(
                 dataset_iterator=dataset_iterator,
                 tf_agent=agent,
-                train_step_counter=train_step_counter,
             )
             current_step = train_step_counter.numpy()
+            # Epsilon Annealing
+            if current_step < config.EPSILON_DECAY_TRAINING_STEPS:
+                new_epsilon = config.INITIAL_EPSILON - (
+                    epsilon_decay_rate * current_step
+                )
+                current_epsilon_tf_var.assign(max(config.MIN_EPSILON, new_epsilon))
+            else:
+                current_epsilon_tf_var.assign(config.MIN_EPSILON)
             if current_step % config.LOG_INTERVAL == 0:
                 _LOG.info(
                     f"Iteration: {iteration + 1}, Step: {current_step}, "
-                    f"Loss: {train_loss.numpy():.5f}, "
-                    f"Epsilon (fixed for now): {get_current_epsilon_fn().numpy():.3f}"
+                    f"Loss: {train_loss.numpy():.5f} (avg), "
+                    f"Epsilon: {get_current_epsilon_fn().numpy():.3f}",
                 )
+                # Monitor Q-value scale
+                try:
+                    obs_batch, _ = next(dataset_iterator)
+                    q_vals, _ = q_net(obs_batch.observation)
+                    _LOG.info(
+                        f"Q-value range: {tf.reduce_min(q_vals).numpy():.3f} to {tf.reduce_max(q_vals).numpy():.3f}"
+                    )
+                    # Get target Q-values for same observations to monitor target network lag
+                    target_q_vals, _ = agent._target_q_network(obs_batch.observation)
+                    q_diff = tf.abs(q_vals - target_q_vals)
+                    _LOG.info(
+                        f"Target-network lag (mean absolute diff): {tf.reduce_mean(q_diff).numpy():.5f}"
+                    )
+                    # Monitor reward statistics (once every 5 log intervals to avoid slowing training)
+                    if current_step % (config.LOG_INTERVAL * 5) == 0:
+                        sample_traj, _ = replay_buffer.get_next(
+                            sample_batch_size=min(
+                                2048, replay_buffer.num_frames().numpy()
+                            ),
+                            num_steps=1,
+                        )
+                        r = sample_traj.reward
+                        _LOG.info(
+                            f"Reward stats - Mean: {tf.reduce_mean(r).numpy():.5f}, "
+                            f"Std: {tf.math.reduce_std(r).numpy():.5f}, "
+                            f"Min: {tf.reduce_min(r).numpy():.5f}, "
+                            f"Max: {tf.reduce_max(r).numpy():.5f}"
+                        )
+                except Exception as e:
+                    _LOG.warning(f"Error while collecting monitoring statistics: {e}")
     except Exception as e:
         _LOG.error(f"Error during training loop: {e}", exc_info=True)
     finally:

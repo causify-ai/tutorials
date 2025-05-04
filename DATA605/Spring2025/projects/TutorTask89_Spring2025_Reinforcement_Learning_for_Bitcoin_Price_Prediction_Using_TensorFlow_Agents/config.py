@@ -3,7 +3,7 @@ Configuration file for the project.
 Contains hyperparameters and settings for data, environment, agent, and training.
 """
 
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 # #############################################################################
 # Data Configuration
@@ -48,9 +48,19 @@ DROPOUT_RATE: Optional[float] = None  # Example: 0.1 for 10% dropout
 # #############################################################################
 # DQN Agent Hyperparameters
 # #############################################################################
-LEARNING_RATE: float = 1e-4  # Learning rate for the optimizer (Adam)
+LEARNING_RATE: float = 1e-5  # Learning rate for the optimizer (Adam)
 GAMMA: float = 0.99  # Discount factor for future rewards
-TARGET_UPDATE_PERIOD: int = 100  # Number of steps before updating the target Q-network
+TARGET_UPDATE_PERIOD: int = 100
+GRADIENT_CLIPPING_NORM: Union[float, None] = (
+    1.0  # Gradient clipping norm (None to disable)
+)
+# If TARGET_UPDATE_TAU is set, soft updates are used.
+# If TARGET_UPDATE_TAU is None, hard updates are used with TARGET_UPDATE_PERIOD.
+TARGET_UPDATE_TAU: Union[float, None] = 0.005
+TARGET_UPDATE_PERIOD_WITH_TAU: int = 1
+TARGET_UPDATE_PERIOD_WITHOUT_TAU: int = (
+    100  # Number of steps before updating the target Q-network
+)
 
 # #############################################################################
 # Replay Buffer Hyperparameters
@@ -82,3 +92,5 @@ LOG_INTERVAL: int = 200  # Log training loss every N iterations
 INITIAL_EPSILON: float = (
     1.0  # Starting epsilon for exploration for initial collection policy setup
 )
+MIN_EPSILON: float = 0.01  # Minimum epsilon for exploration
+EPSILON_DECAY_TRAINING_STEPS: int = int(NUM_TRAINING_ITERATIONS * 0.7)
