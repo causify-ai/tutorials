@@ -4,3 +4,14 @@ __pycache__
 .git
 .gitignore
 .env
+tests/
+
+docker_bash.sh
+docker_build.sh
+docker_clean.sh
+docker_exec.sh
+docker_push.sh
+Dockerfile
+version.sh
+bashrc
+etc_sudoers

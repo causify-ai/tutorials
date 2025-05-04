@@ -19,6 +19,22 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 
+from typing import Optional, List, Union
+from tf_agents.environments import py_environment
+from tf_agents.environments import tf_py_environment
+from bitcoin_trading_env import BitcoinTradingEnv
+
+import tensorflow as tf
+from typing import Tuple, Optional, Any, Union
+from tf_agents.agents.dqn import dqn_agent
+from tf_agents.networks import q_network as tf_agents_q_network
+from tf_agents.environments import tf_py_environment
+from tf_agents.trajectories import time_step as ts
+from tf_agents.specs import tensor_spec
+from tensorflow.keras import initializers
+
+import config
+
 
 # #############################################################################
 # Logging Setup
@@ -334,3 +350,158 @@ def normalize_data(dataframes: list, params: dict) -> tuple:
     except Exception as e:
         _LOG.error(f"Error normalizing data: {e}")
         raise
+
+
+# #############################################################################
+# Create Bitcoin Trading Environment
+# #############################################################################
+def create_btc_env(
+    data_path: str,
+    window_size: int = 20,
+    fee: float = 0.001,
+    feature_columns: Optional[List[str]] = None,
+    wrap_in_tf_env: bool = True,
+) -> Union[BitcoinTradingEnv, tf_py_environment.TFPyEnvironment]:
+    _LOG.info(f"Attempting to create BitcoinTradingEnv with data from: {data_path}")
+    try:
+        df = pd.read_csv(data_path)
+        _LOG.info(
+            f"Successfully loaded data. Shape: {df.shape}, Columns: {df.columns.tolist()}"
+        )
+    except Exception as e:
+        _LOG.error(f"Failed to load data from {data_path}: {e}")
+        raise
+    if "Close" not in df.columns:
+        _LOG.error(
+            f"'Close' column not found in {data_path}. It is required for reward calculation."
+        )
+        raise ValueError(f"'Close' column not found in {data_path}")
+    if feature_columns is None:
+        default_features = ["Log_Returns", "Price_SMA_20", "Volume_SMA_20", "Volume"]
+        feature_columns = [col for col in default_features if col in df.columns]
+        if not feature_columns:
+            _LOG.error(
+                f"No default feature columns ({default_features}) found in {data_path}."
+            )
+            raise ValueError("No feature columns available for the environment.")
+        _LOG.info(
+            f"Using automatically determined feature columns for observation: {feature_columns}"
+        )
+    else:
+        missing_cols = [col for col in feature_columns if col not in df.columns]
+        if missing_cols:
+            _LOG.error(
+                f"Specified feature_columns not found in DataFrame: {missing_cols}"
+            )
+            raise ValueError(f"Missing feature columns: {missing_cols}")
+        _LOG.info(f"Using specified feature columns for observation: {feature_columns}")
+    py_env = BitcoinTradingEnv(
+        df=df,
+        window_size=window_size,
+        fee=fee,
+        feature_columns=feature_columns,
+    )
+    _LOG.info(
+        f"BitcoinTradingEnv (PyEnvironment) created successfully. Observation Spec: {py_env.observation_spec()}, Action Spec: {py_env.action_spec()}"
+    )
+    if wrap_in_tf_env:
+        tf_env = tf_py_environment.TFPyEnvironment(py_env)
+        _LOG.info("Successfully wrapped environment in TFPyEnvironment.")
+        return tf_env
+    return py_env
+
+
+# #############################################################################
+# Create Q-Network
+# #############################################################################
+def create_q_network(
+    observation_spec: tensor_spec.TensorSpec,
+    action_spec: tensor_spec.BoundedTensorSpec,
+    fc_layer_params: Tuple[int, ...] = config.FC_LAYER_PARAMS,
+    activation_fn: Any = tf.keras.activations.relu,
+    kernel_initializer: tf.keras.initializers.Initializer = config.KERNEL_INITIALIZER,
+    dropout_rate_for_fc_layers: Optional[float] = config.DROPOUT_RATE,
+) -> tf_agents_q_network.QNetwork:
+    """
+    Creates a Q-Network for the DQN agent.
+
+    Handles 2D observations by flattening before FC layers. Includes options for
+    kernel initializer and dropout after each FC layer.
+
+    Args:
+        observation_spec: A tf.TensorSpec for observations.
+        action_spec: A tf.TensorSpec for actions.
+        fc_layer_params: Tuple of units for each fully connected hidden layer.
+        activation_fn: Activation function for hidden layers.
+        kernel_initializer: Initializer for kernel weights of dense layers.
+        dropout_rate_for_fc_layers: Dropout rate to apply after each FC layer.
+                                     If None, no dropout is applied.
+
+    Returns:
+        An instance of tf_agents.networks.q_network.QNetwork.
+    """
+    dropout_layer_params_for_qnetwork: Optional[Tuple[float, ...]] = None
+    if dropout_rate_for_fc_layers is not None and fc_layer_params:
+        dropout_layer_params_for_qnetwork = tuple(
+            [dropout_rate_for_fc_layers] * len(fc_layer_params)
+        )
+    q_net = tf_agents_q_network.QNetwork(
+        input_tensor_spec=observation_spec,
+        action_spec=action_spec,
+        fc_layer_params=fc_layer_params,
+        activation_fn=activation_fn,
+        kernel_initializer=kernel_initializer,
+        dropout_layer_params=dropout_layer_params_for_qnetwork,
+    )
+    return q_net
+
+
+# #############################################################################
+# Create DQN Agent
+# #############################################################################
+def create_dqn_agent(
+    time_step_spec: ts.TimeStep,
+    action_spec: tensor_spec.BoundedTensorSpec,
+    q_net: tf_agents_q_network.QNetwork,
+    optimizer: tf.keras.optimizers.Optimizer,
+    train_step_counter: tf.Variable,
+    gamma: float = config.GAMMA,
+    target_update_period: int = config.TARGET_UPDATE_PERIOD,
+    td_errors_loss_fn: Any = dqn_agent.common.element_wise_huber_loss,
+) -> dqn_agent.DqnAgent:
+    """
+    Creates and initializes a TF-Agents DqnAgent.
+
+    Note on Exploration: The DqnAgent itself computes a greedy policy based on Q-values.
+    Exploration strategies (e.g., epsilon-greedy with annealing epsilon) are typically
+    implemented by wrapping the agent's `policy` with a collection policy like
+    `tf_agents.policies.epsilon_greedy_policy.EpsilonGreedyPolicy` during data collection.
+    The `epsilon_greedy` parameter of the DqnAgent constructor sets an initial value for
+    a simple built-in epsilon-greedy mechanism but is often superseded by an explicit
+    exploration policy wrapper during training setup.
+    Args:
+        time_step_spec: A tf_agents.trajectories.time_step.TimeStep spec.
+        action_spec: A tf.TensorSpec for actions.
+        q_net: The Q-Network instance.
+        optimizer: The optimizer for training the Q-Network.
+        train_step_counter: A tf.Variable to count training steps.
+        gamma: Discount factor for future rewards.
+        target_update_period: Frequency for updating the target network.
+        td_errors_loss_fn: Loss function for TD errors.
+
+    Returns:
+        An initialized instance of tf_agents.agents.dqn.dqn_agent.DqnAgent.
+    """
+    agent = dqn_agent.DqnAgent(
+        time_step_spec=time_step_spec,
+        action_spec=action_spec,
+        q_network=q_net,
+        optimizer=optimizer,
+        td_errors_loss_fn=td_errors_loss_fn,
+        gamma=gamma,
+        target_update_period=target_update_period,
+        train_step_counter=train_step_counter,
+        # Epsilon for exploration will be handled by a wrapper policy during data collection.
+    )
+    agent.initialize()
+    return agent
