@@ -14,6 +14,36 @@
 # ---
 
 # %% [markdown]
+# CONTENTS:
+# - [GitHub API Tutorial](#github-api-tutorial)
+#   - [Setup](#setup)
+#     - [1. Install Dependencies](#1.-install-dependencies)
+#     - [2. Import Required Modules](#2.-import-required-modules)
+#     - [3. Set Up GitHub Authentication](#3.-set-up-github-authentication)
+#   - [Define Config](#define-config)
+#   - [Initialize GitHub Client](#initialize-github-client)
+#   - [Fetch Repositories for the Organization](#fetch-repositories-for-the-organization)
+#   - [Fetch Commit Statistics](#fetch-commit-statistics)
+#     - [**Usage**](#**usage**)
+#     - [**Parameters**](#**parameters**)
+#   - [Fetch Pull Request Statistics](#fetch-pull-request-statistics)
+#     - [**Parameters**](#**parameters**)
+#     - [Fetching Only Closed PRs](#fetching-only-closed-prs)
+#   - [Fetch Unmerged Pull Request Statistics](#fetch-unmerged-pull-request-statistics)
+#     - [**Parameters**](#**parameters**)
+#   - [Fetch Total Issues Statistics](#fetch-total-issues-statistics)
+#     - [**Parameters**](#**parameters**)
+#   - [Fetch Issues Without Assignee](#fetch-issues-without-assignee)
+#     - [**Parameters**](#**parameters**)
+#   - [Fetch Commits by a Specific User](#fetch-commits-by-a-specific-user)
+#     - [**Parameters:**](#**parameters:**)
+#   - [Fetch Pull Requests by a Specific User](#fetch-pull-requests-by-a-specific-user)
+#     - [**Parameters:**](#**parameters:**)
+#   - [Fetch Unmerged Pull Requests by a Specific User](#fetch-unmerged-pull-requests-by-a-specific-user)
+#     - [**Parameters:**](#**parameters:**)
+
+# %% [markdown]
+# <a name='github-api-tutorial'></a>
 # # GitHub API Tutorial
 #
 # **Overview:**
@@ -42,40 +72,38 @@
 # 6. Click **Generate token**.
 # 7. **Copy and save your token immediately**—you won’t be able to see it again later.
 
+# %% [markdown]
+# <a name='1.-install-dependencies'></a>
+# <a name='setup'></a>
+# ## Setup
+#
+# Before proceeding with API calls, ensure that your environment is correctly set up.
+
 # %%
 # !sudo /bin/bash -c "(source /venv/bin/activate; pip install --quiet jupyterlab-vim)"
 # !jupyter labextension enable
 
 # %% [markdown]
-# ## Setup
-#
-# Before proceeding with API calls, ensure that your environment is correctly set up.
-
-# %% [markdown]
-# ### 2. Import Required Modules
+# <a name='2.-import-required-modules'></a>
+# ### Import Required Modules
 # Import the necessary libraries:
 
 # %%
-import os
 import logging
+import os
+from datetime import datetime
+
 import github_utils
-import pandas as pd
 from github import Github
-from datetime import datetime, timedelta
 
 # Enable logging.
 logging.basicConfig(level=logging.INFO)
 _LOG = logging.getLogger(__name__)
 
 # %% [markdown]
-# ### 3. Set Up GitHub Authentication
+# <a name='3.-set-up-github-authentication'></a>
+# ### Set Up GitHub Authentication
 # Store your **GitHub Personal Access Token (PAT)** as an environment variable for security. You can do this in your terminal:
-#
-# ```sh
-# export GITHUB_ACCESS_TOKEN="your_personal_access_token"
-# ```
-#
-# Alternatively, you can set it within the notebook:
 
 # %%
 # Set your GitHub access token here.
@@ -87,12 +115,15 @@ access_token = os.getenv("GITHUB_ACCESS_TOKEN")
 
 # Ensure the token is set correctly.
 if not access_token:
-    raise ValueError("GitHub Access Token is not set. Please configure it before proceeding.")
+    raise ValueError(
+        "GitHub Access Token is not set. Please configure it before proceeding."
+    )
 
 # %% [markdown]
 # Now, you're ready to interact with the GitHub API!
 
 # %% [markdown]
+# <a name='define-config'></a>
 # ## Define Config
 # Here we define all parameters in a single `config` dictionary.
 # You can easily modify:
@@ -103,14 +134,15 @@ if not access_token:
 # Define the configuration settings.
 config = {
     # Replace with actual GitHub organization or username.
-    "org_name": "causify-ai",  
+    "org_name": "causify-ai",
     "start_date": (datetime(2025, 1, 20)),
     "end_date": (datetime(2025, 2, 25)),
     # Load from environment variable.
-    "access_token": access_token,  
+    "access_token": access_token,
 }
 
 # %% [markdown]
+# <a name='initialize-github-client'></a>
 # ## Initialize GitHub Client
 
 # %%
@@ -125,6 +157,7 @@ except Exception as e:
     print(f"Authentication failed: {e}")
 
 # %% [markdown]
+# <a name='fetch-repositories-for-the-organization'></a>
 # ## Fetch Repositories for the Organization
 #
 # The `get_repo_names` function retrieves all repositories within a specified GitHub organization. This helps in identifying available repositories before analyzing commits or pull requests.
@@ -134,9 +167,12 @@ repos_info = github_utils.get_repo_names(client, config["org_name"])
 repos_info
 
 # %% [markdown]
+# <a name='**parameters**'></a>
+# <a name='**usage**'></a>
+# <a name='fetch-commit-statistics'></a>
 # ## Fetch Commit Statistics
 #
-# The `get_total_commits` function allows us to retrieve the number of commits made in the repositories of a specified GitHub organization. 
+# The `get_total_commits` function allows us to retrieve the number of commits made in the repositories of a specified GitHub organization.
 #
 # ### **Usage**
 # - You can fetch **all commits** made during a specific time range.
@@ -150,23 +186,23 @@ repos_info
 
 # %%
 commit_stats = github_utils.get_total_commits(
-    client, 
-    config["org_name"], 
-    period=(config["start_date"], 
-    config["end_date"]))
+    client, config["org_name"], period=(config["start_date"], config["end_date"])
+)
 commit_stats
 
 # %%
 commit_stats_filtered = github_utils.get_total_commits(
-    client, 
-    config["org_name"], 
+    client,
+    config["org_name"],
     period=(config["start_date"], config["end_date"]),
     # Replace with actual GitHub usernames.
-    usernames=["heanhsok"]  
+    usernames=["heanhsok"],
 )
 commit_stats_filtered
 
 # %% [markdown]
+# <a name='**parameters**'></a>
+# <a name='fetch-pull-request-statistics'></a>
 # ## Fetch Pull Request Statistics
 #
 # The `get_total_prs` function retrieves the number of pull requests (PRs) made within the repositories of a specified GitHub organization. This function allows filtering PRs by state, author, and time period.
@@ -183,25 +219,26 @@ commit_stats_filtered
 
 # %%
 pr_stats = github_utils.get_total_prs(
-    client, 
-    config["org_name"], 
-    period=(config["start_date"], config["end_date"])
+    client, config["org_name"], period=(config["start_date"], config["end_date"])
 )
 pr_stats
 
 # %% [markdown]
+# <a name='fetching-only-closed-prs'></a>
 # ### Fetching Only Closed PRs
 
 # %%
 pr_stats_closed = github_utils.get_total_prs(
-    client, 
-    config["org_name"], 
+    client,
+    config["org_name"],
     period=(config["start_date"], config["end_date"]),
-    state="closed"
+    state="closed",
 )
 pr_stats_closed
 
 # %% [markdown]
+# <a name='**parameters**'></a>
+# <a name='fetch-unmerged-pull-request-statistics'></a>
 # ## Fetch Unmerged Pull Request Statistics
 #
 # The `get_prs_not_merged` function retrieves the count of **closed but unmerged** pull requests (PRs) within the repositories of a specified GitHub organization. This helps identify PRs that were closed without being merged, which could indicate rejected changes or abandoned contributions.
@@ -214,13 +251,13 @@ pr_stats_closed
 
 # %%
 unmerged_prs = github_utils.get_prs_not_merged(
-    client, 
-    config["org_name"], 
-    period=(config["start_date"], config["end_date"])
+    client, config["org_name"], period=(config["start_date"], config["end_date"])
 )
 unmerged_prs
 
 # %% [markdown]
+# <a name='**parameters**'></a>
+# <a name='fetch-total-issues-statistics'></a>
 # ## Fetch Total Issues Statistics
 #
 # The `get_total_issues` function retrieves the count of issues (excluding pull requests) across all repositories in a GitHub organization. You can filter by issue state (open, closed, or all), a specific time window, or a set of repositories.
@@ -243,6 +280,8 @@ total_issues = github_utils.get_total_issues(
 total_issues
 
 # %% [markdown]
+# <a name='**parameters**'></a>
+# <a name='fetch-issues-without-assignee'></a>
 # ## Fetch Issues Without Assignee
 #
 # The `get_issues_without_assignee` function returns the number of issues that are **unassigned** across one or more repositories in the organization, within a specified state and time period.
@@ -265,6 +304,8 @@ issues_no_assignee = github_utils.get_issues_without_assignee(
 issues_no_assignee
 
 # %% [markdown]
+# <a name='**parameters:**'></a>
+# <a name='fetch-commits-by-a-specific-user'></a>
 # ## Fetch Commits by a Specific User
 #
 # The `get_commits_by_person` function retrieves the number of commits made by a specific GitHub user across repositories in the given organization. This is helpful for assessing an individual’s contribution during a particular time window.
@@ -279,13 +320,15 @@ issues_no_assignee
 commit_stats_user = github_utils.get_commits_by_person(
     client,
     # Replace with GitHub username.
-    username="heanhsok",  
+    username="heanhsok",
     org_name=config["org_name"],
-    period=(config["start_date"], config["end_date"])
+    period=(config["start_date"], config["end_date"]),
 )
 commit_stats_user
 
 # %% [markdown]
+# <a name='**parameters:**'></a>
+# <a name='fetch-pull-requests-by-a-specific-user'></a>
 # ## Fetch Pull Requests by a Specific User
 #
 # The `get_prs_by_person` function returns the number of pull requests created by a specific GitHub user across all repositories in an organization. This is useful to evaluate code contributions in the form of PRs, optionally filtered by state.
@@ -301,15 +344,17 @@ commit_stats_user
 prs_stats_user = github_utils.get_prs_by_person(
     client,
     # Replace with GitHub username.
-    username="heanhsok",  
+    username="heanhsok",
     org_name=config["org_name"],
     period=(config["start_date"], config["end_date"]),
     # You can use "open", "closed", or "all".
-    state="open"  
+    state="open",
 )
 prs_stats_user
 
 # %% [markdown]
+# <a name='**parameters:**'></a>
+# <a name='fetch-unmerged-pull-requests-by-a-specific-user'></a>
 # ## Fetch Unmerged Pull Requests by a Specific User
 #
 # The `get_prs_not_merged_by_person` function fetches all PRs that were closed but not merged, submitted by a particular GitHub user. This helps identify stale or rejected contributions.
@@ -324,8 +369,8 @@ prs_stats_user
 unmerged_prs_user = github_utils.get_prs_not_merged_by_person(
     client,
     # Replace with GitHub username.
-    username="heanhsok",  
+    username="heanhsok",
     org_name=config["org_name"],
-    period=(config["start_date"], config["end_date"])
+    period=(config["start_date"], config["end_date"]),
 )
 unmerged_prs_user

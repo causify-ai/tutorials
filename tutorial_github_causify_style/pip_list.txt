@@ -12,8 +12,8 @@ babel==2.17.0
 beautifulsoup4==4.13.3
 black==25.1.0
 bleach==6.2.0
-boto3==1.37.29
-botocore==1.37.29
+boto3==1.37.30
+botocore==1.37.30
 certifi==2025.1.31
 cffi==1.17.1
 charset-normalizer==3.4.1
