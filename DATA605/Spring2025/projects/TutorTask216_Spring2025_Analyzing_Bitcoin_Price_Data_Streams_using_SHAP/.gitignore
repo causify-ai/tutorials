@@ -1,0 +1,15 @@
+# Python bytecode
+__pycache__/
+
+# VS Code settings
+.vscode/
+
+# Virtual environments
+.env
+.env/
+.venv/
+env/
+venv/
+
+# Mac junk files
+*.DS_Store
