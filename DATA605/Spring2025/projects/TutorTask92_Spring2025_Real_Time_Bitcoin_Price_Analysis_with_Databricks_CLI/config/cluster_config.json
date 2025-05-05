@@ -1,0 +1,29 @@
+{
+    "num_workers": 0,
+    "cluster_name": "bitcoin-analysis-cluster",
+    "spark_version": "15.4.x-scala2.12",
+    "spark_conf": {
+      "spark.master": "local[*, 4]",
+      "spark.databricks.cluster.profile": "singleNode"
+    },
+    "azure_attributes": {
+      "first_on_demand": 1,
+      "availability": "SPOT_WITH_FALLBACK_AZURE",
+      "spot_bid_max_price": -1
+    },
+    "node_type_id": "Standard_D3_v2",
+    "driver_node_type_id": "Standard_D3_v2",
+    "ssh_public_keys": [],
+    "custom_tags": {
+      "ResourceClass": "SingleNode"
+    },
+    "spark_env_vars": {
+      "PYSPARK_PYTHON": "/databricks/python3/bin/python3"
+    },
+    "autotermination_minutes": 10,
+    "enable_elastic_disk": true,
+    "init_scripts": [],
+    "single_user_name": "ritik294@umd.edu",
+    "data_security_mode": "LEGACY_SINGLE_USER_STANDARD",
+    "runtime_engine": "PHOTON"
+  }
