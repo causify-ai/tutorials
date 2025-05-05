@@ -1,0 +1,20 @@
+# Ignore virtual environment
+venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Logs and DB files
+*.log
+*.db
+
+# Databricks CLI config (contains your token)
+.databrickscfg
+
+# Environment variables (if you add a .env file later)
+.env
+
+# API Key and Databricks URL
+/config/settings.sh
+/config/settings.py
