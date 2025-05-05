@@ -1,0 +1,5 @@
+pandas
+matplotlib
+requests
+sympy
+notebook
