@@ -80,13 +80,15 @@ docker_name.sh                  # tagging helper
 **Note**: I copied `install_jupyter_extensions.sh` and `.bashrc` from the `docker_common` directory into my local project folder. I also made slight modifications to the Docker-related scripts (`docker_bash.sh`, `docker_build.sh`, `docker_jupyter.sh`) and the `Dockerfile`.
 
 1. **Configure Databricks CLI**
-```bash
-  databricks configure --token
-### 2.1 Install the Databricks CLI
 
 ```bash
 pip install databricks-cli
+### Install the Databricks CLI
 databricks --version
+```
+
+```bash
+  databricks configure --token
 ```
 
 ### 2.2 Authenticate
@@ -127,7 +129,7 @@ databricks configure --token
 
    **or you can**
 
-4. **Launch JupyterLab**  
+4. **Launch JupyterLab** (Preferred)
    ```bash
    ./docker_jupyter.sh --mount-config
    ```
