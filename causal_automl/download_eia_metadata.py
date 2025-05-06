@@ -271,7 +271,7 @@ def _write_df_to_s3(
     df: pd.DataFrame, file_name: str, bucket_path: str, aws_profile: str
 ) -> None:
     """
-    Save a data as a local CSV file and upload it to S3.
+    Save the data as a local CSV file and upload it to S3.
 
     :param df: data to be saved to S3
     :param file_name: local file name for saving
@@ -319,31 +319,61 @@ def _parse() -> argparse.ArgumentParser:
     return parser
 
 
-def _main(parser: argparse.ArgumentParser) -> None:
-    args = parser.parse_args()
-    hdbg.init_logger(verbosity=args.log_level, use_exec_path=True)
-    leaf_route_data = _get_leaf_route_data(args.category, args.api_key)
+def metadata_extraction(
+    category: str,
+    api_key: str,
+    version_num: str,
+    bucket_path: str,
+    aws_profile: str,
+) -> None:
+    """
+    Run the full metadata extraction and writing process for a given EIA category.
+
+    This function:
+    - Retrieves all leaf dataset metadata from the given category.
+    - Extracts frequency and metric combinations into a flat index.
+    - Collects associated facet values.
+    - Saves all files locally and uploads to S3.
+
+    :param category: root category path under EIA v2 API (e.g. "electricity").
+    :param api_key: EIA API key used for authentication.
+    :param version_num: version tag for output paths (e.g. "1.0").
+    :param bucket_path: base S3 path where files should be uploaded.
+    :param aws_profile: AWS profile to use for S3 operations.
+    """
+    leaf_route_data = _get_leaf_route_data(category, api_key)
     if leaf_route_data:
         metadata_entries = []
         for route, data in leaf_route_data.items():
             # Extract metadata.
-            metadata = _extract_metadata(data, route, args.version_num)
+            metadata = _extract_metadata(data, route, version_num)
             metadata_entries.extend(metadata)
             # Facets are the same for each route.
             sample_metadata = metadata[0]
             # Extract parameter values.
-            df_params = _get_facet_values(sample_metadata, route, args.api_key)
+            df_params = _get_facet_values(sample_metadata, route, api_key)
             # Write parameter values to S3 bucket.
             param_file_name = sample_metadata["parameter_values_file"]
-            _write_df_to_s3(df_params, param_file_name, args.bucket_path, args.aws_profile)
+            _write_df_to_s3(df_params, param_file_name, bucket_path, aws_profile)
         # Write metadata to S3 bucket.
         df_metadata = pd.DataFrame(metadata_entries)
         metadata_file_path = (
-            f"eia_{args.category}_metadata_index_v{args.version_num}.csv"
+            f"eia_{category}_metadata_index_v{version_num}.csv"
         )
-        _write_df_to_s3(df_metadata, metadata_file_path, args.bucket_path, args.aws_profile)
+        _write_df_to_s3(df_metadata, metadata_file_path, bucket_path, aws_profile)
     else:
         _LOG.warning("No leaf datasets found under the given root.")
 
+
+def _main(parser: argparse.ArgumentParser) -> None:
+    args = parser.parse_args()
+    hdbg.init_logger(verbosity=args.log_level, use_exec_path=True)
+    metadata_extraction(
+        category=args.category,
+        api_key=args.api_key,
+        version_num=args.version_num,
+        bucket_path=args.bucket_path,
+        aws_profile=args.aws_profile,
+    )
 if __name__ == "__main__":
     _main(_parse())
