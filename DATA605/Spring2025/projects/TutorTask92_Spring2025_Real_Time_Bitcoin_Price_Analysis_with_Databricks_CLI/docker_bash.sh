@@ -23,9 +23,18 @@ FULL_IMAGE_NAME="${REPO_NAME}/${IMAGE_NAME}"
 CONTAINER_NAME="${IMAGE_NAME}_bash"
 
 # parse flag
+# MOUNT_CFG=""
+# if [[ "${1:-}" == "--mount-config" ]]; then
+#   MOUNT_CFG="-v ${HOME}/.databrickscfg:/root/.databrickscfg:ro"
+# fi
 MOUNT_CFG=""
 if [[ "${1:-}" == "--mount-config" ]]; then
-  MOUNT_CFG="-v ${HOME}/.databrickscfg:/root/.databrickscfg:ro"
+  if [[ "$(uname -o)" =~ Msys|Cygwin ]]; then
+    HOST_CFG_PATH="//c/Users/Ritik/.databrickscfg"
+  else
+    HOST_CFG_PATH="${HOME}/.databrickscfg"
+  fi
+  MOUNT_CFG="-v ${HOST_CFG_PATH}:/root/.databrickscfg:ro"
 fi
 
 # show the image

@@ -77,18 +77,57 @@ docker_name.sh                  # tagging helper
 
 ## 4. Build & Run Docker (data605_style)
 
-**Note**: I have copied the `install_jupyter_extensions.sh` & `bashrc` from  `docker_common` into my local project folder. Also I have slightly modified docker- bash,build and Dockfile.
+**Note**: I copied `install_jupyter_extensions.sh` and `.bashrc` from the `docker_common` directory into my local project folder. I also made slight modifications to the Docker-related scripts (`docker_bash.sh`, `docker_build.sh`, `docker_jupyter.sh`) and the `Dockerfile`.
 
-1. **Build the image**  
+1. **Configure Databricks CLI**
+```bash
+  databricks configure --token
+### 2.1 Install the Databricks CLI
+
+```bash
+pip install databricks-cli
+databricks --version
+```
+
+### 2.2 Authenticate
+
+Generate a Personal Access Token (PAT) in your Databricks UI:
+
+1. **User Settings → Access Tokens → Generate New Token**  
+2. Copy the token immediately.
+
+Configure via terminal:
+
+```bash
+databricks configure --token
+# When prompted, enter:
+#   Databricks Host:   https://<your-workspace>.cloud.databricks.com
+#   Token:             <your-PAT>
+```
+**Note**: This will save Databricks Host and Token in `~/.databrickscfg` in your local C:\Users\<your-name/pc name>
+
+2. **Build the image**  
    ```bash
    chmod +x docker_*.sh
    ./docker_build.sh
    ```
-2. **Start an interactive shell** (mounts your CLI config for persistence)  
+   This will also install all required libraries listed in `requirements.txt`
+
+3. **Start an interactive shell** (mounts your CLI config for persistence)  
    ```bash
    ./docker_bash.sh --mount-config
    ```
-3. **Launch JupyterLab**  
+   then
+
+   ```bash
+      cd data
+      ls
+    ```
+    Run any ipynb which you want
+
+   **or you can**
+
+4. **Launch JupyterLab**  
    ```bash
    ./docker_jupyter.sh --mount-config
    ```

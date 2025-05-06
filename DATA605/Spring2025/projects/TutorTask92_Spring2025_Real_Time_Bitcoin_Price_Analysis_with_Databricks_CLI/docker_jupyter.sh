@@ -60,24 +60,37 @@
 #     $FULL_IMAGE_NAME \
 #     $CMD"
 
-
 set -xeuo pipefail
 
 REPO_NAME=umd_data605
 IMAGE_NAME=bitcoin_cli_project
 FULL_IMAGE_NAME="${REPO_NAME}/${IMAGE_NAME}"
 CONTAINER_NAME="${IMAGE_NAME}_jupyter"
-
-# Default Jupyter port
 JUPYTER_HOST_PORT=8888
 MOUNT_CFG=""
 
-# Parse optional flags
+# On Windows/Git-bash we'll translate paths differently:
+if [[ "$(uname -o 2>/dev/null)" =~ Msys|Cygwin ]]; then
+  # the Unix‐style path for testing:
+  TEST_CFG="$(cygpath -u "$USERPROFILE/.databrickscfg")"
+  # the Windows‐style path for Docker‐mount
+  WIN_PATH="$(echo "$USERPROFILE" | sed 's|\\|/|g')/.databrickscfg"
+else
+  TEST_CFG="$HOME/.databrickscfg"
+  WIN_PATH="$TEST_CFG"
+fi
+
+# parse flags
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --mount-config)
-      # mount host ~/.databrickscfg into container for CLI auth
-      MOUNT_CFG="-v ${HOME}/.databrickscfg:/root/.databrickscfg:ro"
+      echo "→ looking for host config at $TEST_CFG"
+      if [[ -f "$TEST_CFG" ]]; then
+        echo "→ will mount host config from $WIN_PATH"
+        MOUNT_CFG="-v ${WIN_PATH}:/root/.databrickscfg:ro"
+      else
+        echo "warning: no config found at $TEST_CFG, your CLI calls will fail"
+      fi
       shift
       ;;
     -p|--port)
@@ -90,21 +103,20 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# Determine host project directory path for Docker
+# figure out your project directory
 if [[ "$(uname -o 2>/dev/null)" =~ Msys|Cygwin ]]; then
   HOST_DIR="$(pwd -W)"
 else
   HOST_DIR="$(pwd)"
 fi
 
-# Show the image
 docker image ls "${FULL_IMAGE_NAME}"
 
-# Run container and start JupyterLab
 docker run --rm -it \
   --name "${CONTAINER_NAME}" \
   -p "${JUPYTER_HOST_PORT}:${JUPYTER_HOST_PORT}" \
   ${MOUNT_CFG} \
   -v "${HOST_DIR}:/data" \
   "${FULL_IMAGE_NAME}" \
-  bash -lc "cd /data && jupyter lab --no-browser --ip=0.0.0.0 --port=${JUPYTER_HOST_PORT} --allow-root"
+  bash -lc "cd /data && jupyter notebook \
+     --no-browser --ip=0.0.0.0 --port=${JUPYTER_HOST_PORT} --allow-root"

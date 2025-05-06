@@ -18,3 +18,4 @@ __pycache__/
 # API Key and Databricks URL
 /config/settings.sh
 /config/settings.py
+/config/.databrickscfg
