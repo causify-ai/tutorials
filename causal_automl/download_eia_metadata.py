@@ -22,6 +22,7 @@ Arguments:
 import argparse
 import csv
 import io
+import os
 import logging
 from typing import Any, Dict, List
 
@@ -324,9 +325,9 @@ def _write_df_to_s3(
     :param bucket_path: S3 bucket path
     :param aws_profile: AWS CLI profile to use for authentication
     """
-    cache_dir = "tmp.download_metadata_cache"
-    os.makedirs(cache_dir, exist_ok=True)
+    cache_dir = "tmp.download_metadata_cache/"
     local_file_path = os.path.join(cache_dir, file_name)
+    os.makedirs(os.path.dirname(local_file_path), exist_ok=True)
     # Save CSV locally.
     df.to_csv(local_file_path, index=False)
     _LOG.debug("Saved CSV locally to: %s", local_file_path)
@@ -369,7 +370,7 @@ def _parse() -> argparse.ArgumentParser:
 def _main(parser: argparse.ArgumentParser) -> None:
     args = parser.parse_args()
     hdbg.init_logger(verbosity=args.log_level, use_exec_path=True)
-    metadata_extraction(
+    run_metadata_extraction(
         category=args.category,
         api_key=args.api_key,
         version_num=args.version_num,
