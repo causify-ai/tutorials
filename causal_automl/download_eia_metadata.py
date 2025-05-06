@@ -44,6 +44,36 @@ def _get_api_request(route: str, api_key: str) -> Dict[str, Any]:
     """
     Retrieve JSON data from a given EIA v2 API route.
 
+    This function sends a GET request to the specified EIA v2 API endpoint
+    and returns the parsed content from the "response" key.
+
+    Example output:
+    {
+        "id": "retail-sales",
+        "name": "Electricity Sales to Ultimate Customers",
+        "description": "Electricity sales to ultimate customer by state and sector. 
+            Sources: Forms EIA-826, EIA-861, EIA-861M",
+        "frequency": [
+            {"id": "monthly", "format": "YYYY-MM"},
+            ...
+        ],
+        "facets": [
+            {"id": "stateid", "description": "State / Census Region"},
+            ...
+        ],
+        "data": {
+            "revenue": {
+                "alias": "Revenue from Sales to Ultimate Customers",
+                "units": "million dollars"
+            },
+            ...
+        },
+        "startPeriod": "2001-01",
+        "endPeriod": "2025-01",
+        "defaultDateFormat": "YYYY-MM",
+        "defaultFrequency": "monthly"
+    }
+
     :param route: endpoint path like "electricity/retail-sales"
     :param api_key: EIA API key
     :return: content from the EIA API response
@@ -66,35 +96,81 @@ def _extract_metadata(
     """
     Extract and flatten relevant metadata fields from a single API response.
 
+    For each frequency and metric combination in the dataset, construct a flat
+    metadata record containing API query details, dataset properties, frequency
+    info, metric info, and associated file paths.
+
+    Example output:
+    [
+        {
+            "url": "https://api.eia.gov/v2/electricity/retail-sales?api_key={API_KEY}&frequency=monthly&data[0]=revenue",
+            "id": "retail_sales_monthly_revenue",
+            "dataset_id": "retail_sales",
+            "name": "Electricity Sales to Ultimate Customers",
+            "description": "...",
+            "frequency_id": "monthly",
+            "frequency_alias": ...,
+            "frequency_description": "One data point for each month.",
+            "frequency_query": "M",
+            "frequency_format": "YYYY-MM",
+            "facets": [
+                {"id": "stateid", "description": "State / Census Region"},
+                {"id": "sectorid", "description": "Sector"}
+            ],
+            "data": "revenue",
+            "data_alias": "Revenue from Sales to Ultimate Customers",
+            "data_units": "million dollars",
+            "start_period": "2001-01",
+            "end_period": "2025-01",
+            "parameter_values_file": "eia_parameters_v1.0/retail_sales_parameters.csv"
+        },
+        ...
+    ]
+
     :param data: API response content for a leaf endpoint
     :param route: full route path used to access this response
     :param version_num: version number of output paths
     :return: flattened metadata fields
     """
-    url = f"{BASE_URL}/{route}?api_key="
-    dataset_id = data.get("id")
-    dataset_id_clean = dataset_id.replace("-", "_")
-    param_file_path = (
-        f"eia_parameters_v{version_num}/{dataset_id_clean}_parameters.csv"
-    )
     frequencies = data.get("frequency", [])
     metrics = data.get("data", {})
     flattened_metadata = []
     for frequency in frequencies:
-        freq_id = frequency.get("id")
-        for metric_id in metrics.keys():
+        for metric_id, metric_info in metrics.items():
+            # Clean up IDs for use in CSVs or DBs.
+            frequency_id = frequency.get("id")
+            dataset_id = data.get("id")
+            dataset_id_clean = dataset_id.replace("-", "_")
+            metric_id_clean = metric_id.replace("-", "_")
+            # Construct a placeholder API URL.
+            url = (
+                f"{BASE_URL}/{route}"
+                f"?api_key={{API_KEY}}"
+                f"&frequency={frequency_id}"
+                f"&data[0]={metric_id}"
+            )
+            # Determine parameter CSV path for associated facet values.
+            param_file_path = (
+                f"eia_parameters_v{version_num}/{dataset_id_clean}_parameters.csv"
+            )
+            # Flattened metadata row for one frequency and metric combination.
             metadata = {
                 "url": url,
-                "id": dataset_id,
+                "id": f"{dataset_id_clean}_{frequency_id}_{metric_id_clean}",
+                "dataset_id": dataset_id_clean,
                 "name": data.get("name"),
                 "description": data.get("description"),
-                "frequency": freq_id,
+                "frequency_id": frequency.get("id"),
+                "frequency_alias": frequency.get("alias"),
+                "frequency_description": frequency.get("description"),
+                "frequency_query": frequency.get("query"),
+                "frequency_format": frequency.get("format"),
                 "facets": data.get("facets"),
                 "data": metric_id,
+                "data_alias": metric_info.get("alias"),
+                "data_units": metric_info.get("units"),
                 "start_period": data.get("startPeriod"),
                 "end_period": data.get("endPeriod"),
-                "default_date_format": data.get("defaultDateFormat"),
-                "default_frequency": data.get("defaultFrequency"),
                 "parameter_values_file": param_file_path,
             }
             flattened_metadata.append(metadata)
@@ -107,9 +183,29 @@ def _get_leaf_route_data(
     """
     Traverse the API tree and collect metadata from all leaf routes.
 
+    This function performs a breadth-first traversal over all sub-routes beginning at
+    `root_route`. For each route that has no children (i.e., a leaf), it fetches and stores
+    the associated metadata.
+
+    Example output:
+    {
+        "electricity/retail-sales": {
+            "id": "retail-sales",
+            "name": "Electricity Sales to Ultimate Customers",
+            "frequency": [...],
+            "facets": [...],
+            "data": {...},
+            "startPeriod": "2001-01",
+            "endPeriod": "2025-01",
+            "defaultDateFormat": "YYYY-MM",
+            "defaultFrequency": "monthly"
+        },
+        ...
+    }
+
     :param root_route: root category route
     :param api_key: EIA API key
-    :return: all leaf route and its data payload
+    :return: all leaf routes and their data payloads
     """
     # Create a queue to hold routes to explore.
     queue = [root_route]
@@ -151,11 +247,11 @@ def _get_facet_values(
         facet_id = facet["id"]
         facet_route = f"{route}/facet/{facet_id}"
         facet_data = _get_api_request(facet_route, api_key)
-        facet_values[facet_id] = facet_data.get("facets", {})
+        facet_entries = facet_data.get("facets", [])
         # Build a row for each value associated with this facet.
-        for values in facet_values[facet_id]:
+        for values in facet_entries:
             row = {
-                "dataset_id": metadata["id"],
+                "dataset_id": metadata["dataset_id"],
                 "facet_id": facet_id,
                 "id": values.get("id"),
                 "name": values.get("name"),
@@ -172,22 +268,25 @@ def _get_facet_values(
 
 
 def _write_df_to_s3(
-    df: pd.DataFrame, file_name: str, aws_profile: str
+    df: pd.DataFrame, file_name: str, bucket_path: str, aws_profile: str
 ) -> None:
     """
-    Write metadata to an S3 bucket in CSV format.
+    Save a data as a local CSV file and upload it to S3.
 
     :param df: data to be saved to S3
-    :param file_name: full S3 URI where CSV should be saved
+    :param file_name: local file name for saving
+    :param bucket_path: S3 bucket path
     :param aws_profile: AWS CLI profile to use for authentication
     """
-    # Convert DataFrame to CSV String.
-    buffer = io.StringIO()
-    df.to_csv(buffer, index=False)
-    csv_str = buffer.getvalue()
-    # Upload the CSV string to the specified S3 bucket.
-    csv_str = buffer.getvalue()
-    hs3.to_file(csv_str, file_name, mode="wb", aws_profile=aws_profile)
+    # Save CSV locally.
+    _LOG.debug("Saved CSV locally to: %s", file_name)
+    df.to_csv(file_name, index=False)
+    # Upload CSV to the specified S3 bucket.
+    bucket_file_path = bucket_path + file_name
+    _LOG.debug("Uploaded to S3: %s", bucket_file_path)
+    with open(file_name, "r", encoding="utf-8") as f:
+        csv_str = f.read()
+        hs3.to_file(csv_str, bucket_file_path, mode="wb", aws_profile=aws_profile)
 
 
 # #############################################################################
@@ -236,19 +335,15 @@ def _main(parser: argparse.ArgumentParser) -> None:
             df_params = _get_facet_values(sample_metadata, route, args.api_key)
             # Write parameter values to S3 bucket.
             param_file_name = sample_metadata["parameter_values_file"]
-            param_file_path = args.bucket_path + param_file_name
-            _LOG.debug("Writing parameter values to: %s", param_file_path)
-            _write_df_to_s3(df_params, param_file_path, args.aws_profile)
+            _write_df_to_s3(df_params, param_file_name, args.bucket_path, args.aws_profile)
         # Write metadata to S3 bucket.
         df_metadata = pd.DataFrame(metadata_entries)
         metadata_file_path = (
-            f"{args.bucket_path}eia_{args.category}_metadata_index_v{args.version_num}.csv"
+            f"eia_{args.category}_metadata_index_v{args.version_num}.csv"
         )
-        _LOG.debug("Writing metadata to: %s", metadata_file_path)
-        _write_df_to_s3(df_metadata, param_file_path, args.aws_profile)
+        _write_df_to_s3(df_metadata, metadata_file_path, args.bucket_path, args.aws_profile)
     else:
         _LOG.warning("No leaf datasets found under the given root.")
-    
 
 if __name__ == "__main__":
     _main(_parse())
