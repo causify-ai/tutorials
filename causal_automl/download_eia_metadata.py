@@ -3,7 +3,7 @@
 Download metadata from the EIA v2 API and upload it to S3.
 
 Usage:
-> python fetch_eia_metadata.py --category <CATEGORY> --api_key <API_KEY> --version_num <VERSION_NUM>
+> python download_eia_metadata.py --category <CATEGORY> --api_key <API_KEY> --version_num <VERSION_NUM>
 
 This script traverses the EIA v2 API under a specified category, collects all time series 
 metadata, and writes the metadata and associated parameter values to an S3 bucket in versioned
@@ -132,8 +132,8 @@ def _extract_metadata(
     :param version_num: version number of output paths
     :return: flattened metadata fields
     """
-    frequencies = data.get("frequency", [])
-    metrics = data.get("data", {})
+    frequencies = data.get("frequency")
+    metrics = data.get("data")
     flattened_metadata = []
     for frequency in frequencies:
         for metric_id, metric_info in metrics.items():
@@ -247,7 +247,7 @@ def _get_facet_values(
         facet_id = facet["id"]
         facet_route = f"{route}/facet/{facet_id}"
         facet_data = _get_api_request(facet_route, api_key)
-        facet_entries = facet_data.get("facets", [])
+        facet_entries = facet_data.get("facets")
         # Build a row for each value associated with this facet.
         for values in facet_entries:
             row = {
@@ -262,7 +262,7 @@ def _get_facet_values(
     return df_params
 
 
-def metadata_extraction(
+def run_metadata_extraction(
     category: str,
     api_key: str,
     version_num: str,
@@ -270,7 +270,7 @@ def metadata_extraction(
     aws_profile: str,
 ) -> None:
     """
-    Run the full metadata extraction and writing process for a given EIA category.
+    Extract and save the full metadata for a given EIA category.
 
     This function:
     - Retrieves all leaf dataset metadata from the given category.
@@ -278,11 +278,11 @@ def metadata_extraction(
     - Collects associated facet values.
     - Saves all files locally and uploads to S3.
 
-    :param category: root category path under EIA v2 API (e.g. "electricity").
-    :param api_key: EIA API key used for authentication.
-    :param version_num: version tag for output paths (e.g. "1.0").
-    :param bucket_path: base S3 path where files should be uploaded.
-    :param aws_profile: AWS profile to use for S3 operations.
+    :param category: root category path under EIA v2 API (e.g. "electricity")
+    :param api_key: EIA API key used for authentication
+    :param version_num: version tag for output paths (e.g. "1.0")
+    :param bucket_path: base S3 path where files should be uploaded
+    :param aws_profile: AWS profile to use for S3 operations
     """
     leaf_route_data = _get_leaf_route_data(category, api_key)
     if leaf_route_data:
@@ -324,16 +324,17 @@ def _write_df_to_s3(
     :param bucket_path: S3 bucket path
     :param aws_profile: AWS CLI profile to use for authentication
     """
+    cache_dir = "tmp.download_metadata_cache"
+    os.makedirs(cache_dir, exist_ok=True)
+    local_file_path = os.path.join(cache_dir, file_name)
     # Save CSV locally.
-    _LOG.debug("Saved CSV locally to: %s", file_name)
-    df.to_csv(file_name, index=False)
+    df.to_csv(local_file_path, index=False)
+    _LOG.debug("Saved CSV locally to: %s", local_file_path)
     # Upload CSV to the specified S3 bucket.
     bucket_file_path = bucket_path + file_name
+    hs3.copy_file_to_s3(file_name, bucket_file_path, aws_profile)
     _LOG.debug("Uploaded to S3: %s", bucket_file_path)
-    with open(file_name, "r", encoding="utf-8") as f:
-        csv_str = f.read()
-        hs3.to_file(csv_str, bucket_file_path, mode="wb", aws_profile=aws_profile)
-
+    
 
 # #############################################################################
 # CLI entry point
@@ -375,5 +376,7 @@ def _main(parser: argparse.ArgumentParser) -> None:
         bucket_path=args.bucket_path,
         aws_profile=args.aws_profile,
     )
+
+
 if __name__ == "__main__":
     _main(_parse())
