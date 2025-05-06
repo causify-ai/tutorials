@@ -1,0 +1,54 @@
+
+.DS_Store
+
+
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# ─── Python ───────────────────────────────────────
+# bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+
+venv/
+env/
+ENV/
+.Python
+
+
+build/
+dist/
+*.egg-info/
+
+
+.pytest_cache/
+.mypy_cache/
+
+
+.env
+
+# ─── Node.js / JavaScript ──────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+logs/
+*.log
+coverage/
+htmlcov/
+
+# ─── Docker ──────────────────────────────────────
+
+docker-compose.override.yml
+
+
+docker-build/
+
+
+*.swp      # Vim 交换文件

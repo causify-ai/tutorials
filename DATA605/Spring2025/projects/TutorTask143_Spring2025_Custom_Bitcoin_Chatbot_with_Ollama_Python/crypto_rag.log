@@ -1,0 +1,170 @@
+2025-05-01 00:52:40,788 - __main__ - INFO - Created templates directory with index.html
+2025-05-01 00:52:40,835 - __main__ - INFO - Initializing Crypto Assistant...
+2025-05-01 00:52:40,835 - __main__ - WARNING - Vector store path faiss_index does not exist
+2025-05-01 00:52:40,835 - __main__ - INFO - Starting data update for coins: bitcoin
+2025-05-01 00:52:41,880 - __main__ - INFO - Successfully fetched price data for 1 coins
+2025-05-01 00:52:41,882 - __main__ - INFO - Fetching 365 days of historical data for bitcoin
+2025-05-01 00:52:42,097 - __main__ - INFO - Successfully processed 366 days of data for bitcoin
+2025-05-01 00:52:48,104 - __main__ - INFO - Successfully fetched historical data for 1 coins
+2025-05-01 00:52:54,303 - __main__ - INFO - Successfully fetched market data for 1 coins
+2025-05-01 00:52:54,758 - __main__ - INFO - Successfully fetched 98 news articles
+2025-05-01 00:52:54,759 - __main__ - INFO - All data updated at 2025-05-01 00:52:54.759708
+2025-05-01 00:52:54,765 - __main__ - INFO - Split 105 documents into 105 chunks
+2025-05-01 01:05:01,104 - __main__ - INFO - Created templates directory with index.html
+2025-05-01 01:05:01,209 - __main__ - INFO - Initializing Crypto Assistant...
+2025-05-01 01:05:01,210 - __main__ - WARNING - Vector store path faiss_index does not exist
+2025-05-01 01:05:01,210 - __main__ - INFO - Starting data update for coins: bitcoin
+2025-05-01 01:05:01,444 - __main__ - INFO - Successfully fetched price data for 1 coins
+2025-05-01 01:05:01,445 - __main__ - INFO - Fetching 365 days of historical data for bitcoin
+2025-05-01 01:05:01,681 - __main__ - INFO - Successfully processed 366 days of data for bitcoin
+2025-05-01 01:05:07,687 - __main__ - INFO - Successfully fetched historical data for 1 coins
+2025-05-01 01:05:13,835 - __main__ - INFO - Successfully fetched market data for 1 coins
+2025-05-01 01:05:14,184 - __main__ - INFO - Successfully fetched 98 news articles
+2025-05-01 01:05:14,185 - __main__ - INFO - All data updated at 2025-05-01 01:05:14.185767
+2025-05-01 01:05:14,190 - __main__ - INFO - Split 105 documents into 105 chunks
+2025-05-01 20:05:29,022 - __main__ - INFO - Created templates directory with index.html
+2025-05-01 20:05:29,137 - __main__ - INFO - Initializing Crypto Assistant...
+2025-05-01 20:05:29,137 - __main__ - WARNING - Vector store path faiss_index does not exist
+2025-05-01 20:05:29,138 - __main__ - INFO - Starting data update for coins: bitcoin
+2025-05-01 20:05:29,304 - __main__ - INFO - Successfully fetched price data for 1 coins
+2025-05-01 20:05:29,305 - __main__ - INFO - Fetching 365 days of historical data for bitcoin
+2025-05-01 20:05:29,478 - __main__ - INFO - Successfully processed 366 days of data for bitcoin
+2025-05-01 20:05:35,484 - __main__ - INFO - Successfully fetched historical data for 1 coins
+2025-05-01 20:05:41,638 - __main__ - INFO - Successfully fetched market data for 1 coins
+2025-05-01 20:05:42,064 - __main__ - INFO - Successfully fetched 100 news articles
+2025-05-01 20:05:42,065 - __main__ - INFO - All data updated at 2025-05-01 20:05:42.065529
+2025-05-01 20:05:42,070 - __main__ - INFO - Split 107 documents into 107 chunks
+2025-05-01 20:17:02,368 - __main__ - INFO - Created templates directory with index.html
+2025-05-01 20:17:02,418 - __main__ - INFO - Initializing Crypto Assistant...
+2025-05-01 20:17:02,418 - __main__ - WARNING - Vector store path faiss_index does not exist
+2025-05-01 20:17:02,418 - __main__ - INFO - Starting data update for coins: bitcoin
+2025-05-01 20:17:02,588 - __main__ - INFO - Successfully fetched price data for 1 coins
+2025-05-01 20:17:02,589 - __main__ - INFO - Fetching 365 days of historical data for bitcoin
+2025-05-01 20:17:02,782 - __main__ - INFO - Successfully processed 366 days of data for bitcoin
+2025-05-01 20:17:08,788 - __main__ - INFO - Successfully fetched historical data for 1 coins
+2025-05-01 20:17:14,952 - __main__ - INFO - Successfully fetched market data for 1 coins
+2025-05-01 20:17:16,158 - __main__ - INFO - Successfully fetched 100 news articles
+2025-05-01 20:17:16,159 - __main__ - INFO - All data updated at 2025-05-01 20:17:16.159208
+2025-05-01 20:17:16,164 - __main__ - INFO - Split 107 documents into 107 chunks
+2025-05-01 20:27:04,876 - __main__ - INFO - Created templates directory with index.html
+2025-05-01 20:27:04,924 - __main__ - INFO - Initializing Crypto Assistant...
+2025-05-01 20:27:04,924 - __main__ - WARNING - Vector store path faiss_index does not exist
+2025-05-01 20:27:04,924 - __main__ - INFO - Starting data update for coins: bitcoin
+2025-05-01 20:27:05,054 - __main__ - INFO - Successfully fetched price data for 1 coins
+2025-05-01 20:27:05,055 - __main__ - INFO - Fetching 365 days of historical data for bitcoin
+2025-05-01 20:27:05,226 - __main__ - INFO - Successfully processed 366 days of data for bitcoin
+2025-05-01 20:27:11,232 - __main__ - INFO - Successfully fetched historical data for 1 coins
+2025-05-01 20:27:17,402 - __main__ - INFO - Successfully fetched market data for 1 coins
+2025-05-01 20:27:17,772 - __main__ - INFO - Successfully fetched 100 news articles
+2025-05-01 20:27:17,774 - __main__ - INFO - All data updated at 2025-05-01 20:27:17.774492
+2025-05-01 20:27:17,781 - __main__ - INFO - Split 107 documents into 107 chunks
+2025-05-01 20:44:10,719 - __main__ - INFO - Created templates directory with index.html
+2025-05-01 20:44:10,807 - __main__ - INFO - Initializing Crypto Assistant...
+2025-05-01 20:44:10,807 - __main__ - WARNING - Vector store path faiss_index does not exist
+2025-05-01 20:44:10,807 - __main__ - INFO - Starting data update for coins: bitcoin
+2025-05-01 20:44:10,945 - __main__ - INFO - Successfully fetched price data for 1 coins
+2025-05-01 20:44:10,947 - __main__ - INFO - Fetching 365 days of historical data for bitcoin
+2025-05-01 20:44:11,141 - __main__ - INFO - Successfully processed 366 days of data for bitcoin
+2025-05-01 20:44:17,146 - __main__ - INFO - Successfully fetched historical data for 1 coins
+2025-05-01 20:44:23,287 - __main__ - INFO - Successfully fetched market data for 1 coins
+2025-05-01 20:44:24,527 - __main__ - INFO - Successfully fetched 100 news articles
+2025-05-01 20:44:24,529 - __main__ - INFO - All data updated at 2025-05-01 20:44:24.528972
+2025-05-01 20:44:24,534 - __main__ - INFO - Split 107 documents into 107 chunks
+2025-05-01 20:46:08,548 - __main__ - INFO - Created templates directory with index.html
+2025-05-01 20:46:08,639 - __main__ - INFO - Initializing Crypto Assistant...
+2025-05-01 20:46:08,640 - __main__ - WARNING - Vector store path faiss_index does not exist
+2025-05-01 20:46:08,640 - __main__ - INFO - Starting data update for coins: bitcoin
+2025-05-01 20:46:08,884 - __main__ - INFO - Successfully fetched price data for 1 coins
+2025-05-01 20:46:08,885 - __main__ - INFO - Fetching 365 days of historical data for bitcoin
+2025-05-01 20:46:09,106 - __main__ - INFO - Successfully processed 366 days of data for bitcoin
+2025-05-01 20:46:15,112 - __main__ - INFO - Successfully fetched historical data for 1 coins
+2025-05-01 20:46:21,269 - __main__ - INFO - Successfully fetched market data for 1 coins
+2025-05-01 20:46:21,565 - __main__ - INFO - Successfully fetched 100 news articles
+2025-05-01 20:46:21,567 - __main__ - INFO - All data updated at 2025-05-01 20:46:21.567152
+2025-05-01 20:46:21,573 - __main__ - INFO - Split 107 documents into 107 chunks
+2025-05-01 20:47:27,038 - faiss.loader - INFO - Loading faiss with AVX2 support.
+2025-05-01 20:47:27,078 - faiss.loader - INFO - Successfully loaded faiss with AVX2 support.
+2025-05-01 20:47:27,099 - __main__ - INFO - Vector store initialized successfully
+2025-05-01 20:47:27,100 - __main__ - INFO - QA chain initialized successfully
+2025-05-01 20:47:27,105 - __main__ - INFO - Vector store saved to faiss_index
+2025-05-01 20:47:27,106 - __main__ - INFO - Crypto Assistant initialized successfully
+2025-05-01 20:47:27,106 - __main__ - INFO - Started scheduled updates every 15 minutes
+2025-05-01 20:47:27,112 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.125.128:5000
+2025-05-01 20:47:27,113 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-01 20:48:11,011 - werkzeug - INFO - 127.0.0.1 - - [01/May/2025 20:48:11] "GET / HTTP/1.1" 200 -
+2025-05-01 20:48:11,152 - werkzeug - INFO - 127.0.0.1 - - [01/May/2025 20:48:11] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-01 20:50:11,257 - werkzeug - INFO - 127.0.0.1 - - [01/May/2025 20:50:11] "GET / HTTP/1.1" 200 -
+2025-05-01 20:53:16,476 - __main__ - INFO - Successfully answered question: what is the bitcoin price...
+2025-05-01 20:53:16,477 - werkzeug - INFO - 127.0.0.1 - - [01/May/2025 20:53:16] "POST /api/ask HTTP/1.1" 200 -
+2025-05-01 20:53:33,755 - __main__ - INFO - Successfully answered question: hi what is the bitcoin price yesterdays...
+2025-05-01 20:53:33,756 - werkzeug - INFO - 127.0.0.1 - - [01/May/2025 20:53:33] "POST /api/ask HTTP/1.1" 200 -
+2025-05-01 20:53:37,506 - __main__ - INFO - Successfully answered question: what is bitcoin price...
+2025-05-01 20:53:37,507 - werkzeug - INFO - 127.0.0.1 - - [01/May/2025 20:53:37] "POST /api/ask HTTP/1.1" 200 -
+2025-05-01 20:57:51,726 - __main__ - INFO - Successfully answered question: what is the bitcoin price for yesterdays...
+2025-05-01 20:57:51,728 - werkzeug - INFO - 127.0.0.1 - - [01/May/2025 20:57:51] "POST /api/ask HTTP/1.1" 200 -
+2025-05-01 21:02:28,083 - __main__ - INFO - Updating cryptocurrency data for: bitcoin
+2025-05-01 21:02:28,083 - __main__ - INFO - Starting data update for coins: bitcoin
+2025-05-01 21:02:29,067 - __main__ - INFO - Successfully fetched price data for 1 coins
+2025-05-01 21:02:29,068 - __main__ - INFO - Fetching 365 days of historical data for bitcoin
+2025-05-01 21:02:29,444 - __main__ - INFO - Successfully processed 366 days of data for bitcoin
+2025-05-01 21:02:35,450 - __main__ - INFO - Successfully fetched historical data for 1 coins
+2025-05-01 21:02:41,615 - __main__ - INFO - Successfully fetched market data for 1 coins
+2025-05-01 21:02:41,928 - __main__ - INFO - Successfully fetched 100 news articles
+2025-05-01 21:02:41,930 - __main__ - INFO - All data updated at 2025-05-01 21:02:41.930039
+2025-05-01 21:05:33,496 - __main__ - INFO - Added 107 new chunks to the vector store
+2025-05-01 21:05:33,501 - __main__ - INFO - Vector store saved to faiss_index
+2025-05-01 21:05:33,501 - __main__ - INFO - Data update complete
+2025-05-01 21:05:49,316 - __main__ - INFO - Successfully answered question: what is todays date...
+2025-05-01 21:05:49,317 - werkzeug - INFO - 127.0.0.1 - - [01/May/2025 21:05:49] "POST /api/ask HTTP/1.1" 200 -
+2025-05-01 21:15:27,367 - __main__ - INFO - Successfully answered question: how has bitoin performed over the last 30 days...
+2025-05-01 21:15:27,371 - werkzeug - INFO - 127.0.0.1 - - [01/May/2025 21:15:27] "POST /api/ask HTTP/1.1" 200 -
+2025-05-01 21:20:34,447 - __main__ - INFO - Updating cryptocurrency data for: bitcoin
+2025-05-01 21:20:34,447 - __main__ - INFO - Starting data update for coins: bitcoin
+2025-05-01 21:20:34,597 - __main__ - INFO - Successfully fetched price data for 1 coins
+2025-05-01 21:20:34,601 - __main__ - INFO - Fetching 365 days of historical data for bitcoin
+2025-05-01 21:20:34,825 - __main__ - INFO - Successfully processed 366 days of data for bitcoin
+2025-05-01 21:20:40,832 - __main__ - INFO - Successfully fetched historical data for 1 coins
+2025-05-01 21:20:46,977 - __main__ - INFO - Successfully fetched market data for 1 coins
+2025-05-01 21:20:47,388 - __main__ - INFO - Successfully fetched 100 news articles
+2025-05-01 21:20:47,390 - __main__ - INFO - All data updated at 2025-05-01 21:20:47.389981
+2025-05-01 21:21:52,936 - __main__ - INFO - Added 107 new chunks to the vector store
+2025-05-01 21:21:52,944 - __main__ - INFO - Vector store saved to faiss_index
+2025-05-01 21:21:52,945 - __main__ - INFO - Data update complete
+2025-05-01 22:26:11,350 - __main__ - INFO - Created templates directory with index.html
+2025-05-01 22:26:11,476 - __main__ - INFO - Initializing Crypto Assistant...
+2025-05-01 22:26:11,576 - faiss.loader - INFO - Loading faiss with AVX2 support.
+2025-05-01 22:26:11,637 - faiss.loader - INFO - Successfully loaded faiss with AVX2 support.
+2025-05-01 22:26:11,668 - __main__ - INFO - Vector store loaded from faiss_index
+2025-05-01 22:26:11,671 - __main__ - INFO - QA chain initialized successfully
+2025-05-01 22:26:11,671 - __main__ - INFO - Crypto Assistant initialized successfully
+2025-05-01 22:26:11,672 - __main__ - INFO - Started scheduled updates every 15 minutes
+2025-05-01 22:26:11,676 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.125.128:5000
+2025-05-01 22:26:11,676 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-01 22:26:29,889 - werkzeug - INFO - 192.168.125.128 - - [01/May/2025 22:26:29] "GET / HTTP/1.1" 200 -
+2025-05-01 22:26:30,036 - werkzeug - INFO - 192.168.125.128 - - [01/May/2025 22:26:30] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-01 22:26:35,174 - __main__ - WARNING - Data is outdated. Consider updating before asking questions.
+2025-05-01 22:26:35,185 - __main__ - ERROR - Error answering question: Error raised by inference API HTTP code: 404, {"error":"model \"nomic-embed-text\" not found, try pulling it first"}
+2025-05-01 22:26:35,188 - werkzeug - INFO - 192.168.125.128 - - [01/May/2025 22:26:35] "POST /api/ask HTTP/1.1" 200 -
+2025-05-01 22:30:20,567 - __main__ - INFO - Created templates directory with index.html
+2025-05-01 22:30:20,616 - __main__ - INFO - Initializing Crypto Assistant...
+2025-05-01 22:30:20,646 - faiss.loader - INFO - Loading faiss with AVX2 support.
+2025-05-01 22:30:20,659 - faiss.loader - INFO - Successfully loaded faiss with AVX2 support.
+2025-05-01 22:30:20,664 - __main__ - INFO - Vector store loaded from faiss_index
+2025-05-01 22:30:20,665 - __main__ - INFO - QA chain initialized successfully
+2025-05-01 22:30:20,666 - __main__ - INFO - Crypto Assistant initialized successfully
+2025-05-01 22:30:20,666 - __main__ - INFO - Started scheduled updates every 15 minutes
+2025-05-01 22:30:20,669 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.125.128:5000
+2025-05-01 22:30:20,671 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-01 22:30:25,414 - werkzeug - INFO - 192.168.125.128 - - [01/May/2025 22:30:25] "GET / HTTP/1.1" 200 -
+2025-05-01 22:30:30,681 - __main__ - WARNING - Data is outdated. Consider updating before asking questions.
+2025-05-01 22:32:51,113 - __main__ - INFO - Successfully answered question: what is the bitcoin price...
+2025-05-01 22:32:51,115 - werkzeug - INFO - 192.168.125.128 - - [01/May/2025 22:32:51] "POST /api/ask HTTP/1.1" 200 -
