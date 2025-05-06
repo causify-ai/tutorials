@@ -1,0 +1,7 @@
+tmp.build/
+metastore_db/
+spark-warehouse/
+.ipynb_checkpoints/
+__pycache__/
+btc_prices_daily/
+btc_prices_hourly/
