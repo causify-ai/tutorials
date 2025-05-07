@@ -119,10 +119,19 @@ databricks configure --token
    ```
    This will also install all required libraries listed in `requirements.txt`
 
-3. **Start an interactive shell** (mounts your CLI config for persistence)  
+3. **Start an interactive shell** (mounts your CLI config for persistence)
+  **Note**: Before launching your container, open `docker_bash.sh` and set the `HOST_CFG_PATH` variable to point at your local Databricks config. For example 
+
+   ```bash
+   HOST_CFG_PATH="//c/Users/YourUserName/.databrickscfg"
+   ```
+   Then invoke:
+
    ```bash
    ./docker_bash.sh --mount-config
    ```
+   if not in `data` folder eg. `root@596fdb0653a5:/data#`
+    
    then
 
    ```bash
