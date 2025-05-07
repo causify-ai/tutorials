@@ -1,5 +1,7 @@
 # Project Files
 
+---
+
 This tutorial contains the following files:
 
 - Docker Container
@@ -11,13 +13,15 @@ This tutorial contains the following files:
     - requirements.txt
     - (more)
 - README.md: This file
-- sparkSQL.API.ipynb: Notebook describing the native API of Spark SQL along with a simple example.
-- sparkSQL.API.md: Description of the native API of Spark SQL.
+- sparkSQL_API.ipynb: Notebook describing the native API of Spark SQL along with a simple example.
+- sparkSQL_API.md: Description of the native API of Spark SQL.
 - books.csv: Data corresponding to example in Spark SQL API notebook.
 - prices.csv: Data corresponding to example in Spark SQL API notebook.
-- sparkSQL.example.ipynb: Notebook implementing the project using Spark SQL.
-- sparkSQL.example.md: Description of the project using Spark SQL.
-- sparkSQL.example.py: Code corresponding to the project.
+- sparkSQL_example.ipynb: Notebook implementing the project using Spark SQL.
+- sparkSQL_example.md: Description of the project using Spark SQL.
+- sparkSQL.utils: Class and function to load data from API endpoint corresponding to sparkSQL_example.ipynb.
+
+---
 
 ## 1. Set up Environment
 
@@ -56,6 +60,6 @@ From the project directory -
 ```
 4. Go to http://localhost:8888.
 
-5. Under the folder '/data', you will find all the files part of this tutorial.
+5. Under the folder '/data', you will find all the files that are required for this tutorial.
 
-6. Run the notebooks to follow the examples.
+6. Read the markdown files and run the notebooks to follow the examples.

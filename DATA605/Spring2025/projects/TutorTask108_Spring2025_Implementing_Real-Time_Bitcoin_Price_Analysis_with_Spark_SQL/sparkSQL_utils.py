@@ -110,6 +110,8 @@ class BitcoinDataHandler:
                 window = W.Window.partitionBy("hour_key").orderBy(F.col("timestamp").desc())
                 ranked_df = filtered_df.withColumn("rn", F.row_number().over(window))
                 new_df = ranked_df.filter(F.col("rn") == 1)
+                
+                #Exclude data for hours that are already in the view.
                 new_df = new_df.join(existing_hour_keys, on="hour_key", how="left_anti")
                 new_df = new_df.drop("rn","hour_key")
                 new_df = new_df.withColumn("price_date", F.from_unixtime("timestamp", "yyyy-MM-dd HH:mm:ss"))
