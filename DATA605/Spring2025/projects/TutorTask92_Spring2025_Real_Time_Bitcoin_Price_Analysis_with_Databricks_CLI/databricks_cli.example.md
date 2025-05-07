@@ -1,5 +1,10 @@
 # Project Example: Real-Time Bitcoin Price Analysis Pipeline
 
+## Workflow Overview
+
+![Databricks UI: new cluster RUNNING](images/example_flowchart.png)
+
+
 ## Project Files
 
 - **`databricks_cli_utils.py`**  

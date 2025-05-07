@@ -62,6 +62,10 @@ docker_name.sh                  # tagging helper
 
 ---
 
+### Methodology Overview
+
+![Databricks UI: new cluster RUNNING](images/project_Methodology.png)
+
 ## 3. Prerequisites & Setup
 
 1. **Clone the repo & navigate**  
