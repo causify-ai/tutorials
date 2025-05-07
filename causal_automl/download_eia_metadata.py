@@ -304,12 +304,6 @@ def run_metadata_extraction(
     """
     Extract metadata and facet values for a given EIA category. 
 
-    This function:
-    - Retrieves all leaf dataset metadata from the given category.
-    - Extracts frequency and metric combinations into a flat index.
-    - Collects associated facet values.
-    - Saves all files locally and uploads to S3.
-
     :param category: root category path under EIA v2 API (e.g. "electricity")
     :param api_key: EIA API key used for authentication
     :param version_num: version tag for output paths (e.g. "1.0")
