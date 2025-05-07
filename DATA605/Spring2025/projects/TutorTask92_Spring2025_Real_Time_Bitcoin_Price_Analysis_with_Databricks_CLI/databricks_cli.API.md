@@ -1,5 +1,9 @@
 # Databricks CLI API Documentation
 
+## Workflow Overview
+
+![Databricks UI: new cluster RUNNING](images/api_flowchart.png)
+
 ## Project Files
 
 - **`databricks_cli_utils.py`**  
@@ -85,7 +89,7 @@ Example:
   }
 }
 ```
-
+![Databricks UI: new cluster RUNNING](images/api_cluster_image.png)
 ---
 
 ## 4. Core Databricks CLI Commands
@@ -108,6 +112,7 @@ databricks fs ls <dbfs:/path>
 databricks fs mkdirs <dbfs:/path>
 databricks fs rm <dbfs:/path>
 ```
+![Databricks UI: new cluster RUNNING](images/api_dbfs_image.png)
 
 ### 4.3 Jobs & Runs
 
@@ -117,7 +122,14 @@ databricks jobs run-now      --job-id <job_id>
 databricks runs submit       --json '{...}' 
 databricks runs get          --run-id <run_id>
 ```
+**Test job run**
+![Databricks UI: new cluster RUNNING](images/api_job_running.png)
 
+**Test Notebook run**
+![Databricks UI: new cluster RUNNING](images/api_test_notebook_job_run.png)
+
+**Test cluster termination**
+![Databricks UI: new cluster RUNNING](images/api_cluster_termination.png)
 ---
 
 ## 5. Python Wrappers (`databricks_cli_utils.py`)
