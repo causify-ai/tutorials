@@ -4,12 +4,14 @@ train_dqn.py
 Main script to train a Deep Q-Network (DQN) agent for Bitcoin trading.
 It sets up the environment, agent, replay buffer, data collection,
 and executes the training loop using an in-memory TFUniformReplayBuffer.
+Includes evaluation on the validation set with return and directional accuracy.
 """
 
+import numpy as np
 import tensorflow as tf
-from tf_agents.environments import tf_environment  # For type hinting
-from tf_agents.policies import random_tf_policy  # For initial collect
-from tf_agents.utils import common  # For create_variable
+from tf_agents.environments import tf_environment
+from tf_agents.policies import random_tf_policy
+from tf_agents.utils import common
 import config
 import tensorflow_agents_utils as utils
 
@@ -208,11 +210,105 @@ if __name__ == "__main__":
                         )
                 except Exception as e:
                     _LOG.warning(f"Error while collecting monitoring statistics: {e}")
+            # Evaluation
+            if current_step > 0 and current_step % config.EVAL_INTERVAL == 0:
+                _LOG.info(f"Starting Evaluation at Training Step {current_step}")
+                all_episode_rewards_eval = []
+                total_trades_taken_eval = 0
+                total_correct_directions_eval = 0
+                py_eval_env = eval_tf_env.pyenv.envs[0]
+                for eval_ep_num in range(config.NUM_EVAL_EPISODES):
+                    eval_time_step = (
+                        eval_tf_env.reset()
+                    )  # Resets py_eval_env's _current_tick too
+                    current_episode_reward = 0.0
+                    eval_ep_steps = 0
+                    while not eval_time_step.is_last():
+                        # Get current price before taking the step in the environment
+                        # This price corresponds to the end of the current observation window
+                        # The action will be based on this, and reward on the next price.
+                        tick_before_action = (
+                            py_eval_env._current_tick
+                        )  # Tick for current_price_eval
+                        # Ensure tick_before_action is valid for py_eval_env._df
+                        if tick_before_action < 0 or tick_before_action >= len(
+                            py_eval_env._df
+                        ):
+                            _LOG.warning(
+                                f"Eval ep {eval_ep_num + 1}: Invalid tick_before_action {tick_before_action}, skipping directional acc for this step."
+                            )
+                            # This should ideally not happen if reset and windowing are correct
+                            current_price_eval = np.nan  # Sentinel for error
+                        else:
+                            current_price_eval = py_eval_env._df.loc[
+                                tick_before_action, "Close"
+                            ]
+                        action_step = agent.policy.action(eval_time_step)
+                        chosen_action_eval = action_step.action.numpy()[0]
+                        eval_time_step = eval_tf_env.step(
+                            action_step.action
+                        )  # This advances py_eval_env._current_tick
+                        # Get price after the action was taken and env stepped
+                        # This is the price at the new py_eval_env._current_tick
+                        tick_after_action = py_eval_env._current_tick
+                        if tick_after_action < 0 or tick_after_action >= len(
+                            py_eval_env._df
+                        ):
+                            _LOG.warning(
+                                f"Eval ep {eval_ep_num + 1}: Invalid tick_after_action {tick_after_action}, skipping directional acc for this step."
+                            )
+                            next_price_eval = np.nan  # Sentinel for error
+                        else:
+                            next_price_eval = py_eval_env._df.loc[
+                                tick_after_action, "Close"
+                            ]
+                        reward_val = eval_time_step.reward.numpy()[0]
+                        current_episode_reward += reward_val
+                        eval_ep_steps += 1
+                        # Calculate directional accuracy only for Long (2) or Short (0) actions
+                        # And only if prices were valid
+                        if not np.isnan(current_price_eval) and not np.isnan(
+                            next_price_eval
+                        ):
+                            if chosen_action_eval == 2:  # Long
+                                total_trades_taken_eval += 1
+                                if next_price_eval > current_price_eval:
+                                    total_correct_directions_eval += 1
+                            elif chosen_action_eval == 0:  # Short
+                                total_trades_taken_eval += 1
+                                if next_price_eval < current_price_eval:
+                                    total_correct_directions_eval += 1
+                    all_episode_rewards_eval.append(current_episode_reward)
+                    _LOG.debug(
+                        f"Eval Episode {eval_ep_num + 1}/{config.NUM_EVAL_EPISODES} "
+                        f"completed. Reward: {current_episode_reward:.5f}, Steps: {eval_ep_steps}"
+                    )
+                avg_eval_reward = np.mean(all_episode_rewards_eval)
+                std_eval_reward = (
+                    np.std(all_episode_rewards_eval)
+                    if config.NUM_EVAL_EPISODES > 0
+                    else 0.0
+                )
+                directional_accuracy_eval = (
+                    (total_correct_directions_eval / total_trades_taken_eval)
+                    if total_trades_taken_eval > 0
+                    else 0.0
+                )
+                _LOG.info(
+                    f"Step: {current_step}, Avg Eval Reward: {avg_eval_reward:.5f} "
+                    f"(Std: {std_eval_reward:.5f} over {config.NUM_EVAL_EPISODES} episodes)"
+                )
+                _LOG.info(
+                    f"Step: {current_step}, Eval Directional Accuracy: {directional_accuracy_eval:.3f} "
+                    f"(based on {total_trades_taken_eval} trades)"
+                )
+                _LOG.info(f"Evaluation Finished at Training Step {current_step}")
+
     except Exception as e:
         _LOG.error(f"Error during training loop: {e}", exc_info=True)
     finally:
         _LOG.info(
-            f"--- Training Loop Completed (or interrupted) at Step: {train_step_counter.numpy()} ---"
+            f"Training Loop Completed (or interrupted) at Step: {train_step_counter.numpy()}"
         )
         train_tf_env.close()
         eval_tf_env.close()

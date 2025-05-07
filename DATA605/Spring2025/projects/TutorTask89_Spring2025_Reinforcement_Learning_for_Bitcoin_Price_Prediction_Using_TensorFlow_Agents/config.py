@@ -94,3 +94,10 @@ INITIAL_EPSILON: float = (
 )
 MIN_EPSILON: float = 0.01  # Minimum epsilon for exploration
 EPSILON_DECAY_TRAINING_STEPS: int = int(NUM_TRAINING_ITERATIONS * 0.7)
+
+# #############################################################################
+# Evaluation Hyperparameters
+# #############################################################################
+EVAL_INTERVAL: int = 1000  # e.g., Evaluate every 1000 training steps
+NUM_EVAL_EPISODES: int = 5 # Number of episodes to evaluate the agent
+
