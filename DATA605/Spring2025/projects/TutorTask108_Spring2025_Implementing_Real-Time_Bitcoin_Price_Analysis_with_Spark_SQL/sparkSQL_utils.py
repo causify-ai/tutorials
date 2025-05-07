@@ -73,8 +73,8 @@ class BitcoinDataHandler:
 
     def start_real_time_update(self, days: int, vw_nm:str, path:str, curr: str = "usd") -> None:
         """
-        Fetch and load existing Bitcoin price data within specified days and start real time updates at every hour. The 
-        function will identify if there is new data to add, and updates the view with any new data periodically.
+        Fetch and load existing Bitcoin price data within specified days and start real time updates. The function will 
+        identify if there is new data to add (hourly level), and updates the view with any new data periodically (at every hour).
         
         :param days: How many days to retrieve data for intially.
         :param vw_nm: Name of the view to create and load data into.
@@ -121,8 +121,8 @@ class BitcoinDataHandler:
                 combined_df = existing_df.unionByName(new_df)
                 self.spark.catalog.dropTempView(vw_nm)
                 combined_df.createOrReplaceTempView(vw_nm)
-                print(f"Added following new records:")
-                print(new_df)
+                print(f"Added following new record(s):")
+                print(new_df.show()
             else:
                 print("No new data found.")
             time.sleep(3600)

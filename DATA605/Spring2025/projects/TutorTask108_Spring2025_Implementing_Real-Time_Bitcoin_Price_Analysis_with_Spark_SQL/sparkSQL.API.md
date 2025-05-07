@@ -1,6 +1,5 @@
+# SparkSQL API Tutorial
 <!-- toc -->
-
-- [SparkSQL API Tutorial](#spark-sql-api-tutorial)
   * [Introduction](#introduction)
   * [Architecture](#architecture)
   * [Setting Up via Docker](#setting-up-via-docker)
@@ -16,7 +15,7 @@
 
 <!-- tocstop -->
 
-# SparkSQL API Tutorial
+---
 
 ## Introduction
 
@@ -25,6 +24,8 @@
 - Spark SQL integrates with various programming languages, data sources, and other Big Data APIs.
 - This tutorial focuses on showcasing the use of SparkSQL in Python via pyspark through various examples.
 - More information on Spark SQL can be found [here](https://spark.apache.org/sql/).
+
+---
 
 ## Architecture
 
@@ -61,6 +62,8 @@ These dependencies are already installed via this Docker container. To run the c
  > /data/run_jupyter.sh
  ```
 
+---
+
 ## Spark Session & Configurations
 
 ### Creating a Spark Session
@@ -83,6 +86,8 @@ Partitions in a data source plays a critical role during the large-scale cluster
 However, there may be cases when certain column values have more associated rows in a table than others, leading to data skew across partitions and data files. When executed on massive data sizes across a cluster, adjusting these settings and configurations can improve runtime, reduce data loss, improve fault tolerance, and much more.
 
 This tutorial uses a small sample dataset that does not necessairly require these configurations. You can learn more about the different configurations [here](https://spark.apache.org/docs/3.5.4/sql-performance-tuning.html).
+
+---
 
 ## Datasets & DataFrame 
 
@@ -137,7 +142,9 @@ Generally, in traditional SQL, queries are written to SELECT from specific views
     - Temporary view that can be accessed across all sesssions, and persists until the Spark application terminates.
 2. Temporary View: 'createOrReplaceTempView(name)'
     - It no longer exists once the Spark session that created it terminates.
-  
+
+---
+
 ## SQL
 
 Via the 'sql' function on the Spark Session, we can programmatically run SQL queries against the views/tables created using the DataFrame API, and return the results as a DataFrame. In this way, we can easily write common query statements:
@@ -151,7 +158,7 @@ We can write even more complex queries by including filters, window functions, a
 > df.write.saveAsTable("table_name")
 > spark.sql("select * from table_name").show()
 ```
-We will explore more complex queries in 'sparkSQL.API.ipynb'. A brief example can be found [https://spark.apache.org/examples.html](https://spark.apache.org/examples.html).
+We will explore more complex queries in 'sparkSQL.API.ipynb'. A brief example can be found [here](https://spark.apache.org/examples.html).
 
 ### Functions
 

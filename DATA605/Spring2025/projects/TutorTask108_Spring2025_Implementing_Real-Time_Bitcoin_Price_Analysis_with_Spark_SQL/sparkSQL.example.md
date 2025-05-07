@@ -1,19 +1,23 @@
+# SparkSQL Example Tutorial
+
 <!-- toc -->
 
-- [SparkSQL Example Tutorial](#spark-sql-example-tutorial)
   * [Introduction](#introduction)
   * [Data](#data)
       * [API Endpoint](#api-endpoint)
       * [Data Loading](#data-loading)
+          * [BitcoinDataLoader](#bitcoindataloader)
+          * [Views](#views)
   * [Analyses & Visualizations](#analyses-&-visualizations)
       * [Monthly Price Over the Past Year](#monthly-price-over-the-past-year)
       * [Hourly Price Over the Past 90 Days](#daily-price-over-the-past-90-days)
       * [Spikes & Drops In Prices](#spikes-and-drops-in-prices)
+      * [Price Prediction & Extrapolation](#price-prediction-&-extrapolation)
 
 
 <!-- tocstop -->
 
-# SparkSQL Example Tutorial
+---
 
 ## Introduction
 
@@ -24,6 +28,8 @@ In this tutorial, we will:
 1. Load real-time data into Spark using Dataframe operations.
 2. Use SparkSQL to find descriptive statistics and identify patterns and abnormalities in price changes.
 3. Visualize these trends to facilitate understanding.
+
+---
 
 ## Data
 
@@ -46,6 +52,24 @@ For this example, we will focus on hourly data for the past 3 months and daily d
 
 The file 'sparkSQL_utils.py' contains the class 'BitcoinDataLoader' which contains functions to statically and dynamically create views containing the specified duration and interval of data.
 
+#### BitcoinDataLoader
+
+**'load_data'**
+This function populates the a view with Bitcoin prices in given currency for given past total_days; it is used directly to populate the daily data view and indirectly to populate the daily data view. 
+
+**'fetch_data_range'**
+This function returns price data using given a time range and currency of Bitcoin. The time interval of data retrieved is based on the total_days and the API endpoint's granulity levels.
+
+It is not called directly in the example notebook, but rather indirectly in the 'load_data' function.
+
+**'start_real_time_update'**
+This function fetches and loads existing Bitcoin price data within specified days and start real time updates at every hour. The 
+function will identify if there is new hourly data to add, and updates the existing view. This function is directly called to create the hourly data view.
+
+**'stop_real_time_update'**
+This function can be used to stop real time updates in the notebook, if desired. 
+
+#### Views
 Each view contains three columns:
 1.'Price' - in USD
 2.'Timestamp' - UNIX timestamp
@@ -89,7 +113,7 @@ Each view contains three columns:
   +-----------------+----------------+-------------------+
   ```
   
-**Data Diagram **
+**Data Diagram**
 
 ```mermaid
 flowchart TD
@@ -105,6 +129,8 @@ flowchart TD
     linkStyle 1 stroke:#2962FF,fill:none
     linkStyle 3 stroke:#2962FF,fill:none
 ```
+---
+
 ## Analysis & Visualizations
 
 To understand the change in BTC price over time, there are multiple operations and analyses we can perform via SparkSQL and visualize with 'matplotlib'.
@@ -121,16 +147,20 @@ Here, we will perform SparkSQL aggregation to determine whether prices have incr
 
 ### Spikes & Drops In Prices
 
-To further understand BTC price volatility, we can aim to identify signficant spikes and drops in price by applying the window functions, joins, and with clauses in SparkSQL to our views. This will provide an understanding the distribution of price changes.
+To further understand BTC price volatility, we can aim to identify signficant spikes and drops in price by applying the window functions, joins, and with clauses in SparkSQL to our hourly data view. This will provide an understanding the distribution of price changes.
 
 This example considers two thresholds for a significant change in price:
 
 1. Average of absolute value of change in price in time period.
 2. Using the IQR method and considering the whiskers as the bounds for outliers.
+3. Line plots, box and whisker plots, and histograms can aid in understanding the trend and distribution of price change.
 
+### Price Prediction & Extrapolation
 
+Finally, the last analysis the example notebook covers is the price prediction/extrapolation. Using the previous price information and time interval, we will use SparkSQL queries to predict the next price at the given time interval. The logic behind the queries is using the average change in price over a subset of past data and adding that change to the most recent price.
 
+We will look at three predictions/extrapolations:
 
-
-
-
+1. Price of next day using past week of data (daily view).
+2. Price of next month using past year of data on monthly basis (daily view).
+3. Price of next hour using past 24 hours of data (hourly view).
