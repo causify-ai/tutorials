@@ -4,8 +4,6 @@ Contains hyperparameters and settings for data, environment, agent, and training
 """
 
 from typing import Optional, Tuple
-from tensorflow.keras import initializers
-import tensorflow as tf
 
 # #############################################################################
 # Data Configuration
@@ -29,14 +27,20 @@ NUM_POSITION_FEATURES: int = 1  # Number of position features (e.g., current pos
 NUM_FEATURES_IN_OBSERVATION: int = (
     NUM_MARKET_FEATURES + NUM_POSITION_FEATURES
 )  # Total number of features in the observation space
+FEE = 0.001  # Transaction fee for buy/sell actions
+
+# #############################################################################
+# Seed
+# #############################################################################
+RANDOM_SEED: int = 42  # Random seed for reproducibility
 
 # #############################################################################
 # Q-Network Hyperparameters
 # #############################################################################
 FC_LAYER_PARAMS: Tuple[int, ...] = (128, 64)
-KERNEL_INITIALIZER: tf.keras.initializers.Initializer = initializers.VarianceScaling(
-    scale=2.0, mode="fan_in", distribution="truncated_normal"
-)
+KERNEL_INIT_SCALE: float = 2.0
+KERNEL_INIT_MODE: str = "fan_in"
+KERNEL_INIT_DISTRIBUTION: str = "truncated_normal"
 # Set to a float (e.g., 0.1, 0.2) to enable dropout, or None to disable.
 # If a float, dropout layers with this rate will be added after each FC layer.
 DROPOUT_RATE: Optional[float] = None  # Example: 0.1 for 10% dropout
@@ -44,6 +48,37 @@ DROPOUT_RATE: Optional[float] = None  # Example: 0.1 for 10% dropout
 # #############################################################################
 # DQN Agent Hyperparameters
 # #############################################################################
-LEARNING_RATE: float = 1e-4
-GAMMA: float = 0.99
-TARGET_UPDATE_PERIOD: int = 100
+LEARNING_RATE: float = 1e-4  # Learning rate for the optimizer (Adam)
+GAMMA: float = 0.99  # Discount factor for future rewards
+TARGET_UPDATE_PERIOD: int = 100  # Number of steps before updating the target Q-network
+
+# #############################################################################
+# Replay Buffer Hyperparameters
+# #############################################################################
+REPLAY_BUFFER_CAPACITY: int = (
+    100000  # Maximum number of experiences in the replay buffer
+)
+
+# #############################################################################
+# Data Collection Hyperparameters
+# #############################################################################
+INITIAL_COLLECT_STEPS: int = (
+    1000  # Number of steps to fill buffer before training starts
+)
+COLLECT_STEPS_PER_ITERATION: int = (
+    1  # Number of steps to collect in env per training iteration
+)
+BATCH_SIZE: int = 64  # Batch size for sampling from replay buffer for training
+
+# #############################################################################
+# Training Loop Hyperparameters
+# #############################################################################
+NUM_TRAINING_ITERATIONS: int = 10000  # Example: Total agent.train() calls
+LOG_INTERVAL: int = 200  # Log training loss every N iterations
+
+# #############################################################################
+# Epsilon Greedy Exploration Hyperparameters
+# #############################################################################
+INITIAL_EPSILON: float = (
+    1.0  # Starting epsilon for exploration for initial collection policy setup
+)

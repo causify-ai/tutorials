@@ -25,13 +25,21 @@ from tf_agents.environments import tf_py_environment
 from bitcoin_trading_env import BitcoinTradingEnv
 
 import tensorflow as tf
-from typing import Tuple, Optional, Any, Union
+from typing import Tuple, Optional, Any, Union, Callable
 from tf_agents.agents.dqn import dqn_agent
 from tf_agents.networks import q_network as tf_agents_q_network
 from tf_agents.environments import tf_py_environment
 from tf_agents.trajectories import time_step as ts
 from tf_agents.specs import tensor_spec
 from tensorflow.keras import initializers
+from tf_agents.agents.dqn import dqn_agent as tfa_dqn_agent
+from tf_agents.policies import (
+    epsilon_greedy_policy as tfa_epsilon_greedy_policy,
+)
+from tf_agents.replay_buffers import tf_uniform_replay_buffer
+from tf_agents.environments import tf_environment
+from tf_agents.drivers import dynamic_step_driver
+from tf_agents.policies import tf_policy
 
 import config
 
@@ -419,7 +427,11 @@ def create_q_network(
     action_spec: tensor_spec.BoundedTensorSpec,
     fc_layer_params: Tuple[int, ...] = config.FC_LAYER_PARAMS,
     activation_fn: Any = tf.keras.activations.relu,
-    kernel_initializer: tf.keras.initializers.Initializer = config.KERNEL_INITIALIZER,
+    kernel_initializer: tf.keras.initializers.Initializer = initializers.VarianceScaling(
+        scale=config.KERNEL_INIT_SCALE,
+        mode=config.KERNEL_INIT_MODE,
+        distribution=config.KERNEL_INIT_DISTRIBUTION,
+    ),
     dropout_rate_for_fc_layers: Optional[float] = config.DROPOUT_RATE,
 ) -> tf_agents_q_network.QNetwork:
     """
@@ -505,3 +517,185 @@ def create_dqn_agent(
     )
     agent.initialize()
     return agent
+
+
+# #############################################################################
+# Create Epsilon Greedy Policy for Data Collection
+# #############################################################################
+def create_collection_policy(
+    tf_agent: tfa_dqn_agent.DqnAgent,
+    epsilon_fn: Callable[[], tf.Tensor],
+) -> tfa_epsilon_greedy_policy.EpsilonGreedyPolicy:
+    """
+    Creates an EpsilonGreedyPolicy for data collection.
+
+    Args:
+        tf_agent: The TF-Agents DQN agent whose greedy policy will be wrapped.
+        epsilon_fn: A callable (e.g., a lambda function or a tf.Variable.value)
+                    that returns the current epsilon value (a tf.Tensor).
+                    This allows for dynamic epsilon annealing.
+
+    Returns:
+        An EpsilonGreedyPolicy instance.
+    """
+    collect_policy = tfa_epsilon_greedy_policy.EpsilonGreedyPolicy(
+        policy=tf_agent.policy,  # The agent's greedy policy for exploitation
+        epsilon=epsilon_fn,  # Epsilon for exploration
+    )
+    _LOG.info(
+        "EpsilonGreedyPolicy created for collection. Initial epsilon will be determined by epsilon_fn()."
+    )
+    return collect_policy
+
+
+# #############################################################################
+# Create Replay Buffer for Experience Replay
+# #############################################################################
+def create_replay_buffer(
+    tf_agent: tfa_dqn_agent.DqnAgent,
+    environment_batch_size: int,
+    replay_buffer_capacity: int = config.REPLAY_BUFFER_CAPACITY,
+) -> tf_uniform_replay_buffer.TFUniformReplayBuffer:
+    """
+    Creates a TFUniformReplayBuffer.
+
+    Args:
+        tf_agent: The TF-Agent whose data spec will be used.
+        environment_batch_size: The batch size of the environment (typically 1).
+        replay_buffer_capacity: The maximum number of experiences to store.
+
+    Returns:
+        An instance of TFUniformReplayBuffer.
+    """
+    replay_buffer = tf_uniform_replay_buffer.TFUniformReplayBuffer(
+        data_spec=tf_agent.collect_data_spec,
+        batch_size=environment_batch_size,
+        max_length=replay_buffer_capacity,
+    )
+    _LOG.info(f"TFUniformReplayBuffer created with capacity: {replay_buffer_capacity}")
+    return replay_buffer
+
+
+# #############################################################################
+# Create Data Collection Driver for Experience Collection
+# #############################################################################
+def create_data_collection_driver(
+    train_tf_env: tf_environment.TFEnvironment,
+    collect_policy: tf_policy.TFPolicy,
+    replay_buffer: tf_uniform_replay_buffer.TFUniformReplayBuffer,
+    steps_to_collect: int,
+) -> dynamic_step_driver.DynamicStepDriver:
+    """
+    Creates a DynamicStepDriver for collecting experiences.
+
+    Args:
+        train_tf_env: The TF-Environment to collect experiences from.
+        collect_policy: The policy to use for action selection during collection.
+        replay_buffer: The replay buffer to store collected experiences.
+        steps_to_collect: The number of steps to collect when driver.run() is called.
+
+    Returns:
+        An instance of DynamicStepDriver.
+    """
+    replay_observer = [replay_buffer.add_batch]
+    driver = dynamic_step_driver.DynamicStepDriver(
+        train_tf_env,
+        collect_policy,
+        observers=replay_observer,
+        num_steps=steps_to_collect,
+    )
+    _LOG.info(f"DynamicStepDriver created to collect {steps_to_collect} steps per run.")
+    return driver
+
+
+# #############################################################################
+# Create Training Dataset from Replay Buffer
+# #############################################################################
+def create_training_dataset(
+    replay_buffer: tf_uniform_replay_buffer.TFUniformReplayBuffer,
+    tf_agent: tfa_dqn_agent.DqnAgent,  # Used for train_sequence_length
+    batch_size: int = config.BATCH_SIZE,
+    num_parallel_calls: int = tf.data.AUTOTUNE,
+    prefetch_buffer_size: int = tf.data.AUTOTUNE,
+) -> tf.data.Dataset:
+    """
+    Creates a tf.data.Dataset from the replay buffer for training.
+
+    Args:
+        replay_buffer: The replay buffer to sample from.
+        tf_agent: The agent, used to determine train_sequence_length.
+        batch_size: The batch size for training samples.
+        num_parallel_calls: Number of parallel calls for dataset processing.
+        prefetch_buffer_size: Buffer size for prefetching data.
+
+    Returns:
+        A tf.data.Dataset instance.
+    """
+
+    dataset_num_steps = tf_agent.train_sequence_length
+    if dataset_num_steps is None:  # Should default to 1 for DqnAgent
+        dataset_num_steps = 1
+        _LOG.warning(
+            "Agent train_sequence_length is None, defaulting dataset num_steps to 1."
+        )
+
+    dataset = replay_buffer.as_dataset(
+        num_parallel_calls=num_parallel_calls,
+        sample_batch_size=batch_size,
+        num_steps=dataset_num_steps,  # For DQN, this effectively samples single transitions (T=1)
+        # The agent then constructs (s,a,r,s') from these.
+    ).prefetch(prefetch_buffer_size)
+    _LOG.info(
+        f"Training dataset created from replay buffer: "
+        f"batch_size={batch_size}, num_steps_in_sample={dataset_num_steps}"
+    )
+    return dataset
+
+
+# #############################################################################
+# Initial Collection of Experiences
+# #############################################################################
+def initial_collect(
+    initial_collect_driver: dynamic_step_driver.DynamicStepDriver,
+    replay_buffer: tf_uniform_replay_buffer.TFUniformReplayBuffer,
+) -> None:
+    """
+    Performs an initial collection of experiences to populate the replay buffer.
+
+    Args:
+        initial_collect_driver: The driver configured with a policy (e.g., random)
+                                and number of steps for initial collection.
+        replay_buffer: The replay buffer to populate.
+    """
+    _LOG.info("Starting initial collection of experiences...")
+    initial_collect_driver.run()
+    _LOG.info(
+        f"Initial collection complete. Replay buffer now contains "
+        f"{replay_buffer.num_frames()} frames."
+    )
+
+
+# #############################################################################
+# Train One Iteration of the Agent
+# #############################################################################
+def train_one_iteration(
+    dataset_iterator: Any,  # Iterator for the training dataset
+    tf_agent: tfa_dqn_agent.DqnAgent,
+    train_step_counter: tf.Variable,
+) -> tf.Tensor:  # Returns the training loss
+    """
+    Performs one iteration of training the agent.
+
+    Args:
+        dataset_iterator: An iterator for the tf.data.Dataset providing training batches.
+        tf_agent: The agent to be trained.
+        train_step_counter: A tf.Variable tracking the number of training steps.
+
+    Returns:
+        The training loss for this iteration.
+    """
+    experience, _ = next(dataset_iterator)  # Get a batch of experience
+    # The agent's train method updates its Q-network and returns loss information.
+    # train_step_counter is incremented by the agent's train method.
+    loss_info = tf_agent.train(experience)
+    return loss_info.loss

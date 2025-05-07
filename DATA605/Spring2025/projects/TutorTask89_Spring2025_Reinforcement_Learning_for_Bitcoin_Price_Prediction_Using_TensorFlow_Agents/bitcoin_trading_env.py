@@ -135,5 +135,15 @@ class BitcoinTradingEnv(py_environment.PyEnvironment):
             .iloc[max(0, start) : end]
             .to_numpy(dtype=np.float32)
         )
+        n_rows, n_feats = block.shape[0], block.shape[1]
+        pad_len = self.window_size - n_rows
+        if pad_len > 0:
+            if n_rows > 0:
+                # repeat the first real row
+                pad_block = np.repeat(block[0:1, :], pad_len, axis=0)
+            else:
+                # no data yet – pad with zeros
+                pad_block = np.zeros((pad_len, n_feats), dtype=np.float32)
+            block = np.concatenate([pad_block, block], axis=0)
         pos_col = np.full((self.window_size, 1), self._position, dtype=np.float32)
         return np.concatenate([block, pos_col], axis=1)
