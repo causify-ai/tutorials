@@ -379,5 +379,6 @@ def _main(parser: argparse.ArgumentParser) -> None:
     metadata_file_path = f"eia_{args.category}_metadata_index_v{args.version_num}.csv"
     writer._write_df_to_s3(df_metadata, metadata_file_path)
 
+
 if __name__ == "__main__":
     _main(_parse())
