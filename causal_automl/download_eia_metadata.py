@@ -5,7 +5,7 @@ Download metadata from the EIA v2 API and upload it to S3.
 Usage:
 > python download_eia_metadata.py --category <CATEGORY> --api_key <API_KEY> --version_num <VERSION_NUM>
 
-This script traverses the EIA v2 API under a specified category, collects all time series 
+This script traverses the EIA v2 API under a specified category, collects all time series
 metadata, and writes the metadata and associated parameter values to an S3 bucket in versioned
 CSV files.
 
@@ -20,10 +20,8 @@ Arguments:
 """
 
 import argparse
-import csv
-import io
-import os
 import logging
+import os
 from typing import Any, Dict, List, Tuple
 
 import helpers.hdbg as hdbg
@@ -262,7 +260,7 @@ class _EiaMetadataFetcher:
                 rows.append(row)
         df_params = pd.DataFrame(rows)
         return df_params
-
+      
 
 # #############################################################################
 # _EiaMetadataWriter
