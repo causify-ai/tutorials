@@ -1,7 +1,9 @@
 import os
 import requests
-import pandas as pd
+import logging
 from typing import Any, Dict, List, Tuple
+
+import pandas as pd
 
 _LOG = logging.getLogger(__name__)
 
@@ -212,7 +214,6 @@ class EiaMetadataFetcher:
         :return: data containing all facet values
         """
         facets = metadata["facets"]
-        facet_values = {}
         rows = []
         for facet in facets:
             # Extract the actual facet ID.
@@ -241,12 +242,6 @@ def run_metadata_extraction(
 ) -> Tuple[pd.DataFrame, List[Tuple[pd.DataFrame, str]]]:
     """
     Extract metadata and facet values for a given EIA category. 
-
-    This function:
-    - Retrieves all leaf dataset metadata from the given category.
-    - Extracts frequency and metric combinations into a flat index.
-    - Collects associated facet values.
-    - Saves all files locally and uploads to S3.
 
     :param category: root category path under EIA v2 API (e.g. "electricity")
     :param api_key: EIA API key used for authentication

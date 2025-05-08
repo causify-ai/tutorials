@@ -61,7 +61,7 @@ class _EiaMetadataWriter:
         _LOG.debug("Saved CSV locally to: %s", local_file_path)
         # Upload CSV to the specified S3 bucket.
         bucket_file_path = self._bucket_path + file_name
-        hs3.copy_file_to_s3(local_file_path, bucket_file_path, self._aws_profile)
+        #hs3.copy_file_to_s3(local_file_path, bucket_file_path, self._aws_profile)
         _LOG.debug("Uploaded to S3: %s", bucket_file_path)
 
 
@@ -106,8 +106,9 @@ def _main(parser: argparse.ArgumentParser) -> None:
     writer = _EiaMetadataWriter(args.bucket_path, args.aws_profile)
     for df_facet, facet_file_path in param_entries:
         writer._write_df_to_s3(df_facet, facet_file_path)
-    metadata_file_path = f"eia_{args.category}_metadata_index_v{args.version_num}.csv"
+    metadata_file_path = f"eia_{args.category}_metadata_original_v{args.version_num}.csv"
     writer._write_df_to_s3(df_metadata, metadata_file_path)
+
 
 if __name__ == "__main__":
     _main(_parse())
