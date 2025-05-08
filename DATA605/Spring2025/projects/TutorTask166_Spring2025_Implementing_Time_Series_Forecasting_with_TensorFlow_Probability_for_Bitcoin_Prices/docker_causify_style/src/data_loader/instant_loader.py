@@ -35,7 +35,7 @@ class InstantCSVLoader:
                 return None
             
             # Convert timestamp to datetime
-            df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s')
+            df['timestamp'] = pd.to_datetime(df['timestamp'])
             
             # Get the latest timestamp
             latest_time = df['timestamp'].max()
@@ -73,12 +73,14 @@ class InstantCSVLoader:
             if len(df) == 0:
                 return pd.DataFrame()
                 
-            df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s')
-        return df
+            df['timestamp'] = pd.to_datetime(df['timestamp'])
+        
             
         except Exception as e:
             print(f"Error loading historical data: {str(e)}")
             return pd.DataFrame()
+        
+        return df
 
     def get_latest_timestamp(self) -> Optional[datetime]:
         """Get the latest timestamp from the data."""
@@ -90,7 +92,7 @@ class InstantCSVLoader:
             if len(df) == 0:
                 return None
                 
-            df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s')
+            df['timestamp'] = pd.to_datetime(df['timestamp'])
             return df['timestamp'].max()
             
         except Exception as e:

@@ -10,16 +10,16 @@ app:
 data:
   raw_data:
     instant_data:
-      file: data/raw/instant_data.csv
+      file: /app/data/raw/instant_data.csv
     historical_data:
-      file: data/raw/historical_data.csv
+      file: /app/data/raw_data/bitcoin_history_365d.csv
   predictions:
     instant_data:
-      predictions_file: data/predictions/instant_predictions.csv
-      metrics_file: data/predictions/instant_metrics.csv
+      predictions_file: /app/data/predictions/instant_predictions.csv
+      metrics_file: /app/data/predictions/instant_metrics.csv
     history_data:
-      predictions_file: data/predictions/history_data/history_predictions.csv
-      metrics_file: data/predictions/history_data/history_metrics.csv
+      predictions_file: /app/data/predictions/history_data/history_predictions.csv
+      metrics_file: /app/data/predictions/history_data/history_metrics.csv
 
 # Data format configuration
 data_format:

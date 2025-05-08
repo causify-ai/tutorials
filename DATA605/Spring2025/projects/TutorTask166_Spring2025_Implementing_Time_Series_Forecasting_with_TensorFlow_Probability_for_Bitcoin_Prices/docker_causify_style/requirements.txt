@@ -5,7 +5,7 @@ tensorflow-probability[tf]==0.25.0
 # Data handling
 pandas==2.2.1
 numpy==1.26.4
-scikit-learn==1.4.1
+scikit-learn
 
 # Visualization
 matplotlib==3.8.3
@@ -28,3 +28,6 @@ kafka-python==2.0.2
 
 # Additional dependencies
 python-dotenv==1.0.1
+
+# for web app - backend
+uvicorn==0.15.0

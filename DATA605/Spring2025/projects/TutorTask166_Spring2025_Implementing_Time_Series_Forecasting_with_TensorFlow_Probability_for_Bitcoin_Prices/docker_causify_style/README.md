@@ -48,18 +48,18 @@
 
 ## data source choosing
 
-Those two rows really are for the same asset (the original Bitcoin, ticker BTC-USD on Yahoo and ID bitcoin on CoinGecko), but they come from very different pipelines—so it’s normal to see discrepancies. Here are the main reasons:
+Those two rows really are for the same asset (the original Bitcoin, ticker BTC-USD on Yahoo and ID bitcoin on CoinGecko), but they come from very different pipelines—so it's normal to see discrepancies. Here are the main reasons:
 	1.	Different data sources & exchange coverage
 	•	CoinGecko aggregates trades from dozens of spot exchanges, then computes daily open/high/low/close from that combined feed.
-	•	Yahoo Finance feeds (via yfinance.download("BTC-USD")) often draw from a specific subset of venues (and may even include derivative markets), so you’re not seeing the full global volume.
+	•	Yahoo Finance feeds (via yfinance.download("BTC-USD")) often draw from a specific subset of venues (and may even include derivative markets), so you're not seeing the full global volume.
 	2.	Time‐stamp & time-zone alignment
-	•	CoinGecko’s daily bars are aligned to 00:00 UTC (so “2025-02-05” really means the 24 hours from 00:00 UTC on the 5th to 00:00 UTC on the 6th).
-	•	Yahoo Finance will often use the local market close (for crypto it can actually default to UTC nevertheless, but the sample time can differ slightly), so your “open” price may be the last trade on Feb 4 at 23:59 UTC rather than the first Feb 5 price at 00:00 UTC.
-	3.	Definition of “volume”
-	•	CoinGecko’s total_volume is the USD-value of all spot trades on all exchanges over the 24 hours.
-	•	Yahoo’s Volume column for crypto also reports a USD figure but only across its data partners—which can be a different subset of venues.
+	•	CoinGecko's daily bars are aligned to 00:00 UTC (so "2025-02-05" really means the 24 hours from 00:00 UTC on the 5th to 00:00 UTC on the 6th).
+	•	Yahoo Finance will often use the local market close (for crypto it can actually default to UTC nevertheless, but the sample time can differ slightly), so your "open" price may be the last trade on Feb 4 at 23:59 UTC rather than the first Feb 5 price at 00:00 UTC.
+	3.	Definition of "volume"
+	•	CoinGecko's total_volume is the USD-value of all spot trades on all exchanges over the 24 hours.
+	•	Yahoo's Volume column for crypto also reports a USD figure but only across its data partners—which can be a different subset of venues.
 	4.	No merge bug—just apples vs. oranges
-We did in fact pull BTC in both scripts (CoinGecko’s ID was hard-coded to "bitcoin", and yfinance downloaded "BTC-USD"), so there’s no accidental “other coin” slipping in. The difference you’re seeing is simply because the two services measure and timestamp their daily bars differently.
+We did in fact pull BTC in both scripts (CoinGecko's ID was hard-coded to "bitcoin", and yfinance downloaded "BTC-USD"), so there's no accidental "other coin" slipping in. The difference you're seeing is simply because the two services measure and timestamp their daily bars differently.
 
 --
 
@@ -92,7 +92,7 @@ docker-compose config --services
 ### 1. You only changed your Python code
 
 (and your source dir is bind-mounted into the container at runtime)
-	1.	No rebuild needed — the container already “sees” your new .py files.
+	1.	No rebuild needed — the container already "sees" your new .py files.
 	2.	Just restart the affected services so the Python process picks up the change:
 
 ```bash
@@ -102,9 +102,9 @@ docker-compose logs -f data-collector bitcoin-forecast-app dashboard
 ```
 
 Why this is fast:
-	•	You’re not tearing down volumes, networks or images.
-	•	You’re only issuing a docker restart under the covers, so containers come up in a couple of seconds.
-	•	Kafka (and its data volume) never touched—so your topics and messages stay intact, and your app’s Kafka client will automatically reconnect.
+	•	You're not tearing down volumes, networks or images.
+	•	You're only issuing a docker restart under the covers, so containers come up in a couple of seconds.
+	•	Kafka (and its data volume) never touched—so your topics and messages stay intact, and your app's Kafka client will automatically reconnect.
 
 ### 2. You changed Dockerfiles or your docker-compose.yml
 
@@ -128,7 +128,7 @@ docker-compose logs -f
 --
 
 - When to use which?
-	•	During development, if you only change your Python code inside a volume-mounted folder, you don’t need --build—just docker-compose restart <service> or up -d will pick up the new code.
+	•	During development, if you only change your Python code inside a volume-mounted folder, you don't need --build—just docker-compose restart <service> or up -d will pick up the new code.
 	•	If you change your Dockerfile (base image, new apt packages, etc.), use --build.
 	•	If you ever need a truly clean slate—including your DB—you can add -v to remove volumes. Otherwise your data in named volumes will persist across restarts.
 
@@ -269,6 +269,39 @@ The volumes are already created
 To fix this permanently, we could add health checks and dependencies in the docker-compose file, but the current workaround (restarting) is actually a common practice in development environments.
 ```
 
+---
+
+## Real-Time System Data Flow (Sequence Diagram)
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Dashboard
+    participant WebFrontend
+    participant ForecastApp as Bitcoin-Forecast-App
+    participant Collector as Data-Collector
+    participant Data as DataFiles
+
+    User->>Dashboard: Open dashboard UI
+    User->>WebFrontend: Open web frontend UI
+    Collector->>Data: Write to /data/raw/instant_data.csv
+    ForecastApp->>Data: Read /data/raw/instant_data.csv
+    ForecastApp->>Data: Write /data/predictions/instant_predictions.csv, instant_metrics.csv
+    Dashboard->>Data: Read /data/raw/instant_data.csv
+    Dashboard->>Data: Read /data/predictions/instant_predictions.csv, instant_metrics.csv
+    WebFrontend->>Data: Read /data/raw/instant_data.csv
+    WebFrontend->>Data: Read /data/predictions/instant_predictions.csv, instant_metrics.csv
+```
+
+### Cold Start Behavior
+
+- **Data Collector**: Starts writing to `/data/raw/instant_data.csv` immediately. If the file does not exist, it is created.
+- **Bitcoin Forecast App**: Waits for enough data in `/data/raw/instant_data.csv` before making predictions. Logs "Waiting for more data..." until ready.
+- **Dashboard & Web Frontend**: If prediction or metrics files do not exist or are empty, they display a friendly "Waiting for data..." message and show empty chart frames. As soon as data is available, charts and metrics update automatically.
+- **All services**: Use config-driven file paths and timestamp formats for consistency. If files are missing, the UI will not crash but will inform the user and retry automatically.
+
+---
+
 ```
 version: '3.8'
 
@@ -396,141 +429,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-    restart: unless-stopped
-
-version: '3.8'
-
-services:
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.3.0
-    container_name: zookeeper
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-      ZOOKEEPER_INIT_LIMIT: 5
-      ZOOKEEPER_SYNC_LIMIT: 2
-    ports:
-      - "2181:2181"
-    healthcheck:
-      test: ["CMD-SHELL", "echo ruok | nc localhost 2181 || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    volumes:
-      - zookeeper-data:/var/lib/zookeeper/data
-      - zookeeper-log:/var/lib/zookeeper/log
-    networks:
-      - kafka-network
-    restart: unless-stopped
-
-  kafka:
-    image: confluentinc/cp-kafka:7.3.0
-    container_name: kafka
-    depends_on:
-      zookeeper:
-        condition: service_healthy
-    ports:
-      - "9092:9092"
-      - "29092:29092"
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-      KAFKA_LOG_RETENTION_HOURS: 168
-      KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 300000
-      KAFKA_LOG_SEGMENT_BYTES: 1073741824
-      KAFKA_LOG_RETENTION_BYTES: -1
-      KAFKA_LOG_CLEANUP_POLICY: "delete"
-    volumes:
-      - kafka-data:/var/lib/kafka/data
-    networks:
-      - kafka-network
-    healthcheck:
-      test: ["CMD-SHELL", "kafka-topics --bootstrap-server localhost:9092 --list"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-    restart: unless-stopped
-
-  kafka-setup:
-    image: confluentinc/cp-kafka:7.3.0
-    container_name: kafka-setup
-    depends_on:
-      kafka:
-        condition: service_healthy
-    command: >
-      bash -c "
-        echo 'Waiting for Kafka to be ready...' &&
-        cub kafka-ready -b kafka:29092 1 30 &&
-        kafka-topics --create --if-not-exists --bootstrap-server kafka:29092 --topic bitcoin-prices -
--partitions 1 --replication-factor 1
-      "
-    networks:
-      - kafka-network
-    restart: "no"
-
-  data-collector:
-    build:
-      context: ./data_collector
-      dockerfile: Dockerfile
-    container_name: data-collector
-    volumes:
-      - ./data:/app/data
-      - ./data_collector/configs:/app/configs
-      - ./data_collector/scripts:/app/scripts
-    depends_on:
-      kafka:
-        condition: service_healthy
-    environment:
-      - PYTHONUNBUFFERED=1
-    networks:
-      - kafka-network
-    restart: unless-stopped
-
-  bitcoin-forecast-app:
-    build:
-      context: ./bitcoin_forecast_app
-      dockerfile: Dockerfile
-    container_name: bitcoin-forecast-app
-    volumes:
-      - ./data:/app/data
-      - ./configs:/app/configs
-    depends_on:
-      kafka:
-        condition: service_healthy
-    environment:
-      - PYTHONUNBUFFERED=1
-    networks:
-      - kafka-network
-    restart: unless-stopped
-
-  dashboard:
-    build:
-      context: ./dashboard
-      dockerfile: Dockerfile
-    container_name: dashboard
-    volumes:
-      - ./data:/app/data
-      - ./configs:/app/configs
-    ports:
-      - "8501:8501"
-    depends_on:
-      kafka:
-        condition: service_healthy
-    environment:
-      - PYTHONUNBUFFERED=1
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8501/_stcore/health || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
     restart: unless-stopped
 
   kafka-ui:

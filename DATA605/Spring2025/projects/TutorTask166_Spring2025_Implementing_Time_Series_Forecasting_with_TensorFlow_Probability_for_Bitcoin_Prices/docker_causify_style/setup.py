@@ -15,7 +15,7 @@ setup(
         # data handling
         "pandas==2.2.1",
         "numpy==1.26.4",
-        "scikit-learn==1.4.1",
+        "scikit-learn",
         # visualization
         "matplotlib==3.8.3",
         "seaborn==0.13.2",

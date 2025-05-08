@@ -78,13 +78,13 @@ services:
 
   data-collector:
     build:
-      context: ./data_collector
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: data_collector/Dockerfile
     container_name: data-collector
     volumes:
-      - ./data:/app/data
-      - ./data_collector/configs:/app/configs
-      - ./data_collector/scripts:/app/scripts
+      - ./data:/app/data:rw
+      - ./configs:/app/configs:ro
+      - ./data_collector/scripts:/app/scripts:ro
     depends_on:
       kafka-setup:
         condition: service_completed_successfully
@@ -104,12 +104,12 @@ services:
 
   bitcoin-forecast-app:
     build:
-      context: ./bitcoin_forecast_app
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: bitcoin_forecast_app/Dockerfile
     container_name: bitcoin-forecast-app
     volumes:
-      - ./data:/app/data
-      - ./configs:/app/configs
+      - ./data:/app/data:rw
+      - ./configs:/app/configs:ro
     depends_on:
       data-collector:
         condition: service_started
@@ -129,12 +129,13 @@ services:
 
   web-backend:
     build:
-      context: ./web_app/backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: web_app/backend/Dockerfile
     ports:
       - "8000:8000"
     volumes:
-      - ./data:/app/data
+      - ./data:/app/data:rw
+      - ./configs:/app/configs:ro
     environment:
       - KAFKA_BOOTSTRAP_SERVERS=kafka:29092
     networks:
@@ -153,20 +154,20 @@ services:
   web-frontend:
     build:
       context: .
-      dockerfile: docker_causify_style/web_app/frontend/Dockerfile
+      dockerfile: web_app/frontend/Dockerfile
     container_name: web-frontend
     ports:
       - "5001:5000"
     volumes:
-      - ./data:/app/data
-      - ./web_app/frontend/configs:/app/configs
+      - ./data:/app/data:rw
+      - ./configs:/app/configs:ro
     networks:
       - kafka-network
     depends_on:
       web-backend:
         condition: service_started
     environment:
-      - FLASK_APP=app.py
+      - FLASK_APP=web_app/frontend/app.py
       - FLASK_ENV=development
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:5000/health || exit 1"]
@@ -179,11 +180,11 @@ services:
   dashboard:
     build:
       context: .
-      dockerfile: docker_causify_style/dashboard/Dockerfile
+      dockerfile: dashboard/Dockerfile
     container_name: dashboard
     volumes:
-      - ./data:/app/data
-      - ./configs:/app/configs
+      - ./data:/app/data:rw
+      - ./configs:/app/configs:ro
     ports:
       - "8501:8501"
     depends_on:
