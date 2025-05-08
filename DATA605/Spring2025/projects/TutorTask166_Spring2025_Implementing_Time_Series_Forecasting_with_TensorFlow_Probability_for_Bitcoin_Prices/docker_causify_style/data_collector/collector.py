@@ -3,8 +3,18 @@ import os
 import logging
 import json
 from datetime import datetime
-from kafka import KafkaProducer
 import time
+import yaml
+import csv
+import asyncio
+import websockets
+from utilities.price_format import normalize_price
+
+# Load config
+CONFIG_PATH = '/app/configs/config.yaml'
+with open(CONFIG_PATH, 'r') as f:
+    config = yaml.safe_load(f)
+TIMESTAMP_FORMAT = config['data_format']['timestamp']['format']
 
 # Configure logging
 logging.basicConfig(
@@ -14,132 +24,93 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-def init_kafka_producer():
-    """Initialize Kafka producer."""
-    try:
-        producer = KafkaProducer(
-            bootstrap_servers=os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'kafka:29092'),
-            value_serializer=lambda x: json.dumps(x).encode('utf-8')
-        )
-        logger.info(f"Initialized Kafka producer with bootstrap servers: {os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'kafka:29092')}")
-        return producer
-    except Exception as e:
-        logger.error(f"Failed to initialize Kafka producer: {e}")
-        raise
-
+# Robust save_data function (as before)
 def save_data(data, file_path):
-    """Save data to CSV file with proper timestamp format and column names."""
     try:
-        # Ensure data has all required columns
         required_columns = ['timestamp', 'open', 'high', 'low', 'close', 'volume']
-        
-        # If timestamp is not in ISO format, convert it
-        if 'timestamp' in data:
-            try:
-                # Try to parse the timestamp
-                ts = pd.Timestamp(data['timestamp'])
-                # Convert to ISO format
-                data['timestamp'] = ts.strftime('%Y-%m-%dT%H:%M:%S')
-            except:
-                # If parsing fails, use current time
-                data['timestamp'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
-        else:
-            data['timestamp'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
-        
-        # Ensure all required columns exist
         for col in required_columns:
             if col not in data:
-                if col == 'timestamp':
-                    continue
-                data[col] = data.get('price', 0)  # Use price for all columns if not available
-        
-        # Create DataFrame with proper column order
+                data[col] = data.get('price', 0)
+        data['timestamp'] = pd.Timestamp(data['timestamp']).strftime(TIMESTAMP_FORMAT)
         df = pd.DataFrame([data], columns=required_columns)
-        
-        # Ensure numeric columns are float64
         numeric_columns = ['open', 'high', 'low', 'close', 'volume']
         for col in numeric_columns:
             df[col] = pd.to_numeric(df[col], errors='coerce')
-        
-        # Ensure directory exists
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
-        
-        # Write to file with proper locking
         with open(file_path, 'a' if os.path.exists(file_path) else 'w') as f:
-            # Get file lock
             import fcntl
             fcntl.flock(f, fcntl.LOCK_EX)
             try:
-                # Write header if file is new
                 if f.tell() == 0:
                     df.to_csv(f, index=False)
                 else:
                     df.to_csv(f, mode='a', header=False, index=False)
             finally:
-                # Release lock
                 fcntl.flock(f, fcntl.LOCK_UN)
-        
         logger.info(f"Saved data to {file_path}")
-        return df
-        
     except Exception as e:
         logger.error(f"Error saving data: {e}")
         raise
 
-def main():
-    """Main function to collect and save Bitcoin price data."""
-    try:
-        # Initialize Kafka producer
-        producer = init_kafka_producer()
-        
-        # Get configuration
-        topic = os.getenv('KAFKA_TOPIC', 'bitcoin-prices')
-        data_file = os.path.join('/app/data', 'raw/instant_data.csv')
-        
-        logger.info(f"Starting data collection for topic: {topic}")
-        logger.info(f"Data will be saved to: {data_file}")
-        
-        while True:
-            try:
-                # Get current timestamp
-                current_time = datetime.now()
-                timestamp = current_time.strftime('%Y-%m-%dT%H:%M:%S')
-                
-                # Simulate getting Bitcoin price (replace with actual API call)
-                price = 95000.0  # Placeholder
-                
-                # Create data point
-                data = {
-                    'timestamp': timestamp,
-                    'price': price,
-                    'open': price,
-                    'high': price,
-                    'low': price,
-                    'close': price,
-                    'volume': 0.0
+# Coinbase WebSocket OHLCV collector
+data_file = os.path.join('/app/data', 'raw/instant_data.csv')
+
+async def stream_1s_ohlc():
+    uri = "wss://ws-feed.exchange.coinbase.com"
+    curr_sec = None
+    o = h = l = c = v = None
+    while True:
+        try:
+            async with websockets.connect(uri, ping_interval=20) as ws:
+                subscribe_msg = {
+                    "type": "subscribe",
+                    "channels": [{"name": "ticker", "product_ids": ["BTC-USD"]}]
                 }
-                
-                # Save to file
-                save_data(data, data_file)
-                
-                # Send to Kafka
-                producer.send(topic, value=data)
-                producer.flush()
-                
-                logger.info(f"Collected and sent data for {timestamp}")
-                
-                # Wait for next collection
-                time.sleep(1)
-                
-            except Exception as e:
-                logger.error(f"Error in main loop: {e}")
-                time.sleep(1)
-                
-    except KeyboardInterrupt:
-        logger.info("Shutting down...")
-    finally:
-        if 'producer' in locals():
-            producer.close()
+                await ws.send(json.dumps(subscribe_msg))
+                async for message in ws:
+                    msg = json.loads(message)
+                    if msg.get("type") != "ticker":
+                        continue
+                    ts = datetime.fromisoformat(msg["time"].replace("Z", "+00:00"))
+                    price = float(msg["price"])
+                    size = float(msg.get("last_size", 0.0))
+                    sec = int(ts.timestamp())
+                    if curr_sec is None:
+                        curr_sec = sec
+                        o = h = l = c = price
+                        v = size
+                    elif sec == curr_sec:
+                        h = max(h, price)
+                        l = min(l, price)
+                        c = price
+                        v += size
+                    else:
+                        # Flush the completed second to CSV
+                        row_ts = datetime.utcfromtimestamp(curr_sec).strftime(TIMESTAMP_FORMAT)
+                        bar = {
+                            'timestamp': row_ts,
+                            'open': normalize_price(o),
+                            'high': normalize_price(h),
+                            'low': normalize_price(l),
+                            'close': normalize_price(c),
+                            'volume': v
+                        }
+                        save_data(bar, data_file)
+                        logger.info(f"[System Time: {datetime.now().strftime(TIMESTAMP_FORMAT)}] Collected data for [Data Time: {row_ts}] - O={o}, H={h}, L={l}, C={c}, V={v}")
+                        # Start a new bar
+                        curr_sec = sec
+                        o = h = l = c = price
+                        v = size
+        except (websockets.ConnectionClosed, asyncio.TimeoutError) as e:
+            logger.warning(f"WebSocket disconnected: {e}. Reconnecting in 5s…")
+            await asyncio.sleep(5)
+        except Exception as e:
+            logger.error(f"Unexpected error: {e}. Restarting in 5s…")
+            await asyncio.sleep(5)
+
+def main():
+    logger.info(f"Starting real-time Coinbase OHLCV collector for BTC-USD")
+    asyncio.run(stream_1s_ohlc())
 
 if __name__ == "__main__":
     main() 

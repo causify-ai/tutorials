@@ -1,25 +1,29 @@
-FROM python:3.9-slim
+FROM python:3.10-slim
 
 WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
-    iputils-ping \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first to leverage Docker cache
-COPY requirements.txt .
+# Copy requirements and install Python packages
+COPY data_collector/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application
-COPY . .
-
 # Create necessary directories
-RUN mkdir -p /app/data/raw_data/instant_data
+RUN mkdir -p /app/data/raw /app/data/predictions /app/data/raw_data \
+    && chmod -R 777 /app/data
+
+# Copy source code
+COPY data_collector/collector.py .
+COPY data_collector/scripts/ ./scripts/
+COPY configs/ ./configs/
+COPY utilities/ ./utilities/
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app
 
-# Run the data collector
-CMD ["python", "/app/scripts/get_coingetcko_instant_bitcoin.py"] 
+# Run the collector
+CMD ["python", "collector.py"] 
