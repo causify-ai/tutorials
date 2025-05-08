@@ -1,0 +1,12 @@
+anthropic
+pyspark
+dash
+prophet
+slack-sdk
+imbalanced-learn
+pandas
+numpy
+scikit-learn
+plotly
+requests
+tqdm
