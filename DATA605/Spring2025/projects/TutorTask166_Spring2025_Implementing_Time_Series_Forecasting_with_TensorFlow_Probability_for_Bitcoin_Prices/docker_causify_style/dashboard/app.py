@@ -34,79 +34,10 @@ logger = logging.getLogger(__name__)
 def load_data():
     """Load the latest data with caching."""
     try:
-        # Load price data
-        if not os.path.exists(PRICE_FILE):
-            st.warning("Price data file not found")
-            return None, None
-            
-        # Read price data with proper column names and types
-        price_df = pd.read_csv(
-            PRICE_FILE,
-            names=config['data_format']['columns']['raw_data']['names'],
-            skiprows=1,  # Skip header row
-            parse_dates=['timestamp'],
-            date_format=config['data_format']['timestamp']['format']
-        )
-        
-        if price_df.empty:
-            st.warning("No price data available")
-            return None, None
-            
-        # Ensure proper data types
-        for col, dtype in config['data_format']['columns']['raw_data']['dtypes'].items():
-            if col in price_df.columns:
-                if dtype == 'datetime64[ns]':
-                    price_df[col] = pd.to_datetime(price_df[col], format=config['data_format']['timestamp']['format'])
-                else:
-                    price_df[col] = pd.to_numeric(price_df[col], errors='coerce')
-        
-        # Sort by timestamp
-        price_df = price_df.sort_values('timestamp')
-        
-        # Filter to last hour
-        one_hour_ago = datetime.now() - timedelta(hours=1)
-        price_df = price_df[price_df['timestamp'] >= one_hour_ago]
-        
-        # Load predictions if available
-        pred_df = None
-        if os.path.exists(PREDICTIONS_FILE):
-            try:
-                # First check if file is corrupted
-                with open(PREDICTIONS_FILE, 'r') as f:
-                    first_line = f.readline().strip()
-                    if not first_line or 'import' in first_line or 'from' in first_line:
-                        st.warning("Predictions file appears to be corrupted")
-                        return price_df, None
-                
-                # Read predictions with proper column names and types
-                pred_df = pd.read_csv(
-                    PREDICTIONS_FILE,
-                    names=config['data_format']['columns']['predictions']['names'],
-                    skiprows=1,  # Skip header row
-                    parse_dates=['timestamp'],
-                    date_format=config['data_format']['timestamp']['format']
-                )
-                
-                if not pred_df.empty:
-                    # Ensure proper data types
-                    for col, dtype in config['data_format']['columns']['predictions']['dtypes'].items():
-                        if col in pred_df.columns:
-                            if dtype == 'datetime64[ns]':
-                                pred_df[col] = pd.to_datetime(pred_df[col], format=config['data_format']['timestamp']['format'])
-                            else:
-                                pred_df[col] = pd.to_numeric(pred_df[col], errors='coerce')
-                    
-                    # Sort by timestamp
-                    pred_df = pred_df.sort_values('timestamp')
-                    
-                    # Filter predictions to last hour
-                    pred_df = pred_df[pred_df['timestamp'] >= one_hour_ago]
-                
-            except Exception as e:
-                st.warning(f"Error loading predictions: {str(e)}")
-                pred_df = None
-        
-        return price_df, pred_df
+        predictions_file = config['data']['predictions']['instant_data']['predictions_file']
+        metrics_file = config['data']['predictions']['instant_data']['metrics_file']
+        raw_data_file = config['data']['raw_data']['instant_data']['file']
+        return load_and_filter_data(config, predictions_file, metrics_file, raw_data_file)
     except Exception as e:
         st.error(f"Error loading data: {str(e)}")
         logger.error(f"Error loading data: {str(e)}")

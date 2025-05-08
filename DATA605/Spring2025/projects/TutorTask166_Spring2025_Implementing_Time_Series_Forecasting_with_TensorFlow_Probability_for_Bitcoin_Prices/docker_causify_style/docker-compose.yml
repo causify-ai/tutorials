@@ -152,8 +152,8 @@ services:
 
   web-frontend:
     build:
-      context: ./web_app/frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: docker_causify_style/web_app/frontend/Dockerfile
     container_name: web-frontend
     ports:
       - "5001:5000"
@@ -178,8 +178,8 @@ services:
 
   dashboard:
     build:
-      context: ./dashboard
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: docker_causify_style/dashboard/Dockerfile
     container_name: dashboard
     volumes:
       - ./data:/app/data
