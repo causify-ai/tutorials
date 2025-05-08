@@ -49,17 +49,16 @@
 import io
 import logging
 import re
-from typing import Optional
-
-import matplotlib.pyplot as plt
-import pandas as pd
-import seaborn as sns
+from typing import Dict, Optional
 
 import helpers.hdbg as hdbg
 import helpers.henv as henv
 import helpers.hpandas as hpandas
 import helpers.hprint as hprint
 import helpers.hs3 as hs3
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
 
 # %%
 # Configure logger.
@@ -195,7 +194,7 @@ def _load_data(file_path: str) -> pd.DataFrame:
     return df
 
 
-file_path = "s3://causify-data-collaborators/causal_automl/metadata/gridstatus_metadata_v1.0.csv"
+file_path = "s3://causify-data-collaborators/causal_automl/metadata/gridstatus_metadata_original_v1.0.csv"
 gs_meta = _load_data(file_path)
 
 

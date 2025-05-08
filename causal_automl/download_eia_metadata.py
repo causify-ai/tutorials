@@ -5,7 +5,7 @@ Download metadata from the EIA v2 API and upload it to S3.
 Usage:
 > python download_eia_metadata.py --category <CATEGORY> --api_key <API_KEY> --version_num <VERSION_NUM>
 
-This script traverses the EIA v2 API under a specified category, collects all time series 
+This script traverses the EIA v2 API under a specified category, collects all time series
 metadata, and writes the metadata and associated parameter values to an S3 bucket in versioned
 CSV files.
 
@@ -20,10 +20,8 @@ Arguments:
 """
 
 import argparse
-import csv
-import io
-import os
 import logging
+import os
 from typing import Any, Dict, List
 
 import helpers.hdbg as hdbg
@@ -52,7 +50,7 @@ def _get_api_request(route: str, api_key: str) -> Dict[str, Any]:
     {
         "id": "retail-sales",
         "name": "Electricity Sales to Ultimate Customers",
-        "description": "Electricity sales to ultimate customer by state and sector. 
+        "description": "Electricity sales to ultimate customer by state and sector.
             Sources: Forms EIA-826, EIA-861, EIA-861M",
         "frequency": [
             {"id": "monthly", "format": "YYYY-MM"},
@@ -234,14 +232,13 @@ def _get_facet_values(
 ) -> pd.DataFrame:
     """
     Retrieve all facet values for a given dataset route.
-    
+
     :param metadata: metadata for the dataset
     :param route: dataset route under the EIA v2 API
     :param api_key: EIA API key
     :return: data containing all facet values
     """
     facets = metadata["facets"]
-    facet_values = {}
     rows = []
     for facet in facets:
         # Extract the actual facet ID.
@@ -302,7 +299,7 @@ def run_metadata_extraction(
         # Write metadata to S3 bucket.
         df_metadata = pd.DataFrame(metadata_entries)
         metadata_file_path = (
-            f"eia_{category}_metadata_index_v{version_num}.csv"
+            f"eia_{category}_metadata_original_v{version_num}.csv"
         )
         _write_df_to_s3(df_metadata, metadata_file_path, bucket_path, aws_profile)
     else:
@@ -335,7 +332,7 @@ def _write_df_to_s3(
     bucket_file_path = bucket_path + file_name
     hs3.copy_file_to_s3(file_name, bucket_file_path, aws_profile)
     _LOG.debug("Uploaded to S3: %s", bucket_file_path)
-    
+
 
 # #############################################################################
 # CLI entry point
