@@ -240,7 +240,6 @@ class _EiaMetadataFetcher:
         :return: data containing all facet values
         """
         facets = metadata["facets"]
-        facet_values = {}
         rows = []
         for facet in facets:
             # Extract the actual facet ID.
