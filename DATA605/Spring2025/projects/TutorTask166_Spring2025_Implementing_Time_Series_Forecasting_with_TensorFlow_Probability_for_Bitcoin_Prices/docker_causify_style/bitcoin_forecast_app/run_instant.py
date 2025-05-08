@@ -24,8 +24,29 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Load configuration
-with open('/app/configs/config.yaml', 'r') as f:
-    config = yaml.safe_load(f)
+config_path = os.getenv('CONFIG_PATH', '/app/configs/config.yaml')
+try:
+    with open(config_path, 'r') as f:
+        config = yaml.safe_load(f)
+    logger.info(f"Successfully loaded configuration from {config_path}")
+except Exception as e:
+    logger.error(f"Failed to load configuration from {config_path}: {str(e)}")
+    config = {
+        'kafka': {
+            'bootstrap_servers': os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'kafka:29092'),
+            'topic': os.getenv('KAFKA_TOPIC', 'bitcoin-prices'),
+            'group_id': 'bitcoin-forecast'
+        },
+        'data': {
+            'predictions': {
+                'instant_data': {
+                    'predictions_file': 'data/predictions/instant_predictions.csv',
+                    'metrics_file': 'data/predictions/instant_metrics.csv'
+                }
+            }
+        }
+    }
+    logger.warning("Using default configuration")
 
 # Initialize Kafka consumer
 def init_kafka_consumer():
@@ -48,21 +69,16 @@ def init_kafka_consumer():
 # Initialize model
 def init_model():
     try:
-        # Load historical data
-        historical_data = pd.read_csv(config['data']['raw_data']['historical_data']['file'])
-        logger.info(f"Initialized model with {len(historical_data)} historical records")
-        
-        # Initialize and train model (simplified for example)
+        # Create a simple model that doesn't require historical data
         model = tf.keras.Sequential([
-            tf.keras.layers.LSTM(50, return_sequences=True, input_shape=(60, 1)),
-            tf.keras.layers.LSTM(50),
+            tf.keras.layers.Dense(32, activation='relu', input_shape=(1,)),
+            tf.keras.layers.Dense(16, activation='relu'),
             tf.keras.layers.Dense(1)
         ])
         
-        # Compile and train model (simplified)
+        # Compile model
         model.compile(optimizer='adam', loss='mse')
-        # Add actual training code here
-        
+        logger.info("Initialized simple forecasting model")
         return model
     except Exception as e:
         logger.error(f"Failed to initialize model: {e}")
@@ -71,10 +87,13 @@ def init_model():
 # Make prediction
 def make_prediction(model, data):
     try:
-        # Prepare data for prediction
-        # Add actual prediction logic here
-        predicted_price = 95000.0  # Placeholder
-        confidence_interval = (predicted_price - 100, predicted_price + 100)  # Placeholder
+        # Get the current price
+        current_price = float(data['price'])
+        
+        # Make a simple prediction (placeholder)
+        # In a real implementation, this would use the model to make predictions
+        predicted_price = current_price * 1.001  # Simple 0.1% increase
+        confidence_interval = (predicted_price * 0.99, predicted_price * 1.01)  # ±1% confidence interval
         
         return predicted_price, confidence_interval
     except Exception as e:
@@ -84,6 +103,12 @@ def make_prediction(model, data):
 # Save prediction
 def save_prediction(timestamp, actual_price, predicted_price, confidence_interval):
     try:
+        # Ensure directory exists
+        predictions_dir = os.path.dirname(config['data']['predictions']['instant_data']['predictions_file'])
+        metrics_dir = os.path.dirname(config['data']['predictions']['instant_data']['metrics_file'])
+        os.makedirs(predictions_dir, exist_ok=True)
+        os.makedirs(metrics_dir, exist_ok=True)
+        
         # Save prediction
         prediction = {
             'timestamp': timestamp,
@@ -94,8 +119,6 @@ def save_prediction(timestamp, actual_price, predicted_price, confidence_interva
         }
         
         predictions_file = config['data']['predictions']['instant_data']['predictions_file']
-        os.makedirs(os.path.dirname(predictions_file), exist_ok=True)
-        
         df = pd.DataFrame([prediction])
         if os.path.exists(predictions_file):
             df.to_csv(predictions_file, mode='a', header=False, index=False)
@@ -104,18 +127,18 @@ def save_prediction(timestamp, actual_price, predicted_price, confidence_interva
             
         logger.info(f"Saved prediction for {timestamp}")
         
-        # Save metrics
+        # Calculate and save metrics
+        error = abs(actual_price - predicted_price)
+        error_percentage = (error / actual_price) * 100
+        
         metrics = {
             'timestamp': timestamp,
-            'actual_price': actual_price,
-            'predicted_price': predicted_price,
-            'error': abs(actual_price - predicted_price),
-            'error_percentage': abs(actual_price - predicted_price) / actual_price * 100
+            'mae': error,
+            'rmse': error,  # Simplified for now
+            'mape': error_percentage
         }
         
         metrics_file = config['data']['predictions']['instant_data']['metrics_file']
-        os.makedirs(os.path.dirname(metrics_file), exist_ok=True)
-        
         df_metrics = pd.DataFrame([metrics])
         if os.path.exists(metrics_file):
             df_metrics.to_csv(metrics_file, mode='a', header=False, index=False)
@@ -139,20 +162,20 @@ def main():
     try:
         while True:
             try:
-                # Get current timestamp
-                current_time = datetime.now()
-                
                 # Consume message from Kafka
                 message = next(consumer)
                 data = message.value
                 
+                # Get timestamp from data or use current time
+                timestamp = data.get('timestamp', datetime.now().strftime('%Y-%m-%dT%H:%M:%S'))
+                
                 # Make prediction
                 predicted_price, confidence_interval = make_prediction(model, data)
                 
-                # Save prediction with current timestamp
+                # Save prediction with original timestamp
                 save_prediction(
-                    current_time,
-                    data['price'],
+                    timestamp,
+                    float(data['price']),
                     predicted_price,
                     confidence_interval
                 )

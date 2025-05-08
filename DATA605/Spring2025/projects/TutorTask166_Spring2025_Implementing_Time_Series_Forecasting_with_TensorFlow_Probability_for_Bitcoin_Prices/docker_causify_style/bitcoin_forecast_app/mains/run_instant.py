@@ -13,19 +13,11 @@ from datetime import datetime, timedelta
 from kafka import KafkaConsumer
 import sys
 import time
-import concurrent.futures
+import gc
 
 # Add the models directory to the Python path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from models.tfp_model import BitcoinForecastModel
-
-# Set up logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s | %(levelname)s | %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
-)
-logger = logging.getLogger(__name__)
 
 class BitcoinForecastApp:
     def __init__(self):
@@ -33,6 +25,15 @@ class BitcoinForecastApp:
         with open('/app/configs/config.yaml', 'r') as f:
             self.config = yaml.safe_load(f)
         
+        # Set up logging
+        logging.basicConfig(
+            level=getattr(logging, self.config['app']['log_level']),
+            format=self.config['app']['log_format'],
+            datefmt=self.config['app']['log_date_format']
+        )
+        self.logger = logging.getLogger(__name__)
+        
+        # Load data paths
         self.data_file = self.config['data']['raw_data']['instant_data']['file']
         self.predictions_file = self.config['data']['predictions']['instant_data']['predictions_file']
         self.metrics_file = self.config['data']['predictions']['instant_data']['metrics_file']
@@ -46,24 +47,12 @@ class BitcoinForecastApp:
         # Ensure predictions directory exists
         os.makedirs(os.path.dirname(self.predictions_file), exist_ok=True)
         
-        # Initialize Kafka consumer
+        # Initialize Kafka consumer with config settings
         self.consumer = KafkaConsumer(
             self.kafka_topic,
             bootstrap_servers=self.kafka_bootstrap_servers,
             value_deserializer=lambda x: json.loads(x.decode('utf-8')),
-            auto_offset_reset='latest',
-            enable_auto_commit=True,
-            group_id='bitcoin-forecast-group',
-            session_timeout_ms=60000,
-            heartbeat_interval_ms=20000,
-            max_poll_interval_ms=600000,
-            retry_backoff_ms=1000,
-            reconnect_backoff_ms=1000,
-            reconnect_backoff_max_ms=5000,
-            max_poll_records=100,
-            fetch_max_wait_ms=500,
-            fetch_min_bytes=1,
-            fetch_max_bytes=52428800
+            **self.config['kafka']['consumer']
         )
         
         # Initialize the TensorFlow Probability model
@@ -72,28 +61,52 @@ class BitcoinForecastApp:
         # Initialize last prediction time
         self.last_prediction_time = None
         
-        logger.info(f"Initialized BitcoinForecastApp")
-        logger.info(f"Data file: {self.data_file}")
-        logger.info(f"Predictions file: {self.predictions_file}")
-        logger.info(f"Metrics file: {self.metrics_file}")
-        logger.info(f"Kafka bootstrap servers: {self.kafka_bootstrap_servers}")
-        logger.info(f"Kafka topic: {self.kafka_topic}")
+        # Set window size for historical data from config
+        self.window_size = timedelta(seconds=self.config['model']['instant']['window_size'])
+        
+        self.logger.info(f"Initialized {self.config['app']['name']} v{self.config['app']['version']}")
+        self.logger.info(f"Data file: {self.data_file}")
+        self.logger.info(f"Predictions file: {self.predictions_file}")
+        self.logger.info(f"Metrics file: {self.metrics_file}")
+        self.logger.info(f"Kafka bootstrap servers: {self.kafka_bootstrap_servers}")
+        self.logger.info(f"Kafka topic: {self.kafka_topic}")
+
+    def format_timestamp(self, dt):
+        """
+        Unified function to format timestamps to seconds precision.
+        Args:
+            dt: datetime object or timestamp string
+        Returns:
+            str: Formatted timestamp string in ISO8601 format with seconds precision
+        """
+        if isinstance(dt, str):
+            dt = pd.to_datetime(dt)
+        elif isinstance(dt, (int, float)):
+            dt = datetime.fromtimestamp(dt)
+        
+        # Round to seconds by truncating microseconds
+        dt = dt.replace(microsecond=0)
+        return dt.strftime(self.config['data_format']['timestamp']['format'])
 
     def load_historical_data(self):
-        """Load historical data from CSV file."""
+        """Load historical data from CSV file with windowing."""
         try:
-            # Read CSV with proper column names
+            # Read only the last window_size of data
             df = pd.read_csv(
                 self.data_file,
-                names=['timestamp', 'open', 'high', 'low', 'close', 'volume'],
+                names=self.config['data_format']['columns']['raw_data']['names'],
                 skiprows=1  # Skip header row
             )
             
-            # Convert timestamp to datetime
-            df['timestamp'] = pd.to_datetime(df['timestamp'], format='%Y-%m-%dT%H:%M:%S')
+            # Convert timestamp to datetime and round to seconds
+            df['timestamp'] = pd.to_datetime(df['timestamp']).dt.floor('S')
+            
+            # Filter to last window_size
+            cutoff_time = datetime.now().replace(microsecond=0) - self.window_size
+            df = df[df['timestamp'] >= cutoff_time]
             
             # Ensure numeric columns are float64
-            numeric_columns = ['open', 'high', 'low', 'close', 'volume']
+            numeric_columns = self.config['data_format']['columns']['raw_data']['names'][1:]  # Skip timestamp
             for col in numeric_columns:
                 df[col] = pd.to_numeric(df[col], errors='coerce')
             
@@ -102,14 +115,14 @@ class BitcoinForecastApp:
             
             return df
         except Exception as e:
-            logger.error(f"Error loading historical data: {e}")
+            self.logger.error(f"Error loading historical data: {e}")
             return pd.DataFrame()
 
-    def save_prediction(self, timestamp, actual_price, predicted_price, confidence_interval):
-        """Save prediction to CSV file."""
+    def save_prediction(self, prediction_time, actual_price, predicted_price, confidence_interval):
+        """Save prediction to CSV file with actual prediction timestamp."""
         try:
-            # Format timestamp in ISO8601 format
-            formatted_timestamp = pd.Timestamp(timestamp).strftime('%Y-%m-%dT%H:%M:%S')
+            # Format timestamp using unified function
+            formatted_timestamp = self.format_timestamp(prediction_time)
             
             # Create prediction data
             prediction_data = {
@@ -124,16 +137,19 @@ class BitcoinForecastApp:
             df = pd.DataFrame([prediction_data])
             df.to_csv(self.predictions_file, mode='a', header=not os.path.exists(self.predictions_file), index=False)
             
-            logger.info(f"Saved prediction for {formatted_timestamp}")
+            self.logger.info(f"Saved prediction for {formatted_timestamp}")
         except Exception as e:
-            logger.error(f"Error saving prediction: {str(e)}")
+            self.logger.error(f"Error saving prediction: {str(e)}")
             raise
 
-    def save_metrics(self, timestamp, mae, rmse, mape):
-        """Save prediction metrics to CSV file."""
+    def save_metrics(self, prediction_time, mae, rmse, mape):
+        """Save prediction metrics to CSV file with actual prediction timestamp."""
         try:
+            # Format timestamp using unified function
+            formatted_timestamp = self.format_timestamp(prediction_time)
+            
             metrics_data = {
-                'timestamp': timestamp,
+                'timestamp': formatted_timestamp,
                 'mae': float(mae),
                 'rmse': float(rmse),
                 'mape': float(mape)
@@ -148,12 +164,12 @@ class BitcoinForecastApp:
             else:
                 df.to_csv(self.metrics_file, index=False)
             
-            logger.info(f"Saved metrics for {timestamp}")
+            self.logger.info(f"Saved metrics for {formatted_timestamp}")
             
         except Exception as e:
-            logger.error(f"Error saving metrics: {e}")
+            self.logger.error(f"Error saving metrics: {e}")
 
-    def make_prediction(self, timestamp, actual_price):
+    def make_prediction(self, message_time, actual_price):
         """Make a prediction for the current timestamp."""
         try:
             # Get historical data for model input
@@ -164,9 +180,9 @@ class BitcoinForecastApp:
                 
                 # Only update model if we have new data
                 if self.last_prediction_time is None or \
-                   (timestamp - self.last_prediction_time).total_seconds() >= 60:  # Update every minute
+                   (message_time - self.last_prediction_time).total_seconds() >= self.config['model']['instant']['update_interval']:
                     self.model.update(price_series)
-                    self.last_prediction_time = timestamp
+                    self.last_prediction_time = message_time
                 
                 # Generate forecast
                 predicted_price, lower_bound, upper_bound = self.model.forecast()
@@ -177,112 +193,72 @@ class BitcoinForecastApp:
                 rmse = np.sqrt(mae ** 2)
                 mape = abs((predicted_price - actual_price) / actual_price) * 100
                 
-                # Log the prediction with the timestamp
-                logger.info(f"Made prediction for {timestamp}: Actual={actual_price:.2f}, Predicted={predicted_price:.2f}")
+                # Get the actual prediction time and round to seconds
+                prediction_time = datetime.now().replace(microsecond=0)
                 
-                # Save prediction and metrics in a single operation
-                self.save_prediction_and_metrics(
-                    timestamp,  # Use the same timestamp for saving
-                    actual_price,
-                    predicted_price,
-                    confidence_interval,
-                    mae,
-                    rmse,
-                    mape
-                )
+                # Log the prediction with the actual prediction timestamp
+                self.logger.info(f"Made prediction at {self.format_timestamp(prediction_time)}: Actual={actual_price:.2f}, Predicted={predicted_price:.2f}")
+                
+                # Save prediction and metrics with actual prediction timestamp
+                self.save_prediction(prediction_time, actual_price, predicted_price, confidence_interval)
+                self.save_metrics(prediction_time, mae, rmse, mape)
+                
+                # Clean up memory
+                del historical_data
+                gc.collect()
                 
                 return True
             else:
-                logger.warning("No historical data available for prediction")
+                self.logger.warning("No historical data available for prediction")
                 return False
             
         except Exception as e:
-            logger.error(f"Error making prediction: {e}")
+            self.logger.error(f"Error making prediction: {e}")
             return False
 
-    def save_prediction_and_metrics(self, ts_make_prediction, actual_price, predicted_price, confidence_interval, mae, rmse, mape):
-        """Save prediction and metrics in a single operation."""
-        try:
-            # Format the timestamp to match the data format
-            formatted_ts = ts_make_prediction.strftime('%Y-%m-%dT%H:%M:%S')
-            
-            # Prepare data with formatted timestamp
-            prediction_data = {
-                'timestamp': formatted_ts,  # Use formatted timestamp
-                'actual_price': float(actual_price),
-                'predicted_price': float(predicted_price),
-                'lower_bound': float(confidence_interval[0]),
-                'upper_bound': float(confidence_interval[1])
-            }
-            
-            metrics_data = {
-                'timestamp': formatted_ts,  # Use formatted timestamp
-                'mae': float(mae),
-                'rmse': float(rmse),
-                'mape': float(mape)
-            }
-            
-            # Create DataFrames
-            pred_df = pd.DataFrame([prediction_data])
-            metrics_df = pd.DataFrame([metrics_data])
-            
-            # Save both files in parallel
-            with concurrent.futures.ThreadPoolExecutor() as executor:
-                futures = [
-                    executor.submit(
-                        lambda df, file: df.to_csv(file, mode='a', header=not os.path.exists(file), index=False),
-                        pred_df, self.predictions_file
-                    ),
-                    executor.submit(
-                        lambda df, file: df.to_csv(file, mode='a', header=not os.path.exists(file), index=False),
-                        metrics_df, self.metrics_file
-                    )
-                ]
-                concurrent.futures.wait(futures)
-            
-            logger.info(f"Saved prediction and metrics for {formatted_ts}")
-            
-        except Exception as e:
-            logger.error(f"Error saving prediction and metrics: {e}")
-
     def process_new_data(self, message):
-        """Process new data from Kafka message."""
+        """Process new data from Kafka."""
         try:
             data = message.value
-            # Capture the timestamp when we receive the message
-            ts_make_prediction = datetime.now()
-            actual_price = np.float64(data['close'])  # Ensure float64
+            # Round message timestamp to seconds
+            message_time = pd.to_datetime(data['timestamp']).floor('S')
+            actual_price = float(data['close'])
             
-            # Make prediction with the captured timestamp
-            self.make_prediction(ts_make_prediction, actual_price)
+            # Make prediction using message time for model update but actual time for prediction
+            self.make_prediction(message_time, actual_price)
             
         except Exception as e:
-            logger.error(f"Error processing message: {e}")
+            self.logger.error(f"Error processing new data: {e}")
 
     def run(self):
-        """Main loop to process incoming data."""
-        logger.info("Starting Bitcoin price forecasting...")
+        """Run the Bitcoin price forecasting application."""
+        self.logger.info("Starting Bitcoin price forecasting...")
         
         try:
-            # Load initial historical data
-            historical_data = self.load_historical_data()
-            if not historical_data.empty:
-                # Initialize model with historical data
-                price_series = historical_data['close'].values
-                self.model.fit(price_series)
-                logger.info(f"Initialized model with {len(historical_data)} historical records")
-            else:
-                logger.warning("No historical data available for model initialization")
-            
-            # Process incoming messages
-            for message in self.consumer:
-                self.process_new_data(message)
+            while True:
+                # Poll for new messages
+                messages = self.consumer.poll(
+                    timeout_ms=int(self.config['memory']['cleanup_interval'] * 1000),
+                    max_records=self.config['kafka']['consumer']['max_poll_records']
+                )
                 
+                for tp, msgs in messages.items():
+                    for message in msgs:
+                        self.process_new_data(message)
+                
+                # Clean up memory periodically
+                gc.collect()
+                
+                # Small sleep to prevent CPU overuse
+                time.sleep(self.config['memory']['sleep_interval'])
+                
+        except KeyboardInterrupt:
+            self.logger.info("Shutting down...")
         except Exception as e:
-            logger.error(f"Error in main loop: {e}")
-            raise
+            self.logger.error(f"Error in main loop: {e}")
+        finally:
+            self.consumer.close()
 
 if __name__ == "__main__":
-    logger.info("Starting Bitcoin Forecast App...")
     app = BitcoinForecastApp()
     app.run() 

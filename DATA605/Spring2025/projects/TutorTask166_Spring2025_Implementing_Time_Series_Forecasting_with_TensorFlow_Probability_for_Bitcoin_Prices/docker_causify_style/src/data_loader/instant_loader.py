@@ -74,7 +74,7 @@ class InstantCSVLoader:
                 return pd.DataFrame()
                 
             df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s')
-            return df
+        return df
             
         except Exception as e:
             print(f"Error loading historical data: {str(e)}")
