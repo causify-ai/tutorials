@@ -126,6 +126,8 @@ databricks runs get          --run-id <run_id>
 ![Databricks UI: new cluster RUNNING](images/api_job_running.png)
 
 **Test Notebook run**
+`API Test (./notebooks/api_test_job_notebook.ipynb)` notebook in databricks run compilation
+   
 ![Databricks UI: new cluster RUNNING](images/api_test_notebook_job_run.png)
 
 **Test cluster termination**

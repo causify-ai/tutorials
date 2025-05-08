@@ -84,6 +84,8 @@ All heavy lifting is done by the Python wrappers in `databricks_cli_utils.py`, c
    - Poll via `get_job_run_status_cli()` until success  
    ![Databricks UI: new cluster RUNNING](images/example_job_success.png)
 
+   - `bitcoin analysis (./notebooks/bitcoin_analysis.ipynb)` notebook in databricks run compilation
+   ![Databricks UI: new cluster RUNNING](images/example_databricks_notebook_run.png)
 
 6. **Result Retrieval**  
    - `download_from_dbfs_cli("dbfs:/bitcoin/forecast_output.csv", "data/forecast_output.csv")`
