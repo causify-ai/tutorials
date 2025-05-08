@@ -370,7 +370,7 @@ def _main(parser: argparse.ArgumentParser) -> None:
     writer = _EiaMetadataWriter(args.bucket_path, args.aws_profile)
     for df_facet, facet_file_path in param_entries:
         writer._write_df_to_s3(df_facet, facet_file_path)
-    metadata_file_path = f"eia_{args.category}_metadata_index_v{args.version_num}.csv"
+    metadata_file_path = f"eia_{args.category}_metadata_original_v{args.version_num}.csv"
     writer._write_df_to_s3(df_metadata, metadata_file_path)
 
 
