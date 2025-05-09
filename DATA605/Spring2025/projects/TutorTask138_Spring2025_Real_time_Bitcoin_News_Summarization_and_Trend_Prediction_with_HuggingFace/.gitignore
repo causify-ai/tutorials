@@ -1,3 +1,5 @@
 .env
-.env
 .Trash-*
+__pycache__/
+.ipynb_checkpoints/
+
