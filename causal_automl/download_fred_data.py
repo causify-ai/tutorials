@@ -63,7 +63,7 @@ class FredDataDownloader:
         :param frequency: series data frequency; valid frequencies are:
                         - 'q' (quarter)
                         - 'sa' (semi-annual)
-                        - 'a' (annual).
+                        - 'a' (annual)
         :return: relevant FRED series data
         """
         # Validate frequency before any API call.
