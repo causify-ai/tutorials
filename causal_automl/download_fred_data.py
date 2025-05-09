@@ -17,7 +17,7 @@ _LOG = logging.getLogger(__name__)
 
 class FredDataDownloader:
     """
-    Load historical data from FRED.
+    Download historical data from FRED.
     """
 
     def __init__(self, api_key: Optional[str] = None) -> None:
@@ -44,7 +44,7 @@ class FredDataDownloader:
         frequency: Optional[str] = None,
     ) -> pd.DataFrame:
         """
-        Download historical data.
+        Download historical series data.
 
         When no start and end timestamps are passed, the entire time series is downloaded.
         Valid frequencies are: 'q' (quarter), 'sa' (semi-annual), 'a' (annual).
@@ -60,7 +60,7 @@ class FredDataDownloader:
         :param id_: FRED series identifier (e.g., 'GDP')
         :param start_timestamp: first observation date
         :param end_timestamp: last observation date
-        :param frequency: data frequency (e.g., 'q', 'sa', 'a')
+        :param frequency: series data frequency (e.g., 'q', 'sa', 'a')
         :return: relevant FRED series data
         """
         # Set args.
