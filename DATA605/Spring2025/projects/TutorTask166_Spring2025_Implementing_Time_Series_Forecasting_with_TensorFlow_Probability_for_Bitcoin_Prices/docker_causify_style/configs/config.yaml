@@ -38,20 +38,19 @@ data_format:
         close: 'float64'
         volume: 'float64'
     predictions:
-      names: ['timestamp', 'actual_price', 'predicted_price', 'lower_bound', 'upper_bound']
+      names: ['timestamp', 'pred_price', 'pred_lower', 'pred_upper']
       dtypes:
         timestamp: 'datetime64[ns]'
-        actual_price: 'float64'
-        predicted_price: 'float64'
-        lower_bound: 'float64'
-        upper_bound: 'float64'
+        pred_price: 'float64'
+        pred_lower: 'float64'
+        pred_upper: 'float64'
     metrics:
-      names: ['timestamp', 'mae', 'rmse', 'mape']
+      names: ['timestamp', 'std', 'mae', 'rmse']
       dtypes:
         timestamp: 'datetime64[ns]'
+        std: 'float64'
         mae: 'float64'
         rmse: 'float64'
-        mape: 'float64'
 
 # Kafka configuration
 kafka:
@@ -109,6 +108,7 @@ dashboard:
   data_aggregation: "1S"   # 1-second intervals for real-time data
   plot_settings:
     time_window: 300      # seconds to show in the plot (5 minutes)
+    time_window_minutes: 30  # minutes to show in all plots (NEW, for 30min window)
     update_interval: 1     # seconds between plot updates
     max_points: 300        # maximum number of points to show (1 point per second for 5 minutes)
     resample_freq: "1S"    # resample frequency for data aggregation

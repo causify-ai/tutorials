@@ -10,6 +10,7 @@ import os
 import time
 from kafka import KafkaProducer
 import json
+from utilities.timestamp_format import to_iso8601
 
 class InstantTrainer:
     def __init__(
@@ -71,49 +72,56 @@ class InstantTrainer:
             'r2': r2_score(actual_values, predicted_mean)
         }
 
-    def save_metrics(self, metrics: Dict[str, float]):
-        """Save evaluation metrics to CSV file."""
-        df = pd.DataFrame([metrics])
-        df['timestamp'] = pd.Timestamp.now()
-        df.to_csv(self.metrics_file, mode='a', header=not pd.io.common.file_exists(self.metrics_file), index=False)
-
-    def save_prediction(self, timestamp, actual_price, predicted_price, confidence_interval):
-        """Save prediction to CSV file."""
+    def save_metrics(self, timestamp, std, mae, rmse):
+        """Save metrics to CSV file using config-driven columns."""
         try:
-            # Create a DataFrame with the prediction data
-            prediction_data = {
-                'timestamp': pd.Timestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S'),  # Remove microseconds
-                'actual_price': float(actual_price),
-                'predicted_price': float(predicted_price),
-                'lower_bound': float(confidence_interval[0]),
-                'upper_bound': float(confidence_interval[1])
+            metrics_cols = self.config['data_format']['columns']['metrics']['names']
+            metrics_row = {
+                'timestamp': to_iso8601(timestamp),
+                'std': float(std),
+                'mae': float(mae),
+                'rmse': float(rmse)
             }
-            
-            # Create DataFrame with proper column order
-            df = pd.DataFrame([prediction_data], columns=[
-                'timestamp', 'actual_price', 'predicted_price', 'lower_bound', 'upper_bound'
-            ])
-            
-            # Ensure directory exists
-            os.makedirs(os.path.dirname(self.predictions_file), exist_ok=True)
-            
-            # Write to file with proper locking
-            with open(self.predictions_file, 'a' if os.path.exists(self.predictions_file) else 'w') as f:
-                # Get file lock
+            df = pd.DataFrame([metrics_row], columns=metrics_cols)
+            os.makedirs(os.path.dirname(self.metrics_file), exist_ok=True)
+            with open(self.metrics_file, 'a' if os.path.exists(self.metrics_file) else 'w') as f:
                 import fcntl
                 fcntl.flock(f, fcntl.LOCK_EX)
                 try:
-                    # Write header if file is new
                     if f.tell() == 0:
                         df.to_csv(f, index=False)
                     else:
                         df.to_csv(f, mode='a', header=False, index=False)
                 finally:
-                    # Release lock
                     fcntl.flock(f, fcntl.LOCK_UN)
-            
+            self.logger.info(f"Saved metrics for {timestamp}")
+        except Exception as e:
+            self.logger.error(f"Error saving metrics: {e}")
+            raise
+
+    def save_prediction(self, timestamp, actual_price, predicted_price, confidence_interval):
+        """Save prediction to CSV file using config-driven columns."""
+        try:
+            pred_cols = self.config['data_format']['columns']['predictions']['names']
+            pred_row = {
+                'timestamp': to_iso8601(timestamp),
+                'pred_price': float(predicted_price),
+                'pred_lower': float(confidence_interval[0]),
+                'pred_upper': float(confidence_interval[1])
+            }
+            df = pd.DataFrame([pred_row], columns=pred_cols)
+            os.makedirs(os.path.dirname(self.predictions_file), exist_ok=True)
+            with open(self.predictions_file, 'a' if os.path.exists(self.predictions_file) else 'w') as f:
+                import fcntl
+                fcntl.flock(f, fcntl.LOCK_EX)
+                try:
+                    if f.tell() == 0:
+                        df.to_csv(f, index=False)
+                    else:
+                        df.to_csv(f, mode='a', header=False, index=False)
+                finally:
+                    fcntl.flock(f, fcntl.LOCK_UN)
             self.logger.info(f"Saved prediction for {timestamp}")
-            
         except Exception as e:
             self.logger.error(f"Error saving prediction: {e}")
             raise
@@ -121,7 +129,19 @@ class InstantTrainer:
     def append_to_csv(self, data, filename):
         """Append data to CSV file, creating it if it doesn't exist."""
         try:
+            # Create DataFrame from data
             df = pd.DataFrame([data])
+            
+            # Filter columns based on file type
+            if 'predictions' in filename:
+                # For predictions file: timestamp, mean, lower, upper
+                # pred_cols = self.config['data_format']['columns']['predictions']['names']  # TODO: the naming in config is different from the metadata keys defined above, thus hard code here
+                df = df[['timestamp', 'mean', 'lower', 'upper']]
+            elif 'metrics' in filename:
+                # For metrics file: timestamp, std, mae, rmse
+                # metrics_cols = self.config['data_format']['columns']['metrics']['names']  # TODO: the naming in config is different from the metadata keys defined above, thus hard code here
+                df = df[['timestamp', 'std', 'mae', 'rmse']]
+            
             if not os.path.exists(filename):
                 df.to_csv(filename, index=False)
                 self.logger.info(f"Created new file: {filename}")

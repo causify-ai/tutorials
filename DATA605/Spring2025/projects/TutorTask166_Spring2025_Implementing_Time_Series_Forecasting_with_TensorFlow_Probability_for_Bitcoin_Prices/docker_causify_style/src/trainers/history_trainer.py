@@ -1,6 +1,9 @@
 import logging
 import tensorflow as tf
 import tensorflow_probability as tfp
+import pandas as pd
+import os
+from utilities.timestamp_format import to_iso8601
 
 class HistoryTrainer:
     def __init__(
@@ -42,4 +45,35 @@ class HistoryTrainer:
         self.logger.info(f"90% CI lower (head): {lower[:5]}")
         self.logger.info(f"90% CI upper (head): {upper[:5]}")
 
+        self.save_history_prediction(raw[-1]['timestamp'], mean, lower, upper)
         return {'mean': mean, 'lower': lower, 'upper': upper}
+
+    def save_history_prediction(self, timestamp, mean, lower, upper):
+        """Save history prediction to CSV file using config-driven columns."""
+        pred_cols = self.config['data_format']['columns']['predictions']['names']
+        pred_row = {
+            'timestamp': to_iso8601(timestamp),
+            'pred_price': float(mean),
+            'pred_lower': float(lower),
+            'pred_upper': float(upper)
+        }
+        df = pd.DataFrame([pred_row], columns=pred_cols)
+        predictions_file = self.config['data']['predictions']['history_data']['predictions_file']
+        os.makedirs(os.path.dirname(predictions_file), exist_ok=True)
+        df.to_csv(predictions_file, mode='a', header=not os.path.exists(predictions_file), index=False)
+        self.logger.info(f"Saved history prediction for {timestamp}")
+
+    def save_history_metrics(self, timestamp, std, mae, rmse):
+        """Save history metrics to CSV file using config-driven columns."""
+        metrics_cols = self.config['data_format']['columns']['metrics']['names']
+        metrics_row = {
+            'timestamp': to_iso8601(timestamp),
+            'std': float(std),
+            'mae': float(mae),
+            'rmse': float(rmse)
+        }
+        df = pd.DataFrame([metrics_row], columns=metrics_cols)
+        metrics_file = self.config['data']['predictions']['history_data']['metrics_file']
+        os.makedirs(os.path.dirname(metrics_file), exist_ok=True)
+        df.to_csv(metrics_file, mode='a', header=not os.path.exists(metrics_file), index=False)
+        self.logger.info(f"Saved history metrics for {timestamp}")

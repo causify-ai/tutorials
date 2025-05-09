@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import os
 import logging
 import time
+from utilities.timestamp_format import parse_timestamp
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +41,7 @@ def load_and_filter_data(config, predictions_file, metrics_file, raw_data_file):
 
         # Helper for robust date parsing
         def parse_dates_col(col):
-            return [robust_parse_dates(x, config['data_format']['timestamp']['format']) for x in col]
+            return [parse_timestamp(x) for x in col]
 
         # Load predictions with retry
         max_retries = 3

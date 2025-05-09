@@ -4,6 +4,7 @@ import numpy as np
 from datetime import datetime, timedelta
 import pandas as pd
 import logging
+from utilities.timestamp_format import to_iso8601, parse_timestamp
 
 class InstantForecastModel:
     def __init__(self, config):
@@ -97,8 +98,11 @@ class InstantForecastModel:
             self.logger.info("No data available for prediction. Waiting for more data...")
             return None
 
-        # Fit the model with the window data
-        self.fit(window_data)
+        # # Fit the model with the window data
+        # self.fit(window_data)  # FIXME: this will lead to forecaster dies after running for a while
+        # Fit the model with the window data _and_ update our timestamp index
+        self.fit(window_data,           # the prices
+                 timestamps=timestamps)  # the matching pandas-DatetimeIndex
 
         # Make a single-step forecast
         samples = self.posterior.sample(self.config['model']['instant']['num_samples'])
@@ -116,7 +120,7 @@ class InstantForecastModel:
         return {
             'distribution': forecast_dist,
             'metadata': {
-                'timestamp': int(current_time.timestamp()),
+                'timestamp': to_iso8601(current_time),
                 'mean': float(forecast_dist.mean()[0]),
                 'std': float(forecast_dist.stddev()[0]),
                 'lower': float(forecast_dist.mean()[0] - 1.645 * forecast_dist.stddev()[0]),
