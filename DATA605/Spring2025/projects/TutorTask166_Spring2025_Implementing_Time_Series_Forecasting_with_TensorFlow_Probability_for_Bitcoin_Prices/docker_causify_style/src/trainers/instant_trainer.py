@@ -182,9 +182,19 @@ class InstantTrainer:
         except Exception as e:
             self.logger.error(f"Error processing Kafka buffer file: {e}")
 
-    def backup_failed_row(self, row, backup_file):
+    def backup_failed_row(self, row, backup_file, kind='predictions'):
         try:
-            df = pd.DataFrame([row])
+            if kind == 'predictions':
+                cols = self.config['data_format']['columns']['predictions']['names']
+            elif kind == 'metrics':
+                cols = self.config['data_format']['columns']['metrics']['names']
+            else:
+                cols = list(row.keys())
+            # Fill missing columns with NaN
+            for col in cols:
+                if col not in row:
+                    row[col] = float('nan')
+            df = pd.DataFrame([row], columns=cols)
             if not os.path.exists(backup_file):
                 df.to_csv(backup_file, index=False)
             else:
@@ -254,7 +264,8 @@ class InstantTrainer:
                             'pred_lower': metadata['lower'],
                             'pred_upper': metadata['upper']
                         },
-                        "failed_predictions_backup.csv"
+                        "failed_predictions_backup.csv",
+                        kind='predictions'
                     )
 
                 try:
@@ -273,7 +284,8 @@ class InstantTrainer:
                             'mae': metrics['mae'],
                             'rmse': metrics['rmse']
                         },
-                        "failed_metrics_backup.csv"
+                        "failed_metrics_backup.csv",
+                        kind='metrics'
                     )
 
                 # Send to Kafka with error handling and buffer fallback
