@@ -27,26 +27,73 @@ from typing import Any, Dict, List, Tuple
 import helpers.hdbg as hdbg
 import helpers.hio as hio
 import helpers.hparser as hparser
-import helpers.hs3 as hs3
 import pandas as pd
 import requests
 
 _LOG = logging.getLogger(__name__)
 
-BASE_URL = "https://api.eia.gov/v2"
-
 
 # #############################################################################
-# _EiaMetadataFetcher
+# EiaMetadataDownloader
 # #############################################################################
 
 
-class _EiaMetadataFetcher:
+class EiaMetadataDownloader:
+    """
+    Extract EIA time series metadata and facet values.
+    """
 
-    def __init__(self, category: str, api_key: str, version_num: str):
+    def __init__(
+        self,
+        category: str,
+        api_key: str,
+        version_num: str,
+        *,
+        base_url: str = "https://api.eia.gov/v2",
+    ) -> None:
+        """
+        Initialize the metadata downloader.
+
+        :param category: root category path under the EIA v2 API (e.g.,
+                         "electricity")
+        :param api_key: EIA API key
+        :param version_num: version tag for output paths (e.g., "1.0")
+        :param base_url: base URL for the EIA v2 API
+        """
         self._category = category
         self._api_key = api_key
         self._version_num = version_num
+        self._base_url = base_url
+
+    def run_metadata_extraction(
+        self,
+    ) -> Tuple[pd.DataFrame, List[Tuple[pd.DataFrame, str]]]:
+        """
+        Extract metadata and facet values for a given EIA category.
+
+        :return: flattened metadata and corresponding facet tables with
+            file paths
+        """
+        metadata_entries: List[Dict[str, Any]] = []
+        param_entries: List[Tuple[pd.DataFrame, str]] = []
+        df_metadata = pd.DataFrame()
+        leaf_route_data = self._get_leaf_route_data()
+        if leaf_route_data:
+            for route, data in leaf_route_data.items():
+                # Extract metadata.
+                metadata = self._extract_metadata(data, route)
+                metadata_entries.extend(metadata)
+                # Facets are the same for each route.
+                sample_metadata = metadata[0]
+                # Extract parameter values.
+                df_params = self._get_facet_values(sample_metadata, route)
+                param_entries.append(
+                    (df_params, sample_metadata["parameter_values_file"])
+                )
+            df_metadata = pd.DataFrame(metadata_entries)
+        else:
+            _LOG.warning("No leaf datasets found under the given root.")
+        return df_metadata, param_entries
 
     def _get_api_request(self, route: str) -> Dict[str, Any]:
         """
@@ -88,7 +135,7 @@ class _EiaMetadataFetcher:
         ```
         """
         # Build the full API request URL.
-        url = f"{BASE_URL}/{route}?api_key={self._api_key}"
+        url = f"{self._base_url}/{route}?api_key={self._api_key}"
         # Send HTTP GET request to the EIA API.
         response = requests.get(url, timeout=20)
         # Parse JSON content.
@@ -190,19 +237,19 @@ class _EiaMetadataFetcher:
         ]
         ```
         """
-        frequencies = data.get("frequency")
-        metrics = data.get("data")
+        frequencies = data.get("frequency", [])
+        metrics = data.get("data", {})
         flattened_metadata = []
         for frequency in frequencies:
             for metric_id, metric_info in metrics.items():
                 # Clean up IDs for use in CSVs or DBs.
                 frequency_id = frequency.get("id")
-                dataset_id = data.get("id")
+                dataset_id = data.get("id", "")
                 dataset_id_clean = dataset_id.replace("-", "_")
                 metric_id_clean = metric_id.replace("-", "_")
                 # Construct a placeholder API URL.
                 url = (
-                    f"{BASE_URL}/{route}"
+                    f"{self._base_url}/{route}"
                     f"?api_key={{API_KEY}}"
                     f"&frequency={frequency_id}"
                     f"&data[0]={metric_id}"
@@ -249,7 +296,7 @@ class _EiaMetadataFetcher:
             facet_id = facet["id"]
             facet_route = f"{route}/facet/{facet_id}"
             facet_data = self._get_api_request(facet_route)
-            facet_entries = facet_data.get("facets")
+            facet_entries = facet_data.get("facets", {})
             # Build a row for each value associated with this facet.
             for values in facet_entries:
                 row = {
@@ -270,12 +317,22 @@ class _EiaMetadataFetcher:
 
 
 class _EiaMetadataWriter:
+    """
+    Save EIA metadata and upload to S3.
+    """
 
-    def __init__(self, bucket_path: str, aws_profile: str):
+    def __init__(self, bucket_path: str, aws_profile: str) -> None:
+        """
+        Initialize the writer for saving metadata and facet values to S3.
+
+        :param bucket_path: base S3 path where files will be uploaded
+                            (e.g., "s3://bucket/dir/")
+        :param aws_profile: AWS CLI profile name used for authentication
+        """
         self._bucket_path = bucket_path
         self._aws_profile = aws_profile
 
-    def _write_df_to_s3(self, df: pd.DataFrame, file_name: str) -> None:
+    def write_df_to_s3(self, df: pd.DataFrame, file_name: str) -> None:
         """
         Save the data as a local CSV file and upload it to S3.
 
@@ -294,47 +351,37 @@ class _EiaMetadataWriter:
         _LOG.debug("Uploaded to S3: %s", bucket_file_path)
 
 
-def run_metadata_extraction(
-    category: str,
-    api_key: str,
-    version_num: str,
-) -> Tuple[pd.DataFrame, List[Tuple[pd.DataFrame, str]]]:
-    """
-    Extract metadata and facet values for a given EIA category.
-
-    :param category: root category path under EIA v2 API (e.g.
-        "electricity")
-    :param api_key: EIA API key used for authentication
-    :param version_num: version tag for output paths (e.g. "1.0")
-    :return: flattened metadata and corresponding facet tables with file
-        paths
-    """
-    fetcher = _EiaMetadataFetcher(category, api_key, version_num)
-    metadata_entries: List[Dict[str, Any]] = []
-    param_entries: List[Tuple[pd.DataFrame, str]] = []
-    df_metadata = pd.DataFrame()
-    leaf_route_data = fetcher._get_leaf_route_data()
-    if leaf_route_data:
-        for route, data in leaf_route_data.items():
-            # Extract metadata.
-            metadata = fetcher._extract_metadata(data, route)
-            metadata_entries.extend(metadata)
-            # Facets are the same for each route.
-            sample_metadata = metadata[0]
-            # Extract parameter values.
-            df_params = fetcher._get_facet_values(sample_metadata, route)
-            param_entries.append(
-                (df_params, sample_metadata["parameter_values_file"])
-            )
-        df_metadata = pd.DataFrame(metadata_entries)
-    else:
-        _LOG.warning("No leaf datasets found under the given root.")
-    return df_metadata, param_entries
-
-
 # #############################################################################
 # CLI entry point
 # #############################################################################
+
+
+def _extract_and_upload_metadata(
+    category: str,
+    api_key: str,
+    version_num: str,
+    bucket_path: str,
+    aws_profile: str,
+) -> None:
+    """
+    Extract metadata from the EIA API and upload both metadata and facet values
+    to S3.
+
+    :param category: root API category (e.g., "electricity")
+    :param api_key: EIA API key
+    :param version_num: version tag (e.g., "1.0")
+    :param bucket_path: target S3 bucket path
+    :param aws_profile: AWS profile name
+    """
+    # Extract metadata.
+    downloader = EiaMetadataDownloader(category, api_key, version_num)
+    df_metadata, param_entries = downloader.run_metadata_extraction()
+    # Write to S3 bucket.
+    writer = _EiaMetadataWriter(bucket_path, aws_profile)
+    for df_facet, facet_file_path in param_entries:
+        writer.write_df_to_s3(df_facet, facet_file_path)
+    metadata_file_path = f"eia_{category}_metadata_original_v{version_num}.csv"
+    writer.write_df_to_s3(df_metadata, metadata_file_path)
 
 
 def _parse() -> argparse.ArgumentParser:
@@ -365,18 +412,13 @@ def _parse() -> argparse.ArgumentParser:
 def _main(parser: argparse.ArgumentParser) -> None:
     args = parser.parse_args()
     hdbg.init_logger(verbosity=args.log_level, use_exec_path=True)
-    # Extract metadata.
-    df_metadata, param_entries = run_metadata_extraction(
-        args.category, args.api_key, args.version_num
+    _extract_and_upload_metadata(
+        args.category,
+        args.api_key,
+        args.version_num,
+        args.bucket_path,
+        args.aws_profile,
     )
-    # Write to S3 bucket.
-    writer = _EiaMetadataWriter(args.bucket_path, args.aws_profile)
-    for df_facet, facet_file_path in param_entries:
-        writer._write_df_to_s3(df_facet, facet_file_path)
-    metadata_file_path = (
-        f"eia_{args.category}_metadata_original_v{args.version_num}.csv"
-    )
-    writer._write_df_to_s3(df_metadata, metadata_file_path)
 
 
 if __name__ == "__main__":
