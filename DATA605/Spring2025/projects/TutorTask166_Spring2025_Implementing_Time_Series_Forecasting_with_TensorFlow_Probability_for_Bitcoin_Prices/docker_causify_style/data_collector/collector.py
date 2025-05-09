@@ -26,6 +26,21 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Add robust timestamp conversion
+def safe_iso8601(ts):
+    # If ts is a float/int, treat as epoch
+    if isinstance(ts, (int, float)):
+        # Validate reasonable range (2000-01-01 to 2100-01-01)
+        if ts < 946684800 or ts > 4102444800:
+            raise ValueError(f"Timestamp {ts} out of range")
+        return datetime.utcfromtimestamp(ts).strftime(TIMESTAMP_FORMAT)
+    # If already string, try to parse and reformat
+    try:
+        dt = pd.to_datetime(ts, utc=True)
+        return dt.strftime(TIMESTAMP_FORMAT)
+    except Exception:
+        raise ValueError(f"Unrecognized timestamp: {ts}")
+
 # Robust save_data function (as before)
 def save_data(data, file_path):
     try:
@@ -33,7 +48,8 @@ def save_data(data, file_path):
         for col in required_columns:
             if col not in data:
                 data[col] = data.get('price', 0)
-        data['timestamp'] = pd.Timestamp(data['timestamp']).strftime(TIMESTAMP_FORMAT)
+        # Use robust timestamp conversion
+        data['timestamp'] = safe_iso8601(data['timestamp'])
         df = pd.DataFrame([data], columns=required_columns)
         numeric_columns = ['open', 'high', 'low', 'close', 'volume']
         for col in numeric_columns:
@@ -99,7 +115,14 @@ class BitcoinDataCollector:
                             v += size
                         else:
                             # Flush the completed second to CSV and Kafka
-                            row_ts = to_iso8601(curr_sec)
+                            try:
+                                row_ts = safe_iso8601(curr_sec)
+                            except Exception as e:
+                                logger.error(f"Skipping row due to bad timestamp: {curr_sec} ({e})")
+                                curr_sec = sec
+                                o = h = l = c = price
+                                v = size
+                                continue
                             bar = {
                                 'timestamp': row_ts,
                                 'open': normalize_price(o),

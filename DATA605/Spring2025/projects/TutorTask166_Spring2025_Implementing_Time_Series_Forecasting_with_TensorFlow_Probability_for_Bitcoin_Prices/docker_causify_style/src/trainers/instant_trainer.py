@@ -10,6 +10,7 @@ import os
 import time
 from kafka import KafkaProducer
 import json
+import traceback
 from utilities.timestamp_format import to_iso8601
 
 class InstantTrainer:
@@ -123,7 +124,7 @@ class InstantTrainer:
                     fcntl.flock(f, fcntl.LOCK_UN)
             self.logger.info(f"Saved prediction for {timestamp}")
         except Exception as e:
-            self.logger.error(f"Error saving prediction: {e}")
+            self.logger.error(f"Error saving prediction: {e}\nData: {pred_row}\n{traceback.format_exc()}")
             raise
 
     def append_to_csv(self, data, filename):
@@ -151,15 +152,58 @@ class InstantTrainer:
         except Exception as e:
             self.logger.error(f"Error appending to {filename}: {str(e)}")
 
+    def buffer_kafka_message(self, message):
+        buffer_file = "kafka_failed_buffer.jsonl"
+        try:
+            with open(buffer_file, "a") as f:
+                f.write(json.dumps(message) + "\n")
+            self.logger.warning("Buffered Kafka message to disk.")
+        except Exception as e:
+            self.logger.error(f"Failed to buffer Kafka message: {e}")
+
+    def resend_buffered_kafka_messages(self):
+        buffer_file = "kafka_failed_buffer.jsonl"
+        if not os.path.exists(buffer_file):
+            return
+        lines_to_keep = []
+        try:
+            with open(buffer_file, "r") as f:
+                for line in f:
+                    try:
+                        msg = json.loads(line)
+                        self.producer.send(self.kafka_topic, value=msg)
+                        self.producer.flush()
+                    except Exception as e:
+                        self.logger.error(f"Failed to resend buffered Kafka message: {e}")
+                        lines_to_keep.append(line)
+            # Rewrite buffer file with unsent messages
+            with open(buffer_file, "w") as f:
+                f.writelines(lines_to_keep)
+        except Exception as e:
+            self.logger.error(f"Error processing Kafka buffer file: {e}")
+
+    def backup_failed_row(self, row, backup_file):
+        try:
+            df = pd.DataFrame([row])
+            if not os.path.exists(backup_file):
+                df.to_csv(backup_file, index=False)
+            else:
+                df.to_csv(backup_file, mode='a', header=False, index=False)
+            self.logger.warning(f"Backed up failed row to {backup_file}")
+        except Exception as e:
+            self.logger.error(f"Failed to backup row: {e}")
+
     def run(self):
-        """Run continuous predictions."""
         self.logger.info("Starting continuous predictions...")
-        
+
         while True:
             try:
+                # Try to resend any buffered Kafka messages first
+                self.resend_buffered_kafka_messages()
+
                 # Get current time
                 current_time = datetime.now()
-                
+
                 # Get latest data
                 series = self.loader.load_latest_data()
                 if series is None:
@@ -193,17 +237,55 @@ class InstantTrainer:
                     'rmse': float(np.sqrt(np.mean((samples - metadata['mean'])**2)))
                 }
 
-                # Append predictions and metrics to CSV files
-                self.append_to_csv(metadata, self.predictions_file)
-                self.append_to_csv(metrics, self.metrics_file)
+                # Save prediction and metrics with error handling and backup
+                try:
+                    self.save_prediction(
+                        timestamp=metadata['timestamp'],
+                        actual_price=None,
+                        predicted_price=metadata['mean'],
+                        confidence_interval=(metadata['lower'], metadata['upper'])
+                    )
+                except Exception as e:
+                    self.logger.error(f"Error saving prediction: {e}")
+                    self.backup_failed_row(
+                        {
+                            'timestamp': metadata['timestamp'],
+                            'pred_price': metadata['mean'],
+                            'pred_lower': metadata['lower'],
+                            'pred_upper': metadata['upper']
+                        },
+                        "failed_predictions_backup.csv"
+                    )
 
-                # Send to Kafka
-                self.producer.send(self.kafka_topic, value=metadata)
-                self.producer.flush()
+                try:
+                    self.save_metrics(
+                        timestamp=metadata['timestamp'],
+                        std=metadata['std'],
+                        mae=metrics['mae'],
+                        rmse=metrics['rmse']
+                    )
+                except Exception as e:
+                    self.logger.error(f"Error saving metrics: {e}")
+                    self.backup_failed_row(
+                        {
+                            'timestamp': metadata['timestamp'],
+                            'std': metadata['std'],
+                            'mae': metrics['mae'],
+                            'rmse': metrics['rmse']
+                        },
+                        "failed_metrics_backup.csv"
+                    )
+
+                # Send to Kafka with error handling and buffer fallback
+                try:
+                    self.producer.send(self.kafka_topic, value=metadata)
+                    self.producer.flush()
+                except Exception as e:
+                    self.logger.error(f"Error sending to Kafka: {e}")
+                    self.buffer_kafka_message(metadata)
 
                 self.logger.info(f"Prediction made for {current_time}: mean={metadata['mean']:.2f}, std={metadata['std']:.2f}")
-                
-                # Wait for next second
+
                 time.sleep(1)
 
             except Exception as e:

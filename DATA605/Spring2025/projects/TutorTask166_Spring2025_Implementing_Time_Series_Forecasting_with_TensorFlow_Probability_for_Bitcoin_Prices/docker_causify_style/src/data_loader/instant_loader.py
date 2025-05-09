@@ -30,34 +30,30 @@ class InstantCSVLoader:
 
             # Read the CSV file
             df = pd.read_csv(self.raw_data_file)
-            
             if len(df) == 0:
                 return None
-            
-            # Convert timestamp to datetime
-            df['timestamp'] = pd.to_datetime(df['timestamp'])
-            
+
+            # Convert timestamp to datetime, coerce errors
+            df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
+            # Drop rows with invalid timestamps
+            df = df.dropna(subset=['timestamp'])
+            if len(df) == 0:
+                return None
+
             # Get the latest timestamp
             latest_time = df['timestamp'].max()
-            
             # Filter data to last 5 minutes
             start_time = latest_time - self.window_size
             df = df[df['timestamp'] >= start_time]
-            
             if len(df) < 2:  # Need at least 2 points for prediction
                 return None
-            
             # Sort by timestamp
             df = df.sort_values('timestamp')
-            
             # Extract the time series values
             series = df['close'].values
-            
             # Store the timestamps for the model
             self.timestamps = df['timestamp'].values
-            
             return series
-            
         except Exception as e:
             print(f"Error loading latest data: {str(e)}")
             return None
@@ -68,18 +64,14 @@ class InstantCSVLoader:
             if not os.path.exists(self.raw_data_file):
                 self.ensure_data_file_exists()
                 return pd.DataFrame()
-            
             df = pd.read_csv(self.raw_data_file)
             if len(df) == 0:
                 return pd.DataFrame()
-                
-            df['timestamp'] = pd.to_datetime(df['timestamp'])
-        
-            
+            df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
+            df = df.dropna(subset=['timestamp'])
         except Exception as e:
             print(f"Error loading historical data: {str(e)}")
             return pd.DataFrame()
-        
         return df
 
     def get_latest_timestamp(self) -> Optional[datetime]:
