@@ -27,6 +27,7 @@ from typing import Any, Dict, List, Tuple
 import helpers.hdbg as hdbg
 import helpers.hio as hio
 import helpers.hparser as hparser
+import helpers.hs3 as hs3
 import pandas as pd
 import requests
 
@@ -55,7 +56,7 @@ class EiaMetadataDownloader:
         Initialize the metadata downloader.
 
         :param category: root category path under the EIA v2 API (e.g.,
-                         "electricity")
+            "electricity")
         :param api_key: EIA API key
         :param version_num: version tag for output paths (e.g., "1.0")
         :param base_url: base URL for the EIA v2 API
@@ -326,7 +327,7 @@ class _EiaMetadataWriter:
         Initialize the writer for saving metadata and facet values to S3.
 
         :param bucket_path: base S3 path where files will be uploaded
-                            (e.g., "s3://bucket/dir/")
+            (e.g., "s3://bucket/dir/")
         :param aws_profile: AWS CLI profile name used for authentication
         """
         self._bucket_path = bucket_path
