@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-import logging
+from utilities.logger import get_logger
 import json
 from datetime import datetime
 import time
@@ -19,12 +19,7 @@ with open(CONFIG_PATH, 'r') as f:
 TIMESTAMP_FORMAT = config['data_format']['timestamp']['format']
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s | %(levelname)s | %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
-)
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 # Add robust timestamp conversion
 def safe_iso8601(ts):
@@ -79,10 +74,10 @@ class BitcoinDataCollector:
         )
         self.data_file = os.path.join('/app/data', 'raw/instant_data.csv')
 
-    def publish_to_kafka(self, bar):
+    def publish_to_kafka(self, bar, ts):
         self.producer.send(self.config['kafka']['topic'], bar)
         self.producer.flush()
-        logger.info(f"→ pushed to Kafka: {bar}")
+        logger.info(f"[System Time: {datetime.now().strftime(TIMESTAMP_FORMAT)}] [Data Time: {ts}] → pushed to Kafka: {bar}")
 
     async def stream_1s_ohlc(self):
         uri = "wss://ws-feed.exchange.coinbase.com"
@@ -132,8 +127,8 @@ class BitcoinDataCollector:
                                 'volume': v
                             }
                             save_data(bar, self.data_file)
-                            self.publish_to_kafka(bar)
-                            logger.info(f"[System Time: {datetime.now().strftime(TIMESTAMP_FORMAT)}] Collected data for [Data Time: {row_ts}] - O={o}, H={h}, L={l}, C={c}, V={v}")
+                            self.publish_to_kafka(bar=bar, ts=row_ts)
+                            # logger.info(f"[System Time: {datetime.now().strftime(TIMESTAMP_FORMAT)}] Collected data for [Data Time: {row_ts}] - O={o}, H={h}, L={l}, C={c}, V={v}")
                             # Start a new bar
                             curr_sec = sec
                             o = h = l = c = price

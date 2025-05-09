@@ -1,11 +1,11 @@
 import pandas as pd
 from datetime import datetime, timedelta
 import os
-import logging
+from utilities.logger import get_logger
 import time
 from utilities.timestamp_format import parse_timestamp
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 def robust_parse_dates(date_str, config_format):
     """Try parsing with config format, then fallback to space format."""

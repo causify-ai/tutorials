@@ -1,4 +1,3 @@
-import logging
 from typing import Dict
 import numpy as np
 import tensorflow as tf
@@ -12,6 +11,7 @@ from kafka import KafkaProducer
 import json
 import traceback
 from utilities.timestamp_format import to_iso8601
+from utilities.logger import get_logger
 
 class InstantTrainer:
     def __init__(
@@ -25,7 +25,7 @@ class InstantTrainer:
         self.loader = loader
         self.fe = fe
         self.model = model
-        self.logger = logger
+        self.logger = logger if logger is not None else get_logger(__name__)
         self.config = config
         
         # Get file paths from config

@@ -1,4 +1,4 @@
-import logging
+from utilities.logger import get_logger
 import tensorflow as tf
 import tensorflow_probability as tfp
 import pandas as pd
@@ -17,7 +17,7 @@ class HistoryTrainer:
         self.loader = loader
         self.fe = feature_engineer
         self.model = model
-        self.logger = logger
+        self.logger = logger if logger is not None else get_logger(__name__)
         self.config = config
         self.horizon = config['history']['forecast_horizon']
 
