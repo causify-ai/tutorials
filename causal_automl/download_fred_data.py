@@ -1,13 +1,14 @@
-import logging
+import logging as log
 import os
 import time
 from typing import Optional
 
 import fredapi
+import helpers.hdbg as hdbg
 import pandas as pd
 import ratelimit
 
-_LOG = logging.getLogger(__name__)
+_LOG = log.getLogger(__name__)
 
 
 # #############################################################################
@@ -25,9 +26,9 @@ class FredDataDownloader:
         Initialize the FRED data downloader with the API key.
 
         If no FRED API key is passed as a parameter, it is read from the
-        environment variables.
+        environment variable.
 
-        :param api_key: FRED api key
+        :param api_key: FRED API key
         """
         key = api_key or os.getenv("FRED_API_KEY")
         if not key:
@@ -42,15 +43,14 @@ class FredDataDownloader:
         start_timestamp: Optional[pd.Timestamp] = None,
         end_timestamp: Optional[pd.Timestamp] = None,
         frequency: Optional[str] = None,
-    ) -> pd.DataFrame:
+    ) -> Optional[pd.DataFrame]:
         """
         Download historical series data.
 
         When no start and end timestamps are passed, the entire time series is downloaded.
-        Valid frequencies are: 'q' (quarter), 'sa' (semi-annual), 'a' (annual).
         If invalid frequencies are passed, the frequency parameter is automatically dropped.
 
-        Example of a returned series,
+        Example of a returned series:
 
                           GDP
         2019-10-01  21933.217
@@ -60,9 +60,21 @@ class FredDataDownloader:
         :param id_: FRED series identifier (e.g., 'GDP')
         :param start_timestamp: first observation date
         :param end_timestamp: last observation date
-        :param frequency: series data frequency (e.g., 'q', 'sa', 'a')
+        :param frequency: series data frequency; valid frequencies are:
+                        - 'q' (quarter)
+                        - 'sa' (semi-annual)
+                        - 'a' (annual).
         :return: relevant FRED series data
         """
+        # Validate frequency before any API call.
+        valid_freqs = ["q", "sa", "a"]
+        if frequency is not None:
+            hdbg.dassert_in(
+                frequency,
+                valid_freqs,
+                "Invalid frequency '%s'.",
+                frequency,
+            )
         # Set args.
         loading_kwargs = {}
         if start_timestamp is not None:
@@ -74,11 +86,6 @@ class FredDataDownloader:
         attempt = 1
         max_attempts = 4
         err_msgs = {}
-        SEARCHABLE_ERRORS = [
-            "The series does not exist",
-            "should be 25 or less alphanumeric",
-            "URL can't contain control characters",
-        ]
         # Start attempts.
         while attempt <= max_attempts:
             try:
@@ -87,37 +94,27 @@ class FredDataDownloader:
                     **loading_kwargs,
                 )
             except Exception as err:
-                if "Value of frequency" in str(err):
-                    _LOG.error(
-                        "Attempt: %s Retrying without frequency parameter...", err
-                    )
-                    # Remove invalid frequency and retry.
-                    loading_kwargs.pop("frequency", None)
-                elif "Internal Server Error" in str(err):
+                if "Internal Server Error" in str(err):
                     _LOG.error("Attempt %s: %s Retrying...", attempt, err)
-                    attempt += 1
-                elif any(sub in str(err) for sub in SEARCHABLE_ERRORS):
-                    # Find top 5 closest matches to the invalid query.
-                    recs = "No closest matches."
-                    matches = self._client.search(id_)
-                    if matches is not None:
-                        recs = f"Did you mean: {str(list(matches.iloc[0:5, 0]))}"
-                    raise ValueError(f"Attempt {attempt}: {err} {recs} ") from err
+                    # Wait before retrying.
+                    time.sleep(10)
                 elif "Too Many Requests" in str(err):
                     # Retry after exponential backoff.
+                    backoff = 4**attempt
                     _LOG.error(
                         "Attempt %d: %s Retrying after %ds... ",
                         attempt,
                         err,
-                        2**attempt,
+                        backoff,
                     )
-                    time.sleep(2**attempt)
+                    time.sleep(backoff)
                     continue
                 else:
                     raise
                 err_msgs[f"Attempt {attempt}"] = str(err)
                 attempt += 1
                 continue
+            # Log the series download and return.
             df = series.to_frame(name=id_)
             _LOG.info(
                 "Downloaded series %s with %d records",
@@ -126,5 +123,5 @@ class FredDataDownloader:
             )
             return df
         raise RuntimeError(
-            f"Failed to fetch after {max_attempts} attempts. Errors per run {err_msgs}"
+            f"Failed to fetch after {max_attempts} attempts. Errors per run: {err_msgs}"
         )
