@@ -16,4 +16,4 @@ naming should be as follows:
 - https://github.com/causify-ai/helpers/blob/master/docs/coding/all.coding_style.how_to_guide.md
 """
 
-# Same as tutorial_template/template.API.py
+# Same as tutorial_template/Gecko_API.py
