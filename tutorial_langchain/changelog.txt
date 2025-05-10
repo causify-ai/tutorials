@@ -1,0 +1,3 @@
+# tutorial_langchain-1.0.0
+- 2024-12-16
+- First release
