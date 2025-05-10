@@ -18,7 +18,7 @@ import os
 load_dotenv()
 
 COINGECKO_URL = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
-CSV_FILENAME = 'bitcoin_prices1.csv'
+CSV_FILENAME = 'bitcoin_prices.csv'
 
 os.environ["LLAMA_CPP_LOG_LEVEL"] = "off" 
 
