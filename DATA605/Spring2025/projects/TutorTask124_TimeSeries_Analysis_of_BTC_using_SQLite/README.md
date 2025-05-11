@@ -27,11 +27,11 @@
   - Less redundant since code is factored out
   - Used for real-world development, production workflows
   - Used for all internships, RA / TA, full-time at UMD DATA605 / MSML610 /
-    Causify 
+    Causify
 - Cons
   - It is more complex to use and configure
-  - More dependencies from the 
-- For thin environment setup instructions, refer to:  
+  - More dependencies from the
+- For thin environment setup instructions, refer to:
   [How to Set Up Development on Laptop](https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
 
 ## Reference Tutorials
@@ -43,3 +43,77 @@
 
 - Choose the approach that best fits your comfort level and project needs. Both
   are valid depending on your use case.
+
+
+## Running Jupyter Notebook in Docker
+
+### Build the Docker Image
+
+```bash
+docker build -t my-jupyter-app .
+```
+
+- This command builds the Docker image from the current directory's Dockerfile.
+- `my-jupyter-app` is the name of the image (change it if desired).
+
+---
+
+### Run the Docker Container
+
+```bash
+docker run -p 8888:8888 my-jupyter-app
+```
+
+- Exposes Jupyter on `localhost:8888`.
+- No password or token required — it opens directly in your browser.
+
+---
+
+### Access the Notebook
+
+Open your browser and go to:
+
+```
+http://localhost:8888
+```
+
+Your notebook (e.g. `sqlite.example.ipynb`) should launch automatically.
+
+---
+
+## Cleaning Up
+
+### Stop and Remove the Running Container
+
+1. List running containers:
+   ```bash
+   docker ps
+   ```
+
+2. Stop the container (replace `<container_id>` with actual ID):
+   ```bash
+   docker stop <container_id>
+   ```
+
+3. Remove the container:
+   ```bash
+   docker rm <container_id>
+   ```
+
+---
+
+### Remove the Docker Image
+
+```bash
+docker rmi my-jupyter-app
+```
+
+---
+
+### (Optional) Remove All Build Cache
+
+```bash
+docker builder prune -a
+```
+
+> This will delete all unused Docker build cache and intermediate layers.

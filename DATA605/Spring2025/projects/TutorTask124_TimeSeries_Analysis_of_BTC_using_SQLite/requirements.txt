@@ -1,0 +1,7 @@
+requests
+pandas
+mplfinance
+yfinance
+matplotlib
+seaborn
+sqlite-utils
