@@ -18,8 +18,7 @@ A comprehensive notebook for fetching, storing, and analyzing Bitcoin (BTC) dail
   - [Volatility](#volatility)
   - [Distribution Analysis](#distribution-analysis)
 - [Visualization](#visualization)
-- [References](#references)
-- [Citations](#citations)
+
 
 ---
 

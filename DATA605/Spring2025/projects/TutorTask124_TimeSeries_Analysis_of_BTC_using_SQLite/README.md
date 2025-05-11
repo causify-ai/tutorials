@@ -1,8 +1,22 @@
-# Tutorial Template: Two Docker Approaches
+# Bitcoin Daily Price Analysis with SQLite & CoinMarketCap API
+## Project Overview
 
-# Jupyter Notebook Docker Environment
+This project is a hands-on demonstration of SQLite’s capabilities in the context of real-world cryptocurrency data analysis, with a focus on Bitcoin. Leveraging the CoinMarketCap API, it showcases how to fetch, store, and analyze daily Bitcoin (BTC) price and volume data using Python, SQLite, and Jupyter Notebooks.
 
-This project provides a Dockerized environment for running a Jupyter Notebook server with all dependencies specified in `requirements.txt`. The container launches Jupyter and opens the notebook `sqlite.example.ipynb` by default.
+You’ll find practical examples covering:
+
+- **Data Acquisition:** Fetching historical and live BTC market data from the CoinMarketCap API.
+- **Data Storage:** Efficiently storing and managing time series data in a local SQLite database.
+- **Analysis & Visualization:** Performing statistical analyses and creating insightful visualizations to uncover market trends and patterns.
+
+
+This project provides a Dockerized environment for running a Jupyter Notebook server with all dependencies specified in `requirements.txt`. The container launches Jupyter Lab and kindly open the notebook `sqlite.example.ipynb` to find the primary analysis in my project.
+
+**Name: Asutosh Dalei**
+
+**UID: 120997754**
+
+**Email: asutoshd@umd.edu**
 
 ---
 ## File Structure
@@ -122,15 +136,3 @@ To clean up unused images, build cache, and dangling data:
 ```
 docker system prune
 ```
-
-├── btcDaily.db
-├── Dockerfile
-├── README.md
-├── requirements.txt
-├── sqlite_utils.py
-├── sqlite.API.ipynb
-├── sqlite.API.md
-├── sqlite.API.py
-├── sqlite.example.ipynb
-├── sqlite.example.md
-└── sqlite.example.py
