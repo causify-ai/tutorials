@@ -1,14 +1,10 @@
 import os
 import pandas as pd
 from datetime import datetime
-from src.logger import get_logger
-from src.common import logger, BASE_SAVE_DIR
+import chardet
+import csv
+from src.common import logger
 # logger = get_logger(__name__)
-
-
-
-
-
 
 def save_data(data, filename, include_timestamp=False, compress=False):
     """
@@ -24,7 +20,7 @@ def save_data(data, filename, include_timestamp=False, compress=False):
         return
 
     try:
-        os.makedirs(BASE_SAVE_DIR, exist_ok=True)
+        os.makedirs('data', exist_ok=True)
         data_copy = data.copy()
 
         # Format datetime columns for consistency
@@ -40,7 +36,7 @@ def save_data(data, filename, include_timestamp=False, compress=False):
             base, ext = os.path.splitext(filename)
             filename = f"{base}_{timestamp}{ext}"
 
-        filepath = os.path.join(BASE_SAVE_DIR, filename)
+        filepath = os.path.join('data', filename)
 
         # Handle compression
         if compress:
@@ -88,7 +84,7 @@ def load_data(filename, compressed=False):
         pandas.DataFrame or None: Loaded DataFrame or None if file doesn't exist
     """
     try:
-        filepath = os.path.join(BASE_SAVE_DIR, filename)
+        filepath = os.path.join('data', filename)
         if compressed:
             filepath += '.gz'
 
