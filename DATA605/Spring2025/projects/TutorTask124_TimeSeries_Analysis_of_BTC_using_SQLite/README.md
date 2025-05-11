@@ -1,119 +1,136 @@
 # Tutorial Template: Two Docker Approaches
 
-- This directory provides two versions of the same tutorial setup to help you
-  work with Jupyter notebooks and Python scripts inside Docker environments
+# Jupyter Notebook Docker Environment
 
-- Both versions run the same code but use different Docker approaches, with
-  different level of complexity and maintainability
-
-## 1. `data605_style` (Simple Docker Environment)
-
-- This version is modeled after the setup used in DATA605 tutorials
-- This template provides a ready-to-run environment, including scripts to build,
-  run, and clean the Docker container.
-
-- For your specific project, you should:
-  - Modify the Dockerfile to add project-specific dependencies
-  - Update bash/scripts accordingly
-  - Expose additional ports if your project requires them
-
-## 2. `causify_style` (Causify AI dev-system)
-
-- This setup reflects the approach commonly used in Causify AI dev-system
-- **Recommended** for students familiar with Docker or those wishing to explore a
-  production-like setup
-- Pros
-  - Docker layer written in Python to make it easy to extend and test
-  - Less redundant since code is factored out
-  - Used for real-world development, production workflows
-  - Used for all internships, RA / TA, full-time at UMD DATA605 / MSML610 /
-    Causify
-- Cons
-  - It is more complex to use and configure
-  - More dependencies from the
-- For thin environment setup instructions, refer to:
-  [How to Set Up Development on Laptop](https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
-
-## Reference Tutorials
-
-- The `tutorial_github` example has been implemented in both environments for you
-  to refer to:
-  - `tutorial_github_data605_style` uses the simpler DATA605 approach
-  - `tutorial_github_causify_style` uses the more complex Causify approach
-
-- Choose the approach that best fits your comfort level and project needs. Both
-  are valid depending on your use case.
-
-
-## Running Jupyter Notebook in Docker
-
-### Build the Docker Image
-
-```bash
-docker build -t my-jupyter-app .
-```
-
-- This command builds the Docker image from the current directory's Dockerfile.
-- `my-jupyter-app` is the name of the image (change it if desired).
+This project provides a Dockerized environment for running a Jupyter Notebook server with all dependencies specified in `requirements.txt`. The container launches Jupyter and opens the notebook `sqlite.example.ipynb` by default.
 
 ---
+## File Structure
 
-### Run the Docker Container
-
-```bash
-docker run -p 8888:8888 my-jupyter-app
-```
-
-- Exposes Jupyter on `localhost:8888`.
-- No password or token required — it opens directly in your browser.
-
----
-
-### Access the Notebook
-
-Open your browser and go to:
-
-```
-http://localhost:8888
-```
-
-Your notebook (e.g. `sqlite.example.ipynb`) should launch automatically.
-
----
-
-## Cleaning Up
-
-### Stop and Remove the Running Container
-
-1. List running containers:
-   ```bash
-   docker ps
-   ```
-
-2. Stop the container (replace `<container_id>` with actual ID):
-   ```bash
-   docker stop <container_id>
-   ```
-
-3. Remove the container:
-   ```bash
-   docker rm <container_id>
-   ```
-
----
-
-### Remove the Docker Image
-
-```bash
-docker rmi my-jupyter-app
+```mermaid
+graph TD
+    A[Sqlite Project Root]
+    subgraph sqlite.API
+        G[sqlite.API.ipynb]
+        H[sqlite.API.md]
+        I[sqlite.API.py]
+    end
+    subgraph sqlite.example
+        J[sqlite.example.ipynb]
+        K[sqlite.example.md]
+        L[sqlite.example.py]
+    end
+    A --> B[btcDaily.db]
+    A --> C[Dockerfile]
+    A --> D[README.md]
+    A --> E[requirements.txt]
+    A --> F[sqlite_utils.py]
+    A --> sqlite.API
+    A --> sqlite.example
+    G --> H
+    G --> I
+    J --> K
+    J --> L
 ```
 
 ---
 
-### (Optional) Remove All Build Cache
+## Prerequisites
 
-```bash
-docker builder prune -a
+- [Docker](https://docs.docker.com/get-docker/) installed on your system.
+
+---
+
+## Build the Docker Image
+
+1. **Clone this repository** (if you haven't already) and navigate to the project directory containing the `Dockerfile` and `requirements.txt`:
+
+    ```
+    cd /path/to/your/project
+    ```
+
+2. **Build the Docker image** (replace `sqliteapp` with your preferred image name):
+
+    ```
+    docker build -t sqliteapp:latest .
+    ```
+
+---
+
+## Run the Docker Container
+
+To start the Jupyter Notebook server and access it from your browser:
+```
+docker run –rm -p 8888:8888 sqliteapp:latest
+```
+- `--rm` automatically removes the container when it stops.
+- `-p 8888:8888` maps port 8888 of the container to port 8888 on your host machine.
+
+**Access Jupyter Notebook:**
+
+- Open your browser and navigate to: [http://localhost:8888](http://localhost:8888)
+- No token or password is required (as configured in the Dockerfile).
+
+---
+## Stopping the Container
+
+- Press `Ctrl+C` in the terminal running the container to stop it.
+
+---
+
+## Customization
+
+- To install additional Python packages, add them to `requirements.txt` and rebuild the image.
+- To open a different notebook by default, modify the `CMD` line in the `Dockerfile`.
+
+---
+
+## Troubleshooting
+
+- If you encounter issues with ports already in use, try a different host port (e.g., `-p 8889:8888`).
+- Ensure Docker has permission to access the directory you want to mount.
+
+---
+
+## Delete the Docker Image and Clean Up Caches
+
+### 1. **Stop and Remove All Containers**
+
+First, stop any running containers based on your image:
+
+```
+docker ps -a
+docker stop <container_id>
+docker rm <container_id>
 ```
 
-> This will delete all unused Docker build cache and intermediate layers.
+### 2. **Remove the Docker Image**
+
+Find your image name or ID:
+```
+docker images
+```
+
+Remove the image by name or ID:
+```
+docker rmi sqliteapp:latest
+```
+
+### 3. **Remove Build Cache and Dangling Images**
+
+To clean up unused images, build cache, and dangling data:
+```
+docker system prune
+```
+
+├── btcDaily.db
+├── Dockerfile
+├── README.md
+├── requirements.txt
+├── sqlite_utils.py
+├── sqlite.API.ipynb
+├── sqlite.API.md
+├── sqlite.API.py
+├── sqlite.example.ipynb
+├── sqlite.example.md
+└── sqlite.example.py
