@@ -1,7 +1,7 @@
 import requests
 import pandas as pd
 
-def fetch_bitcoin_data(api_key: str, days: int = 365, interval: str = 'daily') -> pd.DataFrame:
+def fetch_bitcoin_data(api_key: str = "YOUR_API_KEY", days: int = 365, interval: str = 'daily') -> pd.DataFrame:
     headers = {
         'x-cg-demo-api-key': api_key
     }
