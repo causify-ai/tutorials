@@ -1,0 +1,4 @@
+keyword,best_lag_k2p,best_lag_p2k,k2p_pvalue,p2k_pvalue,k2p_significant,p2k_significant
+xrp,1,1,0.2885930751438148,0.20976592348551829,False,False
+ethereum,1,1,0.3129783404606804,0.8139341409114862,False,False
+trump,1,1,0.49168973242310077,0.7572040761806531,False,False
