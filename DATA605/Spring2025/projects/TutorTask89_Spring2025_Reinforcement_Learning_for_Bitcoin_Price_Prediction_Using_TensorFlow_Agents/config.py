@@ -16,6 +16,8 @@ NORM_TRAIN_DATA_PATH: str = "data/train_data_normalized.csv"
 NORM_VALIDATION_DATA_PATH: str = "data/validation_data_normalized.csv"
 NORM_TEST_DATA_PATH: str = "data/test_data_normalized.csv"
 
+POLICY_SAVE_PATH: str = "policy"  # Directory to save the trained policy
+
 
 # #############################################################################
 # Environment Configuration
@@ -99,5 +101,4 @@ EPSILON_DECAY_TRAINING_STEPS: int = int(NUM_TRAINING_ITERATIONS * 0.7)
 # Evaluation Hyperparameters
 # #############################################################################
 EVAL_INTERVAL: int = 1000  # e.g., Evaluate every 1000 training steps
-NUM_EVAL_EPISODES: int = 5 # Number of episodes to evaluate the agent
-
+NUM_EVAL_EPISODES: int = 5  # Number of episodes to evaluate the agent

@@ -7,11 +7,13 @@ and executes the training loop using an in-memory TFUniformReplayBuffer.
 Includes evaluation on the validation set with return and directional accuracy.
 """
 
+import os
 import numpy as np
 import tensorflow as tf
 from tf_agents.environments import tf_environment
 from tf_agents.policies import random_tf_policy
 from tf_agents.utils import common
+from tf_agents.policies import policy_saver
 import config
 import tensorflow_agents_utils as utils
 
@@ -32,14 +34,12 @@ if __name__ == "__main__":
             feature_columns=None,
             wrap_in_tf_env=True,
         )
-        eval_tf_env: tf_environment.TFEnvironment = (
-            utils.create_btc_env(  # For later evaluation
-                data_path=config.NORM_VALIDATION_DATA_PATH,
-                window_size=config.WINDOW_SIZE,
-                fee=config.FEE,
-                feature_columns=None,
-                wrap_in_tf_env=True,
-            )
+        eval_tf_env: tf_environment.TFEnvironment = utils.create_btc_env(
+            data_path=config.NORM_VALIDATION_DATA_PATH,
+            window_size=config.WINDOW_SIZE,
+            fee=config.FEE,
+            feature_columns=None,
+            wrap_in_tf_env=True,
         )
     except Exception as e:
         _LOG.error(f"Failed to create environments: {e}", exc_info=True)
@@ -150,6 +150,11 @@ if __name__ == "__main__":
     except Exception as e:
         _LOG.error(f"Error during initial replay buffer population: {e}", exc_info=True)
         exit()
+    best_avg_eval_reward = -np.inf  # Initialize to negative infinity
+    policy_save_dir = config.POLICY_SAVE_PATH
+    if not os.path.exists(policy_save_dir):
+        os.makedirs(policy_save_dir)
+        _LOG.info(f"Created policy save directory: {policy_save_dir}")
     # Training Loop
     _LOG.info(
         f"Starting training loop for {config.NUM_TRAINING_ITERATIONS} iterations..."
@@ -218,9 +223,7 @@ if __name__ == "__main__":
                 total_correct_directions_eval = 0
                 py_eval_env = eval_tf_env.pyenv.envs[0]
                 for eval_ep_num in range(config.NUM_EVAL_EPISODES):
-                    eval_time_step = (
-                        eval_tf_env.reset()
-                    )  # Resets py_eval_env's _current_tick too
+                    eval_time_step = eval_tf_env.reset()
                     current_episode_reward = 0.0
                     eval_ep_steps = 0
                     while not eval_time_step.is_last():
@@ -303,6 +306,18 @@ if __name__ == "__main__":
                     f"(based on {total_trades_taken_eval} trades)"
                 )
                 _LOG.info(f"Evaluation Finished at Training Step {current_step}")
+                # Save the policy
+                if avg_eval_reward > best_avg_eval_reward:
+                    best_avg_eval_reward = avg_eval_reward
+                    _LOG.info(
+                        f"New best average evaluation reward: {best_avg_eval_reward:.5f}. Saving policy..."
+                    )
+                    best_policy_path = os.path.join(
+                        policy_save_dir,
+                        f"policy_step_{current_step}_reward_{avg_eval_reward:.5f}.zip",
+                    )
+                    policy_saver.PolicySaver(agent.policy).save(best_policy_path)
+                    _LOG.info(f"Policy saved to: {best_policy_path}")
 
     except Exception as e:
         _LOG.error(f"Error during training loop: {e}", exc_info=True)
