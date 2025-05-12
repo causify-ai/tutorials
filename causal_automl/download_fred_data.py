@@ -1,9 +1,3 @@
-"""
-Import as:
-
-import download_fred_data as dwfreda
-"""
-
 import logging as log
 import os
 import time
