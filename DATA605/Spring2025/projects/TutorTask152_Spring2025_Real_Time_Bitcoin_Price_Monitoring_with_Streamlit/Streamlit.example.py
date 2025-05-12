@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
+import os
 from prophet import Prophet
 from Streamlit_utils import get_current_price, get_historical_data, calculate_moving_average, calculate_technical_indicators, detect_anomalies
 
@@ -60,14 +61,16 @@ def get_crypto_news(coin='bitcoin'):
         Returns:
             list: A list of dictionaries containing the latest news items, including titles, sources, dates, and URLs.
         """
-    CryptoPanic_api = "write your own"
+    CryptoPanic_api = os.getenv("CRYPTOPANIC_API_KEY")
+    if not CryptoPanic_api:
+        st.error("Please set CRYPTOPANIC_API_KEY in your environment.")
     url = f"https://cryptopanic.com/api/v1/posts/?auth_token={CryptoPanic_api}&currencies={CRYPTO_LIST[coin]}"
     try:
         response = requests.get(url)
         news_items = response.json()['results'][:5]  # Get top 5 news items
         return news_items
     except Exception as e:
-        st.error(f"Error fetching news: {e}")
+        st.error(f"You need to add your own news api(CryptoPanic_api) key - Read Streamlit.example.md for more detail instructions")
         return []
 
 
