@@ -5,7 +5,7 @@ Download metadata from the EIA v2 API and upload it to S3.
 Usage:
 > python download_eia_metadata.py --category <CATEGORY> --api_key <API_KEY> --version_num <VERSION_NUM>
 
-This script traverses the EIA v2 API under a specified category, collects all time series 
+This script traverses the EIA v2 API under a specified category, collects all time series
 metadata, and writes the metadata and associated parameter values to an S3 bucket in versioned
 CSV files.
 
@@ -20,16 +20,16 @@ Arguments:
 """
 
 import argparse
-import os
 import logging
-
-import pandas as pd
+import os
+from typing import Any, Dict, List, Tuple
 
 import helpers.hdbg as hdbg
+import helpers.hio as hio
 import helpers.hparser as hparser
 import helpers.hs3 as hs3
-import helpers.hio as hio
 import eia_utils as eiu
+import pandas as pd
 
 _LOG = logging.getLogger(__name__)
 
@@ -39,14 +39,22 @@ _LOG = logging.getLogger(__name__)
 
 
 class _EiaMetadataWriter:
-    def __init__(self, bucket_path: str, aws_profile: str):
+    """
+    Save EIA metadata and upload to S3.
+    """
+
+    def __init__(self, bucket_path: str, aws_profile: str) -> None:
+        """
+        Initialize the writer for saving metadata and facet values to S3.
+
+        :param bucket_path: base S3 path where files will be uploaded
+            (e.g., "s3://bucket/dir/")
+        :param aws_profile: AWS CLI profile name used for authentication
+        """
         self._bucket_path = bucket_path
         self._aws_profile = aws_profile
 
-
-    def _write_df_to_s3(
-        self, df: pd.DataFrame, file_name: str
-    ) -> None:
+    def write_df_to_s3(self, df: pd.DataFrame, file_name: str) -> None:
         """
         Save the data as a local CSV file and upload it to S3.
 
@@ -68,6 +76,34 @@ class _EiaMetadataWriter:
 # #############################################################################
 # CLI entry point
 # #############################################################################
+
+
+def _extract_and_upload_metadata(
+    category: str,
+    api_key: str,
+    version_num: str,
+    bucket_path: str,
+    aws_profile: str,
+) -> None:
+    """
+    Extract metadata from the EIA API and upload both metadata and facet values
+    to S3.
+
+    :param category: root API category (e.g., "electricity")
+    :param api_key: EIA API key
+    :param version_num: version tag (e.g., "1.0")
+    :param bucket_path: target S3 bucket path
+    :param aws_profile: AWS profile name
+    """
+    # Extract metadata.
+    downloader = eiu.EiaMetadataDownloader(category, api_key, version_num)
+    df_metadata, param_entries = downloader.run_metadata_extraction()
+    # Write to S3 bucket.
+    writer = _EiaMetadataWriter(bucket_path, aws_profile)
+    for df_facet, facet_file_path in param_entries:
+        writer.write_df_to_s3(df_facet, facet_file_path)
+    metadata_file_path = f"eia_{category}_metadata_original_v{version_num}.csv"
+    writer.write_df_to_s3(df_metadata, metadata_file_path)
 
 
 def _parse() -> argparse.ArgumentParser:
@@ -98,16 +134,13 @@ def _parse() -> argparse.ArgumentParser:
 def _main(parser: argparse.ArgumentParser) -> None:
     args = parser.parse_args()
     hdbg.init_logger(verbosity=args.log_level, use_exec_path=True)
-    # Extract metadata.
-    df_metadata, param_entries = eiu.run_metadata_extraction(
-        args.category, args.api_key, args.version_num
+    _extract_and_upload_metadata(
+        args.category,
+        args.api_key,
+        args.version_num,
+        args.bucket_path,
+        args.aws_profile,
     )
-    # Write to S3 bucket.
-    writer = _EiaMetadataWriter(args.bucket_path, args.aws_profile)
-    for df_facet, facet_file_path in param_entries:
-        writer._write_df_to_s3(df_facet, facet_file_path)
-    metadata_file_path = f"eia_{args.category}_metadata_original_v{args.version_num}.csv"
-    writer._write_df_to_s3(df_metadata, metadata_file_path)
 
 
 if __name__ == "__main__":
