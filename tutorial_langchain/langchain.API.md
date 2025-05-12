@@ -46,7 +46,7 @@ This tutorial explores:
 
 LangChain is built around four key components:
 
-![alt text](/figures/image.png)
+![alt text](figures/image.png)
 
 - 1. Prompts
   - Prompts define the interaction between users and the language model
@@ -88,7 +88,7 @@ outputs.
 
 ## Message Handling
 
-![alt text](/figures/image-1.png)
+![alt text](figures/image-1.png)
 
 LangChain provides `SystemMessage` and `HumanMessage` to structure
 conversations. These objects enable fine-grained control:
@@ -101,7 +101,7 @@ conversations. These objects enable fine-grained control:
 
 ## Custom Prompts
 
-![alt text](/figures/image-2.png)
+![alt text](figures/image-2.png)
 
 Prompts are critical in defining the tasks a language model performs. LangChain
 provides the `ChatPromptTemplate` for creating structured prompts. These prompts
@@ -138,7 +138,7 @@ A chain could:
 
 ## Retrieval with FAISS
 
-![alt text](/figures/image-5.png)
+![alt text](figures/image-5.png)
 
 Retrieval mechanisms like FAISS allow you to augment language models with
 external data. FAISS (Facebook AI Similarity Search) is an efficient library for
@@ -158,7 +158,7 @@ the assistant's ability to answer.
 
 ## Building a QA System
 
-![alt text](/figures/image-4.png)
+![alt text](figures/image-4.png)
 
 Combining retrieval with chains allows you to build a robust QA system. The
 workflow might look like this:
@@ -174,7 +174,7 @@ the risk of hallucination.
 
 ## Agents and Tools
 
-![alt text](/figures/image-3.png)
+![alt text](figures/image-3.png)
 
 Agents are flexible systems capable of deciding which tools or workflows to use
 dynamically. LangChain agents can:
