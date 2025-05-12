@@ -1,105 +1,101 @@
 """
-template_utils.py
+bitcoin_utils.py
 
-This file contains utility functions that support the tutorial notebooks.
-
-- Notebooks should call these functions instead of writing raw logic inline.
-- This helps keep the notebooks clean, modular, and easier to debug.
-- Students should implement functions here for data preprocessing,
-  model setup, evaluation, or any reusable logic.
+Utility module to support real-time Bitcoin news summarization and sentiment analysis
+using HuggingFace and NewsAPI. Designed to generate structured sentiment data
+for time series modeling and prediction.
 """
 
-# bitcoin_utils.py
-
+import requests
+from typing import List, Dict, Tuple
+from datetime import datetime, timedelta
 from transformers import pipeline
-from typing import List
+import time
+import pandas as pd
 
-# Initialize HuggingFace pipelines
+# Initialize HuggingFace NLP pipelines
 summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
 sentiment_analyzer = pipeline("sentiment-analysis")
 
-def fetch_news() -> List[str]:
-    """
-    Fetch Bitcoin news articles.
 
-    :return: A list of Bitcoin news article texts.
-    """
-    news_list = [
-        "Bitcoin surges above $30,000 as investors show renewed interest.",
-        "Cryptocurrency markets remain volatile amid regulatory concerns."
-    ]
-    return news_list
 
 def summarize_article(text: str) -> str:
     """
-    Summarize a Bitcoin news article.
+    Summarize a block of text using HuggingFace's summarization model.
 
-    :param text: The full article text.
-    :return: The summarized version of the article.
+    :param text: Full article text or description
+    :return: Summarized text
     """
-    summary = summarizer(text, max_length=60, min_length=20, do_sample=False)
-    return summary[0]['summary_text']
+    try:
+        summary = summarizer(text, max_length=60, min_length=20, do_sample=False)
+        return summary[0]['summary_text']
+    except Exception:
+        return ""
 
 def analyze_sentiment(text: str) -> str:
     """
-    Analyze the sentiment of a Bitcoin news article.
+    Analyze sentiment using HuggingFace's sentiment analysis model.
 
-    :param text: The full article text.
-    :return: Sentiment label (POSITIVE, NEGATIVE, or NEUTRAL).
+    :param text: Text to classify
+    :return: Sentiment label (POSITIVE, NEGATIVE, NEUTRAL)
     """
-    result = sentiment_analyzer(text)
-    return result[0]['label']
-import requests
-from typing import List
-
-def fetch_bitcoin_news_from_newsapi(api_key: str, query: str = "bitcoin", page_size: int = 5,
-                                    from_date: str = None, to_date: str = None) -> List[dict]:
-    url = f"https://newsapi.org/v2/everything?q={query}&pageSize={page_size}&sortBy=publishedAt&language=en&apiKey={api_key}"
-    if from_date and to_date:
-        url += f"&from={from_date}&to={to_date}"
-
-    response = requests.get(url)
-    if response.status_code != 200:
-        raise Exception(f"NewsAPI request failed: {response.status_code}")
-    data = response.json()
-    return data.get("articles", [])
+    try:
+        result = sentiment_analyzer(text)
+        return result[0]['label']
+    except Exception:
+        return "NEUTRAL"
+    
 
 
-from typing import List
+def get_100_summarized_articles(api_key: str) -> pd.DataFrame:
+    """
+    Fetch, summarize, and analyze 100 Bitcoin news articles from the past 30 days.
 
-def fetch_bitcoin_news_multiple_pages(api_key: str, query: str = "bitcoin", total_articles: int = 200) -> List[dict]:
-    all_articles = []
-    page_size = 100
-    pages = (total_articles + page_size - 1) // page_size  # Number of pages
+    :param api_key: NewsAPI key
+    :return: DataFrame with published_date, title, summary, sentiment, source
+    """
+    from datetime import datetime, timedelta
 
-    for page in range(1, pages + 1):
-        url = f"https://newsapi.org/v2/everything?q={query}&pageSize={page_size}&page={page}&sortBy=publishedAt&language=en&apiKey={api_key}"
+    results = []
+    total_fetched = 0
+    yesterday = datetime.utcnow().date() - timedelta(days=1)
+
+    for i in range(30):
+        if total_fetched >= 100:
+            break
+
+        date = yesterday - timedelta(days=i)
+        date_str = date.strftime("%Y-%m-%d")
+
+        url = (
+            f"https://newsapi.org/v2/everything?q=bitcoin"
+            f"&from={date_str}&to={date_str}"
+            f"&pageSize=5&sortBy=publishedAt"
+            f"&language=en&apiKey={api_key}"
+        )
+
         response = requests.get(url)
         if response.status_code != 200:
-            print(f"Failed to fetch page {page}: {response.status_code}")
-            break
-        data = response.json()
-        articles = data.get("articles", [])
-        all_articles.extend(articles)  # Keep entire article dicts
-
-    return all_articles
-
-
-
-
-def summarize_and_analyze_articles(articles: List[dict]) -> List[dict]:
-    results = []
-    for article in articles:
-        content = article.get("content") or article.get("description")
-        if not content:
             continue
-        summary = summarize_article(content)
-        sentiment = analyze_sentiment(content)
-        results.append({
-            "original": content,
-            "summary": summary,
-            "sentiment": sentiment,
-            "publishedAt": article.get("publishedAt")
-        })
-    return results
 
+        articles = response.json().get("articles", [])
+        for article in articles:
+            if total_fetched >= 100:
+                break
+
+            content = article.get("content") or article.get("description") or ""
+            summary = summarize_article(content)
+            sentiment = analyze_sentiment(summary)
+
+            results.append({
+                "published_date": article.get("publishedAt", "")[:10],
+                "title": article.get("title", ""),
+                "summary": summary,
+                "sentiment": sentiment,
+                "source": article.get("source", {}).get("name", "")
+            })
+
+            total_fetched += 1
+            time.sleep(1)
+
+    return pd.DataFrame(results)
