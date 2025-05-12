@@ -30,7 +30,6 @@
 # #!sudo /venv/bin/pip install -U langchainhub --quiet
 # #!sudo /venv/bin/pip install -U unstructured python-magic pandoc markdown faiss-cpu --quiet
 # #!sudo /venv/bin/pip install --quiet chromadb
-
 # !sudo /venv/bin/pip install -U --quiet unstructured markdown
 
 # %%
@@ -71,7 +70,7 @@ config = {
         "temperature": 0,
     },
     # Define input directory path containing documents.
-    "source_directory": "docs",
+    "source_directory": "example_docs",
     "parse_data_into_chunks": {
         "chunk_size": 500,
         "chunk_overlap": 50,
@@ -107,7 +106,11 @@ chat_model = langchain_openai.ChatOpenAI(**config["language_model"])
 # We'll parse the files into LangChain `Document` objects and split them into manageable chunks to ensure efficient retrieval.
 
 # %%
-# Initialize with documents
+md_files = ut.list_markdown_files(config["source_directory"])
+print(md_files)
+
+# %%
+# Initialize with documents.
 md_files = ut.list_markdown_files(config["source_directory"])
 raw_documents = ut.parse_markdown_files(md_files)
 chunked_documents = ut.split_documents(
@@ -115,6 +118,15 @@ chunked_documents = ut.split_documents(
     chunk_size=config["parse_data_into_chunks"]["chunk_size"],
     chunk_overlap=config["parse_data_into_chunks"]["chunk_overlap"],
 )
+
+# %%
+more 
+
+# %%
+print(chunked_documents[1])
+
+# %%
+print(chunked_documents[2])
 
 # %% [markdown]
 # ## Create a FAISS Vector Store
@@ -153,7 +165,8 @@ _LOG.info("RetrievalQA chain initialized.")
 
 # %%
 # Define a user query.
-query = "What are the guidelines for setting up a new project?"
+#query = "What are the guidelines for setting up a new project?"
+query = "Is there any mention of Diataxis?"
 
 # Query the chatbot.
 response = qa_chain({"query": query})
