@@ -1,5 +1,18 @@
 # Streamlit.example.md
 
+## Table of Contents
+- [1. Project Purpose](#1-project-purpose)
+- [2. Repository Contents](#2-repository-contents)
+- [3. Core Workflow](#3-core-workflow)
+- [4. Detailed File Breakdown](#4-detailed-file-breakdown)
+  - [4.1 `Streamlit.example.py`](#41-streamlitexamplepy)
+  - [4.2 `Streamlit.example.ipynb`](#42-streamlitexampleipynb)
+- [5. Running the Dashboard Locally](#5-running-the-dashboard-locally)
+  - [Configure CryptoPanic API Key](#configure-cryptopanic-api-key)
+- [6. Extending the Project](#6-extending-the-project)
+- [7. References & Further Reading](#7-references--further-reading)
+
+
 ## 1. Project Purpose
 
 **Real-Time Bitcoin Price Monitoring with Streamlit** demonstrates how to turn a pure-Python data-science workflow into a polished, interactive web dashboard—no HTML, CSS, or JavaScript required.

@@ -1,6 +1,17 @@
 
 # Streamlit.API.md
 
+## Table of Contents
+- [Overview](#overview)
+- [Objectives](#objectives)
+- [Structure & Flow](#structure--flow)
+- [API Layer and Wrapper](#api-layer-and-wrapper)
+- [Key Dependencies](#key-dependencies)
+- [References](#references)
+- [Citations](#citations)
+- [Future Improvements](#future-improvements)
+- [Additional Features to Explore in CoinGecko API](#additional-features-to-explore-in-coingecko-api)
+
 ## Overview
 
 This markdown file documents the structure, purpose, and functionality of the `XYZ.API_final_with_metadata.ipynb` notebook. The notebook serves as a demonstration of how to use a native CoinGecko API in conjunction with a Python-based wrapper module `XYZ_utils` to perform common cryptocurrency analytics tasks.
@@ -24,25 +35,25 @@ The main objectives of the notebook are:
 
 The notebook follows a logical flow designed for both demonstration and educational purposes:
 
-1. **Introduction**  
+1. **Introduction**
    Brief overview of the CoinGecko API and its relevance in crypto analytics.
 
-2. **Notebook Setup and Imports**  
+2. **Notebook Setup and Imports**
    Imports necessary functions from `XYZ_utils`.
 
-3. **Fetch Current Price**  
+3. **Fetch Current Price**
    Uses the wrapper function `get_current_price()` to obtain the latest price of Bitcoin.
 
-4. **Fetch Historical Data**  
+4. **Fetch Historical Data**
    Retrieves the last 30 days of Bitcoin price data using `get_historical_data()`.
 
-5. **Moving Average Calculation**  
+5. **Moving Average Calculation**
    Applies a 7-day moving average to the historical dataset using `calculate_moving_average()`.
 
-6. **Technical Indicator Computation**  
+6. **Technical Indicator Computation**
    Leverages `calculate_technical_indicators()` to compute popular financial indicators.
 
-7. **Anomaly Detection**  
+7. **Anomaly Detection**
    Invokes `detect_anomalies()` to flag data points that significantly deviate from trends.
 
 ---
@@ -72,15 +83,15 @@ These functions encapsulate request handling, JSON parsing, error checking, and 
 
 ## References
 
-- CoinGecko API documentation: https://www.coingecko.com/en/api/documentation  
-- Python for Data Analysis – Wes McKinney  
+- CoinGecko API documentation: https://www.coingecko.com/en/api/documentation
+- Python for Data Analysis – Wes McKinney
 - Investopedia articles on [Moving Averages](https://www.investopedia.com/terms/m/movingaverage.asp) and [Technical Analysis](https://www.investopedia.com/terms/t/technicalanalysis.asp)
 
 ---
 
 ## Citations
 
-- CoinGecko. (2024). *CoinGecko API v3*. Retrieved from https://www.coingecko.com/en/api/documentation  
+- CoinGecko. (2024). *CoinGecko API v3*. Retrieved from https://www.coingecko.com/en/api/documentation
 - McKinney, W. (2018). *Python for Data Analysis*. O’Reilly Media.
 
 ---
@@ -90,9 +101,6 @@ These functions encapsulate request handling, JSON parsing, error checking, and 
 - Include support for additional coins beyond Bitcoin
 - Add interactive visualizations
 - Implement alerting system for detected anomalies
-
----
-
 
 ---
 

@@ -1,8 +1,30 @@
 # Real-Time Bitcoin Price Monitoring with Streamlit
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Repository Structure](#repository-structure)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+  - [1. Clone the Repository](#1-clone-the-repository)
+  - [2. Set Up a Virtual Environment (Recommended)](#2-set-up-a-virtual-environment-recommended)
+  - [3. Install Python Dependencies](#3-install-python-dependencies)
+- [Running the App Locally](#running-the-app-locally)
+- [Docker Deployment](#docker-deployment)
+  - [Quickstart with Scripts](#quickstart-with-scripts)
+  - [Manual Docker Commands](#manual-docker-commands)
+- [Configuration](#configuration)
+- [Jupyter Notebooks](#jupyter-notebooks)
+- [Contributing](#contributing)
+
 ## Overview
 
 This project demonstrates how to transform a pure-Python data-science workflow into a polished, interactive web dashboard using Streamlit—without writing any HTML, CSS, or JavaScript. It ingests live and historical cryptocurrency data from the CoinGecko REST API, enriches it with technical-analysis metrics, detects anomalies, and provides probabilistic forecasts via Prophet. You can run it locally, in a Docker container, or explore the analysis step-by-step in the provided Jupyter notebooks.
+
+Author: Manan J. Ambaliya
+UID: 121118776
+Email: manan001@umd.edu
 
 ## Features
 
@@ -147,10 +169,6 @@ Contributions, issues, and feature requests are welcome! Please:
 3. Commit your changes (`git commit -m 'Add new feature'`)
 4. Push to the branch (`git push origin feature-name`)
 5. Open a Pull Request
-
-## License
-
-This project is licensed under the [MIT License](LICENSE) (or specify your license).
 
 ---
 
