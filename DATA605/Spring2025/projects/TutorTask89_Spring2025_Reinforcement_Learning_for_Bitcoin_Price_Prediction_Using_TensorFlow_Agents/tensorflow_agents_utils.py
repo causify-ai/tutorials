@@ -11,35 +11,39 @@ Functions include:
 - split_yahoo_data: Splits the DataFrame into training, testing, and validation sets.
 - calculate_features: Computes a suite of features on the DataFrame, including log returns and simple moving averages.
 - calculate_normalization_params: Calculates normalization parameters for specified columns in the DataFrame.
+- normalize_data: Normalizes the training, validation, and test data using the calculated parameters.
+- create_btc_env: Creates a Bitcoin trading environment using the BitcoinTradingEnv class.
+- create_q_network: Creates a Q-Network for the DQN agent.
+- create_dqn_agent: Creates and initializes a TF-Agents DqnAgent.
+- create_collection_policy: Creates an EpsilonGreedyPolicy for data collection.
+- create_replay_buffer: Creates a TFUniformReplayBuffer.
+- create_data_collection_driver: Creates a DynamicStepDriver for collecting experiences.
+- create_training_dataset: Creates a tf.data.Dataset from the replay buffer for training.
+- initial_collect: Performs an initial collection of experiences to populate the replay buffer.
+- train_one_iteration: Performs one iteration of training the agent.
+- calculate_buy_and_hold_performance: Calculates the performance of a Buy & Hold strategy on the given dataset.
+- calculate_naive_directional_accuracy: Calculates the directional accuracy of a naive strategy.
 """
 
 import os
 import logging
+from typing import Optional, List, Union, Tuple, Any, Callable
+
 import numpy as np
 import pandas as pd
 import yfinance as yf
-
-from typing import Optional, List, Union
-from tf_agents.environments import tf_py_environment
-from bitcoin_trading_env import BitcoinTradingEnv
-
 import tensorflow as tf
-from typing import Tuple, Optional, Any, Union, Callable
-from tf_agents.agents.dqn import dqn_agent
-from tf_agents.networks import q_network as tf_agents_q_network
-from tf_agents.environments import tf_py_environment
-from tf_agents.trajectories import time_step as ts
-from tf_agents.specs import tensor_spec
 from tensorflow.keras import initializers
-from tf_agents.agents.dqn import dqn_agent as tfa_dqn_agent
-from tf_agents.policies import (
-    epsilon_greedy_policy as tfa_epsilon_greedy_policy,
-)
-from tf_agents.replay_buffers import tf_uniform_replay_buffer
-from tf_agents.environments import tf_environment
-from tf_agents.drivers import dynamic_step_driver
+from tf_agents.environments import tf_py_environment, tf_environment
+from tf_agents.specs import tensor_spec
+from tf_agents.trajectories import time_step as ts
+from tf_agents.agents.dqn import dqn_agent
+from tf_agents.policies import epsilon_greedy_policy
 from tf_agents.policies import tf_policy
-
+from tf_agents.networks import q_network
+from tf_agents.replay_buffers import tf_uniform_replay_buffer
+from tf_agents.drivers import dynamic_step_driver
+from bitcoin_trading_env import BitcoinTradingEnv
 import config
 
 
@@ -432,7 +436,7 @@ def create_q_network(
         distribution=config.KERNEL_INIT_DISTRIBUTION,
     ),
     dropout_rate_for_fc_layers: Optional[float] = config.DROPOUT_RATE,
-) -> tf_agents_q_network.QNetwork:
+) -> q_network.QNetwork:
     """
     Creates a Q-Network for the DQN agent.
 
@@ -456,7 +460,7 @@ def create_q_network(
         dropout_layer_params_for_qnetwork = tuple(
             [dropout_rate_for_fc_layers] * len(fc_layer_params)
         )
-    q_net = tf_agents_q_network.QNetwork(
+    q_net = q_network.QNetwork(
         input_tensor_spec=observation_spec,
         action_spec=action_spec,
         fc_layer_params=fc_layer_params,
@@ -473,7 +477,7 @@ def create_q_network(
 def create_dqn_agent(
     time_step_spec: ts.TimeStep,
     action_spec: tensor_spec.BoundedTensorSpec,
-    q_net: tf_agents_q_network.QNetwork,
+    q_net: q_network.QNetwork,
     optimizer: tf.keras.optimizers.Optimizer,
     train_step_counter: tf.Variable,
     gamma: float = config.GAMMA,
@@ -532,9 +536,9 @@ def create_dqn_agent(
 # Create Epsilon Greedy Policy for Data Collection
 # #############################################################################
 def create_collection_policy(
-    tf_agent: tfa_dqn_agent.DqnAgent,
+    tf_agent: dqn_agent.DqnAgent,
     epsilon_fn: Callable[[], tf.Tensor],
-) -> tfa_epsilon_greedy_policy.EpsilonGreedyPolicy:
+) -> epsilon_greedy_policy.EpsilonGreedyPolicy:
     """
     Creates an EpsilonGreedyPolicy for data collection.
 
@@ -547,7 +551,7 @@ def create_collection_policy(
     Returns:
         An EpsilonGreedyPolicy instance.
     """
-    collect_policy = tfa_epsilon_greedy_policy.EpsilonGreedyPolicy(
+    collect_policy = epsilon_greedy_policy.EpsilonGreedyPolicy(
         policy=tf_agent.policy,  # The agent's greedy policy for exploitation
         epsilon=epsilon_fn,  # Epsilon for exploration
     )
@@ -561,7 +565,7 @@ def create_collection_policy(
 # Create Replay Buffer for Experience Replay
 # #############################################################################
 def create_replay_buffer(
-    tf_agent: tfa_dqn_agent.DqnAgent,
+    tf_agent: dqn_agent.DqnAgent,
     environment_batch_size: int,
     replay_buffer_capacity: int = config.REPLAY_BUFFER_CAPACITY,
 ) -> tf_uniform_replay_buffer.TFUniformReplayBuffer:
@@ -622,7 +626,7 @@ def create_data_collection_driver(
 # #############################################################################
 def create_training_dataset(
     replay_buffer: tf_uniform_replay_buffer.TFUniformReplayBuffer,
-    tf_agent: tfa_dqn_agent.DqnAgent,  # Used for train_sequence_length
+    tf_agent: dqn_agent.DqnAgent,  # Used for train_sequence_length
     batch_size: int = config.BATCH_SIZE,
     num_parallel_calls: int = tf.data.AUTOTUNE,
     prefetch_buffer_size: int = tf.data.AUTOTUNE,
@@ -689,7 +693,7 @@ def initial_collect(
 # #############################################################################
 def train_one_iteration(
     dataset_iterator: Any,  # Iterator for the training dataset
-    tf_agent: tfa_dqn_agent.DqnAgent,
+    tf_agent: dqn_agent.DqnAgent,
 ) -> tf.Tensor:  # Returns the training loss
     """
     Performs one iteration of training the agent.
@@ -707,3 +711,163 @@ def train_one_iteration(
     weights = tf.constant(1.0 / batch_size, shape=(batch_size,), dtype=tf.float32)
     loss_info = tf_agent.train(experience, weights=weights)
     return loss_info.loss
+
+
+# #############################################################################
+# Baseline Strategy Evaluation
+# #############################################################################
+def calculate_buy_and_hold_performance(
+    data_path: str,
+    initial_capital: float = 10000.0,
+    date_column: str = "Date",
+    open_column: str = "Open",
+    close_column: str = "Close",
+) -> Tuple[float, pd.DataFrame, float]:
+    """
+    Calculates the performance of a Buy & Hold strategy on the given dataset.
+
+    The strategy buys at the 'Open' price of the first day (of the provided data_path)
+    and holds until the 'Close' price of the last day (of the provided data_path).
+    The input data should contain original, unscaled prices.
+
+    Args:
+        data_path: Path to the CSV data file (e.g., your raw test split: config.TEST_DATA_PATH).
+        initial_capital: The initial capital to simulate the investment.
+        date_column: The name of the column containing date information.
+        open_column: The name of the column containing daily open prices.
+        close_column: The name of the column containing daily close prices.
+
+    Returns:
+        A tuple containing:
+            - final_portfolio_value (float): The value of the portfolio at the end.
+            - portfolio_history (pd.DataFrame): DataFrame with 'Timestamp' and 'PortfolioValue'.
+            - total_return_percentage (float): The total percentage return.
+    """
+    _LOG.info(f"Calculating Buy & Hold performance for data: {data_path}")
+    try:
+        df = pd.read_csv(data_path)
+        if df.empty:
+            _LOG.warning(f"Data at {data_path} is empty. Cannot calculate Buy & Hold.")
+            return (
+                initial_capital,
+                pd.DataFrame({"Timestamp": [], "PortfolioValue": []}),
+                0.0,
+            )
+        required_cols = {date_column, open_column, close_column}
+        if not required_cols.issubset(df.columns):
+            missing = required_cols - set(df.columns)
+            _LOG.error(f"Required columns {missing} not found in {data_path}.")
+            raise ValueError(
+                f"DataFrame must contain specified date, open, and close columns. Missing: {missing}"
+            )
+        df["Timestamp"] = pd.to_datetime(df[date_column])
+        df.sort_values(by="Timestamp", inplace=True)
+        df.reset_index(drop=True, inplace=True)
+        buy_price = df[open_column].iloc[0]
+        if pd.isna(buy_price) or buy_price <= 0:
+            _LOG.error(f"Invalid buy price ({buy_price}) at the start of {data_path}.")
+            raise ValueError("Invalid or missing buy price at the start of the data.")
+        num_coins = initial_capital / buy_price
+        _LOG.info(
+            f"Buy & Hold: Buying {num_coins:.6f} BTC at {buy_price:.2f} on {df[date_column].iloc[0].strftime('%Y-%m-%d')}"
+        )
+        portfolio_history_values = num_coins * df[close_column]
+        portfolio_history_df = pd.DataFrame(
+            {"Timestamp": df[date_column], "PortfolioValue": portfolio_history_values}
+        )
+        final_portfolio_value = portfolio_history_values.iloc[-1]
+        sell_price = df[close_column].iloc[-1]
+        _LOG.info(
+            f"Buy & Hold: Holding until {df[date_column].iloc[-1].strftime('%Y-%m-%d')}. "
+            f"Last close price: {sell_price:.2f}. Final value: {final_portfolio_value:.2f}"
+        )
+        total_return_percentage = (
+            (final_portfolio_value - initial_capital) / initial_capital
+        ) * 100
+        _LOG.info(f"Buy & Hold: Total Return: {total_return_percentage:.2f}%")
+        return final_portfolio_value, portfolio_history_df, total_return_percentage
+    except FileNotFoundError:
+        _LOG.error(f"Data file not found: {data_path}")
+        raise
+    except Exception as e:
+        _LOG.error(
+            f"Error calculating Buy & Hold performance for {data_path}: {e}",
+            exc_info=True,
+        )
+        raise
+
+
+# #############################################################################
+# Naive Prediction Baselines
+# #############################################################################
+def calculate_naive_directional_accuracy(
+    data_path: str,
+    prediction_type: str,  # "always_up" or "always_down"
+    date_column: str = "Date",
+    close_column: str = "Close",
+) -> Tuple[float, int, int]:
+    """
+    Calculates the accuracy of a naive 'Always Predict Up' or 'Always Predict Down' strategy.
+
+    Args:
+        data_path: Path to the CSV data file.
+        prediction_type: Specifies the naive strategy. Must be "always_up" or "always_down".
+        date_column: The name of the column containing date/timestamp information.
+        close_column: The name of the column containing daily close prices.
+
+    Returns:
+        A tuple containing:
+            - accuracy (float): The directional accuracy (0.0 to 1.0).
+            - num_correct_predictions (int): Number of correctly predicted days.
+            - total_prediction_days (int): Total number of days used for prediction.
+    """
+    _LOG.info(f"Calculating Naive '{prediction_type}' accuracy for data: {data_path}")
+    if prediction_type not in ["always_up", "always_down"]:
+        _LOG.error(
+            f"Invalid prediction_type: {prediction_type}. Must be 'always_up' or 'always_down'."
+        )
+        raise ValueError("Invalid prediction_type for naive accuracy.")
+    try:
+        df = pd.read_csv(data_path)
+        if df.empty or len(df) < 2:
+            _LOG.warning(
+                f"Data at {data_path} is too short (<2 rows) to calculate directional accuracy."
+            )
+            return 0.0, 0, 0
+        required_cols = {date_column, close_column}
+        if not required_cols.issubset(df.columns):
+            missing = required_cols - set(df.columns)
+            _LOG.error(
+                f"Required columns {missing} not found in {data_path} for naive accuracy."
+            )
+            raise ValueError(
+                f"DataFrame must contain specified date and close columns. Missing: {missing}"
+            )
+        df["Timestamp"] = pd.to_datetime(df[date_column])
+        df.sort_values(by="Timestamp", inplace=True)
+        df.reset_index(drop=True, inplace=True)
+        df["PriceChange"] = df[close_column].diff()
+        df_comparable = df.dropna(subset=["PriceChange"])
+        if df_comparable.empty:
+            _LOG.warning(f"No comparable days after diff() for data: {data_path}")
+            return 0.0, 0, 0
+        total_prediction_days = len(df_comparable)
+        if prediction_type == "always_up":
+            num_correct_predictions = (df_comparable["PriceChange"] > 0).sum()
+        else:  # "always_down"
+            num_correct_predictions = (df_comparable["PriceChange"] < 0).sum()
+        accuracy = num_correct_predictions / total_prediction_days
+        _LOG.info(
+            f"Naive '{prediction_type}' Accuracy: {accuracy:.2%} "
+            f"({num_correct_predictions}/{total_prediction_days} days)"
+        )
+        return accuracy, num_correct_predictions, total_prediction_days
+    except FileNotFoundError:
+        _LOG.error(f"Data file not found for naive accuracy: {data_path}")
+        raise
+    except Exception as e:
+        _LOG.error(
+            f"Error calculating naive directional accuracy for {data_path}: {e}",
+            exc_info=True,
+        )
+        raise
