@@ -1,3 +1,9 @@
+"""
+Import as:
+
+import download_fred_data as dwfreda
+"""
+
 import logging as log
 import os
 import time
@@ -48,22 +54,24 @@ class FredDataDownloader:
         Download historical series data.
 
         When no start and end timestamps are passed, the entire time series is downloaded.
-        If invalid frequencies are passed, the frequency parameter is automatically dropped.
+        If no frequency is passed, the highest available frequency is downloaded.
 
         Example of a returned series:
 
+        ```
                           GDP
         2019-10-01  21933.217
         2020-01-01  21727.657
         2020-04-01  19935.444
+        ```
 
-        :param id_: FRED series identifier (e.g., 'GDP')
+        :param id_: FRED series identifier (e.g., "GDP")
         :param start_timestamp: first observation date
         :param end_timestamp: last observation date
-        :param frequency: series data frequency; valid frequencies are:
-                        - 'q' (quarter)
-                        - 'sa' (semi-annual)
-                        - 'a' (annual)
+        :param frequency: series data frequency
+            - "q": quarter
+            - "sa": semi-annual
+            - "a": annual
         :return: relevant FRED series data
         """
         # Validate frequency before any API call.
@@ -114,7 +122,7 @@ class FredDataDownloader:
                 err_msgs[f"Attempt {attempt}"] = str(err)
                 attempt += 1
                 continue
-            # Log the series download and return.
+            # Package the output.
             df = series.to_frame(name=id_)
             _LOG.info(
                 "Downloaded series %s with %d records",
