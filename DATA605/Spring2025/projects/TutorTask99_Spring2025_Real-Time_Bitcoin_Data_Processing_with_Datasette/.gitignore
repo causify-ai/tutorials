@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
+
+# Virtual environments
+venv/
+ENV/
+
+# Build logs
+*.log
+
+# Temporary folders
+tmp.build/
+

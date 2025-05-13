@@ -4,6 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get -y update
 RUN apt-get -y upgrade
 
+
 # Install system utilities.
 RUN apt install -y --no-install-recommends \
     sudo \
@@ -11,7 +12,12 @@ RUN apt install -y --no-install-recommends \
     systemctl \
     gnupg \
     git \
-    vim
+    vim \
+    build-essential \
+    libatlas-base-dev \
+    libopenblas-dev \
+    liblapack-dev \
+    gfortran
 
 # Install Python.
 RUN apt install -y --no-install-recommends \
@@ -20,7 +26,13 @@ RUN apt install -y --no-install-recommends \
     python3-dev
 
 RUN python3 -m pip install --upgrade pip
-    
+
+
+#copy and install from requirements.txt
+
+#RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install scipy statsmodels pandas requests datasette schedule matplotlib jupyter
+
 # Install Python packages.
 # There is a bug:
 #   File "/opt/homebrew/lib/python3.10/site-packages/tornado/iostream.py", line 182, in advance
@@ -38,18 +50,24 @@ RUN pip3 install \
 
 RUN mkdir /install
 
+
 # Install Jupyter extensions.
-ADD install_jupyter_extensions.sh /install
-RUN /install/install_jupyter_extensions.sh
+#ADD install_jupyter_extensions.sh /install
+#RUN /install/install_jupyter_extensions.sh
 
 # Config.
-ADD etc_sudoers /install/
-COPY etc_sudoers /etc/sudoers
-COPY bashrc /root/.bashrc
+#ADD etc_sudoers /install/
+# COPY etc_sudoers /etc/sudoers
+# COPY bashrc /root/.bashrc
 
 # Report package versions.
 ADD version.sh /install/
 RUN /install/version.sh 2>&1 | tee version.log
 
 # Jupyter.
-EXPOSE 8888
+EXPOSE 8888 8001
+
+
+COPY run_services.sh /run_services.sh
+RUN chmod +x /run_services.sh
+CMD ["/run_services.sh"]

@@ -1,0 +1,38 @@
+{
+  "title": "Real-Time Bitcoin Data Explorer",
+  "description_html": "<img src='/static/logo.png' alt='Bitcoin Data Logo' style='height:50px;'> <p>Explore real-time Bitcoin price data with interactive visualizations and time series analysis.</p>",
+  "license": "MIT License",
+  "license_url": "https://opensource.org/licenses/MIT",
+  "source": "CoinGecko API",
+  "source_url": "https://www.coingecko.com/",
+  "extra_css_urls": ["/static/custom.css"],
+  "extra_js_urls": [],
+  "databases": {
+    "bitcoin_data": {
+      "tables": {
+        "bitcoin_prices": {
+          "description": "Historical Bitcoin price data with timestamps and market information.",
+          "label_column": "timestamp"
+        },
+        "time_series_analysis": {
+          "description": "Precomputed time series analysis results for Bitcoin prices.",
+          "label_column": "analysis_type"
+        }
+      },
+      "queries": {
+        "recent_prices": {
+          "sql": "SELECT * FROM bitcoin_prices ORDER BY timestamp DESC LIMIT 100",
+          "title": "Recent Bitcoin Prices"
+        },
+        "daily_average": {
+          "sql": "SELECT DATE(timestamp) as date, AVG(price) as average_price FROM bitcoin_prices GROUP BY DATE(timestamp)",
+          "title": "Daily Average Price"
+        },
+        "highest_price_per_day": {
+          "sql": "SELECT DATE(timestamp) as date, MAX(price) as max_price FROM bitcoin_prices GROUP BY DATE(timestamp)",
+          "title": "Highest Price Per Day"
+        }
+      }
+    }
+  }
+}
