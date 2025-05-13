@@ -4,7 +4,30 @@ This Jupyter notebook provides a robust and reproducible workflow for analyzing 
 
 ---
 
-## **Notebook Objectives**
+## Table of Contents
+
+- [Notebook Objectives](#notebook-objectives)
+- [Notebook Structure](#notebook-structure)
+- [Data Acquisition](#data-acquisition)
+- [Database Operations](#database-operations)
+- [Schema Details](#schema-details)
+- [Schema Diagram](#schema-diagram)
+- [Usage Instructions](#usage-instructions)
+- [API Function Breakdown](#api-function-breakdown)
+- [Data Analysis](#data-analysis)
+  - [Moving Averages](#moving-averages)
+  - [Volume Analysis](#volume-analysis)
+  - [Bollinger Bands](#bollinger-bands)
+  - [Rate of Change](#rate-of-change)
+  - [Volatility](#volatility)
+  - [Distribution Analysis](#distribution-analysis)
+- [Visualization](#visualization)
+- [Conclusion](#conclusion)
+- [References](#references)
+
+---
+
+## Notebook Objectives
 
 - Fetch and analyze 15 years of daily historical Bitcoin price and volume data.
 - Store and manage data efficiently using a local SQLite database.
@@ -14,7 +37,7 @@ This Jupyter notebook provides a robust and reproducible workflow for analyzing 
 
 ---
 
-## **Notebook Structure**
+## Notebook Structure
 
 | Section                    | Description                                                                 |
 |----------------------------|-----------------------------------------------------------------------------|
@@ -29,16 +52,53 @@ This Jupyter notebook provides a robust and reproducible workflow for analyzing 
 
 ---
 
-## **Key Features**
+## Data Acquisition
 
-- **Comprehensive Data Pipeline**: From historical data ingestion to live updates and persistent storage.
-- **Reproducibility**: All steps are documented and organized for clarity.
-- **Extensibility**: Modular code structure allows easy adaptation for other cryptocurrencies or data sources.
-- **Visualization Ready**: Data is formatted and stored for downstream analysis and visualization.
+- Retrieves up to 15 years of BTC-USD daily data.
+- Fetches live market data from CoinMarketCap.
+- Updates local database (`btcDaily.db`) with new entries.
 
 ---
 
-## **Usage Instructions**
+## Database Operations
+
+- Uses SQLite for lightweight and persistent storage.
+- Supports dynamic querying using SQL.
+
+---
+
+## Schema Details
+
+The schema is composed of a single main table: `btc_daily_stats`. Each row corresponds to one day's worth of Bitcoin market data.
+
+### Column Descriptions:
+
+- **date** *(string)* – Timestamp in `YYYY-MM-DD-HH-MM-SS` format.
+- **close** *(float)* – Closing price of Bitcoin for that day.
+- **high** *(float)* – Highest price reached that day.
+- **low** *(float)* – Lowest price reached that day.
+- **open** *(float)* – Opening price of Bitcoin that day.
+- **volume** *(float)* – Total trading volume for that day.
+
+---
+
+## Schema Diagram
+
+```mermaid
+erDiagram
+    btc_daily_stats {
+        string date
+        float close
+        float high
+        float low
+        float open
+        float volume
+    }
+```
+
+---
+
+## Usage Instructions
 
 1. **Environment Setup**: Ensure you have Python 3.x and the following packages installed:
    - `pandas`, `requests`, `sqlite3`, `mplfinance`, `yfinance`, `matplotlib`, `seaborn`
@@ -47,103 +107,83 @@ This Jupyter notebook provides a robust and reproducible workflow for analyzing 
 
 ---
 
-## Tool API Reference
+## API Function Breakdown
 
-| Function             | Description                                                                 |
-|---------------------|-----------------------------------------------------------------------------|
-| `fetchHistoricalBTC()` | Retrieves 15 years of BTC-USD data using `yfinance`.                        |
-| `storeData()`           | Inserts a DataFrame into the SQLite database.                              |
-| `fetchDB()`             | Executes a custom SQL query and returns a DataFrame.                       |
-| `liveBTC()`             | Fetches the latest BTC data from CoinMarketCap.                            |
-| `addDatapoint()`        | Appends the live data into the SQLite database.                            |
-
----
-
-## Quickstart Examples
-
-### 1. Fetch Historical Data
-```python
-# Retrieve data as DataFrame
-df = fetchHistoricalBTC('BTC-USD', period='15y', interval='1d')
-print(df.head())
-```
-
-### 2. Insert into SQLite Database
-```python
-# Save fetched data into DB
-storeData(df, 'btcDaily.db')
-```
-
-### 3. Query the Database
-```python
-# Custom SQL query
-result = fetchDB("SELECT * FROM btc_daily_stats WHERE close > 30000", 'btcDaily.db')
-print(result.head())
-```
-
-### 4. Fetch Latest Live Data
-```python
-# Retrieve live BTC data
-url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
-API_KEY = "<your_key>"
-live_data, _ = liveBTC(url, API_KEY)
-print(live_data)
-```
-
-### 5. Update Database with Live Data
-```python
-# Add latest live BTC data to DB
-addDatapoint(live_data, 'btcDaily.db')
-```
-
----
-
-## Function Signatures
-
-### `fetchHistoricalBTC(ticker, period, interval)`
-- **Returns**: `pd.DataFrame` with historical BTC data.
-- **Columns**: `['date', 'close', 'high', 'low', 'open', 'volume']`
+### `fetchHistoricalBTC()`
+- **Purpose**: Downloads historical BTC price data using the Yahoo Finance API.
+- **Behind the scenes**: Calls `yf.download()` and reshapes columns to the desired schema. Converts the datetime index into a formatted string for SQLite compatibility.
 
 ### `storeData(data, db)`
-- **Arguments**: `data` — DataFrame with BTC market data; `db` — DB file path.
-- **Effect**: Inserts data into the `btc_daily_stats` table.
+- **Purpose**: Persists a DataFrame into the SQLite database.
+- **Behind the scenes**: Uses `pandas.to_sql()` to replace or insert data into the `btc_daily_stats` table. Handles the SQLite connection lifecycle.
 
 ### `fetchDB(query, db)`
-- **Arguments**: `query` — SQL string; `db` — DB file path.
-- **Returns**: Query result as a `pd.DataFrame`.
+- **Purpose**: Executes a custom SQL query and returns the result.
+- **Behind the scenes**: Connects to SQLite using `sqlite3.connect`, runs `pd.read_sql_query`, and closes the connection after fetching.
 
 ### `liveBTC(url, API_KEY)`
-- **Returns**: Tuple — dictionary of selected fields and raw response dictionary.
-- **Source**: CoinMarketCap API
+- **Purpose**: Fetches real-time Bitcoin stats from CoinMarketCap.
+- **Behind the scenes**: Makes a `GET` request with proper headers and query parameters. Parses the JSON to extract timestamp, open price, and volume.
 
 ### `addDatapoint(liveData, db)`
-- **Effect**: Adds the latest BTC data into the `btc_daily_stats` table.
+- **Purpose**: Inserts a new live data row into the database.
+- **Behind the scenes**: Uses `sqlite3` to prepare and execute an `INSERT` SQL command. Converts the date to match the schema format before inserting.
 
 ---
 
-## Requirements
-Make sure you have the following installed:
-- `pandas`, `requests`, `sqlite3`, `yfinance`, `matplotlib`, `seaborn`, `mplfinance`
+## Data Analysis
+
+### Moving Averages
+- Calculates 2, 30, and 120-day moving averages.
+- Useful to smoothen volatility and detect trends.
+
+### Volume Analysis
+- Assesses how trading volume evolves.
+- Flags sudden surges or dry periods.
+
+### Bollinger Bands
+- Applies a 20-day rolling mean and standard deviation to show dynamic price bands.
+
+### Rate of Change
+- Measures price change percentages over different windows (1d, 30d, 120d).
+- Good for momentum detection.
+
+### Volatility
+- Rolling standard deviation to measure price fluctuation.
+
+### Distribution Analysis
+- Histogram of daily returns.
+- Summarizes mean, median, and spread of market behavior.
+
+---
+
+## Visualization
+
+- **Line plots**: For time trends of price and volume.
+- **Candlestick charts**: To visualize open-high-low-close with Bollinger overlays.
+- **Bar charts**: For rate-of-change visuals.
+- **Histograms**: For return distributions.
+- **Scatter plots**: To detect outliers or relationships.
+
+---
+
+## Conclusion
+
+This analysis framework captures the essential building blocks for time-series analysis of cryptocurrency data:
+
+- The SQLite schema is deliberately simple and efficient, making queries fast and the structure easy to maintain.
+- Visual tools like moving averages, Bollinger Bands, and volatility metrics help identify key trends and shifts in the BTC market.
+- The setup supports easy extension to other coins, new metrics, or integration with different APIs.
+
+By storing everything locally in SQLite and visualizing data in Python, this solution remains fast, cost-effective, and highly transparent.
 
 ---
 
 ## References
-- [CoinMarketCap API Docs](https://coinmarketcap.com/api/documentation/v1/)
-- [SQLite Python Docs](https://docs.python.org/3/library/sqlite3.html)
 
----
-
-## **Data Overview**
-
-- **Historical Data**: 15 years of daily BTC-USD prices and volumes, stored in `btcDaily.db` SQLite database.
-- **Live Data**: Real-time Bitcoin statistics (price, volume, market cap, etc.) fetched via CoinMarketCap API and appended to the database.
-
----
-
-## **Notebook Best Practices**
-
-- All code sections are clearly labeled and commented.
-- Data is validated after each major operation (fetch, store, update).
-- Notebook structure is inspired by established data science best practices for clarity and reproducibility.
+- [CoinMarketCap API Documentation](https://coinmarketcap.com/api/)
+- [pandas Documentation](https://pandas.pydata.org/docs/)
+- [sqlite3 Python Docs](https://docs.python.org/3/library/sqlite3.html)
+- [mplfinance Documentation](https://github.com/matplotlib/mplfinance)
 
 ---

@@ -10,6 +10,7 @@ This notebook demonstrates how to fetch, store, and analyze daily Bitcoin (BTC) 
 - [Notebook Structure](#notebook-structure)
 - [Data Acquisition](#data-acquisition)
 - [Database Operations](#database-operations)
+- [Schema Details](#schema-details)
 - [Schema Diagram](#schema-diagram)
 - [Data Analysis](#data-analysis)
   - [Moving Averages](#moving-averages)
@@ -19,6 +20,7 @@ This notebook demonstrates how to fetch, store, and analyze daily Bitcoin (BTC) 
   - [Volatility](#volatility)
   - [Distribution Analysis](#distribution-analysis)
 - [Visualization](#visualization)
+- [Conclusion](#conclusion)
 - [References](#references)
 
 ---
@@ -54,13 +56,22 @@ Each block is well-commented for clarity and reproducibility.
 ## Database Operations
 
 - Uses SQLite for lightweight and persistent storage.
-- Table schema example:
-
-| date                | close  | high   | low    | open   | volume       |
-|---------------------|--------|--------|--------|--------|--------------|
-| 2014-09-17-00-00-00 | 457.33 | 468.17 | 452.42 | 465.86 | 21056800     |
-
 - Supports dynamic querying using SQL.
+
+---
+
+## Schema Details
+
+The schema is composed of a single main table: `btc_daily_stats`. Each row corresponds to one day's worth of Bitcoin market data.
+
+### Column Descriptions:
+
+- **date** *(string)* – Timestamp in `YYYY-MM-DD-HH-MM-SS` format.
+- **close** *(float)* – Closing price of Bitcoin for that day.
+- **high** *(float)* – Highest price reached that day.
+- **low** *(float)* – Lowest price reached that day.
+- **open** *(float)* – Opening price of Bitcoin that day.
+- **volume** *(float)* – Total trading volume for that day.
 
 ---
 
@@ -116,10 +127,24 @@ erDiagram
 
 ---
 
+## Conclusion
+
+This analysis framework captures the essential building blocks for time-series analysis of cryptocurrency data:
+
+- The SQLite schema is deliberately simple and efficient, making queries fast and the structure easy to maintain.
+- Visual tools like moving averages, Bollinger Bands, and volatility metrics help identify key trends and shifts in the BTC market.
+- The setup supports easy extension to other coins, new metrics, or integration with different APIs.
+
+By storing everything locally in SQLite and visualizing data in Python, this solution remains fast, cost-effective, and highly transparent.
+
+---
+
 ## References
 
 - [CoinMarketCap API Documentation](https://coinmarketcap.com/api/)
 - [pandas Documentation](https://pandas.pydata.org/docs/)
 - [sqlite3 Python Docs](https://docs.python.org/3/library/sqlite3.html)
 - [mplfinance Documentation](https://github.com/matplotlib/mplfinance)
+
+---
 
