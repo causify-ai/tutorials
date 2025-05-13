@@ -2,14 +2,19 @@
 
 <!-- toc -->
 
-- [Project files](#project-files)
+- [EIA Tutorial Overview](#eia-tutorial-overview)
+- [Files](#files)
+- [Setup and Dependencies](#setup-and-dependencies)
+  - [Building and Running the Docker Container](#building-and-running-the-docker-container)
 
 <!-- tocstop -->
 
 ## EIA Tutorial Overview
 
 This tutorial demonstrates how to extract and analyze electricity metadata from
-the U.S. EIA v2 API.
+the U.S. EIA v2 API. It provides a modular metadata-only pipeline for exploring
+dataset coverage, metrics, frequencies, and facet structures without pulling
+actual time series values.
 
 ## Files
 
@@ -18,5 +23,32 @@ the U.S. EIA v2 API.
 - `download_eia_metadata.API.ipynb`: Notebook showing how to use the API wrapper
 - `download_eia_metadata.API.md`: Markdown explaining the API design and wrapper
 - `download_eia_metadata.example.ipynb`: Notebook exploring the output metadata
-- `download_eia_metadata.example.md`: Markdown explaining the analysis and insights
+- `download_eia_metadata.example.md`: Markdown explaining the analysis and
+  insights
 - `README.md`: This file
+
+## Setup and Dependencies
+
+### Building and Running the Docker Container
+
+- Go to the top of the `tutorials` repo
+  ```
+  > cd ~/src/tutorials1
+  ```
+- Build the thin environment
+  ```bash
+  > cd helpers_root
+  > ./dev_scripts_helpers/thin_client/build.py
+  ```
+- Activate virtual environment:
+  ```bash
+  > source dev_scripts_tutorial_github/thin_client/setenv.sh
+  ```
+- Run Container:
+  ```bash
+  > i docker_bash
+  ```
+- Launch Jupyter Notebook:
+  ```bash
+  > i docker_jupyter
+  ```

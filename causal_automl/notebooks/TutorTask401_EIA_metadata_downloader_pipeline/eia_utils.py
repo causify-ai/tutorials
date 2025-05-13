@@ -1,11 +1,11 @@
 """
 Import as:
 
-import causal_automl.TutorTask401_EIA_metadata_downloader_pipeline.eia_utils as catemdpeu
+import causal_automl.notebooks.TutorTask401_EIA_metadata_downloader_pipeline.eia_utils as cantemdpeu
 """
 
 import logging
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -298,7 +298,7 @@ def build_full_url(
     base_url: str,
     df_facets: pd.DataFrame,
     api_key: str,
-    facet_input: Dict[str, str]
+    facet_input: Dict[str, str],
 ) -> str:
     """
     Build a full EIA v2 API URL by appending one facet value per facet type.
@@ -325,16 +325,13 @@ def build_full_url(
     return full_url
 
 
-def plot_distribution(
-    df_metadata: pd.DataFrame,
-    column: str,
-    title: str
-) -> None:
+def plot_distribution(df_metadata: pd.DataFrame, column: str, title: str) -> None:
     """
     Plot a distribution count for a specified metadata column.
 
     :param df_metadata: metadata table containing time series fields
-    :param column: column to group and count values by (e.g., 'frequency_id', 'data_units')
+    :param column: column to group and count values by (e.g.,
+        'frequency_id', 'data_units')
     :param title: title for the plot
     """
     if column not in df_metadata.columns:
@@ -347,4 +344,3 @@ def plot_distribution(
     plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
     plt.show()
-

@@ -73,11 +73,9 @@
 # %% vscode={"languageId": "plaintext"}
 # %load_ext autoreload
 # %autoreload 2
-import os
-import pandas as pd
 import logging
+import os
 
-import helpers.hdbg as hdbg
 import eia_utils as eiu
 
 # Enable logging.
@@ -104,7 +102,9 @@ api_key = os.getenv("EIA_API_KEY")
 
 # Ensure the token is set correctly.
 if not api_key:
-    raise ValueError("EIA API key is not set. Please configure it before proceeding.")
+    raise ValueError(
+        "EIA API key is not set. Please configure it before proceeding."
+    )
 
 # %% [markdown]
 # ## Define Config

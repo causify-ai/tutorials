@@ -23,11 +23,12 @@ import argparse
 import logging
 import os
 
-import eia_utils as eiu
 import helpers.hdbg as hdbg
 import helpers.hio as hio
 import helpers.hparser as hparser
 import pandas as pd
+
+import causal_automl.notebooks.TutorTask401_EIA_metadata_downloader_pipeline.eia_utils as cantemdpeu
 
 _LOG = logging.getLogger(__name__)
 
@@ -95,7 +96,7 @@ def _extract_and_upload_metadata(
     :param aws_profile: AWS profile name
     """
     # Extract metadata.
-    downloader = eiu.EiaMetadataDownloader(category, api_key, version_num)
+    downloader = cantemdpeu.EiaMetadataDownloader(category, api_key, version_num)
     df_metadata, param_entries = downloader.run_metadata_extraction()
     # Write to S3 bucket.
     writer = _EiaMetadataWriter(bucket_path, aws_profile)
