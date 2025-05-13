@@ -1,8 +1,0 @@
-pandas
-requests
-datasette
-schedule
-matplotlib
-scipy
-statsmodels
-jupyter
