@@ -1,9 +1,13 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# stream_loop.py
+
 import time
 from datetime import datetime
+import sys
+import os
+
+sys.path.append(os.path.dirname(__file__))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from bitcoin_utils import fetch_btc_data_dict, save_to_daily_file
 
 print("🚀 Starting real-time Bitcoin data collection (every 30 seconds)...")
