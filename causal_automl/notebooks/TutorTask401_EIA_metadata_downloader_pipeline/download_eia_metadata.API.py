@@ -76,7 +76,7 @@
 import logging
 import os
 
-import eia_utils as eiu
+import causal_automl.notebooks.TutorTask401_EIA_metadata_downloader_pipeline.eia_utils as cantemdpeu
 
 # Enable logging.
 logging.basicConfig(level=logging.INFO)
@@ -125,7 +125,7 @@ version_num = "1.0"
 # ## Initialize Metadata Downloader
 
 # %% vscode={"languageId": "plaintext"}
-downloader = eiu.EiaMetadataDownloader(
+downloader = cantemdpeu.EiaMetadataDownloader(
     category=category,
     api_key=api_key,
     version_num=version_num,
@@ -168,7 +168,7 @@ meta = df_metadata.iloc[0]
 facet_input = {"stateid": "IN", "sectorid": "OTH"}
 
 # Build URL.
-full_url = eiu.build_full_url(
+full_url = cantemdpeu.build_full_url(
     base_url=meta["url"],
     df_facets=df_facet,
     api_key=api_key,

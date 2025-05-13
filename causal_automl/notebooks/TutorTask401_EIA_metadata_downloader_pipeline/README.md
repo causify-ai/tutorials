@@ -5,7 +5,7 @@
 - [EIA Tutorial Overview](#eia-tutorial-overview)
 - [Files](#files)
 - [Setup and Dependencies](#setup-and-dependencies)
-  - [Building and Running the Docker Container](#building-and-running-the-docker-container)
+  * [Building and Running the Docker Container](#building-and-running-the-docker-container)
 
 <!-- tocstop -->
 
