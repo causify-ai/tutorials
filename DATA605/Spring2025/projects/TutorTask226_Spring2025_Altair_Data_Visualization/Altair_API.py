@@ -1,10 +1,11 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 import pandas as pd
-from template_utils import generate_dashboard, apply_transforms, get_combined_data
+from Altair_utils import generate_dashboard, apply_transforms, get_combined_data
 
 app = FastAPI()
 
+# Serve the HTML dashboard
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html>
@@ -25,11 +26,7 @@ HTML_TEMPLATE = """
     fetch("/chart")
       .then(response => response.json())
       .then(spec => {
-        vegaEmbed('#vis', spec).catch(console.error);
-      })
-      .catch(err => {
-        document.getElementById('vis').textContent = 'Failed to load chart';
-        console.error("Chart load error:", err);
+        vegaEmbed("#vis", spec);
       });
   </script>
 </body>
@@ -37,14 +34,15 @@ HTML_TEMPLATE = """
 """
 
 @app.get("/", response_class=HTMLResponse)
-async def render_dashboard(request: Request):
-    return HTMLResponse(content=HTML_TEMPLATE)
+async def get_home():
+    return HTML_TEMPLATE
 
 @app.get("/chart")
 async def get_chart():
-    df = get_combined_data()
-    if df is None or df.empty:
-        return JSONResponse(content={"error": "No data available"}, status_code=200)
-    transformed = apply_transforms(df)
-    chart = generate_dashboard(transformed)
-    return JSONResponse(content=chart.to_dict())
+    try:
+        df = get_combined_data()
+        transformed = apply_transforms(df)
+        chart = generate_dashboard(transformed)
+        return JSONResponse(content=chart.to_dict())
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
