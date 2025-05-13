@@ -1,0 +1,9 @@
+requests
+pandas
+plotly
+clickhouse-connect
+python-dotenv
+Flask
+nbformat
+streamlit
+notebook
