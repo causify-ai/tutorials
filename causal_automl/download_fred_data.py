@@ -1,3 +1,9 @@
+"""
+Import as:
+
+import causal_automl.download_fred_data as cadofrda
+"""
+
 import logging as log
 import os
 import time
@@ -68,7 +74,7 @@ class FredDataDownloader:
             - "a": annual
         :return: relevant FRED series data
         """
-        # Validate frequency before any API call.
+        # Validate the passed frequency value.
         valid_freqs = ["q", "sa", "a"]
         if frequency is not None:
             hdbg.dassert_in(
@@ -91,6 +97,7 @@ class FredDataDownloader:
         # Start attempts.
         while attempt <= max_attempts:
             try:
+                # Download the data for the series.
                 series = self._client.get_series(
                     id_,
                     **loading_kwargs,
