@@ -162,3 +162,30 @@ def addDatapoint(liveData, db):
     conn.commit()
     conn.close()
     return None
+
+# -----------------------------------------------------------------------------
+# updateLiveBTCData: Fetch latest BTC data and push it into the SQLite DB.
+# -----------------------------------------------------------------------------
+
+def updateLiveBTCData(url, API_KEY, db):
+    """
+    Combines liveBTC() and addDatapoint() to fetch and insert latest BTC data.
+
+    :param url (str): The CoinMarketCap API endpoint.
+    :param API_KEY (str): API key to authenticate the CoinMarketCap request.
+    :param db (str): Path to the SQLite database file.
+
+    :return: None
+    """
+    # Fetch the latest live BTC data
+    liveData, _ = liveBTC(url, API_KEY)
+    if liveData is None:
+        print("Failed to fetch live data. No update performed.")
+        return
+
+    # Insert the data into the database
+    try:
+        addDatapoint(liveData, db)
+        print(f"Live data inserted successfully: {liveData}")
+    except Exception as e:
+        print(f"Error inserting live data into DB: {e}")
