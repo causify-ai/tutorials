@@ -1,0 +1,11 @@
+textblob
+newsapi-python
+pandas
+statsmodels
+matplotlib
+requests
+seaborn
+plotly
+numpy
+nltk
+python-dotenv
