@@ -69,7 +69,7 @@ class _EiaMetadataWriter:
         _LOG.debug("Saved CSV locally to: %s", local_file_path)
         # Upload CSV to the specified S3 bucket.
         bucket_file_path = self._bucket_path + file_name
-        # hs3.copy_file_to_s3(local_file_path, bucket_file_path, self._aws_profile)
+        hs3.copy_file_to_s3(local_file_path, bucket_file_path, self._aws_profile)
         _LOG.debug("Uploaded to S3: %s", bucket_file_path)
 
 
