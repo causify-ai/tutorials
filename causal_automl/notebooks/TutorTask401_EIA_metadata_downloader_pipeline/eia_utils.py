@@ -298,8 +298,7 @@ def build_full_url(
     base_url: str,
     df_facets: pd.DataFrame,
     api_key: str,
-    *,
-    facet_input: Optional[Dict[str, str]] = None,
+    facet_input: Dict[str, str]
 ) -> str:
     """
     Build a full EIA v2 API URL by appending one facet value per facet type.
@@ -320,28 +319,32 @@ def build_full_url(
     facet_ids = df_facets["facet_id"].unique()
     query_parts = []
     for facet_id in facet_ids:
-        if facet_id in facet_input:
-            # Use input values if specified.
-            value = facet_input[facet_id]
-        else:
-            value = df_facets[df_facets["facet_id"] == facet_id].iloc[0]["id"]
+        value = facet_input[facet_id]
         query_parts.append(f"&{facet_id}={value}")
     full_url = url + "".join(query_parts)
     return full_url
 
 
-def plot_time_series_count_per_dataset(df_metadata: pd.DataFrame) -> None:
+def plot_distribution(
+    df_metadata: pd.DataFrame,
+    column: str,
+    title: str
+) -> None:
     """
-    Plot the number of time series available per dataset.
+    Plot a distribution count for a specified metadata column.
 
-    :param df_metadata: all EIA time series metadata
+    :param df_metadata: metadata table containing time series fields
+    :param column: column to group and count values by (e.g., 'frequency_id', 'data_units')
+    :param title: title for the plot
     """
-    count_series = df_metadata["dataset_id"].value_counts()
-    ax = count_series.plot(kind="bar", figsize=(8, 4))
-    ax.set_title("Number of Time Series per Dataset")
-    ax.set_xlabel("Dataset ID")
-    ax.set_ylabel("Count of Time Series")
+    if column not in df_metadata.columns:
+        raise ValueError(f"Column '{column}' not found in df_metadata.")
+    counts = df_metadata[column].value_counts()
+    ax = counts.plot(kind="bar", figsize=(8, 4), title=title)
+    ax.set_xlabel(column.replace("_", " ").title())
+    ax.set_ylabel("Count")
     ax.grid(True)
     plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
     plt.show()
+

@@ -146,4 +146,30 @@ df_metadata.head()
 # ## Preview Facet Values
 
 # %% vscode={"languageId": "plaintext"}
-param_entries[0][0].head()
+df_facet = param_entries[0][0]
+df_facet.head()
+
+# %% [markdown]
+# ### Group and Preview Facet Values by Facet Type
+
+# %%
+# Show unique facet types and sample values for each.
+df_facet.groupby("facet_id").head(1)
+
+# %% [markdown]
+# ### Construct Full URL from One Value per Facet
+
+# %%
+# Select sample route.
+meta = df_metadata.iloc[0]
+
+# Select facet values.
+facet_input = {"stateid": "IN", "sectorid": "OTH"}
+
+# Build URL.
+full_url = eiu.build_full_url(
+    base_url=meta["url"],
+    df_facets=df_facet,
+    api_key=api_key,
+    facet_input=facet_input,
+)
