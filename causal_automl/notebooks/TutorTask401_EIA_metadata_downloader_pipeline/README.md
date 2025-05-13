@@ -15,8 +15,8 @@ the U.S. EIA v2 API.
 
 - `eia_utils.py`: Wrapper for the EIA v2 API
 - `download_eia_metadata.py`: Script to extract and upload metadata
-- `eia_metadata.API.ipynb`: Notebook showing how to use the API wrapper
-- `eia_metadata.API.md`: Markdown explaining the API design and wrapper
-- `eia_metadata.example.ipynb`: Notebook exploring the output metadata
-- `eia_metadata.example.md`: Markdown explaining the analysis and insights
+- `download_eia_metadata.API.ipynb`: Notebook showing how to use the API wrapper
+- `download_eia_metadata.API.md`: Markdown explaining the API design and wrapper
+- `download_eia_metadata.example.ipynb`: Notebook exploring the output metadata
+- `download_eia_metadata.example.md`: Markdown explaining the analysis and insights
 - `README.md`: This file

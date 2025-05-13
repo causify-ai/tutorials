@@ -1,13 +1,20 @@
-import os
-import requests
-import logging
-from typing import Any, Dict, List, Tuple
+"""
+Import as:
 
+import causal_automl.TutorTask401_EIA_metadata_downloader_pipeline.eia_utils as catemdpeu
+"""
+
+import logging
+from typing import Any, Dict, List, Optional, Tuple
+
+import matplotlib.pyplot as plt
 import pandas as pd
+import requests
 
 _LOG = logging.getLogger(__name__)
 
 BASE_URL = "https://api.eia.gov/v2"
+
 
 # #############################################################################
 # EiaMetadataDownloader
@@ -285,3 +292,56 @@ class EiaMetadataDownloader:
                 rows.append(row)
         df_params = pd.DataFrame(rows)
         return df_params
+
+
+def build_full_url(
+    base_url: str,
+    df_facets: pd.DataFrame,
+    api_key: str,
+    *,
+    facet_input: Optional[Dict[str, str]] = None,
+) -> str:
+    """
+    Build a full EIA v2 API URL by appending one facet value per facet type.
+
+    Select a default or user-specified value for each facet type and
+    construct a valid query URL to fetch time series data from the EIA
+    v2 API.
+
+    :param base_url: base API URL with frequency and metric, excluding
+        facet values
+    :param df_facet: data containing all facet values
+    :param facet_input: specified facet values
+    :return: full EIA API URL with all required facet parameters
+    """
+    if facet_input is None:
+        facet_input = {}
+    url = base_url.replace("{API_KEY}", api_key)
+    facet_ids = df_facets["facet_id"].unique()
+    query_parts = []
+    for facet_id in facet_ids:
+        if facet_id in facet_input:
+            # Use input values if specified.
+            value = facet_input[facet_id]
+        else:
+            value = df_facets[df_facets["facet_id"] == facet_id].iloc[0]["id"]
+        query_parts.append(f"&{facet_id}={value}")
+    full_url = url + "".join(query_parts)
+    return full_url
+
+
+def plot_time_series_count_per_dataset(df_metadata: pd.DataFrame) -> None:
+    """
+    Plot the number of time series available per dataset.
+
+    :param df_metadata: all EIA time series metadata
+    """
+    count_series = df_metadata["dataset_id"].value_counts()
+    ax = count_series.plot(kind="bar", figsize=(8, 4))
+    ax.set_title("Number of Time Series per Dataset")
+    ax.set_xlabel("Dataset ID")
+    ax.set_ylabel("Count of Time Series")
+    ax.grid(True)
+    plt.xticks(rotation=45, ha="right")
+    plt.tight_layout()
+    plt.show()

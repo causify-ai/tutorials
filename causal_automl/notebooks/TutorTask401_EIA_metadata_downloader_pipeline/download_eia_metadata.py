@@ -22,16 +22,15 @@ Arguments:
 import argparse
 import logging
 import os
-from typing import Any, Dict, List, Tuple
 
+import eia_utils as eiu
 import helpers.hdbg as hdbg
 import helpers.hio as hio
 import helpers.hparser as hparser
-import helpers.hs3 as hs3
-import eia_utils as eiu
 import pandas as pd
 
 _LOG = logging.getLogger(__name__)
+
 
 # #############################################################################
 # _EiaMetadataWriter
@@ -69,7 +68,7 @@ class _EiaMetadataWriter:
         _LOG.debug("Saved CSV locally to: %s", local_file_path)
         # Upload CSV to the specified S3 bucket.
         bucket_file_path = self._bucket_path + file_name
-        #hs3.copy_file_to_s3(local_file_path, bucket_file_path, self._aws_profile)
+        # hs3.copy_file_to_s3(local_file_path, bucket_file_path, self._aws_profile)
         _LOG.debug("Uploaded to S3: %s", bucket_file_path)
 
 
