@@ -25,6 +25,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import nltk
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
@@ -33,11 +34,11 @@ from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
+#from loguru import logger
 import requests
 import pandas as pd
 import numpy as np
 import time
-from loguru import logger
 
 # Progress Class
 class Progress:
@@ -363,7 +364,7 @@ class Twitter_Scraper:
         self,
         username,
         password,
-        max_tweets=200,
+        max_tweets=10,
         scrape_username=None,
         scrape_hashtag=None,
         scrape_query=None,
@@ -404,7 +405,7 @@ class Twitter_Scraper:
 
     def _config_scraper(
         self,
-        max_tweets=150,
+        max_tweets=10,
         scrape_username=None,
         scrape_hashtag=None,
         scrape_query=None,
@@ -677,7 +678,7 @@ It may be due to the following:
 
     def scrape_tweets(
         self,
-        max_tweets=200,
+        max_tweets=10,
         scrape_username=None,
         scrape_hashtag=None,
         scrape_query=None,
@@ -884,6 +885,8 @@ def concat_and_save_to_csv(new_data, output_file="./tweets/all_tweets.csv", post
         data["Followers"] = [tweet[17] for tweet in new_data]
 
     new_df = pd.DataFrame(data)
+    new_df1 = preprocess_text_column(new_df)
+    apply_vader(new_df1)
 
     # Check if the output file already exists
     if os.path.exists(output_file):
@@ -912,7 +915,8 @@ def fetch_price():
         data = response.json()
         return data['bitcoin']['usd']
     except:
-        logger.info("Error fetching bitcoin price")
+        pass
+        #logger.info("Error fetching bitcoin price")
 
 
 # Download required NLTK data
@@ -943,6 +947,7 @@ def preprocess_text_column(df):
 
 nltk.download('vader_lexicon')
 
+
 def apply_vader(df, text_col='cleaned_text'):
     sia = SentimentIntensityAnalyzer()
     df['compound'] = df[text_col].astype(str).apply(lambda x: sia.polarity_scores(x)['compound'])
@@ -961,7 +966,23 @@ def apply_vader(df, text_col='cleaned_text'):
 
     df['sentiment_label'] = df['compound'].apply(label_sentiment)
 
+    timestamp = pd.Timestamp.now()
+    sentiment_score = df['compound'].mean()
+    if sentiment_score >= 0.05:
+        final_sentiment = 'Positive'
+    elif sentiment_score <= -0.05:
+        final_sentiment = 'Negative'
+    else:
+        final_sentiment = 'Neutral'
+    bitcoin_price = fetch_price()
+    finaldf1 = pd.DataFrame({'time': [timestamp], 'sentiment': [final_sentiment], 'price': [bitcoin_price]})
+    try:
+        finaldf = pd.read_csv("final.csv")
+        finaldf = pd.concat([finaldf, finaldf1])
+    except:
+        finaldf = finaldf1.copy()
     # Save to file
+    finaldf.to_csv("final.csv", index=False)
     df.to_csv("sentiment_labeled.csv", index=False)
     print("✅ Saved labeled data to sentiment_labeled.csv")
 
@@ -1015,5 +1036,31 @@ def plot_sentiment_timeseries(file_path='sentiment_labeled.csv'):
     plt.xlabel('Time')
     plt.ylabel('Tweet Count')
     plt.legend(title='Sentiment')
+    plt.tight_layout()
+    plt.show()
+
+def final_corr():
+    df = pd.read_csv("final.csv")
+    df = df.sort_values(by=['time'])
+    df['perc_change'] = df['price'].pct_change() * 100
+    df['perc_change'] = df['perc_change'].fillna(0)
+
+    def categorize(pct):
+        if pct > 0.02:
+            return 'Up'
+        elif pct < -0.02:
+            return 'Down'
+        else:
+            return 'Stable'
+
+    df['movement'] = df['perc_change'].apply(categorize)
+    crosstab = pd.crosstab(df['sentiment'], df['movement'], normalize='index')  # Row-wise normalization
+
+    # Step 2: Plot heatmap
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(crosstab, annot=True, cmap='Blues', fmt='.2f')
+    plt.title("Correlation Heatmap between Sentiment and Movement")
+    plt.ylabel("Sentiment")
+    plt.xlabel("Movement")
     plt.tight_layout()
     plt.show()
