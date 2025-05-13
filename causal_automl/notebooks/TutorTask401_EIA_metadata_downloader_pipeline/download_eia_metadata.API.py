@@ -34,6 +34,7 @@
 # - [Run Metadata Extraction](#run-metadata-extraction)
 # - [Preview Flattened Metadata](#preview-flattened-metadata)
 # - [Preview Facet Values](#preview-facet-values)
+# - [Group and Preview Facet Values by Facet Type](#group-and-preview-facet-values-by-facet-type)
 # - [Construct Sample EIA URL](#construct-sample-eia-url)
 
 # %% [markdown]
@@ -150,14 +151,14 @@ df_facet = param_entries[0][0]
 df_facet.head()
 
 # %% [markdown]
-# ### Group and Preview Facet Values by Facet Type
+# ## Group and Preview Facet Values by Facet Type
 
 # %%
 # Show unique facet types and sample values for each.
 df_facet.groupby("facet_id").head(1)
 
 # %% [markdown]
-# ### Construct Full URL from One Value per Facet
+# ## Construct Full URL from One Value per Facet
 
 # %%
 # Select sample route.
