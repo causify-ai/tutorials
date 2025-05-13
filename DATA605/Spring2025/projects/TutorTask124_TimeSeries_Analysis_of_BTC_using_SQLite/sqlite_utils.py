@@ -1,13 +1,29 @@
 """
-template_utils.py
+Provides utility functions for fetching, storing, and querying Bitcoin data using Yahoo Finance,
+CoinMarketCap API, and SQLite, with support for both historical and live BTC price data handling.
 
-This file contains utility functions that support the tutorial notebooks.
+1. Citations:
+   - Yahoo Finance API via `yfinance`: https://github.com/ranaroussi/yfinance
+   - CoinMarketCap API for live data: https://coinmarketcap.com/api/
+   - SQLite interaction via `sqlite3`: https://docs.python.org/3/library/sqlite3.html
+   - mplfinance used for potential financial visualizations: https://github.com/matplotlib/mplfinance
 
-- Notebooks should call these functions instead of writing raw logic inline.
-- This helps keep the notebooks clean, modular, and easier to debug.
-- Students should implement functions here for data preprocessing,
-  model setup, evaluation, or any reusable logic.
+2. Make sure to run the linter (e.g., `ruff`, `black`, or `flake8`) before committing changes.
+   - Example: `ruff check sqlite_utils.py --fix`
+
+3. Reference documentation for the system:
+   - Custom system design documentation: `docs/system/bitcoin_analysis_system.md`
+   - SQLite schema: `docs/db/schema_btc_daily_stats.sql`
+   - CoinMarketCap API reference: https://coinmarketcap.com/api/documentation/v1/
+
+Script Naming Convention:
+ - For this utilities module, the recommended filename is:
+   `sqlite_utils.py`
+
+Coding Style Guide Reference:
+ - https://github.com/causify-ai/helpers/blob/master/docs/coding/all.coding_style.how_to_guide.md
 """
+
 
 import logging
 import requests
@@ -33,8 +49,8 @@ def fetchHistoricalBTC(ticker, period, interval):
     """
     Function to fetch historical BTC prices from Yahoo Finance.
 
-    Fetches historical stock data for BTC using the yfinance Python library. 
-    The function retrieves data such as open, high, low, close, volume, and adjusted close 
+    Fetches historical stock data for BTC using the yfinance Python library.
+    The function retrieves data such as open, high, low, close, volume, and adjusted close
     for a specified date range and interval.
 
     :param ticker (str): Ticker of stock.
@@ -80,7 +96,7 @@ def fetchDB(query, db):
     :param query (str): SQL Query to be executed.
     :param db: Path to the SQLite database file. SQLite database on which query is to be executed.
     :return data: Pandas Dataframe of the data executed using SQLite from the database.
-    
+
     """
     conn = sqlite3.connect(db)
     data = pd.read_sql_query(query, conn)
@@ -98,25 +114,25 @@ def liveBTC(url,API_KEY):
     :param url (str): The CoinMarketCap API endpoint.
     :param api_key (str): The API key for authenticating the request.
 
-    :return dict: A dictionary containing the current timestamp, open price, volume, 
+    :return dict: A dictionary containing the current timestamp, open price, volume,
           and additional data such as volume change.
     """
     params = {'symbol': 'BTC','convert': 'USD'}
-    
+
     headers = {'Accepts': 'application/json','X-CMC_PRO_API_KEY': API_KEY}
-    
+
     response = requests.get(url, headers=headers, params=params)
     if response.status_code != 200:
         print("ERROR CODE: ",response.status_code, " : ", response.text)
         return None, None
     data = response.json()
-    
+
     btc = data['data']['BTC'][0]['quote']['USD']
     last_updated = data['data']['BTC'][0]['last_updated']
-    
+
     btc_data_prime = {'date': pd.Timestamp(last_updated).strftime(DATEFMT), 'open': btc['price'], 'volume': btc['volume_24h']}
 
-    return btc_data_prime, btc 
+    return btc_data_prime, btc
 
 # -----------------------------------------------------------------------------
 # addDatapoint: Function to insert live Bitcoin price data into a SQLite database.
@@ -125,14 +141,14 @@ def liveBTC(url,API_KEY):
 def addDatapoint(liveData, db):
     """
     Function to insert live Bitcoin price data into a SQLite database.
-    
+
     :param data (dict): A dictionary containing:
     - 'timestamp' (str or datetime): The current time.
     - 'open_price' (float): The opening price of BTC.
     - 'volume' (float): The trading volume.
-    
+
     :param db (str): Path to the SQLite database file.
-    
+
     :return None: The function inserts the data and does not return a value
     """
     conn = sqlite3.connect(db)
@@ -140,10 +156,9 @@ def addDatapoint(liveData, db):
     date, liveOpen, volume = liveData['date'],liveData['open'],liveData['volume']
     query = f'''INSERT INTO btc_daily_stats (date, open, volume) VALUES (STRFTIME({DATEFMT},{date}), {liveOpen}, {volume})'''
     query = f'''INSERT INTO btc_daily_stats (date, open, volume) VALUES (?,?,?)'''
-    
+
     cursor = conn.cursor()
     cursor.execute(query, (date, liveOpen, volume))
     conn.commit()
     conn.close()
     return None
-    

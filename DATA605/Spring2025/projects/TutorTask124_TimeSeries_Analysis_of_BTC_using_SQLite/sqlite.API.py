@@ -1,24 +1,31 @@
 """
-A brief overview of what the script does in one line.
+Fetches historical and live Bitcoin price data using Yahoo Finance and CoinMarketCap APIs,
+and manages storage and retrieval via a local SQLite database using helper utilities.
 
-1. Make sure to include the citations here (code and research)
-2. Make sure to run the linter on the script before committing changes.
-    - Many changes would be pointed out by the linter to maintain consistency
-      with coding style.
-3. Provide here the reference to the documentation that explains the system in
-   detail. (e.g., pycaret.API.md)
+1. Citations:
+   - Historical Data Source: Yahoo Finance via `yfinance` (https://github.com/ranaroussi/yfinance)
+   - Live Price Source: CoinMarketCap API (https://coinmarketcap.com/api/)
+   - Data Persistence: SQLite via `sqlite3` and custom `sqlite_utils.py`
+   - Visualization tools: `matplotlib`, `seaborn`, and `mplfinance`
 
-The name of this script should in the following format:
- - if the notebook is exploring `pycaret API`, then it is `pycaret.API.py`
+2. Make sure to run the linter (e.g., `ruff`, `black`, or `flake8`) on the script before committing changes.
+   - Example: `ruff check api_btc_script.py --fix`
 
- Follow the reference on coding style guide to write clean and readable code.
-- https://github.com/causify-ai/helpers/blob/master/docs/coding/all.coding_style.how_to_guide.md
+3. References:
+   - Custom utility documentation: `sqlite_utils.py`
+   - System design and data flow: `docs/system/bitcoin_analysis_system.md`
+   - CoinMarketCap API documentation: https://coinmarketcap.com/api/documentation/v1/
+
+Script Naming Convention:
+ - If this script is responsible for integrating API data into SQLite for BTC analysis:
+   `bitcoin.api_ingestion.py`
+
+Coding Style Guide Reference:
+ - https://github.com/causify-ai/helpers/blob/master/docs/coding/all.coding_style.how_to_guide.md
 """
 
-# Comments should be imperative and have a period at the end.
-# Your code should be well commented.
-# Import libraries in this section.
-# Avoid imports like import *, from ... import ..., from ... import *, etc.
+
+
 import logging
 
 # Import standard and third-party libraries for logging, HTTP requests, data handling, visualization, and database operations.

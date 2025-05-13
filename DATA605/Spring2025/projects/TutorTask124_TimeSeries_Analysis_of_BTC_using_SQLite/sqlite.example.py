@@ -1,19 +1,29 @@
 """
-A brief overview of what the script does in one line.
+Performs historical and live Bitcoin data ingestion, storage, and visual time-series analysis using SQLite and visualization libraries.
 
-1. Make sure to include the citations here (code and research)
-2. Make sure to run the linter on the script before committing changes.
-    - Many changes would be pointed out by the linter to maintain consistency
-      with coding style.
-3. Provide here the reference to the documentation that explains the system in
-   detail. (e.g., pycaret.API.md)
+1. Citations:
+   - Data Source: CoinMarketCap API (https://coinmarketcap.com/api/)
+   - Historical Data: yfinance (https://github.com/ranaroussi/yfinance)
+   - SQLite utilities: sqlite-utils (https://github.com/simonw/sqlite-utils)
+   - Visualization: seaborn, matplotlib, mplfinance
+   - Research/Indicators: Common financial metrics (moving averages, rate of change, Bollinger bands)
 
-The name of this script should in the following format:
- - if the notebook is exploring `pycaret API`, then it is `pycaret.API.py`
+2. Make sure to run the linter (e.g., `ruff`, `black`, or `flake8`) on the script before committing changes.
+   - This ensures consistency with the team's coding style guide.
+   - Example: `ruff check script_name.py --fix`
 
- Follow the reference on coding style guide to write clean and readable code.
-- https://github.com/causify-ai/helpers/blob/master/docs/coding/all.coding_style.how_to_guide.md
+3. Refer to the documentation that explains the system in detail:
+   - [sqlite_utils documentation](https://github.com/simonw/sqlite-utils)
+   - Project-specific system design documentation: `docs/system/bitcoin_analysis_system.md` (if applicable)
+
+Script Naming Convention:
+ - If the notebook explores `bitcoin API + SQLite + Analysis`, name the file as:
+   `bitcoin.sqlite_analysis.py`
+
+Coding Style Guide Reference:
+ - https://github.com/causify-ai/helpers/blob/master/docs/coding/all.coding_style.how_to_guide.md
 """
+
 
 import logging
 
