@@ -4,6 +4,12 @@ import numpy as np
 import time
 from loguru import logger
 
+# Add a file handler specifically for the price log (to a separate file)
+price_logger = logger.bind()
+
+# Add a file handler to this logger
+price_logger.add("price_log.log", level="INFO", rotation="1 day", retention="7 days", compression="zip")
+
 # FETCHING DATA FROM COINGECKO
 def fetch_price():
     try:
@@ -35,7 +41,16 @@ def save(timestamp, price):
 
 
 def data_ingest(minutes):
-    if minutes:
+    if minutes==1:
+        timestamp = pd.Timestamp.now()
+        price = fetch_price()
+
+        if timestamp and price:
+            price_logger.info(f"Time: {timestamp} | Price: {price}")
+            save(timestamp, price)
+        else:
+            price_logger.info("No record found")
+    elif minutes>1:
         for _ in range(minutes):
         # for _ in range(60):  # Collect for x minutes
         # while True:  # Collect indefinitely
@@ -63,4 +78,5 @@ def data_ingest(minutes):
                 logger.info("No record found")
                 
             time.sleep(60)  # Scraping data after every 60 seconds
-        logger.info("Data Ingestion Module Completed")
+        # logger.info("Data Ingestion Module Completed")
+
