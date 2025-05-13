@@ -13,13 +13,11 @@ venv/
 ENV/
 .env/
 .venv/
+*.env
 # Build logs
 *.log
 
 # Temporary folders
 tmp.build/
-
-
-
-# Temporary
-tmp.build/
+# Ignore all virtual environments in tmp.build
+DATA605/Spring2025/projects/tmp.build/venv/
