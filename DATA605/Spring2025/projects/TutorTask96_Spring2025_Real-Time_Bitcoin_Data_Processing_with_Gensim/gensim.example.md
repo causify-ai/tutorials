@@ -1,3 +1,138 @@
+# Data Ingestion
+
+## Native API Used: CoinGecko Public API
+
+This project uses the CoinGecko API to fetch real-time Bitcoin pricing information.
+
+### Endpoint
+
+GET [https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd](https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd)
+
+This endpoint returns the latest price of Bitcoin in multiple currencies, including USD.
+
+---
+
+## Wrapper Function: `fetch_price()`
+
+### Purpose
+
+To abstract away API interaction logic and allow downstream components to easily retrieve the current Bitcoin price in USD.
+
+### Function Definition
+
+```python
+def fetch_price() -> float:
+    """
+    Fetches the current price of Bitcoin in USD using the CoinGecko public API.
+
+    Returns:
+        float: The latest Bitcoin price in USD, or None if the request fails.
+    """
+```
+
+### Design Decisions
+
+- We use the CoinGecko API because it is public and does not require authentication.
+- The wrapper includes error handling and logs failures using the Python logging module.
+- The function is designed to be lightweight, stateless, and reusable across the API layer and higher-level logic.
+
+### Example Usage
+
+```python
+from gensim_utils import fetch_price
+
+price = fetch_price()
+if price:
+    print(f"Current Bitcoin Price (USD): ${price}")
+else:
+    print("Failed to fetch Bitcoin price.")
+```
+
+---
+
+## Data Ingestion and Storage Functions
+
+### Purpose
+
+These utility functions form the data ingestion layer of the project. They work together to periodically collect real-time Bitcoin price data and save it locally for later analysis.
+
+---
+
+## Function: `save(timestamp, price)`
+
+### Purpose
+
+Appends a timestamped Bitcoin price to a CSV file (`data.csv`). Automatically creates the file if it doesn’t exist. This allows incremental accumulation of time-series pricing data.
+
+### Design Decisions
+
+- Uses `pandas` for easy CSV handling.
+- Automatically derives `date` and `time` from the timestamp.
+- Appends without overwriting historical records.
+
+### Arguments
+
+- `timestamp (pd.Timestamp)`: The time when the price was fetched.
+- `price (float)`: The fetched Bitcoin price in USD.
+
+### Example Usage
+
+```python
+from gensim_utils import save
+import pandas as pd
+
+timestamp = pd.Timestamp.now()
+price = 67890.12
+save(timestamp, price)
+```
+
+### Output File
+
+File: `data.csv`  
+Columns: `time`, `price`, `date`
+
+---
+
+## Function: `data_ingest(minutes=None)`
+
+### Description
+
+Fetches Bitcoin price data using `fetch_price()` every 60 seconds.
+
+- If `minutes` is specified, it runs for that many minutes.
+- If `minutes=None`, it runs indefinitely.
+
+### Design Decisions
+
+- Uses `fetch_price()` from `gensim_utils.py` to decouple API logic.
+- Sleeps for 60 seconds between fetches for real-time pacing.
+- Supports both finite duration and indefinite ingestion.
+- Logs all operations using the Python logging module.
+
+### Arguments
+
+- `minutes (int or None)`: Duration to run data ingestion.
+
+### Behavior
+
+- Uses `fetch_price()` from `gensim_utils.py` to retrieve live Bitcoin prices.
+- Logs and saves each record using `save()`.
+
+---
+
+## Example Usage
+
+```python
+from gensim_utils import data_ingest
+
+# Run for a fixed duration
+data_ingest(minutes=3)
+
+# Or run indefinitely (keyboard interrupt to stop)
+data_ingest()
+```
+-------------------------------------------------------------------------------------------------------------------------------------
+
 # Data Transformation and Segmentation
 
 ## Table of Contents
