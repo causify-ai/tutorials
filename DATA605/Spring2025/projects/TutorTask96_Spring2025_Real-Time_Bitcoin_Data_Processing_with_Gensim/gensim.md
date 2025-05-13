@@ -68,7 +68,7 @@ df = data_transform(df, window=5)
 documents = segmentation(df)
 ```
 
-> 📄 Each document simulates a weekly snapshot of crypto news.
+> Each document simulates a weekly snapshot of crypto news.
 
 ---
 
@@ -152,7 +152,7 @@ plt.title("Bitcoin Price Over Time")
 #### Similarity Analysis
 
 - Compare vector similarity between windows
-- Detect sudden topic shifts (e.g., regulatory vs bullish sentiment)
+- Detect sudden topic shifts (e.g., bearish vs bullish sentiment)
 
 ---
 
@@ -168,10 +168,17 @@ plt.title("Bitcoin Price Over Time")
 
 ```
 .
-├── gensim.example.ipynb       # 💻 Main notebook
-├── data.csv                   # 💾 Bitcoin time-series dataset
+├── data.csv                   # Bitcoin time-series dataset
+├── gensim.example.ipynb       # Main notebook
+├── gensim.md                  # Comprehensive documentation
 ├── gensim_utils.py            # Modular functions for modeling
-├── gensim_project_documentation.md   # 📄 Comprehensive documentation
+├── gensim.API.py              # Project function usage
+├── gensim.API.md              # Project function usage documentation
+├── price_log.log              # Logging file
+├── requirements.txt           # Requirements
+├── README.md                  # Project Description
+├── docker_data605_style       # Docker Folder
+├── gensim_data_ingestion_cron.py            # Cron Function
 ```
 
 ---
@@ -186,9 +193,3 @@ This project combines NLP and unsupervised learning to model evolving themes in 
 > This methodology is adaptable to other cryptocurrencies or financial domains.
 
 ---
-
-## Future Extensions
-
-- Real-time ingestion from CoinGecko API
-- Integration of transformer-based models (e.g., BERTopic)
-- Live dashboard for topic monitoring
