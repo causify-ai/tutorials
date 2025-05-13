@@ -8,6 +8,8 @@ __pycache__/
 # Notebooks checkpoints
 .ipynb_checkpoints/
 
+DATA605/**/venv
+DATA605/**/tmp.build
 # Virtual environments
 venv/
 ENV/
