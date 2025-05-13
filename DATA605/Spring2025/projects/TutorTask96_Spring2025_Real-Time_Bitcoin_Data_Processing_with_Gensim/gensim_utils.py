@@ -32,6 +32,11 @@ import networkx as nx
 # # -----------------------------------------------------------------------------
 # # Data Collection and Ingestion
 # # -----------------------------------------------------------------------------
+# Add a file handler specifically for the price log (to a separate file)
+price_logger = logger.bind()
+
+# Add a file handler to this logger
+price_logger.add("price_log.log", level="INFO", rotation="1 day", retention="7 days", compression="zip")
 
 def fetch_price():
     """
@@ -89,8 +94,19 @@ def data_ingest(minutes=None):
     logger.info("Starting Data Ingestion Module")
 
     try:
-        if minutes:
+        if minutes==1:
+            timestamp = pd.Timestamp.now()
+            price = fetch_price()
+
+            if timestamp and price:
+                price_logger.info(f"Time: {timestamp} | Price: {price}")
+                save(timestamp, price)
+            else:
+                price_logger.info("No record found")
+        elif minutes>1:
             for _ in range(minutes):
+            # for _ in range(60):  # Collect for x minutes
+            # while True:  # Collect indefinitely
                 timestamp = pd.Timestamp.now()
                 price = fetch_price()
 
@@ -99,10 +115,12 @@ def data_ingest(minutes=None):
                     save(timestamp, price)
                 else:
                     logger.info("No record found")
-
-                time.sleep(60)
+                    
+                time.sleep(60)  # Scraping data after every 60 seconds
+            logger.info("Data Ingestion Module Completed")
         else:
-            while True:
+            logger.info("Entered Data Ingestion Module")
+            while True:  # Collect indefinitely
                 timestamp = pd.Timestamp.now()
                 price = fetch_price()
 
@@ -111,8 +129,9 @@ def data_ingest(minutes=None):
                     save(timestamp, price)
                 else:
                     logger.info("No record found")
-
-                time.sleep(60)
+                    
+                time.sleep(60)  # Scraping data after every 60 seconds
+            # logger.info("Data Ingestion Module Completed")
 
     except KeyboardInterrupt:
         logger.info("Data Ingestion Module Stopped Manually")

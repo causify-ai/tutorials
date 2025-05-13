@@ -204,9 +204,9 @@ Returns a trained FastText model (`gensim.models.FastText`) which:
 
 FastText is especially useful when:
 
-- Your dataset has rare or compound symbolic labels
-- You want better generalization to unseen movements
-- You need high-quality embeddings in small datasets
+- Our dataset has rare or compound symbolic labels
+- We want better generalization to unseen movements
+- We need high-quality embeddings in small datasets
 
 It can be used similarly to Word2Vec for:
 
@@ -296,9 +296,9 @@ Returns a trained Doc2Vec model (`gensim.models.Doc2Vec`) which can:
 
 Doc2Vec is ideal when:
 
-- You want to compare or cluster entire time windows
-- You need to retrieve most similar past patterns
-- You’re modeling higher-order structure over a sequence of symbolic movements
+- We want to compare or cluster entire time windows
+- We need to retrieve most similar past patterns
+- We’re modeling higher-order structure over a sequence of symbolic movements
 - This model forms the backbone for window-level similarity analysis in our application.
 
 -------------------------------------------------------------------------------------------------------------------------------------

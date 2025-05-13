@@ -1,2 +1,9 @@
 2025-05-12 13:11:14.833 | INFO     | data_ingestion:data_ingest:49 - Time: 2025-05-12 13:11:14.669070 | Price: 103004
 2025-05-12 13:11:23.111 | INFO     | data_ingestion:data_ingest:49 - Time: 2025-05-12 13:11:22.939802 | Price: 103004
+2025-05-13 15:11:45.877 | INFO     | data_transformation:data_transform:27 - Segmented data with window size of: 5
+2025-05-13 15:11:47.083 | INFO     | data_transformation:segmentation:34 - Segmented data into documents
+2025-05-13 15:12:07.217 | INFO     | vectorization:word2vec:8 - Vectorization completed using Word2Vec Model
+2025-05-13 15:12:07.699 | INFO     | vectorization:fasttext:13 - Vectorization completed using Fast Text Model
+2025-05-13 15:12:07.700 | INFO     | vectorization:doc_tagger:18 - Document Tagging completed
+2025-05-13 15:12:07.722 | INFO     | vectorization:do2vec:24 - Document Vectorization completed using Doc2Vec Model
+2025-05-13 15:12:28.903 | INFO     | topic_modeling:corpus_creation:10 - Dictionary and Corpus created for Topic Modeling
