@@ -109,6 +109,16 @@ services:
         window_size: 300        # 5 minutes in seconds
         initial_data_points: 1000  # Limit initial data load
         update_interval: 60     # Update model every 60 seconds
+        # Advanced model parameters
+        use_mcmc: false         # Use MCMC for more accurate but slower inference
+        mcmc_steps: 1000        # Number of MCMC steps (only used if use_mcmc=true)
+        mcmc_burnin: 300        # Number of burn-in steps for MCMC
+        use_day_of_week: true   # Add day-of-week seasonal component
+        use_technical_indicators: true  # Use technical indicators for better predictions
+        # Technical indicators configuration
+        short_ma_window: 5      # Short moving average window
+        long_ma_window: 20      # Long moving average window
+        volatility_window: 10   # Window for volatility calculation
       history:
         evaluation_window: 168  # hours (1 week)
         forecast_horizon: 24    # steps

@@ -7,13 +7,12 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first to leverage Docker cache
-COPY dashboard/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
 # Create necessary directories
 RUN mkdir -p /app/data/raw /app/data/predictions /app/data/raw_data \
     && chmod -R 777 /app/data
+
+# Install required Python packages
+RUN pip install --no-cache-dir streamlit pandas numpy plotly scipy tensorflow tensorflow-probability pyyaml
 
 # Copy unified configuration
 COPY configs/unified_config.yaml /app/configs/

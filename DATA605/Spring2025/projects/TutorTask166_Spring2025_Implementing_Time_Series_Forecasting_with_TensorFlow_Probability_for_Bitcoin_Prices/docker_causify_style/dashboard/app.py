@@ -16,6 +16,29 @@ from utilities.price_format import usd_to_display_str
 from utilities.unified_config import get_service_config
 import numpy as np
 
+# Try to import scipy.stats, but handle if not available
+try:
+    import scipy.stats as stats
+except ImportError:
+    # Define a minimal stats module for basic functionality
+    class MinimalStats:
+        def norm(self):
+            class NormalDist:
+                def pdf(self, x, loc, scale):
+                    # Simple normal distribution approximation
+                    return np.exp(-((x - loc) ** 2) / (2 * scale ** 2)) / (scale * np.sqrt(2 * np.pi))
+            return NormalDist()
+            
+        def zscore(self, a):
+            # Calculate z-scores (standardized values)
+            mean = np.mean(a)
+            std = np.std(a)
+            if std == 0:
+                return np.zeros_like(a)
+            return (a - mean) / std
+    
+    stats = MinimalStats()
+
 # Get service name from environment or use default
 SERVICE_NAME = os.environ.get('SERVICE_NAME', 'dashboard')
 
@@ -560,8 +583,10 @@ def create_mae_chart(metrics_df):
                 line=dict(color='gray', width=1, dash='dash')
             ))
             
-            # Calculate average error
+            # Calculate average error and RMSE
             avg_error = filtered_df['actual_error'].mean()
+            mse = (filtered_df['actual_error'] ** 2).mean()
+            rmse = np.sqrt(mse)
             
             # Add a horizontal line for the average error
             fig.add_trace(go.Scatter(
@@ -570,6 +595,23 @@ def create_mae_chart(metrics_df):
                 name=f'Avg Error: {avg_error:.2f}',
                 line=dict(color='blue', width=1, dash='dash')
             ))
+            
+            # Calculate percentage errors for display
+            if 'rmse' in filtered_df.columns:
+                filtered_df['pct_error'] = (filtered_df['actual_error'] / filtered_df['rmse']) * 100
+                
+                # Remove this annotation to avoid legend overlap and confusion
+                # avg_pct_error = filtered_df['pct_error'].mean()
+                # fig.add_annotation(
+                #     x=filtered_df['timestamp'].max(),
+                #     y=filtered_df['actual_error'].max(),
+                #     text=f"Avg % Error: {avg_pct_error:.2f}%<br>RMSE: {rmse:.2f}",
+                #     showarrow=False,
+                #     yshift=10,
+                #     bgcolor="rgba(255, 255, 255, 0.8)",
+                #     bordercolor="gray",
+                #     borderwidth=1
+                # )
         
         if has_mae:
             # Also show MAE on the same chart but with lighter opacity
@@ -645,6 +687,109 @@ def create_mae_chart(metrics_df):
     
     return fig
 
+def create_error_distribution_chart(metrics_df):
+    """Create a histogram showing the distribution of prediction errors."""
+    fig = go.Figure()
+    
+    if metrics_df is not None and not metrics_df.empty and 'actual_error' in metrics_df.columns:
+        # Make sure actual_error is numeric
+        metrics_df['actual_error'] = pd.to_numeric(metrics_df['actual_error'], errors='coerce')
+        
+        # Filter out NaN values
+        filtered_df = metrics_df.dropna(subset=['actual_error'])
+        
+        if not filtered_df.empty:
+            # Calculate statistics
+            mean_error = filtered_df['actual_error'].mean()
+            median_error = filtered_df['actual_error'].median()
+            std_error = filtered_df['actual_error'].std()
+            
+            # Create histogram of errors
+            fig.add_trace(go.Histogram(
+                x=filtered_df['actual_error'],
+                nbinsx=20,
+                name='Error Distribution',
+                marker_color='lightblue'
+            ))
+            
+            # Add mean line
+            fig.add_vline(
+                x=mean_error,
+                line_dash="dash",
+                line_color="red",
+                annotation_text=f"Mean: {mean_error:.2f}",
+                annotation_position="top right"
+            )
+            
+            # Add median line
+            fig.add_vline(
+                x=median_error,
+                line_dash="dash",
+                line_color="green",
+                annotation_text=f"Median: {median_error:.2f}",
+                annotation_position="top left"
+            )
+            
+            # Add perfect prediction line (zero error)
+            fig.add_vline(
+                x=0,
+                line_dash="solid",
+                line_color="black",
+                annotation_text="Perfect",
+                annotation_position="bottom"
+            )
+            
+            # Try to add normal distribution curve if scipy is available
+            try:
+                # Generate x values for the curve
+                x_range = np.linspace(
+                    filtered_df['actual_error'].min(),
+                    filtered_df['actual_error'].max(),
+                    100
+                )
+                
+                # Get the normal distribution curve
+                if hasattr(stats, 'norm') and callable(getattr(stats.norm, 'pdf', None)):
+                    # Use scipy.stats if available
+                    y_norm = stats.norm.pdf(x_range, mean_error, std_error)
+                else:
+                    # Use our minimal implementation
+                    y_norm = stats.norm().pdf(x_range, mean_error, std_error)
+                    
+                # Scale to match histogram height
+                hist_max = np.histogram(filtered_df['actual_error'], bins=20)[0].max()
+                norm_max = max(y_norm) if len(y_norm) > 0 else 1
+                scale_factor = hist_max / norm_max if norm_max > 0 else 1
+                
+                fig.add_trace(go.Scatter(
+                    x=x_range,
+                    y=y_norm * scale_factor,
+                    mode='lines',
+                    name='Normal Distribution',
+                    line=dict(color='darkblue', width=2)
+                ))
+            except Exception as e:
+                # Log the error but continue without the normal curve
+                logger.warning(f"Could not add normal distribution curve: {e}")
+    
+    fig.update_layout(
+        title='Prediction Error Distribution',
+        xaxis_title='Error (USD)',
+        yaxis_title='Frequency',
+        template='plotly_white',
+        height=int(config['dashboard']['chart_height'] * 0.5),
+        showlegend=True,
+        xaxis=dict(
+            tickformat=',.0f',
+            tickprefix='$',
+            zeroline=True,
+            zerolinecolor='black',
+            zerolinewidth=2
+        )
+    )
+    
+    return fig
+
 def main():
     """Main dashboard function."""
     st.title("Bitcoin Price Dashboard")
@@ -654,6 +799,7 @@ def main():
     price_placeholder = st.empty()
     prediction_placeholder = st.empty()
     mae_placeholder = st.empty()
+    distribution_placeholder = st.empty()
     
     # Sidebar configuration
     st.sidebar.title("Dashboard Settings")
@@ -682,6 +828,9 @@ def main():
         try:
             # Load all data
             price_df, pred_df, metrics_df = load_data()
+            
+            # Generate a unique timestamp for this iteration to avoid duplicate keys
+            timestamp_str = datetime.now().strftime("%Y%m%d%H%M%S%f")
             
             # Log data info after loading
             logger.info(f"Raw data loaded - price: {len(price_df)} rows, predictions: {len(pred_df)} rows, metrics: {len(metrics_df)} rows")
@@ -815,16 +964,21 @@ def main():
                 
                 # Always show price chart if available
                 with price_placeholder:
-                    st.plotly_chart(create_price_chart(price_df), use_container_width=True)
+                    st.plotly_chart(create_price_chart(price_df), use_container_width=True, key=f"price_chart_{timestamp_str}")
                 
                 # Show prediction chart (will use dual-axis if timestamps don't match)
                 with prediction_placeholder:
-                    st.plotly_chart(create_prediction_chart(price_df, pred_df), use_container_width=True)
+                    st.plotly_chart(create_prediction_chart(price_df, pred_df), use_container_width=True, key=f"prediction_chart_{timestamp_str}")
                 
                 # Show MAE chart if available
                 with mae_placeholder:
                     if metrics_df is not None and not metrics_df.empty and 'mae' in metrics_df.columns:
-                        st.plotly_chart(create_mae_chart(metrics_df), use_container_width=True)
+                        st.plotly_chart(create_mae_chart(metrics_df), use_container_width=True, key=f"mae_chart_{timestamp_str}")
+                        
+                        # Show error distribution chart below the MAE chart
+                        if 'actual_error' in metrics_df.columns:
+                            with distribution_placeholder:
+                                st.plotly_chart(create_error_distribution_chart(metrics_df), use_container_width=True, key=f"distribution_chart_{timestamp_str}")
                     else:
                         st.info("No prediction error metrics available")
             else:
@@ -832,9 +986,9 @@ def main():
                 with metrics_placeholder:
                     st.info("Waiting for price data...")
                 with price_placeholder:
-                    st.plotly_chart(create_price_chart(pd.DataFrame()), use_container_width=True)
+                    st.plotly_chart(create_price_chart(pd.DataFrame()), use_container_width=True, key=f"empty_price_chart_{timestamp_str}")
                 with prediction_placeholder:
-                    st.plotly_chart(create_prediction_chart(pd.DataFrame(), pd.DataFrame()), use_container_width=True)
+                    st.plotly_chart(create_prediction_chart(pd.DataFrame(), pd.DataFrame()), use_container_width=True, key=f"empty_prediction_chart_{timestamp_str}")
                 with mae_placeholder:
                     st.info("No metrics data available")
             

@@ -261,13 +261,35 @@ class BitcoinForecastApp:
                 # Calculate standard deviation
                 std = (pred_upper - pred_lower) / 2
                 
-                # Calculate absolute error (correct calculation - absolute difference between prediction and actual)
-                mae = abs(pred_price - actual_price)
+                # Use enhanced evaluation method from the model
+                eval_metrics = self.model.evaluate_prediction(
+                    actual_price=actual_price,
+                    prediction=pred_price,
+                    timestamp=message_time
+                )
                 
-                # Debug log to identify any scaling issues
-                self.logger.info(f"Price difference calculation: Actual={round(actual_price, 2):.2f}, Predicted={round(pred_price, 2):.2f}, Difference={round(actual_price - pred_price, 2):.2f}, MAE={round(mae, 2):.2f}")
+                # Get error metrics 
+                mae = eval_metrics['absolute_error']
                 
-                # Calculate RMSE
+                # Debug log with enhanced metrics
+                self.logger.info(
+                    f"Prediction metrics: "
+                    f"Actual={round(actual_price, 2):.2f}, "
+                    f"Predicted={round(pred_price, 2):.2f}, "
+                    f"Error={round(actual_price - pred_price, 2):.2f}, "
+                    f"MAE={mae:.2f}, "
+                    f"%Error={eval_metrics['percentage_error']:.2f}%, "
+                    f"Z-score={eval_metrics['z_score']:.2f}"
+                )
+                
+                # Flag anomalous predictions for investigation
+                if eval_metrics['is_anomaly']:
+                    self.logger.warning(
+                        f"ANOMALOUS PREDICTION DETECTED! Error Z-score: {eval_metrics['z_score']:.2f} "
+                        f"exceeds threshold {self.model.anomaly_detection_threshold}"
+                    )
+                
+                # Calculate RMSE (squared error)
                 rmse = math.sqrt((pred_price - actual_price) ** 2)
                 
                 # Log the prediction
@@ -447,13 +469,40 @@ class BitcoinForecastApp:
             lower_bound = pred_price - 1.96 * std_price
             upper_bound = pred_price + 1.96 * std_price
             
-            # Calculate metrics
-            mae = abs(pred_price - actual_price)
-            rmse = np.sqrt(mae ** 2)
+            # Use enhanced evaluation if model is available
+            if hasattr(self, 'model') and self.model is not None:
+                eval_metrics = self.model.evaluate_prediction(
+                    actual_price=actual_price,
+                    prediction=pred_price,
+                    timestamp=message_time
+                )
+                mae = eval_metrics['absolute_error']
+                
+                # Log more detailed metrics
+                self.logger.info(
+                    f"Robust prediction metrics: "
+                    f"Actual={round(actual_price, 2):.2f}, "
+                    f"Predicted={round(pred_price, 2):.2f}, "
+                    f"Error={round(actual_price - pred_price, 2):.2f}, "
+                    f"MAE={mae:.2f}, "
+                    f"%Error={eval_metrics['percentage_error']:.2f}%"
+                )
+                
+                rmse = math.sqrt(mae ** 2)  # Simplified RMSE calculation
+            else:
+                # Fall back to simple metrics if model isn't available
+                mae = abs(actual_price - pred_price)
+                rmse = np.sqrt(mae ** 2)
+                self.logger.info(f"Simple robust prediction metrics: Actual={round(actual_price, 2):.2f}, Predicted={round(pred_price, 2):.2f}, Error={round(actual_price - pred_price, 2):.2f}")
             
             # Use the original timestamp from the message
             # Log timestamp being used for prediction
             self.logger.info(f"Using message timestamp for robust prediction: {message_time.isoformat()}")
+            
+            # Round predictions to 2 decimal places
+            pred_price = round(pred_price, 2)
+            lower_bound = round(lower_bound, 2)
+            upper_bound = round(upper_bound, 2)
             
             # Save prediction and metrics with the original message timestamp
             self.save_prediction(message_time, pred_price, lower_bound, upper_bound)
@@ -475,6 +524,11 @@ class BitcoinForecastApp:
                 # Calculate metrics
                 mae = 0.0  # Perfect prediction since we're using the actual price
                 rmse = 0.0  # Perfect prediction
+                
+                # Round predictions to 2 decimal places
+                pred_price = round(pred_price, 2)
+                lower_bound = round(lower_bound, 2)
+                upper_bound = round(upper_bound, 2)
                 
                 # Save this last-resort prediction
                 self.save_prediction(message_time, pred_price, lower_bound, upper_bound)
