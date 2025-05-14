@@ -9,17 +9,22 @@ import csv
 import asyncio
 import websockets
 from utilities.price_format import normalize_price
-from utilities.timestamp_format import to_iso8601
+from utilities.timestamp_format import to_iso8601, format_timestamp
+from utilities.unified_config import get_service_config
 from kafka import KafkaProducer
 
-# Load config
-CONFIG_PATH = '/app/configs/config.yaml'
-with open(CONFIG_PATH, 'r') as f:
-    config = yaml.safe_load(f)
-TIMESTAMP_FORMAT = config['data_format']['timestamp']['format']
+# Get service name from environment or use default
+SERVICE_NAME = os.environ.get('SERVICE_NAME', 'data_collector')
+
+# Load config using unified config parser
+config = get_service_config(SERVICE_NAME)
 
 # Configure logging
-logger = get_logger(__name__)
+logger = get_logger(__name__, log_level=config['app']['log_level'])
+logger.info(f"Starting {SERVICE_NAME} service with unified configuration")
+
+# Get timestamp format from config
+TIMESTAMP_FORMAT = config['data_format']['timestamp']['format']
 
 # Add robust timestamp conversion
 def safe_iso8601(ts):
@@ -28,11 +33,11 @@ def safe_iso8601(ts):
         # Validate reasonable range (2000-01-01 to 2100-01-01)
         if ts < 946684800 or ts > 4102444800:
             raise ValueError(f"Timestamp {ts} out of range")
-        return datetime.utcfromtimestamp(ts).strftime(TIMESTAMP_FORMAT)
+        return format_timestamp(ts, use_t_separator=True)
     # If already string, try to parse and reformat
     try:
         dt = pd.to_datetime(ts, utc=True)
-        return dt.strftime(TIMESTAMP_FORMAT)
+        return format_timestamp(dt, use_t_separator=True)
     except Exception:
         raise ValueError(f"Unrecognized timestamp: {ts}")
 
@@ -72,7 +77,8 @@ class BitcoinDataCollector:
             bootstrap_servers=config['kafka']['bootstrap_servers'],
             value_serializer=lambda x: json.dumps(x).encode()
         )
-        self.data_file = os.path.join('/app/data', 'raw/instant_data.csv')
+        self.data_file = config['data']['raw_data']['instant_data']['file']
+        logger.info(f"Data will be saved to {self.data_file}")
 
     def publish_to_kafka(self, bar, ts):
         self.producer.send(self.config['kafka']['topic'], bar)
@@ -128,7 +134,6 @@ class BitcoinDataCollector:
                             }
                             save_data(bar, self.data_file)
                             self.publish_to_kafka(bar=bar, ts=row_ts)
-                            # logger.info(f"[System Time: {datetime.now().strftime(TIMESTAMP_FORMAT)}] Collected data for [Data Time: {row_ts}] - O={o}, H={h}, L={l}, C={c}, V={v}")
                             # Start a new bar
                             curr_sec = sec
                             o = h = l = c = price

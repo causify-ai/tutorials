@@ -16,4 +16,4 @@ done
 echo "Kafka is ready!"
 
 # Run the application
-python /app/mains/run_instant.py 
+python /app/bitcoin_forecast_app/mains/run_instant.py 

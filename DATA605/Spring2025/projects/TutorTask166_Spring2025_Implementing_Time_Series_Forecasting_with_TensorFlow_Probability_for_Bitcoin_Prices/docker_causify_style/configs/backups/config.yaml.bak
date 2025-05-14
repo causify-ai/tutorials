@@ -1,0 +1,140 @@
+# Application configuration
+app:
+  name: "BitcoinForecastApp"
+  version: "1.0.0"
+  log_level: "INFO"
+  log_format: "%(asctime)s | %(levelname)s | %(name)s.%(funcName)s() | %(message)s"  # "%(asctime)s | %(levelname)s | %(message)s"
+  log_date_format: "%Y-%m-%d %H:%M:%S"
+
+# Data paths
+data:
+  raw_data:
+    instant_data:
+      file: /app/data/raw/instant_data.csv
+    historical_data:
+      file: /app/data/raw_data/bitcoin_history_365d.csv
+  predictions:
+    instant_data:
+      predictions_file: /app/data/predictions/instant_predictions.csv
+      metrics_file: /app/data/predictions/instant_metrics.csv
+    history_data:
+      predictions_file: /app/data/predictions/history_data/history_predictions.csv
+      metrics_file: /app/data/predictions/history_data/history_metrics.csv
+
+# Data format configuration
+data_format:
+  timestamp:
+    format: "%Y-%m-%dT%H:%M:%S"  # ISO8601 format
+    timezone: "UTC"
+    precision: "seconds"  # Round all timestamps to seconds
+  columns:
+    raw_data:
+      names: ['timestamp', 'open', 'high', 'low', 'close', 'volume']
+      dtypes:
+        timestamp: 'datetime64[ns]'
+        open: 'float64'
+        high: 'float64'
+        low: 'float64'
+        close: 'float64'
+        volume: 'float64'
+    predictions:
+      names: ['timestamp', 'pred_price', 'pred_lower', 'pred_upper']
+      dtypes:
+        timestamp: 'datetime64[ns]'
+        pred_price: 'float64'
+        pred_lower: 'float64'
+        pred_upper: 'float64'
+    metrics:
+      names: ['timestamp', 'std', 'mae', 'rmse']
+      dtypes:
+        timestamp: 'datetime64[ns]'
+        std: 'float64'
+        mae: 'float64'
+        rmse: 'float64'
+
+# Kafka configuration
+kafka:
+  bootstrap_servers: kafka:29092
+  topic: bitcoin-prices
+  consumer:
+    group_id: "bitcoin-forecast-group"
+    auto_offset_reset: "latest"
+    enable_auto_commit: true
+    session_timeout_ms: 60000
+    heartbeat_interval_ms: 20000
+    max_poll_interval_ms: 600000
+    retry_backoff_ms: 1000
+    reconnect_backoff_ms: 1000
+    reconnect_backoff_max_ms: 5000
+    max_poll_records: 10
+    fetch_max_wait_ms: 500
+    fetch_min_bytes: 1
+    fetch_max_bytes: 1048576  # 1MB
+
+# Model configuration
+model:
+  instant:
+    evaluation_window: 300  # 5 minutes in seconds
+    forecast_horizon: 1     # 1 second ahead
+    learning_rate: 0.01    # Learning rate for model training
+    vi_steps: 100         # Reduced from 500 for faster initialization
+    num_samples: 50       # Reduced from 100 for faster initialization
+    feature_windows:       # Feature windows configuration
+      log_return: 5        # 5-minute window for log returns
+      vol_rolling: [15, 30, 60]  # List of windows for volatility rolling window
+      ma_short: 30         # 30-minute window for short-term moving average
+      ma_long: 120         # 2-hour window for long-term moving average
+    resample_freq: "5T"    # 5-minute intervals
+    lookback: 60          # Reduced from 120 for faster initialization
+    window_size: 300       # 5 minutes in seconds
+    initial_data_points: 1000  # Limit initial data load
+    update_interval: 60    # Update model every 60 seconds
+  history:
+    evaluation_window: 168 # hours (1 week)
+    forecast_horizon: 24   # steps
+    learning_rate: 0.01    # Learning rate for model training
+    vi_steps: 1000         # Number of variational inference steps
+    num_samples: 1000      # Number of samples for forecasting
+    num_seasons: 7         # Number of seasons for seasonal model
+    rolling_vol: 7         # Days for rolling volatility calculation
+    seasonal_period: 24    # Hours in a seasonal period
+
+# Dashboard configuration
+dashboard:
+  refresh_interval: 1      # seconds between frontend updates
+  default_time_range_days: 1
+  chart_height: 600
+  theme: "plotly_white"
+  data_aggregation: "1S"   # 1-second intervals for real-time data
+  plot_settings:
+    time_window: 300      # seconds to show in the plot (5 minutes)
+    time_window_minutes: 30  # minutes to show in all plots (NEW, for 30min window)
+    update_interval: 1     # seconds between plot updates
+    max_points: 300        # maximum number of points to show (1 point per second for 5 minutes)
+    resample_freq: "1S"    # resample frequency for data aggregation
+    time_alignment:
+      mode: "right"        # align plot to right (latest time)
+      padding: 10          # seconds of padding on the right
+      auto_range: true     # automatically adjust range to show latest data
+    axis:
+      x:
+        type: "date"
+        tickformat: "%H:%M:%S"
+        tickangle: -45
+        tickmode: "auto"
+        nticks: 10
+      y:
+        type: "linear"
+        autorange: true
+        fixedrange: false
+  colors:
+    actual_up: "#2ecc71"   # Green for price increase
+    actual_down: "#e74c3c" # Red for price decrease
+    predicted: "#f39c12"   # Orange for predictions
+    actual: "#3498db"      # Blue for actual prices
+    confidence: "rgba(243, 156, 18, 0.2)"  # Semi-transparent orange for confidence intervals
+
+# Memory management
+memory:
+  cleanup_interval: 0.1    # seconds between garbage collection
+  sleep_interval: 0.1      # seconds between main loop iterations

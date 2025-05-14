@@ -11,19 +11,18 @@ RUN apt-get update && apt-get install -y \
 COPY dashboard/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the src and utilities directories
-COPY src /app/src
-COPY utilities /app/utilities
+# Create necessary directories
+RUN mkdir -p /app/data/raw /app/data/predictions /app/data/raw_data \
+    && chmod -R 777 /app/data
 
-# Create configs directory and copy config file
-RUN mkdir -p /app/configs
-COPY configs/config.yaml /app/configs/
+# Copy unified configuration
+COPY configs/unified_config.yaml /app/configs/
 
-# Create data directories (will be mounted as volumes)
-RUN mkdir -p /app/data/predictions /app/data/raw_data
+# Copy utilities (including the unified config parser)
+COPY utilities/ /app/utilities/
 
 # Copy the dashboard app
-COPY dashboard /app/dashboard
+COPY dashboard/ /app/dashboard/
 
 # Expose the port
 EXPOSE 8501
@@ -31,6 +30,7 @@ EXPOSE 8501
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app
+ENV SERVICE_NAME=dashboard
 
 # Run the application
 CMD ["streamlit", "run", "dashboard/app.py"] 

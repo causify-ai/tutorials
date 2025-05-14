@@ -35,7 +35,7 @@ setup(
         "console_scripts": [
             # so you can run `run_history` or `run_instant` directly
             "run_history = mains.run_history:main",
-            "run_instant = mains.run_instant:main",
+            "run_instant = bitcoin_forecast_app.mains.run_instant:main",
         ],
     },
 )

@@ -106,13 +106,11 @@ services:
     build:
       context: .
       dockerfile: bitcoin_forecast_app/Dockerfile
-    container_name: bitcoin-forecast-app
+    command: python /app/bitcoin_forecast_app/mains/run_instant.py
     volumes:
-      - ./data:/app/data:rw
-      - ./configs:/app/configs:ro
+      - ./data:/app/data
     depends_on:
-      data-collector:
-        condition: service_started
+      - kafka
     environment:
       - PYTHONUNBUFFERED=1
       - KAFKA_BOOTSTRAP_SERVERS=kafka:29092

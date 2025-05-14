@@ -48,12 +48,13 @@ data_format:
         pred_lower: 'float64'
         pred_upper: 'float64'
     metrics:
-      names: ['timestamp', 'std', 'mae', 'rmse']
+      names: ['timestamp', 'std', 'mae', 'rmse', 'actual_error']
       dtypes:
         timestamp: 'datetime64[ns]'
         std: 'float64'
         mae: 'float64'
         rmse: 'float64'
+        actual_error: 'float64'
 
 # Kafka configuration (shared across services)
 kafka:
@@ -128,11 +129,14 @@ services:
     chart_height: 600
     theme: "plotly_white"
     data_aggregation: "1S"      # 1-second intervals for real-time data
+    cold_start:
+      enabled: true             # Enable cold start mode for better visualization with limited data
+      min_data_points: 10       # Minimum number of data points needed to show the chart
     plot_settings:
-      time_window: 300          # seconds to show in the plot (5 minutes)
-      time_window_minutes: 30   # minutes to show in all plots
+      time_window: 3600         # seconds to show in the plot (60 minutes)
+      time_window_minutes: 60   # minutes to show in all plots (consistent across all charts)
       update_interval: 1        # seconds between plot updates
-      max_points: 300           # maximum number of points to show
+      max_points: 3600          # maximum number of points to show (1 point per second for 60 minutes)
       resample_freq: "1S"       # resample frequency for data aggregation
       time_alignment:
         mode: "right"           # align plot to right (latest time)
