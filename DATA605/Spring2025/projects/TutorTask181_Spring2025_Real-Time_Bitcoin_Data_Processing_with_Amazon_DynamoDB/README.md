@@ -43,3 +43,42 @@
 
 - Choose the approach that best fits your comfort level and project needs. Both
   are valid depending on your use case.
+
+
+# Real-Time Bitcoin Data Processing with Amazon DynamoDB
+
+## Introduction
+This project tracks Bitcoin’s price in real time and logs the data into an Amazon DynamoDB table. The project fetches the latest Bitcoin price (in USD) from the CoinGecko API and stores each data point in DynamoDB.
+
+---
+
+## Setup Instructions
+1. **Install dependencies:**
+    ```bash
+    pip install boto3 requests pandas matplotlib
+    ```
+
+2. **Configure AWS credentials:**
+    ```bash
+    aws configure
+    ```
+
+3. **Create a DynamoDB table:**
+    - Table Name: `BitcoinPrices`
+    - Primary Key: `timestamp` (Number)
+
+---
+
+## Running the Real-Time Ingestor
+```bash
+python3 realtime_ingestor.py
+
+This script will log the latest BTC price to DynamoDB every 60 seconds.
+
+# Viewing the Data
+Open the provided Jupyter notebook to visualize and analyze the collected data.
+
+# Cleanup Script
+You can run cleanup.sh to remove temporary files:
+./cleanup.sh
+
