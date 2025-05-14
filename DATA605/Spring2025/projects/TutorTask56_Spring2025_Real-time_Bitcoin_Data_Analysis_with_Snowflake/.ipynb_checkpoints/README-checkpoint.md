@@ -1,45 +1,59 @@
-# Tutorial Template: Two Docker Approaches
+# 📈 Bitcoin-Snowflake Project: Real-time Ingestion, Storage, and Analysis
 
-- This directory provides two versions of the same tutorial setup to help you
-  work with Jupyter notebooks and Python scripts inside Docker environments
+- This directory implements a complete **Bitcoin price tracking system** using:
+  - Snowflake (for storage)
+  - CoinGecko API (for real-time and historical data)
+  - Docker (for reproducible environments)
+  - Jupyter + Streamlit (for analysis and dashboarding)
 
-- Both versions run the same code but use different Docker approaches, with
-  different level of complexity and maintainability
+- The project uses a **Dockerized environment** to run both:
+  - 📓 Jupyter Lab (for notebooks)
+  - 📊 Streamlit App (for dashboard visualization)
 
-## 1. `data605_style` (Simple Docker Environment)
+## 1. `docker_data605_style/` (Simple Docker Environment)
 
-- This version is modeled after the setup used in DATA605 tutorials
-- This template provides a ready-to-run environment, including scripts to build,
-  run, and clean the Docker container.
+- This setup follows the **DATA605-style** template.
+- It provides:
+  - A ready-to-run **Dockerfile**.
+  - Scripts to **build**, **run**, and **clean** the Docker container easily.
+  - Streamlit and Jupyter services running inside the same container.
 
-- For your specific project, you should:
-  - Modify the Dockerfile to add project-specific dependencies
-  - Update bash/scripts accordingly
-  - Expose additional ports if your project requires them
+- For your specific project:
+  - You can modify `Dockerfile` to add extra dependencies if needed.
+  - Update `.env` with safe credentials (never commit real secrets).
+  - Expose additional ports if you expand the system beyond Streamlit/Jupyter.
 
-## 2. `causify_style` (Causify AI dev-system)
 
-- This setup reflects the approach commonly used in Causify AI dev-system
-- **Recommended** for students familiar with Docker or those wishing to explore a
-  production-like setup
-- Pros
-  - Docker layer written in Python to make it easy to extend and test
-  - Less redundant since code is factored out
-  - Used for real-world development, production workflows
-  - Used for all internships, RA / TA, full-time at UMD DATA605 / MSML610 /
-    Causify 
-- Cons
-  - It is more complex to use and configure
-  - More dependencies from the 
-- For thin environment setup instructions, refer to:  
-  [How to Set Up Development on Laptop](https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
+## 🚀 Project Highlights
 
-## Reference Tutorials
+- Pulls real-time Bitcoin prices every few minutes using **CoinGecko API**.
+- Bulk loads 90 days of historical Bitcoin prices into **Snowflake**.
+- Stores structured data in a `bitcoin_prices` table.
+- Visualizes trends with:
+  - 📈 7-day Moving Averages
+  - 📉 Bollinger Bands
+- Streamlit dashboard for live exploration.
+- Jupyter notebooks for deep analysis.
 
-- The `tutorial_github` example has been implemented in both environments for you
-  to refer to:
-  - `tutorial_github_data605_style` uses the simpler DATA605 approach
-  - `tutorial_github_causify_style` uses the more complex Causify approach
+## 🛠️ How to Build and Run
 
-- Choose the approach that best fits your comfort level and project needs. Both
-  are valid depending on your use case.
+```bash
+# Build Docker image
+bash docker_data605_style/docker_build.sh
+
+# Run Docker container
+docker run -it -p 8888:8888 -p 8502:8502 -v $(pwd):/project --name btc_container btc_snowflake_app
+```
+
+- JupyterLab: http://127.0.0.1:8888/lab/
+- Streamlit Dashboard: [http://localhost:8502](http://localhost:8502)
+
+## 📚 Reference Materials
+
+- [Snowflake Documentation](https://docs.snowflake.com/en/)
+- [CoinGecko API Docs](https://www.coingecko.com/en/api)
+- [Streamlit Docs](https://docs.streamlit.io/)
+- [Docker Docs](https://docs.docker.com/)
+- [DATA605 Course Tutorials](https://github.com/causify-ai/tutorials)
+
+---

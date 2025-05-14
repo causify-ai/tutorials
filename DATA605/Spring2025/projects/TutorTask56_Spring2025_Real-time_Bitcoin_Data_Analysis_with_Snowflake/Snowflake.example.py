@@ -1,5 +1,5 @@
 """
-This script demonstrates a template-style interface for interacting with Snowflake.
+This script demonstrates a template-style interface for interacting with Snowflake using key pair authentication.
 
 1. Includes code abstraction and documentation to meet modular standards.
 2. Please lint this script using black/pylint before committing.
@@ -11,46 +11,53 @@ Follow the reference on coding style guide to write clean and readable code:
 - https://github.com/causify-ai/helpers/blob/master/docs/coding/all.coding_style.how_to_guide.md
 """
 
-# Comments should be imperative and have a period at the end.
-# Your code should be well commented.
-# Import libraries in this section.
-# Avoid imports like import *, from ... import ..., from ... import *, etc.
 import logging
 from typing import List
 import pandas as pd
 import snowflake.connector
+from dotenv import load_dotenv
+import os
+from cryptography.hazmat.primitives import serialization
 
 _LOG = logging.getLogger(__name__)
 
 
-# #############################################################################
-# Snowflake Client Template
-# #############################################################################
-
-
 class SnowflakeClient:
     """
-    Provides a simplified client wrapper for interacting with Snowflake.
+    Provides a simplified client wrapper for interacting with Snowflake using RSA key pair authentication.
     """
 
-    def __init__(self, user: str, password: str, account: str, warehouse: str, database: str, schema: str):
+    def __init__(self, user: str, account: str, warehouse: str, database: str, schema: str, private_key_path: str, role: str = "ACCOUNTADMIN"):
         """
-        Initialize the Snowflake connection using secure credentials.
+        Initialize the Snowflake connection using RSA private key authentication.
 
         :param user: Snowflake username
-        :param password: Snowflake password
         :param account: Snowflake account identifier
         :param warehouse: Snowflake virtual warehouse
         :param database: Snowflake database name
         :param schema: Snowflake schema name
+        :param private_key_path: Path to the private key file
+        :param role: Optional Snowflake role
         """
+        with open(private_key_path, "rb") as key_file:
+            p_key = serialization.load_pem_private_key(
+                key_file.read(),
+                password=None,
+            )
+        private_key_bytes = p_key.private_bytes(
+            encoding=serialization.Encoding.DER,
+            format=serialization.PrivateFormat.PKCS8,
+            encryption_algorithm=serialization.NoEncryption()
+        )
+
         self.connection = snowflake.connector.connect(
             user=user,
-            password=password,
             account=account,
             warehouse=warehouse,
             database=database,
-            schema=schema
+            schema=schema,
+            role=role,
+            private_key=private_key_bytes
         )
         _LOG.info("Snowflake connection established successfully.")
 
@@ -99,15 +106,13 @@ def init_client_from_env() -> SnowflakeClient:
 
     :return: SnowflakeClient instance
     """
-    import os
-    from dotenv import load_dotenv
-
     load_dotenv()
     return SnowflakeClient(
         user=os.getenv("SNOWFLAKE_USER"),
-        password=os.getenv("SNOWFLAKE_PASSWORD"),
         account=os.getenv("SNOWFLAKE_ACCOUNT"),
         warehouse=os.getenv("SNOWFLAKE_WAREHOUSE"),
         database=os.getenv("SNOWFLAKE_DATABASE"),
-        schema=os.getenv("SNOWFLAKE_SCHEMA")
+        schema=os.getenv("SNOWFLAKE_SCHEMA"),
+        private_key_path=os.getenv("SNOWFLAKE_PRIVATE_KEY"),
+        role=os.getenv("SNOWFLAKE_ROLE", "ACCOUNTADMIN")
     )

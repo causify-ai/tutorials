@@ -2,9 +2,10 @@ pandas
 requests
 python-dotenv
 snowflake-connector-python
-jupyter
+jupyterlab
 plotly
 boto3
 dotenv
+cryptography
 Prophet
 streamlit

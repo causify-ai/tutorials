@@ -4,18 +4,32 @@ import snowflake.connector
 import requests
 from datetime import datetime
 from dotenv import load_dotenv
+from cryptography.hazmat.primitives import serialization
 
 load_dotenv()
 
 def connect_to_snowflake():
-    """Establishes a connection to Snowflake using environment variables."""
+    """Establishes a connection to Snowflake using key pair authentication."""
+    private_key_path = os.getenv("SNOWFLAKE_PRIVATE_KEY", "rsa_key.pem")
+    with open(private_key_path, "rb") as key_file:
+        p_key = serialization.load_pem_private_key(
+            key_file.read(),
+            password=None,
+        )
+    private_key_bytes = p_key.private_bytes(
+        encoding=serialization.Encoding.DER,
+        format=serialization.PrivateFormat.PKCS8,
+        encryption_algorithm=serialization.NoEncryption()
+    )
+
     return snowflake.connector.connect(
         user=os.getenv("SNOWFLAKE_USER"),
-        password=os.getenv("SNOWFLAKE_PASSWORD"),
         account=os.getenv("SNOWFLAKE_ACCOUNT"),
         warehouse=os.getenv("SNOWFLAKE_WAREHOUSE"),
         database=os.getenv("SNOWFLAKE_DATABASE"),
-        schema=os.getenv("SNOWFLAKE_SCHEMA")
+        schema=os.getenv("SNOWFLAKE_SCHEMA"),
+        role=os.getenv("SNOWFLAKE_ROLE", "ACCOUNTADMIN"),
+        private_key=private_key_bytes
     )
 
 def fetch_bitcoin_price():
