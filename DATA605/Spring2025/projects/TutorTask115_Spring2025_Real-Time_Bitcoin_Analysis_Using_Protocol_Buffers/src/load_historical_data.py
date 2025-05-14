@@ -1,56 +1,59 @@
-# load_historical_data.py
+# src/load_historical_data.py
 
 import os
-import pandas as pd
+import requests
+import datetime
 from src.bitcoin_full_pb2 import BitcoinFullData
 
-def load_protobuf_file(file_path):
-    """Load and parse all BitcoinFullData records from a binary file."""
-    messages = []
-    with open(file_path, "rb") as f:
-        while True:
-            try:
-                msg = BitcoinFullData()
-                msg.ParseFromString(f.read(msg.ByteSize()))
-                messages.append(msg)
-            except Exception:
-                break
-    return messages
+# ----------- Utility Functions -----------
 
-def protobufs_to_dataframe(messages):
-    """Convert list of BitcoinFullData messages to a DataFrame."""
-    rows = []
-    for msg in messages:
-        rows.append({
-            "timestamp": msg.timestamp,
-            "id": msg.id,
-            "symbol": msg.symbol,
-            "name": msg.name,
-            "current_price": msg.current_price,
-            "market_cap": msg.market_cap,
-            "total_volume": msg.total_volume,
-            "high_24h": msg.high_24h,
-            "low_24h": msg.low_24h,
-            "price_change_24h": msg.price_change_24h,
-            "market_cap_rank": msg.market_cap_rank,
-            "circulating_supply": msg.circulating_supply,
-            "ath": msg.ath,
-            "atl": msg.atl,
-            "source": msg.source,
-            "last_updated": msg.last_updated,
-        })
-    return pd.DataFrame(rows)
+def fetch_hourly_historical_data():
+    """Fetch past 30 days of hourly Bitcoin market data from CoinGecko."""
+    url = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart"
+    params = {"vs_currency": "usd", "days": "30", "interval": "hourly"}
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    return response.json()
+
+def dict_to_protobuf(ts, price, market_cap, volume):
+    """Convert a single data point to a BitcoinFullData protobuf object."""
+    return BitcoinFullData(
+        timestamp=int(ts // 1000),
+        current_price=price,
+        market_cap=market_cap,
+        total_volume=volume,
+        source="coingecko",
+    )
+
+def save_to_length_delimited_file(messages, output_path):
+    """Save protobuf messages using length-delimited encoding."""
+    with open(output_path, "wb") as f:
+        for msg in messages:
+            serialized = msg.SerializeToString()
+            size = len(serialized)
+            f.write(size.to_bytes(4, byteorder="little"))
+            f.write(serialized)
+
+# ----------- Main Script -----------
 
 if __name__ == "__main__":
-    data_dir = os.path.join(os.path.dirname(__file__), "data")
-    all_data = []
+    print("🌐 Fetching 30 days of hourly Bitcoin data from CoinGecko...")
+    data = fetch_hourly_historical_data()
 
-    for file in os.listdir(data_dir):
-        if file.endswith(".bin"):
-            path = os.path.join(data_dir, file)
-            messages = load_protobuf_file(path)
-            df = protobufs_to_dataframe(messages)
-            all_data.append(df)
+    timestamps = data["prices"]
+    market_caps = {ts: mc for ts, mc in data["market_caps"]}
+    volumes = {ts: vol for ts, vol in data["total_volumes"]}
 
-    full_df = pd.concat(all_data, ignore_index=True)
-    print(full_df.head())
+    messages = []
+    for ts, price in timestamps:
+        mc = market_caps.get(ts, 0.0)
+        vol = volumes.get(ts, 0.0)
+        proto = dict_to_protobuf(ts, price, mc, vol)
+        messages.append(proto)
+
+    output_dir = os.path.join(os.path.dirname(__file__), "data")
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, "bitcoin_historical_hourly.pb")
+
+    save_to_length_delimited_file(messages, output_path)
+    print(f"✅ Saved {len(messages)} hourly records to {output_path}")
