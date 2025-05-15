@@ -13,7 +13,20 @@ A scalable, monitoring-ready Kubernetes application that fetches, processes, and
 
 ## Architecture
 
-![Architecture Diagram](https://mermaid.ink/img/pako:eNqFk81u2zAMx19F0C67-QV60LSbZRt62GAMww5NcFCtaNFiK5clF0GQdy9tJ00_tmGXRD-S-pOUzqJyFoWI0ndXzZHAUm_RucZsZEXP0NbW24GBFwePM0JQl_AE3t_DVnP9DWuPDh4dGbTQUUBk-sNRgJ2JD9aHgkSZS5SZJsMdT-QdPnC38_uUUPJBSV-Pc4ymmtPwJO8_czcaVdvRG9EFDsrD0qKl2oM-3ZMgHJBMJHSFPkpYTCE9KNwfOONsUKTg0SXQQcXMFcixBgZYcGTBzXMoB4YuA6yJOH5kixSVwYGMhS5cLwLO4R3UCo0Pxr8ZIHYoNuR_8xCsacBTKHRnFPEuxwnnAe5pUKc1SgcJB-VlZTAObZ3pFxo9SfTGQz1OkuQ9ZHLv8eHgEUwZODvH-PCPLp7Vz13yZbOvwBRVV3sNpYvCrZcjCcOPjlBWZXGrNWgcD6mUmAWIwhK-cZPDpNJAoZU9gMr4rD1GcbOJo_8Cq9-UbwrPHEslbvk0qczBCZGJXPgwbL4KkUbwY2v2i1xgzM8x4mP3Yx8r3NVqgPiT0xVeKUdmWUOCkStK4fFWiIFm7TmrU5yH8_nSU1z_gPWbN5LbOKJZ-_P1YmfbLyGgZA0)
+```mermaid
+graph TD
+    A[CoinGecko API] -->|Fetch Data| B[Bitcoin Fetcher Pods]
+    B -->|Store Data| C[PostgreSQL]
+    B -->|Expose Metrics| D[Prometheus]
+    D -->|Visualize Metrics| E[Grafana Dashboards]
+    B -->|Time Series Analysis| B
+    F[HPA] -->|Auto-scale| B
+    G[Kubernetes Cluster] -->|Manages| B
+    G -->|Manages| C
+    G -->|Manages| D
+    G -->|Manages| E
+    H[User] -->|View| E
+```
 
 ## Prerequisites
 
@@ -40,9 +53,7 @@ A scalable, monitoring-ready Kubernetes application that fetches, processes, and
    ```bash
    minikube service grafana --url
    ```
-   - Username: admin
-   - Password: admin
-
+  Check/Update the secret files for the username and password
 ## Secret Management
 
 This project uses secret files to manage sensitive information. To set up:
@@ -173,22 +184,3 @@ Some ideas to extend the project:
 - Set up alerts based on price movements
 - Create a web UI to view analytics
 - Add a streaming solution like Kafka for higher throughput
-```
-
-## 6. Architecture Diagram
-
-Here's the architecture diagram for the complete project:
-
-```
-graph TD
-    A[CoinGecko API] -->|Fetch Data| B[Bitcoin Fetcher Pods]
-    B -->|Store Data| C[PostgreSQL]
-    B -->|Expose Metrics| D[Prometheus]
-    D -->|Visualize Metrics| E[Grafana Dashboards]
-    B -->|Time Series Analysis| B
-    F[HPA] -->|Auto-scale| B
-    G[Kubernetes Cluster] -->|Manages| B
-    G -->|Manages| C
-    G -->|Manages| D
-    G -->|Manages| E
-    H[User] -->|View| E
