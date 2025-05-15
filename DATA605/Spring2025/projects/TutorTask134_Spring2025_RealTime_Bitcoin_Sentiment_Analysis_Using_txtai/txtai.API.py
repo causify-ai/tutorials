@@ -1,83 +1,184 @@
-"""
-A brief overview of what the script does in one line.
+#!/usr/bin/env python
+# coding: utf-8
 
-1. Make sure to include the citations here (code and research)
-2. Make sure to run the linter on the script before committing changes.
-    - Many changes would be pointed out by the linter to maintain consistency with coding style.
-3. Provide here the reference to the documentation that explains the system in detail. (e.g., pycaret.API.md)
+# # Real-Time Bitcoin Sentiment Analysis Using txtai
+# 
+# This project uses real-time news headlines and Bitcoin pricing data to evaluate market sentiment and predict short-term price movements. Tools include:
+# 
+# - [txtai](https://github.com/neuml/txtai) for semantic search and sentiment analysis
+# - [NewsAPI](https://newsapi.org/) for real-time crypto-related news
+# - [CoinGecko API](https://www.coingecko.com/en/api) for Bitcoin price data
+# - Time-series models (ARIMA) for forecasting
 
-The name of this script should in the following format:
- - if the notebook is exploring `pycaret API`, then it is `pycaret.API.py`
+# ## 1. Environment Setup
+# 
+# We begin by installing and importing the necessary Python packages. These include:
+# 
+# - `txtai` for semantic search and sentiment analysis
+# - `requests` for communicating with external APIs (NewsAPI and CoinGecko)
+# - `pandas` for working with tabular data
+# - `matplotlib` and `seaborn` for visualizing price and sentiment trends
+# - `datetime` for handling timestamps and date alignment
+# 
+# These tools provide the foundation for data ingestion, processing, and visualization in this notebook.
 
- Follow the reference on coding style guide to write clean and readable code. 
-- https://github.com/causify-ai/helpers/blob/master/docs/coding/all.coding_style.how_to_guide.md
-"""
+# In[1]:
 
-# Comments should be imperative and have a period at the end.
-# Your code should be well commented. 
-# Import libraries in this section.
-# Avoid imports like import *, from ... import ..., from ... import *, etc.
-import logging
-# Following is a useful library for typehinting.
-# For typehints like list, dict, etc. you can use the following:
-## def func(arg1:List[int]) -> List[int]:
-# For more info check: https://docs.python.org/3/library/typing.html
-from typing import List
 
+# import libraries
 import pandas as pd
-import numpy as np
-
-########################################################################
-# Prefer using logger over print statements.
-# You can use logger in the following manner:
-## _LOG.info("message") for logging level INFO
-## _LOG.debug("message") for logging level DEBUG, etc.
-### To add string formatting, use the following syntax:
-### _LOG.info("message %s", "string") and so on.
-##########################################################################
-_LOG = logging.getLogger(__name__)
+import matplotlib.pyplot as plt
+import seaborn as sns
+from txtai_utils import TxtaiSentimentSearch, fetch_bitcoin_headlines, analyze_sentiment
+from datetime import datetime
+import requests
 
 
-# #############################################################################
-# <Class Name> ("Template" in this case)
-# #############################################################################
+# ## 2. Fetch Real-Time News and Analyze Sentiment
+# 
+# We use NewsAPI to fetch live Bitcoin-related news headlines and analyze them using `txtai`'s sentiment pipeline.
 
-class Template:
-    """
-    Brief imperative description of what the class does in one line, if needed.
-    """
-    def __init__(self):
-        pass
-    
-    def method1(self, arg1:int) -> None:
-        """
-        Brief imperative description of what the method does in one line.
-
-        You can elaborate more in the method docstring in this section, for e.g. explaining 
-        the formula/algorithm. Every method/function should have a docstring, typehints and include the
-        parameters and return as follows:
-
-        :param arg1: description of arg1
-        :return: description of return
-        """
-        # Code bloks go here.
-        # Make sure to include comments to explain what the code is doing.
-        # No empty lines between code blocks.
-        pass
+# In[2]:
 
 
-def template_function(arg1:int) -> None:
-    """
-    Brief imperative description of what the function does in one line.
+# Set your NewsAPI key
+API_KEY = "6e540235a1794f78a804270f2317adf3"  # Replace with your actual NewsAPI key
+headlines = fetch_bitcoin_headlines(API_KEY)
+today = datetime.utcnow().date()
+sentiments = [analyze_sentiment(h) for h in headlines]
 
-    You can elaborate more in the function docstring in this section, for e.g. explaining 
-    the formula/algorithm. Every function should have a docstring, typehints and include the
-    parameters and return as follows:
+# Create sentiment DataFrame
+df_sentiment = pd.DataFrame({
+    "date": today,
+    "headline": headlines,
+    "sentiment": sentiments
+})
 
-    :param arg1: description of arg1
-    :return: description of return
-    """
-    # Code bloks go here.
-    # Make sure to include comments to explain what the code is doing.
-    # No empty lines between code blocks.
-    pass
+
+# ## 3. Fetch Bitcoin Price from CoinGecko
+# 
+# We retrieve historical Bitcoin prices from the CoinGecko API to align with the news sentiment data.
+
+# In[3]:
+
+
+def fetch_bitcoin_prices(days=7):
+    url = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart"
+    params = {"vs_currency": "usd", "days": days}
+    r = requests.get(url, params=params)
+    data = r.json()
+    prices = [(datetime.fromtimestamp(ts / 1000).date(), price) for ts, price in data["prices"]]
+    return pd.DataFrame(prices, columns=["date", "price"])
+# Load price data
+df_prices = fetch_bitcoin_prices(days=7)
+
+
+# ## 4. Merge Sentiment with Price Data
+# 
+# We align news sentiment and price data by merging on the date field.
+
+# In[4]:
+
+
+df_merge = pd.merge(df_sentiment, df_prices, on="date", how="inner")
+
+
+# ## 5. Visualize Price and Sentiment Trends
+# 
+# We create two visualizations: a line plot for price and a bar chart for sentiment distribution.
+
+# In[5]:
+
+
+# Price Line Plot
+df_prices.set_index("date")["price"].plot(title="Bitcoin Price (USD)", figsize=(10, 4))
+plt.ylabel("Price (USD)")
+plt.grid(True)
+plt.show()
+
+# Sentiment Bar Plot
+df_summary = df_merge.groupby(["date", "sentiment"]).size().unstack().fillna(0)
+df_summary.plot(kind="bar", stacked=True, figsize=(10, 4), title="News Sentiment Distribution")
+plt.ylabel("Headline Count")
+plt.grid(True)
+plt.show()
+
+
+# ## 6. Forecasting Bitcoin Prices with ARIMA
+# 
+# In this section, we use ARIMA to model and forecast Bitcoin prices based on the past 30 days of data.
+# We first clean and validate the time series before fitting the model.
+
+# In[10]:
+
+
+# Fetch 30 days of Bitcoin prices
+df_prices = fetch_bitcoin_prices(days=30)
+
+# Remove duplicate dates by grouping and averaging (or use .last() if you prefer)
+df_prices = df_prices.groupby("date").mean().reset_index()
+
+# Convert to daily frequency
+df_prices = df_prices.set_index("date").asfreq("D")
+
+# Fill missing values by forward filling
+df_prices["price"] = df_prices["price"].fillna(method="ffill")
+
+
+# In[11]:
+
+
+# print sanity check to make sure prices aren't all zeros or NaNs
+print(df_prices.tail())
+print("NaN count:", df_prices["price"].isna().sum())
+print("Min/Max price:", df_prices["price"].min(), df_prices["price"].max())
+
+
+# In[12]:
+
+
+# Import ARIMA model
+from statsmodels.tsa.arima.model import ARIMA
+
+
+# In[13]:
+
+
+# Fit ARIMA model
+model = ARIMA(df_prices["price"], order=(5, 1, 2))
+model_fit = model.fit()
+
+# Forecast next 7 days
+forecast = model_fit.forecast(steps=7)
+
+
+# In[19]:
+
+
+# Plot forecasting result
+plt.figure(figsize=(10, 5))
+plt.plot(df_prices.index, df_prices["price"], label="Historical Price")
+plt.plot(pd.date_range(df_prices.index[-1], periods=8, freq="D")[1:], forecast,
+         label="Forecasted Price", color="orange", linestyle="--")
+plt.title("Bitcoin Price Forecast (Next 7 Days)")
+plt.xlabel("Date")
+plt.ylabel("Price (USD)")
+plt.grid(True)
+plt.legend()
+
+# Rotate and format date labels
+plt.xticks(rotation=45)
+
+plt.tight_layout()
+plt.subplots_adjust(bottom=0.2) 
+plt.show()
+
+
+# ## Conclusion
+# 
+# In this notebook, we:
+# 
+# - Retrieved real-time Bitcoin news and price data
+# - Performed sentiment analysis
+# - Merged and visualized sentiment vs. market movement
+# - Forecasted future prices using an ARIMA model
