@@ -168,32 +168,6 @@ class BitcoinForecastApp:
             self.logger.error(f"Error loading historical data: {e}\n{traceback.format_exc()}")
             return pd.DataFrame()
 
-    def ensure_consistent_timestamp(self, timestamp):
-        """
-        Ensure consistent timestamp format for all operations.
-        This function standardizes all timestamps to ISO8601 format with T separator.
-        
-        Args:
-            timestamp: datetime object or timestamp string
-            
-        Returns:
-            Standardized timestamp string
-        """
-        # First ensure we have a datetime object
-        if isinstance(timestamp, str):
-            timestamp = parse_timestamp(timestamp)
-        
-        # Then format it consistently
-        if timestamp is not None:
-            # Ensure timezone is set
-            if timestamp.tzinfo is None:
-                timestamp = timestamp.replace(tzinfo=timezone.utc)
-            # Format with T separator
-            return format_timestamp(timestamp, use_t_separator=True)
-        
-        # Return current time as fallback
-        return format_timestamp(datetime.now(timezone.utc), use_t_separator=True)
-
     def save_prediction(self, timestamp, pred_price, pred_lower, pred_upper):
         """Save prediction to CSV file."""
         try:
@@ -201,7 +175,7 @@ class BitcoinForecastApp:
             os.makedirs(os.path.dirname(self.predictions_file), exist_ok=True)
             
             # Format timestamp consistently using ISO8601 format with T separator
-            timestamp_str = self.ensure_consistent_timestamp(timestamp)
+            timestamp_str = format_timestamp(timestamp, use_t_separator=True)
             
             # Round price values to 2 decimal places using safe_round
             pred_price = safe_round(pred_price, 2)
@@ -236,17 +210,19 @@ class BitcoinForecastApp:
             os.makedirs(os.path.dirname(self.metrics_file), exist_ok=True)
             
             # Format timestamp consistently using ISO8601 format with T separator
-            timestamp_str = self.ensure_consistent_timestamp(timestamp)
+            timestamp_str = format_timestamp(timestamp, use_t_separator=True)
             
-            # Round metric values using safe_round
-            std = safe_round(std, 4)
-            mae = safe_round(mae, 4)
-            rmse = safe_round(rmse, 4)
+            # Round metric values to 2 decimal places using safe_round
+            std = safe_round(std, 2)
+            mae = safe_round(mae, 2)
+            rmse = safe_round(rmse, 2)
             
-            # Calculate actual error if both actual and predicted prices are available
-            actual_error = "NA"
+            # Calculate the actual error if actual_price and pred_price are provided
+            actual_error = None
             if actual_price is not None and pred_price is not None:
-                actual_error = safe_round(actual_price - pred_price, 4)
+                actual_price = safe_round(actual_price, 2)
+                pred_price = safe_round(pred_price, 2)
+                actual_error = safe_round(actual_price - pred_price, 2)
             
             # Check if file exists and needs header
             file_exists = os.path.isfile(self.metrics_file)
@@ -257,13 +233,16 @@ class BitcoinForecastApp:
                 self.logger.info(f"Created new metrics file with header")
             
             # Format the line to write
-            line = f"{timestamp_str},{std},{mae},{rmse},{actual_error}\n"
+            if actual_error is not None:
+                line = f"{timestamp_str},{std},{mae},{rmse},{actual_error}\n"
+            else:
+                line = f"{timestamp_str},{std},{mae},{rmse},\n"  # Empty actual_error column
             
             # Write in append mode
             with open(self.metrics_file, 'a') as f:
                 f.write(line)
             
-            self.logger.info(f"Saved metrics for {timestamp_str}")
+            self.logger.info(f"Saved metrics for timestamp {timestamp_str}")
             return True
         except Exception as e:
             self.logger.error(f"Error saving metrics: {e}\n{traceback.format_exc()}")
@@ -433,19 +412,13 @@ class BitcoinForecastApp:
             current_utc_time = datetime.now(timezone.utc).replace(microsecond=0)
             message_time = current_utc_time
             
-            # Standardize timestamp format for comparison by ensuring it's a proper ISO8601 string
-            # This fixes issues with timezone representation differences
-            current_second_str = format_timestamp(message_time.replace(microsecond=0), use_t_separator=True)
-            current_second = parse_timestamp(current_second_str)
-            
             # Skip processing if we've already made a prediction for this second
-            if self.last_processed_second is not None:
-                last_second_str = format_timestamp(self.last_processed_second, use_t_separator=True)
-                if current_second_str == last_second_str:
-                    self.logger.info(f"Skipping duplicate prediction for second: {current_second_str}")
-                    return
+            current_second = message_time.replace(microsecond=0)
+            if self.last_processed_second is not None and current_second == self.last_processed_second:
+                self.logger.info(f"Skipping duplicate prediction for second: {current_second.isoformat()}")
+                return
             
-            # Update last processed second with the standardized format
+            # Update last processed second
             self.last_processed_second = current_second
             
             # Get price from either close or price field
@@ -457,8 +430,8 @@ class BitcoinForecastApp:
                 self.logger.error("Message missing both 'close' and 'price' fields")
                 return
             
-            # Always log the actual timestamp we're working with with consistent formatting
-            self.logger.info(f"Processing data for timestamp: {current_second_str}")
+            # Always log the actual timestamp we're working with
+            self.logger.info(f"Processing data for timestamp: {message_time.isoformat()}")
             
             # Try processing with main prediction pipeline
             try:
@@ -762,13 +735,10 @@ class BitcoinForecastApp:
                         # Parse timestamp from message
                         timestamp_str = message.value.get('timestamp')
                         if timestamp_str:
-                            # Use our standardized timestamp function for consistency
-                            timestamp_str = self.ensure_consistent_timestamp(timestamp_str)
-                            # Parse using standardized format
+                            # IMPORTANT: We must use the Kafka message timestamp as is
                             message_time = parse_timestamp(timestamp_str)
-                            
                             if message_time:
-                                # Get current price from message
+                                # Always use the message timestamp for all operations to maintain data veracity
                                 current_price = None
                                 if 'close' in message.value:
                                     current_price = float(message.value['close'])
@@ -776,9 +746,7 @@ class BitcoinForecastApp:
                                     current_price = float(message.value['price'])
                                     
                                 if current_price is not None:
-                                    # Update the message value with standardized timestamp
-                                    message.value['timestamp'] = timestamp_str
-                                    # Process the data
+                                    # Process the data with the message timestamp
                                     self.process_new_data(message)
                                     consecutive_errors = 0
                                 else:

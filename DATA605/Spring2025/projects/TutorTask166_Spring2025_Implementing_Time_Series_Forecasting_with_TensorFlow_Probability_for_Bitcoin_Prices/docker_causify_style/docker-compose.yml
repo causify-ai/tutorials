@@ -115,8 +115,29 @@ services:
       - PYTHONUNBUFFERED=1
       - KAFKA_BOOTSTRAP_SERVERS=kafka:29092
       - KAFKA_TOPIC=bitcoin-prices
+      # Optimize TensorFlow performance
+      - TF_CPP_MIN_LOG_LEVEL=2
+      - TF_FORCE_GPU_ALLOW_GROWTH=true
+      - TF_XLA_FLAGS=--tf_xla_enable_xla_devices
+      - TF_FP16_CONV_USE_FP32_COMPUTATIONS=1
+      - TF_ENABLE_AUTO_MIXED_PRECISION=1
+      # Memory optimization flags
+      - PYTHONHASHSEED=0
+      # Service tuning
+      - MODEL_BATCH_SIZE=64
+      - MODEL_VARIATIONAL_STEPS=150
+      - MODEL_LEARNING_RATE=0.03
     networks:
       - kafka-network
+    # Allocate more resources for the forecast model
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '1.0'
+          memory: 1G
     healthcheck:
       test: ["CMD-SHELL", "ps aux | grep python | grep -v grep || exit 1"]
       interval: 30s
