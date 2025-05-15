@@ -1,204 +1,184 @@
+
 <!-- toc -->
 
-- [BitcoinLLMQA API Documentation](#bitcoinllmqa-api-documentation)
-  - [Overview](#overview)
-  - [Table of Contents](#table-of-contents)
-    - [Hierarchy](#hierarchy)
-  - [General Guidelines](#general-guidelines)
-  - [Native API](#native-api)
-    - [CoinGecko Simple Price API](#coingecko-simple-price-api)
-  - [Software Wrapper Layer](#software-wrapper-layer)
-    - [Data Fetching](#data-fetching)
-    - [Dataset Update](#dataset-update)
-    - [Data Loading](#data-loading)
-    - [Time Series Analysis](#time-series-analysis)
-    - [Visualization](#visualization)
-    - [Price Trend Analysis](#price-trend-analysis)
-  - [LLM Q\&A Integration (DocsGPT/LLaMA)](#llm-qa-integration-docsgptllama)
-    - [Model Setup](#model-setup)
-    - [Natural Language Query](#natural-language-query)
-  - [Example Usage](#example-usage)
-  - [Design Decisions](#design-decisions)
+- [DocsGPT Tutorial](#docsgpt-tutorial)
+  - [What is DocsGPT?](#what-is-docsgpt)
+  - [What We Demonstrate in This Notebook](#what-we-demonstrate-in-this-notebook)
+  - [Autoreload Setup](#autoreload-setup)
+  - [Imports](#imports)
+  - [Configuration](#configuration)
+  - [Model Initialization](#model-initialization)
+  - [Document Ingestion](#document-ingestion)
+  - [Querying Documents](#querying-documents)
+  - [Manual Prompting](#manual-prompting)
+  - [Answer Extraction](#answer-extraction)
+  - [Interactive Q\&A Loop](#interactive-qa-loop)
+    - [Sample Interaction:](#sample-interaction)
+  - [Demonstration with CSV and Web Link](#demonstration-with-csv-and-web-link)
+  - [Comparison Table](#comparison-table)
+  - [Notebook Naming Convention](#notebook-naming-convention)
   - [References](#references)
+
 
 <!-- tocstop -->
 
-# BitcoinLLMQA API Documentation
+# DocsGPT Tutorial
 
-## Overview
-
-**BitcoinLLMQA** is a real-time Bitcoin price data Q&A system combining:
-- **CoinGecko API** for BTC/USD market prices
-- **Pandas** for time series analysis
-- **DocsGPT (LLaMA)** for local, offline question answering
-
-All core logic resides in `BitcoinLLMQA_utils.py` and is demonstrated in `BitcoinLLMQA.API.ipynb`.
+This tutorial explains how to use the native API of [DocsGPT](https://github.com/arc53/DocsGPT), a self-hosted, open-source Retrieval-Augmented Generation (RAG) system. DocsGPT allows users to get grounded, accurate answers from their own documents using LLMs like LLaMA via `llama-cpp-python`.
 
 ---
 
-## Table of Contents
 
-### Hierarchy
+## What is DocsGPT?
 
-Level 1 (Title)
-Level 2
-Level 3
-text
+DocsGPT is a local, offline question-answering system that:
 
----
+- Ingests and indexes your documents using embeddings  
+- Enables semantic search and context retrieval  
+- Uses LLMs to answer questions based on your content  
+- Returns answers with optional source citations  
+- Supports formats like PDF, DOCX, TXT, CSV, Markdown, and HTML  
 
-## General Guidelines
+It can be accessed via a:
 
-- Documents both native API (CoinGecko) and wrapper layer
-- All functions reusable in scripts/notebooks
-- Example usage shown in `BitcoinLLMQA.API.ipynb`
-
----
-
-## Native API
-
-### CoinGecko Simple Price API
-
-Direct API call from notebook
-response = requests.get("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd")
-
-text
-
-| Parameter       | Value                          |
-|-----------------|--------------------------------|
-| Endpoint        | `GET /simple/price`            |
-| Authentication  | None required                  |
-| Rate Limits     | 50 calls/minute (free tier)    |
-| Sample Response | `{"bitcoin": {"usd": 103272}}` |
+- Web UI  
+- CLI  
+- REST API  
+- Python integration (as shown in this notebook)
 
 ---
 
-## Software Wrapper Layer
+## What We Demonstrate in This Notebook
 
-### Data Fetching
+This notebook (`BitcoinLLMQA.API.ipynb`) demonstrates how to:
 
-def fetch_bitcoin_price() -> float | None
-
-text
-- Fetches current BTC price via CoinGecko API
-- Implements retry logic for failed requests
-- Returns `None` on persistent failures
-
-### Dataset Update
-
-def update_dataset(new_price: float) -> pd.DataFrame
-
-text
-- Appends records to `bitcoin_prices.csv` with:
-  - ISO 8601 timestamps
-  - Rolling volatility (12-period window)
-  - Log returns calculation
-- Maintains dataset integrity through file locking
-
-### Data Loading
-
-def load_dataset(filename=CSV_FILENAME) -> pd.DataFrame
-
-text
-- Loads CSV with dtype optimization:
-  - `timestamp` as datetime64[ns]
-  - `price` as float32
-  - `volatility` as float32
-- Handles missing values via forward-fill
-
-### Time Series Analysis
-
-def analyze_data(df: pd.DataFrame) -> dict
-
-text
-Returns structured metrics:
-{
-"hourly_avg": {
-"price": 29623.30,
-"volatility": 0.252296
-},
-"daily_volatility": 0.241686,
-"recent_anomalies": [
-["2025-05-09 21:17:00", 31924.06, 0.254599]
-]
-}
-
-text
-
-### Visualization
-
-def visualize_bitcoin_data(df: pd.DataFrame, periods=48)
-
-text
-- Generates dual-axis plot using matplotlib
-- Left axis: Price in USD
-- Right axis: Rolling volatility percentage
-- Saves figures to `plots/` directory
-
-### Price Trend Analysis
-
-def get_price_trends(df: pd.DataFrame, period='24h') -> dict
-
-text
-Supports periods:
-- `1h`, `24h`, `7d`, `30d`
-- Returns % changes, max/min values, and volatility trends
+- Load a quantized LLaMA model locally using `llama-cpp-python`  
+- Ingest documents via DocsGPT's REST API  
+- Send queries and retrieve accurate, document-based answers  
+- Build prompts manually for low-level control  
+- Interact with the system in a loop for dynamic Q&A  
+- Demonstrate DocsGPT’s functionality on formats like CSV and PDF via URLs  
 
 ---
 
-## LLM Q&A Integration (DocsGPT/LLaMA)
+## Autoreload Setup
 
-### Model Setup
-
-def setup_docsgpt() -> Llama
-
-text
-- Loads 7B LLaMA 2 GGUF model
-- Configures GPU layers for acceleration
-- Sets 2048 token context window
-
-### Natural Language Query
-
-def handle_query(llm: Llama, question: str) -> str
-
-text
-- Combines user question with:
-  - Last 10 data rows
-  - Current volatility status
-  - Price trend metrics
-- Uses chain-of-thought prompting for accurate responses
+This section sets up `%autoreload` to reload imported modules automatically during development, ensuring iterative changes are reflected live.
 
 ---
 
-## Example Usage
+## Imports
 
-Full workflow from notebook
-price = fetch_bitcoin_price() # Returns 103272.0
-df = update_dataset(price)
-metrics = analyze_data(df)
-fig = visualize_bitcoin_data(df)
-llm = setup_docsgpt()
-answer = handle_query(llm, "Show volatility spikes in last 6 hours")
-
-text
+The notebook uses standard libraries such as:
+- `requests` for sending REST API calls  
+- `logging` for system diagnostics  
+- `llama_cpp` for loading and using a local LLaMA model  
 
 ---
 
-## Design Decisions
+## Configuration
 
-| Component          | Implementation Choice         | Reason                          |
-|--------------------|-------------------------------|---------------------------------|
-| Data Storage       | CSV with timestamps           | Human-readable/portable         |
-| Volatility Window  | 12-period (1 hour)            | Balances responsiveness/stability |
-| LLM Context        | Last 10 rows + stats          | Optimizes token usage           |
-| Error Handling     | Silent fails with NaN         | Maintains data continuity       |
+Logging is initialized to track system behavior, model load time, and response time, which is essential for debugging and understanding performance.
+
+---
+
+## Model Initialization
+
+A quantized LLaMA model is loaded using `llama-cpp-python`. Parameters like context window size, thread count, and GPU layers are set for performance.
+
+This step enables running a powerful LLM completely offline for document question-answering.
+
+---
+
+## Document Ingestion
+
+A function is defined to ingest local files (PDFs, DOCXs, CSVs) via the DocsGPT API. This allows the system to chunk and embed documents into its internal vector store for retrieval.
+
+**Why it's important:** This step makes the document searchable and accessible to the LLM during query time.
+
+---
+
+## Querying Documents
+
+This section introduces safe API querying logic. User questions are submitted to the `/query` endpoint, and responses are handled with error resilience for production-readiness.
+
+**Why use it:** To make sure the system handles network errors, malformed inputs, and edge cases gracefully.
+
+---
+
+## Manual Prompting
+
+Manual prompting lets developers experiment with custom prompt formats, directly invoking the LLM. This gives fine-tuned control over how document context and questions are structured.
+
+---
+
+## Answer Extraction
+
+After querying, the response is parsed and printed. This part includes logic for multiple response formats (choices, text, or default fallback).
+
+---
+
+## Interactive Q&A Loop
+
+A live prompt-and-answer loop is implemented to simulate a human-AI interaction, just like a ChatGPT terminal.
+
+### Sample Interaction:
+
+- **User:** What is the stock market price trend  
+- **Assistant:** I'm just an AI, I don't have real-time access to current stock market data. However, I can provide general information on stock market trends.
+
+- **User:** You can take reference from this website: https://tradingeconomics.com/united-states/stock-market  
+- **Assistant:** Thank you for providing the website link. Based on the data, the stock market price trend in the U.S. has generally been upward with fluctuations.
+
+- **User:** Which commodity has the highest stocks currently?  
+- **Assistant:** I don't have real-time access, but you can refer to data from the World Bank or USDA on commodities like wheat, corn, and soybeans.
+
+- **User:** What is the summary of this book: https://sopheaksrey.wordpress.com/wp-content/uploads/2012/04/rich_dad_poor_dad_by_robert_t-_kiyosaki.pdf  
+- **Assistant:** "Rich Dad Poor Dad" challenges traditional views on money. It compares the teachings of the author’s real dad vs. his mentor (Rich Dad), emphasizing financial literacy, passive income, and investment mindset.
+
+---
+
+## Demonstration with CSV and Web Link
+
+In this notebook, a **CSV file** is ingested to showcase DocsGPT's compatibility with structured tabular data. This could be:
+- Financial datasets
+- Log files
+- Historical records  
+
+Additionally, a **web link to a public PDF book** was queried to demonstrate that DocsGPT can:
+- Parse remote documents  
+- Extract relevant text chunks  
+- Answer questions about long documents (e.g., "Rich Dad Poor Dad")  
+
+This confirms that **DocsGPT supports a wide variety of formats and sources** beyond just plain text or local files.
+
+---
+
+## Comparison Table
+| Feature                       | OpenAI GPT API           | LangChain (RAG)                   | DocsGPT                    |
+| ----------------------------- | ------------------------ | --------------------------------- | -------------------------- |
+| Cloud Dependency              | Required                 | Required                          | Optional (can run locally) |
+| Runs Locally                  | Not supported            | Supported                         | Supported                  |
+| REST API Availability         | Not available            | Available (custom setup required) | Available out of the box   |
+| Citation Support              | Not supported            | Partial support                   | Fully supported            |
+| Interactive UI                | Available                | Not available                     | Available                  |
+| Multi-format Document Support | Limited (manual parsing) | Supported                         | Supported                  |
+
+
+---
+
+## Notebook Naming Convention
+
+This notebook follows the template-guided naming convention:
+
+**BitcoinLLMQA.API.ipynb**
 
 ---
 
 ## References
 
-1. [CoinGecko API Docs](https://www.coingecko.com/en/api)
-2. [DocsGPT GitHub](https://github.com/arc53/DocsGPT) 
-3. [Pandas Time Series Guide](https://pandas.pydata.org/docs/user_guide/timeseries.html)
-
-**Last updated:** May 10, 2025
+- [DocsGPT GitHub](https://github.com/arc53/DocsGPT)  
+- [llama-cpp-python](https://github.com/abetlen/llama-cpp-python)  
+- [Causify Notebook Tutorial Template](https://github.com/causify-ai/tutorials)  
+- [TradingEconomics Stock Market](https://tradingeconomics.com/united-states/stock-market)  
+- [Rich Dad Poor Dad (PDF Link)](https://sopheaksrey.wordpress.com/wp-content/uploads/2012/04/rich_dad_poor_dad_by_robert_t-_kiyosaki.pdf)
