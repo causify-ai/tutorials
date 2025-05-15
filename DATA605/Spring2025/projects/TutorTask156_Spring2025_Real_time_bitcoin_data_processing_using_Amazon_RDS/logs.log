@@ -23,3 +23,252 @@
 2025-05-01 01:14:56,465:WARNING:/tmp/ipykernel_65826/2885578866.py:14: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
   df_hourly = pd.read_sql_query(hourly_query, conn)
 
+2025-05-15 04:45:14,232 - bitcoin_rds_utils - INFO - Fetching Bitcoin data from CoinGecko
+2025-05-15 04:45:14,523 - bitcoin_rds_utils - INFO - Creating database connection pool
+2025-05-15 04:45:14,826 - bitcoin_rds_utils - INFO - Connection pool created with 1-10 connections
+2025-05-15 04:45:14,946 - bitcoin_rds_utils - INFO - Retrieving 30 days of Bitcoin price history (hourly=False)
+2025-05-15 04:45:15,039 - bitcoin_rds_utils - ERROR - Error retrieving Bitcoin price history: Execution failed on sql '
+        SELECT timestamp, price_usd, volume_usd, market_cap_usd
+        FROM raw_bitcoin_prices
+        WHERE timestamp > NOW() - INTERVAL %s DAY
+        ORDER BY timestamp;
+        ': syntax error at or near "30"
+LINE 4:         WHERE timestamp > NOW() - INTERVAL 30 DAY
+                                                   ^
+
+2025-05-15 04:45:34,923 - bitcoin_rds_utils - INFO - Retrieving 7 days of Bitcoin price history (hourly=False)
+2025-05-15 04:45:35,013 - bitcoin_rds_utils - ERROR - Error retrieving Bitcoin price history: Execution failed on sql '
+        SELECT timestamp, price_usd, volume_usd, market_cap_usd
+        FROM raw_bitcoin_prices
+        WHERE timestamp > NOW() - INTERVAL %s DAY
+        ORDER BY timestamp;
+        ': syntax error at or near "7"
+LINE 4:         WHERE timestamp > NOW() - INTERVAL 7 DAY
+                                                   ^
+
+2025-05-15 05:01:40,045 - bitcoin_rds_utils - INFO - Fetching Bitcoin data from CoinGecko
+2025-05-15 05:01:40,398 - bitcoin_rds_utils - INFO - Creating database connection pool
+2025-05-15 05:01:40,705 - bitcoin_rds_utils - INFO - Connection pool created with 1-10 connections
+2025-05-15 05:01:40,827 - bitcoin_rds_utils - INFO - Retrieving 30 days of Bitcoin price history (hourly=False)
+2025-05-15 05:01:40,935 - bitcoin_rds_utils - ERROR - Error retrieving Bitcoin price history: Execution failed on sql '
+        SELECT timestamp, price_usd, volume_usd, market_cap_usd
+        FROM raw_bitcoin_prices
+        WHERE timestamp > NOW() - INTERVAL %s 'DAY'
+        ORDER BY timestamp;
+        ': syntax error at or near "30"
+LINE 4:         WHERE timestamp > NOW() - INTERVAL 30 'DAY'
+                                                   ^
+
+2025-05-15 05:21:51,071 - bitcoin_rds_utils - INFO - Fetching Bitcoin data from CoinGecko
+2025-05-15 05:21:51,423 - bitcoin_rds_utils - INFO - Creating database connection pool
+2025-05-15 05:21:51,774 - bitcoin_rds_utils - INFO - Connection pool created with 1-10 connections
+2025-05-15 05:21:51,902 - bitcoin_rds_utils - INFO - Retrieving 30 days of Bitcoin price history (hourly=False)
+2025-05-15 05:21:52,003 - bitcoin_rds_utils - ERROR - Error retrieving Bitcoin price history: Execution failed on sql '
+        SELECT timestamp, price_usd, volume_usd, market_cap_usd
+        FROM raw_bitcoin_prices
+        WHERE timestamp > NOW() - INTERVAL %s 'DAY'
+        ORDER BY timestamp;
+        ': syntax error at or near "30"
+LINE 4:         WHERE timestamp > NOW() - INTERVAL 30 'DAY'
+                                                   ^
+
+2025-05-15 05:29:41,993 - bitcoin_rds_utils - INFO - Fetching Bitcoin data from CoinGecko
+2025-05-15 01:59:31,690 - bitcoin_rds_utils - INFO - Creating database connection pool
+2025-05-15 01:59:32,056 - bitcoin_rds_utils - INFO - Connection pool created with 1-10 connections
+2025-05-15 02:01:13,297 - bitcoin_rds_utils - INFO - Creating database connection pool
+2025-05-15 02:01:13,586 - bitcoin_rds_utils - INFO - Connection pool created with 1-10 connections
+2025-05-15 06:05:58,748 - bitcoin_rds_utils - INFO - Creating database connection pool
+2025-05-15 06:05:59,067 - bitcoin_rds_utils - INFO - Connection pool created with 1-10 connections
+2025-05-15 06:07:18,908 - bitcoin_rds_utils - INFO - Creating database connection pool
+2025-05-15 06:07:19,190 - bitcoin_rds_utils - INFO - Connection pool created with 1-10 connections
+2025-05-15 02:39:08,560 - bitcoin_rds_utils - INFO - Creating database connection pool
+2025-05-15 02:39:08,786 - bitcoin_rds_utils - INFO - Connection pool created with 1-10 connections
+2025-05-15 02:39:08,794 - __main__ - INFO - Successfully connected to the database!
+2025-05-15 02:39:08,850 - __main__ - INFO - PostgreSQL database version: PostgreSQL 17.2 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.4.0, 64-bit
+2025-05-15 02:39:09,066 - bitcoin_rds_utils - INFO - Creating tables if they don't exist
+2025-05-15 02:39:09,416 - bitcoin_rds_utils - INFO - Tables created successfully
+2025-05-15 02:39:09,419 - __main__ - INFO - Tables are ready!
+2025-05-15 02:39:09,617 - bitcoin_rds_utils - INFO - Fetching Bitcoin data from CoinGecko
+2025-05-15 02:39:09,906 - __main__ - INFO - Current Bitcoin price: $102,532.00
+2025-05-15 02:39:09,915 - __main__ - INFO - 24h Volume: $27,409,206,718.00
+2025-05-15 02:39:09,923 - __main__ - INFO - Market Cap: $2,036,956,307,449.00
+2025-05-15 02:39:10,162 - bitcoin_rds_utils - INFO - Inserting raw Bitcoin data into database
+2025-05-15 02:39:10,243 - bitcoin_rds_utils - INFO - Data inserted successfully with ID: 447
+2025-05-15 02:39:10,245 - __main__ - INFO - Data stored successfully with ID: 447
+2025-05-15 02:39:10,393 - bitcoin_rds_utils - INFO - Fetching historical Bitcoin data for the past 30 days
+2025-05-15 02:39:10,398 - bitcoin_rds_utils - INFO - Fetching batch: 2025-05-08 to 2025-05-15 (7 days)
+2025-05-15 02:39:10,707 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 401 Client Error: Unauthorized for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:39:10,709 - bitcoin_rds_utils - INFO - Fetching batch: 2025-05-01 to 2025-05-08 (7 days)
+2025-05-15 02:39:11,048 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 401 Client Error: Unauthorized for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:39:11,056 - bitcoin_rds_utils - INFO - Fetching batch: 2025-04-24 to 2025-05-01 (7 days)
+2025-05-15 02:39:11,280 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 401 Client Error: Unauthorized for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:39:11,285 - bitcoin_rds_utils - INFO - Fetching batch: 2025-04-17 to 2025-04-24 (7 days)
+2025-05-15 02:39:11,577 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 401 Client Error: Unauthorized for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:39:11,579 - bitcoin_rds_utils - INFO - Fetching batch: 2025-04-15 to 2025-04-17 (2 days)
+2025-05-15 02:39:11,841 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=2&interval=hourly
+2025-05-15 02:39:11,850 - bitcoin_rds_utils - INFO - Historical data fetch complete. Inserted 0 new records
+2025-05-15 02:39:11,864 - __main__ - INFO - Added 0 historical data points
+2025-05-15 02:39:12,005 - bitcoin_rds_utils - INFO - Retrieving 30 days of Bitcoin price history (hourly=False)
+2025-05-15 02:39:12,095 - bitcoin_rds_utils - ERROR - Error retrieving Bitcoin price history: Execution failed on sql '
+        SELECT timestamp, price_usd, volume_usd, market_cap_usd
+        FROM raw_bitcoin_prices
+        WHERE timestamp > NOW() - INTERVAL %s 'DAY'
+        ORDER BY timestamp;
+        ': syntax error at or near "30"
+LINE 4:         WHERE timestamp > NOW() - INTERVAL 30 'DAY'
+                                                   ^
+
+2025-05-15 02:39:12,099 - __main__ - ERROR - Error retrieving price history: Execution failed on sql '
+        SELECT timestamp, price_usd, volume_usd, market_cap_usd
+        FROM raw_bitcoin_prices
+        WHERE timestamp > NOW() - INTERVAL %s 'DAY'
+        ORDER BY timestamp;
+        ': syntax error at or near "30"
+LINE 4:         WHERE timestamp > NOW() - INTERVAL 30 'DAY'
+                                                   ^
+
+2025-05-15 02:39:12,260 - bitcoin_rds_utils - INFO - Aggregating hourly Bitcoin data for the last 7 days
+2025-05-15 02:39:12,325 - bitcoin_rds_utils - ERROR - Error aggregating hourly data: syntax error at or near "7"
+LINE 4:     WHERE timestamp > NOW() - INTERVAL 7 'DAY'
+                                               ^
+
+2025-05-15 02:39:12,354 - __main__ - ERROR - Error with hourly aggregation: syntax error at or near "7"
+LINE 4:     WHERE timestamp > NOW() - INTERVAL 7 'DAY'
+                                               ^
+
+2025-05-15 02:39:12,549 - __main__ - ERROR - Error calculating moving averages: name 'df_history' is not defined
+2025-05-15 02:39:36,130 - __main__ - INFO - Successfully connected to the database!
+2025-05-15 02:39:36,182 - __main__ - INFO - PostgreSQL database version: PostgreSQL 17.2 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.4.0, 64-bit
+2025-05-15 02:39:38,181 - bitcoin_rds_utils - INFO - Creating tables if they don't exist
+2025-05-15 02:39:38,524 - bitcoin_rds_utils - INFO - Tables created successfully
+2025-05-15 02:39:38,528 - __main__ - INFO - Tables are ready!
+2025-05-15 02:39:39,020 - bitcoin_rds_utils - INFO - Fetching Bitcoin data from CoinGecko
+2025-05-15 02:39:39,536 - bitcoin_rds_utils - WARNING - API call attempt 1 failed: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false
+2025-05-15 02:39:39,539 - bitcoin_rds_utils - INFO - Retrying in 2 seconds...
+2025-05-15 02:39:41,877 - bitcoin_rds_utils - WARNING - API call attempt 2 failed: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false
+2025-05-15 02:39:41,883 - bitcoin_rds_utils - INFO - Retrying in 2 seconds...
+2025-05-15 02:39:44,084 - bitcoin_rds_utils - WARNING - API call attempt 3 failed: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false
+2025-05-15 02:39:44,097 - bitcoin_rds_utils - ERROR - All API call attempts failed: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false
+2025-05-15 02:39:44,108 - __main__ - ERROR - Error fetching Bitcoin data: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false
+2025-05-15 02:39:44,317 - bitcoin_rds_utils - INFO - Inserting raw Bitcoin data into database
+2025-05-15 02:39:44,412 - bitcoin_rds_utils - INFO - Data inserted successfully with ID: 448
+2025-05-15 02:39:44,415 - __main__ - INFO - Data stored successfully with ID: 448
+2025-05-15 02:39:44,527 - bitcoin_rds_utils - INFO - Fetching historical Bitcoin data for the past 30 days
+2025-05-15 02:39:44,543 - bitcoin_rds_utils - INFO - Fetching batch: 2025-05-08 to 2025-05-15 (7 days)
+2025-05-15 02:39:44,759 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:39:44,765 - bitcoin_rds_utils - INFO - Fetching batch: 2025-05-01 to 2025-05-08 (7 days)
+2025-05-15 02:39:44,932 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:39:44,945 - bitcoin_rds_utils - INFO - Fetching batch: 2025-04-24 to 2025-05-01 (7 days)
+2025-05-15 02:39:45,206 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:39:45,212 - bitcoin_rds_utils - INFO - Fetching batch: 2025-04-17 to 2025-04-24 (7 days)
+2025-05-15 02:39:45,411 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:39:45,418 - bitcoin_rds_utils - INFO - Fetching batch: 2025-04-15 to 2025-04-17 (2 days)
+2025-05-15 02:39:45,588 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=2&interval=hourly
+2025-05-15 02:39:45,591 - bitcoin_rds_utils - INFO - Historical data fetch complete. Inserted 0 new records
+2025-05-15 02:39:45,595 - __main__ - INFO - Added 0 historical data points
+2025-05-15 02:39:45,723 - bitcoin_rds_utils - INFO - Retrieving 30 days of Bitcoin price history (hourly=False)
+2025-05-15 02:39:45,811 - bitcoin_rds_utils - ERROR - Error retrieving Bitcoin price history: Execution failed on sql '
+        SELECT timestamp, price_usd, volume_usd, market_cap_usd
+        FROM raw_bitcoin_prices
+        WHERE timestamp > NOW() - INTERVAL %s 'DAY'
+        ORDER BY timestamp;
+        ': syntax error at or near "30"
+LINE 4:         WHERE timestamp > NOW() - INTERVAL 30 'DAY'
+                                                   ^
+
+2025-05-15 02:39:45,827 - __main__ - ERROR - Error retrieving price history: Execution failed on sql '
+        SELECT timestamp, price_usd, volume_usd, market_cap_usd
+        FROM raw_bitcoin_prices
+        WHERE timestamp > NOW() - INTERVAL %s 'DAY'
+        ORDER BY timestamp;
+        ': syntax error at or near "30"
+LINE 4:         WHERE timestamp > NOW() - INTERVAL 30 'DAY'
+                                                   ^
+
+2025-05-15 02:39:45,939 - bitcoin_rds_utils - INFO - Aggregating hourly Bitcoin data for the last 7 days
+2025-05-15 02:39:46,001 - bitcoin_rds_utils - ERROR - Error aggregating hourly data: syntax error at or near "7"
+LINE 4:     WHERE timestamp > NOW() - INTERVAL 7 'DAY'
+                                               ^
+
+2025-05-15 02:39:46,036 - __main__ - ERROR - Error with hourly aggregation: syntax error at or near "7"
+LINE 4:     WHERE timestamp > NOW() - INTERVAL 7 'DAY'
+                                               ^
+
+2025-05-15 02:39:46,193 - __main__ - ERROR - Error calculating moving averages: name 'df_history' is not defined
+2025-05-15 02:41:19,633 - bitcoin_rds_utils - INFO - Aggregating hourly Bitcoin data for the last 7 days
+2025-05-15 02:41:19,713 - bitcoin_rds_utils - INFO - Aggregating 10 hours of data
+2025-05-15 02:41:20,278 - bitcoin_rds_utils - INFO - Hourly data aggregated successfully
+2025-05-15 02:41:20,282 - __main__ - INFO - Hourly data aggregated successfully
+2025-05-15 02:41:26,301 - __main__ - ERROR - Error calculating moving averages: name 'df_history' is not defined
+2025-05-15 02:41:39,361 - __main__ - INFO - Successfully connected to the database!
+2025-05-15 02:41:39,429 - __main__ - INFO - PostgreSQL database version: PostgreSQL 17.2 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.4.0, 64-bit
+2025-05-15 02:41:39,679 - bitcoin_rds_utils - INFO - Creating tables if they don't exist
+2025-05-15 02:41:40,021 - bitcoin_rds_utils - INFO - Tables created successfully
+2025-05-15 02:41:40,026 - __main__ - INFO - Tables are ready!
+2025-05-15 02:41:40,202 - bitcoin_rds_utils - INFO - Fetching Bitcoin data from CoinGecko
+2025-05-15 02:41:40,453 - __main__ - INFO - Current Bitcoin price: $102,497.00
+2025-05-15 02:41:40,462 - __main__ - INFO - 24h Volume: $27,419,237,158.00
+2025-05-15 02:41:40,468 - __main__ - INFO - Market Cap: $2,036,956,307,449.00
+2025-05-15 02:41:40,644 - bitcoin_rds_utils - INFO - Inserting raw Bitcoin data into database
+2025-05-15 02:41:40,722 - bitcoin_rds_utils - INFO - Data inserted successfully with ID: 449
+2025-05-15 02:41:40,724 - __main__ - INFO - Data stored successfully with ID: 449
+2025-05-15 02:41:40,912 - bitcoin_rds_utils - INFO - Fetching historical Bitcoin data for the past 30 days
+2025-05-15 02:41:40,929 - bitcoin_rds_utils - INFO - Fetching batch: 2025-05-08 to 2025-05-15 (7 days)
+2025-05-15 02:41:41,261 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 401 Client Error: Unauthorized for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:41:41,267 - bitcoin_rds_utils - INFO - Fetching batch: 2025-05-01 to 2025-05-08 (7 days)
+2025-05-15 02:41:41,552 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 401 Client Error: Unauthorized for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:41:41,558 - bitcoin_rds_utils - INFO - Fetching batch: 2025-04-24 to 2025-05-01 (7 days)
+2025-05-15 02:41:41,815 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 401 Client Error: Unauthorized for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:41:41,835 - bitcoin_rds_utils - INFO - Fetching batch: 2025-04-17 to 2025-04-24 (7 days)
+2025-05-15 02:41:42,159 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 401 Client Error: Unauthorized for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:41:42,165 - bitcoin_rds_utils - INFO - Fetching batch: 2025-04-15 to 2025-04-17 (2 days)
+2025-05-15 02:41:42,347 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=2&interval=hourly
+2025-05-15 02:41:42,354 - bitcoin_rds_utils - INFO - Historical data fetch complete. Inserted 0 new records
+2025-05-15 02:41:42,360 - __main__ - INFO - Added 0 historical data points
+2025-05-15 02:41:42,503 - bitcoin_rds_utils - INFO - Retrieving 30 days of Bitcoin price history (hourly=False)
+2025-05-15 02:41:42,610 - bitcoin_rds_utils - INFO - Retrieved 295 records of Bitcoin price history
+2025-05-15 02:41:42,688 - __main__ - INFO - Retrieved 295 records
+2025-05-15 02:41:42,946 - bitcoin_rds_utils - INFO - Aggregating hourly Bitcoin data for the last 7 days
+2025-05-15 02:41:43,006 - bitcoin_rds_utils - INFO - No new hours to aggregate
+2025-05-15 02:41:43,034 - __main__ - INFO - Hourly data aggregated successfully
+2025-05-15 02:41:43,289 - bitcoin_rds_utils - INFO - Calculating 24-hour moving average
+2025-05-15 02:42:26,741 - bitcoin_rds_utils - INFO - Creating database connection pool
+2025-05-15 02:42:26,988 - bitcoin_rds_utils - INFO - Connection pool created with 1-10 connections
+2025-05-15 02:42:26,994 - __main__ - INFO - Successfully connected to the Amazon RDS PostgreSQL database!
+2025-05-15 02:42:27,064 - __main__ - INFO - PostgreSQL database version: PostgreSQL 17.2 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.4.0, 64-bit
+2025-05-15 02:42:27,324 - bitcoin_rds_utils - INFO - Creating tables if they don't exist
+2025-05-15 02:42:27,647 - bitcoin_rds_utils - INFO - Tables created successfully
+2025-05-15 02:42:27,650 - __main__ - INFO - Tables are ready for Bitcoin data storage!
+2025-05-15 02:42:27,902 - __main__ - INFO - Fetching and storing 60 days of historical Bitcoin data...
+2025-05-15 02:42:27,913 - bitcoin_rds_utils - INFO - Fetching historical Bitcoin data for the past 60 days
+2025-05-15 02:42:27,920 - bitcoin_rds_utils - INFO - Fetching batch: 2025-05-08 to 2025-05-15 (7 days)
+2025-05-15 02:42:28,347 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:42:28,351 - bitcoin_rds_utils - INFO - Fetching batch: 2025-05-01 to 2025-05-08 (7 days)
+2025-05-15 02:42:28,571 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:42:28,584 - bitcoin_rds_utils - INFO - Fetching batch: 2025-04-24 to 2025-05-01 (7 days)
+2025-05-15 02:42:28,759 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:42:28,767 - bitcoin_rds_utils - INFO - Fetching batch: 2025-04-17 to 2025-04-24 (7 days)
+2025-05-15 02:42:29,013 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:42:29,020 - bitcoin_rds_utils - INFO - Fetching batch: 2025-04-10 to 2025-04-17 (7 days)
+2025-05-15 02:42:29,307 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:42:29,313 - bitcoin_rds_utils - INFO - Fetching batch: 2025-04-03 to 2025-04-10 (7 days)
+2025-05-15 02:42:29,556 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:42:29,560 - bitcoin_rds_utils - INFO - Fetching batch: 2025-03-27 to 2025-04-03 (7 days)
+2025-05-15 02:42:29,912 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:42:29,920 - bitcoin_rds_utils - INFO - Fetching batch: 2025-03-20 to 2025-03-27 (7 days)
+2025-05-15 02:42:30,114 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=hourly
+2025-05-15 02:42:30,128 - bitcoin_rds_utils - INFO - Fetching batch: 2025-03-16 to 2025-03-20 (4 days)
+2025-05-15 02:42:30,401 - bitcoin_rds_utils - ERROR - Error fetching or processing batch: 429 Client Error: Too Many Requests for url: https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=4&interval=hourly
+2025-05-15 02:42:30,412 - bitcoin_rds_utils - INFO - Historical data fetch complete. Inserted 0 new records
+2025-05-15 02:42:30,418 - __main__ - INFO - Successfully added 0 historical data points
+2025-05-15 02:42:30,671 - bitcoin_rds_utils - INFO - Retrieving 60 days of Bitcoin price history (hourly=False)
+2025-05-15 02:42:30,770 - bitcoin_rds_utils - INFO - Retrieved 446 records of Bitcoin price history
+2025-05-15 02:42:30,806 - __main__ - INFO - Retrieved 446 records of Bitcoin price history
+2025-05-15 02:42:56,843 - bitcoin_rds_utils - INFO - Calculating 14-period RSI
+2025-05-15 02:43:04,158 - bitcoin_rds_utils - INFO - Fetching Bitcoin data from CoinGecko
+2025-05-15 02:43:04,518 - __main__ - INFO - Current Bitcoin price: $102,490.00
+2025-05-15 02:43:04,525 - __main__ - INFO - 24h Volume: $27,418,897,737.00
+2025-05-15 02:43:04,531 - __main__ - INFO - Market Cap: $2,035,959,799,389.00
+2025-05-15 02:43:04,550 - bitcoin_rds_utils - INFO - Inserting raw Bitcoin data into database
+2025-05-15 02:43:04,672 - bitcoin_rds_utils - INFO - Data inserted successfully with ID: 450
+2025-05-15 02:43:04,691 - __main__ - INFO - Successfully stored current data with ID: 450

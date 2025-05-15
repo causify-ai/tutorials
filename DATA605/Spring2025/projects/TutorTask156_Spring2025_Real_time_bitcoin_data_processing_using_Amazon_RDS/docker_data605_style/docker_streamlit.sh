@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Run Jupyter for Bitcoin RDS project
+# Run Streamlit dashboard for Bitcoin RDS project
 #
 
 # Directory where this script is located
@@ -10,8 +10,12 @@ cd $DIR
 # Source the docker name configuration
 source ./docker_name.sh
 
+# Set the image name for the Streamlit version
+STREAMLIT_IMAGE_NAME="${IMAGE_NAME}_streamlit"
+STREAMLIT_FULL_IMAGE_NAME="${REPO_NAME}/${STREAMLIT_IMAGE_NAME}"
+
 # Default settings
-JUPYTER_HOST_PORT=8888
+STREAMLIT_HOST_PORT=6666
 
 # Calculate project directory (parent directory of the docker_data605_style folder)
 PROJECT_DIR="$(cd .. && pwd)"
@@ -20,26 +24,19 @@ PROJECT_DIR="$(cd .. && pwd)"
 while getopts p: flag
 do
     case "${flag}" in
-        p) JUPYTER_HOST_PORT=${OPTARG};;
+        p) STREAMLIT_HOST_PORT=${OPTARG};;
     esac
 done
 
-echo "Starting Jupyter notebook for Bitcoin RDS project..."
-echo "Port: $JUPYTER_HOST_PORT"
+echo "Starting Streamlit dashboard for Bitcoin RDS project..."
+echo "Port: $STREAMLIT_HOST_PORT"
 echo "Project directory: $PROJECT_DIR"
 
 # Run the Docker container
 docker run \
     --rm -it \
-    --name $IMAGE_NAME-jupyter \
-    -p $JUPYTER_HOST_PORT:8888 \
+    --name $STREAMLIT_IMAGE_NAME-dashboard \
+    -p $STREAMLIT_HOST_PORT:8501 \
     -v $PROJECT_DIR:/project \
-    $FULL_IMAGE_NAME \
-    jupyter notebook \
-    --ip=0.0.0.0 \
-    --port=8888 \
-    --no-browser \
-    --allow-root \
-    --NotebookApp.notebook_dir=/project \
-    --NotebookApp.token='' \
-    --NotebookApp.password=''
+    $STREAMLIT_FULL_IMAGE_NAME \
+    /usr/local/bin/run_streamlit.sh 
