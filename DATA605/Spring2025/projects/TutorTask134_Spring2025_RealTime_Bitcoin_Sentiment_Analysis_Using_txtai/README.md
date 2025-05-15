@@ -19,7 +19,7 @@ This project demonstrates a real-time semantic analysis pipeline that fetches Bi
 
 ```plaintext
 .
-├── code/
+├── docker_data605_style/
 │   ├── Dockerfile               # Docker environment with dependencies
 │   ├── txtai_utils.py           # Helper functions for sentiment and price data
 │   ├── txtai.API.ipynb          # Main analysis notebook (pipeline execution)
