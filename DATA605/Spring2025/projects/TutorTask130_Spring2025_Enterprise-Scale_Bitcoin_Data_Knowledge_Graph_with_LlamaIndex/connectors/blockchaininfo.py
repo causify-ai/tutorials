@@ -82,7 +82,6 @@ class BlockchainInfoConnector:
         
         chart_name = self.METRIC_MAPPING[metric_name]
         
-        # Prepare request parameters
         params = {
             "format": "json",
             "timespan": timespan
@@ -110,7 +109,6 @@ class BlockchainInfoConnector:
                 else:  # More than a month
                     params["timespan"] = f"{diff_seconds // 2592000}months"
         
-        # Make the request
         response = self._make_request(chart_name, params)
         
         # Filter response by end timestamp if needed

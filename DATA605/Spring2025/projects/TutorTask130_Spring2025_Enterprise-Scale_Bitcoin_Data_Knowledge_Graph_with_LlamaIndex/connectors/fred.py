@@ -101,11 +101,7 @@ class FredApiConnector:
         
         # Rename columns
         df.columns = ['date', 'value']
-        
-        # Convert dates to string
         df['date'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m-%d')
-        
-        # Convert to records format
         records = df.to_dict(orient='records')
         
         return {

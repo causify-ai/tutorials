@@ -130,6 +130,7 @@ class LlamaAgents:
         """
         stop_progress = False
         
+        # Just for the looks :)
         async def progress_indicator():
             stages = ["Thinking", "Analyzing knowledge graph", "Finding relevant information", "Synthesizing answer"]
             stage_idx = 0
