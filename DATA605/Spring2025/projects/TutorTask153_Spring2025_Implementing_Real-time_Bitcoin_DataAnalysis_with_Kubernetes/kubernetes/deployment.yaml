@@ -13,11 +13,25 @@ spec:
     metadata:
       labels:
         app: bitcoin-fetcher
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "8000"
     spec:
       containers:
       - name: bitcoin-fetcher
         image: bitcoin-fetcher:latest
         imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        ports:
+        - containerPort: 8000
+          name: metrics
         env:
         - name: FETCH_INTERVAL
           value: "60"
@@ -41,13 +55,18 @@ spec:
             secretKeyRef:
               name: postgres-secret
               key: postgres-password
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "250m"
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 5
         volumeMounts:
         - name: charts-volume
           mountPath: /data/charts

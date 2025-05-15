@@ -1,3 +1,19 @@
+# Create PersistentVolume for PostgreSQL
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/data/postgres"
+    type: DirectoryOrCreate
+---
+# Create PersistentVolumeClaim for PostgreSQL
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -7,8 +23,25 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 2Gi
+  volumeName: postgres-pv
 ---
+# Create PersistentVolume for Bitcoin data
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: bitcoin-data-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/data/bitcoin"
+    type: DirectoryOrCreate
+---
+# Create PersistentVolumeClaim for Bitcoin data
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -19,3 +52,4 @@ spec:
   resources:
     requests:
       storage: 1Gi
+  volumeName: bitcoin-data-pv

@@ -17,6 +17,13 @@ spec:
       containers:
       - name: postgres
         image: postgres:14
+        resources:
+          requests:
+            cpu: 200m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
         ports:
         - containerPort: 5432
         env:
@@ -29,16 +36,26 @@ spec:
             secretKeyRef:
               name: postgres-secret
               key: postgres-password
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "250m"
         volumeMounts:
         - name: postgres-data
           mountPath: /var/lib/postgresql/data
+          subPath: postgres  # Add this line to prevent permission issues
+        livenessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - postgres
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - postgres
+          initialDelaySeconds: 5
+          periodSeconds: 5
       volumes:
       - name: postgres-data
         persistentVolumeClaim:
