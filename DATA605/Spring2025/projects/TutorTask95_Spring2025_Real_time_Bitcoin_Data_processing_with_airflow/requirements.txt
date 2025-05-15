@@ -1,4 +1,4 @@
 pandas
 numpy
-boto3
 requests
+boto3
