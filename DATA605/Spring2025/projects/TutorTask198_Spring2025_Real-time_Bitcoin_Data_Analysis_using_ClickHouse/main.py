@@ -13,6 +13,8 @@ from visualization.system_dashboards import (
     fetch_dashboard_specs,
 )
 
+# from config.clickhouse_dashboards import register_default_btc_dashboard
+
 app = Flask(__name__)
 
 
@@ -68,6 +70,8 @@ if __name__ == "__main__":
         print(
             f"⚠️  Warning: historical ingest failed ({e!r}), continuing with existing data…"
         )
+
+    # register_default_btc_dashboard()
 
     # 3) Build the initial dashboard
     df0 = fetch_time_series_from_db()

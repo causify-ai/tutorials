@@ -4,28 +4,51 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 
-def fetch_current_price(retries: int = 3, backoff: int = 10) -> float:
+def fetch_current_price(retries: int = 5, backoff: int = 10) -> float:
     """
-    Fetch the latest Bitcoin price in USD, with simple retry/backoff on 429.
+    Fetch the latest Bitcoin price in USD from CoinGecko, with retry/backoff support.
+
+    Args:
+        retries: Number of retry attempts on failure.
+        backoff: Base wait time (in seconds) for exponential backoff.
+
+    Returns:
+        The latest price as a float.
+
+    Raises:
+        RuntimeError if all retries fail.
     """
     url = "https://api.coingecko.com/api/v3/simple/price"
     params = {"ids": "bitcoin", "vs_currencies": "usd", "precision": "full"}
 
     for attempt in range(1, retries + 1):
-        resp = requests.get(url, params=params)
-        if resp.status_code == 200:
-            return resp.json()["bitcoin"]["usd"]
-        elif resp.status_code == 429:
-            # Too many requests → wait and retry
-            wait = backoff * attempt
-            print(f"429 received, sleeping {wait}s before retry {attempt}/{retries}…")
-            time.sleep(wait)
-        else:
-            # some other error
-            resp.raise_for_status()
+        try:
+            resp = requests.get(url, params=params, timeout=10)
+            print(f"Attempt {attempt} → Status: {resp.status_code}")
 
-    # If we get here, we never got a valid price
-    raise RuntimeError("Could not fetch current price after retries")
+            if resp.status_code == 200:
+                price = resp.json()["bitcoin"]["usd"]
+                print(f"✅ Fetched current price: ${price}")
+                return price
+
+            elif resp.status_code == 429:
+                wait = backoff * attempt
+                print(
+                    f"⏳ 429 Too Many Requests — sleeping {wait}s before retry {attempt}/{retries}"
+                )
+                time.sleep(wait)
+            elif resp.status_code == 500:
+                print(f"⚠️ Server error on attempt {attempt}: {resp.text}")
+                resp.raise_for_status()
+            else:
+                print(f"⚠️ Unexpected status {resp.status_code}: {resp.text}")
+                resp.raise_for_status()
+
+        except requests.RequestException as e:
+            print(f"⚠️ Request error on attempt {attempt}: {e}")
+            time.sleep(backoff * attempt)
+
+    raise RuntimeError("❌ Could not fetch current price after retries")
 
 
 def fetch_historical_prices(days: int = 365, interval: str = "hourly") -> pd.DataFrame:

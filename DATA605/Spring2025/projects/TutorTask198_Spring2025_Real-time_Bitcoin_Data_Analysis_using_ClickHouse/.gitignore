@@ -21,6 +21,9 @@ docker-compose.override.yml
 .vscode/
 .idea/
 
+# Local history (ignore folder and all its contents)
+.history/**
+
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
 

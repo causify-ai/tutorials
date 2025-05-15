@@ -7,3 +7,8 @@ Flask
 nbformat
 streamlit
 notebook
+prophet
+statsmodels 
+scikit-learn
+pmdarima
+watchdog
