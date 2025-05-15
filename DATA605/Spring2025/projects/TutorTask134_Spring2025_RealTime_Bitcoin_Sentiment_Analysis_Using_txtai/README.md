@@ -16,22 +16,22 @@ This project demonstrates a real-time semantic analysis pipeline that fetches Bi
 ---
 
 ## File Structure
-
 ```plaintext
 .
 ├── docker_data605_style/
-│   ├── Dockerfile               # Docker environment with dependencies
-│   ├── txtai_utils.py           # Helper functions for sentiment and price data
-│   ├── txtai.API.ipynb          # Main analysis notebook (pipeline execution)
-│   ├── txtai.example.ipynb      # Demo notebook to showcase txtai search
-│   ├── txtai.API.md             # Markdown API documentation for utility functions
-│   ├── txtai.example.md         # Markdown walkthrough for search example
-├── docker_build.sh              # Builds the Docker container
-├── docker_bash.sh               # Opens a bash shell inside the container
-├── docker_jupyter.sh            # Runs Jupyter Notebook inside the container
-├── requirements.txt             # Python package requirements
-├── README.md                    # Project overview and usage instructions
-```
+│   ├── Dockerfile               # Docker environment with dependencies and setup
+│   ├── txtai_utils.py           # Utility functions for news fetching, sentiment scoring, and merging data
+│   ├── txtai.API.ipynb          # Main pipeline notebook: fetch, score, forecast, visualize
+│   ├── txtai.API.py             # Exported Python script version of the main pipeline
+│   ├── txtai.API.md             # Documentation for utility API functions
+│   ├── txtai.example.ipynb      # Demo notebook for using txtai semantic search
+│   ├── txtai.example.py         # Script version of semantic search example
+│   ├── txtai.example.md         # Markdown walkthrough of the search example
+├── requirements.txt             # Python package requirements for txtai and project dependencies
+├── README.md                    # Project overview, usage instructions, and setup notes
+├── docker_build.sh              # Shell script to build the Docker container
+├── docker_bash.sh               # Script to open an interactive shell inside Docker
+├── docker_jupyter.sh            # Script to run Jupyter Notebook from the container
 
 ---
 
