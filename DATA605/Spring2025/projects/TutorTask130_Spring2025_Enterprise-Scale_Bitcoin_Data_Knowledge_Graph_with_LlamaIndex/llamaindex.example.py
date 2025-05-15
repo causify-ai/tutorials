@@ -34,6 +34,14 @@ from llama_index.core.graph_stores.types import (
 from llama_index.core.schema import TextNode
 import sys
 import asyncio
+import uvicorn
+from datetime import timedelta, datetime
+from fastapi import FastAPI, Request, BackgroundTasks
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 # Configure logging
 for handler in logging.root.handlers[:]:
@@ -56,179 +64,152 @@ llm = OpenAI(model="gpt-4.1-mini",
 Settings.llm = llm
 Settings.embed_model = embed_model
 
+# Initialize FastAPI app
+app = FastAPI(title="Bitcoin Knowledge Graph API")
+templates = Jinja2Templates(directory="templates")
+
+# Global variables
+kg_index = None
+llama_agents = None
+last_update_time = None
+is_updating = False
+live = False
+
+class QueryRequest(BaseModel):
+    query: str
+
 # Ingest Data from multiple sources
-def ingest_data(td: timedelta) -> None:
-   """
-   Ingest and save raw bitcoin blocks, economic indicators and on-chain metrics
-   """
-   ingest_raw_block_data(td)
-   ingest_economic_indicators(td)
-   ingest_onchain_metrics(td)
-   logger.info(f"Data Ingestion complete...")
+async def ingest_data(td: timedelta):
+    """
+    Ingest and save raw bitcoin blocks, economic indicators and on-chain metrics
+    """
+    ingest_raw_block_data(td)
+    ingest_economic_indicators(td)
+    ingest_onchain_metrics(td)
+    logger.info("Data Ingestion complete...")
 
-# Build Graph Structure with Triplets
-def generate_triplets() -> Tuple[List[LabelledNode], List[Relation], List[TextNode]]:
-   """
-   Generate Triplets in the form of Node and Relationships
-   """
-   blocks_data = get_raw_block_data()
-   economic_data = get_onchain_metrics()
-   onchain_data = get_economic_indicators()
+# Build Graph Structure with Triplets and batch embed them
+async def generate_and_embed_triplets():
+    """
+    Generate and embed triplets
+    """
+    blocks_data = get_raw_block_data()
+    economic_data = get_onchain_metrics()
+    onchain_data = get_economic_indicators()
 
-   triplet_generator = TripletGenerator()
-   nodes, relations, text_nodes = triplet_generator.load_and_process_data(blocks_data, economic_data, onchain_data)
-   logger.info(f"Generated {len(nodes)} nodes")
-   logger.info(f"Generated {len(relations)} relations")
-   return nodes, relations, text_nodes
-
-# Batch embed nodes for insertion
-def embed_triplets(nodes: List[LabelledNode], text_nodes: List[TextNode]) -> None:
-   """
-   Create a node string based on key and properties and batch embed it
-   """
-   # based on BaseNode embedding texts
-   node_texts = []
-   for node in nodes:
-      node_texts.append("\n".join([f"{key}: {node.properties[key]}" for key in node.properties.keys()]))
-      
-
-   node_embeddings = embed_model.get_text_embedding_batch(node_texts)
-   text_embeddings = embed_model.get_text_embedding_batch([text_node.text for text_node in text_nodes])
-   for node, embedding in zip(nodes, node_embeddings):
-      node.embedding = embedding
-   for text_node, embedding in zip(text_nodes, text_embeddings):
-      text_node.embedding = embedding
-
-   logger.info(f"Embedded {len(nodes)} nodes")
-   return nodes, text_nodes
+    triplet_generator = TripletGenerator()
+    nodes, relations, text_nodes = triplet_generator.load_and_process_data(blocks_data, economic_data, onchain_data)
+    
+    # Embed nodes
+    node_texts = []
+    for node in nodes:
+        node_texts.append("\n".join([f"{key}: {node.properties[key]}" for key in node.properties.keys()]))
+    
+    node_embeddings = embed_model.get_text_embedding_batch(node_texts)
+    text_embeddings = embed_model.get_text_embedding_batch([text_node.text for text_node in text_nodes])
+    
+    for node, embedding in zip(nodes, node_embeddings):
+        node.embedding = embedding
+    for text_node, embedding in zip(text_nodes, text_embeddings):
+        text_node.embedding = embedding
+    
+    logger.info(f"Generated and embedded {len(nodes)} nodes, {len(relations)} relations")
+    return nodes, relations, text_nodes
 
 # Create a new Knowledge Graph
-def build_knowledge_graph(nodes: List[LabelledNode] = None, relations: List[Relation] = None, text_nodes: List[TextNode] = None) -> PropertyGraphIndex:
-   """
-   Connect to Neo4j Graph Store, Add Triplets and Create a PropertyGraphIndex
-   """
-   # You may pass your username/password/url here
-   graph_store = get_neo4j_graph_store()
-   
-   if nodes:
-   # Add Nodes, Relations and TextNodes to the Graph Store
-      graph_store.upsert_nodes(nodes)
-      graph_store.upsert_relations(relations)
-      graph_store.upsert_llama_nodes(text_nodes)
+async def build_knowledge_graph(nodes=None, relations=None, text_nodes=None):
+    """
+    Connect to Neo4j Graph Store, Add Triplets and Create a PropertyGraphIndex
+    """
+    global kg_index, llama_agents, live
+    
+    graph_store = get_neo4j_graph_store()
+    
+    if nodes and live:
+        graph_store.upsert_nodes(nodes)
+        graph_store.upsert_relations(relations)
+        graph_store.upsert_llama_nodes(text_nodes)
+    
+    kg_index = PropertyGraphIndex.from_existing(
+        property_graph_store=graph_store,
+        llm=llm
+    )
+    
+    llama_agents = LlamaAgents(kg_index=kg_index)
+    logger.info("Knowledge graph updated")
 
-   # Initialize Graph Index with the Graph Store
-   kg_index = PropertyGraphIndex.from_existing(
-      property_graph_store=graph_store,
-      llm=llm
-   )
+# Update existing Knowledge Graph
+async def update_knowledge_graph():
+   """
+   Update the knowledge graph with new data
+   """
+   global last_update_time, is_updating
 
-   logger.info(f"PropertyGraphIndex created with schema: \n{str(kg_index.property_graph_store.structured_schema)[:1000]}...")
-   return kg_index
+   if is_updating:
+      logger.info("Update already in progress, skipping...")
+      return
+
+   is_updating = True
+   try:
+      await ingest_data(timedelta(days=1))  # Get last day's data
+      nodes, relations, text_nodes = await generate_and_embed_triplets()
+      await build_knowledge_graph(nodes, relations, text_nodes)
+      last_update_time = datetime.now()
+      logger.info(f"Knowledge graph updated at {last_update_time}")
+   except Exception as e:
+      logger.error(f"Error updating knowledge graph: {str(e)}")
+   finally:
+      is_updating = False
 
 
 ###################
-# Command Line UI #
-class BTCKnowledgeGraphUI:
-   """
-   Simple class for command line UI
-   """
-   def __init__(self, agents: LlamaAgents):
-      self.agents = agents
-         
-   def display_banner(self):
-      """Display welcome banner"""
-      banner = """
-               ╔═══════════════════════════════════════════════════════════╗
-               ║        Enterprise-Scale Bitcoin Data Knowledge Graph      ║
-               ║             Powered by LlamaIndex & Neo4j                 ║
-               ╚═══════════════════════════════════════════════════════════╝
+# FastAPI Setup #
+@app.on_event("startup")
+async def startup_event():
+   global last_update_time, live
 
-               Ask me anything about Bitcoin blocks, transactions, addresses,
-               economic indicators, or on-chain metrics!
+   # Initial setup
+   logger.info("Performing initial knowledge graph setup...")
+   if live:
+      await ingest_data(timedelta(days=10))
+      nodes, relations, text_nodes = await generate_and_embed_triplets()
+   else:
+      nodes, relations, text_nodes = None, None, None
 
-               Type 'help' for examples, 'exit' or 'quit' to leave.
-      """
-      print(banner)
-      
-   def display_help(self):
-      """Display help menu with example queries"""
-      help_text = """
-            Example queries you can ask:
+   await build_knowledge_graph(nodes, relations, text_nodes)
+   last_update_time = datetime.now()
 
-            Blockchain queries:
-            - "When was block 894214 created?"
-            - "Show me high-value transactions in the last week"
-            - "What transactions are in block 890000?"
-            - "What's the balance of address bc1..."
+   # Set up scheduler for periodic updates
+   if live:
+      scheduler = AsyncIOScheduler()
+      scheduler.add_job(update_knowledge_graph, 'interval', hours=1)
+      scheduler.start()
+      logger.info("Scheduled hourly updates for knowledge graph")
 
-            Economic queries:
-            - "What was the S&P 500 value on April 24, 2025?"
-            - "How did the Federal Funds Rate change last month?"
-            - "Show me CPI values for Q1 2025"
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
-            Metrics queries:
-            - "What was the Bitcoin hash rate last week?"
-            - "Compare transaction volume in BTC vs USD for today"
-            - "Show me active addresses over the past month"
+@app.post("/api/query")
+async def query(query_request: QueryRequest):
+    if not llama_agents:
+        return {"error": "Knowledge graph not initialized yet"}
+    
+    try:
+        result = await llama_agents.query(query_request.query)
+        return {"result": result}
+    except Exception as e:
+        logger.error(f"Error processing query: {str(e)}")
+        return {"error": f"Error processing query: {str(e)}"}
 
-            Cross-domain analysis:
-            - "How did economic indicators correlate with Bitcoin price?"
-            - "Show me high transaction volume periods and related economic data"
-            - "What was the economic context when block 900000 was mined?"
-
-            For the best results, be specific with dates and include
-            relevant identifiers (block heights, transaction hashes, addresses).
-            """
-      print(help_text)
-     
-   async def run(self):
-      """Main CLI loop"""
-      self.display_banner()
-      
-      while True:
-         try:
-               # Get user input
-               query = input("\n> ").strip()
-               
-               # Check for exit commands
-               if query.lower() in ['exit', 'quit', 'q']:
-                  print("\nGoodbye!")
-                  break
-               
-               # Check for help command
-               if query.lower() == 'help':
-                  self.display_help()
-                  continue
-               
-               # Skip empty queries
-               if not query:
-                  continue
-               
-               # Process and display query result
-               response = await self.agents.query(query)
-               if response:
-                  print(f"\n{response}\n")
-               
-         except KeyboardInterrupt:
-               print("\nUse 'exit' or 'quit' to leave.")
-         except Exception as e:
-               print(f"\nError: {str(e)}")
-
-
-# Putting it all together 
-async def main():
-   """Build and query Knowledge Graph"""
-   td = timedelta(days=10)
-   ingest_data(td)
-   nodes, relations, text_nodes = None, None, None
-   nodes, relations, text_nodes = generate_triplets()
-   nodes, text_nodes = embed_triplets(nodes, text_nodes)
-   kg_index = build_knowledge_graph(nodes, relations, text_nodes)
-   llama_agents = LlamaAgents(kg_index=kg_index)
-
-   # UI
-   cli = BTCKnowledgeGraphUI(llama_agents)
-   await cli.run()
+@app.get("/api/status")
+async def status():
+    return {
+        "status": "online",
+        "last_update": last_update_time.isoformat() if last_update_time else None,
+        "is_updating": is_updating
+    }
 
 if __name__ == "__main__":
-   asyncio.run(main())
+    import uvicorn
+    uvicorn.run("__main__:app", host="0.0.0.0", port=8000, reload=True)
