@@ -12,3 +12,15 @@ CREATE TABLE IF NOT EXISTS bitcoin_data (
 
 -- Create index on timestamp for faster queries
 CREATE INDEX IF NOT EXISTS idx_bitcoin_timestamp ON bitcoin_data(timestamp);
+
+CREATE TABLE IF NOT EXISTS bitcoin_analytics (
+    id SERIAL PRIMARY KEY,
+    timestamp TIMESTAMP NOT NULL,
+    analysis_type VARCHAR(50) NOT NULL,
+    time_period VARCHAR(20) NOT NULL,
+    value FLOAT NOT NULL,
+    annotation VARCHAR(255)
+);
+
+-- Create index for analytics queries
+CREATE INDEX IF NOT EXISTS idx_analytics_type_period ON bitcoin_analytics(analysis_type, time_period);
