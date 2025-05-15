@@ -32,6 +32,7 @@
 - [Function: `word2v_cosine_sim(model, documents, top_k=20, threshold=0.8)`](#function-word2v_cosine_simmodel-documents-top_k20-threshold08)
 - [Function: `topic_model_cos_sim(model, corpus)`](#function-topic_model_cos_simmodel-corpus)
 - [Function: `combine_topic_signals(lda_result, lsi_result)`](#function-combine_topic_signalslda_result-lsi_result)
+- [Function: `time_analysis(model, corpus, df)`](#function-time_analysismodel-corpus-df)
 
 -------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1082,3 +1083,66 @@ Recommendation: BULLISH — Both models agree with high confidence.
 
 - Serves as a final decision layer in model-based trading signals.
 - Helps avoid misleading recommendations from a single model.
+
+---
+
+## Function: `time_analysis(model, corpus, df)`
+
+### Purpose
+
+Performs a **time analysis** of trends based on LSI (Latent Semantic Indexing) topic models, and visualizes the inferred market trends, Bitcoin price distributions, and trend-based price changes.
+
+---
+
+### Arguments
+
+- `model (gensim.models.LsiModel)`: Pre-trained LSI/LDA model for topic modeling.
+- `corpus (list)`: The document-term matrix representing the corpus.
+- `df (pandas.DataFrame)`: DataFrame containing time series data with at least 'window', 'datetime', and 'price' columns.
+
+---
+
+### Design Decisions
+
+- **Trend Labeling**:
+  - Dominant topic (0 or 1) is used to infer the trend: 'Bearish' for topic 0 and 'Bullish' for topic 1.
+  - `df_trends` DataFrame is created with trend labels and dominant topics per window.
+- **Visualization**:
+  - Market trend distribution is visualized via a bar chart.
+  - Price change distribution by inferred trend is shown using a boxplot.
+  - Bitcoin price over time is plotted, with points marked based on trend.
+
+---
+
+### Example Usage
+
+```python
+import pandas as pd
+import gensim
+from template_utils import time_analysis
+
+# Example usage
+model = gensim.models.LsiModel.load("path_to_model")
+corpus = [...]  # Your document-term matrix
+df = pd.DataFrame({
+    'window': range(10),
+    'datetime': ['2023-01-01', '2023-01-02', '2023-01-03', ...],
+    'price': [100, 105, 110, ...],
+    'perc_change': [5, 3, -2, ...]
+})
+
+# Run time analysis
+result_df = time_analysis(model, corpus, df)
+```
+
+### Output
+
+1. **Bar Chart**: Displays the distribution of market trends (Bullish vs. Bearish).
+2. **Boxplot**: Shows the price change distribution categorized by inferred trend.
+3. **Line Chart**: Plots Bitcoin price over time, with trend markers (green for Bullish, red for Bearish).
+
+### Example Output Visuals:
+
+- **Market Trend Distribution**: A bar chart comparing the count of bullish and bearish trends.
+- **Price Change Distribution by Trend**: A boxplot comparing price changes by inferred trend.
+- **Bitcoin Price Over Time**: A line plot of Bitcoin price with scatter points showing the trend (green for Bullish, red for Bearish).

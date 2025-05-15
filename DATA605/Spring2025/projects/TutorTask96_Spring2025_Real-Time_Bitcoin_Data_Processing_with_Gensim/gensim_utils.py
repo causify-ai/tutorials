@@ -25,6 +25,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+import matplotlib.lines as mlines
 from itertools import combinations
 import networkx as nx
 
@@ -72,11 +73,13 @@ def save(timestamp, price):
     try:
         df = pd.read_csv("data.csv")
         tempdf = pd.DataFrame({'time': [timestamp], 'price': [price]})
+        tempdf['datetime'] = tempdf['time']
         tempdf['date'] = tempdf['time'].dt.date
         tempdf['time'] = tempdf['time'].dt.time
         df = pd.concat([df, tempdf])
     except:
         tempdf = pd.DataFrame({'time': [timestamp], 'price': [price]})
+        tempdf['datetime'] = tempdf['time']
         tempdf['date'] = tempdf['time'].dt.date
         tempdf['time'] = tempdf['time'].dt.time
         df = tempdf.copy()
@@ -607,3 +610,85 @@ def combine_topic_signals(lda_result, lsi_result):
         print(f"Weighted Recommendation: {final_trend.upper()} (based on {dominant}, stronger confidence).")
     else:
         print("Mixed Signals: LDA and LSI disagree with similar confidence proceed with caution.")
+# --------------------------------------- #
+
+def time_analysis(model, corpus, df):
+    # Get LSI/LDA topic vectors for all windows
+    topic_vectors = [model[corpus[i]] for i in range(len(corpus))]
+
+    # Convert sparse topic distributions into dense numpy arrays
+    num_topics = model.num_topics
+    dense_vectors = []
+
+    for doc in topic_vectors:
+        vec = np.zeros(num_topics)
+        for topic_id, value in doc:
+            vec[topic_id] = value
+        dense_vectors.append(vec)
+
+    for idx, topic in model.print_topics(num_words=5):
+        print(f"Topic {idx}: {topic}")
+
+    # Assign dominant topic label per window based on LSI topic vectors
+    trend_labels = []
+
+    for vec in dense_vectors:
+        dominant_topic = np.argmax(vec)
+        if dominant_topic == 0:
+            trend_labels.append('Bearish')
+        else:
+            trend_labels.append('Bullish')
+
+    # Append to dataframe for easy reference
+    df_trends = pd.DataFrame({
+        'window': list(range(len(dense_vectors))),
+        'dominant_topic': [np.argmax(vec) for vec in dense_vectors],
+        'trend': trend_labels
+    })
+    
+    df_trends['trend'].value_counts().plot(kind='bar', color=['crimson', 'green'])
+    plt.title('Market Trend Distribution (LSI Topic Inference)')
+    plt.xlabel('Trend')
+    plt.ylabel('Number of Windows')
+    plt.show()
+
+    # Merge trend labels back to your original df
+    df_temp = df.merge(df_trends, on='window')
+    # Boxplot of price change by trend
+    plt.figure(figsize=(8, 6))
+    sns.boxplot(x='trend', y='perc_change', data=df_temp)
+    plt.title('Price Change Distribution by Inferred Trend')
+    plt.xlabel('Inferred Trend')
+    plt.ylabel('Price Change (%)')
+    plt.show()
+
+    # Plot Bitcoin price over time
+    df_temp['datetime'] = pd.to_datetime(df_temp['datetime'])
+    df_temp = df_temp.sort_values(by='datetime')
+    plt.figure(figsize=(10, 6))
+    plt.plot(df_temp['datetime'], df_temp['price'], label='Bitcoin Price', color='blue', marker='o')
+
+    # Mark points based on trend
+    for i in range(len(df_temp)):
+        if df_temp['trend'][i] == 'Bullish':
+            plt.scatter(df_temp['datetime'][i], df_temp['price'][i], color='green', zorder=5)
+        else:
+            plt.scatter(df_temp['datetime'][i], df_temp['price'][i], color='red', zorder=5)
+
+    # Create custom legend handles for Bullish (green) and Bearish (red)
+    bullish_handle = mlines.Line2D([], [], color='green', marker='o', linestyle='None', markersize=8, label='Bullish (Green)')
+    bearish_handle = mlines.Line2D([], [], color='red', marker='o', linestyle='None', markersize=8, label='Bearish (Red)')
+
+
+    # Labeling
+    plt.title('Bitcoin Price Over Time')
+    plt.xlabel('Time')
+    plt.ylabel('Price')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.legend(handles=[bullish_handle, bearish_handle])
+
+    # Show plot
+    plt.show()
+
+    return df_temp
