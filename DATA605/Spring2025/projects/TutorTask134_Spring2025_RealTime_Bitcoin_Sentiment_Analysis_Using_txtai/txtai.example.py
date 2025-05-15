@@ -1,84 +1,110 @@
-"""
-A brief overview of what the script does in one line.
+#!/usr/bin/env python
+# coding: utf-8
 
-1. Make sure to include the citations here (code and research)
-2. Make sure to run the linter on the script before committing changes.
-    - Many changes would be pointed out by the linter to maintain consistency with coding style.
-3. Provide here the reference to the documentation that explains the system in detail. (e.g., pycaret.API.md)
+# # Real-Time Bitcoin Sentiment Analysis Using txtai
+# 
+# This notebook explains how to build a simple AI-powered semantic search engine using `txtai`.
+# 
+# We fetch real-time Bitcoin news headlines from NewsAPI and use `txtai` to find the most relevant headlines based on meaning, not just keywords.
+# 
+# This serves as a minimal demo to explore:
+# - How semantic search works using sentence embeddings
+# - How to use `txtai` to index and query real-world text
+# - How to apply sentiment analysis on search results
 
-This script is how you use (customize) the API in the project. The
-naming should be as follows:
- - if the project is on `pycaret`, then it is `pycaret.example.py`
-
- Follow the reference on coding style guide to write clean and readable code. 
-- https://github.com/causify-ai/helpers/blob/master/docs/coding/all.coding_style.how_to_guide.md
-"""
-
-# Comments should be imperative and have a period at the end.
-# Your code should be well commented. 
-# Import libraries in this section.
-# Avoid imports like import *, from ... import ..., from ... import *, etc.
-import logging
-# Following is a useful library for typehinting.
-# For typehints like list, dict, etc. you can use the following:
-## def func(arg1:List[int]) -> List[int]:
-# For more info check: https://docs.python.org/3/library/typing.html
-from typing import List
-
-import pandas as pd
-import numpy as np
-
-########################################################################
-# Prefer using logger over print statements.
-# You can use logger in the following manner:
-## _LOG.info("message") for logging level INFO
-## _LOG.debug("message") for logging level DEBUG, etc.
-### To add string formatting, use the following syntax:
-### _LOG.info("message %s", "string") and so on.
-##########################################################################
-_LOG = logging.getLogger(__name__)
+# In[1]:
 
 
-# #############################################################################
-# <Class Name> ("Template" in this case)
-# #############################################################################
-
-class Template:
-    """
-    Brief imperative description of what the class does in one line, if needed.
-    """
-    def __init__(self):
-        pass
-    
-    def method1(self, arg1:int) -> None:
-        """
-        Brief imperative description of what the method does in one line.
-
-        You can elaborate more in the method docstring in this section, for e.g. explaining 
-        the formula/algorithm. Every method/function should have a docstring, typehints and include the
-        parameters and return as follows:
-
-        :param arg1: description of arg1
-        :return: description of return
-        """
-        # Code bloks go here.
-        # Make sure to include comments to explain what the code is doing.
-        # No empty lines between code blocks.
-        pass
+# import function from txtai_utils.py
+from txtai_utils import TxtaiSentimentSearch, fetch_bitcoin_headlines, analyze_sentiment
 
 
-def template_function(arg1:int) -> None:
-    """
-    Brief imperative description of what the function does in one line.
+# ## Import Utility Functions
+# 
+# We use a helper module (`txtai_utils.py`) that contains functions for:
+# - Fetching news headlines
+# - Creating a semantic search engine with `txtai`
+# - Running sentiment analysis
 
-    You can elaborate more in the function docstring in this section, for e.g. explaining 
-    the formula/algorithm. Every function should have a docstring, typehints and include the
-    parameters and return as follows:
+# In[2]:
 
-    :param arg1: description of arg1
-    :return: description of return
-    """
-    # Code bloks go here.
-    # Make sure to include comments to explain what the code is doing.
-    # No empty lines between code blocks.
-    pass
+
+# Fetch real-time Bitcoin headlines from NewsAPI
+API_KEY = "6e540235a1794f78a804270f2317adf3"  # Replace with your actual NewsAPI key
+
+# Fetch the headlines
+headlines = fetch_bitcoin_headlines(API_KEY)
+
+# Preview results
+print(f"Total headlines fetched: {len(headlines)}")
+headlines[:5]
+
+
+# ## Fetch Bitcoin News Headlines
+# 
+# We call NewsAPI and retrieve the top 100 Bitcoin-related news headlines.
+
+# In[3]:
+
+
+# Create the semantic search engine
+search_engine = TxtaiSentimentSearch()
+
+# Build the txtai index using the fetched headlines
+search_engine.build_index(headlines)
+
+
+# ## Build txtai Semantic Index
+# 
+# We load a transformer model (`all-MiniLM-L6-v2`) and index all headlines so that txtai can search based on sentence meaning.
+
+# In[4]:
+
+
+# Search for a topic using semantic match
+query = "Why is Bitcoin dropping?"  # You can try other questions too
+
+# Get top 5 semantically similar headlines
+results = search_engine.search(query, top_k=5)
+
+# Print results
+print("🔍 Query:", query)
+print("Top Results:")
+for result in results:
+    print("-", result)
+
+
+# ## Semantic Search
+# 
+# We enter a natural-language query and retrieve the most relevant headlines using `txtai`.
+# This works even if the headlines don't contain the exact keywords from the query.
+
+# In[5]:
+
+
+# Analyze sentiment of the results
+print("\n💬 Sentiment Analysis on Results:\n")
+
+# Run sentiment analysis on each search result
+for result in results:
+    sentiment = analyze_sentiment(result)
+    print(f"[{sentiment}] {result}")
+
+
+# ## Sentiment Analysis
+# 
+# We classify each search result as POSITIVE or NEGATIVE using a BERT-based model.
+
+# ## Conclusion
+# 
+# In this demo notebook, we:
+# 
+# - Fetched live Bitcoin headlines from NewsAPI
+# - Indexed them using `txtai` with semantic embeddings
+# - Queried with natural language
+# - Classified headline sentiment using a pre-trained model
+# 
+# Next steps (in `txtai.API.ipynb`) will integrate:
+# - Historical Bitcoin prices from CoinGecko
+# - Merged sentiment + price data
+# - Time-series modeling (e.g. ARIMA)
