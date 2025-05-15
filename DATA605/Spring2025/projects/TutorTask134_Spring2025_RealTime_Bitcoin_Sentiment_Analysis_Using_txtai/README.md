@@ -32,7 +32,7 @@ This project demonstrates a real-time semantic analysis pipeline that fetches Bi
 ├── docker_build.sh              # Shell script to build the Docker container
 ├── docker_bash.sh               # Script to open an interactive shell inside Docker
 ├── docker_jupyter.sh            # Script to run Jupyter Notebook from the container
-
+```
 ---
 
 ## Running the Project
