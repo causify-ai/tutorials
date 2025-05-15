@@ -131,7 +131,7 @@ def load_data():
             return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
             
         price_df = pd.read_csv(
-            PRICE_FILE, 
+            PRICE_FILE,
             names=config['data_format']['columns']['raw_data']['names'],
             skiprows=1,
             parse_dates=['timestamp']
@@ -633,14 +633,14 @@ def create_mae_chart(metrics_df):
                 p95 = filtered_df['mae'].quantile(0.95)
                 mae_filtered_df = filtered_df[filtered_df['mae'] <= p95].copy()
             
-            fig.add_trace(go.Scatter(
+    fig.add_trace(go.Scatter(
                 x=mae_filtered_df['timestamp'],
                 y=mae_filtered_df['mae'],
-                name='MAE',
+        name='MAE',
                 line=dict(color='orange', width=2, dash='dot'),
                 opacity=0.7,
                 hovertemplate='%{y:,.2f}'
-            ))
+    ))
     
     fig.update_layout(
         title='Prediction Error Over Time',
@@ -930,7 +930,7 @@ def main():
                     with col3:
                         if pred_df is not None and not pred_df.empty and 'pred_price' in pred_df.columns:
                             # Always use the latest prediction value regardless of timestamp
-                            latest_pred = pred_df['pred_price'].iloc[-1]  
+                            latest_pred = pred_df['pred_price'].iloc[-1]
                             latest_pred_time = pred_df['timestamp'].iloc[-1]
                             
                             # Ensure we can compare dates regardless of string or datetime format

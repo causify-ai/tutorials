@@ -8,7 +8,7 @@ def usd_to_display_str(value):
         value = round(float(value), 2)
         if value >= 1000:
             return f"{value/1000:.2f}k"
-        return f"{value:.2f}"
+        return f"{value:.2f}" 
     except (ValueError, TypeError):
         # Return a safe default if conversion fails
         return "N/A" 
