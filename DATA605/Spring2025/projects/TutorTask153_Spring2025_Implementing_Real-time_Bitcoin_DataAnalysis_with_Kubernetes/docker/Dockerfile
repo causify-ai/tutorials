@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.9-slim
 
 # Install build tools and libraries for pandas + psycopg2-binary
 RUN apt-get update && apt-get install -y \
@@ -17,9 +17,14 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
+RUN pip install --no-cache-dir setuptools wheel
+
 COPY docker/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY src/ .
+
+# Expose port for Prometheus metrics
+EXPOSE 8000
 
 CMD ["python", "bitcoin_data_fetcher.py"]

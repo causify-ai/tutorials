@@ -5,3 +5,8 @@ schedule==1.1.0
 python-dotenv==0.21.0
 psycopg2-binary==2.9.3
 sqlalchemy==1.4.41
+statsmodels==0.13.5
+scikit-learn==1.2.0
+prometheus-client==0.16.0
+werkzeug==2.2.3
+flask==2.2.3

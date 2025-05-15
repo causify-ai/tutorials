@@ -1,0 +1,3 @@
+FROM grafana/grafana:12.0.0
+
+COPY dashboards /etc/grafana/provisioning/dashboards/
