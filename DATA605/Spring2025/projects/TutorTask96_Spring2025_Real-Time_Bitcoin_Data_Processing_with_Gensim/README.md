@@ -174,11 +174,10 @@ plt.title("Bitcoin Price Over Time")
 ├── gensim_utils.py            # Modular functions for modeling
 ├── gensim.API.py              # Project function usage
 ├── gensim.API.md              # Project function usage documentation
-├── price_log.log              # Logging file
+├── logfile.log              # Logging file
 ├── requirements.txt           # Requirements
 ├── README.md                  # Project Description
 ├── docker_data605_style       # Docker Folder
-├── gensim_data_ingestion_cron.py            # Cron Function
 ```
 
 ---
