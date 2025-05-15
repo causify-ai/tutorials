@@ -1,3 +1,13 @@
+# Table of Contents
+- [Gensim NLP Model Demonstrations](#gensim-nlp-model-demonstrations)
+    - [Function: `Word2Vec`](#function-word2vec)
+    - [Function: `FastText`](#function-fasttext)
+    - [Function: `Doc2Vec`](#function-doc2vec)
+    - [Function: `LdaModel`](#function-ldamodel)
+    - [Function: `LsiModel`](#function-lsimodel)
+    - [Dictionary and Corpus Creation (Common Preprocessing)](#dictionary-and-corpus-creation-common-preprocessing)
+- [Coingecko Demonstration](#coingecko-demonstration)
+    - [Wrapper Function: `fetch_price()`](#wrapper-function-fetch_price)
 
 # Gensim NLP Model Demonstrations
 
@@ -163,3 +173,48 @@ corpus = [dictionary.doc2bow(doc) for doc in processed_docs]
 
 ### Use Case
 Foundation for building models like LDA and LSI.
+
+---
+
+# Coingecko Demonstration
+
+## Wrapper Function: `fetch_price()`
+
+### Software Layer
+- Native API Used: CoinGecko Public API
+- This project uses the CoinGecko API to fetch real-time Bitcoin pricing information.
+- Endpoint: GET [https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd](https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd)
+
+### Purpose
+
+To abstract away API interaction logic and allow downstream components to easily retrieve the current Bitcoin price in USD.
+
+### Function Definition
+
+```python
+def fetch_price() -> float:
+    """
+    Fetches the current price of Bitcoin in USD using the CoinGecko public API.
+
+    Returns:
+        float: The latest Bitcoin price in USD, or None if the request fails.
+    """
+```
+
+### Design Decisions
+
+- We use the CoinGecko API because it is public and does not require authentication.
+- The wrapper includes error handling and logs failures using the Python logging module.
+- The function is designed to be lightweight, stateless, and reusable across the API layer and higher-level logic.
+
+### Example Usage
+
+```python
+from gensim_utils import fetch_price
+
+price = fetch_price()
+if price:
+    print(f"Current Bitcoin Price (USD): ${price}")
+else:
+    print("Failed to fetch Bitcoin price.")
+```
