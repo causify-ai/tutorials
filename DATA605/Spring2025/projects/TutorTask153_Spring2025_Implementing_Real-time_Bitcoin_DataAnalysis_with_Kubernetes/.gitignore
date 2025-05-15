@@ -1,5 +1,26 @@
 minikube-linux-amd64
 kubectl
-.env
+.env.secrets
 kubernetes/postgres-secret.yaml
+kubernetes/grafana/grafana-secret.yaml
 local_charts
+
+# Generated files during deployment
+*.generated.*
+
+# Persistent volume data
+data/
+charts/
+
+# Potential local config files
+minikube-setup.sh.local
+*-local.yaml
+*-local.json
+
+# Temporary files that might be created
+src/*.pyc
+__pycache__/
+*.py[cod]
+
+# Log files that might be generated
+*.log
