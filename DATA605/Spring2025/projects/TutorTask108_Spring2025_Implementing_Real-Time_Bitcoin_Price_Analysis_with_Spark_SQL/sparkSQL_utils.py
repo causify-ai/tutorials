@@ -124,7 +124,7 @@ class BitcoinDataHandler:
                 self.spark.catalog.dropTempView(vw_nm)
                 combined_df.createOrReplaceTempView(vw_nm)
                 print(f"Added following new record(s):")
-                print(new_df.show()
+                print(new_df.show())
             else:
                 print("No new data found.")
             time.sleep(3600)
