@@ -24,6 +24,7 @@
 - Spark SQL integrates with various programming languages, data sources, and other Big Data APIs.
 - This tutorial focuses on showcasing the use of SparkSQL in Python via pyspark through various examples.
 - More information on Spark SQL can be found [here](https://spark.apache.org/sql/).
+- The sparkSQL.API.md will show case how to implement the functionalties of SparkSQL, including Spark Session, DataFrame API, and SQL function using a small dataset.
 
 ---
 
@@ -81,11 +82,11 @@ spark = SparkSession.builder \
 There are various Spark SQL configurations that can be set when creating a Spark Session to allow for performance improvement. These settings can be tuned with respect to the partitions and data files created within an application that ingests data, performs a sequence of queries, and outputs the data. 
 
 **What is data partitioning?**
-Partitions in a data source plays a critical role during the large-scale cluster computing. Setting partition column(s) helps reduce data shuffle and helps Spark distribute the data across the cluster during large-scale computing.
+Partitions in a data source play a critical role during the large-scale cluster computing. Setting partition column(s) helps reduce data shuffle and helps Spark distribute the data across the cluster during large-scale computing.
 
 However, there may be cases when certain column values have more associated rows in a table than others, leading to data skew across partitions and data files. When executed on massive data sizes across a cluster, adjusting these settings and configurations can improve runtime, reduce data loss, improve fault tolerance, and much more.
 
-This tutorial uses a small sample dataset that does not necessairly require these configurations. You can learn more about the different configurations [here](https://spark.apache.org/docs/3.5.4/sql-performance-tuning.html).
+This tutorial uses a small sample dataset that does not necessarily require these configurations. You can learn more about the different configurations [here](https://spark.apache.org/docs/3.5.4/sql-performance-tuning.html).
 
 ---
 
@@ -94,7 +95,7 @@ This tutorial uses a small sample dataset that does not necessairly require thes
 When Spark SQL is run through another programming language (Python, Java, Scala, etc), the results are returned either as a Dataset or DataFrame.
 
 1. Dataset API - Is availabile in Scala and Java.
-2. DataFrame API - Is available in Scala, Java, Python and R. It is a dataset which organized into named columns.
+2. DataFrame API - Is available in Scala, Java, Python and R. It is a dataset which is organized into named columns.
 
 More information can be found [here](https://spark.apache.org/docs/latest/sql-programming-guide.html#datasets-and-dataframes).
 
@@ -160,8 +161,6 @@ We can write even more complex queries by including filters, window functions, a
 ```
 We will explore more complex queries in 'sparkSQL.API.ipynb'. A brief example can be found [here](https://spark.apache.org/examples.html).
 
-### Functions
-
 Spark SQL supports numerous scalar and aggregate functions that can be incorporated in queries. A complete list of them can be found [here](https://spark.apache.org/docs/3.5.4/sql-ref-functions.html#udfs-user-defined-functions).
 
 Examples include
@@ -169,6 +168,10 @@ Examples include
 2. Window functions
 3. Date and Timestamp functions
 4. User Defined Functions
+
+---
+
+## User Defined Functions
 
 While the DataFrame API supports functions like 'avg', 'when', and 'col', we can also create user defined functions which can act on single or multiple rows. These are created when the built-in functions do not meet user requirements. Creating a UDF is a three step process:
 

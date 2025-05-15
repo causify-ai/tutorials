@@ -41,7 +41,7 @@ Specifcally, this tutorial uses the '/coins/{id}/market_chart/range' endpoint. M
 
 This endpoint contains pricing data at various granulity levels:
 
-1. >= 90 days at the daily level
+1. 90 days or more at the daily level
 2. 2-90 days at the hourly level
 3. 1 day at the 5-minute level
 
@@ -55,15 +55,15 @@ The file 'sparkSQL_utils.py' contains the class 'BitcoinDataLoader' which contai
 #### BitcoinDataLoader
 
 **'load_data'**
-This function populates the a view with Bitcoin prices in given currency for given past total_days; it is used directly to populate the daily data view and indirectly to populate the daily data view. 
+This function populates the view with Bitcoin prices in a given currency for a given past total_days; it is used directly to populate the daily data view and indirectly to populate the hourly data view. 
 
 **'fetch_data_range'**
-This function returns price data using given a time range and currency of Bitcoin. The time interval of data retrieved is based on the total_days and the API endpoint's granulity levels.
+This function returns price data using a given time range and currency of Bitcoin. The time interval of data retrieved is based on the total_days and the API endpoint's granulity levels.
 
 It is not called directly in the example notebook, but rather indirectly in the 'load_data' function.
 
 **'start_real_time_update'**
-This function fetches and loads existing Bitcoin price data within specified days and start real time updates at every hour. The 
+This function fetches and loads existing Bitcoin price data within specified days and starts real time updates at every hour. The 
 function will identify if there is new hourly data to add, and updates the existing view. This function is directly called to create the hourly data view.
 
 **'stop_real_time_update'**
@@ -71,9 +71,9 @@ This function can be used to stop real time updates in the notebook, if desired.
 
 #### Views
 Each view contains three columns:
-1.'Price' - in USD
-2.'Timestamp' - UNIX timestamp
-3.'Price_Date' - Timestamp column converted to respective format
+- Price - in USD
+- Timestamp - UNIX timestamp
+- Price_Date - Timestamp column converted to respective format
 
 1. **Static Data**
     - This data is loaded for the past year at the daily level.
@@ -117,11 +117,11 @@ Each view contains three columns:
 
 ```mermaid
 flowchart TD
+    n2["Retrieve once"]
     A(["CoinGecko Endpoint"]) --> B{"Spark Session"}
     A -.-> B
     B --- C["Static View"]
     B -. Update .-> D["Dynamic View"]
-    n2["Retrieve once"]
     n1["Retrieve every 3600 seconds"]
     n2@{ shape: text}
     n1@{ shape: text}
@@ -151,13 +151,14 @@ To further understand BTC price volatility, we can aim to identify signficant sp
 
 This example considers two thresholds for a significant change in price:
 
-1. Average of absolute value of change in price in time period.
+1. Using the average of absolute value of change in price in time period.
 2. Using the IQR method and considering the whiskers as the bounds for outliers.
-3. Line plots, box and whisker plots, and histograms can aid in understanding the trend and distribution of price change.
+
+Line plots, box and whisker plots, and histograms can aid in understanding the trend and distribution of price change.
 
 ### Price Prediction & Extrapolation
 
-Finally, the last analysis the example notebook covers is the price prediction/extrapolation. Using the previous price information and time interval, we will use SparkSQL queries to predict the next price at the given time interval. The logic behind the queries is using the average change in price over a subset of past data and adding that change to the most recent price.
+Finally, the last analysis in the example notebook is price prediction/extrapolation. Using the previous price information and time interval, we will use SparkSQL queries to predict the next price at the given time interval. The logic behind the queries is using the average change in price over a subset of past data and adding that change to the most recent price.
 
 We will look at three predictions/extrapolations:
 
