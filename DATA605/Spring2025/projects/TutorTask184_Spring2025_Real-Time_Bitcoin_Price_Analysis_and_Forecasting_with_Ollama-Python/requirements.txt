@@ -1,0 +1,8 @@
+pandas
+numpy
+requests
+pytz
+plotly
+dash
+flask
+ollama
