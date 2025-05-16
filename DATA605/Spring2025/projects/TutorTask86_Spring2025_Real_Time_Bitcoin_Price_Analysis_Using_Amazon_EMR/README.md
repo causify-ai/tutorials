@@ -4,47 +4,6 @@ This project focuses on **real-time ingestion and processing of Bitcoin price da
 Bitcoin prices are fetched from a public API (such as CoinGecko) every few seconds and saved to Amazon S3. These records are then processed using Spark jobs running on an EMR cluster to enable near real-time analytics.
 
 ---
- HEAD
-
-## 📌 Objectives
-- Fetch real-time Bitcoin price data from public APIs
-- Process data using PySpark on Amazon EMR
-- Perform time-series analysis (e.g., moving averages, price fluctuations)
-- Store raw and processed data in Amazon S3
-
----
-
-## 📂 Project Structure
-DATA605/Spring2025/projects/TutorTask86_Spring2025_Real_Time_Bitcoin_Price_Analysis_Using_Amazon_EMR/ 
-├── bitcoin_ingest.API.py
-├── bitcoin_processing.example.py 
-├── bitcoin_streaming.example.py 
-├── bitcoin_timeseries.example.py 
-├── spark_test.py 
-└── template.API.ipynb
-
-
----
-
-## 🔧 Technologies
-- Amazon EMR
-- Apache Spark (PySpark)
-- AWS S3
-- CoinGecko API / CryptoCompare API
-- Python
-
----
-
-## ✅ Next Steps
-- Add Docker setup
-- Finalize automation using EMR steps
-- Complete write-up and submit final PR
-
----
-
-*Author: Rithika Baskaran*  
-*Date: Spring 2025*
-=======
 
 ## ✅ Project Objective
 
@@ -97,4 +56,4 @@ DATA605/Spring2025/projects/TutorTask86_Spring2025_Real_Time_Bitcoin_Price_Analy
 }
 
 
- 3544db0 (Updated README to reflect real-time structure and progress for PR #2)
+
