@@ -12,6 +12,3 @@ docker_clean.sh
 docker_exec.sh
 docker_push.sh
 Dockerfile
-version.sh
-bashrc
-etc_sudoers

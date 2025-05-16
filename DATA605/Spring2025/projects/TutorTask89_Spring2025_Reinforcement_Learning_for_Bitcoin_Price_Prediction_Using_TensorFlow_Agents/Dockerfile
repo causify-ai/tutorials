@@ -31,6 +31,10 @@ COPY . .
 
 RUN mkdir /install
 
+# Install Jupyter extensions.
+ADD install_jupyter_extensions.sh /install
+RUN /install/install_jupyter_extensions.sh
+
 # Config.
 ADD etc_sudoers /install/
 COPY etc_sudoers /etc/sudoers
@@ -39,3 +43,6 @@ COPY bashrc /root/.bashrc
 # Report package versions.
 ADD version.sh /install/
 RUN /install/version.sh 2>&1 | tee version.log
+
+# Jupyter.
+EXPOSE 8888
