@@ -1,6 +1,6 @@
-# Bitcoin Market Data Analysis with SQLite & CoinMarketCap API
+# API Reference: Bitcoin Market Data with SQLite & CoinMarketCap
 
-This Jupyter notebook provides a robust and reproducible workflow for analyzing both historical and live Bitcoin (BTC-USD) market data. Leveraging Python, SQLite, and public APIs, it demonstrates best practices in data retrieval, storage, querying, and real-time updates.
+This document describes backend API utilities for managing historical and live Bitcoin data using Python and SQLite. Leveraging Python, SQLite, and public APIs, it demonstrates best practices in data retrieval, storage, querying, and real-time updates.
 
 ---
 
@@ -27,17 +27,8 @@ This Jupyter notebook provides a robust and reproducible workflow for analyzing 
 
 ---
 
-## Notebook Objectives
+## Developer Guide
 
-- Fetch and analyze 15 years of daily historical Bitcoin price and volume data.
-- Store and manage data efficiently using a local SQLite database.
-- Retrieve and display live Bitcoin market data from CoinMarketCap.
-- Update the database with the latest live data points.
-- Ensure transparency and maintainability through clear code documentation and section-wise explanations.
-
----
-
-## Notebook Structure
 
 | Section                    | Description                                                                 |
 |----------------------------|-----------------------------------------------------------------------------|
@@ -108,6 +99,41 @@ erDiagram
 ---
 
 ## API Function Breakdown
+---
+
+## Function Parameters and Returns
+
+### `fetchHistoricalBTC()`
+- **Parameters**: None  
+- **Returns**: `pd.DataFrame` – Historical BTC price data  
+- **Raises**: `ValueError` if data fetch fails
+
+### `storeData(data: pd.DataFrame, db: str)`
+- **Parameters**:
+  - `data`: Cleaned BTC price DataFrame
+  - `db`: SQLite DB path
+- **Returns**: None
+
+### `fetchDB(query: str, db: str)`
+- **Parameters**:
+  - `query`: SQL string
+  - `db`: SQLite DB path
+- **Returns**: `pd.DataFrame` with query result
+
+### `liveBTC(url: str, API_KEY: str)`
+- **Parameters**:
+  - `url`: CoinMarketCap endpoint
+  - `API_KEY`: Your API key
+- **Returns**: Dictionary with date, open price, and volume
+
+### `addDatapoint(liveData: dict, db: str)`
+- **Parameters**:
+  - `liveData`: Dict with latest BTC data
+  - `db`: SQLite DB path
+- **Returns**: None
+
+---
+
 
 ### `fetchHistoricalBTC()`
 - **Purpose**: Downloads historical BTC price data using the Yahoo Finance API.
@@ -187,3 +213,13 @@ By storing everything locally in SQLite and visualizing data in Python, this sol
 - [mplfinance Documentation](https://github.com/matplotlib/mplfinance)
 
 ---
+
+
+---
+
+## Developer Notes
+
+- Designed for use in scheduled jobs, automation scripts, or real-time dashboards.
+- Can be easily adapted for other cryptocurrencies or integrated into trading systems.
+- Avoids unnecessary recomputation by updating only the latest datapoint.
+

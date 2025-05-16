@@ -1,6 +1,6 @@
-# Bitcoin Daily Price Analysis with SQLite & CoinMarketCap API
+# Tutorial: Daily Bitcoin Price Analysis with SQLite
 
-This notebook demonstrates how to fetch, store, and analyze daily Bitcoin (BTC) price and volume data using the CoinMarketCap API and SQLite. It serves as a clean, reproducible template for cryptocurrency market analysis with statistical and visual exploration.
+This beginner-friendly notebook walks you through fetching, storing, and analyzing Bitcoin data step-by-step using Python. It serves as a clean, reproducible template for cryptocurrency market analysis with statistical and visual exploration.
 
 ---
 
@@ -31,6 +31,19 @@ This notebook focuses on a practical workflow for analyzing BTC daily data. It c
 
 ---
 
+
+---
+
+## Learning Goals
+
+By the end of this tutorial, you will:
+
+- Understand how to use APIs and SQL together in Python.
+- Learn to compute and visualize technical indicators like moving averages and Bollinger Bands.
+- Gain hands-on experience in managing time-series data with SQLite.
+
+---
+
 ## Notebook Structure
 
 The steps in the notebook follow a modular, logical flow:
@@ -42,6 +55,58 @@ The steps in the notebook follow a modular, logical flow:
 - Store or update insights
 
 Each block is well-commented for clarity and reproducibility.
+
+---
+
+
+---
+
+## Step-by-Step Tutorial
+
+### 1. Fetch Historical Data
+
+We begin by retrieving 15 years of daily BTC data.  
+Run the following code block:
+
+```python
+df = fetchHistoricalBTC()
+print(df.head())
+```
+
+You should see columns like `open`, `high`, `low`, etc.
+
+---
+
+### 2. Store Data in SQLite
+
+Now let’s save the data into our SQLite database:
+
+```python
+storeData(df, 'btcDaily.db')
+```
+
+---
+
+### 3. Query the Database
+
+You can extract data using SQL queries:
+
+```python
+query = "SELECT * FROM btc_daily_stats ORDER BY date DESC LIMIT 5;"
+recent_data = fetchDB(query, 'btcDaily.db')
+print(recent_data)
+```
+
+---
+
+### 4. Add Live Data
+
+Fetch and store today’s live BTC data:
+
+```python
+live = liveBTC(url, API_KEY)
+addDatapoint(live, 'btcDaily.db')
+```
 
 ---
 
