@@ -3,6 +3,7 @@ Redis_utils.py
 
 This file contains utility functions for connecting to Redis and fetching Bitcoin price data.
 It provides a layer of abstraction over the Redis API and CoinGecko API.
+
 It can also be run directly as a command-line tool for data collection and analysis.
 """
 
@@ -34,6 +35,7 @@ REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
 REDIS_PORT = int(os.getenv('REDIS_PORT', '6379'))
 REDIS_PASSWORD = os.getenv('REDIS_PASSWORD', '')
 
+
 # -----------------------------------------------------------------------------
 # Logging
 # -----------------------------------------------------------------------------
@@ -46,11 +48,13 @@ logger = logging.getLogger(__name__)
 # Redis Connection
 # -----------------------------------------------------------------------------
 
+
 def connect_to_redis(host: str = None, port: int = None, password: str = None) -> redis.Redis:
     """
     Connect to Redis server.
     
     Args:
+
         host (str, optional): Redis host address. If None, uses REDIS_HOST from env.
         port (int, optional): Redis port. If None, uses REDIS_PORT from env.
         password (str, optional): Redis password. If None, uses REDIS_PASSWORD from env.
@@ -119,17 +123,17 @@ def verify_redis_connection(redis_conn: redis.Redis = None, host: str = None,
         host = connection_info.get('host', 'unknown')
         port = connection_info.get('port', 'unknown')
         
-        print(f"✅ Successfully connected to Redis at {host}:{port}")
+        print(f" Successfully connected to Redis at {host}:{port}")
         return True
         
     except redis.ConnectionError as e:
-        print(f"❌ Failed to connect to Redis: {e}")
+        print(f" Failed to connect to Redis: {e}")
         return False
     except redis.TimeoutError as e:
-        print(f"❌ Connection timeout when connecting to Redis: {e}")
+        print(f" Connection timeout when connecting to Redis: {e}")
         return False
     except Exception as e:
-        print(f"❌ Unexpected error when verifying Redis connection: {e}")
+        print(f" Unexpected error when verifying Redis connection: {e}")
         return False
 
 # -----------------------------------------------------------------------------
