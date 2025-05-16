@@ -6,4 +6,6 @@ requests==2.31.0
 vaderSentiment==3.3.2
 jupyter==1.0.0
 numpy==1.25.2
+seaborn==0.13.2
+scipy==1.10.1
 en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl

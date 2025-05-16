@@ -17,8 +17,10 @@ import time
 from typing import List, Tuple
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 import requests
 import spacy
+from scipy.stats import spearmanr, kendalltau
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -84,23 +86,104 @@ class BitcoinSentimentAnalyzer:
         time.sleep(5)  # Wait for login page to load
 
         try:
-            # Enter username
-            username_field = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located((By.NAME, "text"))
-            )
+            # Try multiple selectors for username field
+            username_selectors = [
+                (By.NAME, "text"),
+                (By.CSS_SELECTOR, "input[autocomplete='username']"),
+                (By.XPATH, "//input[@name='text' or @autocomplete='username']")
+            ]
+            username_field = None
+            for by, selector in username_selectors:
+                try:
+                    username_field = WebDriverWait(self.driver, 15).until(
+                        EC.presence_of_element_located((by, selector))
+                    )
+                    break
+                except TimeoutException:
+                    continue
+
+            if not username_field:
+                raise TimeoutException("Username field not found with any selector.")
+
             username_field.send_keys(self.x_username)
-            next_button = self.driver.find_element(By.XPATH, "//span[contains(text(), 'Next')]")
+
+            # Try multiple selectors for the Next button
+            next_button_selectors = [
+                (By.XPATH, "//span[contains(text(), 'Next')]"),
+                (By.CSS_SELECTOR, "button[role='button'] span[contains(text(), 'Next')]"),
+                (By.XPATH, "//button[@role='button' and .//span[contains(text(), 'Next')]]")
+            ]
+            next_button = None
+            for by, selector in next_button_selectors:
+                try:
+                    next_button = WebDriverWait(self.driver, 10).until(
+                        EC.element_to_be_clickable((by, selector))
+                    )
+                    break
+                except TimeoutException:
+                    continue
+
+            if not next_button:
+                raise TimeoutException("Next button not found with any selector.")
+
             next_button.click()
             time.sleep(2)
 
-            # Enter password
-            password_field = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located((By.NAME, "password"))
-            )
+            # Try multiple selectors for password field
+            password_selectors = [
+                (By.NAME, "password"),
+                (By.CSS_SELECTOR, "input[autocomplete='current-password']"),
+                (By.XPATH, "//input[@name='password' or @autocomplete='current-password']")
+            ]
+            password_field = None
+            for by, selector in password_selectors:
+                try:
+                    password_field = WebDriverWait(self.driver, 15).until(
+                        EC.presence_of_element_located((by, selector))
+                    )
+                    break
+                except TimeoutException:
+                    continue
+
+            if not password_field:
+                raise TimeoutException("Password field not found with any selector.")
+
             password_field.send_keys(self.x_password)
-            login_button = self.driver.find_element(By.XPATH, "//span[contains(text(), 'Log in')]")
+
+            # Try multiple selectors for the Log in button
+            login_button_selectors = [
+                (By.XPATH, "//span[contains(text(), 'Log in')]"),
+                (By.CSS_SELECTOR, "button[role='button'] span[contains(text(), 'Log in')]"),
+                (By.XPATH, "//button[@role='button' and .//span[contains(text(), 'Log in')]]")
+            ]
+            login_button = None
+            for by, selector in login_button_selectors:
+                try:
+                    login_button = WebDriverWait(self.driver, 10).until(
+                        EC.element_to_be_clickable((by, selector))
+                    )
+                    break
+                except TimeoutException:
+                    continue
+
+            if not login_button:
+                raise TimeoutException("Log in button not found with any selector.")
+
             login_button.click()
             time.sleep(5)  # Wait for login to complete
+
+            # Check for 2FA or verification prompts
+            try:
+                verification_prompt = WebDriverWait(self.driver, 5).until(
+                    EC.presence_of_element_located((By.XPATH, "//input[@name='verification_code']"))
+                )
+                log_message("2FA or verification prompt detected. Manual intervention required.")
+                self.driver.save_screenshot("2fa_verification_screenshot.png")
+                log_message("Screenshot saved as 2fa_verification_screenshot.png")
+                raise Exception("2FA or verification prompt encountered. Please handle manually.")
+            except TimeoutException:
+                # No 2FA prompt detected, continue
+                pass
 
             log_message("Successfully logged in to X.")
         except Exception as e:
@@ -109,60 +192,92 @@ class BitcoinSentimentAnalyzer:
             log_message("Screenshot of login failure saved as login_failure_screenshot.png")
             raise
 
-    def scrape_tweets(self, keyword: str, max_tweets: int) -> List[dict]:
+    def scrape_tweets(self, keywords: List[str], max_tweets: int) -> List[dict]:
         """
-        Scrape tweets containing the specified keyword using Selenium.
+        Scrape tweets containing the specified keywords using Selenium.
 
-        :param keyword: The search term to query on Twitter (e.g., "Bitcoin").
+        :param keywords: List of search terms to query on Twitter (e.g., ["Bitcoin", "BTC"]).
         :param max_tweets: The maximum number of tweets to scrape.
         :return: A list of dictionaries with tweet text and timestamp.
         """
-        log_message(f"Scraping tweets for keyword: {keyword}")
-
         # Log in to X if credentials are provided
         self.login_to_x()
 
-        # Navigate to the search page
-        self.driver.get(f"https://x.com/search?q={keyword}&src=typed_query&f=live")
-        time.sleep(5)  # Wait for initial page load
+        all_tweets = []
+        seen_texts = set()  # To track unique tweets and avoid duplicates
 
-        tweets = []
-        scroll_attempts = 0
-        max_scroll_attempts = 50  # Limit to avoid infinite scrolling
+        for keyword in keywords:
+            log_message(f"Scraping tweets for keyword: {keyword}")
+            self.driver.get(f"https://x.com/search?q={keyword}&src=typed_query&f=live")
+            time.sleep(5)  # Wait for initial page load
 
-        while len(tweets) < max_tweets and scroll_attempts < max_scroll_attempts:
-            try:
-                # Wait for tweet elements to be present (increased timeout to 30 seconds)
-                WebDriverWait(self.driver, 30).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, 'article[data-testid="tweet"]'))
-                )
-                tweet_elements = self.driver.find_elements(By.CSS_SELECTOR, 'article[data-testid="tweet"]')
-                for element in tweet_elements:
-                    try:
-                        text = element.find_element(By.CSS_SELECTOR, 'div[lang]').text
-                        timestamp = pd.Timestamp.now().isoformat()
-                        if text not in [t["text"] for t in tweets]:
-                            tweets.append({"text": text, "timestamp": timestamp})
-                    except:
-                        continue
+            tweets = []
+            scroll_attempts = 0
+            max_scroll_attempts = 50  # Limit to avoid infinite scrolling
 
-                # Scroll down to load more tweets
-                self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                time.sleep(2)  # Wait for new tweets to load
-                scroll_attempts += 1
+            while len(tweets) < max_tweets and scroll_attempts < max_scroll_attempts:
+                try:
+                    # Try multiple selectors for tweet elements
+                    tweet_selectors = [
+                        (By.CSS_SELECTOR, 'article[data-testid="tweet"]'),
+                        (By.CSS_SELECTOR, 'article[data-testid="post"]'),
+                        (By.CSS_SELECTOR, 'div[data-testid="tweetText"]')
+                    ]
+                    tweet_elements = None
+                    for by, selector in tweet_selectors:
+                        try:
+                            WebDriverWait(self.driver, 60).until(
+                                EC.presence_of_element_located((by, selector))
+                            )
+                            if selector == 'div[data-testid="tweetText"]':
+                                # If using tweetText, the parent article element is needed for context
+                                tweet_elements = self.driver.find_elements(By.CSS_SELECTOR, 'article')
+                            else:
+                                tweet_elements = self.driver.find_elements(by, selector)
+                            break
+                        except TimeoutException:
+                            continue
 
-            except TimeoutException as e:
-                log_message("Timeout waiting for tweet elements. Debugging info:")
-                log_message(f"Page URL: {self.driver.current_url}")
-                log_message("Page source snippet:")
-                page_source = self.driver.page_source
-                log_message(page_source[:1000])
-                self.driver.save_screenshot("timeout_screenshot.png")
-                log_message("Screenshot saved as timeout_screenshot.png")
-                raise e
+                    if not tweet_elements:
+                        raise TimeoutException("Tweet elements not found with any selector.")
 
-        log_message(f"Scraped {len(tweets)} tweets.")
-        return tweets[:max_tweets]
+                    for element in tweet_elements:
+                        try:
+                            # Adjust text extraction based on selector
+                            if 'tweetText' in selector:
+                                text = element.find_element(By.CSS_SELECTOR, 'div[data-testid="tweetText"]').text
+                            else:
+                                text = element.find_element(By.CSS_SELECTOR, 'div[lang]').text
+                            if text not in seen_texts:  # Check for duplicates
+                                timestamp = pd.Timestamp.now().isoformat()
+                                tweets.append({"text": text, "timestamp": timestamp})
+                                seen_texts.add(text)
+                        except:
+                            continue
+
+                    # Scroll down to load more tweets
+                    self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                    time.sleep(2)  # Wait for new tweets to load
+                    scroll_attempts += 1
+
+                except TimeoutException as e:
+                    log_message("Timeout waiting for tweet elements. Debugging info:")
+                    log_message(f"Page URL: {self.driver.current_url}")
+                    log_message("Page source snippet:")
+                    page_source = self.driver.page_source
+                    log_message(page_source[:1000])
+                    self.driver.save_screenshot("timeout_screenshot.png")
+                    log_message("Screenshot saved as timeout_screenshot.png")
+                    raise e
+
+            log_message(f"Scraped {len(tweets)} tweets for keyword: {keyword}")
+            all_tweets.extend(tweets)
+
+        # Sort tweets by timestamp and limit to max_tweets
+        all_tweets.sort(key=lambda x: x["timestamp"])
+        all_tweets = all_tweets[:max_tweets]
+        log_message(f"Total unique tweets after combining: {len(all_tweets)}")
+        return all_tweets
 
     def preprocess_tweets(self, tweets: List[dict]) -> List[dict]:
         """
@@ -227,13 +342,13 @@ class BitcoinSentimentAnalyzer:
         log_message(f"Fetched {len(df)} price data points.")
         return df
 
-    def correlate_sentiment_price(self, tweets: List[dict], price_df: pd.DataFrame) -> Tuple[pd.DataFrame, float]:
+    def correlate_sentiment_price(self, tweets: List[dict], price_df: pd.DataFrame) -> Tuple[pd.DataFrame, dict]:
         """
-        Correlate sentiment scores with Bitcoin price data.
+        Correlate sentiment scores with Bitcoin price data using multiple methods.
 
         :param tweets: A list of tweet dictionaries with sentiment scores.
         :param price_df: A DataFrame with Bitcoin price data.
-        :return: A tuple containing the combined DataFrame and the correlation coefficient.
+        :return: A tuple containing the combined DataFrame and a dictionary of correlation coefficients.
         """
         log_message("Correlating sentiment with Bitcoin price.")
         sentiment_df = pd.DataFrame({
@@ -243,10 +358,38 @@ class BitcoinSentimentAnalyzer:
         sentiment_df["timestamp"] = pd.to_datetime(sentiment_df["timestamp"])
         # Resample price data to match the number of tweets (simplified)
         price_df = price_df.iloc[:len(tweets)]
+        # Rename timestamp column in price_df to avoid conflict
+        price_df = price_df.rename(columns={"timestamp": "price_timestamp"})
         combined_df = pd.concat([sentiment_df, price_df.reset_index(drop=True)], axis=1)
-        correlation = combined_df["sentiment"].corr(combined_df["price"])
-        log_message(f"Correlation coefficient: {correlation:.4f}")
-        return combined_df, correlation
+
+        # Calculate additional metrics
+        combined_df["price_change"] = combined_df["price"].pct_change()
+        combined_df["cumulative_sentiment"] = combined_df["sentiment"].cumsum()
+
+        # Calculate multiple correlation coefficients
+        correlations = {}
+        # Pearson correlation (linear)
+        correlations["pearson"] = combined_df["sentiment"].corr(combined_df["price"])
+        # Spearman correlation (monotonic)
+        spearman_corr, _ = spearmanr(combined_df["sentiment"], combined_df["price"])
+        correlations["spearman"] = spearman_corr
+        # Kendall correlation (rank-based)
+        kendall_corr, _ = kendalltau(combined_df["sentiment"], combined_df["price"])
+        correlations["kendall"] = kendall_corr
+
+        # Lagged correlation (shift sentiment by 1 to see if past sentiment predicts price)
+        combined_df["sentiment_lagged"] = combined_df["sentiment"].shift(1)
+        correlations["lagged_pearson"] = combined_df["sentiment_lagged"].corr(combined_df["price"])
+
+        # Rolling correlation (window of 5)
+        rolling_corr = combined_df["sentiment"].rolling(window=5).corr(combined_df["price"]).fillna(0)
+        combined_df["rolling_corr"] = rolling_corr
+
+        log_message("Correlation coefficients:")
+        for method, value in correlations.items():
+            log_message(f"{method.capitalize()}: {value:.4f}")
+
+        return combined_df, correlations
 
     def visualize_data(self, combined_df: pd.DataFrame) -> None:
         """
@@ -262,26 +405,100 @@ class BitcoinSentimentAnalyzer:
         plt.plot(combined_df["timestamp"], combined_df["sentiment"], label="Sentiment Score", color="orange")
         plt.title("Bitcoin Price vs Sentiment Over Time")
         plt.legend()
-        plt.savefig("sentiment_price_plot.png")
-        log_message("Visualization saved to sentiment_price_plot.png.")
+        plt.show()
         plt.close()
 
-    def run_analysis(self, keyword: str = "Bitcoin", max_tweets: int = 50) -> None:
+    def visualize_sentiment_distribution_box(self, combined_df: pd.DataFrame) -> None:
+        """
+        Visualize the distribution of sentiment scores as a box plot.
+
+        :param combined_df: A DataFrame with sentiment data.
+        :return: None
+        """
+        log_message("Generating box plot of sentiment distribution.")
+        plt.figure(figsize=(8, 6))
+        plt.boxplot(combined_df["sentiment"], vert=False)
+        plt.title("Distribution of Sentiment Scores")
+        plt.xlabel("Sentiment Score")
+        plt.show()
+        plt.close()
+
+    def visualize_cumulative_sentiment_area(self, combined_df: pd.DataFrame) -> None:
+        """
+        Visualize cumulative sentiment and Bitcoin price as an area plot.
+
+        :param combined_df: A DataFrame with sentiment and price data.
+        :return: None
+        """
+        log_message("Generating area plot of cumulative sentiment and price.")
+        fig, ax1 = plt.subplots(figsize=(10, 6))
+        ax1.fill_between(combined_df["timestamp"], combined_df["cumulative_sentiment"], color="orange", alpha=0.3, label="Cumulative Sentiment")
+        ax1.set_xlabel("Time")
+        ax1.set_ylabel("Cumulative Sentiment", color="orange")
+        ax1.tick_params(axis="y", labelcolor="orange")
+        ax2 = ax1.twinx()
+        ax2.plot(combined_df["timestamp"], combined_df["price"], color="blue", label="Bitcoin Price (USD)")
+        ax2.set_ylabel("Bitcoin Price (USD)", color="blue")
+        ax2.tick_params(axis="y", labelcolor="blue")
+        fig.suptitle("Cumulative Sentiment vs Bitcoin Price")
+        fig.legend(loc="upper right")
+        plt.show()
+        plt.close()
+
+    def visualize_correlation_heatmap(self, combined_df: pd.DataFrame) -> None:
+        """
+        Visualize a heatmap of correlations between sentiment, price, and other metrics.
+
+        :param combined_df: A DataFrame with sentiment and price data.
+        :return: None
+        """
+        log_message("Generating correlation heatmap.")
+        corr_matrix = combined_df[["sentiment", "price", "price_change", "rolling_corr"]].corr()
+        plt.figure(figsize=(8, 6))
+        sns.heatmap(corr_matrix, annot=True, cmap="coolwarm", vmin=-1, vmax=1)
+        plt.title("Correlation Heatmap")
+        plt.show()
+        plt.close()
+
+    def visualize_rolling_correlation(self, combined_df: pd.DataFrame) -> None:
+        """
+        Visualize the rolling correlation between sentiment and price over time.
+
+        :param combined_df: A DataFrame with sentiment and price data.
+        :return: None
+        """
+        log_message("Generating rolling correlation plot.")
+        plt.figure(figsize=(10, 6))
+        plt.plot(combined_df["timestamp"], combined_df["rolling_corr"], label="Rolling Correlation (window=5)", color="purple")
+        plt.title("Rolling Correlation Between Sentiment and Bitcoin Price")
+        plt.xlabel("Time")
+        plt.ylabel("Correlation Coefficient")
+        plt.legend()
+        plt.show()
+        plt.close()
+
+    def run_analysis(self, keywords: List[str] = ["Bitcoin", "BTC"], max_tweets: int = 50) -> None:
         """
         Run the full sentiment analysis pipeline.
 
-        :param keyword: The search term to query on Twitter (default: "Bitcoin").
+        :param keywords: List of search terms to query on Twitter (default: ["Bitcoin", "BTC"]).
         :param max_tweets: The maximum number of tweets to scrape (default: 50).
         :return: None
         """
         log_message("Starting Bitcoin sentiment analysis pipeline.")
-        tweets = self.scrape_tweets(keyword, max_tweets)
+        tweets = self.scrape_tweets(keywords, max_tweets)
         processed_tweets = self.preprocess_tweets(tweets)
         tweets_with_sentiment = self.analyze_sentiment(processed_tweets)
         price_df = self.fetch_bitcoin_price()
-        combined_df, correlation = self.correlate_sentiment_price(tweets_with_sentiment, price_df)
-        log_message(f"Correlation between sentiment and Bitcoin price: {correlation:.4f}")
+        combined_df, correlations = self.correlate_sentiment_price(tweets_with_sentiment, price_df)
+
+        # Visualizations
         self.visualize_data(combined_df)
+        self.visualize_sentiment_distribution_box(combined_df)
+        self.visualize_cumulative_sentiment_area(combined_df)
+        self.visualize_correlation_heatmap(combined_df)
+        self.visualize_rolling_correlation(combined_df)
+
         log_message("Analysis pipeline completed.")
 
     def __del__(self):
@@ -293,3 +510,24 @@ class BitcoinSentimentAnalyzer:
         log_message("Closing Selenium WebDriver.")
         if hasattr(self, 'driver'):
             self.driver.quit()
+
+
+def main() -> None:
+    """
+    Execute the main Bitcoin sentiment analysis pipeline.
+
+    :return: None
+    """
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    log_message("Starting main function.")
+    analyzer = BitcoinSentimentAnalyzer(
+        chromedriver_path="path/to/chromedriver",
+        x_username="your_username",  # Replace with your X username
+        x_password="your_password"   # Replace with your X password
+    )
+    analyzer.run_analysis(keywords=["Bitcoin", "BTC"], max_tweets=50)
+    log_message("Main function completed.")
+
+
+if __name__ == "__main__":
+    main()
