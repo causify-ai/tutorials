@@ -1,0 +1,35 @@
+schema: '2.0'
+stages:
+  fetch_price:
+    cmd: python -c "from src.data_ingestion import record_price; record_price()"
+    deps:
+    - path: src/data_ingestion.py
+      hash: md5
+      md5: 086b4327b95128d46c719d443bcc6367
+      size: 691
+    outs:
+    - path: data/bitcoin_prices.csv
+      hash: md5
+      md5: 4d831adbabd5a59bd44e193e001d2a50
+      size: 50
+  preprocess_and_plot:
+    cmd: python -c "from src.preprocess_eda import preprocess, plot_data; df = preprocess();
+      plot_data(df)"
+    deps:
+    - path: data/bitcoin_prices.csv
+      hash: md5
+      md5: 4d831adbabd5a59bd44e193e001d2a50
+      size: 50
+    - path: src/preprocess_eda.py
+      hash: md5
+      md5: e2383efce8c44bf00a95da2a3bee8524
+      size: 920
+    outs:
+    - path: Output/bitcoin_price_plot.png
+      hash: md5
+      md5: 43e0f9a7f69f90dbb92ccf3caa3db17c
+      size: 20650
+    - path: data/cleaned_bitcoin.csv
+      hash: md5
+      md5: d64e0ca18e625d5c104a6140665e2bb6
+      size: 75
