@@ -10,6 +10,7 @@ Helper functions for Bitcoin trade processing.
 from datetime import datetime
 from collections import defaultdict
 import logging
+from huey import RedisHuey
 
 # -----------------------------------------------------------------------------
 # Setup Logging
@@ -17,6 +18,12 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 _LOG = logging.getLogger(__name__)
+
+# -----------------------------------------------------------------------------
+# Huey Instance
+# -----------------------------------------------------------------------------
+
+huey = RedisHuey('btc-trade', host='redis', port=6379)
 
 # -----------------------------------------------------------------------------
 # OHLC Aggregation Buckets
@@ -30,13 +37,6 @@ ohlc_5min = defaultdict(list)
 # -----------------------------------------------------------------------------
 
 def get_bucket(timestamp: str, interval: str = '1min') -> datetime:
-    """
-    Get the time bucket for a trade timestamp.
-
-    :param timestamp: ISO timestamp string.
-    :param interval: '1min' or '5min'
-    :return: Rounded datetime object.
-    """
     dt = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
     if interval == '1min':
         return dt.replace(second=0, microsecond=0)
@@ -47,12 +47,6 @@ def get_bucket(timestamp: str, interval: str = '1min') -> datetime:
 
 
 def compute_ohlc(prices: list) -> dict:
-    """
-    Compute OHLC metrics from a list of prices.
-
-    :param prices: List of trade prices.
-    :return: Dictionary with open, high, low, close values.
-    """
     if not prices:
         return {"open": None, "high": None, "low": None, "close": None}
     

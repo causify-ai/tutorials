@@ -1,16 +1,13 @@
 FROM python:3.11-slim
 
-# Set working directory
 WORKDIR /app
 
-# Copy requirements
-COPY requirements.txt .
-
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the rest of the app
 COPY . .
 
-# Default command
-CMD ["bash"]
+RUN pip install --no-cache-dir -r docker_data605_style/requirements.txt
+
+EXPOSE 8000
+
+CMD bash -c "huey_consumer btc_trade_tasks.huey & python coinbase_stream.py"
+
+

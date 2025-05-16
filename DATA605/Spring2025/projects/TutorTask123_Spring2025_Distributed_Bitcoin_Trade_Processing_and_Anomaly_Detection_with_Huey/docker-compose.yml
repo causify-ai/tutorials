@@ -1,0 +1,18 @@
+services:
+  btc_pipeline_app:
+    build:
+      context: .
+      dockerfile: docker_data605_style/Dockerfile
+    container_name: btc_pipeline_app
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  redis:
+    image: redis:6-alpine
+    container_name: btc_pipeline_redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped

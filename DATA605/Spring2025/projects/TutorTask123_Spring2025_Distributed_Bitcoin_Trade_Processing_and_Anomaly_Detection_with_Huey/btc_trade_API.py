@@ -15,10 +15,15 @@ Reference:
 """
 
 import os
+import nltk
+nltk.download('vader_lexicon')
+
 import logging
 import requests
 from dotenv import load_dotenv
 from huey import RedisHuey
+from btc_trade_utils import huey
+
 from prometheus_client import start_http_server, Counter, Summary
 from btc_trade_utils import compute_ohlc, get_bucket, ohlc_1min, ohlc_5min
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
@@ -53,7 +58,8 @@ TASK_DURATION = Summary("task_processing_seconds", "Time spent processing trades
 # Initialize Huey
 # -----------------------------------------------------------------------------
 
-huey = RedisHuey('btc-trade', host='host.docker.internal', port=6379)
+#huey = RedisHuey('btc-trade', host='redis', port=6379)
+
 
 
 # -----------------------------------------------------------------------------
@@ -120,7 +126,7 @@ def check_anomaly(trade_data: dict) -> None:
     :param trade_data: Trade data dictionary.
     """
     price = trade_data.get("price")
-    from anomaly import is_anomalous  # ✅ moved inside task to avoid module error
+    from anomaly import is_anomalous  
     if is_anomalous(price):
         ANOMALIES.inc()
         send_slack_alert(f"🚨 Anomalous trade: ${price}\nIt is 3σ outside the normal range.")
