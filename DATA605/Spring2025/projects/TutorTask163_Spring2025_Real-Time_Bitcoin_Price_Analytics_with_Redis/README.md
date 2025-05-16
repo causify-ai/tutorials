@@ -74,14 +74,18 @@ The project uses several Redis data structures to store different types of infor
    cd ~/tutorials1/DATA605/Spring2025/projects/TutorTask163_Spring2025_Real-Time_Bitcoin_Price_Analytics_with_Redis$ 
    ```
 
-2. Create a `.env` file in the project folder root and copy thefollowing for Redis DB with your own credentials:
+2. Create a `.env` file for Redis connection:
    ```bash
-   # Redis connection parameters E.g.
-   REDIS_HOST=your-redis-host.example.com  # Your Redis host address
-   REDIS_PORT=6379                        # Your Redis port number
-   REDIS_PASSWORD=your-password-here      # Your Redis password if any
+   # Redis connection parameters - Using local Redis (pre-Docker workflow)
+   REDIS_HOST=localhost
+   REDIS_PORT=6379
+   REDIS_PASSWORD=
    ```
 
+   > **Note:** 
+   > - For local development, install Redis on your machine first: https://redis.io/docs/getting-started/
+   > - On most systems, Redis runs on localhost:6379 without a password by default
+   > - If you have your own Redis instance (like Redis Cloud), use those credentials instead
 
 3. Build and activate the thin environment:
    ```bash

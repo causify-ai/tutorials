@@ -1,4 +1,7 @@
-
+.env
 .ipynb_checkpoints/
+__pycache__/
+*.pyc
 helpers_root/**/__pycache__/
 helpers_root/**/*.pyc
+docker_data605_style/redis_data/
