@@ -1,6 +1,9 @@
 spacy==3.7.2
-pandas
-matplotlib
-wordcloud
-requests
-jupyter
+selenium==4.11.2
+pandas==2.0.3
+matplotlib==3.7.2
+requests==2.31.0
+vaderSentiment==3.3.2
+jupyter==1.0.0
+numpy==1.25.2
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
