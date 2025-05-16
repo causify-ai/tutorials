@@ -73,7 +73,7 @@ def start_monitoring(port: int = 8000) -> None:
     :param port: Port number for Prometheus server.
     """
     _LOG.info("Starting Prometheus server at port %s", port)
-    start_http_server(port)
+    start_http_server(port,addr="0.0.0.0")
 
 
 def send_slack_alert(message: str) -> None:
@@ -177,3 +177,7 @@ def process_trade(trade_data: dict) -> None:
     aggregate_trade(trade_data)
     check_anomaly(trade_data)
     correlate_reddit_sentiment(trade_data)
+
+if __name__ == "__main__":
+    start_monitoring(port=8000)
+

@@ -8,6 +8,8 @@ services:
       - .env
     depends_on:
       - redis
+    ports:
+      - "8000:8000"   
     restart: unless-stopped
 
   redis:

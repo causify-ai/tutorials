@@ -13,7 +13,7 @@ Run this script to start live ingestion.
 Reference:
 - Coinbase WebSocket API documentation: https://docs.cloud.coinbase.com/exchange/docs/websocket-overview
 """
-
+import btc_trade_API
 import websocket
 import json
 import logging
@@ -99,4 +99,5 @@ def start_coinbase_stream():
 # -----------------------------------------------------------------------------
 
 if __name__ == "__main__":
+    btc_trade_API.start_monitoring(port=8000)
     start_coinbase_stream()
