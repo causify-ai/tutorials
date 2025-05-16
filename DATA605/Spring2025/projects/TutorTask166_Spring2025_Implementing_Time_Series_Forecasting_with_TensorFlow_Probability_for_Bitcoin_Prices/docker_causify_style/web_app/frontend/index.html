@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Price Dashboard</title>
+    <!-- Plotly.js for charts -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- Fetch API polyfill for older browsers -->
+    <script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@3.6.2/dist/fetch.umd.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --accent-color: #f39c12;
+            --danger-color: #e74c3c;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .sidebar {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .metrics-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .metric-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+        }
+        
+        .metric-title {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .metric-change {
+            font-size: 1rem;
+        }
+        
+        .positive-change {
+            color: var(--secondary-color);
+        }
+        
+        .negative-change {
+            color: var(--danger-color);
+        }
+        
+        .chart-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 20px;
+        }
+        
+        .info-box {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+        
+        .warning-box {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+        
+        .error-box {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+        
+        .loading::after {
+            content: "";
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bitcoin Price Dashboard</h1>
+    </header>
+    
+    <div class="container">
+        <div class="dashboard">
+            <div class="sidebar">
+                <h2>Dashboard Settings</h2>
+                <div id="time-window-info" class="info-box">
+                    Target chart window: 30 minutes
+                </div>
+                <div id="cold-start-info" class="info-box">
+                    Cold start mode is enabled. For new systems with less than 30 minutes of data, 
+                    charts will automatically adjust to show all available data.
+                </div>
+                <div id="status-box" class="info-box">
+                    Normal mode: Showing 30 minutes of data
+                </div>
+            </div>
+            
+            <div class="main-content">
+                <div class="metrics-container">
+                    <div class="metric-card">
+                        <div class="metric-title">Latest Price</div>
+                        <div id="latest-price" class="metric-value">$---.--</div>
+                        <div id="price-change" class="metric-change">$0.00</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-title">Last Update</div>
+                        <div id="last-update" class="metric-value">--:--:--</div>
+                        <div class="metric-change">&nbsp;</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-title">Latest Prediction</div>
+                        <div id="latest-prediction" class="metric-value">$---.--</div>
+                        <div id="prediction-change" class="metric-change">$0.00</div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div id="price-chart" style="height: 400px;"></div>
+                </div>
+                
+                <div class="chart-container">
+                    <div id="prediction-chart" style="height: 400px;"></div>
+                </div>
+                
+                <div class="chart-container">
+                    <div id="mae-chart" style="height: 300px;"></div>
+                </div>
+                
+                <div class="chart-container">
+                    <div id="error-distribution-chart" style="height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Configuration
+        const config = {
+            refreshInterval: 1000, // 1 second
+            timeWindowMinutes: 30,
+            apiBaseUrl: '/api',
+            coldStart: {
+                enabled: true,
+                minDataPoints: 10
+            },
+            colors: {
+                actualUp: '#2ecc71',    // Green for price increase
+                actualDown: '#e74c3c',  // Red for price decrease
+                predicted: '#f39c12',   // Orange for predictions
+                actual: '#3498db',      // Blue for actual prices
+                confidence: 'rgba(243, 156, 18, 0.2)'  // Semi-transparent orange for confidence intervals
+            }
+        };
+        
+        // API endpoints
+        const endpoints = {
+            priceData: `${config.apiBaseUrl}/price-data`,
+            predictionData: `${config.apiBaseUrl}/prediction-data`,
+            metricsData: `${config.apiBaseUrl}/metrics-data`
+        };
+        
+        // Dashboard state
+        let state = {
+            priceData: [],
+            predictionData: [],
+            metricsData: [],
+            isColdStart: false,
+            coldStartMinutes: 0,
+            lastUpdate: null
+        };
+        
+        // Initialize charts
+        let priceChart = null;
+        let predictionChart = null;
+        let maeChart = null;
+        let errorDistributionChart = null;
+        
+        // Format price as USD
+        function formatPrice(price) {
+            return new Intl.NumberFormat('en-US', { 
+                style: 'currency', 
+                currency: 'USD',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(price);
+        }
+        
+        // Format price change (can be positive or negative)
+        function formatPriceChange(change) {
+            const formatted = formatPrice(Math.abs(change));
+            return change >= 0 ? `+${formatted}` : `-${formatted}`;
+        }
+        
+        // Format date for display
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toISOString().replace('T', ' ').substring(0, 19);
+        }
+        
+        // Filter data to last N minutes
+        function filterLastNMinutes(data, minutes) {
+            if (!data || data.length === 0) return [];
+            
+            const cutoffTime = new Date();
+            cutoffTime.setMinutes(cutoffTime.getMinutes() - minutes);
+            
+            return data.filter(item => new Date(item.timestamp) >= cutoffTime);
+        }
+        
+        // Create price candlestick chart
+        function createPriceChart(data) {
+            const layout = {
+                title: 'Bitcoin Price (Candlestick Chart)',
+                yaxis: {
+                    title: 'Price (USD)',
+                    tickformat: '$,.0f'
+                },
+                xaxis: {
+                    title: 'Time',
+                    tickformat: '%H:%M',
+                    tickangle: -45
+                },
+                template: 'plotly_white',
+                showlegend: false,
+                xaxis_rangeslider_visible: false
+            };
+            
+            if (data && data.length > 0) {
+                // Set dynamic x-axis range
+                const maxTime = new Date(Math.max(...data.map(d => new Date(d.timestamp))));
+                const minTime = new Date(Math.min(...data.map(d => new Date(d.timestamp))));
+                const timeSpanMinutes = (maxTime - minTime) / (1000 * 60);
+                
+                // Check if we're in cold start mode
+                if (config.coldStart.enabled && 
+                    timeSpanMinutes < config.timeWindowMinutes && 
+                    data.length >= config.coldStart.minDataPoints) {
+                    
+                    // Use actual data range with padding
+                    const padding = 30 * 1000; // 30 seconds in milliseconds
+                    layout.xaxis.range = [
+                        new Date(minTime.getTime() - padding),
+                        new Date(maxTime.getTime() + padding)
+                    ];
+                    
+                    state.isColdStart = true;
+                    state.coldStartMinutes = timeSpanMinutes;
+                } else {
+                    // Standard mode: use full time window
+                    const standardMinTime = new Date(maxTime);
+                    standardMinTime.setMinutes(standardMinTime.getMinutes() - config.timeWindowMinutes);
+                    layout.xaxis.range = [standardMinTime, maxTime];
+                    
+                    state.isColdStart = false;
+                }
+            }
+            
+            const trace = {
+                x: data.map(d => d.timestamp),
+                open: data.map(d => d.open),
+                high: data.map(d => d.high),
+                low: data.map(d => d.low),
+                close: data.map(d => d.close),
+                type: 'candlestick',
+                name: 'Bitcoin Price',
+                increasing: { line: { color: config.colors.actualUp } },
+                decreasing: { line: { color: config.colors.actualDown } }
+            };
+            
+            Plotly.newPlot('price-chart', [trace], layout);
+        }
+        
+        // Create prediction chart with confidence interval
+        function createPredictionChart(priceData, predictionData) {
+            const traces = [];
+            const layout = {
+                title: 'Predicted Price with Confidence Interval vs Actual',
+                yaxis: {
+                    title: 'Price (USD)',
+                    tickformat: '$,.0f'
+                },
+                xaxis: {
+                    title: 'Time',
+                    tickformat: '%H:%M',
+                    tickangle: -45
+                },
+                template: 'plotly_white',
+                showlegend: true
+            };
+            
+            // Determine if we need dual-axis presentation
+            let useSecondaryY = false;
+            
+            if (priceData && priceData.length > 0 && predictionData && predictionData.length > 0) {
+                // Get time ranges to compare
+                const priceMinTime = new Date(Math.min(...priceData.map(d => new Date(d.timestamp))));
+                const priceMaxTime = new Date(Math.max(...priceData.map(d => new Date(d.timestamp))));
+                const predMinTime = new Date(Math.min(...predictionData.map(d => new Date(d.timestamp))));
+                const predMaxTime = new Date(Math.max(...predictionData.map(d => new Date(d.timestamp))));
+                
+                // Check if the timestamp ranges overlap (with a 1-day buffer)
+                const oneDay = 24 * 60 * 60 * 1000; // 1 day in milliseconds
+                const rangesOverlap = (
+                    predMinTime.getTime() - oneDay <= priceMaxTime.getTime() && 
+                    predMaxTime.getTime() + oneDay >= priceMinTime.getTime()
+                );
+                
+                if (!rangesOverlap) {
+                    useSecondaryY = true;
+                    layout.title = 'Actual Price and Predicted Price (Different Time Periods)';
+                }
+            }
+            
+            // Add actual price line if data exists
+            if (priceData && priceData.length > 0) {
+                traces.push({
+                    x: priceData.map(d => d.timestamp),
+                    y: priceData.map(d => d.close),
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'Actual Price',
+                    line: { color: config.colors.actual, width: 2 }
+                });
+            }
+            
+            // Add prediction line and confidence interval if data exists
+            if (predictionData && predictionData.length > 0) {
+                // Determine if we should use a time-label for the prediction based on date differences
+                let timeLabel = "";
+                if (priceData && priceData.length > 0 && predictionData.length > 0) {
+                    const latestPriceDate = new Date(priceData[priceData.length - 1].timestamp).toDateString();
+                    const latestPredDate = new Date(predictionData[predictionData.length - 1].timestamp).toDateString();
+                    
+                    if (latestPriceDate !== latestPredDate) {
+                        const dateStr = new Date(predictionData[predictionData.length - 1].timestamp)
+                            .toISOString().split('T')[0];
+                        timeLabel = ` (${dateStr})`;
+                    }
+                }
+                
+                const predictionName = `Predicted Price${timeLabel}`;
+                const upperBoundName = `Upper Bound${timeLabel}`;
+                const lowerBoundName = `Lower Bound${timeLabel}`;
+                
+                // Add prediction trace
+                traces.push({
+                    x: predictionData.map(d => d.timestamp),
+                    y: predictionData.map(d => d.pred_price),
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: predictionName,
+                    line: { color: config.colors.predicted, width: 2 },
+                    yaxis: useSecondaryY ? 'y2' : 'y'
+                });
+                
+                // Add upper bound
+                traces.push({
+                    x: predictionData.map(d => d.timestamp),
+                    y: predictionData.map(d => d.pred_upper),
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: upperBoundName,
+                    line: { color: config.colors.predicted, width: 1, dash: 'dash' },
+                    yaxis: useSecondaryY ? 'y2' : 'y'
+                });
+                
+                // Add lower bound with fill
+                traces.push({
+                    x: predictionData.map(d => d.timestamp),
+                    y: predictionData.map(d => d.pred_lower),
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: lowerBoundName,
+                    line: { color: config.colors.predicted, width: 1, dash: 'dash' },
+                    fill: 'tonexty',
+                    fillcolor: config.colors.confidence,
+                    yaxis: useSecondaryY ? 'y2' : 'y'
+                });
+                
+                // Configure the secondary y-axis if needed
+                if (useSecondaryY) {
+                    layout.yaxis2 = {
+                        title: 'Predicted Price (USD)',
+                        side: 'right',
+                        overlaying: 'y',
+                        tickformat: '$,.0f'
+                    };
+                }
+            }
+            
+            Plotly.newPlot('prediction-chart', traces, layout);
+        }
+        
+        // Create MAE (Mean Absolute Error) chart
+        function createMaeChart(metricsData) {
+            if (!metricsData || metricsData.length === 0) {
+                document.getElementById('mae-chart').innerHTML = 
+                    '<div class="info-box">No prediction error metrics available</div>';
+                return;
+            }
+            
+            const trace = {
+                x: metricsData.map(d => d.timestamp),
+                y: metricsData.map(d => d.mae),
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Mean Absolute Error',
+                line: { color: '#e74c3c', width: 2 },
+                marker: { size: 6 }
+            };
+            
+            const layout = {
+                title: 'Prediction Error (Mean Absolute Error)',
+                yaxis: {
+                    title: 'Error (USD)',
+                    tickformat: '$,.2f'
+                },
+                xaxis: {
+                    title: 'Time',
+                    tickformat: '%H:%M',
+                    tickangle: -45
+                },
+                template: 'plotly_white'
+            };
+            
+            Plotly.newPlot('mae-chart', [trace], layout);
+        }
+        
+        // Create error distribution chart
+        function createErrorDistributionChart(metricsData) {
+            if (!metricsData || metricsData.length === 0 || !metricsData[0].hasOwnProperty('actual_error')) {
+                document.getElementById('error-distribution-chart').innerHTML = 
+                    '<div class="info-box">No error distribution data available</div>';
+                return;
+            }
+            
+            // Extract error values
+            const errors = metricsData.map(d => d.actual_error).filter(e => !isNaN(e));
+            
+            if (errors.length === 0) {
+                document.getElementById('error-distribution-chart').innerHTML = 
+                    '<div class="info-box">No valid error data available</div>';
+                return;
+            }
+            
+            // Create histogram trace
+            const histTrace = {
+                x: errors,
+                type: 'histogram',
+                name: 'Error Distribution',
+                marker: {
+                    color: 'rgba(52, 152, 219, 0.7)',
+                    line: {
+                        color: 'rgba(52, 152, 219, 1)',
+                        width: 1
+                    }
+                },
+                opacity: 0.75,
+                xbins: {
+                    // Auto-determine bin size based on data range
+                    size: Math.max(1, (Math.max(...errors) - Math.min(...errors)) / 20)
+                }
+            };
+            
+            const layout = {
+                title: 'Prediction Error Distribution',
+                xaxis: {
+                    title: 'Error (USD)',
+                    tickformat: '$,.2f'
+                },
+                yaxis: {
+                    title: 'Frequency'
+                },
+                template: 'plotly_white',
+                bargap: 0.05
+            };
+            
+            Plotly.newPlot('error-distribution-chart', [histTrace], layout);
+        }
+        
+        // Update metrics display
+        function updateMetricsDisplay() {
+            if (state.priceData && state.priceData.length > 0) {
+                const latestPrice = state.priceData[state.priceData.length - 1];
+                
+                // Update latest price
+                document.getElementById('latest-price').textContent = formatPrice(latestPrice.close);
+                
+                // Update price change
+                let priceChange = 0;
+                if (state.priceData.length > 1) {
+                    const previousPrice = state.priceData[state.priceData.length - 2];
+                    priceChange = latestPrice.close - previousPrice.close;
+                }
+                
+                const priceChangeElement = document.getElementById('price-change');
+                priceChangeElement.textContent = formatPriceChange(priceChange);
+                priceChangeElement.className = 'metric-change ' + 
+                    (priceChange >= 0 ? 'positive-change' : 'negative-change');
+                
+                // Update last update time
+                document.getElementById('last-update').textContent = 
+                    new Date(latestPrice.timestamp).toISOString().replace('T', ' ').substring(11, 19);
+            }
+            
+            if (state.predictionData && state.predictionData.length > 0) {
+                const latestPrediction = state.predictionData[state.predictionData.length - 1];
+                
+                // Update latest prediction
+                document.getElementById('latest-prediction').textContent = formatPrice(latestPrediction.pred_price);
+                
+                // Update prediction change
+                let predChange = 0;
+                if (state.predictionData.length > 1) {
+                    const previousPrediction = state.predictionData[state.predictionData.length - 2];
+                    predChange = latestPrediction.pred_price - previousPrediction.pred_price;
+                }
+                
+                const predChangeElement = document.getElementById('prediction-change');
+                predChangeElement.textContent = formatPriceChange(predChange);
+                predChangeElement.className = 'metric-change ' + 
+                    (predChange >= 0 ? 'positive-change' : 'negative-change');
+            }
+            
+            // Update status box
+            const statusBox = document.getElementById('status-box');
+            if (state.isColdStart) {
+                statusBox.className = 'warning-box';
+                statusBox.textContent = `Cold start mode active: Showing ${state.coldStartMinutes.toFixed(1)} minutes of data. ` +
+                    `Full ${config.timeWindowMinutes}-minute view will be used once sufficient data is available.`;
+            } else {
+                statusBox.className = 'info-box';
+                statusBox.textContent = `Normal mode: Showing ${config.timeWindowMinutes} minutes of data`;
+            }
+        }
+        
+        // Fetch data from API
+        async function fetchData() {
+            try {
+                // In a real implementation, these would be actual API calls
+                // For this example, we'll simulate the API responses
+                
+                // Simulate price data
+                const priceResponse = await fetch(endpoints.priceData);
+                if (priceResponse.ok) {
+                    state.priceData = await priceResponse.json();
+                }
+                
+                // Simulate prediction data
+                const predictionResponse = await fetch(endpoints.predictionData);
+                if (predictionResponse.ok) {
+                    state.predictionData = await predictionResponse.json();
+                }
+                
+                // Simulate metrics data
+                const metricsResponse = await fetch(endpoints.metricsData);
+                if (metricsResponse.ok) {
+                    state.metricsData = await metricsResponse.json();
+                }
+                
+                // Update charts and metrics
+                createPriceChart(state.priceData);
+                createPredictionChart(state.priceData, state.predictionData);
+                createMaeChart(state.metricsData);
+                createErrorDistributionChart(state.metricsData);
+                updateMetricsDisplay();
+                
+                state.lastUpdate = new Date();
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                
+                // Show error message
+                const errorBox = document.createElement('div');
+                errorBox.className = 'error-box';
+                errorBox.textContent = `Error updating dashboard: ${error.message}`;
+                
+                // Remove previous error messages
+                document.querySelectorAll('.error-box').forEach(box => box.remove());
+                
+                // Add new error message at the top of main content
+                const mainContent = document.querySelector('.main-content');
+                mainContent.insertBefore(errorBox, mainContent.firstChild);
+            }
+        }
+        
+        // Initialize dashboard
+        function initDashboard() {
+            // Set up refresh interval
+            setInterval(fetchData, config.refreshInterval);
+            
+            // Initial data fetch
+            fetchData();
+        }
+        
+        // Start the dashboard when the page is loaded
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html> 

@@ -166,24 +166,26 @@ services:
           autorange: true
           fixedrange: false
     colors:
+      actual: "#3498db"         # Blue for actual prices
+      predicted: "#f39c12"      # Orange for predictions
+      confidence: "rgba(243, 156, 18, 0.2)"  # Semi-transparent orange for confidence intervals
       actual_up: "#2ecc71"      # Green for price increase
       actual_down: "#e74c3c"    # Red for price decrease
-      predicted: "#f39c12"      # Orange for predictions
-      actual: "#3498db"         # Blue for actual prices
-      confidence: "rgba(243, 156, 18, 0.2)"  # Semi-transparent orange for confidence intervals
 
   # Web App service configuration
   web_app:
     backend:
       host: "0.0.0.0"
-      port: 8000
-      debug: false
-      api_prefix: "/api/v1"
-      cors_origins: ["*"]
-      rate_limit: 100           # requests per minute
-    frontend:
-      host: "0.0.0.0"
       port: 5000
       debug: false
-      static_folder: "static"
-      template_folder: "templates" 
+    refresh_interval: 1         # seconds between frontend updates
+    time_window_minutes: 30     # minutes to show in all plots by default
+    cold_start:
+      enabled: true
+      min_data_points: 10
+    colors:
+      actual: "#3498db"         # Blue for actual prices
+      predicted: "#f39c12"      # Orange for predictions
+      confidence: "rgba(243, 156, 18, 0.2)"  # Semi-transparent orange for confidence intervals
+      actual_up: "#2ecc71"      # Green for price increase
+      actual_down: "#e74c3c"    # Red for price decrease 
