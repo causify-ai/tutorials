@@ -1,45 +1,86 @@
-# Tutorial Template: Two Docker Approaches
+# TutorTask186 – Spring 2025  
+## Ingest Bitcoin Prices Using AWS Glue
 
-- This directory provides two versions of the same tutorial setup to help you
-  work with Jupyter notebooks and Python scripts inside Docker environments
+###  Project Overview
 
-- Both versions run the same code but use different Docker approaches, with
-  different level of complexity and maintainability
+This project demonstrates how to build a serverless ETL pipeline using **AWS Glue** to ingest real-time **Bitcoin price data** from the **CoinGecko API** and process it into columnar format for analysis.
 
-## 1. `data605_style` (Simple Docker Environment)
+The pipeline includes:
+- Fetching JSON data from a public API
+- Storing raw data in **Amazon S3**
+- Using **AWS Glue Crawler** to discover schema and populate the **Data Catalog**
+- Creating a **Glue Job** (written in PySpark) to transform the nested JSON into a flat, partitioned Parquet dataset
+- Writing structured outputs back to S3
 
-- This version is modeled after the setup used in DATA605 tutorials
-- This template provides a ready-to-run environment, including scripts to build,
-  run, and clean the Docker container.
+This project simulates real-world data lake workflows and helps students gain hands-on experience with cloud-based ETL processes.
 
-- For your specific project, you should:
-  - Modify the Dockerfile to add project-specific dependencies
-  - Update bash/scripts accordingly
-  - Expose additional ports if your project requires them
+---
 
-## 2. `causify_style` (Causify AI dev-system)
+###  Technologies Used
 
-- This setup reflects the approach commonly used in Causify AI dev-system
-- **Recommended** for students familiar with Docker or those wishing to explore a
-  production-like setup
-- Pros
-  - Docker layer written in Python to make it easy to extend and test
-  - Less redundant since code is factored out
-  - Used for real-world development, production workflows
-  - Used for all internships, RA / TA, full-time at UMD DATA605 / MSML610 /
-    Causify 
-- Cons
-  - It is more complex to use and configure
-  - More dependencies from the 
-- For thin environment setup instructions, refer to:  
-  [How to Set Up Development on Laptop](https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
+- **AWS Glue** (Crawlers, Jobs, Data Catalog)
+- **Amazon S3** for storage
+- **CoinGecko API** for real-time price data
+- **PySpark** for transformation logic
+- **Docker + Jupyter** for local development and simulation
 
-## Reference Tutorials
+---
 
-- The `tutorial_github` example has been implemented in both environments for you
-  to refer to:
-  - `tutorial_github_data605_style` uses the simpler DATA605 approach
-  - `tutorial_github_causify_style` uses the more complex Causify approach
+###  Files Included
 
-- Choose the approach that best fits your comfort level and project needs. Both
-  are valid depending on your use case.
+| File | Description |
+|------|-------------|
+| `template.API.py` | Script to fetch Bitcoin price data from CoinGecko and upload raw JSON to S3 |
+| `template.API.ipynb` | Notebook version of the above script |
+| `template.example.py` | AWS Glue-compatible PySpark job to read, transform, and write processed data |
+| `template.example.ipynb` | Notebook version for local Spark simulation |
+| `run_jupyter.sh` | Script to start Jupyter Notebook with Docker |
+| `README.md` | Project summary and usage guide |
+
+---
+
+###  ETL Process Breakdown
+
+1. **Data Ingestion**  
+   - A script uses `requests` and `boto3` to fetch Bitcoin price history from the CoinGecko API  
+   - The data is saved as `bitcoin_prices.json` in the S3 bucket:  
+     `s3://data606-bitcoinbucket/raw/`
+
+2. **Schema Discovery**  
+   - AWS Glue Crawler scans the raw JSON and registers a table (`raw`) in the `bitcoin_data` database
+
+3. **Data Transformation (Glue Job)**  
+   - PySpark script reads the table from the Glue Data Catalog  
+   - Explodes the nested JSON array of structs (`prices`)
+   - Extracts and converts timestamp, flattens price data
+   - Writes the cleaned data in **Parquet format** to:  
+     `s3://data606-bitcoinbucket/processed/bitcoin_prices/`  
+     (partitioned by date)
+
+---
+
+1. Create a Glue Crawler pointed at `s3://data606-bitcoinbucket/raw/`
+2. Create a database named `bitcoin_data`
+3. Run the crawler to create the `raw` table
+4. Paste the contents of `template.example.py` into a new Glue Job
+5. Use an IAM role with permissions for Glue and S3 (e.g., `AWSGlueServiceRole-Bitcoin`)
+6. Run the Glue job
+7. Check your S3 bucket for processed Parquet files
+
+---
+
+###  Learning Outcomes
+
+- Understand the workflow of ingest → catalog → transform → store
+- Work with real API data in cloud-native formats
+- Use AWS Glue Data Catalog and PySpark DynamicFrames
+- Handle nested JSON and schema inference
+- Partition datasets for efficient storage and querying
+
+---
+
+###  Author
+
+Harshit Gadge  
+Spring 2025 | University of Maryland  
+Course: DATA605 / TutorTask186  
