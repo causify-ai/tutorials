@@ -73,13 +73,13 @@ def save(timestamp, price):
     try:
         df = pd.read_csv("data.csv")
         tempdf = pd.DataFrame({'time': [timestamp], 'price': [price]})
-        tempdf['datetime'] = tempdf['time']
+        tempdf['datetime'] = pd.to_datetime(tempdf['time'])
         tempdf['date'] = tempdf['time'].dt.date
         tempdf['time'] = tempdf['time'].dt.time
         df = pd.concat([df, tempdf])
     except:
         tempdf = pd.DataFrame({'time': [timestamp], 'price': [price]})
-        tempdf['datetime'] = tempdf['time']
+        tempdf['datetime'] = pd.to_datetime(tempdf['time'])
         tempdf['date'] = tempdf['time'].dt.date
         tempdf['time'] = tempdf['time'].dt.time
         df = tempdf.copy()

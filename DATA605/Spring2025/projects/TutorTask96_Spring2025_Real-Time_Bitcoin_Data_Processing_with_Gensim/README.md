@@ -168,16 +168,17 @@ plt.title("Bitcoin Price Over Time")
 
 ```
 .
-├── data.csv                   # Bitcoin time-series dataset
-├── gensim.example.ipynb       # Main notebook
-├── gensim.md                  # Comprehensive documentation
-├── gensim_utils.py            # Modular functions for modeling
-├── gensim.API.py              # Project function usage
-├── gensim.API.md              # Project function usage documentation
-├── logfile.log              # Logging file
-├── requirements.txt           # Requirements
-├── README.md                  # Project Description
 ├── docker_data605_style       # Docker Folder
+├── data.csv                   # Bitcoin time-series dataset
+├── gensim_utils.py            # Modular functions for project
+├── gensim.API.ipynb           # Native function usage
+├── gensim.API.md              # Native function usage documentation
+├── gensim.example.ipynb       # Main project
+├── gensim.example.md          # Main project function usage & documentation
+├── logfile.log                # Logging file
+├── price_logfile.log          # Bitcoin Price Logging file
+├── README.md                  # Project Description
+├── requirements.txt           # Requirements
 ```
 
 ---
