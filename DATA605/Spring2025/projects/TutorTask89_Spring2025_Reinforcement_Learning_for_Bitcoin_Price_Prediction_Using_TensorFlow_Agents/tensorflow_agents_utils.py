@@ -26,7 +26,7 @@ Functions include:
 - calculate_naive_directional_accuracy: Calculates the directional accuracy of a naive strategy.
 """
 
-import os
+import re, os
 import logging
 from typing import Optional, List, Union, Tuple, Any, Callable
 
@@ -1033,3 +1033,33 @@ def plot_series(
     plt.legend()
     plt.tight_layout()
     plt.show()
+
+
+# #############################################################################
+# Model selection – pick the highest‑reward policy in a folder
+# #############################################################################
+def get_best_policy_path(policy_root: str) -> str:
+    """
+    Scan policy_root for sub-folders named
+    ``policy_step_<step>_reward_<reward>`` (optionally ending in .zip)
+    and return the path of the folder with the highest reward.
+
+    :param policy_root: Directory that contains saved policy folders.
+    :return: Path to the best-reward policy folder.
+    """
+    pattern = re.compile(r"policy_step_(\d+)_reward_([-+]?[0-9]*\.?[0-9]+)(?:\.zip)?$")
+    best_reward = -float("inf")  #  so any real reward is greater
+    best_path: str | None = None
+    for name in os.listdir(policy_root):
+        match = pattern.match(name)
+        if match:
+            reward = float(match.group(2))
+            if reward > best_reward:
+                best_reward = reward
+                best_path = os.path.join(policy_root, name)
+    if best_path is None:
+        raise FileNotFoundError(f"No policies matching pattern found in {policy_root}")
+    _LOG.info(
+        f"Best policy found: {os.path.basename(best_path)} (reward {best_reward:.5f})"
+    )
+    return best_path
