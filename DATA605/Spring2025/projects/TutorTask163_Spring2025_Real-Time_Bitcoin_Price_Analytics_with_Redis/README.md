@@ -71,18 +71,18 @@ The project uses several Redis data structures to store different types of infor
 1. Clone this repository:
    ```bash
    git clone [repository-url]
-   cd [repository-folder]
+   cd ~/tutorials1/DATA605/Spring2025/projects/TutorTask163_Spring2025_Real-Time_Bitcoin_Price_Analytics_with_Redis$ 
    ```
 
-2. Create a `.env` file and copy thefollowing for Redis DB with your own credentials:
+2. Create a `.env` file in the project folder root and copy thefollowing for Redis DB with your own credentials:
    ```bash
-   # Redis connection parameters
+   # Redis connection parameters E.g.
    REDIS_HOST=your-redis-host.example.com  # Your Redis host address
    REDIS_PORT=6379                        # Your Redis port number
    REDIS_PASSWORD=your-password-here      # Your Redis password if any
    ```
 
-   > **Note:** If you're using Redis Cloud or another Redis provider, they will provide you with connection details. If using local Redis, typically use localhost:6379 with no password.
+
 3. Build and activate the thin environment:
    ```bash
    # Build the thin environment (done once per client)
@@ -107,6 +107,8 @@ The project uses several Redis data structures to store different types of infor
    alias w='which'
    ==> SUCCESS <==
    ```
+
+
 #### Docker Setup
 
 1. Navigate to the docker configuration directory:
