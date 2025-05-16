@@ -23,19 +23,6 @@ This tutorial demonstrates how to simulate and analyze user interaction events u
 
 ---
 
-## Table of Contents
-
-The markdown follows a clear hierarchy and supports TOC generation tools.
-
-### Hierarchy
-
-```
-# Level 1 (Used as title)
-## Level 2
-### Level 3
-```
-
----
 
 ## General Guidelines
 

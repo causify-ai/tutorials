@@ -23,21 +23,6 @@ A time series analysis pipeline built to evaluate **Customer.io behaviors** such
 
 ---
 
-## Table of Contents
-
-This markdown follows proper structural hierarchy and can be indexed by TOC generators or linters.
-
-### Hierarchy
-
-The structure used:
-
-```
-# Level 1 (Used as title)
-## Level 2
-### Level 3
-```
-
----
 
 ## General Guidelines
 
