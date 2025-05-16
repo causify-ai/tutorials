@@ -1,0 +1,11 @@
+fetch:
+  interval_seconds: 10         # Time between recordings
+  record_count: 12             # Number of recordings per session
+  currency: usd                # Default currency for API
+  output_file: data/bitcoin_prices.csv
+
+preprocess:
+  rolling_window: 5            # Rolling average window size
+  volatility_threshold: 25     # For detecting spikes
+  cleaned_output: data/cleaned_bitcoin.csv
+  plot_output: Output/bitcoin_price_plot.png
