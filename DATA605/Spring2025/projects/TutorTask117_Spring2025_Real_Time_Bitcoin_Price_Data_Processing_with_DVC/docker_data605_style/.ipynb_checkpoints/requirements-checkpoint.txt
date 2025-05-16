@@ -1,0 +1,6 @@
+# Core project dependencies
+dvc
+pandas
+matplotlib
+requests
+
