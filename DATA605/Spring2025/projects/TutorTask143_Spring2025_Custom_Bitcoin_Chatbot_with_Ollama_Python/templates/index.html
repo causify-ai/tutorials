@@ -1,0 +1,191 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Crypto Assistant</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+            .chat-container {
+                height: 400px;
+                border: 1px solid #ccc;
+                padding: 10px;
+                overflow-y: auto;
+                margin-bottom: 10px;
+                background-color: #f9f9f9;
+            }
+            .message {
+                margin-bottom: 10px;
+                padding: 8px 12px;
+                border-radius: 4px;
+            }
+            .user-message {
+                background-color: #e1f5fe;
+                margin-left: 20%;
+                margin-right: 5px;
+                text-align: right;
+            }
+            .assistant-message {
+                background-color: #f1f1f1;
+                margin-right: 20%;
+                margin-left: 5px;
+            }
+            input[type="text"] {
+                width: 85%;
+                padding: 8px;
+                margin-right: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            button {
+                padding: 8px 15px;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            button:hover {
+                background-color: #45a049;
+            }
+            .summary-container {
+                margin-top: 20px;
+                padding: 10px;
+                background-color: #f0f7ff;
+                border: 1px solid #d0e3ff;
+                border-radius: 4px;
+            }
+            .buttons {
+                margin-top: 10px;
+            }
+            .secondary-button {
+                background-color: #2196F3;
+                margin-right: 5px;
+            }
+            .secondary-button:hover {
+                background-color: #0b7dda;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Crypto Assistant</h1>
+        <div class="chat-container" id="chatContainer"></div>
+        <div>
+            <input type="text" id="userInput" placeholder="Ask about crypto prices, trends, or news...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+        <div class="buttons">
+            <button class="secondary-button" onclick="getSummary()">Get Summary</button>
+            <button class="secondary-button" onclick="updateData()">Force Update</button>
+        </div>
+        <div class="summary-container" id="summaryContainer" style="display: none;"></div>
+
+        <script>
+            document.getElementById('userInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            function sendMessage() {
+                const userInput = document.getElementById('userInput');
+                const message = userInput.value.trim();
+                
+                if (message === '') return;
+                
+                appendMessage('user', message);
+                userInput.value = '';
+                
+                // Display loading indicator
+                const loadingId = appendMessage('assistant', 'Thinking...');
+                
+                fetch('/api/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ question: message })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Remove loading message and add actual response
+                    removeMessage(loadingId);
+                    appendMessage('assistant', data.answer);
+                })
+                .catch(error => {
+                    removeMessage(loadingId);
+                    appendMessage('assistant', 'Sorry, an error occurred while processing your request.');
+                    console.error('Error:', error);
+                });
+            }
+            
+            function appendMessage(sender, text) {
+                const chatContainer = document.getElementById('chatContainer');
+                const messageDiv = document.createElement('div');
+                const messageId = Date.now().toString();
+                
+                messageDiv.id = messageId;
+                messageDiv.className = `message ${sender}-message`;
+                messageDiv.innerHTML = `<p>${text}</p>`;
+                
+                chatContainer.appendChild(messageDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                return messageId;
+            }
+            
+            function removeMessage(id) {
+                const message = document.getElementById(id);
+                if (message) {
+                    message.remove();
+                }
+            }
+            
+            function getSummary() {
+                const summaryContainer = document.getElementById('summaryContainer');
+                
+                summaryContainer.innerHTML = 'Loading summary...';
+                summaryContainer.style.display = 'block';
+                
+                fetch('/api/summary')
+                .then(response => response.json())
+                .then(data => {
+                    summaryContainer.innerHTML = `<pre>${data.summary}</pre>`;
+                })
+                .catch(error => {
+                    summaryContainer.innerHTML = 'Failed to load summary.';
+                    console.error('Error:', error);
+                });
+            }
+            
+            function updateData() {
+                const summaryContainer = document.getElementById('summaryContainer');
+                
+                summaryContainer.innerHTML = 'Updating data... This may take a moment.';
+                summaryContainer.style.display = 'block';
+                
+                fetch('/api/update', {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    summaryContainer.innerHTML = `<p>${data.status}</p>`;
+                    setTimeout(() => {
+                        getSummary();
+                    }, 500);
+                })
+                .catch(error => {
+                    summaryContainer.innerHTML = 'Failed to update data.';
+                    console.error('Error:', error);
+                });
+            }
+        </script>
+    </body>
+    </html>
+    
