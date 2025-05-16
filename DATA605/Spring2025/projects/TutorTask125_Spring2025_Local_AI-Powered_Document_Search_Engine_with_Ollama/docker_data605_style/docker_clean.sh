@@ -1,9 +1,19 @@
-#!/bin/bash -e
+#!/bin/bash -xe
 
-GIT_ROOT=$(git rev-parse --show-toplevel)
-source $GIT_ROOT/tutorial_github_simple/docker_common/utils.sh
+CONTAINER_NAME=doc-search
+IMAGE_NAME=document_search_engine
 
-REPO_NAME=umd_data605
-IMAGE_NAME=umd_data605_template
+# Stop and remove container if running
+if [ "$(docker ps -a -q -f name=$CONTAINER_NAME)" ]; then
+    docker stop $CONTAINER_NAME
+    docker rm $CONTAINER_NAME
+fi
 
-remove_container_image
+# Remove image if exists
+if [ "$(docker images -q $IMAGE_NAME)" ]; then
+    docker rmi $IMAGE_NAME
+fi
+
+# Show current containers and images
+docker ps -a
+docker images
