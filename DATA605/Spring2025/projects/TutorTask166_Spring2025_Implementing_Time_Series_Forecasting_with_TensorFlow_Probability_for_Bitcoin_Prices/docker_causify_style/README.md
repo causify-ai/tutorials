@@ -6,28 +6,36 @@ An advanced real-time Bitcoin price forecasting system leveraging TensorFlow Pro
 
 This project implements a microservices-based Bitcoin price forecasting system with the following components:
 
-1. **Data Collector**: Fetches real-time Bitcoin price data from exchanges
+1. **Data Collector**: Fetches real-time Bitcoin price data from Coinbase via WebSocket API
 2. **Bitcoin Forecast App**: Processes data and generates predictions using TensorFlow Probability
 3. **Dashboard**: Real-time visualization of prices, predictions, and performance metrics
+4. **Kafka**: Message broker for communication between services
+5. **ZooKeeper**: Coordination service for Kafka
 
 ## Key Features
 
 ### Advanced Time Series Modeling
 - Structural time series models with trend, seasonal, and autoregressive components
 - Day-of-week seasonality effects
+- Local linear trend with flexible priors
+- AR(5) for better short-term dynamics
+- SemiLocalLinearTrend for cryptocurrency volatility
 - Choice between Variational Inference (fast) and MCMC (more accurate)
+- Multi-start optimization to avoid local minima
 
 ### Enhanced Data Preprocessing
-- Outlier detection and replacement
-- Missing value handling
-- Technical indicators (moving averages, MACD, RSI, momentum)
-- Feature normalization and scaling
+- Multiple outlier detection methods (Modified Z-Score, IQR, Percentage change)
+- Missing value handling with exponential weighted imputation
+- Cryptocurrency-specific technical indicators
+- Robust scaling using median/IQR
+- Automatic data validation
 
 ### Robust Prediction Framework
-- Confidence intervals for uncertainty quantification
-- Fallback prediction mechanisms for system resilience
-- Adaptive learning rates for better convergence
-- Multiple window size forecasting
+- 99% confidence intervals for uncertainty quantification
+- Fallback prediction mechanisms using ensemble methods
+- Adaptive learning rates based on volatility
+- Sanity checks to prevent extreme predictions
+- Gradient clipping for optimization stability
 
 ### Comprehensive Evaluation
 - Mean Absolute Error (MAE) tracking
@@ -42,6 +50,50 @@ This project implements a microservices-based Bitcoin price forecasting system w
 - Error tracking and metrics
 - Error distribution analysis
 - Cold start handling for improved UX
+- 30-minute time window for all charts
+
+## Components in Detail
+
+### Data Collector
+
+The data collector connects to Coinbase WebSocket API to fetch real-time Bitcoin price data:
+
+- Aggregates tick data into 1-second OHLCV bars
+- Validates and cleans incoming data
+- Detects and filters outliers
+- Saves data to CSV for persistence
+- Publishes data to Kafka for real-time processing
+- Provides periodic statistics reporting
+
+### Bitcoin Forecast App
+
+The forecast application processes incoming data and generates predictions:
+
+- Uses TensorFlow Probability for Bayesian time series modeling
+- Implements both primary and fallback prediction mechanisms
+- Tracks prediction errors for model evaluation
+- Updates model continuously as new data arrives
+- Handles outliers and anomalous inputs
+
+### Dashboard
+
+The Streamlit dashboard visualizes the data and predictions:
+
+- Real-time price chart with 30-minute window
+- Prediction visualization with confidence intervals
+- Error metrics tracking and visualization
+- Error distribution analysis
+- System status monitoring
+
+### Utilities
+
+Common utility functions ensure consistent data handling across all components:
+
+- **Data Utils**: Safe data handling, rounding, filtering
+- **Timestamp Format**: Consistent ISO8601 timestamp handling
+- **Model Utils**: Safe model prediction, error metrics calculation
+- **Price Format**: Consistent price formatting
+- **Unified Config**: Centralized configuration management
 
 ## Model Configuration
 
@@ -58,129 +110,148 @@ model:
     mcmc_burnin: 300        # Number of burn-in steps for MCMC
     use_day_of_week: true   # Add day-of-week seasonal component
     use_technical_indicators: true  # Use technical indicators
+    short_ma_window: 5      # Short moving average window
+    long_ma_window: 20      # Long moving average window
+    volatility_window: 10   # Window for volatility calculation
 ```
-
-## System Improvements
-
-The system has been enhanced with several optimizations:
-
-1. **Duplicate Prediction Prevention**: The system now tracks the last processed second to avoid duplicates.
-
-2. **Improved Error Calculation**: MAE calculations have been corrected to properly measure the difference between predicted and actual values.
-
-3. **Enhanced Dashboard**: The dashboard now displays actual error at each timestamp with a zero-line baseline for perfect predictions.
-
-4. **Advanced Model Components**: The prediction model now includes autoregressive components and day-of-week effects.
-
-5. **Cold Start Handling**: The dashboard dynamically adjusts its time range when limited data is available during startup.
-
-6. **Price Value Rounding**: All price-related values are consistently rounded to 2 decimal places.
-
-7. **Error Distribution Analysis**: Statistical analysis of prediction errors with distribution visualization.
-
-8. **Anomaly Detection**: Z-score based anomaly detection for suspicious predictions.
 
 ## Usage
 
+### Starting the System
+
 1. Start the system using Docker Compose:
-   ```
-   docker-compose up
+   ```bash
+   docker-compose up -d
    ```
 
 2. Access the dashboard at http://localhost:8501
 
 3. Monitor real-time predictions and performance metrics
 
+### Restarting with Optimized Settings
+
+To restart the system with optimized settings:
+
+```bash
+./restart_optimized.sh
+```
+
+This script:
+- Stops existing containers
+- Cleans up Docker resources
+- Backs up and resets prediction data
+- Trims raw data for better performance
+- Rebuilds containers with optimized settings
+
 ## Development
 
-The codebase is organized as follows:
+### Directory Structure
 
-- `bitcoin_forecast_app/`: The main prediction service
-  - `models/`: TensorFlow Probability model implementation
-  - `mains/`: Application entry points
-- `dashboard/`: Streamlit-based visualization interface
-- `configs/`: Configuration files
-- `utilities/`: Shared utility functions
-
-## Refactoring Overview
-
-This project has been refactored to improve code organization, reduce redundancy, and ensure consistency across services. The key improvements include:
-
-1. **Unified Configuration**: All configuration settings are now in a single `unified_config.yaml` file
-2. **Centralized Utilities**: Common functions are now in a shared `utilities` directory
-3. **Clear Service Boundaries**: Each service has a well-defined responsibility
-4. **Consistent Timestamp Handling**: Standardized ISO8601 format with 'T' separator
-
-## Getting Started
-
-### Prerequisites
-
-- Docker and Docker Compose
-- Git
-
-### Installation
-
-1. Clone the repository
-2. Run `docker-compose build` to build the services
-3. Run `docker-compose up -d` to start the system
+```
+docker_causify_style/
+├── bitcoin_forecast_app/      # Prediction service
+│   ├── models/                # TensorFlow Probability model
+│   ├── mains/                 # Application entry points
+│   └── utilities/             # App-specific utilities
+├── dashboard/                 # Streamlit visualization interface
+├── data_collector/            # Real-time data collection service 
+├── configs/                   # Configuration files
+│   ├── unified_config.yaml    # Main configuration file
+│   └── config.yaml            # Legacy/component-specific config
+├── utilities/                 # Shared utility functions
+├── docker-compose.yml         # Docker services configuration
+└── restart_optimized.sh       # System restart script
+```
 
 ### Configuration
 
 The system uses a unified configuration approach:
 
 1. Edit `configs/unified_config.yaml` to change settings
-2. Run `scripts/update_config.sh` to apply changes
-3. Restart services with `docker-compose up -d`
+2. Restart services with `docker-compose restart <service-name>`
 
 ## Timestamp Format
 
 All timestamps in the system use the ISO8601 format with 'T' separator:
 
 ```
-YYYY-MM-DDThh:mm:ss
+YYYY-MM-DDThh:mm:ss+00:00
 ```
 
-If you encounter timestamp format issues, use the `scripts/fix_timestamps.sh` script to standardize them.
-
-## Documentation
-
-- `docs/CODE_STRUCTURE.md`: Detailed explanation of the code structure
-- `docs/TIMESTAMP_FORMAT.md`: Information about timestamp handling
+The system ensures consistent timestamp handling across all components through the utilities/timestamp_format.py module.
 
 ## Troubleshooting
 
-### Dashboard Error: 'str' object has no attribute 'date'
+### Dashboard Shows No Data
 
-This error occurs when timestamps are not properly parsed as datetime objects. To fix it:
+If the dashboard shows no data:
 
-1. Run `scripts/fix_timestamps.sh` to standardize timestamp formats
-2. Restart the dashboard service: `docker-compose restart dashboard`
+1. Check if data collector is running: `docker-compose logs data-collector`
+2. Verify data files exist: `ls -l data/raw/instant_data.csv`
+3. Restart the dashboard: `docker-compose restart dashboard`
+
+### High Prediction Errors
+
+If you notice unusually high prediction errors:
+
+1. Check if there are outliers in the raw data
+2. Restart the system with clean data: `./restart_optimized.sh`
+3. Monitor the metrics after restarting
 
 ### Timestamp Mismatch Between Actual and Predicted Data
 
-If you notice that actual and predicted data have different timestamps:
+If actual and predicted data have different timestamps:
 
-1. Run `scripts/fix_timestamps.sh` to update all timestamps to the current date
-2. Restart the services: `docker-compose restart bitcoin-forecast-app dashboard`
+1. Restart the bitcoin forecast app: `docker-compose restart bitcoin-forecast-app`
+2. Check logs for timestamp parsing errors: `docker-compose logs bitcoin-forecast-app`
 
-## Common Docker Commands
+## Docker Commands Reference
 
-### Restart Services with Updated Code
+### Service Management
+
 ```bash
-docker-compose restart bitcoin-forecast-app dashboard
+# Start all services
+docker-compose up -d
+
+# Start specific service
+docker-compose up -d <service-name>
+
+# Stop all services
+docker-compose down
+
+# Restart specific service
+docker-compose restart <service-name>
+
+# View logs
 docker-compose logs -f
+docker-compose logs -f <service-name>
 ```
 
-### Rebuild and Restart All Services
+### Rebuilding Services
+
 ```bash
+# Rebuild and restart all services
 docker-compose down
 docker-compose up -d --build
-docker-compose logs -f
-```
 
-### Clean Build (No Cache)
-```bash
+# Rebuild specific service
+docker-compose build <service-name>
+docker-compose up -d <service-name>
+
+# Clean build (no cache)
 docker-compose build --no-cache
 docker-compose up -d
-docker-compose logs -f
+```
+
+### System Maintenance
+
+```bash
+# View container status
+docker-compose ps
+
+# Check container resource usage
+docker stats
+
+# Clean up Docker resources
+docker system prune -f
 ```

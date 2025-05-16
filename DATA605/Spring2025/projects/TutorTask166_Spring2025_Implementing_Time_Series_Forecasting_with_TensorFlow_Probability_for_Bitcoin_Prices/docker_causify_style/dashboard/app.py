@@ -68,7 +68,7 @@ PREDICTIONS_FILE = config['data']['predictions']['instant_data']['predictions_fi
 METRICS_FILE = config['data']['predictions']['instant_data']['metrics_file']
 
 # Set consistent time window for all charts (60 minutes)
-TIME_WINDOW_MINUTES = 60
+TIME_WINDOW_MINUTES = 30
 
 # Update config to ensure consistency
 if 'plot_settings' not in config['dashboard']:
