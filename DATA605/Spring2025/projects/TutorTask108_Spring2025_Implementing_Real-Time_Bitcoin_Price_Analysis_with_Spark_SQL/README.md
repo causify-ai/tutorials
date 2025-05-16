@@ -1,10 +1,16 @@
+# Tutorial on Spark SQL
+
+Author: Neha Dutt
+
+---
+
 # Project Files
 
 ---
 
 This tutorial contains the following files:
 
-- Docker Container
+- `Docker Container`
     - docker_bash.sh
     - docker_build.sh
     - docker_build.version.log
@@ -12,14 +18,14 @@ This tutorial contains the following files:
     - Dockerfile
     - requirements.txt
     - ...Additional files
-- README.md: This file which contains information on how to start the Docker container.
-- sparkSQL_API.ipynb: Notebook describing the native API of Spark SQL along with a simple example and basic SQL queries.
-- sparkSQL_API.md: Description of the native API of Spark SQL.
-- books.csv: Data corresponding to example in Spark SQL API notebook.
-- prices.csv: Data corresponding to example in Spark SQL API notebook.
-- sparkSQL_example.ipynb: Notebook implementing the project using Spark SQL.
-- sparkSQL_example.md: Description of the project using Spark SQL.
-- sparkSQL.utils: Class and functions to load data from API endpoint corresponding to sparkSQL_example.ipynb.
+- `README.md`: This file which contains information on how to start the Docker container.
+- `sparkSQL_API.ipynb`: Notebook describing the native API of Spark SQL along with a simple example and basic SQL queries.
+- `sparkSQL_API.md`: Description of the native API of Spark SQL.
+- `books.csv`: Data corresponding to example in Spark SQL API notebook.
+- `prices.csv`: Data corresponding to example in Spark SQL API notebook.
+- `sparkSQL_example.ipynb`: Notebook implementing the project on Bitcoin prices using Spark SQL.
+- `sparkSQL_example.md`: Description of the project on Bitcoin prices using Spark SQL.
+- `sparkSQL.utils`: Class and functions to load data from API endpoint corresponding to sparkSQL_example.ipynb.
 
 ---
 

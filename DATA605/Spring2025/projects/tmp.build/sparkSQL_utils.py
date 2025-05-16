@@ -38,7 +38,10 @@ class BitcoinDataHandler:
             print("No data found.")
             return
         df = self.spark.createDataFrame(data)
-        df = df.withColumn("price_date", F.from_unixtime("timestamp", "yyyy-MM-dd"))
+        if total_days > 90:
+            df = df.withColumn("price_date", F.from_unixtime("timestamp", "yyyy-MM-dd"))
+        else:
+            df = df.withColumn("price_date", F.from_unixtime("timestamp", "yyyy-MM-dd HH:mm:ss"))
         df = df.drop_duplicates()
         df.createOrReplaceTempView(view_name)
         df.write.option("header", "true").mode("overwrite").csv(data_path)
@@ -70,8 +73,8 @@ class BitcoinDataHandler:
 
     def start_real_time_update(self, days: int, vw_nm:str, path:str, curr: str = "usd") -> None:
         """
-        Fetch and load existing Bitcoin price data within specified days and start real time updates at every hour. The 
-        function will identify if there is new data to add, and updates the view with any new data periodically.
+        Fetch and load existing Bitcoin price data within specified days and start real time updates. The function will 
+        identify if there is new data to add (hourly level), and updates the view with any new data periodically (at every hour).
         
         :param days: How many days to retrieve data for intially.
         :param vw_nm: Name of the view to create and load data into.
@@ -97,22 +100,31 @@ class BitcoinDataHandler:
             filtered_data = [item for item in new_data if int(item["timestamp"]) > int(latest_ts)]
             #If there are new entries, create a dataframe, and append latest price per hour to existing data path and view.
             if filtered_data:
+                existing_df = self.spark.table(vw_nm)
+                existing_df2 = existing_df.withColumn("hour_key", F.date_format(F.from_unixtime("timestamp"), "yyyy-MM-dd HH:00:00"))
+                existing_hour_keys = existing_df2.select("hour_key").distinct()
+
                 #Isolate last record for each hour.
                 filtered_df = self.spark.createDataFrame(filtered_data)
                 filtered_df = filtered_df.withColumn("hour_key", F.date_format(F.from_unixtime("timestamp"), "yyyy-MM-dd HH:00:00"))
                 window = W.Window.partitionBy("hour_key").orderBy(F.col("timestamp").desc())
                 ranked_df = filtered_df.withColumn("rn", F.row_number().over(window))
-                new_df = ranked_df.filter(F.col("rn") == 1).drop("rn","hour_key")
+                new_df = ranked_df.filter(F.col("rn") == 1)
+                
+                #Exclude data for hours that are already in the view.
+                new_df = new_df.join(existing_hour_keys, on="hour_key", how="left_anti")
+                new_df = new_df.drop("rn","hour_key")
                 new_df = new_df.withColumn("price_date", F.from_unixtime("timestamp", "yyyy-MM-dd HH:mm:ss"))
                 
                 #Update data path and view.
                 combined_df = self.spark.read.option("header", "true").csv(path)
                 new_df.write.mode("append").option("header", "false").csv(path)
-                existing_df = self.spark.table(vw_nm)
+                
                 combined_df = existing_df.unionByName(new_df)
                 self.spark.catalog.dropTempView(vw_nm)
                 combined_df.createOrReplaceTempView(vw_nm)
-                print(f"Added {len(filtered_data)} new records.")
+                print(f"Added following new record(s):")
+                print(new_df.show())
             else:
                 print("No new data found.")
             time.sleep(3600)
