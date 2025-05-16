@@ -48,12 +48,13 @@ data_format:
         pred_lower: 'float64'
         pred_upper: 'float64'
     metrics:
-      names: ['timestamp', 'std', 'mae', 'rmse']
+      names: ['timestamp', 'std', 'mae', 'rmse', 'actual_error']
       dtypes:
         timestamp: 'datetime64[ns]'
         std: 'float64'
         mae: 'float64'
         rmse: 'float64'
+        actual_error: 'float64'
 
 # Kafka configuration (shared across services)
 kafka:
@@ -98,6 +99,8 @@ services:
         learning_rate: 0.01     # Learning rate for model training
         vi_steps: 100           # Number of variational inference steps
         num_samples: 50         # Number of samples for forecasting
+        max_history_size: 1000  # Maximum number of data points to keep in history
+        min_points_req: 10      # Minimum number of data points required for model fitting
         feature_windows:        # Feature windows configuration
           log_return: 5         # 5-minute window for log returns
           vol_rolling: [15, 30, 60]  # List of windows for volatility rolling window
@@ -108,6 +111,16 @@ services:
         window_size: 300        # 5 minutes in seconds
         initial_data_points: 1000  # Limit initial data load
         update_interval: 60     # Update model every 60 seconds
+        # Advanced model parameters
+        use_mcmc: false         # Use MCMC for more accurate but slower inference
+        mcmc_steps: 1000        # Number of MCMC steps (only used if use_mcmc=true)
+        mcmc_burnin: 300        # Number of burn-in steps for MCMC
+        use_day_of_week: true   # Add day-of-week seasonal component
+        use_technical_indicators: true  # Use technical indicators for better predictions
+        # Technical indicators configuration
+        short_ma_window: 5      # Short moving average window
+        long_ma_window: 20      # Long moving average window
+        volatility_window: 10   # Window for volatility calculation
       history:
         evaluation_window: 168  # hours (1 week)
         forecast_horizon: 24    # steps
@@ -128,11 +141,14 @@ services:
     chart_height: 600
     theme: "plotly_white"
     data_aggregation: "1S"      # 1-second intervals for real-time data
+    cold_start:
+      enabled: true             # Enable cold start mode for better visualization with limited data
+      min_data_points: 10       # Minimum number of data points needed to show the chart
     plot_settings:
-      time_window: 300          # seconds to show in the plot (5 minutes)
-      time_window_minutes: 30   # minutes to show in all plots
+      time_window: 3600         # seconds to show in the plot (60 minutes)
+      time_window_minutes: 60   # minutes to show in all plots (consistent across all charts)
       update_interval: 1        # seconds between plot updates
-      max_points: 300           # maximum number of points to show
+      max_points: 3600          # maximum number of points to show (1 point per second for 60 minutes)
       resample_freq: "1S"       # resample frequency for data aggregation
       time_alignment:
         mode: "right"           # align plot to right (latest time)

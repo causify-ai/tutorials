@@ -99,6 +99,8 @@ services:
         learning_rate: 0.01     # Learning rate for model training
         vi_steps: 100           # Number of variational inference steps
         num_samples: 50         # Number of samples for forecasting
+        max_history_size: 1000  # Maximum number of data points to keep in history
+        min_points_req: 10      # Minimum number of data points required for model fitting
         feature_windows:        # Feature windows configuration
           log_return: 5         # 5-minute window for log returns
           vol_rolling: [15, 30, 60]  # List of windows for volatility rolling window

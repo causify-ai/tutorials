@@ -113,6 +113,10 @@ class BitcoinForecastModel:
         # Get VI steps from config
         self.vi_steps = model_config.get('vi_steps', 100)
 
+        # Add missing attributes for history size management
+        self.max_history_size = model_config.get('max_history_size', 1000)
+        self.min_points_req = model_config.get('min_points_req', 10)
+        self.num_variational_steps = model_config.get('vi_steps', 100)
         # Store num_samples for forecasting
         self.num_samples = model_config.get('num_samples', 50)
 

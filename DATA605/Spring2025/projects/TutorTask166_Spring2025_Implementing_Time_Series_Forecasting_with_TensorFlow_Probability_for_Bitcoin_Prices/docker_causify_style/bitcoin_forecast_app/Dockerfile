@@ -17,7 +17,7 @@ RUN mkdir -p /app/data/raw /app/data/predictions /app/data/raw_data \
     && chmod -R 777 /app/data
 
 # Copy unified configuration
-COPY configs/unified_config.yaml /app/configs/
+COPY configs/config.yaml /app/configs/
 
 # Copy utilities (including the unified config parser)
 COPY utilities/ /app/utilities/

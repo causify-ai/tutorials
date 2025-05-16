@@ -12,8 +12,8 @@ from typing import Dict, Any, Optional
 logger = logging.getLogger(__name__)
 
 # Default configuration paths
-DEFAULT_CONFIG_PATH = '/app/configs/unified_config.yaml'
-LOCAL_CONFIG_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'configs/unified_config.yaml')
+DEFAULT_CONFIG_PATH = '/app/configs/config.yaml'
+LOCAL_CONFIG_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'configs/config.yaml')
 
 # Global configuration cache
 _config_cache = None
