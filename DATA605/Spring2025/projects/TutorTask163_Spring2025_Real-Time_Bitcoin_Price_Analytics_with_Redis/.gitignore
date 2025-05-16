@@ -1,4 +1,4 @@
-.env
+
 .ipynb_checkpoints/
 helpers_root/**/__pycache__/
 helpers_root/**/*.pyc
