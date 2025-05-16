@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.17.1
+#       jupytext_version: 1.16.7
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -171,7 +171,7 @@ def _load_eia_metadata_and_parameters(
     df_metadata = _load_data(metadata_path, aws_profile)
     # Load all parameter CSVs.
     parameter_dir = os.path.join(s3_dir, parameter_subdir)
-    s3fs_ = hs3.get_s3fs("ck")
+    s3fs_ = hs3.get_s3fs(aws_profile)
     param_paths = s3fs_.ls(parameter_dir)
     param_dfs = {}
     for path in param_paths:
@@ -209,7 +209,7 @@ def _preprocess_eia(
     # Parse facets column if stored as string.
     df_metadata["facets"] = df_metadata["facets"].apply(ast.literal_eval)
     # Normalize similar variables.
-    df_metadata["facets"] = df_metadata["facets"].map(normalize_facets)
+    df_metadata["facets"] = df_metadata["facets"].map(_normalize_facets)
     # Preprocess parameters.
     param_dfs_cleaned = {}
     for file_name, df_param in param_dfs.items():
