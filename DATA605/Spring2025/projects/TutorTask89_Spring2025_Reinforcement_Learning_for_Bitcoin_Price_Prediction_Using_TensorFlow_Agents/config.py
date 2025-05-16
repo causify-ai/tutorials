@@ -5,6 +5,18 @@ Contains hyperparameters and settings for data, environment, agent, and training
 
 from typing import Optional, Tuple, Union
 
+
+# #############################################################################
+# Dates
+# #############################################################################
+# Ingestion window
+START_DATE: str = "2014-09-17"
+END_DATE: str = "2025-04-29"
+# Data-split boundaries
+TRAIN_START_DATE: str = "2014-09-17"
+VALIDATION_START_DATE: str = "2022-02-21"
+TEST_START_DATE: str = "2024-01-01"
+
 # #############################################################################
 # Data Configuration
 # #############################################################################

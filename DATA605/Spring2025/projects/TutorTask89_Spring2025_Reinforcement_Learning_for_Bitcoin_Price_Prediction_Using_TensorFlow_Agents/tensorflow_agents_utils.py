@@ -12,6 +12,7 @@ Functions include:
 - calculate_features: Computes a suite of features on the DataFrame, including log returns and simple moving averages.
 - calculate_normalization_params: Calculates normalization parameters for specified columns in the DataFrame.
 - normalize_data: Normalizes the training, validation, and test data using the calculated parameters.
+- ingest_bitcoin_data: Loads, cleans, feature-engineers, and returns a DataFrame.
 - create_btc_env: Creates a Bitcoin trading environment using the BitcoinTradingEnv class.
 - create_q_network: Creates a Q-Network for the DQN agent.
 - create_dqn_agent: Creates and initializes a TF-Agents DqnAgent.
@@ -33,6 +34,7 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 import tensorflow as tf
+import matplotlib.pyplot as plt
 from tensorflow.keras import initializers
 from tf_agents.environments import tf_py_environment, tf_environment
 from tf_agents.specs import tensor_spec
@@ -197,12 +199,12 @@ def localize_to_timezone(input_date: str, timezone: str) -> pd.Timestamp:
 # #############################################################################
 def split_yahoo_data(
     df: pd.DataFrame,
-    train_start_date: str = "2014-09-17",
-    validation_start_date: str = "2022-02-21",
-    test_start_date: str = "2024-01-01",
-    train_data_path: str = "data/train_data.csv",
-    validation_data_path: str = "data/validation_data.csv",
-    test_data_path: str = "data/test_data.csv",
+    train_start_date: str = config.TRAIN_START_DATE,
+    validation_start_date: str = config.VALIDATION_START_DATE,
+    test_start_date: str = config.TEST_START_DATE,
+    train_data_path: str = config.TRAIN_DATA_PATH,
+    validation_data_path: str = config.VALIDATION_DATA_PATH,
+    test_data_path: str = config.TEST_DATA_PATH,
 ) -> None:
     """
     Split the DataFrame into training, testing, and validation sets.
@@ -361,6 +363,61 @@ def normalize_data(dataframes: list, params: dict) -> tuple:
     except Exception as e:
         _LOG.error(f"Error normalizing data: {e}")
         raise
+
+
+# #############################################################################
+# Ingest Data
+# #############################################################################
+def ingest_bitcoin_data(
+    ticker: str = "BTC-USD",
+    start_date: str = config.START_DATE,
+    end_date: str = config.END_DATE,
+    train_start_date: str = config.TRAIN_START_DATE,
+    validation_start_date: str = config.VALIDATION_START_DATE,
+    test_start_date: str = config.TEST_START_DATE,
+    train_data_path: str = config.TRAIN_DATA_PATH,
+    validation_data_path: str = config.VALIDATION_DATA_PATH,
+    test_data_path: str = config.TEST_DATA_PATH,
+):
+    """
+    Load, clean, feature-engineer, save, split(train, validation, test) the source data and return the DataFrame.
+
+    :param ticker: The ticker symbol for the cryptocurrency
+    :param start_date: The start date in 'YYYY-MM-DD' format
+    :param end_date: The end date in 'YYYY-MM-DD' format
+    :param train_start_date: Start date for the training set
+    :param validation_start_date: Start date for the validation set
+    :param test_start_date: Start date for the testing set
+    :param train_data_path: Path to save the training data
+    :param validation_data_path: Path to save the validation data
+    :param test_data_path: Path to save the testing data
+
+    :return: DataFrame containing the cleaned and feature-engineered data
+    """
+    _LOG.info(f"Loading data for {ticker} from {start_date} to {end_date}")
+    df = load_yahoo_data(ticker, start_date, end_date)
+    df = clean_yahoo_data(df)
+    df = calculate_features(df)
+    _LOG.info("Ingestion complete: features calculated")
+    # Save the data to CSV
+    save_to_csv(df, config.SRC_DATA_PATH)
+    _LOG.info(f"Data saved to {config.SRC_DATA_PATH}")
+    # Split the data into training, validation, and test sets
+    split_yahoo_data(
+        df,
+        train_start_date,
+        validation_start_date,
+        test_start_date,
+        train_data_path,
+        validation_data_path,
+        test_data_path,
+    )
+    _LOG.info(
+        f"Data split into training, validation, and test sets. "
+        f"Train shape: {df.shape}, Validation shape: {df.shape}, Test shape: {df.shape}"
+    )
+    _LOG.info("Data ingestion complete")
+    return df
 
 
 # #############################################################################
@@ -722,6 +779,7 @@ def calculate_buy_and_hold_performance(
     date_column: str = "Date",
     open_column: str = "Open",
     close_column: str = "Close",
+    visualize: bool = True,
 ) -> Tuple[float, pd.DataFrame, float]:
     """
     Calculates the performance of a Buy & Hold strategy on the given dataset.
@@ -736,6 +794,7 @@ def calculate_buy_and_hold_performance(
         date_column: The name of the column containing date information.
         open_column: The name of the column containing daily open prices.
         close_column: The name of the column containing daily close prices.
+        visualize: Whether to plot portfolio value over time.
 
     Returns:
         A tuple containing:
@@ -763,28 +822,41 @@ def calculate_buy_and_hold_performance(
         df["Timestamp"] = pd.to_datetime(df[date_column])
         df.sort_values(by="Timestamp", inplace=True)
         df.reset_index(drop=True, inplace=True)
+        buy_ts = df["Timestamp"].iloc[0]
+        sell_ts = df["Timestamp"].iloc[-1]
         buy_price = df[open_column].iloc[0]
         if pd.isna(buy_price) or buy_price <= 0:
             _LOG.error(f"Invalid buy price ({buy_price}) at the start of {data_path}.")
             raise ValueError("Invalid or missing buy price at the start of the data.")
         num_coins = initial_capital / buy_price
         _LOG.info(
-            f"Buy & Hold: Buying {num_coins:.6f} BTC at {buy_price:.2f} on {df[date_column].iloc[0].strftime('%Y-%m-%d')}"
+            f"Buy & Hold: Buying {num_coins:.6f} BTC at {buy_price:.2f} on {buy_ts.strftime('%Y-%m-%d')}"
         )
         portfolio_history_values = num_coins * df[close_column]
         portfolio_history_df = pd.DataFrame(
-            {"Timestamp": df[date_column], "PortfolioValue": portfolio_history_values}
+            {"Timestamp": df["Timestamp"], "PortfolioValue": portfolio_history_values}
         )
         final_portfolio_value = portfolio_history_values.iloc[-1]
         sell_price = df[close_column].iloc[-1]
         _LOG.info(
-            f"Buy & Hold: Holding until {df[date_column].iloc[-1].strftime('%Y-%m-%d')}. "
-            f"Last close price: {sell_price:.2f}. Final value: {final_portfolio_value:.2f}"
+            f"Buy & Hold: Holding until {sell_ts.strftime('%Y-%m-%d')}. Last close price: {sell_price:.2f}. Final value: {final_portfolio_value:.2f}"
         )
         total_return_percentage = (
             (final_portfolio_value - initial_capital) / initial_capital
         ) * 100
         _LOG.info(f"Buy & Hold: Total Return: {total_return_percentage:.2f}%")
+        if visualize:
+            plt.figure(figsize=(10, 5))
+            plt.plot(
+                portfolio_history_df["Timestamp"],
+                portfolio_history_df["PortfolioValue"],
+            )
+            plt.title("Buy‑&‑Hold Portfolio Value Over Time")
+            plt.xlabel("Date")
+            plt.ylabel("Portfolio Value (USD)")
+            plt.grid(True, alpha=0.3)
+            plt.tight_layout()
+            plt.show()
         return final_portfolio_value, portfolio_history_df, total_return_percentage
     except FileNotFoundError:
         _LOG.error(f"Data file not found: {data_path}")
@@ -805,6 +877,7 @@ def calculate_naive_directional_accuracy(
     prediction_type: str,  # "always_up" or "always_down"
     date_column: str = "Date",
     close_column: str = "Close",
+    visualize: bool = True,
 ) -> Tuple[float, int, int]:
     """
     Calculates the accuracy of a naive 'Always Predict Up' or 'Always Predict Down' strategy.
@@ -814,6 +887,7 @@ def calculate_naive_directional_accuracy(
         prediction_type: Specifies the naive strategy. Must be "always_up" or "always_down".
         date_column: The name of the column containing date/timestamp information.
         close_column: The name of the column containing daily close prices.
+        visualize: Whether to show a bar plot comparing the two naïve baselines.
 
     Returns:
         A tuple containing:
@@ -861,6 +935,39 @@ def calculate_naive_directional_accuracy(
             f"Naive '{prediction_type}' Accuracy: {accuracy:.2%} "
             f"({num_correct_predictions}/{total_prediction_days} days)"
         )
+        # Visualize the results
+        if visualize:
+            other_type = (
+                "always_down" if prediction_type == "always_up" else "always_up"
+            )
+            other_acc, _, _ = calculate_naive_directional_accuracy(
+                data_path,
+                other_type,
+                date_column=date_column,
+                close_column=close_column,
+                visualize=False,
+            )
+            plt.figure(figsize=(6, 4))
+            plt.bar(
+                ["Always Up", "Always Down"],
+                [
+                    accuracy if prediction_type == "always_up" else other_acc,
+                    accuracy if prediction_type == "always_down" else other_acc,
+                ],
+                color=["tab:blue", "tab:orange"],
+            )
+            plt.title("Naïve Directional Accuracy Baselines")
+            plt.ylabel("Accuracy")
+            plt.ylim(0, 1)
+            for idx, val in enumerate(
+                [
+                    accuracy if prediction_type == "always_up" else other_acc,
+                    accuracy if prediction_type == "always_down" else other_acc,
+                ]
+            ):
+                plt.text(idx, val + 0.02, f"{val:.2%}", ha="center")
+            plt.tight_layout()
+            plt.show()
         return accuracy, num_correct_predictions, total_prediction_days
     except FileNotFoundError:
         _LOG.error(f"Data file not found for naive accuracy: {data_path}")
@@ -871,3 +978,58 @@ def calculate_naive_directional_accuracy(
             exc_info=True,
         )
         raise
+
+
+# #############################################################################
+# Visualization (Line Chart)
+# #############################################################################
+def plot_series(
+    df: pd.DataFrame,
+    y_col: str,
+    x_col: Optional[str] = None,
+    title: Optional[str] = None,
+    xlabel: Optional[str] = None,
+    ylabel: Optional[str] = None,
+) -> None:
+    """
+    Plot a line chart of one column against another from a DataFrame, using
+    either a column or the DataFrame’s index for the x-axis.
+
+    :param df: DataFrame containing the data.
+    :param x_col: Column name for the x-axis. If None, or if not found in
+        df.columns but matches df.index.name, uses df.index instead.
+    :param y_col: Column name for the y-axis.
+    :param title: Title of the plot.
+    :param xlabel: Label for the x-axis.
+    :param ylabel: Label for the y-axis.
+
+    :return: None
+    """
+    if x_col is None:
+        x = df.index
+        x_label = xlabel or (df.index.name or "index")
+    elif x_col in df.columns:
+        if not pd.api.types.is_datetime64_any_dtype(df[x_col]):
+            x = pd.to_datetime(df[x_col])
+        else:
+            x = df[x_col]
+        x_label = xlabel or x_col
+    elif df.index.name == x_col:
+        x = df.index
+        x_label = xlabel or x_col
+    else:
+        raise ValueError(
+            f"x_col '{x_col}' not found in DataFrame columns or index name"
+        )
+    if y_col not in df.columns:
+        raise ValueError(f"y_col '{y_col}' not found in DataFrame columns")
+    y = df[y_col]
+    y_label = ylabel or y_col
+    plt.figure()
+    plt.plot(x, y, label=y_col)
+    plt.title(title or f"{y_col} vs {x_label}")
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
