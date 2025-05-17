@@ -251,7 +251,10 @@ from tensorflow.keras.layers import LSTM, Dropout, Dense
 
 def build_lstm_model(input_shape):
     """
-    Builds and compiles a stacked LSTM model.
+    Builds and compiles the tuned LSTM model using best-found hyperparameters:
+    - LSTM(128) + Dropout(0.4)
+    - LSTM(48)  + Dropout(0.2)
+    - Dense(1)
 
     :param input_shape: Tuple (timesteps, features)
     :return: Compiled Keras model
@@ -259,14 +262,15 @@ def build_lstm_model(input_shape):
     logger.info(f"Building LSTM model with input shape {input_shape}")
 
     model = Sequential([
-        LSTM(64, return_sequences=True, input_shape=input_shape),
-        Dropout(0.3),
-        LSTM(32),
+        LSTM(128, return_sequences=True, input_shape=input_shape),
+        Dropout(0.4),
+        LSTM(48),
         Dropout(0.2),
         Dense(1)
     ])
     model.compile(optimizer='adam', loss='mse')
     return model
+
 
 # --------------------------------------------------------------------
 # LSTM Model Training Function
@@ -301,6 +305,37 @@ def train_lstm_model(model, X_train, y_train, X_val, y_val, epochs=50, batch_siz
     logger.info("Model training complete.")
     return model, history
 
+
+
+
+# --------------------------------------------------------------------
+# Fine-Tune Pretrained LSTM Model (on latest window)
+# --------------------------------------------------------------------
+
+from tensorflow.keras.models import load_model
+
+def fine_tune_model(model_path: str, X_recent, y_recent, epochs: int = 5, batch_size: int = 32):
+    """
+    Loads an existing model and fine-tunes it on the most recent data.
+
+    :param model_path: Path to the saved model (.h5 file)
+    :param X_recent: Recent input sequences
+    :param y_recent: Corresponding targets
+    :param epochs: Fine-tuning epochs
+    :param batch_size: Batch size
+    :return: The updated model
+    """
+    logger.info(f"Fine-tuning model at {model_path} on recent data...")
+
+    model = load_model(model_path)
+    model.fit(X_recent, y_recent, epochs=epochs, batch_size=batch_size, verbose=1)
+
+    model.save(model_path)
+    logger.info("✅ Model fine-tuned and saved.")
+    
+    return model
+
+
 # --------------------------------------------------------------------
 # Training Loss Plot
 # --------------------------------------------------------------------
@@ -323,3 +358,4 @@ def plot_training_loss(history):
     plt.legend()
     plt.grid(True)
     plt.show()
+
