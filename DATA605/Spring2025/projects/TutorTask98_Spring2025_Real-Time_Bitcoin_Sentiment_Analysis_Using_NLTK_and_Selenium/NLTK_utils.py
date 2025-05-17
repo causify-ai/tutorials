@@ -34,7 +34,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
-#from loguru import logger
 import requests
 import pandas as pd
 import numpy as np
@@ -364,7 +363,7 @@ class Twitter_Scraper:
         self,
         username,
         password,
-        max_tweets=10,
+        max_tweets=100,
         scrape_username=None,
         scrape_hashtag=None,
         scrape_query=None,
@@ -405,7 +404,7 @@ class Twitter_Scraper:
 
     def _config_scraper(
         self,
-        max_tweets=10,
+        max_tweets=100,
         scrape_username=None,
         scrape_hashtag=None,
         scrape_query=None,
@@ -678,7 +677,7 @@ It may be due to the following:
 
     def scrape_tweets(
         self,
-        max_tweets=10,
+        max_tweets=100,
         scrape_username=None,
         scrape_hashtag=None,
         scrape_query=None,
@@ -858,7 +857,42 @@ It may be due to the following:
 
     def get_tweets(self):
         return self.data
-    
+
+# FETCHING DATA FROM COINGECKO
+def fetch_price():
+    try:
+        params ={
+            'ids': 'bitcoin',
+            'vs_currencies': 'usd'
+        }
+        url = f'https://api.coingecko.com/api/v3/simple/price'
+        response = requests.get(url,params)
+        data = response.json()
+        return data['bitcoin']['usd']
+    except:
+        pass
+        #logger.info("Error fetching bitcoin price")
+
+def preprocess_text_column(df):
+    stop_words = set(stopwords.words('english'))
+    lemmatizer = WordNetLemmatizer()
+
+    def full_preprocess(text):
+        text = re.sub(r"http\S+", "", text)
+        text = re.sub(r"@\w+", "", text)
+        text = re.sub(r"#\w+", "", text)
+        text = re.sub(r"[^\w\s]", "", text)
+        text = text.lower()
+
+        tokens = word_tokenize(text)
+        tokens = [word for word in tokens if word not in stop_words]
+        tokens = [lemmatizer.lemmatize(word) for word in tokens]
+        return tokens
+
+    df['cleaned_text'] = df['Content'].astype(str)  
+    df['tokens'] = df['cleaned_text'].apply(full_preprocess)
+    return df
+        
 def concat_and_save_to_csv(new_data, output_file="./tweets/all_tweets.csv", poster_details=False):
     # Prepare new scraped data as a DataFrame
     data = {
@@ -885,38 +919,41 @@ def concat_and_save_to_csv(new_data, output_file="./tweets/all_tweets.csv", post
         data["Followers"] = [tweet[17] for tweet in new_data]
 
     new_df = pd.DataFrame(data)
-    new_df1 = preprocess_text_column(new_df)
-    apply_vader(new_df1)
-
-    # Check if the output file already exists
-    if os.path.exists(output_file):
-        existing_df = pd.read_csv(output_file)
-        combined_df = pd.concat([existing_df, new_df], ignore_index=True)
-    else:
-        combined_df = new_df
-    
-    # Drop duplicates based on 'Tweet ID'
-    if 'Tweet ID' in combined_df.columns:
-        combined_df = combined_df.drop_duplicates(subset=['Tweet ID'], keep='last')
-
-    # Save combined data
-    combined_df.to_csv(output_file, index=False, encoding="utf-8")
-    print(f"Saved {len(new_df)} new tweets. Total tweets now: {len(combined_df)}")
-
-# FETCHING DATA FROM COINGECKO
-def fetch_price():
+    price = fetch_price()
+    new_df['Bitcoin_Price'] = price
+    timestamp = pd.Timestamp.now()
+    new_df['UnitTime'] = timestamp
+    new_df = preprocess_text_column(new_df)
     try:
-        params ={
-            'ids': 'bitcoin',
-            'vs_currencies': 'usd'
-        }
-        url = f'https://api.coingecko.com/api/v3/simple/price'
-        response = requests.get(url,params)
-        data = response.json()
-        return data['bitcoin']['usd']
+        df = pd.read_csv(output_file)
+        # unit_new = df['unit'].max()+1
+        # new_df['unit'] = unit_new
+        df = pd.concat([df, new_df])
     except:
-        pass
-        #logger.info("Error fetching bitcoin price")
+        # unit_new = 0
+        # new_df['unit'] = unit_new
+        df = new_df
+    df.to_csv(output_file, index=False)
+    
+    # new_df1 = preprocess_text_column(new_df)
+    # apply_vader(new_df1)
+
+    # # Check if the output file already exists
+    # if os.path.exists(output_file):
+    #     existing_df = pd.read_csv(output_file)
+    #     combined_df = pd.concat([existing_df, new_df], ignore_index=True)
+    # else:
+    #     combined_df = new_df
+    
+    # # Drop duplicates based on 'Tweet ID'
+    # if 'Tweet ID' in combined_df.columns:
+    #     combined_df = combined_df.drop_duplicates(subset=['Tweet ID'], keep='last')
+
+    # # Save combined data
+    # combined_df.to_csv(output_file, index=False, encoding="utf-8")
+    # print(f"Saved {len(new_df)} new tweets. Total tweets now: {len(combined_df)}")
+    # new_df.to_csv(output_file, index=False, encoding="utf-8")
+    print(f"Saved {len(new_df)} new tweets. All tweets {len(df)}")
 
 
 # Download required NLTK data
@@ -924,26 +961,6 @@ nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 
-
-def preprocess_text_column(df):
-    stop_words = set(stopwords.words('english'))
-    lemmatizer = WordNetLemmatizer()
-
-    def full_preprocess(text):
-        text = re.sub(r"http\S+", "", text)
-        text = re.sub(r"@\w+", "", text)
-        text = re.sub(r"#\w+", "", text)
-        text = re.sub(r"[^\w\s]", "", text)
-        text = text.lower()
-
-        tokens = word_tokenize(text)
-        tokens = [word for word in tokens if word not in stop_words]
-        tokens = [lemmatizer.lemmatize(word) for word in tokens]
-        return tokens
-
-    df['cleaned_text'] = df['Content'].astype(str)  
-    df['tokens'] = df['cleaned_text'].apply(full_preprocess)
-    return df
 
 nltk.download('vader_lexicon')
 
@@ -966,25 +983,24 @@ def apply_vader(df, text_col='cleaned_text'):
 
     df['sentiment_label'] = df['compound'].apply(label_sentiment)
 
-    timestamp = pd.Timestamp.now()
-    sentiment_score = df['compound'].mean()
-    if sentiment_score >= 0.05:
-        final_sentiment = 'Positive'
-    elif sentiment_score <= -0.05:
-        final_sentiment = 'Negative'
-    else:
-        final_sentiment = 'Neutral'
-    bitcoin_price = fetch_price()
-    finaldf1 = pd.DataFrame({'time': [timestamp], 'sentiment': [final_sentiment], 'price': [bitcoin_price]})
-    try:
-        finaldf = pd.read_csv("final.csv")
-        finaldf = pd.concat([finaldf, finaldf1])
-    except:
-        finaldf = finaldf1.copy()
-    # Save to file
-    finaldf.to_csv("final.csv", index=False)
-    df.to_csv("sentiment_labeled.csv", index=False)
-    print("✅ Saved labeled data to sentiment_labeled.csv")
+    # sentiment_score = df['compound'].mean()
+    # if sentiment_score >= 0.05:
+    #     final_sentiment = 'Positive'
+    # elif sentiment_score <= -0.05:
+    #     final_sentiment = 'Negative'
+    # else:
+    #     final_sentiment = 'Neutral'
+    # bitcoin_price = fetch_price()
+    # finaldf1 = pd.DataFrame({'time': [timestamp], 'sentiment': [final_sentiment], 'price': [bitcoin_price]})
+    # try:
+    #     finaldf = pd.read_csv("final.csv")
+    #     finaldf = pd.concat([finaldf, finaldf1])
+    # except:
+    #     finaldf = finaldf1.copy()
+    # # Save to file
+    # finaldf.to_csv("final.csv", index=False)
+    # df.to_csv("sentiment_labeled.csv", index=False)
+    # print("Saved labeled data to sentiment_labeled.csv")
 
     return df
 
@@ -998,63 +1014,114 @@ def train_and_evaluate(df, text_col='cleaned_text', label_col='sentiment_label')
     clf.fit(X_train, y_train)
     y_pred = clf.predict(X_test)
 
-    print("✅ Model Evaluation")
+    print("Model Evaluation")
     print("Accuracy:", accuracy_score(y_test, y_pred))
     print("Classification Report:")
     print(classification_report(y_test, y_pred))
 
-def plot_sentiment_timeseries(file_path='sentiment_labeled.csv'):
-    # Load data
-    df = pd.read_csv(file_path)
+def plot_sentiment_timeseries(df):
+    df = df.groupby(['UnitTime']).agg({'Bitcoin_Price':'max','compound':'mean'}).reset_index()
+    df['Time'] = pd.to_datetime(df['UnitTime'], errors='coerce')
+    df = df.sort_values(by=['Time'])
 
+    fig, ax1 = plt.subplots(figsize=(10,5))
+
+    # Plot price on primary y-axis
+    ax1.plot(df['Time'], df['Bitcoin_Price'], label='Price', color='lightcoral')
+    ax1.set_xlabel('Time')
+    ax1.set_ylabel('Price')
+    ax1.set_title('Bitcoin Price and Sentiment Over Time')
+
+    # Plot compound score on secondary y-axis
+    ax2 = ax1.twinx()
+    ax2.plot(df['Time'], df['compound'], label='Compound Score', color='dodgerblue')
+    ax2.set_ylabel('Compound Score')
+
+    # Combine legends from both axes
+    lines1, labels1 = ax1.get_legend_handles_labels()
+    lines2, labels2 = ax2.get_legend_handles_labels()
+    ax1.legend(lines1 + lines2, labels1 + labels2, loc='best')
+
+    plt.tight_layout()
+    plt.show()
     # Ensure Timestamp is in datetime format
-    df['Timestamp'] = pd.to_datetime(df['Timestamp'], errors='coerce')
-    df = df.dropna(subset=['Timestamp'])  # Drop rows with invalid timestamps
+    # df['Timestamp'] = pd.to_datetime(df['time'], errors='coerce')
+    # print(df.head())
+    # df = df.dropna(subset=['Timestamp'])  # Drop rows with invalid timestamps
 
-    # Set Timestamp as index
-    df = df.set_index('Timestamp')
+    # # Set Timestamp as index
+    # df = df.set_index('Timestamp')
 
-    # Resample: average compound score over time (e.g., hourly)
-    sentiment_time = df['compound'].resample('H').mean()
+    # # Resample: average compound score over time (e.g., hourly)
+    # sentiment_time = df['compound'].resample('H').mean()
 
-    # Plot sentiment over time
-    plt.figure(figsize=(8, 4))
-    sentiment_time.plot()
-    plt.title('Average Sentiment (Compound Score) Over Time')
-    plt.xlabel('Time')
-    plt.ylabel('Average Compound Score')
-    plt.grid(True)
-    plt.tight_layout()
-    plt.show()
+    # # Plot sentiment over time
+    # plt.figure(figsize=(8, 4))
+    # sentiment_time.plot()
+    # plt.title('Average Sentiment (Compound Score) Over Time')
+    # plt.xlabel('Time')
+    # plt.ylabel('Average Compound Score')
+    # plt.grid(True)
+    # plt.tight_layout()
+    # plt.show()
 
-    # EDA: Count of sentiment labels over time (hourly)
-    sentiment_counts = df.resample('H')['sentiment_label'].value_counts().unstack().fillna(0)
+    # # EDA: Count of sentiment labels over time (hourly)
+    # sentiment_counts = df.resample('H')['sentiment_label'].value_counts().unstack().fillna(0)
 
-    # Plot stacked bar chart
-    sentiment_counts.plot(kind='bar', stacked=True, figsize=(14, 6), colormap='Set2')
-    plt.title('Sentiment Label Distribution Over Time')
-    plt.xlabel('Time')
-    plt.ylabel('Tweet Count')
-    plt.legend(title='Sentiment')
-    plt.tight_layout()
-    plt.show()
+    # # Plot stacked bar chart
+    # sentiment_counts.plot(kind='bar', stacked=True, figsize=(8, 4), cmap='Blues')
+    # plt.title('Sentiment Label Distribution Over Time')
+    # plt.xlabel('Time')
+    # plt.ylabel('Tweet Count')
+    # plt.legend(title='Sentiment')
+    # plt.tight_layout()
+    # plt.show()
 
-def final_corr():
-    df = pd.read_csv("final.csv")
-    df = df.sort_values(by=['time'])
-    df['perc_change'] = df['price'].pct_change() * 100
-    df['perc_change'] = df['perc_change'].fillna(0)
+def final_corr(df):
+    df = df.groupby(['UnitTime']).agg({'Bitcoin_Price':'max','compound':'mean'}).reset_index()
+    df['Time'] = pd.to_datetime(df['UnitTime'], errors='coerce')
+    df = df.sort_values(by=['Time'])
 
-    def categorize(pct):
-        if pct > 0.02:
-            return 'Up'
-        elif pct < -0.02:
-            return 'Down'
+    def label_sentiment(score):
+        if score >= 0.05:
+            return 'positive'
+        elif score <= -0.05:
+            return 'negative'
         else:
-            return 'Stable'
+            return 'neutral'
 
-    df['movement'] = df['perc_change'].apply(categorize)
-    crosstab = pd.crosstab(df['sentiment'], df['movement'], normalize='index')  # Row-wise normalization
+    df['Sentiment'] = df['compound'].apply(label_sentiment)
+
+    def label_price(price):
+        if price > 0:
+            return 'up'
+        elif price < 0:
+            return 'down'
+        else:
+            return 'stable'
+    df['Bitcoin_Price_Diff'] = df['Bitcoin_Price'].pct_change()
+    df['Movement'] = df['Bitcoin_Price_Diff'].apply(label_price)
+    df['Movement'] = df['Movement'].fillna('stable')
+    print(df.shape)
+    print(df.head())
+
+
+    # sentiment_score = df['compound'].mean()
+    # df = pd.read_csv("final.csv")
+    # df = df.sort_values(by=['time'])
+    # df['perc_change'] = df['price'].pct_change() * 100
+    # df['perc_change'] = df['perc_change'].fillna(0)
+
+    # def categorize(pct):
+    #     if pct > 0.02:
+    #         return 'Up'
+    #     elif pct < -0.02:
+    #         return 'Down'
+    #     else:
+    #         return 'Stable'
+
+    # df['movement'] = df['perc_change'].apply(categorize)
+    crosstab = pd.crosstab(df['Sentiment'], df['Movement'], normalize='index')  # Row-wise normalization
 
     # Step 2: Plot heatmap
     plt.figure(figsize=(8, 6))
