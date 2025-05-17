@@ -12,6 +12,9 @@ import os
 import logging
 import requests
 from transformers import pipeline
+from statsmodels.tsa.arima.model import ARIMA
+import pandas as pd
+import matplotlib.pyplot as plt
 
 # Fix txtai's internal translation module crash
 os.environ["TRANSFORMERS_NO_ADVISORY_WARNINGS"] = "true"
@@ -109,3 +112,29 @@ def analyze_sentiment(headline):
     result = sentiment_pipeline(headline)[0]
     logger.info(f"Analyzed: '{headline}' → {result['label']} ({result['score']:.2f})")
     return result['label']
+# --------------------------------------------------------------------------
+# Function: Run ARIMA Forecast on Bitcoin Price Data
+# --------------------------------------------------------------------------
+
+
+def run_arima_forecast(df, column='price', order=(2, 1, 2), steps=7):
+    """
+    Runs an ARIMA forecast on a specified column of a DataFrame.
+
+    :param df: DataFrame with datetime index
+    :param column: Column to forecast (default = 'price')
+    :param order: ARIMA model order (p,d,q)
+    :param steps: Number of days to forecast
+    :return: DataFrame with forecasted values
+    """
+    logger.info(f"Running ARIMA forecast on '{column}' column...")
+
+    model = ARIMA(df[column], order=order)
+    model_fit = model.fit()
+    forecast = model_fit.forecast(steps=steps)
+
+    forecast_index = pd.date_range(start=df.index[-1] + pd.Timedelta(days=1), periods=steps)
+    forecast_df = pd.DataFrame({'forecast': forecast}, index=forecast_index)
+
+    logger.info(f"Forecasting complete for {steps} steps ahead.")
+    return forecast_df
