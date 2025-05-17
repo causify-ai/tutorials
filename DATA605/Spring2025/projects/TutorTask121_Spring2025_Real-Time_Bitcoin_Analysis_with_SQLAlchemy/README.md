@@ -1,45 +1,45 @@
-# Tutorial Template: Two Docker Approaches
+# Real-Time Bitcoin Analysis with SQLAlchemy
 
-- This directory provides two versions of the same tutorial setup to help you
-  work with Jupyter notebooks and Python scripts inside Docker environments
+##  Overview
 
-- Both versions run the same code but use different Docker approaches, with
-  different level of complexity and maintainability
+This project implements an end-to-end Bitcoin price forecasting system using real-time data. It demonstrates how to:
 
-## 1. `data605_style` (Simple Docker Environment)
+- Fetch Bitcoin price data using the public **CoinGecko API**
+- Store and manage data using **SQLAlchemy** and **SQLite**
+- Automate ingestion of both historical and real-time price data
+- Perform **feature engineering**, **exploratory data analysis**, and **model training**
+- Evaluate and visualize forecasting results using **Linear Regression** and **Random Forest**
 
-- This version is modeled after the setup used in DATA605 tutorials
-- This template provides a ready-to-run environment, including scripts to build,
-  run, and clean the Docker container.
+The project is structured like a professional open-source tutorial with clean utility modules, Jupyter notebooks, and full Docker integration.
 
-- For your specific project, you should:
-  - Modify the Dockerfile to add project-specific dependencies
-  - Update bash/scripts accordingly
-  - Expose additional ports if your project requires them
+---
 
-## 2. `causify_style` (Causify AI dev-system)
+##  Technologies Used
 
-- This setup reflects the approach commonly used in Causify AI dev-system
-- **Recommended** for students familiar with Docker or those wishing to explore a
-  production-like setup
-- Pros
-  - Docker layer written in Python to make it easy to extend and test
-  - Less redundant since code is factored out
-  - Used for real-world development, production workflows
-  - Used for all internships, RA / TA, full-time at UMD DATA605 / MSML610 /
-    Causify 
-- Cons
-  - It is more complex to use and configure
-  - More dependencies from the 
-- For thin environment setup instructions, refer to:  
-  [How to Set Up Development on Laptop](https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
+| Tool | Purpose |
+|------|---------|
+| **Docker** | Environment setup, dependency isolation |
+| **SQLAlchemy** | Database schema definition and ORM |
+| **SQLite** | Local storage of historical and real-time data |
+| **CoinGecko API** | Public REST API for cryptocurrency prices |
+| **pandas / matplotlib** | Data processing and visualization |
+| **scikit-learn** | Regression models and metrics |
+| **Jupyter Notebook** | Interactive workflow for ingestion, modeling, and visualization |
 
-## Reference Tutorials
+---
 
-- The `tutorial_github` example has been implemented in both environments for you
-  to refer to:
-  - `tutorial_github_data605_style` uses the simpler DATA605 approach
-  - `tutorial_github_causify_style` uses the more complex Causify approach
+##  Project Structure
 
-- Choose the approach that best fits your comfort level and project needs. Both
-  are valid depending on your use case.
+```plaintext
+.
+├── SQLAlchemy_utils.py             # Utility functions: DB, API wrappers
+├── SQLAlchemy.API.ipynb           # Demonstrates API and DB usage
+├── SQLAlchemy.API.md              # Explains API layer and design
+├── SQLAlchemy.example.ipynb       # Full end-to-end notebook: ingestion → model
+├── SQLAlchemy.example.md          # Written explanation of modeling example
+├── docker_build.sh                # Script to build Docker container
+├── docker_bash.sh                 # Script to open bash shell inside container
+├── docker_jupyter.sh              # Script to start Jupyter notebook in container
+└── README.md                      # Project overview and instructions
+
+
