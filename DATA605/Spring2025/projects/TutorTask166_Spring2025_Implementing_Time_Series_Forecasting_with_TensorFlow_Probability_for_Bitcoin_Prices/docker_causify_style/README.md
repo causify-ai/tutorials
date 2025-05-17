@@ -97,7 +97,7 @@ Common utility functions ensure consistent data handling across all components:
 
 ## Model Configuration
 
-The model can be configured through the `unified_config.yaml` file, which includes settings for:
+The model can be configured through the `config.yaml` file, which includes settings for:
 
 ```yaml
 model:
@@ -156,8 +156,7 @@ docker_causify_style/
 ├── dashboard/                 # Streamlit visualization interface
 ├── data_collector/            # Real-time data collection service 
 ├── configs/                   # Configuration files
-│   ├── unified_config.yaml    # Main configuration file
-│   └── config.yaml            # Legacy/component-specific config
+│   └── config.yaml            # Main configuration file
 ├── utilities/                 # Shared utility functions
 ├── docker-compose.yml         # Docker services configuration
 └── restart_optimized.sh       # System restart script
@@ -167,7 +166,7 @@ docker_causify_style/
 
 The system uses a unified configuration approach:
 
-1. Edit `configs/unified_config.yaml` to change settings
+1. Edit `configs/config.yaml` to change settings
 2. Restart services with `docker-compose restart <service-name>`
 
 ## Timestamp Format
