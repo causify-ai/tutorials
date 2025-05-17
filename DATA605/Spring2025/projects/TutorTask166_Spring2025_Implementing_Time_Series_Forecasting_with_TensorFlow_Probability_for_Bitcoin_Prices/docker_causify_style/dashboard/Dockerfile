@@ -14,8 +14,8 @@ RUN mkdir -p /app/data/raw /app/data/predictions /app/data/raw_data \
 # Install required Python packages
 RUN pip install --no-cache-dir streamlit pandas numpy plotly scipy tensorflow tensorflow-probability pyyaml
 
-# Copy unified configuration
-COPY configs/unified_config.yaml /app/configs/
+# Copy configuration
+COPY configs/config.yaml /app/configs/
 
 # Copy utilities (including the unified config parser)
 COPY utilities/ /app/utilities/
