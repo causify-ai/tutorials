@@ -1,0 +1,11 @@
+FROM jupyter/scipy-notebook:latest
+
+# use compatible versions
+RUN pip install numpy==1.26.4 txtai==3.3.0
+
+# install additional required packages
+RUN pip install requests matplotlib pandas
+
+# copy all project files
+COPY . /home/jovyan/work/
+WORKDIR /home/jovyan/work
