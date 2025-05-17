@@ -1,29 +1,21 @@
-# Use an official OpenJDK base image (required for Spark)
-FROM openjdk:11-jdk
+# Use a slim Python base image
+FROM python:3.10-slim
 
 # Set working directory inside container
 WORKDIR /app
 
-# Install Python and pip
-RUN apt-get update && apt-get install -y python3 python3-pip
+FROM python:3.10-slim
 
-# Install Spark (choose Spark 3.4.1 to match your EMR)
-RUN apt-get install -y wget && \
-    wget https://archive.apache.org/dist/spark/spark-3.4.1/spark-3.4.1-bin-hadoop3.tgz && \
-    tar -xvzf spark-3.4.1-bin-hadoop3.tgz && \
-    mv spark-3.4.1-bin-hadoop3 /spark
+WORKDIR /workspace
 
+# Copy all project files
+COPY . /workspace
 
-# Add Spark to PATH
-ENV SPARK_HOME=/spark
-ENV PATH=$SPARK_HOME/bin:$PATH
+# Install dependencies
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copy your project files
-COPY . /app
+# Expose Jupyter port
+EXPOSE 8888
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip3 install --no-cache-dir -r requirements.txt
-
-# Default command
-CMD ["bash", "run_spark.sh"]
+# Run Jupyter when container starts
+CMD ["bash", "./run_jupyter.sh"]
