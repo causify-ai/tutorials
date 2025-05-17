@@ -87,6 +87,13 @@ pipeline_model[-1].weights
   * Predicted price from each model
   * Rolling volatility
 * Printed model weights at the end
+---
+### Native API-Based Streaming 
+
+This section showcases real-time Bitcoin price forecasting using River's **native APIs** (`StandardScaler`, `LinearRegression`, and `MAE`) without pipeline wrappers.  
+It uses a rolling window of lagged prices to create features and updates the model incrementally via `learn_one()` after each price observation.  
+Predictions are made using `predict_one()`, and performance is tracked using `MAE` in real-time.  
+This approach provides a transparent and modular example of **streaming online learning** with River.
 
 ---
 
@@ -112,4 +119,10 @@ pipeline_model[-1].weights
 
 - [River: Online machine learning for Python](https://riverml.xyz/latest/)
 - [CoinGecko API Documentation](https://www.coingecko.com/en/api/documentation)
+- [River LinearRegression API](https://riverml.xyz/latest/api/linear_model/LinearRegression/)
+- [River StandardScaler API](https://riverml.xyz/latest/api/preprocessing/StandardScaler/)
+- [River Metrics (MAE, Accuracy, etc.)](https://riverml.xyz/latest/api/metrics/)
+- [CoinGecko API Documentation](https://www.coingecko.com/en/api/documentation)
+- [Python `collections.deque`](https://docs.python.org/3/library/collections.html#collections.deque)
+- [Real-Time Machine Learning Concepts – AWS Blog](https://aws.amazon.com/blogs/machine-learning/building-real-time-prediction-systems-with-online-learning/)
 
