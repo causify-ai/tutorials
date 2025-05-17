@@ -1,0 +1,67 @@
+{
+  "2d052f27a48cfc361431b5ded8d1c860": {
+    "timestamp": "2025-05-17T08:36:07.191720+00:00",
+    "sentiment": "N",
+    "score": 0
+  },
+  "fc095fdcc00f922beec41d96b11e3886": {
+    "timestamp": "2025-05-17T08:36:07.655488+00:00",
+    "sentiment": "N",
+    "score": 0
+  },
+  "1502021daa156b61cbdb8e6857742655": {
+    "timestamp": "2025-05-17T08:36:09.201253+00:00",
+    "sentiment": "Pos",
+    "score": 1
+  },
+  "afb46271793832e11caf28b0c90e9c98": {
+    "timestamp": "2025-05-17T08:36:09.642687+00:00",
+    "sentiment": "N",
+    "score": 0
+  },
+  "0398211b4352b15ef8d6bcb643b7cdcc": {
+    "timestamp": "2025-05-17T08:36:12.397004+00:00",
+    "sentiment": "N",
+    "score": 0
+  },
+  "8a4fd6a432ed6a6e0d954ed4df1478cb": {
+    "timestamp": "2025-05-17T08:36:12.810907+00:00",
+    "sentiment": "N",
+    "score": 0
+  },
+  "4b4f7860082ba930ea6c58666511c4ef": {
+    "timestamp": "2025-05-17T08:36:14.326722+00:00",
+    "sentiment": "N",
+    "score": 0
+  },
+  "0792b80daeff7139b713673b5b0d28ad": {
+    "timestamp": "2025-05-17T08:36:14.700549+00:00",
+    "sentiment": "Pos",
+    "score": 1
+  },
+  "5eb517368cd94b865abcfc4238c9bf7e": {
+    "timestamp": "2025-05-17T08:36:17.583582+00:00",
+    "sentiment": "N",
+    "score": 0
+  },
+  "5e0ae12fe936682832612b0c7e4f1b4a": {
+    "timestamp": "2025-05-17T08:36:17.942974+00:00",
+    "sentiment": "Pos",
+    "score": 1
+  },
+  "e3951dbf04339804eebf56ad85d137d9": {
+    "timestamp": "2025-05-17T08:43:20.272951+00:00",
+    "sentiment": "N",
+    "score": 0
+  },
+  "fed376aa09d28609ab64a5622d13fc3e": {
+    "timestamp": "2025-05-17T08:43:20.642336+00:00",
+    "sentiment": "Pos",
+    "score": 1
+  },
+  "f53e96c5fed36cd9be97fbddb699ec24": {
+    "timestamp": "2025-05-17T08:43:23.227033+00:00",
+    "sentiment": "Pos",
+    "score": 1
+  }
+}

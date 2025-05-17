@@ -1,55 +1,28 @@
-FROM ubuntu:20.04
-ENV DEBIAN_FRONTEND=noninteractive
+# Use an official Python base image
+FROM python:3.11-slim
 
-RUN apt-get -y update
-RUN apt-get -y upgrade
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Install system utilities.
-RUN apt install -y --no-install-recommends \
-    sudo \
-    curl \
-    systemctl \
-    gnupg \
-    git \
-    vim
+# Set work directory
+WORKDIR /app
 
-# Install Python.
-RUN apt install -y --no-install-recommends \
-    python3 \
-    python3-pip \
-    python3-dev
+# Install system dependencies (if needed)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN python3 -m pip install --upgrade pip
-    
-# Install Python packages.
-# There is a bug:
-#   File "/opt/homebrew/lib/python3.10/site-packages/tornado/iostream.py", line 182, in advance
-#   assert 0 < size <= self._size
-# for tornado==6.2 and jupyter-client==8.0.2.
-# https://discourse.jupyter.org/t/jupyter-notebook-zmq-message-arrived-on-closed-channel-error/17869/10
-RUN pip3 install \
-    ipython \
-    tornado==6.1 \
-    jupyter-client==7.3.2 \
-    jupyter-contrib-core \
-    jupyter-contrib-nbextensions \
-    psycopg2-binary \
-    yapf
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip cache purge
+RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-RUN mkdir /install
+# Copy the rest of your code
+COPY . .
 
-# Install Jupyter extensions.
-ADD install_jupyter_extensions.sh /install
-RUN /install/install_jupyter_extensions.sh
-
-# Config.
-ADD etc_sudoers /install/
-COPY etc_sudoers /etc/sudoers
-COPY bashrc /root/.bashrc
-
-# Report package versions.
-ADD version.sh /install/
-RUN /install/version.sh 2>&1 | tee version.log
-
-# Jupyter.
+# (Optional) Expose port for Jupyter
 EXPOSE 8888
+
+# Default command: start Jupyter Notebook
+CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--allow-root", "--no-browser", "--NotebookApp.token=''"]
