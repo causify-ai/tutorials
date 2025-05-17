@@ -5,6 +5,7 @@
 # -----------------------------------------------
 import requests
 import time
+import pandas as pd
 from datetime import datetime, timedelta
 from sqlalchemy import create_engine, Column, Float, Integer, DateTime
 from sqlalchemy.ext.declarative import declarative_base
@@ -129,3 +130,15 @@ def fetch_realtime_5min_series(interval_seconds=10):
         time.sleep(interval_seconds)
 
     return price_list
+
+def load_data_from_db(db_name="bitcoin_data.db"):
+    """
+    Reloads Bitcoin data from SQLite after live ingestion.
+    """
+    engine = create_engine(f"sqlite:///{db_name}")
+    df = pd.read_sql("SELECT * FROM bitcoin_prices", con=engine)
+    df['timestamp'] = pd.to_datetime(df['timestamp'])
+    df.set_index('timestamp', inplace=True)
+    df.sort_index(inplace=True)
+    df.drop_duplicates(inplace=True)
+    return df
