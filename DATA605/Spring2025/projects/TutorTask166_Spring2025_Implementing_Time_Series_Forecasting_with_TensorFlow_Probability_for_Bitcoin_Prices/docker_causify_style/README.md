@@ -1,14 +1,30 @@
 # Bitcoin Price Forecasting System
 
-An advanced real-time Bitcoin price forecasting system leveraging TensorFlow Probability for time series modeling with uncertainty quantification.
+An advanced real-time Bitcoin price forecasting system leveraging TensorFlow Probability for time series modeling with uncertainty quantification. The system provides accurate price predictions with confidence intervals and comprehensive performance metrics.
 
 ## System Architecture
 
-This project implements a microservices-based Bitcoin price forecasting system with the following components:
+```
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│  CoinGecko  │───▶│    Kafka    │───▶│  Forecasting│───▶│  Dashboard  │
+│  API Data   │    │   Broker    │    │    Model    │    │     App     │
+└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
+                                          │     ▲
+                                          │     │
+                                          ▼     │
+                                      ┌─────────────┐
+                                      │   Storage   │
+                                      │  CSV Files  │
+                                      └─────────────┘
+```
+
+This project implements a microservices-based architecture with the following components:
 
 1. **Data Collector**: Fetches real-time Bitcoin price data from Coinbase via WebSocket API
 2. **Bitcoin Forecast App**: Processes data and generates predictions using TensorFlow Probability
 3. **Dashboard**: Real-time visualization of prices, predictions, and performance metrics
+   - **Streamlit Dashboard**: Interactive data visualization with automatic updates
+   - **Web App Dashboard**: Modern web interface with real-time updates
 4. **Kafka**: Message broker for communication between services
 5. **ZooKeeper**: Coordination service for Kafka
 
@@ -51,6 +67,55 @@ This project implements a microservices-based Bitcoin price forecasting system w
 - Error distribution analysis
 - Cold start handling for improved UX
 - 30-minute time window for all charts
+- Consistent update frequency (1 second)
+
+## Data Flow Sequence
+
+1. Bitcoin price data is fetched from CoinGecko and published to Kafka
+2. The forecasting service consumes the data and loads recent historical context
+3. The model is updated with new data and makes a prediction for the next time point
+4. The prediction, with confidence intervals, is stored in the predictions file
+5. Performance metrics are calculated and stored in the metrics file
+6. The dashboard applications read the updated files and refresh the visualization
+7. The cycle repeats at the next data ingestion point
+
+## Model Architecture
+
+The Bitcoin forecasting model uses a structural time series approach based on TensorFlow Probability:
+
+1. **Local Linear Trend**: Models the underlying trend in Bitcoin prices
+2. **Seasonal Component**: Captures regular cyclical patterns in Bitcoin trading
+3. **Autoregressive Component**: Models short-term dependencies where current prices depend on recent past prices
+
+### Inference Techniques
+
+The model uses two primary Bayesian inference techniques:
+
+1. **Variational Inference (VI)**: Fast approximation of the posterior distribution
+2. **Markov Chain Monte Carlo (MCMC)**: More accurate uncertainty estimates when needed
+
+## Performance Metrics
+
+The system tracks several performance metrics:
+
+### Mean Absolute Error (MAE)
+
+The Mean Absolute Error between true target values (y) and predictions (ŷ) is defined as:
+```
+MAE = (1/N) * Σ|y_i - ŷ_i|
+```
+
+MAE fluctuations in the visualization are expected due to:
+- Point-wise MAE representation (individual prediction errors)
+- Bitcoin's inherent price volatility
+- Real-time updates capturing many small price movements
+- Model adaptation periods when market conditions change
+
+Other metrics include:
+- **Root Mean Square Error (RMSE)**: Gives higher weight to larger errors
+- **Percentage Error**: Relative error as a percentage of actual price
+- **Standard Deviation**: Represents confidence in predictions
+- **Z-score**: Identifies anomalous predictions
 
 ## Components in Detail
 
@@ -77,13 +142,22 @@ The forecast application processes incoming data and generates predictions:
 
 ### Dashboard
 
-The Streamlit dashboard visualizes the data and predictions:
+Two dashboard implementations are available:
 
+#### Streamlit Dashboard
 - Real-time price chart with 30-minute window
 - Prediction visualization with confidence intervals
 - Error metrics tracking and visualization
 - Error distribution analysis
 - System status monitoring
+- Auto-refreshes every 1 second
+
+#### Web App Dashboard
+- Modern UI with responsive design
+- Real-time data updates (1 second refresh)
+- Interactive charts with Plotly
+- Comprehensive metrics display
+- Consistent visual styling with the Streamlit dashboard
 
 ### Utilities
 
@@ -124,7 +198,9 @@ model:
    docker-compose up -d
    ```
 
-2. Access the dashboard at http://localhost:8501
+2. Access the dashboards:
+   - Streamlit Dashboard: http://localhost:8501
+   - Web App Dashboard: http://localhost:5000
 
 3. Monitor real-time predictions and performance metrics
 
@@ -143,6 +219,30 @@ This script:
 - Trims raw data for better performance
 - Rebuilds containers with optimized settings
 
+## Recent Improvements
+
+### Universal Data Handling Utilities
+- Centralized utility functions for consistent data operations
+- Safe rounding, price formatting, timestamp normalization
+- Consistent timezone handling in DataFrames
+
+### Model Operation Utilities
+- Safe model prediction with comprehensive error handling
+- Consistent extraction of scalar values from predictions
+- Validation of confidence intervals
+- Standardized error metric calculations
+
+### Improved Error Handling
+- Comprehensive try/except blocks with detailed error logging
+- Fallback mechanisms for model prediction failures
+- Graceful handling of type errors and timestamp comparison issues
+
+### Dashboard Enhancements
+- Consistent update frequency (1 second) between dashboards
+- Improved visualization of MAE and error metrics
+- Consistent color schemes across implementations
+- Better error rating system for high-value assets like Bitcoin
+
 ## Development
 
 ### Directory Structure
@@ -154,10 +254,18 @@ docker_causify_style/
 │   ├── mains/                 # Application entry points
 │   └── utilities/             # App-specific utilities
 ├── dashboard/                 # Streamlit visualization interface
+├── web_app/                   # Web application
+│   ├── backend/               # API backend
+│   └── frontend/              # Web frontend
 ├── data_collector/            # Real-time data collection service 
 ├── configs/                   # Configuration files
 │   └── config.yaml            # Main configuration file
 ├── utilities/                 # Shared utility functions
+│   ├── timestamp_format.py    # Timestamp handling utilities
+│   ├── price_format.py        # Price formatting utilities
+│   ├── data_utils.py          # Data handling utilities
+│   ├── model_utils.py         # Model operation utilities
+│   └── unified_config.py      # Configuration parser
 ├── docker-compose.yml         # Docker services configuration
 └── restart_optimized.sh       # System restart script
 ```
@@ -203,6 +311,7 @@ If actual and predicted data have different timestamps:
 
 1. Restart the bitcoin forecast app: `docker-compose restart bitcoin-forecast-app`
 2. Check logs for timestamp parsing errors: `docker-compose logs bitcoin-forecast-app`
+3. Run the timestamp fix script: `./scripts/fix_timestamps.sh`
 
 ## Docker Commands Reference
 
@@ -248,9 +357,6 @@ docker-compose up -d
 # View container status
 docker-compose ps
 
-# Check container resource usage
-docker stats
-
-# Clean up Docker resources
+# Clean up unused Docker resources
 docker system prune -f
 ```
