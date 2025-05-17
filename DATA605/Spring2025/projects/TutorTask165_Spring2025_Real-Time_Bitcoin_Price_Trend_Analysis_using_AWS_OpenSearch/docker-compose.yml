@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.18
+    container_name: es7_tutorial
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ports:
+      - 9201:9200  # ⚠️ Uses 9201 to avoid clashing with previous es7
+    volumes:
+      - esdata_tutorial:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.18
+    container_name: kibana_tutorial
+    ports:
+      - 5602:5601  # ⚠️ Uses 5602 to avoid clashing with previous kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+
+  worker:
+    build:
+      context: .
+    container_name: bitcoin-tutorial-worker
+    volumes:
+      - ./data:/app/data
+      - ./results:/app/results
+      - ./scripts:/app/scripts
+    depends_on:
+      - elasticsearch
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: ["tail", "-f", "/dev/null"]  # so you can exec into it
+
+volumes:
+  esdata_tutorial:

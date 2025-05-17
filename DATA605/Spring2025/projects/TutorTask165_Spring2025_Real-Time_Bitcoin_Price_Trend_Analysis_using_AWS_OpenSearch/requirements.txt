@@ -1,0 +1,7 @@
+pandas==2.2.2
+matplotlib==3.8.4
+requests==2.31.0
+pycoingecko==3.1.0
+opensearch-py==2.3.2
+sentence-transformers==2.6.1
+tqdm==4.66.4
