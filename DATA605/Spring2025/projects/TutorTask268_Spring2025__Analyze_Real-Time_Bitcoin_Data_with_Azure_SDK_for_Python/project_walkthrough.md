@@ -46,10 +46,10 @@ I created the following Docker-related files in the root of my project:
 
 ### Screenshot Example
 
-```markdown
+
 ![Docker image running](Images/dock/image.png)
 ![Jupyter running in powershell](Images/dock/terminal.png)
-```
+
 
 ---
 
@@ -109,9 +109,9 @@ Once the Docker environment was ready, I structured the project into a clean and
 
 ### Screenshot: Project Folder
 
-```markdown
+
 ![Project Folder](Images/project_folder/folder.png)
-```
+
 
 ---
 
@@ -174,12 +174,12 @@ STORAGE_CONTAINER_NAME=bitcoin-data
 
 Below are screenshots of the Azure components created and configured for this project:
 
-```markdown
+
 ![Azure Event Hub](Images/Azure/EventHub.png)
 ![Azure Blob Storage](Images/Azure/BlobStorage.png)
 ![Azure Blob Storage container](Images/Azure/container.png)
 ![Azure App Registration](Images/Azure/app.png)
-```
+
 
 ---
 
@@ -226,10 +226,10 @@ flowchart TD
 ```
 
 ### Screenshots of scripts
-```markdown
+
 ![Streamer Output](Images/scripts/streamer.png)
 ![Receiver Output](Images/scripts/reciever.png)
-```
+
 ---
 
 ##  Step 6: Time Series Analysis in Azure Synapse Analytics
@@ -262,14 +262,14 @@ I applied the following time-series techniques directly inside Synapse using SQL
 
 Below are screenshots of the graphs and analysis panels created inside Synapse:
 
-```markdown
+
 ![horly_aggregation](Images/Azure_Synapse/horly_aggregation.png)
 ![Synapse Moving Average](Images/Azure_Synapse/moving_average.png)
 ![Synapse Anomaly Detection](Images/Azure_Synapse/zscore.png)
 ![Rate of Change](Images/Azure_Synapse/roc.png)
 ![Syanapse Rolling Average](Images/Azure_Synapse/roll.png)
 ![Rolling SD Volitality](Images/Azure_Synapse/volatality.png)
-```
+
 
 ---
 
