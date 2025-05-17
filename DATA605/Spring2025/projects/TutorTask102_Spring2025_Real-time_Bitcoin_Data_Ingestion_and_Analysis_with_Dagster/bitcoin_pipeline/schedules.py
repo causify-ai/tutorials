@@ -1,9 +1,7 @@
-from dagster import ScheduleDefinition
-from .jobs import bitcoin_price_pipeline
+from dagster import ScheduleDefinition  # ✅ Correct import
+from bitcoin_pipeline.jobs import bitcoin_analysis_job  # 🔁 Use full path if not relative
 
 bitcoin_price_schedule = ScheduleDefinition(
-    job=bitcoin_price_pipeline,
+    job=bitcoin_analysis_job,
     cron_schedule="*/5 * * * *",  # Every 5 minutes
 )
-
-schedules = [bitcoin_price_schedule]

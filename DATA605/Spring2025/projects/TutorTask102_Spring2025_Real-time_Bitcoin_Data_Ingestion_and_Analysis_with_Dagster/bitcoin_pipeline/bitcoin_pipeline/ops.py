@@ -1,28 +1,43 @@
-import requests
-import pandas as pd
 from dagster import op
-from datetime import datetime
+from bitcoin_pipeline.Dagster_utils import (
+    fetch_bitcoin_price,
+    process_price_data,
+    save_to_csv,
+    get_historical_bitcoin_data,
+    calculate_moving_average,
+    detect_trend,
+    detect_anomalies_zscore,
+    fit_arima_model
+)
 
 @op
-def fetch_bitcoin_price():
-    url = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd'
-    response = requests.get(url)
-    data = response.json()
-    timestamp = datetime.utcnow().isoformat()
-    return {"timestamp": timestamp, "price": data["bitcoin"]["usd"]}
+def fetch_price_op():
+    return fetch_bitcoin_price()
 
 @op
-def process_data(raw_data: dict) -> pd.DataFrame:
-    df = pd.DataFrame([raw_data])
-    df['timestamp'] = pd.to_datetime(df['timestamp'])
-    return df
+def process_price_op(data):
+    return process_price_data(data)
 
 @op
-def save_to_csv(df: pd.DataFrame):
-    filename = "bitcoin_prices.csv"
-    try:
-        existing_df = pd.read_csv(filename)
-        df = pd.concat([existing_df, df], ignore_index=True)
-    except FileNotFoundError:
-        pass
-    df.to_csv(filename, index=False)
+def save_csv_op(df):
+    save_to_csv(df, filepath="bitcoin_prices.csv")
+
+@op
+def fetch_historical_op():
+    return get_historical_bitcoin_data(days=365)
+
+@op
+def moving_average_op(df):
+    return calculate_moving_average(df, window_days=5)
+
+@op
+def detect_trend_op(df):
+    return detect_trend(df)
+
+@op
+def detect_anomalies_op(df):
+    return detect_anomalies_zscore(df)
+
+@op
+def forecast_op(df):
+    return fit_arima_model(df, order=(5, 1, 0), forecast_steps=30)

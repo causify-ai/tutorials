@@ -116,6 +116,20 @@ This markdown documents:
 
 ---
 
+### 8. Forecasting using ARIMA
+
+**Functions:**
+- `fit_arima_model(df, order=(5,1,0), forecast_steps=30)`
+- `plot_arima_forecast(df, forecast_steps=30)`
+
+These functions allow the pipeline to forecast future Bitcoin prices using an ARIMA (AutoRegressive Integrated Moving Average) model.
+
+- `fit_arima_model()` fits an ARIMA model on the last 365 days of historical price data and generates forecasts for the next `n` days.
+- `plot_arima_forecast()` visualizes both the historical data and future forecast in a clean time series plot.
+
+This allows for short-term predictive insights and is useful for identifying expected trends in upcoming days based on historical price behavior.
+
+
 ## References and Citations
 
 - Dagster Docs: https://docs.dagster.io  

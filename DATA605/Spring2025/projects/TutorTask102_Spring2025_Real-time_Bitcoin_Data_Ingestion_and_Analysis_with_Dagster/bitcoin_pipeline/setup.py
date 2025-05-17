@@ -5,7 +5,13 @@ setup(
     packages=find_packages(exclude=["bitcoin_pipeline_tests"]),
     install_requires=[
         "dagster",
-        "dagster-cloud"
+        "dagster-cloud",
+        "pandas",
+        "matplotlib",
+        "statsmodels",
+        "requests",
+        "seaborn",
+        "numpy",
     ],
     extras_require={"dev": ["dagster-webserver", "pytest"]},
 )

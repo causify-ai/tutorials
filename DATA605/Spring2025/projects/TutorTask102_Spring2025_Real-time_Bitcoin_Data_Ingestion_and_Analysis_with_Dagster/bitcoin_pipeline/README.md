@@ -1,47 +1,37 @@
-# bitcoin_pipeline
+# Real-time Bitcoin Data Ingestion and Analysis with Dagster
 
-This is a [Dagster](https://dagster.io/) project scaffolded with [`dagster project scaffold`](https://docs.dagster.io/guides/build/projects/creating-a-new-project).
+## 📌 Project Overview
 
-## Getting started
+This project demonstrates how to use **Dagster**, an open-source data orchestration framework, to build a real-time Bitcoin price ingestion and analysis pipeline.
 
-First, install your Dagster code location as a Python package. By using the --editable flag, pip will install your Python package in ["editable mode"](https://pip.pypa.io/en/latest/topics/local-project-installs/#editable-installs) so that as you develop, local code changes will automatically apply.
+The system:
+- Fetches live Bitcoin price data from the [CoinGecko API](https://www.coingecko.com/en/api)
+- Stores the historical data in a CSV file (or optionally in SQLite)
+- Performs basic time-series analysis, including moving average calculations
+- Visualizes trends for further inspection
+- Is built using a modular and reusable Dagster pipeline with `@op` and `@job` patterns
 
-```bash
-pip install -e ".[dev]"
-```
+---
 
-Then, start the Dagster UI web server:
+## ⚙️ Technologies Used
 
-```bash
-dagster dev
-```
+- **Dagster** – for building and running the pipeline
+- **Requests** – for API access
+- **Pandas** – for data manipulation and analysis
+- **Matplotlib / Plotly** – for visualizing Bitcoin price trends
+- **Docker (data605_style)** – for containerized execution
+- **Jupyter Notebook** – for demonstration and experimentation
 
-Open http://localhost:3000 with your browser to see the project.
+---
 
-You can start writing assets in `bitcoin_pipeline/assets.py`. The assets are automatically loaded into the Dagster code location as you define them.
-
-## Development
-
-### Adding new Python dependencies
-
-You can specify new Python dependencies in `setup.py`.
-
-### Unit testing
-
-Tests are in the `bitcoin_pipeline_tests` directory and you can run tests using `pytest`:
+## 📂 Project Structure
 
 ```bash
-pytest bitcoin_pipeline_tests
-```
-
-### Schedules and sensors
-
-If you want to enable Dagster [Schedules](https://docs.dagster.io/guides/automate/schedules/) or [Sensors](https://docs.dagster.io/guides/automate/sensors/) for your jobs, the [Dagster Daemon](https://docs.dagster.io/guides/deploy/execution/dagster-daemon) process must be running. This is done automatically when you run `dagster dev`.
-
-Once your Dagster Daemon is running, you can start turning on schedules and sensors for your jobs.
-
-## Deploy on Dagster+
-
-The easiest way to deploy your Dagster project is to use Dagster+.
-
-Check out the [Dagster+ documentation](https://docs.dagster.io/dagster-plus/) to learn more.
+Dagster_utils.py           # All functional logic: API calls, saving, analysis
+Dagster.API.ipynb          # Minimal example of using the Dagster pipeline
+Dagster.API.md             # Markdown explaining the pipeline design
+Dagster.example.ipynb      # Full example: ingestion + analysis + visualization
+Dagster.example.md         # Markdown explanation of the full example
+README.md                  # This file
+bitcoin_prices.csv         # Output data file (optional)
+pyproject.toml             # Python dependencies declaration
