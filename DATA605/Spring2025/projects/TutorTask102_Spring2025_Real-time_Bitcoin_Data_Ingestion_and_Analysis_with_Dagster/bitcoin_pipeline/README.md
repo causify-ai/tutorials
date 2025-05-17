@@ -1,37 +1,78 @@
-# Real-time Bitcoin Data Ingestion and Analysis with Dagster
+<!-- toc -->
 
-## 📌 Project Overview
+* [Project files](#project-files)
+* [Setup and Dependencies](#setup-and-dependencies)
 
-This project demonstrates how to use **Dagster**, an open-source data orchestration framework, to build a real-time Bitcoin price ingestion and analysis pipeline.
+  * [Building and Running the Docker Container](#building-and-running-the-docker-container)
 
-The system:
-- Fetches live Bitcoin price data from the [CoinGecko API](https://www.coingecko.com/en/api)
-- Stores the historical data in a CSV file (or optionally in SQLite)
-- Performs basic time-series analysis, including moving average calculations
-- Visualizes trends for further inspection
-- Is built using a modular and reusable Dagster pipeline with `@op` and `@job` patterns
+    * [Environment Setup](#environment-setup)
 
----
+<!-- tocstop -->
 
-## ⚙️ Technologies Used
+# Project files
 
-- **Dagster** – for building and running the pipeline
-- **Requests** – for API access
-- **Pandas** – for data manipulation and analysis
-- **Matplotlib / Plotly** – for visualizing Bitcoin price trends
-- **Docker (data605_style)** – for containerized execution
-- **Jupyter Notebook** – for demonstration and experimentation
+* Author: Suryateja Konduri [ksurya14@umd.edu](mailto:ksurya14@umd.edu)
+* Date: 2025-05-17
 
----
+This project contains the following files
 
-## 📂 Project Structure
+* `README.md`: This file
+* `Dagster.API.ipynb`: a notebook describing the Bitcoin API integration
+* `Dagster.API.md`: a markdown description of the Bitcoin API
+* `Dagster.API.py`: code used for API access
+* `Dagster.example.ipynb`: a notebook implementing the pipeline
+* `Dagster.example.md`: markdown summary of the pipeline usage
+* `Dagster.example.py`: Python script to demonstrate full pipeline
+* `Dagster_utils.py`: module containing utility functions like ARIMA forecast, anomaly detection, trend analysis
+* `Dockerfile`: builds Dagster environment for this project
+* `bitcoin_prices.csv`: CSV file storing real-time price data
+* `pyproject.toml`: contains dependency metadata for the project
+* `setup.py`: installs the package and all dependencies
+* `set_env.sh`: helper script for setting up environment variables
+
+Main Package Folder: `bitcoin_pipeline/bitcoin_pipeline`
+
+* `__init__.py`: package initializer
+* `Dagster_utils.py`: shared analysis/forecasting utilities
+* `definitions.py`: Dagster `Definitions` object
+* `jobs.py`: defines the job combining ops
+* `ops.py`: defines data fetching, processing, and forecasting ops
+* `schedules.py`: defines 5-minute periodic schedule
+
+# Setup and Dependencies
+
+## Building and Running the Docker Container
+
+* Go to the top of the repo:
+
+  ```bash
+  > cd ~/tutorials1/DATA605/Spring2025/projects/TutorTask102_Spring2025_Real-time_Bitcoin_Data_Ingestion_and_Analysis_with_Dagster
+  ```
+
+* Build Docker Image:
+
+  ```bash
+  > docker build -t dagster-bitcoin-pipeline .
+  ```
+
+* Run Container:
+
+  ```bash
+  > docker run -it -p 3000:3000 dagster-bitcoin-pipeline
+  ```
+
+* Access Dagster UI in browser:
+
+  ```
+  http://localhost:3000
+  ```
+
+### Environment Setup
+
+If needed, set environment variables in `set_env.sh` and source it before running Dagster locally:
 
 ```bash
-Dagster_utils.py           # All functional logic: API calls, saving, analysis
-Dagster.API.ipynb          # Minimal example of using the Dagster pipeline
-Dagster.API.md             # Markdown explaining the pipeline design
-Dagster.example.ipynb      # Full example: ingestion + analysis + visualization
-Dagster.example.md         # Markdown explanation of the full example
-README.md                  # This file
-bitcoin_prices.csv         # Output data file (optional)
-pyproject.toml             # Python dependencies declaration
+> source set_env.sh
+```
+
+Ensure `DAGSTER_HOME` is set correctly for Dagster instance management.
