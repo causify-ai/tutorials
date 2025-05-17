@@ -92,6 +92,20 @@ Example:
 ![Databricks UI: new cluster RUNNING](images/api_cluster_image.png)
 ---
 
+## Create a Databricks Job via the UI
+
+1. **Log in** to your Databricks workspace.  
+2. In the left sidebar, click **Jobs** → **Job Runs**.  
+3. Click **Create Job**.  
+4. Configure your new job:  
+   - **Job name**: Enter a descriptive name (e.g. `API Test Job`)  
+   - **Task name**: Enter a name for this task (e.g. `Run Test Notebook`)  
+   - **Type**: Select **Notebook**  
+   - **Notebook path**: Browse and choose `/Workspace/api_test_job_notebook`  
+   - **Cluster**: Select **Existing all-purpose** and pick the cluster defined by `config/cluster_config.json`  
+5. Click **Create**.  
+6. **Copy the Job ID** shown under the job details (you’ll use this for CLI/API triggers). 
+
 ## 4. Core Databricks CLI Commands
 
 ### 4.1 Clusters
