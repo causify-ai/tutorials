@@ -4,16 +4,24 @@ Welcome to my capstone project for DATA605: an end-to-end Bitcoin forecasting sy
 
 ---
 
+Here’s your updated **Table of Contents** reflecting all final sections:
+
+---
+
 ## Table of Contents
 
 1. [Project Objective](#project-objective)
-2. [General Guidelines](#-general-guidelines)
-3. [Architecture Overview](#-architecture-overview)
-4. [Technologies & Libraries Used](#-technologies--libraries-used)
-5. [Dataset Sources](#-dataset-sources)
-6. [Utility Functions Explained](#-utility-functions-explained-utilspy)
-7. [Exploratory Data Analysis (EDA)](#-exploratory-data-analysis-eda)
-8. [Project Status](#-project-status)
+2. [General Guidelines](#general-guidelines)
+3. [Architecture Overview](#architecture-overview)
+4. [Technologies & Libraries Used](#technologies--libraries-used)
+5. [Dataset Sources](#dataset-sources)
+6. [Utility Functions Explained (utils.py)](#utility-functions-explained-utilspy)
+7. [Exploratory Data Analysis (EDA)](#exploratory-data-analysis-eda)
+8. [Modeling](#modeling)
+9. [Forecasting](#forecasting)
+10. [Evaluation](#evaluation)
+11. [Streamlit Dashboard](#streamlit-dashboard)
+12. [Project Status](#project-status)
 
 ---
 
