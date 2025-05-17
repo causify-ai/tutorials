@@ -1,0 +1,8 @@
+requests==2.31.0
+pandas==2.1.0
+numpy==1.24.4
+langchain==0.0.310
+faiss-cpu==1.7.4
+ollama==0.1.5
+schedule==1.2.0
+flask==2.3.3
