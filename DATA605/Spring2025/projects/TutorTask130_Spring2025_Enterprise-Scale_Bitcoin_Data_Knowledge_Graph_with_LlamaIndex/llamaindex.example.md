@@ -253,6 +253,8 @@ Each specialized agent focuses on a specific domain, with custom functions and d
 
 The system is exposed through a FastAPI service with both API endpoints and a web interface.
 
+![WebUI](figures/ui.jpeg)
+
 ### FastAPI Implementation
 
 Our FastAPI implementation provides RESTful endpoints for querying and system status:
@@ -292,6 +294,8 @@ Several operations run in the background to keep the system updated and monitore
 ## Monitoring and Observability
 
 Complete monitoring ensures system health and performance tracking in production.
+
+![Monitoring](figures/btc_dashboard.jpeg)
 
 ### Prometheus Metrics
 

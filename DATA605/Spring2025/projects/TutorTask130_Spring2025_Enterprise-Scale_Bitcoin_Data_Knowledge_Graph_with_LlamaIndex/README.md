@@ -9,7 +9,7 @@
 
 # Project files
 
-- Author: Harshavardhan Pati <hcpatil@umd.edu>
+- Author: Harshavardhan C. Patil <hcpatil@umd.edu>
 - Date: 2025-05-17
 
 This project contains the following files
