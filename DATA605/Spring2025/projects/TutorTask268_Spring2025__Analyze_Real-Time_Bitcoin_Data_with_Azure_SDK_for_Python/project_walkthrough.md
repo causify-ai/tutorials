@@ -49,7 +49,7 @@ I created the following Docker-related files in the root of my project:
 ```markdown
 ![Docker image running](Images/dock/image.png)
 ![Jupyter running in powershell](Images/dock/terminal.png)
-
+```
 
 ---
 
@@ -111,7 +111,7 @@ Once the Docker environment was ready, I structured the project into a clean and
 
 ```markdown
 ![Project Folder](Images/project_folder/folder.png)
-
+```
 
 ---
 
@@ -179,7 +179,7 @@ Below are screenshots of the Azure components created and configured for this pr
 ![Azure Blob Storage](Images/Azure/BlobStorage.png)
 ![Azure Blob Storage container](Images/Azure/container.png)
 ![Azure App Registration](Images/Azure/app.png)
-
+```
 
 ---
 
@@ -229,7 +229,7 @@ flowchart TD
 ```markdown
 ![Streamer Output](Images/scripts/streamer.png)
 ![Receiver Output](Images/scripts/reciever.png)
-
+```
 ---
 
 ##  Step 6: Time Series Analysis in Azure Synapse Analytics
@@ -269,7 +269,7 @@ Below are screenshots of the graphs and analysis panels created inside Synapse:
 ![Rate of Change](Images/Azure_Synapse/roc.png)
 ![Syanapse Rolling Average](Images/Azure_Synapse/roll.png)
 ![Rolling SD Volitality](Images/Azure_Synapse/volatality.png)
-
+```
 
 ---
 
