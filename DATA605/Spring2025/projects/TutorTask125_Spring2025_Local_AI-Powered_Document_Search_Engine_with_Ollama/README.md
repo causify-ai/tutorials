@@ -2,8 +2,6 @@
 
 An intelligent document search engine that uses Ollama and FAISS to power semantic search across your local documents. This application allows you to organize documents into searchable collections, process them using AI embeddings, and search them using natural language queries.
 
-![Document Search Engine](https://github.com/user/repo/raw/main/screenshot.png)
-
 ## Features
 
 - **AI-Powered Semantic Search**: Find relevant content based on meaning, not just keywords
@@ -13,6 +11,113 @@ An intelligent document search engine that uses Ollama and FAISS to power semant
 - **Real-time Query Refinement**: Ollama enhances your search queries for better results
 - **User-Friendly Interface**: Clean, intuitive Streamlit interface
 - **Docker Support**: Easy deployment using Docker
+
+## Architecture Diagrams
+
+### System Architecture
+
+```mermaid
+graph TD
+    User([User]) <--> |"Search Queries/Results"| App[Streamlit App]
+    App <--> |"Document Processing"| Utils[Ollama_utils.py]
+    Utils --> |"Generate Embeddings"| SentenceTransformer[Sentence Transformer]
+    Utils <--> |"Vector Search"| FAISS[FAISS Index]
+    Utils <--> |"Query Enhancement"| Ollama[Ollama LLM]
+    
+    subgraph Storage
+        Files[(Document Files)]
+        Index[(FAISS Index)]
+        Metadata[(Document Metadata)]
+    end
+    
+    Utils --> Files
+    Utils <--> Index
+    Utils <--> Metadata
+    
+    style App fill:#f9f,stroke:#333,stroke-width:2px
+    style Utils fill:#bbf,stroke:#333,stroke-width:1px
+    style Ollama fill:#bfb,stroke:#333,stroke-width:1px
+    style FAISS fill:#fbb,stroke:#333,stroke-width:1px
+```
+
+### Document Indexing Process
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant A as App
+    participant P as Document Processor
+    participant E as Embedding Model
+    participant F as FAISS Index
+    
+    U->>A: Add document paths
+    U->>A: Select file types
+    U->>A: Scan files
+    A->>P: Process documents
+    loop For each document
+        P->>P: Extract text
+        P->>P: Chunk text
+        P->>E: Generate embeddings
+        P->>F: Add to index
+    end
+    P->>A: Return indexing status
+    A->>U: Show completion
+```
+
+### Search Process Flow
+
+```mermaid
+flowchart TD
+    A[User enters search query] --> B{Use Ollama?}
+    B -->|Yes| C[Enhance query with Ollama]
+    B -->|No| D[Use original query]
+    C --> E[Generate embedding for query]
+    D --> E
+    E --> F[Search FAISS index]
+    F --> G[Retrieve document chunks]
+    G --> H[Rank by relevance]
+    H --> I[Display results to user]
+    
+    style A fill:#f9f,stroke:#333,stroke-width:1px
+    style C fill:#bfb,stroke:#333,stroke-width:1px
+    style E fill:#bbf,stroke:#333,stroke-width:1px
+    style F fill:#fbb,stroke:#333,stroke-width:1px
+```
+
+### Data Structure Schema
+
+```mermaid
+classDiagram
+    class Searchable {
+        +name: String
+        +paths: List[String]
+        +file_types: List[String]
+        +has_index: Boolean
+    }
+    
+    class Document {
+        +file_path: String
+        +filename: String
+        +file_type: String
+        +chunks: List[Chunk]
+    }
+    
+    class Chunk {
+        +text: String
+        +embedding: Vector
+        +start_pos: Int
+        +end_pos: Int
+    }
+    
+    class FAISSIndex {
+        +index: FAISS
+        +metadata: Dict
+    }
+    
+    Searchable "1" --> "*" Document: contains
+    Document "1" --> "*" Chunk: split into
+    FAISSIndex "1" --> "*" Chunk: indexes
+```
 
 ## Installation
 
@@ -24,8 +129,8 @@ An intelligent document search engine that uses Ollama and FAISS to power semant
 
 2. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/document-search-engine.git
-   cd document-search-engine
+   git clone https://github.com/causify-ai/tutorials.git
+   cd tutorials/DATA605/Spring2025/projects/TutorTask125_Spring2025_Local_AI-Powered_Document_Search_Engine_with_Ollama
    ```
 
 3. **Install dependencies**:
@@ -162,7 +267,3 @@ document-search-engine/
 - [FAISS](https://github.com/facebookresearch/faiss) for efficient similarity search
 - [Sentence Transformers](https://www.sbert.net/) for document embeddings
 - [Streamlit](https://streamlit.io/) for the web interface
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
