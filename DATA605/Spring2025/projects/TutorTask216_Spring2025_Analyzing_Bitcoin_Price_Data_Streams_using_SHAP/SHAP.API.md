@@ -36,7 +36,7 @@ The structure mirrors the SHAP API walkthrough provided in the notebook, coverin
 ## General Guidelines
 
 - This documentation complements `SHAP.API.ipynb`.
-- It focuses on explaining SHAP’s official Python API (not CoinGecko).
+- It focuses on explaining SHAP’s official Python API.
 - All functions shown are directly usable via the `shap` Python package.
 
 ---
