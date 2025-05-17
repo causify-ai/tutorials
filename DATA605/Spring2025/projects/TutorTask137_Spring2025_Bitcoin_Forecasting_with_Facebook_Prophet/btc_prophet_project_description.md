@@ -2,21 +2,6 @@
 
 Welcome to my capstone project for DATA605: an end-to-end Bitcoin forecasting system using Facebook Prophet, built with real-time data ingestion, EDA, time-series modeling, and optional Streamlit deployment.
 
----
-
-## Table of Contents
-
-1. [Project Objective](#project-objective)
-2. [General Guidelines](#-general-guidelines)
-3. [Architecture Overview](#-architecture-overview)
-4. [Technologies & Libraries Used](#-technologies--libraries-used)
-5. [Dataset Sources](#-dataset-sources)
-6. [Utility Functions Explained](#-utility-functions-explained-utilspy)
-7. [Exploratory Data Analysis (EDA)](#-exploratory-data-analysis-eda)
-8. [Project Status](#-project-status)
-
----
-
 ## Project Objective
 
 Forecasting cryptocurrency prices, particularly Bitcoin, is a challenging yet valuable task due to the asset’s high volatility and market sensitivity. Investors, analysts, and trading platforms rely on timely insights to make informed decisions. This project seeks to develop a reliable, real-time forecasting system that predicts short-term Bitcoin price movements using both historical and live data. Leveraging Facebook Prophet, a time series forecasting tool, the project is designed to process noisy and irregular financial data, model seasonality and trends, and produce accurate, interpretable forecasts. The system is also built to be robust against missing data, customizable for future improvements, and scalable for real-time applications.
@@ -193,13 +178,111 @@ After identifying these key inflection points through trend and volatility analy
 
 ---
 
-## Project Status
+Here’s the fully detailed and explanatory version of the **Modeling**, **Forecasting**, and **Evaluation** sections:
 
-| Phase         | Status | Notes                         |
-| ------------- | ------ | ----------------------------- |
-| Ingestion     | Done   | Historical + live merged      |
-| EDA           | Done   | Seasonality, outliers, trends |
-| Modeling      | To Do  | Prophet trained               |
-| Forecasting   | To Do  | Forecast generated            |
-| Evaluation    | To Do  | Metrics computation upcoming  |
-| Streamlit App | To Do  | Web app development           |
+---
+
+## Modeling
+
+###  **Data Preparation & Feature Engineering (In-Depth)**
+
+The modeling process begins with meticulous data preparation to ensure the time series data is clean, continuous, and properly structured for analysis.
+
+* **Dataset Range**: Spanning from **2012 to 2025**, this project combines long-term historical data with real-time data, capturing multiple Bitcoin market cycles, including bull runs, crashes, and recoveries.
+* **Target Variable**: Bitcoin's closing price (`y`), which represents the daily final price and serves as the prediction target.
+* **Datetime Handling**: The Prophet library requires a `ds` column representing dates. All datetime columns were standardized to meet this requirement.
+
+**Feature Engineering through External Regressors**
+To improve the model’s awareness of real-world events affecting price trends, several binary and numerical regressors were added:
+
+| Regressor Name        | Purpose                                                                                           |
+| --------------------- | ------------------------------------------------------------------------------------------------- |
+| `doubling_flag`       | Indicates historical price-doubling events that often precede increased volatility.               |
+| `volatility_flag`     | Marks high volatility periods to help the model adjust predictions during unstable markets.       |
+| `etf_approval_flag`   | Captures the effect of regulatory events such as ETF approvals, which historically impact prices. |
+| `exchange_crash_flag` | Flags events like the FTX collapse to account for market-wide crashes.                            |
+| `rolling_volatility`  | 30-day rolling mean of closing prices to provide short-term trend awareness.                      |
+
+**Holidays Incorporated**
+Bitcoin halving events were explicitly included as custom holidays, as these events historically trigger significant price shifts.
+
+* Dates: *2012-11-28, 2016-07-09, 2020-05-11, 2024-04-20*
+
+---
+
+###  **Prophet Model Configuration**
+
+The Prophet model was carefully tuned to capture the non-linear and highly volatile nature of Bitcoin price movements.
+
+* **Growth Type**: Set to **Linear**, as this allows the model to track general growth trends while relying on changepoints to capture sudden shifts.
+
+* **Seasonality**:
+
+  * **Yearly Seasonality**: Enabled to model yearly cycles observed in the crypto market.
+  * **Weekly Seasonality**: Disabled after EDA confirmed weekly trends had minimal influence.
+  * **Monthly Seasonality**: Manually added with a Fourier order of 5 to capture known monthly trends, especially price increases between January and April.
+  * **Seasonality Mode**: Set to **Multiplicative** to handle the exponential growth patterns seen in Bitcoin.
+
+* **Changepoint Detection**:
+
+  * `n_changepoints = 100` ensured that the model could capture sharp market movements, such as those during the COVID-19 crash and the FTX collapse.
+  * `changepoint_prior_scale = 1.0` provided a balance between model flexibility and overfitting prevention.
+
+---
+
+###  **Model Training Results**
+
+| Metric | Training Set |
+| ------ | ------------ |
+| RMSE   | 1,736.53 USD |
+| MAE    | 929.40 USD   |
+| MAPE   | 43.58%       |
+
+**Analysis of Training Performance**
+
+* The model successfully captured historical Bitcoin trends, including both extended bull markets (2013, 2017, 2021) and harsh bear markets (2014, 2018, 2022).
+* Although sharp, extreme spikes in price were slightly underpredicted (a common limitation in financial modeling), the overall trend and cyclic behavior were accurately reflected.
+* Incorporating external regressors and holidays greatly improved the model’s interpretability, enabling more realistic and explainable predictions.
+
+---
+
+##  Forecasting
+
+###  **Forecasting Configuration**
+
+* **Forecast Horizon**: 365 days, providing one full year of future price predictions.
+* **Test Period**: 2023 – 2025 was chosen to validate the model against recent volatile periods, including the 2024 halving event and post-pandemic economic fluctuations.
+
+The Prophet model was used to generate forecasts along with upper and lower bounds, which quantify the uncertainty inherent in Bitcoin price predictions.
+
+---
+
+### **Forecasting Insights**
+
+* The model successfully captured the broad direction of the market across both upward rallies and sharp corrections.
+* Confidence intervals effectively highlighted uncertain periods, especially around historically volatile events such as regulatory announcements and macroeconomic turbulence.
+* Despite the complexity and unpredictability of cryptocurrency markets, the model demonstrated its ability to forecast within an acceptable margin of error.
+
+---
+
+#  Evaluation
+
+### **Evaluation Metrics (On Test Set)**
+
+| Metric | Value         |
+| ------ | ------------- |
+| RMSE   | 13,424.78 USD |
+| MAE    | 9,817.14 USD  |
+| MAPE   | 16.96%        |
+
+**In-Depth Evaluation Analysis**
+
+* **RMSE (Root Mean Square Error)**: Measures the average magnitude of prediction errors. While high due to the large absolute values of Bitcoin, it is within an acceptable range for financial assets.
+* **MAE (Mean Absolute Error)**: Provides a direct interpretation of the average prediction error in USD terms, demonstrating reasonably accurate predictions.
+* **MAPE (Mean Absolute Percentage Error)**: A MAPE of **16.96%** is highly competitive for financial time series data and indicates that the model's forecasts were quite reliable even during volatile periods.
+
+**Key Takeaways**
+
+* Prediction accuracy was robust despite high market volatility in the test period.
+* External regressors played a significant role in reducing prediction errors by allowing the model to adjust dynamically during impactful events.
+* The model was most challenged during periods of unprecedented price surges, a limitation common to most time series forecasting models.
