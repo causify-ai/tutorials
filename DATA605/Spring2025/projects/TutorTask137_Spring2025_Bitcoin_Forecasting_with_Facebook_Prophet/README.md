@@ -36,7 +36,7 @@ Forecasting cryptocurrency prices, particularly Bitcoin, is a challenging yet va
 * **Environment Management**: Dependencies tracked via `requirements.txt`.
 * **Version Control**: Git with `.gitignore` for large files.
 * **Code Modularity**: Common functions in `utils.py`.
-* **Prophet Setup**: Custom changepoint detection and log return analysis.
+* **Prophet Setup**: Custom changepoint detection.
 * **Deployment**: Streamlit used for interactive dashboard.
 
 ---
