@@ -104,6 +104,8 @@ This project provides helper scripts to simplify Docker workflows:
 | `docker_run.sh`   | Launch a container and expose port 8501    |
 | `docker_bash.sh`  | Open an interactive shell inside the container |
 | `docker_clean.sh` | Stop and remove containers/images          |
+| `docker_dev.sh`   | All in one, First Clear the previous image then Build the image then launch the container     |
+
 
 ### Quickstart with Scripts
 
@@ -122,6 +124,9 @@ chmod +x docker_*.sh
 
 # (Optional) Clean up containers and images
 ./docker_clean.sh
+
+# (Optional) Clean up, Build, and Run
+./docker_dev.sh
 ```
 
 ### Manual Docker Commands
