@@ -834,14 +834,23 @@
                         const maeChangeElement = document.getElementById('mae-change');
                         const maePercent = (latestMetrics.mae / latestMetrics.price) * 100;
                         
-                        maeChangeElement.textContent = 
-                            maePercent < 0.5 ? 'Excellent' : 
-                            maePercent < 1 ? 'Good' : 
-                            maePercent < 2 ? 'Fair' : 'Poor';
-                            
+                        // Debug logging to understand the calculation
+                        console.log(`MAE Rating Calculation: MAE=${latestMetrics.mae}, Latest Price=${latestMetrics.price}, MAE Percent=${maePercent}%`);
+                        
+                        // Adjusted thresholds for Bitcoin's high price
+                        // For high-value assets like Bitcoin, even small percentage errors can be significant
+                        const rating = 
+                            maePercent < 0.001 ? 'Excellent' : 
+                            maePercent < 0.01 ? 'Good' : 
+                            maePercent < 0.1 ? 'Fair' : 'Poor';
+                        
+                        console.log(`MAE Rating: ${rating} (${maePercent}%)`);
+                        
+                        maeChangeElement.textContent = rating;
+                        
                         maeChangeElement.className = 'metric-change ' + 
-                            (maePercent < 1 ? 'positive-change' : 
-                             maePercent < 2 ? '' : 'negative-change');
+                            (maePercent < 0.01 ? 'positive-change' : 
+                             maePercent < 0.1 ? '' : 'negative-change');
                     }
                 }
             } catch (error) {
@@ -1210,17 +1219,32 @@
                     }
                 };
                 
-                const trace2 = {
-                    x: timestamps,
-                    y: maes,
+                // Add a horizontal line for the average error
+                const avgErrorLine = {
+                    x: [minTime, maxTime],
+                    y: [recentAvgError, recentAvgError],
                     type: 'scatter',
                     mode: 'lines',
-                    name: 'MAE',
+                    name: `Avg Error: ${recentAvgError}`,
+                    line: {
+                        color: 'blue',
+                        width: 1,
+                        dash: 'dash'
+                    }
+                };
+                
+                // Add MAE as a horizontal line
+                const maeLine = {
+                    x: [minTime, maxTime],
+                    y: [recentMae, recentMae],
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: `MAE: ${recentMae}`,
                     line: {
                         color: '#e74c3c',
-                        width: 2
-                    },
-                    visible: 'legendonly' // Hide by default
+                        width: 2,
+                        dash: 'dot'
+                    }
                 };
                 
                 const layout = {
@@ -1260,7 +1284,7 @@
                     displayModeBar: false
                 };
                 
-                Plotly.newPlot('mae-chart', [trace1, trace2], layout, plotConfig);
+                Plotly.newPlot('mae-chart', [trace1, avgErrorLine, maeLine], layout, plotConfig);
                 
                 // Update metrics display
                 document.getElementById('mae-value').textContent = formatPrice(recentMae);
@@ -1273,14 +1297,23 @@
                 if (latestPrice > 0) {
                     const maePercent = (recentMae / latestPrice) * 100;
                     
-                    maeChangeElement.textContent = 
-                        maePercent < 0.5 ? 'Excellent' : 
-                        maePercent < 1 ? 'Good' : 
-                        maePercent < 2 ? 'Fair' : 'Poor';
-                        
+                    // Debug logging to understand the calculation
+                    console.log(`MAE Rating Calculation: MAE=${recentMae}, Latest Price=${latestPrice}, MAE Percent=${maePercent}%`);
+                    
+                    // Adjusted thresholds for Bitcoin's high price
+                    // For high-value assets like Bitcoin, even small percentage errors can be significant
+                    const rating = 
+                        maePercent < 0.001 ? 'Excellent' : 
+                        maePercent < 0.01 ? 'Good' : 
+                        maePercent < 0.1 ? 'Fair' : 'Poor';
+                    
+                    console.log(`MAE Rating: ${rating} (${maePercent}%)`);
+                    
+                    maeChangeElement.textContent = rating;
+                    
                     maeChangeElement.className = 'metric-change ' + 
-                        (maePercent < 1 ? 'positive-change' : 
-                         maePercent < 2 ? '' : 'negative-change');
+                        (maePercent < 0.01 ? 'positive-change' : 
+                         maePercent < 0.1 ? '' : 'negative-change');
                 }
                 
             } catch (error) {
