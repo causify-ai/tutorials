@@ -11,7 +11,17 @@ RUN apt install -y --no-install-recommends \
     systemctl \
     gnupg \
     git \
-    vim
+    vim \
+    fake-headers \
+    selenium \
+    webdriver-manager \
+    nltk \
+    pandas \
+    numpy \
+    matplotlib \
+    seaborn \
+    scikit-learn \
+    requests
 
 # Install Python.
 RUN apt install -y --no-install-recommends \

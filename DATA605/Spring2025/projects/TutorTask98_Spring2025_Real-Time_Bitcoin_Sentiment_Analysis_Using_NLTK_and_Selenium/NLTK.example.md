@@ -1,6 +1,6 @@
-# Real-Time Bitcoinc Sentiment Analysis Using NLTK and Selenium
+# Real-Time Bitcoin Sentiment Analysis Using NLTK and Selenium
 
-- [Real-Time Bitcoinc Sentiment Analysis Using NLTK and Selenium](#real-time-bitcoinc-sentiment-analysis-using-nltk-and-selenium)
+- [Real-Time Bitcoin Sentiment Analysis Using NLTK and Selenium](#real-time-bitcoin-sentiment-analysis-using-nltk-and-selenium)
   - [Function: `Progress.__init__(self, current, total)`](#function-progress__init__self-current-total)
   - [Function: `Progress.print_progress(self, current)`](#function-progressprint_progressself-current)
   - [Function: `Scroller.__init__(self, driver)`](#function-scroller__init__self-driver)
@@ -91,7 +91,7 @@ scroller.scroll_to_bottom()
 - `driver`: WebDriver instance to allow interactions.
 - `actions`: ActionChains for mouse hover (to extract user metadata).
 - `scrape_poster_details`: Boolean to decide whether to extract user stats.
-- 
+  
 **Example Usage:**
 ```python
 tweet = Tweet(card, driver, actions, scrape_poster_details=True)
@@ -110,7 +110,7 @@ tweet = Tweet(card, driver, actions, scrape_poster_details=True)
 - `scrape_query`, `scrape_hashtag`, `scrape_username`: Define what to scrape.
 - `scrape_latest`, `scrape_top`: Sort tweet results.
 - `max_tweets`: Total tweets to collect.
-- 
+
 **Example Usage:**
 ```python
 scraper = Twitter_Scraper("myuser", "mypass", scrape_query="Bitcoin", max_tweets=200)
@@ -189,7 +189,7 @@ scraper.save_to_csv()
 - `new_data`: List of tweets.
 - `output_file`: CSV file path to save combined data.
 - `poster_details`: Include user info columns or not.
-- 
+
 **Example Usage:**
 ```python
 concat_and_save_to_csv(scraper.get_tweets(), poster_details=True)
@@ -219,7 +219,7 @@ btc_price = fetch_price()
 
 **Arguments:**
 - `df`: DataFrame containing a 'Content' column with raw tweet texts. 
--  
+  
 **Example Usage:**
 ```python
 df = preprocess_text_column(df)
