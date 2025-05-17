@@ -1,11 +1,3 @@
-#!/bin/bash
-echo "# Pytho3"
-python3 --version
-echo "# pip3"
-pip3 --version
-echo "# jupyter"
-jupyter --version
-echo "# Python packages"
-pip3 list
-echo "# mongo"
-mongod --version
+#!/usr/bin/env bash
+# version.sh — echo only a semantic version for your Docker tag
+echo "0.1.0"
