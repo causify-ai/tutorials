@@ -2,6 +2,7 @@ import streamlit as st
 import Ollama_utils as ou
 import os
 import subprocess
+import json
 
 # Initialize session state variables if they don't exist
 if 'search_results' not in st.session_state:
@@ -20,89 +21,259 @@ if 'index_version' not in st.session_state:
     st.session_state['index_version'] = 1
 if 'num_results' not in st.session_state:
     st.session_state['num_results'] = 10
+    
+# Initialize searchables
+if 'searchables' not in st.session_state:
+    st.session_state['searchables'] = {
+        'Default': {
+            'paths': [],
+            'file_types': [".txt", ".md", ".pdf"],
+            'is_indexed': False,
+            'index_path': "index/default",
+            'indexed_files': []
+        }
+    }
+if 'current_searchable' not in st.session_state:
+    st.session_state['current_searchable'] = 'Default'
+    
+# Function to load searchables from disk
+def load_searchables():
+    try:
+        if os.path.exists("searchables.json"):
+            with open("searchables.json", "r") as f:
+                searchables = json.load(f)
+                st.session_state['searchables'] = searchables
+                # Ensure every searchable has all required fields
+                for name, searchable in st.session_state['searchables'].items():
+                    if 'paths' not in searchable:
+                        searchable['paths'] = []
+                    if 'file_types' not in searchable:
+                        searchable['file_types'] = [".txt", ".md", ".pdf"]
+                    if 'is_indexed' not in searchable:
+                        searchable['is_indexed'] = False
+                    if 'index_path' not in searchable:
+                        searchable['index_path'] = f"index/{name.lower().replace(' ', '_')}"
+                    if 'indexed_files' not in searchable:
+                        searchable['indexed_files'] = []
+    except Exception as e:
+        print(f"Error loading searchables: {str(e)}")
+
+# Function to save searchables to disk
+def save_searchables():
+    try:
+        with open("searchables.json", "w") as f:
+            json.dump(st.session_state['searchables'], f)
+    except Exception as e:
+        print(f"Error saving searchables: {str(e)}")
+
+# Load searchables at startup
+load_searchables()
 
 # ALWAYS check if index exists on disk to handle page reloads
 # This check happens on every page load, regardless of session state
-if os.path.exists("index/faiss_index.bin") and os.path.exists("index/metadata.pkl"):
-    # If index files exist, mark as complete regardless of session state
-    st.session_state['indexing_complete'] = True
-    try:
-        # Load metadata to get count
-        import pickle
-        with open("index/metadata.pkl", "rb") as f:
-            metadata = pickle.load(f)
-            st.session_state['full_metadata'] = metadata  # Store the full metadata for debugging
-            
-            # Print metadata structure for debugging
-            print(f"Metadata type: {type(metadata)}")
-            print(f"Metadata sample: {str(metadata)[:500]}..." if len(str(metadata)) > 500 else str(metadata))
-            
-            if isinstance(metadata, list):
-                st.session_state['indexed_files_count'] = len(metadata)
+for searchable_name, searchable in st.session_state['searchables'].items():
+    index_path = searchable.get('index_path', f"index/{searchable_name.lower().replace(' ', '_')}")
+    faiss_path = f"{index_path}/faiss_index.bin"
+    metadata_path = f"{index_path}/metadata.pkl"
+    
+    if os.path.exists(faiss_path) and os.path.exists(metadata_path):
+        # If index files exist, mark as indexed
+        searchable['is_indexed'] = True
+        try:
+            # Load metadata to get count
+            import pickle
+            with open(metadata_path, "rb") as f:
+                metadata = pickle.load(f)
                 
                 # Extract file paths based on metadata structure
                 paths = []
-                for item in metadata:
-                    if isinstance(item, dict):
-                        # Try different possible keys
-                        if 'file_path' in item:
-                            paths.append(item['file_path'])
-                        elif 'path' in item:
-                            paths.append(item['path'])
-                        elif 'filename' in item:
-                            paths.append(item['filename'])
-                        elif 'source' in item:
-                            paths.append(item['source'])
+                if isinstance(metadata, list):
+                    for item in metadata:
+                        if isinstance(item, dict):
+                            # Try different possible keys
+                            if 'file_path' in item:
+                                paths.append(item['file_path'])
+                            elif 'path' in item:
+                                paths.append(item['path'])
+                            elif 'filename' in item:
+                                paths.append(item['filename'])
+                            elif 'source' in item:
+                                paths.append(item['source'])
                 
                 # Store file paths for display
-                st.session_state['indexed_files'] = paths
-                print(f"Found {len(paths)} file paths in metadata")
-                
-                # Ensure we have at least one valid file path
-                if not any(st.session_state['indexed_files']):
-                    st.session_state['indexed_files_count'] = 0
-                    print("No valid file paths found in metadata")
-            else:
-                # For older index versions or different formats
-                st.session_state['indexed_files_count'] = 1
-                st.session_state['indexed_files'] = []
-                print("Metadata is not a list, cannot extract file paths")
-    except Exception as e:
-        # If error reading metadata, just set a placeholder value but keep indexing_complete True
-        # since we confirmed the files exist
-        st.session_state['indexed_files_count'] = 1
-        st.session_state['indexed_files'] = []
-        st.session_state['metadata_error'] = str(e)
-        print(f"Error loading metadata: {str(e)}")
+                searchable['indexed_files'] = paths
+        except Exception as e:
+            print(f"Error loading metadata for {searchable_name}: {str(e)}")
+
+# Set current searchable's indexing status
+current = st.session_state['searchables'].get(st.session_state['current_searchable'], 
+                                            st.session_state['searchables']['Default'])
+st.session_state['indexing_complete'] = current.get('is_indexed', False)
+if 'indexed_files' in current:
+    st.session_state['indexed_files'] = current['indexed_files']
+    st.session_state['indexed_files_count'] = len(current['indexed_files'])
 
 st.title("📁 Document Search Engine")
 
-st.sidebar.title("📁 Document Setup & Organization")
-user_path = st.sidebar.text_input("Enter the local file path to index:", "", 
-                                placeholder="C:\\Users\\Documents",
-                                help="Enter a folder path like 'C:\\Users\\Documents' or '.' for current directory",
-                                key="user_path_input")
+# Sidebar for searchables management
+st.sidebar.title("📁 Searchables")
+st.sidebar.markdown("*Create and manage your document collections*")
 
-# Help text for drag and drop
-st.sidebar.info("💡 **Tip**: You can enter any local folder path to index its files.")
+# Searchable selector
+searchable_names = list(st.session_state['searchables'].keys())
+selected_searchable = st.sidebar.selectbox(
+    "Select a Searchable:",
+    searchable_names,
+    index=searchable_names.index(st.session_state['current_searchable']),
+    key="searchable_selector"
+)
+
+# Update current searchable if changed
+if selected_searchable != st.session_state['current_searchable']:
+    st.session_state['current_searchable'] = selected_searchable
+    current = st.session_state['searchables'][selected_searchable]
+    # Update indexing status
+    st.session_state['indexing_complete'] = current.get('is_indexed', False)
+    st.session_state['indexed_files'] = current.get('indexed_files', [])
+    st.session_state['indexed_files_count'] = len(current.get('indexed_files', []))
+    # Clear search-related states when switching searchables
+    st.session_state['search_results'] = []
+    if 'found_files' in st.session_state:
+        del st.session_state['found_files']
+    st.rerun()
+
+# Create new searchable
+with st.sidebar.expander("➕ Create New Searchable", expanded=False):
+    new_searchable_name = st.text_input("Searchable Name:", key="new_searchable_name")
+    if st.button("Create", key="create_searchable_button"):
+        if new_searchable_name and new_searchable_name not in st.session_state['searchables']:
+            st.session_state['searchables'][new_searchable_name] = {
+                'paths': [],
+                'file_types': [".txt", ".md", ".pdf"],
+                'is_indexed': False,
+                'index_path': f"index/{new_searchable_name.lower().replace(' ', '_')}",
+                'indexed_files': []
+            }
+            st.session_state['current_searchable'] = new_searchable_name
+            save_searchables()
+            st.success(f"Created new searchable: {new_searchable_name}")
+            st.rerun()
+        elif new_searchable_name in st.session_state['searchables']:
+            st.error("A searchable with this name already exists.")
+        else:
+            st.error("Please enter a valid name.")
+
+# Delete current searchable (with confirmation)
+if len(st.session_state['searchables']) > 1 and selected_searchable != 'Default':  # Prevent deleting Default or last searchable
+    with st.sidebar.expander("🗑️ Delete Current Searchable", expanded=False):
+        st.warning(f"Are you sure you want to delete '{selected_searchable}'?")
+        st.markdown("*This action cannot be undone.*")
+        if st.button("Delete", key="delete_searchable_button"):
+            # Delete index files if they exist
+            index_path = st.session_state['searchables'][selected_searchable].get('index_path')
+            if index_path and os.path.exists(index_path):
+                import shutil
+                try:
+                    shutil.rmtree(index_path, ignore_errors=True)
+                except Exception as e:
+                    print(f"Error deleting index: {str(e)}")
+                    
+            # Remove from searchables
+            del st.session_state['searchables'][selected_searchable]
+            st.session_state['current_searchable'] = 'Default'  # Always go back to Default after deletion
+            save_searchables()
+            # Clear search-related states
+            st.session_state['search_results'] = []
+            if 'found_files' in st.session_state:
+                del st.session_state['found_files']
+            st.success(f"Deleted searchable: {selected_searchable}")
+            st.rerun()
+elif selected_searchable == 'Default':
+    # Show a message that Default cannot be deleted
+    with st.sidebar.expander("ℹ️ About Default Searchable", expanded=False):
+        st.info("The Default searchable cannot be deleted.")
+        st.markdown("You can create additional searchables for different document collections.")
+
+# Get current searchable
+current_searchable = st.session_state['searchables'][st.session_state['current_searchable']]
+
+# Manage paths in current searchable
+st.sidebar.markdown("---")
+st.sidebar.subheader(f"📂 Manage '{selected_searchable}'")
+
+# Add a new path to current searchable
+new_path = st.sidebar.text_input(
+    "Add folder or file path:",
+    "",
+    placeholder="C:\\Users\\Documents",
+    help="Enter a folder path like 'C:\\Users\\Documents' or a specific file path",
+    key="new_path_input"
+)
+
+if st.sidebar.button("Add Path", key="add_path_button"):
+    if new_path:
+        if os.path.exists(new_path):
+            if new_path not in current_searchable['paths']:
+                current_searchable['paths'].append(new_path)
+                save_searchables()
+                st.sidebar.success(f"Added: {new_path}")
+            else:
+                st.sidebar.info("This path is already in the searchable.")
+        else:
+            st.sidebar.error("Path not found. Please enter a valid path.")
+
+# Display current paths and allow removal
+if current_searchable['paths']:
+    st.sidebar.markdown("### Current Paths:")
+    for i, path in enumerate(current_searchable['paths']):
+        col1, col2 = st.sidebar.columns([4, 1])
+        with col1:
+            st.markdown(f"{i+1}. `{path}`")
+        with col2:
+            if st.button("🗑️", key=f"remove_path_{i}"):
+                current_searchable['paths'].remove(path)
+                save_searchables()
+                st.rerun()
+else:
+    st.sidebar.info("No paths added yet. Add a folder or file path above.")
 
 # File types to include
+st.sidebar.markdown("### File Types to Include:")
 file_types = st.sidebar.multiselect(
-    "Select file types to include",
+    "Select file types:",
     [".txt", ".md", ".py", ".js", ".html", ".css", ".json", ".csv", ".pdf"],
-    default=[".txt", ".md", ".pdf"]
+    default=current_searchable.get('file_types', [".txt", ".md", ".pdf"]),
+    key="file_types_select"
 )
+if file_types != current_searchable.get('file_types', []):
+    current_searchable['file_types'] = file_types
+    save_searchables()
 
 # Step 1: Scan files
 if st.sidebar.button("🔍 Scan Files", key="scan_files_button"):
     with st.spinner("Scanning for documents..."):
         try:
-            # Check if path exists
-            if not os.path.exists(user_path):
-                st.sidebar.error(f"Path not found: {user_path}")
+            all_files = []
+            for path in current_searchable['paths']:
+                # Check if path exists
+                if not os.path.exists(path):
+                    st.sidebar.error(f"Path not found: {path}")
+                    continue
+                
+                # Check if it's a file or directory
+                if os.path.isfile(path):
+                    if any(path.endswith(ext) for ext in file_types):
+                        all_files.append(path)
+                else:
+                    # It's a directory, scan for files
+                    files = ou.scan_directory(path, extensions=file_types)
+                    all_files.extend(files)
+                    
+            if all_files:
+                st.session_state['found_files'] = all_files
             else:
-                files = ou.scan_directory(user_path, extensions=file_types)
-                st.session_state['found_files'] = files
+                st.session_state['found_files'] = []
+                st.sidebar.warning("No matching files found in the selected paths.")
         except Exception as e:
             st.sidebar.error(f"Error scanning files: {str(e)}")
 
@@ -117,14 +288,18 @@ if 'found_files' in st.session_state:
             for file in found_files:
                 st.markdown(f"- `{file}`")
 
-        # Always show indexing options, but with different messaging based on state
-        if st.session_state['indexing_complete']:
+        # Always show processing options, but with different messaging based on state
+        if current_searchable.get('is_indexed', False):
             total_files = len(found_files)
-            indexed_files = st.session_state['indexed_files_count']
+            indexed_files = len(current_searchable.get('indexed_files', []))
             
             if indexed_files < total_files:
                 st.info(f"There are {total_files - indexed_files} new files that can be added to make searchable.")
                 if st.button("🔄 Process New Documents", key="update_index_button"):
+                    # Create index directory if it doesn't exist
+                    index_dir = current_searchable.get('index_path', f"index/{selected_searchable.lower().replace(' ', '_')}")
+                    os.makedirs(index_dir, exist_ok=True)
+                    
                     # Create a placeholder for the progress bar
                     progress_placeholder = st.empty()
                     progress_bar = progress_placeholder.progress(0)
@@ -144,13 +319,22 @@ if 'found_files' in st.session_state:
                     ou.build_document_index(
                         found_files, 
                         progress_callback=update_progress,
-                        index_path="index/faiss_index.bin",
-                        metadata_path="index/metadata.pkl"
+                        index_path=f"{index_dir}/faiss_index.bin",
+                        metadata_path=f"{index_dir}/metadata.pkl"
                     )
-                    st.session_state['indexed_files_count'] = total_files
+                    current_searchable['indexed_files'] = found_files
+                    st.session_state['indexed_files'] = found_files
+                    st.session_state['indexed_files_count'] = len(found_files)
+                    
+                    # Mark as indexed
+                    current_searchable['is_indexed'] = True
+                    st.session_state['indexing_complete'] = True
                     
                     # Increment index version to invalidate cache
                     st.session_state['index_version'] += 1
+                    
+                    # Save the updated searchable
+                    save_searchables()
                     
                     # Keep the final progress state
                     progress_bar.progress(1.0)
@@ -164,11 +348,17 @@ if 'found_files' in st.session_state:
                 # Option to rebuild index from scratch
                 if st.button("🔄 Reprocess All Documents", key="rebuild_index_button"):
                     # Delete existing index files
+                    index_dir = current_searchable.get('index_path', f"index/{selected_searchable.lower().replace(' ', '_')}")
                     import shutil
                     try:
-                        shutil.rmtree('index', ignore_errors=True)
+                        shutil.rmtree(index_dir, ignore_errors=True)
+                        os.makedirs(index_dir, exist_ok=True)
+                        current_searchable['is_indexed'] = False
+                        current_searchable['indexed_files'] = []
                         st.session_state['indexing_complete'] = False
                         st.session_state['indexed_files_count'] = 0
+                        st.session_state['indexed_files'] = []
+                        save_searchables()
                         st.rerun()
                     except Exception as e:
                         st.error(f"Error clearing processed files: {str(e)}")
@@ -177,6 +367,10 @@ if 'found_files' in st.session_state:
             confirm = st.checkbox("✅ Confirm to proceed with document processing", key="confirm_processing")
             if confirm:
                 if st.button("🚀 Make Documents Searchable", key="build_index_button"):
+                    # Create index directory if it doesn't exist
+                    index_dir = current_searchable.get('index_path', f"index/{selected_searchable.lower().replace(' ', '_')}")
+                    os.makedirs(index_dir, exist_ok=True)
+                    
                     # Create a placeholder for the progress bar
                     progress_placeholder = st.empty()
                     progress_bar = progress_placeholder.progress(0)
@@ -196,8 +390,8 @@ if 'found_files' in st.session_state:
                     success = ou.build_document_index(
                         found_files, 
                         progress_callback=update_progress,
-                        index_path="index/faiss_index.bin",
-                        metadata_path="index/metadata.pkl"
+                        index_path=f"{index_dir}/faiss_index.bin",
+                        metadata_path=f"{index_dir}/metadata.pkl"
                     )
                     
                     # Increment index version to invalidate cache
@@ -208,14 +402,19 @@ if 'found_files' in st.session_state:
                     message_placeholder.text("✅ Processing complete!")
                     
                     # Set indexing complete flag
+                    current_searchable['is_indexed'] = True
+                    current_searchable['indexed_files'] = found_files
                     st.session_state['indexing_complete'] = True
                     st.session_state['indexed_files_count'] = len(found_files)
-                    # Save the list of indexed files to session state
                     st.session_state['indexed_files'] = found_files
+                    
+                    # Save the updated searchable
+                    save_searchables()
+                    
                     st.success(f"✅ Documents processed successfully! {len(found_files)} files are now searchable.")
                     st.balloons()
     else:
-        st.warning("No supported documents found in the selected path.")
+        st.warning("No supported documents found in the selected paths.")
 
 # Caching for search components
 @st.cache_resource
@@ -249,9 +448,9 @@ if st.session_state['indexing_complete']:
     
     # Display indexed file count with unique documents
     if unique_doc_count > 0:
-        st.markdown(f"*{unique_doc_count} unique documents ready for search*")
+        st.markdown(f"*{unique_doc_count} unique documents ready for search in '{selected_searchable}'*")
     elif st.session_state['indexed_files_count'] > 0:
-        st.markdown(f"*{st.session_state['indexed_files_count']} documents ready for search*")
+        st.markdown(f"*{st.session_state['indexed_files_count']} documents ready for search in '{selected_searchable}'*")
         
     # Show list of indexed documents in an expander
     with st.expander("📄 View Indexed Documents", expanded=False):
@@ -320,12 +519,17 @@ if st.session_state['indexing_complete']:
                 # Make sure the model is loaded (with cache invalidation via index_version)
                 _ = load_embedding_model(_index_version=st.session_state['index_version'])
                 
-                # Search documents - use the selected number of results instead of hardcoded 10
+                # Get index paths for current searchable
+                index_dir = current_searchable.get('index_path', f"index/{selected_searchable.lower().replace(' ', '_')}")
+                faiss_path = f"{index_dir}/faiss_index.bin"
+                metadata_path = f"{index_dir}/metadata.pkl"
+                
+                # Search documents
                 results = ou.search_documents(
                     refined_query, 
                     top_k=st.session_state['num_results'], 
-                    index_path="index/faiss_index.bin", 
-                    metadata_path="index/metadata.pkl"
+                    index_path=faiss_path, 
+                    metadata_path=metadata_path
                 )
                 
                 if isinstance(results, list):
@@ -334,7 +538,7 @@ if st.session_state['indexing_complete']:
                     st.error(results["error"])
                     st.session_state['search_results'] = []
 else:
-    # Only show the welcome guide for first-time users (no files found yet)
+    # Show a more comprehensive guide when no documents have been processed yet
     if 'found_files' not in st.session_state:
         # First-time user experience - provide a comprehensive guide
         st.markdown("---")
@@ -440,7 +644,7 @@ else:
         st.markdown("---")
         st.markdown("## 🔍 No Documents Found")
         st.markdown("""
-        No supported documents were found in the selected path.
+        No supported documents were found in the selected paths.
         
         **Try the following:**
         - Check that you entered the correct folder path
