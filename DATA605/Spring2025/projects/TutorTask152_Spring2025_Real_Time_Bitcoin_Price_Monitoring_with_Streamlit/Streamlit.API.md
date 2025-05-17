@@ -1,143 +1,159 @@
 
-# Streamlit.API.md
+# Streamlit API Reference – Jupyter & Script Edition
+
+[![Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://streamlit.io)
+
+This repository provides a comprehensive **Streamlit API reference notebook** that is suitable for both **Jupyter environments (via [streamlit_jupyter](https://github.com/ddobrinskiy/streamlit-jupyter))** and standard `.py` Streamlit scripts.
+
+---
 
 ## Table of Contents
-- [Overview](#overview)
-- [Objectives](#objectives)
-- [Structure & Flow](#structure--flow)
-- [API Layer and Wrapper](#api-layer-and-wrapper)
-- [Key Dependencies](#key-dependencies)
-- [References](#references)
-- [Citations](#citations)
-- [Future Improvements](#future-improvements)
-- [Additional Features to Explore in CoinGecko API](#additional-features-to-explore-in-coingecko-api)
+
+1. [Overview](#overview)
+2. [Getting Started](#getting-started)
+3. [What's Inside](#whats-inside)
+4. [Section-by-Section Guide](#section-by-section-guide)
+5. [Jupyter vs Script Support](#jupyter-vs-script-support)
+6. [References & Further Reading](#references--further-reading)
+
+---
 
 ## Overview
 
-This markdown file documents the structure, purpose, and functionality of the `XYZ.API_final_with_metadata.ipynb` notebook. The notebook serves as a demonstration of how to use a native CoinGecko API in conjunction with a Python-based wrapper module `XYZ_utils` to perform common cryptocurrency analytics tasks.
+This notebook demonstrates:
+- **Streamlit usage in Jupyter notebooks** (with `streamlit_jupyter` patching)
+- All major Streamlit APIs, with usage explanations and code examples
+- Clear notes on which features work in Jupyter vs. which require a `.py` script
+
+It’s designed for learners, tinkerers, and developers who want a hands-on, example-driven introduction to the Streamlit API—**directly in Jupyter or as a script**.
 
 ---
 
-## Objectives
+## Getting Started
 
-The main objectives of the notebook are:
+To run Streamlit in Jupyter, install the necessary libraries:
 
-- **Fetch real-time price data** for a specific cryptocurrency (e.g., Bitcoin)
-- **Retrieve historical data** for technical analysis
-- **Calculate moving averages** to identify price trends
-- **Compute technical indicators** (e.g., RSI, MACD)
-- **Detect anomalies** in price data that could indicate unusual market behavior
-- **Promote modular and reusable code** via the `XYZ_utils` wrapper layer
+```python
+!pip install streamlit streamlit_jupyter
+```
 
----
+Then, patch Streamlit for Jupyter usage:
 
-## Structure & Flow
+```python
+from streamlit_jupyter import StreamlitPatcher
+sp = StreamlitPatcher()
+sp.jupyter()
+import streamlit as st
+```
 
-The notebook follows a logical flow designed for both demonstration and educational purposes:
-
-1. **Introduction**
-   Brief overview of the CoinGecko API and its relevance in crypto analytics.
-
-2. **Notebook Setup and Imports**
-   Imports necessary functions from `XYZ_utils`.
-
-3. **Fetch Current Price**
-   Uses the wrapper function `get_current_price()` to obtain the latest price of Bitcoin.
-
-4. **Fetch Historical Data**
-   Retrieves the last 30 days of Bitcoin price data using `get_historical_data()`.
-
-5. **Moving Average Calculation**
-   Applies a 7-day moving average to the historical dataset using `calculate_moving_average()`.
-
-6. **Technical Indicator Computation**
-   Leverages `calculate_technical_indicators()` to compute popular financial indicators.
-
-7. **Anomaly Detection**
-   Invokes `detect_anomalies()` to flag data points that significantly deviate from trends.
+> **Note:** Many examples work seamlessly in both Jupyter (with patching) and `.py` scripts. Where notebook support is unavailable, this is clearly indicated.
 
 ---
 
-## API Layer and Wrapper
+## What's Inside
 
-The `XYZ_utils.py` file acts as an abstraction layer over the raw CoinGecko API. It includes the following core methods:
-
-- `get_current_price(coin_id: str) -> float`
-- `get_historical_data(coin_id: str, days: int) -> pd.DataFrame`
-- `calculate_moving_average(df: pd.DataFrame, window: int) -> pd.DataFrame`
-- `calculate_technical_indicators(df: pd.DataFrame) -> pd.DataFrame`
-- `detect_anomalies(df: pd.DataFrame) -> pd.DataFrame`
-
-These functions encapsulate request handling, JSON parsing, error checking, and data transformation steps, making the notebook cleaner and easier to maintain.
-
----
-
-## Key Dependencies
-
-- `requests` – for API communication
-- `pandas` – for data handling and manipulation
-- `ta` – for technical indicator calculations
-- `matplotlib`/`plotly` – for visualization (optional)
+The notebook is organized into the following sections:
+- **Introduction:** What Streamlit is, and the aim of the notebook.
+- **Getting Started:** How to install and initialize for Jupyter.
+- **Core Display Functions:** Titles, headers, markdown, code, and LaTeX rendering.
+- **Input Widgets:** Text, number, slider, select, checkbox, radio, multiselect, date, and time inputs.
+- **Data Display & Metrics:** Tables, dataframes, JSON, and metrics.
+- **Charts & Plots:** Plotly
+- **Media Elements:** Image, audio, and video display (script-only).
+- **Layout & Containers:** Columns, expanders, tabs, containers, and empty spaces (script-only).
+- **File Upload/Download:** File upload (Jupyter-supported), download button (script-only).
+- **Session State & Caching:** How to manage state and cache expensive computations .
+- **Progress & Status:** Showing status, notifications, progress bars, and animations (script-only).
+- **Experimental/Advanced APIs:** Description of advanced/experimental features and components (script-only).
+- **Not Supported in Jupyter:** Explicitly notes functions that do not currently work in notebooks.
 
 ---
 
-## References
+## Section-by-Section Guide
 
-- CoinGecko API documentation: https://www.coingecko.com/en/api/documentation
-- Python for Data Analysis – Wes McKinney
-- Investopedia articles on [Moving Averages](https://www.investopedia.com/terms/m/movingaverage.asp) and [Technical Analysis](https://www.investopedia.com/terms/t/technicalanalysis.asp)
+### Introduction
+- Explains Streamlit’s core idea: quick web apps for data, ML, and dashboards.
+
+### Getting Started
+- Install and initialize Streamlit and `streamlit_jupyter`.
+- Shows magic commands for auto-reload in Jupyter.
+
+### Core Display Functions
+- `st.title`, `st.header`, `st.subheader`, `st.markdown`, `st.write`, `st.code`, `st.latex`
+- Examples for all, explaining their role in organizing and formatting content.
+
+### Input Widgets
+- Examples: `st.text_input`, `st.number_input`, `st.slider`, `st.checkbox`, `st.radio`, `st.selectbox`, `st.multiselect`, `st.date_input`, `st.time_input`, `st.button`
+- Usage: Collect user input, selections, dates, times, etc.
+
+### Data Display & Metrics
+- `st.table`, `st.dataframe`, `st.data_editor` (for interactive tables)
+- `st.json` for displaying dictionary/JSON objects
+- `st.metric` for KPIs, numbers, and deltas
+
+### Charts & Plots
+- `st.line_chart`, `st.bar_chart`, `st.area_chart` for simple plots from pandas/numpy data
+- `st.pyplot` (matplotlib)
+- `st.plotly_chart`, `st.altair_chart`, `st.vega_lite_chart` for interactive plotting
+- `st.map` for simple maps (requires latitude/longitude DataFrame columns)
+
+### Media Elements
+- `st.image`, `st.audio`, `st.video` for displaying images, playing audio or video
+
+### Layout & Containers
+- `st.columns` for side-by-side layout
+- `st.expander` for collapsible sections
+- `st.tabs` for tabbed navigation
+- `st.container` and `st.empty` for layout control
+
+### File Upload/Download
+- `st.file_uploader`: Works in Jupyter for uploading files (e.g., CSV)
+- `st.download_button`: **Not supported in Jupyter**—script only
+
+### Session State & Caching
+- Usage of `st.session_state` to persist variables across interactions (partial notebook support)
+- `st.cache_data` and `st.cache_resource` for efficient, reactive computation
+
+### Progress & Status
+- `st.success`, `st.info`, `st.warning`, `st.error`: Notifications and status
+- `st.progress` for progress bars (may have limited Jupyter support)
+- `st.balloons`, `st.snow`: Fun status animations
+
+### Experimental/Advanced APIs
+- `st.experimental_rerun`, `st.experimental_get_query_params`, etc. — script only
+- Streamlit Components — for advanced use
+
+### Not Supported in Jupyter
+- Lists major Streamlit functions unavailable in Jupyter (e.g., `st.sidebar`, `st.download_button`, reruns, etc.)
+- Recommends using a `.py` script with `streamlit run` for full features
 
 ---
 
-## Citations
+## Jupyter vs Script Support
 
-- CoinGecko. (2024). *CoinGecko API v3*. Retrieved from https://www.coingecko.com/en/api/documentation
-- McKinney, W. (2018). *Python for Data Analysis*. O’Reilly Media.
-
----
-
-## Future Improvements
-
-- Include support for additional coins beyond Bitcoin
-- Add interactive visualizations
-- Implement alerting system for detected anomalies
-
----
-
-## Additional Features to Explore in CoinGecko API
-
-Beyond price and historical data, the CoinGecko API provides access to a wide variety of cryptocurrency metrics and insights:
-
-### 1. **Market Data**
-- `/coins/markets` – Get current data (name, price, market, ...).
-- `/coins/{id}/market_chart` – Get historical market data (prices, market caps, total volumes).
-
-### 2. **Global Market Data**
-- `/global` – Fetch global cryptocurrency market data including total market cap, total volume, active markets, and Bitcoin dominance.
-
-### 3. **Coin Information**
-- `/coins/{id}` – Detailed coin information including whitepaper links, categories, development status, and more.
-- `/coins/{id}/tickers` – Get exchange tickers (price, volume, exchange name).
-
-### 4. **Trending Coins**
-- `/search/trending` – Discover which coins are currently trending on CoinGecko.
-
-### 5. **Derivatives and Exchanges**
-- `/derivatives` – Data about derivative markets.
-- `/exchanges` – Exchange-level data such as volume, trust score, and listed coins.
-
-### 6. **NFTs**
-- `/nfts/list` and `/nfts/{id}` – Fetch NFT project metadata and market metrics.
-
-### 7. **Developer and Community Metrics**
-- `/coins/{id}` – Includes GitHub statistics, Reddit subscribers, Telegram users, etc.
+| Feature                       | Jupyter Support         | Script Support (`.py`)   |
+|-------------------------------|------------------------|--------------------------|
+| Basic Display/Text            | ✅ Yes                 | ✅ Yes                   |
+| Most Input Widgets            | ⚠️ Partial/Static      | ✅ Yes                   |
+| Data Table/Editor             | ✅ Yes                 | ✅ Yes                   |
+| Charts (line/bar/area/plotly) | ✅ Yes                 | ✅ Yes                   |
+| Media Elements                | ❌ No                  | ✅ Yes                   |
+| File Uploader                 | ❌ No                  | ✅ Yes                   |
+| Download Button               | ❌ No                  | ✅ Yes                   |
+| Sidebar                       | ❌ No                  | ✅ Yes                   |
+| Progress Bar/Spinner          | ⚠️ Partial/Static      | ✅ Yes                   |
+| Session State (complex)       | ⚠️ Partial             | ✅ Yes                   |
+| Experimental APIs             | ❌ No                  | ✅ Yes                   |
 
 ---
 
-These features can be used to:
-- Build watchlists or dashboards
-- Analyze token performance across exchanges
-- Investigate market sentiment and developer activity
-- Research NFT trends and project details
+## References & Further Reading
 
-Refer to the [official documentation](https://www.coingecko.com/en/api/documentation) for full details on endpoints and parameters.
+- [Streamlit Documentation](https://docs.streamlit.io/)
+- [streamlit_jupyter Docs](https://ddobrinskiy.github.io/streamlit-jupyter/)
+- [Awesome Streamlit Gallery](https://streamlit.io/gallery)
+- [Streamlit GitHub](https://github.com/streamlit/streamlit)
+
+---
+
+**For any questions, improvements, or suggestions, feel free to open an issue or pull request. Happy Streamliting!**
