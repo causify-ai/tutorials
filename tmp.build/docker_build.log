@@ -1,0 +1,92 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.75kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:20.04
+#2 ...
+
+#3 [auth] library/ubuntu:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:20.04
+#2 DONE 0.5s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 3.64kB done
+#5 DONE 0.0s
+
+#6 [17/20] COPY run_jupyter.sh /run_jupyter.sh
+#6 CACHED
+
+#7 [11/20] RUN /install/install_jupyter_extensions.sh
+#7 CACHED
+
+#8 [16/20] RUN /install/version.sh 2>&1 | tee version.log
+#8 CACHED
+
+#9 [12/20] ADD etc_sudoers /install/
+#9 CACHED
+
+#10 [ 6/20] RUN python3 -m pip install --upgrade pip
+#10 CACHED
+
+#11 [ 7/20] RUN pip3 install     ipython     tornado==6.1     jupyter-client==7.3.2     jupyter-contrib-core     jupyter-contrib-nbextensions     psycopg2-binary     yapf
+#11 CACHED
+
+#12 [13/20] COPY etc_sudoers /etc/sudoers
+#12 CACHED
+
+#13 [ 8/20] RUN mkdir /install
+#13 CACHED
+
+#14 [ 3/20] RUN apt-get -y upgrade
+#14 CACHED
+
+#15 [10/20] RUN chmod +x /install/install_jupyter_extensions.sh
+#15 CACHED
+
+#16 [14/20] COPY bashrc /root/.bashrc
+#16 CACHED
+
+#17 [ 4/20] RUN apt install -y --no-install-recommends     sudo     curl     systemctl     gnupg     git     vim
+#17 CACHED
+
+#18 [ 9/20] ADD install_jupyter_extensions.sh /install
+#18 CACHED
+
+#19 [15/20] ADD version.sh /install/
+#19 CACHED
+
+#20 [ 5/20] RUN apt install -y --no-install-recommends     python3     python3-pip     python3-dev
+#20 CACHED
+
+#21 [18/20] COPY docker_jupyter.sh /docker_jupyter.sh
+#21 ERROR: failed to calculate checksum of ref 1kqrvpm61vvgjel1qom21pasg::myheqplglsn3mmn16qppvkvoz: "/docker_jupyter.sh": not found
+
+#22 [ 1/20] FROM docker.io/library/ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214
+#22 resolve docker.io/library/ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214 done
+#22 sha256:ecd83b6c354452b6a9979c7666bba16927f1e60e2afbfe6401dd6f87d5db8576 0B / 25.98MB
+#22 ...
+
+#23 [ 2/20] RUN apt-get -y update
+#23 CANCELED
+------
+ > [18/20] COPY docker_jupyter.sh /docker_jupyter.sh:
+------
+Dockerfile:55
+--------------------
+  53 |     # Copy startup scripts inside container
+  54 |     COPY run_jupyter.sh /run_jupyter.sh
+  55 | >>> COPY docker_jupyter.sh /docker_jupyter.sh
+  56 |     
+  57 |     # Make startup scripts executable
+--------------------
+ERROR: failed to solve: failed to compute cache key: failed to calculate checksum of ref 1kqrvpm61vvgjel1qom21pasg::myheqplglsn3mmn16qppvkvoz: "/docker_jupyter.sh": not found
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/bx27xdyj1m51hqe9fwzzfx0fa

@@ -1,0 +1,7 @@
+econml
+pandas
+requests
+scikit-learn
+matplotlib
+pytrends
+jupyter
