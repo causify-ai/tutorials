@@ -6,6 +6,23 @@
 
 ---
 
+## Table of Contents
+
+- [1. Project Overview](#1-project-overview)
+- [2. Project Files](#2-project-files)
+- [3. Prerequisites & Setup](#3-prerequisites--setup)
+- [4. Build & Run Docker (data605_style)](#4-build--run-docker-data605_style)
+- [5. Prepare Databricks Workspace](#5-prepare-databricks-workspace)
+- [6. Usage](#6-usage)
+  - [6.1 Run the API demo script](#61-run-the-api-demo-script)
+  - [6.2 Run the full pipeline script](#62-run-the-full-pipeline-script)
+  - [6.3 Interactive Notebooks](#63-interactive-notebooks)
+- [7. Batch Execution](#7-batch-execution)
+- [8. Troubleshooting](#8-troubleshooting)
+- [9. References](#9-references)
+
+---
+
 ## 1. Project Overview
 
 This project builds an automated pipeline to:
