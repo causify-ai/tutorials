@@ -1,4 +1,5 @@
 #!/bin/bash -e
+cd "$(dirname "$0")"
 
 GIT_ROOT=$(git rev-parse --show-toplevel)
 source $GIT_ROOT/docker_common/utils.sh

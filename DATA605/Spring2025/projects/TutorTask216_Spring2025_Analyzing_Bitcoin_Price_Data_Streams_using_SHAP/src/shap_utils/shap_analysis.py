@@ -63,3 +63,30 @@ class SHAPAnalyzer:
             shap.plots.waterfall(self.shap_values[index])
         else:
             raise ValueError("Call compute_shap_values() first.")
+    
+    def plot_dependence(self, feature_name, X):
+        """
+        Plot SHAP dependence plot for a given feature.
+
+        Args:
+            feature_name (str): Feature to visualize
+            X (pd.DataFrame): The dataset used for SHAP value computation
+        """
+        if self.shap_values is not None:
+            shap.dependence_plot(feature_name, self.shap_values.values, X)
+        else:
+            raise ValueError("Call compute_shap_values() first.")
+
+    def plot_decision(self, X_subset=None):
+        """
+        Plot SHAP decision plot for a subset of instances.
+
+        Args:
+            X_subset (pd.DataFrame or None): Optional subset of X to display
+        """
+        if self.shap_values is not None:
+            if X_subset is None:
+                X_subset = self.shap_values.data
+            shap.decision_plot(self.explainer.expected_value, self.shap_values.values, X_subset)
+        else:
+            raise ValueError("Call compute_shap_values() first.")
