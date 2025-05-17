@@ -55,6 +55,8 @@ jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --NotebookApp.token='' --
 
 Access Jupyter at: [http://localhost:8888](http://localhost:8888)
 
+---
+
 ## Architecture Overview
 
 1. Data Ingestion: Load historical CSV, fetch live API data
