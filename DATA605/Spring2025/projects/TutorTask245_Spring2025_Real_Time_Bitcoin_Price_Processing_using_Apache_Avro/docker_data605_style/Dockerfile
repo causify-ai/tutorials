@@ -40,7 +40,8 @@ RUN pip3 install \
     confluent-kafka \
     pyspark \
     requests \
-    pandas
+    pandas \
+    numpy
 
 # Install Java 11 for PySpark
 RUN apt-get update && apt-get install -y openjdk-11-jdk-headless

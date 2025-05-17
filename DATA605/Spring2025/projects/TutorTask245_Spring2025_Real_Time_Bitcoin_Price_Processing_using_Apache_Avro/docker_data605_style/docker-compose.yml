@@ -7,6 +7,7 @@ services:
     ports:
       - "2181:2181"
 
+#I have used a custom internal port since in my local i was running something else on the default import for kafka
   kafka:
     image: confluentinc/cp-kafka:latest
     depends_on:

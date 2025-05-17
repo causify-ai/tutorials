@@ -1,14 +1,3 @@
-"""
-utils.py
-
-This file contains utility functions that support the tutorial notebooks.
-
-- Notebooks should call these functions instead of writing raw logic inline.
-- This helps keep the notebooks clean, modular, and easier to debug.
-- Students should implement functions here for data preprocessing,
-  model setup, evaluation, or any reusable logic.
-"""
-
 import pandas as pd
 import logging
 
@@ -29,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 
-# Define schema
+# Defined schema for table read from api call containing bitcoin price data
 SCHEMA_STR = """
 {
   "type": "record",

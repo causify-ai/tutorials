@@ -103,48 +103,6 @@ class BitcoinAPI:
 
 
 
-
-# class Template:
-#     """
-#     Brief imperative description of what the class does in one line, if needed.
-#     """
-#
-#     def __init__(self):
-#         pass
-#
-#     def method1(self, arg1: int) -> None:
-#         """
-#         Brief imperative description of what the method does in one line.
-#
-#         You can elaborate more in the method docstring in this section, for
-#         e.g. explaining the formula/algorithm. Every method/function should
-#         have a docstring, typehints and include the parameters and return as
-#         follows:
-#
-#         :param arg1: description of arg1
-#         :return: description of return
-#         """
-#         # Code bloks go here.
-#         # Make sure to include comments to explain what the code is doing.
-#         # No empty lines between code blocks.
-#
-#
-# def template_function(arg1: int) -> None:
-#     """
-#     Brief imperative description of what the function does in one line.
-#
-#     You can elaborate more in the function docstring in this section, for e.g.
-#     explaining the formula/algorithm. Every function should have a docstring,
-#     typehints and include the parameters and return as follows:
-#
-#     :param arg1: description of arg1
-#     :return: description of return
-#     """
-#     # Code bloks go here.
-#     # Make sure to include comments to explain what the code is doing.
-#     # No empty lines between code blocks.
-#     pass
-
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     api = BitcoinAPI()
