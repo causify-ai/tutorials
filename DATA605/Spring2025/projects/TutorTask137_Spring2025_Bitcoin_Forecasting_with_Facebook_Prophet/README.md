@@ -93,7 +93,7 @@ Access Jupyter at: [http://localhost:8888](http://localhost:8888)
 
 ### Real-Time Data
 
-* *Source*: CoinGecko API (/coins/bitcoin/market_chart)
+* *Source*: CoinGecko API
 * *Used*: Last 365 days’ prices for live forecasting
 
 ---
