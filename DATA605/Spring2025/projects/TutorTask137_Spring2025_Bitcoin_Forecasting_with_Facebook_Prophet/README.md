@@ -7,18 +7,19 @@ Welcome to my capstone project for DATA605: an end-to-end Bitcoin forecasting sy
 ## Table of Contents
 
 1. [Project Objective](#project-objective)  
-2. [How to Run the Project](#how-to-run-the-project)  
-3. [General Guidelines](#general-guidelines)  
+2. [General Guidelines](#general-guidelines)  
+3. [How to Run the Project](#how-to-run-the-project)  
 4. [Architecture Overview](#architecture-overview)  
-5. [Technologies & Libraries Used](#technologies--libraries-used)  
+5. [Technologies & Libraries Using in The Project](#technologies--libraries-using-in-the-project)  
 6. [Dataset Sources](#dataset-sources)  
 7. [Utility Functions Explained (utils.py)](#utility-functions-explained-utilspy)  
 8. [Exploratory Data Analysis (EDA)](#exploratory-data-analysis-eda)  
-9. [Modeling](#modeling)  
-10. [Forecasting](#forecasting)  
-11. [Evaluation](#evaluation)  
-12. [Streamlit Dashboard](#streamlit-dashboard)  
-13. [Project Status](#project-status)  
+9. [Contextual Zoom-In Events](#contextual-zoom-in-events)  
+10. [Modeling](#modeling)  
+11. [Forecasting](#forecasting)  
+12. [Evaluation](#evaluation)  
+13. [Streamlit Dashboard](#streamlit-dashboard)  
+14. [Project Status](#project-status)  
 
 ---
 
@@ -40,160 +41,6 @@ Forecasting cryptocurrency prices, particularly Bitcoin, is a challenging yet va
 
 ---
 
-## How to Run the Project  
-
-1. **Start Docker Container**
-
-```bash
-docker run -it --rm -p 8888:8888 -v "$PWD":/workspace -w /workspace umd_data605/umd_data605_template bash
-```
-
-2. **Launch Jupyter Notebook**
-
-```bash
-jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --NotebookApp.token='' --allow-root
-```
-
-Access Jupyter at: [http://localhost:8888](http://localhost:8888)
-
----
-
-
-## Architecture Overview
-
-1. Data Ingestion: Load historical CSV, fetch live API data
-2. Preprocessing: Merge, clean, validate data continuity
-3. EDA: Trend analysis, seasonality, volatility
-4. Modeling: Prophet training
-5. Forecasting: 7–30 day predictions
-6. Evaluation: RMSE, MAE
-7. Deployment: Streamlit Dashboard
-
----
-
-## Technologies & Libraries Used
-
-| Component     | Libraries/Tools             |
-| ------------- | --------------------------- |
-| Forecasting   | Facebook Prophet            |
-| Data Handling | pandas, numpy               |
-| API Ingestion | requests, json              |
-| Visualization | matplotlib, seaborn, plotly |
-| Evaluation    | sklearn.metrics             |
-| Dashboard     | streamlit                   |
-
----
-
-## Dataset Sources
-
-**Historical Data**:
-
-* [Kaggle BTC Historical Dataset](https://www.kaggle.com/datasets/mczielinski/bitcoin-historical-data)
-
-**Real-Time Data**:
-
-* CoinGecko API `/coins/bitcoin/market_chart` (last 365 days’ prices)
-
----
-
-## Utility Functions Explained (utils.py)
-
-* `load_historical_data(filepath)`: Loads and formats historical data.
-* `fetch_live_data(days, currency)`: Pulls recent BTC data via API.
-* `merge_and_clean_data(historical_df, live_df)`: Merges and cleans datasets.
-* `create_prophet_model()`: Initializes Prophet model.
-* `train_prophet_model(model, df)`: Trains model on dataset.
-* `make_forecast(model, periods)`: Generates future forecasts.
-* `plot_forecast(model, forecast)`: Visualizes predictions.
-
----
-
-## Exploratory Data Analysis (EDA)
-
-* **Time Range**: 2012–2025
-* **Trend**: Exponential growth with high volatility.
-* **Outliers**: 100+ detected using Z-scores.
-* **Seasonality**:
-
-  * Weekly: Negligible
-  * Monthly: Peaks Jan–Apr
-  * Yearly: Cycles in 2013, 2017, 2021, 2024
-* **Volatility**: 30-day rolling std analysis.
-
----
-
-## Modeling
-
-* **Growth Type**: Linear with changepoint detection.
-* **Seasonality**:
-
-  * Yearly: Enabled
-  * Weekly: Disabled
-  * Monthly: Custom Fourier order 5
-* **Changepoints**:
-
-  * n\_changepoints: 100
-  * changepoint\_prior\_scale: 1.0
-
-**Training Metrics**:
-
-| Metric | Value        |
-| ------ | ------------ |
-| RMSE   | 1,736.53 USD |
-| MAE    | 929.40 USD   |
-| MAPE   | 43.58%       |
-
----
-
-## Forecasting
-
-* **Forecast Horizon**: 365 days
-* **Test Period**: 2023–2025
-
-Forecasts were accompanied by upper and lower bounds to capture uncertainty.
-
----
-
-## Evaluation
-
-| Metric | Value         |
-| ------ | ------------- |
-| RMSE   | 13,424.78 USD |
-| MAE    | 9,817.14 USD  |
-| MAPE   | 16.96%        |
-
-* Prediction accuracy remained strong despite high volatility.
-* External regressors significantly improved model performance.
-
----
-
-## Streamlit Dashboard
-
-An interactive dashboard allows real-time forecast visualization.
-
-* [Live Dashboard](https://btc-forecasting-using-facebook-prophet.streamlit.app/)
-
-**Features**:
-
-* Interactive filtering by year, month, and date.
-* Downloadable 30-day forecast as CSV.
-* Real-time evaluation metrics displayed.
-* Historical events overlay for better context.
-
----
-
-## Project Status
-
-| Phase         | Status     | Notes                         |
-| ------------- | ---------- | ----------------------------- |
-| Ingestion     | ✅ Done     | Historical + live merged      |
-| EDA           | ✅ Done     | Seasonality, outliers, trends |
-| Modeling      | ✅ Done     | Prophet trained               |
-| Forecasting   | ✅ Done     | Forecast generated            |
-| Evaluation    | ✅ Done     | Metrics computed              |
-| Streamlit App | ✅ Deployed | Web app live                  |
-
----
 
 ## How to Run the Project 
 
