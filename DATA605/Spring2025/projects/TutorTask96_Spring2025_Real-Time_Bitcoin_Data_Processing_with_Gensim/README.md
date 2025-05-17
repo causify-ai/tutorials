@@ -183,6 +183,26 @@ plt.title("Bitcoin Price Over Time")
 
 ---
 
+## Instructions to run project
+
+```
+> Open Terminal in parent folder
+
+> cd docker_data605_style
+
+> ./docker_build.sh
+
+> ./docker_jupyter.sh -d <PATH TO PARENT FOLDER>
+
+> Open http://localhost:8888/
+
+> Select `data` folder from the directory
+
+> Read the markdown files and run the notebooks to follow the examples
+```
+
+---
+
 ## Conclusion
 
 This project combines NLP and unsupervised learning to model evolving themes in Bitcoin content. It demonstrates a robust and modular approach using:
