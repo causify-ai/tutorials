@@ -76,3 +76,25 @@ def current_utc_time():
         str: Current UTC timestamp.
     """
     return datetime.utcnow().isoformat()
+
+def send_to_firehose_raw(data):
+    firehose = boto3.client('firehose', region_name='us-east-1')
+    written_raw = firehose.put_record(
+        DeliveryStreamName='btc-firehose-raw',
+        Record={'Data': json.dumps(data) + '\n'}
+    )
+    return written_raw
+
+def send_anomaly():
+    kinesis_client = boto3.client('kinesis')
+    data = {
+        "price": 9999999.0,  # ⚠️ way outside normal range
+        "volume": 9999.0,
+        "timestamp": current_utc_time()
+    }
+    anomaly = kinesis_client.put_record(
+        StreamName="bitcoin-price-stream",
+        Data=json.dumps(data),
+        PartitionKey="test"
+    )
+    return anomaly

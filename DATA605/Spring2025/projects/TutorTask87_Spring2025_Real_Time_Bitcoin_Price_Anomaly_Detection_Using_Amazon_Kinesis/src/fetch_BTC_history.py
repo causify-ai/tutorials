@@ -4,7 +4,7 @@ import requests
 import pandas as pd
 import time
 
-def fetch_btc_data(days=30):
+def fetch_btc_data(days=120):
     url = f"https://api.coingecko.com/api/v3/coins/bitcoin/market_chart"
     params = {
         "vs_currency": "usd",
@@ -36,4 +36,4 @@ def fetch_btc_data(days=30):
     print("Saved data to btc_price_history.csv")
 
 if __name__ == "__main__":
-    fetch_btc_data(days=30)
+    fetch_btc_data(days=365)
