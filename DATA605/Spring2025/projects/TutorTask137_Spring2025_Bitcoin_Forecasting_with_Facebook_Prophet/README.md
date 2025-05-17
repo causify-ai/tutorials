@@ -1,6 +1,6 @@
 # Bitcoin Price Forecasting with Facebook Prophet
 
-Welcome to my capstone project for DATA605: an end-to-end Bitcoin forecasting system using Facebook Prophet, built with real-time data ingestion, EDA, time-series modeling, and optional Streamlit deployment.
+Welcome to my capstone project for DATA605: an end-to-end Bitcoin forecasting system using Facebook Prophet, built with real-time data ingestion, EDA, time-series modeling, and  Streamlit deployment.
 
 ----
 
@@ -66,7 +66,7 @@ This section outlines general project practices followed to ensure a clean, repr
 | API Ingestion | requests, json              |
 | Visualization | matplotlib, seaborn, plotly |
 | Evaluation    | sklearn.metrics             |
-| Dashboard     | streamlit (optional)        |
+| Dashboard     | streamlit                   |
 
 ---
 
