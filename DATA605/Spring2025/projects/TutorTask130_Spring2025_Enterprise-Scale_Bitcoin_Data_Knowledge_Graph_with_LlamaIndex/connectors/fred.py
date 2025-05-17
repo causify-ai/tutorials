@@ -25,9 +25,9 @@ class FredApiConnector:
     METRIC_MAPPING = {
         "federal_funds_rate": "FEDFUNDS",  # Federal Funds Effective Rate
         "cpi": "CPIAUCSL",               # Consumer Price Index for All Urban Consumers
-        "real_gdp_growth": "A191RL1Q225SBEA",  # Real GDP Growth Rate (Quarterly)
-        "unemployment_rate": "UNRATE",   # Unemployment Rate
-        "sp500": "SP500",                # S&P 500 Index
+        "real_gdp_growth": "A191RL1Q225SBEA", 
+        "unemployment_rate": "UNRATE",
+        "sp500": "SP500",                
         "dollar_index": "DTWEXBGS",      # Trade Weighted U.S. Dollar Index: Broad, Goods
         "m2_money_supply": "M2SL"        # M2 Money Stock
     }
