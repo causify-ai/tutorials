@@ -121,6 +121,23 @@ requirements.txt                # Python dependencies
      && echo "Databricks CLI config found" \
      || (echo "No config found—run 'databricks configure --token'" && exit 1)
    ```
+  After you’ve verified your `~/.databrickscfg`, import your local notebooks into the workspace. In **PowerShell** (so that paths resolve correctly), run:
+
+  ```powershell
+  # Import your analysis notebook
+  databricks workspace import `
+    --format SOURCE `
+    --language PYTHON `
+    .\notebooks\bitcoin_analysis_test.ipynb `
+    /Workspace/bitcoin_analysis.ipynb
+
+  # Import your job‐test notebook
+  databricks workspace import `
+    --format SOURCE `
+    --language PYTHON `
+    .\notebooks\bitcoin_analysis_test.ipynb `
+    /Workspace/api_test_job_notebook.ipynb
+  ```
 
 2. **Build the Docker image**
 
