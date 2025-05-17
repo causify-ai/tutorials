@@ -22,6 +22,24 @@ Traditional approaches to making LLMs work with custom data often involve comple
 - **Agent Frameworks**: Enable autonomous and semi-autonomous workflows over your data
 - **Fine-tuning and Evaluation**: Continuously improve system performance
 
+```mermaid
+flowchart TD
+    A[Data Sources] --> B[Document Loaders]
+    B --> C[Documents]
+    C --> D[Chunking]
+    D --> E[Indices]
+    E --> F1[Vector Index]
+    E --> F2[Property Graph Index]
+    E --> F3[List Index]
+    E --> F4[Tree Index]
+    F1 --> G[Query Engine]
+    F2 --> G
+    F3 --> G
+    F4 --> G
+    G --> H[Response Synthesis]
+    I[User Query] --> G
+    H --> J[Final Response]
+```
 
 ## Environment Setup
 
@@ -96,6 +114,16 @@ When you create a vector index in LlamaIndex:
 5. The system finds document chunks with embeddings most similar to your query
 6. These relevant chunks are sent to the LLM along with your query to generate a response
 
+```mermaid
+flowchart LR
+    A[Documents] --> B[Text Chunks]
+    B --> C[Vector Embeddings]
+    D[Query] --> E[Query Embedding]
+    E --> F[Similarity Search]
+    C --> F
+    F --> G[Response Generation]
+```
+
 ### Vector Stores
 
 LlamaIndex supports many vector stores, including:
@@ -145,7 +173,69 @@ A property graph represents information as:
 - **Edges**: Relationships between nodes (e.g., "LlamaIndex -> ENABLES -> RAG")
 - **Properties**: Attributes attached to nodes and edges
 
-### How Property Graphs Are Built
+### How Property Graphs Are Built# LlamaIndex API Tutorial
+
+## Introduction
+
+LlamaIndex is a powerful data framework designed to bridge the gap between your custom data sources and large language models (LLMs). In an era where LLMs like GPT-4 contain vast knowledge but lack awareness of your specific data, LlamaIndex provides the essential infrastructure to make these models work effectively with your proprietary information.
+
+### What is LlamaIndex?
+
+At its core, LlamaIndex is a comprehensive framework that solves several critical challenges:
+
+- **Data Ingestion**: Connect to virtually any data source through built-in connectors for files, APIs, databases, and more
+- **Data Structuring**: Transform raw data into optimized formats (indices) that LLMs can efficiently process
+- **Data Retrieval**: Implement sophisticated retrieval mechanisms to find the most relevant information
+- **Data Synthesis**: Enable LLMs to generate accurate, contextually-aware responses based on your data
+
+### Why Use LlamaIndex?
+
+Traditional approaches to making LLMs work with custom data often involve complex prompt engineering or brittle data pipelines. LlamaIndex provides a structured, flexible framework that addresses these challenges with:
+
+- **Retrieval-Augmented Generation (RAG)**: Enhance LLM responses with relevant retrieved context
+- **Knowledge Graphs**: Create structured representations of your data's relationships
+- **Agent Frameworks**: Enable autonomous and semi-autonomous workflows over your data
+- **Fine-tuning and Evaluation**: Continuously improve system performance
+
+
+## Environment Setup
+
+Before we begin working with LlamaIndex, we need to configure our environment properly.
+
+### API Key Configuration
+
+You'll need an OpenAI API key from [OpenAI's platform](https://platform.openai.com).
+
+### LlamaIndex Settings
+
+LlamaIndex uses a global `Settings` object to configure default behaviors:
+
+- **LLM Provider**: Set which model will answer queries (we'll use `gpt-3.5-turbo`)
+- **Temperature**: Controls response randomness (0.1 for more deterministic outputs)
+- **Embedding Model**: For vector embeddings (defaults to OpenAI's embedding model)
+
+These settings can be overridden for individual components when needed, but establishing defaults simplifies our code.
+
+## Document Loading
+
+The first step in any LlamaIndex workflow is loading your data. LlamaIndex provides a variety of document loaders (called "readers") to ingest data from different sources.
+
+### Document Readers
+
+LlamaIndex includes readers for many common data sources:
+
+- **SimpleDirectoryReader**: Load files from a local directory
+- **PDFReader**: Extract text and metadata from PDF files
+- **WebPageReader**: Scrape and process web content
+- **CSVReader**: Process structured tabular data
+- **And many more**: Including connectors for Notion, Discord, Slack, etc.
+
+### Document Structure
+
+When documents are loaded, they're converted into `Document` objects with:
+
+- **Text Content**: The actual textual data
+
 
 LlamaIndex creates property graphs through these steps:
 
@@ -153,6 +243,17 @@ LlamaIndex creates property graphs through these steps:
 2. **Relationship Extraction**: Determine how entities relate to each other
 3. **Graph Construction**: Organize the entities and relationships into a coherent structure
 
+```mermaid
+flowchart TD
+    A[Entity A] -->|Relationship| B[Entity B]
+    A -->|Relationship| C[Entity C]
+    B -->|Relationship| D[Entity D]
+    
+    style A fill:#f9f,stroke:#333
+    style B fill:#bbf,stroke:#333
+    style C fill:#bbf,stroke:#333
+    style D fill:#bbf,stroke:#333
+```
 ### Knowledge Graph Extractors
 
 LlamaIndex provides several extractors for building knowledge graphs:
@@ -211,6 +312,14 @@ Agents can be combined into workflows that:
 - **Implement complex logic**: Decision trees, conditional execution, loops
 - **Maintain shared context**: Pass information between components
 
+```mermaid
+flowchart LR
+    A[User Question] --> B[Agent]
+    B --> C[Tool Selection]
+    C --> D[Tool Execution]
+    D --> E[Response Generation]
+    E --> F[Answer]
+```
 
 ## Advanced Query Techniques
 
