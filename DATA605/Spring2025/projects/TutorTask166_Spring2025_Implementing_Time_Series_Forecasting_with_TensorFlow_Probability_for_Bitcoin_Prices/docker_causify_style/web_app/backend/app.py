@@ -132,6 +132,37 @@ def get_metrics_data():
         # Filter to last 60 minutes
         metrics_df = filter_last_n_minutes(metrics_df, 60)
         
+        # Load prediction data to calculate actual error if needed
+        if 'actual_error' not in metrics_df.columns and not metrics_df.empty:
+            try:
+                pred_df = load_csv_safely(PREDICTIONS_FILE)
+                price_df = load_csv_safely(PRICE_FILE)
+                
+                if not pred_df.empty and not price_df.empty:
+                    # Merge prediction and price data on timestamp
+                    merged_df = pd.merge_asof(
+                        pred_df.sort_values('timestamp'),
+                        price_df.sort_values('timestamp'),
+                        on='timestamp',
+                        direction='nearest'
+                    )
+                    
+                    # Calculate actual error (actual - predicted)
+                    if 'close' in merged_df.columns and 'pred_price' in merged_df.columns:
+                        merged_df['actual_error'] = merged_df['close'] - merged_df['pred_price']
+                        
+                        # Merge actual_error back to metrics_df
+                        metrics_df = pd.merge_asof(
+                            metrics_df.sort_values('timestamp'),
+                            merged_df[['timestamp', 'actual_error']].sort_values('timestamp'),
+                            on='timestamp',
+                            direction='nearest'
+                        )
+                        
+                        logger.info("Added actual_error field to metrics data")
+            except Exception as e:
+                logger.warning(f"Could not calculate actual_error: {e}")
+        
         # Convert to list of dictionaries for JSON serialization
         result = []
         if not metrics_df.empty:

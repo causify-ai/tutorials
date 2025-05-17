@@ -26,12 +26,15 @@
             padding: 0;
             background-color: #f8f9fa;
             color: #333;
+            overflow-x: hidden;
         }
         
         .container {
             max-width: 1600px;
             margin: 0 auto;
             padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
         }
         
         header {
@@ -40,6 +43,8 @@
             padding: 1rem;
             text-align: center;
             box-shadow: var(--box-shadow);
+            width: 100%;
+            box-sizing: border-box;
         }
         
         h1 {
@@ -52,6 +57,8 @@
             grid-template-columns: 200px 1fr;
             gap: 15px;
             margin-top: 20px;
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .sidebar {
@@ -59,12 +66,16 @@
             border-radius: var(--border-radius);
             padding: 20px;
             box-shadow: var(--box-shadow);
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .main-content {
             display: flex;
             flex-direction: column;
             gap: 20px;
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .metrics-container {
@@ -72,6 +83,8 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .metric-card {
@@ -84,6 +97,8 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .metric-title {
@@ -118,6 +133,8 @@
             box-shadow: var(--box-shadow);
             margin-bottom: 30px;
             width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
         }
         
         .info-box {
@@ -126,6 +143,8 @@
             padding: 15px;
             border-radius: var(--border-radius);
             margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .warning-box {
@@ -134,6 +153,8 @@
             padding: 15px;
             border-radius: var(--border-radius);
             margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .error-box {
@@ -142,6 +163,8 @@
             padding: 15px;
             border-radius: var(--border-radius);
             margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .loading {
@@ -149,6 +172,7 @@
             justify-content: center;
             align-items: center;
             height: 200px;
+            width: 100%;
         }
         
         .loading::after {
@@ -164,6 +188,15 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+        
+        /* Fix for Plotly charts to prevent expanding */
+        .js-plotly-plot, .plot-container {
+            width: 100% !important;
+        }
+        
+        .main-svg {
+            width: 100% !important;
         }
     </style>
 </head>
@@ -218,11 +251,11 @@
                 </div>
                 
                 <div class="chart-container">
-                    <div id="mae-chart" style="height: 300px;"></div>
+                    <div id="mae-chart" style="height: 500px;"></div>
                 </div>
                 
                 <div class="chart-container">
-                    <div id="error-distribution-chart" style="height: 300px;"></div>
+                    <div id="error-distribution-chart" style="height: 500px;"></div>
                 </div>
             </div>
         </div>
@@ -261,7 +294,8 @@
             metricsData: [],
             isColdStart: false,
             coldStartMinutes: 0,
-            lastUpdate: null
+            lastUpdate: null,
+            chartsInitialized: false
         };
         
         // Initialize charts
@@ -304,13 +338,18 @@
         
         // Create price candlestick chart
         function createPriceChart(data) {
+            if (!data || data.length === 0) {
+                document.getElementById('price-chart').innerHTML = 
+                    '<div class="info-box">No price data available</div>';
+                return;
+            }
+            
             const layout = {
                 title: 'Bitcoin Price (Candlestick Chart)',
                 yaxis: {
                     title: 'Price (USD)',
                     tickformat: '$,.0f',
-                    autorange: true,
-                    fixedrange: false
+                    autorange: true
                 },
                 xaxis: {
                     title: 'Time (UTC)',
@@ -326,38 +365,16 @@
                     r: 40,
                     t: 50,
                     b: 80
-                }
+                },
+                autosize: true,
+                width: null  // Let Plotly use container width
             };
             
-            if (data && data.length > 0) {
-                // Set dynamic x-axis range
-                const maxTime = new Date(Math.max(...data.map(d => new Date(d.timestamp))));
-                const minTime = new Date(Math.min(...data.map(d => new Date(d.timestamp))));
-                const timeSpanMinutes = (maxTime - minTime) / (1000 * 60);
-                
-                // Check if we're in cold start mode
-                if (config.coldStart.enabled && 
-                    timeSpanMinutes < config.timeWindowMinutes && 
-                    data.length >= config.coldStart.minDataPoints) {
-                    
-                    // Use actual data range with padding
-                    const padding = 30 * 1000; // 30 seconds in milliseconds
-                    layout.xaxis.range = [
-                        new Date(minTime.getTime() - padding),
-                        new Date(maxTime.getTime() + padding)
-                    ];
-                    
-                    state.isColdStart = true;
-                    state.coldStartMinutes = timeSpanMinutes;
-                } else {
-                    // Standard mode: use full time window
-                    const standardMinTime = new Date(maxTime);
-                    standardMinTime.setMinutes(standardMinTime.getMinutes() - config.timeWindowMinutes);
-                    layout.xaxis.range = [standardMinTime, maxTime];
-                    
-                    state.isColdStart = false;
-                }
-            }
+            // Set fixed time window
+            const maxTime = new Date(Math.max(...data.map(d => new Date(d.timestamp))));
+            const minTime = new Date(maxTime);
+            minTime.setMinutes(minTime.getMinutes() - config.timeWindowMinutes);
+            layout.xaxis.range = [minTime, maxTime];
             
             const trace = {
                 x: data.map(d => d.timestamp),
@@ -371,11 +388,20 @@
                 decreasing: { line: { color: config.colors.actualDown } }
             };
             
-            Plotly.newPlot('price-chart', [trace], layout);
+            Plotly.newPlot('price-chart', [trace], layout, {
+                responsive: true,
+                displayModeBar: false
+            });
         }
         
         // Create prediction chart with confidence interval
         function createPredictionChart(priceData, predictionData) {
+            if (!priceData || priceData.length === 0 || !predictionData || predictionData.length === 0) {
+                document.getElementById('prediction-chart').innerHTML = 
+                    '<div class="info-box">No prediction data available</div>';
+                return;
+            }
+            
             const traces = [];
             const layout = {
                 title: 'Predicted Price with Confidence Interval vs Actual',
@@ -397,8 +423,16 @@
                     r: 40,
                     t: 50,
                     b: 80
-                }
+                },
+                autosize: true,
+                width: null  // Let Plotly use container width
             };
+            
+            // Set fixed time window
+            const maxTime = new Date(Math.max(...priceData.map(d => new Date(d.timestamp))));
+            const minTime = new Date(maxTime);
+            minTime.setMinutes(minTime.getMinutes() - config.timeWindowMinutes);
+            layout.xaxis.range = [minTime, maxTime];
             
             // Determine if we need dual-axis presentation
             let useSecondaryY = false;
@@ -500,7 +534,10 @@
                 }
             }
             
-            Plotly.newPlot('prediction-chart', traces, layout);
+            Plotly.newPlot('prediction-chart', traces, layout, {
+                responsive: true,
+                displayModeBar: false
+            });
         }
         
         // Create MAE (Mean Absolute Error) chart
@@ -511,31 +548,93 @@
                 return;
             }
             
-            const trace = {
+            // Calculate average error
+            const actualErrors = metricsData.map(d => d.actual_error || 0);
+            const avgError = actualErrors.reduce((sum, val) => sum + val, 0) / actualErrors.length;
+            const roundedAvgError = Math.round(avgError * 100) / 100;
+            
+            // Create traces
+            const traces = [];
+            
+            // Actual error trace
+            traces.push({
+                x: metricsData.map(d => d.timestamp),
+                y: metricsData.map(d => d.actual_error || 0),
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Actual Error',
+                line: { color: '#2ecc71', width: 2 }
+            });
+            
+            // MAE trace
+            traces.push({
                 x: metricsData.map(d => d.timestamp),
                 y: metricsData.map(d => d.mae),
                 type: 'scatter',
-                mode: 'lines+markers',
-                name: 'Mean Absolute Error',
-                line: { color: '#e74c3c', width: 2 },
-                marker: { size: 6 }
-            };
+                mode: 'lines',
+                name: 'MAE',
+                line: { color: '#f39c12', width: 2, dash: 'dot' }
+            });
+            
+            // Perfect prediction line
+            traces.push({
+                x: [metricsData[0].timestamp, metricsData[metricsData.length - 1].timestamp],
+                y: [0, 0],
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Perfect Prediction',
+                line: { color: '#7f8c8d', width: 1, dash: 'dash' }
+            });
+            
+            // Average error line
+            traces.push({
+                x: [metricsData[0].timestamp, metricsData[metricsData.length - 1].timestamp],
+                y: [avgError, avgError],
+                type: 'scatter',
+                mode: 'lines',
+                name: `Avg Error: ${roundedAvgError}`,
+                line: { color: '#3498db', width: 1 }
+            });
             
             const layout = {
-                title: 'Prediction Error (Mean Absolute Error)',
+                title: 'Prediction Error Over Time',
                 yaxis: {
                     title: 'Error (USD)',
-                    tickformat: '$,.2f'
+                    tickformat: '$,.2f',
+                    zeroline: true
                 },
                 xaxis: {
                     title: 'Time (UTC)',
                     tickformat: '%H:%M',
-                    tickangle: -45
+                    tickangle: -45,
+                    nticks: 8
                 },
-                template: 'plotly_white'
+                template: 'plotly_white',
+                showlegend: true,
+                legend: {
+                    orientation: 'h',
+                    y: -0.2
+                },
+                margin: {
+                    l: 60,
+                    r: 40,
+                    t: 50,
+                    b: 80
+                },
+                autosize: true,
+                width: null  // Let Plotly use container width
             };
             
-            Plotly.newPlot('mae-chart', [trace], layout);
+            // Set fixed time window
+            const maxTime = new Date(Math.max(...metricsData.map(d => new Date(d.timestamp))));
+            const minTime = new Date(maxTime);
+            minTime.setMinutes(minTime.getMinutes() - config.timeWindowMinutes);
+            layout.xaxis.range = [minTime, maxTime];
+            
+            Plotly.newPlot('mae-chart', traces, layout, {
+                responsive: true,
+                displayModeBar: false
+            });
         }
         
         // Create error distribution chart
@@ -547,13 +646,19 @@
             }
             
             // Extract error values
-            const errors = metricsData.map(d => d.actual_error).filter(e => !isNaN(e));
+            const errors = metricsData.map(d => d.actual_error || 0).filter(e => !isNaN(e));
             
             if (errors.length === 0) {
                 document.getElementById('error-distribution-chart').innerHTML = 
                     '<div class="info-box">No valid error data available</div>';
                 return;
             }
+            
+            // Calculate statistics
+            const mean = errors.reduce((sum, val) => sum + val, 0) / errors.length;
+            const median = [...errors].sort((a, b) => a - b)[Math.floor(errors.length / 2)];
+            const roundedMean = Math.round(mean * 100) / 100;
+            const roundedMedian = Math.round(median * 100) / 100;
             
             // Create histogram trace
             const histTrace = {
@@ -574,20 +679,65 @@
                 }
             };
             
-            const layout = {
-                title: 'Prediction Error Distribution',
-                xaxis: {
-                    title: 'Error (USD)',
-                    tickformat: '$,.2f'
-                },
-                yaxis: {
-                    title: 'Frequency'
-                },
-                template: 'plotly_white',
-                bargap: 0.05
+            // Calculate normal distribution overlay
+            const std = Math.sqrt(errors.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / errors.length);
+            const xValues = [];
+            const yValues = [];
+            const min = Math.min(...errors);
+            const max = Math.max(...errors);
+            const range = max - min;
+            const step = range / 100;
+            
+            // Generate normal distribution curve
+            for (let x = min - range * 0.2; x <= max + range * 0.2; x += step) {
+                xValues.push(x);
+                // Normal distribution PDF
+                const y = (1 / (std * Math.sqrt(2 * Math.PI))) * 
+                          Math.exp(-Math.pow(x - mean, 2) / (2 * Math.pow(std, 2)));
+                // Scale to match histogram height
+                yValues.push(y * errors.length * histTrace.xbins.size);
+            }
+            
+            const normalCurve = {
+                x: xValues,
+                y: yValues,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Normal Distribution',
+                line: {
+                    color: 'rgb(0, 0, 255)',
+                    width: 2
+                }
             };
             
-            Plotly.newPlot('error-distribution-chart', [histTrace], layout);
+            const layout = {
+                title: `Prediction Error Distribution<br>Median: ${roundedMedian} Mean: ${roundedMean}`,
+                xaxis: {
+                    title: 'Error (USD)',
+                    tickformat: '$,.2f',
+                    autorange: true
+                },
+                yaxis: {
+                    title: 'Frequency',
+                    autorange: true
+                },
+                template: 'plotly_white',
+                bargap: 0.05,
+                showlegend: true,
+                margin: {
+                    l: 60,
+                    r: 40,
+                    t: 60,
+                    b: 60
+                },
+                autosize: true,
+                width: null  // Let Plotly use container width
+            };
+            
+            Plotly.newPlot('error-distribution-chart', [histTrace, normalCurve], layout, {
+                responsive: true,
+                displayModeBar: false
+            });
         }
         
         // Update metrics display
@@ -671,10 +821,12 @@
                 }
                 
                 // Update charts and metrics
-                createPriceChart(state.priceData);
-                createPredictionChart(state.priceData, state.predictionData);
-                createMaeChart(state.metricsData);
-                createErrorDistributionChart(state.metricsData);
+                if (state.chartsInitialized) {
+                    updateCharts();
+                } else {
+                    initializeCharts();
+                    state.chartsInitialized = true;
+                }
                 updateMetricsDisplay();
                 
                 state.lastUpdate = new Date();
@@ -693,6 +845,123 @@
                 const mainContent = document.querySelector('.main-content');
                 mainContent.insertBefore(errorBox, mainContent.firstChild);
             }
+        }
+        
+        // Initialize charts
+        function initializeCharts() {
+            createPriceChart(state.priceData);
+            createPredictionChart(state.priceData, state.predictionData);
+            createMaeChart(state.metricsData);
+            createErrorDistributionChart(state.metricsData);
+        }
+        
+        // Update charts with new data
+        function updateCharts() {
+            if (state.priceData && state.priceData.length > 0) {
+                updatePriceChart(state.priceData);
+            }
+            
+            if (state.predictionData && state.predictionData.length > 0) {
+                updatePredictionChart(state.priceData, state.predictionData);
+            }
+            
+            if (state.metricsData && state.metricsData.length > 0) {
+                updateMaeChart(state.metricsData);
+                updateErrorDistributionChart(state.metricsData);
+            }
+        }
+        
+        // Update price chart with new data
+        function updatePriceChart(data) {
+            if (!data || data.length === 0) return;
+            
+            const maxTime = new Date(Math.max(...data.map(d => new Date(d.timestamp))));
+            const minTime = new Date(maxTime);
+            minTime.setMinutes(minTime.getMinutes() - config.timeWindowMinutes);
+            
+            Plotly.update('price-chart', {
+                x: [data.map(d => d.timestamp)],
+                open: [data.map(d => d.open)],
+                high: [data.map(d => d.high)],
+                low: [data.map(d => d.low)],
+                close: [data.map(d => d.close)]
+            }, {
+                xaxis: {
+                    range: [minTime, maxTime]
+                }
+            });
+        }
+        
+        // Update prediction chart with new data
+        function updatePredictionChart(priceData, predictionData) {
+            if (!priceData || priceData.length === 0 || !predictionData || predictionData.length === 0) return;
+            
+            const maxTime = new Date(Math.max(...priceData.map(d => new Date(d.timestamp))));
+            const minTime = new Date(maxTime);
+            minTime.setMinutes(minTime.getMinutes() - config.timeWindowMinutes);
+            
+            // Update data for each trace
+            const updateData = {
+                x: [
+                    priceData.map(d => d.timestamp), // Actual price
+                    predictionData.map(d => d.timestamp), // Predicted price
+                    predictionData.map(d => d.timestamp), // Upper bound
+                    predictionData.map(d => d.timestamp)  // Lower bound
+                ],
+                y: [
+                    priceData.map(d => d.close),
+                    predictionData.map(d => d.pred_price),
+                    predictionData.map(d => d.pred_upper),
+                    predictionData.map(d => d.pred_lower)
+                ]
+            };
+            
+            Plotly.update('prediction-chart', updateData, {
+                xaxis: {
+                    range: [minTime, maxTime]
+                }
+            });
+        }
+        
+        // Update MAE chart with new data
+        function updateMaeChart(metricsData) {
+            if (!metricsData || metricsData.length === 0) return;
+            
+            const maxTime = new Date(Math.max(...metricsData.map(d => new Date(d.timestamp))));
+            const minTime = new Date(maxTime);
+            minTime.setMinutes(minTime.getMinutes() - config.timeWindowMinutes);
+            
+            // Calculate average error
+            const actualErrors = metricsData.map(d => d.actual_error || 0);
+            const avgError = actualErrors.reduce((sum, val) => sum + val, 0) / actualErrors.length;
+            
+            // Update data for each trace
+            const updateData = {
+                x: [
+                    metricsData.map(d => d.timestamp), // Actual error
+                    metricsData.map(d => d.timestamp), // MAE
+                    [metricsData[0].timestamp, metricsData[metricsData.length - 1].timestamp], // Perfect prediction
+                    [metricsData[0].timestamp, metricsData[metricsData.length - 1].timestamp]  // Average error
+                ],
+                y: [
+                    metricsData.map(d => d.actual_error || 0),
+                    metricsData.map(d => d.mae),
+                    [0, 0],
+                    [avgError, avgError]
+                ]
+            };
+            
+            Plotly.update('mae-chart', updateData, {
+                xaxis: {
+                    range: [minTime, maxTime]
+                }
+            });
+        }
+        
+        // Update error distribution chart
+        function updateErrorDistributionChart(metricsData) {
+            // For the histogram, we need to recreate it completely
+            createErrorDistributionChart(metricsData);
         }
         
         // Initialize dashboard
