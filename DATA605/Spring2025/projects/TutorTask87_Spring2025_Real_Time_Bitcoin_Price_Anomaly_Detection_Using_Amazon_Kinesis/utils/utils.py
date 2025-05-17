@@ -6,7 +6,13 @@ import requests
 from datetime import datetime
 from dotenv import load_dotenv
 import os
+import joblib
+import numpy as np
 
+model_path = os.path.join(os.path.dirname(__file__), "isolation_forest_model.pkl")
+scaler_path = os.path.join(os.path.dirname(__file__), "scaler.pkl")
+model = joblib.load(model_path)
+scaler = joblib.load(scaler_path)
 # Load environment variables from .env file
 load_dotenv()
 
@@ -85,10 +91,26 @@ def send_to_firehose_raw(data):
     )
     return written_raw
 
+
+
+def send_to_kinesis_processed(data):
+    # Send processed to new Kinesis stream
+    kinesis = boto3.client('kinesis')
+
+    partition_key = "partitionKey"
+    written_processed = kinesis.put_record(
+        StreamName="btc-processed-stream",
+        Data=json.dumps(data),
+        PartitionKey=partition_key
+    )
+    return written_processed
+
+
+
 def send_anomaly():
     kinesis_client = boto3.client('kinesis')
     data = {
-        "price": 9999999.0,  # ⚠️ way outside normal range
+        "price": 9999999.0,  # way outside normal range
         "volume": 9999.0,
         "timestamp": current_utc_time()
     }
@@ -97,4 +119,23 @@ def send_anomaly():
         Data=json.dumps(data),
         PartitionKey="test"
     )
-    return anomaly
+    return anomaly,data
+
+def detect_anomaly(data):
+    price = data.get("price")
+    volume = data.get("volume")
+    timestamp = data.get("timestamp")
+    features = scaler.transform([[price, volume]])
+    score = model.decision_function(features)[0]
+    if score < -0.0001:
+        is_anomaly = True
+    else:
+        is_anomaly = False
+
+    return {
+        "price": price,
+        "volume": volume,
+        "timestamp": timestamp,
+        "anomaly_score": score,
+        "is_anomaly": is_anomaly
+    }
