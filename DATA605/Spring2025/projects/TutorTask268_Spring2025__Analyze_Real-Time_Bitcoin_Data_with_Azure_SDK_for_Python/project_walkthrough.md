@@ -293,7 +293,7 @@ flowchart TD
     F --> G[Azure Synapse Analytics<br><sub>Time series queries + charts</sub>]
     G --> H[Jupyter Notebooks<br><sub>Advanced ML & visualization</sub>]
 
-
+```
 
 
 ### What I Learned
