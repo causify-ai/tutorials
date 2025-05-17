@@ -1,7 +1,7 @@
 import requests
 import pandas as pd
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 import numpy as np
 from scipy.stats import zscore
@@ -15,6 +15,7 @@ DB_FILE = "data/bitcoin_data.db"
 def fetch_historical_bitcoin_prices(days=365, interval="daily"):
     """
     Fetches historical Bitcoin prices from CoinGecko for the past 'days'.
+    Ensures one entry per day.
     """
     params = {
         "vs_currency": "usd",
@@ -24,15 +25,21 @@ def fetch_historical_bitcoin_prices(days=365, interval="daily"):
     response = requests.get(COINGECKO_URL, params=params)
     response.raise_for_status()
     data = response.json()
-    prices = data.get('prices', [])
-    df = pd.DataFrame(prices, columns=['timestamp', 'price'])
-    df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
-    return df
+
+    df = pd.DataFrame(data.get("prices", []), columns=["ts_ms", "price"])
+    df["ts_ms"] = pd.to_numeric(df["ts_ms"], errors="coerce")
+    df = df.dropna(subset=["ts_ms"])
+
+    df["timestamp"] = pd.to_datetime(df["ts_ms"], unit="ms", errors="coerce").dt.date
+    df = df.dropna(subset=["timestamp"])
+    df = df.drop_duplicates(subset=["timestamp"])
+    return df[["timestamp", "price"]]
 
 
 def fetch_current_price():
     """
     Fetches the current Bitcoin price.
+    Returns one record with today's date.
     """
     params = {
         "ids": "bitcoin",
@@ -42,17 +49,44 @@ def fetch_current_price():
     response.raise_for_status()
     data = response.json()
     price = data["bitcoin"]["usd"]
-    timestamp = pd.Timestamp.utcnow()
-    return pd.DataFrame([{"timestamp": timestamp, "price": price}])
-
+    today = pd.Timestamp.utcnow().normalize().date()
+    return pd.DataFrame([{"timestamp": today, "price": price}])
 
 def save_to_sqlite(df, db_file=DB_FILE, table_name="bitcoin_prices"):
     """
-    Saves a DataFrame to an SQLite table.
+    Saves a DataFrame with timestamp to SQLite safely.
+    Assumes timestamp is already clean and at date-level granularity.
     """
+    if df.empty or "timestamp" not in df.columns:
+        print("⚠️ DataFrame is empty or missing 'timestamp'. Skipping save.")
+        return
+
+    df = df.copy()
+
+    # Ensure timestamp is a proper datetime.date (not datetime64, not str)
+    df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce").dt.date
+    df = df.dropna(subset=["timestamp"])  # Remove NaT rows
+
+    # Only keep relevant columns (this avoids any leftover duplicates)
+    df = df[["timestamp", "price"]]
+
     conn = sqlite3.connect(db_file)
-    df.to_sql(table_name, conn, if_exists='append', index=False)
+    cursor = conn.cursor()
+
+    inserted = 0
+    for _, row in df.iterrows():
+        try:
+            cursor.execute(
+                f"INSERT INTO {table_name} (timestamp, price) VALUES (?, ?)",
+                (row["timestamp"].strftime("%Y-%m-%d"), row["price"])
+            )
+            inserted += 1
+        except sqlite3.IntegrityError:
+            continue  # skip duplicates
+
+    conn.commit()
     conn.close()
+    print(f"✅ Inserted {inserted} new rows (skipped duplicates).")
 
 
 def init_db(db_file=DB_FILE, table_name="bitcoin_prices"):
@@ -188,3 +222,83 @@ def decompose_time_series(df, period=30, model='additive', plot=False):
         plt.show()
 
     return decomposition_df
+
+
+COINGECKO_RANGE_URL = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range"
+
+def fetch_and_update_bitcoin_data(db_path=DB_FILE):
+    print("📈 Updating Bitcoin data…")
+    conn = sqlite3.connect(db_path)
+
+    # 1) Load existing dates
+    try:
+        existing = pd.read_sql_query(
+            "SELECT DISTINCT DATE(timestamp) AS date FROM bitcoin_prices",
+            conn
+        )
+        existing_dates = {
+            pd.to_datetime(d).date()
+            for d in existing["date"].dropna()
+        }
+    except Exception:
+        existing_dates = set()
+
+    # 2) Determine date range to fetch
+    if existing_dates:
+        start_date = max(existing_dates) + timedelta(days=1)
+    else:
+        print("No existing data. Fetching full 365 days history.")
+        start_date = datetime.utcnow().date() - timedelta(days=365)
+
+    end_date = datetime.utcnow().date()
+    if start_date > end_date:
+        print("✅ Data already up to date.")
+        conn.close()
+        return
+
+    print(f"Fetching data from {start_date} to {end_date}")
+
+    # 3) Hit the API
+    params = {
+        "vs_currency": "usd",
+        "from": int(datetime.combine(start_date, datetime.min.time()).timestamp()),
+        "to":   int(datetime.combine(end_date,   datetime.min.time()).timestamp()),
+    }
+    resp = requests.get(COINGECKO_RANGE_URL, params=params)
+    resp.raise_for_status()
+    data = resp.json()
+
+    # 4) Parse & clean the JSON into a DataFrame
+    prices = data.get("prices", [])
+    df = pd.DataFrame(prices, columns=["ts_ms", "price"])
+    df["ts_ms"] = pd.to_numeric(df["ts_ms"], errors="coerce")
+    df = df.dropna(subset=["ts_ms"])
+
+    # Create a single 'timestamp' column and drop ts_ms
+    df["timestamp"] = pd.to_datetime(df["ts_ms"], unit="ms", errors="coerce").dt.date
+    df = df.drop(columns=["ts_ms"])  # ✅ Drop ts_ms to avoid confusion
+    df = df.dropna(subset=["timestamp"])
+    df = df.drop_duplicates(subset=["timestamp"])
+
+
+    # 5) Filter out dates we already have
+    new_rows = [
+        (d.strftime("%Y-%m-%d"), p)
+        for d, p in zip(df["timestamp"], df["price"])
+        if d not in existing_dates
+    ]
+
+    # 6) Insert!
+    if new_rows:
+        cur = conn.cursor()
+        cur.executemany(
+            "INSERT INTO bitcoin_prices (timestamp, price) VALUES (?, ?)",
+            new_rows
+        )
+        conn.commit()
+        print(f"✅ Inserted {len(new_rows)} new rows.")
+    else:
+        print("⚠️ No new unique dates to insert.")
+    df = df[["timestamp", "price"]]  # ✅ Ensure only these two columns exist
+
+    conn.close()

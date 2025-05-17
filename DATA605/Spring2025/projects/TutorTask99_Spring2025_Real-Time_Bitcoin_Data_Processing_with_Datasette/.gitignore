@@ -5,6 +5,8 @@
 __pycache__/
 *.py[cod]
 
+.vscode/
+
 # Notebooks checkpoints
 .ipynb_checkpoints/
 

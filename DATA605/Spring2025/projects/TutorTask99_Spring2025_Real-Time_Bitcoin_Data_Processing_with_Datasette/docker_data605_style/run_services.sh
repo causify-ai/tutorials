@@ -6,6 +6,9 @@ pwd
 echo "==> Contents of current directory:"
 ls -l
 
+echo "==> Running daily Bitcoin data updater..."
+python3 -c "from bitcoin_utils import fetch_and_update_bitcoin_data; fetch_and_update_bitcoin_data()"
+
 # Start Jupyter
 echo "==> Starting Jupyter Notebook..."
 jupyter-notebook \

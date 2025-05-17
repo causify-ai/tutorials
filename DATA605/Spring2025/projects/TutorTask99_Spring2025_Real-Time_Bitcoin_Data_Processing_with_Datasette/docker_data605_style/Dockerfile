@@ -31,7 +31,7 @@ RUN python3 -m pip install --upgrade pip
 #copy and install from requirements.txt
 
 #RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install scipy statsmodels pandas requests datasette schedule matplotlib jupyter
+RUN pip install scipy statsmodels pandas requests datasette schedule matplotlib jupyter datasette-vega datasette-dashboards
 
 # Install Python packages.
 # There is a bug:
