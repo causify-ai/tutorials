@@ -1,33 +1,31 @@
-version: '3.9'
+version: '3.8'
 
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    ports:
-      - "2181:2181"
+    image: confluentinc/cp-zookeeper:7.0.1
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
-    image: confluentinc/cp-kafka:latest
-    depends_on:
-      - zookeeper
+    image: confluentinc/cp-kafka:7.0.1
     ports:
-      - "9093:9092"
+      - "9092:9092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://host.docker.internal:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+
 
   bitcoin-pipeline:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     depends_on:
       - kafka
     volumes:
       - .:/workspace
-    tty: true
+    working_dir: /workspace
+    command: ["./entrypoint.sh"]

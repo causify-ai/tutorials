@@ -21,7 +21,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
 
     # Initialize Kafka producer
-    producer = Producer({'bootstrap.servers': 'host.docker.internal:9093'})
+    producer = Producer({'bootstrap.servers': 'kafka:9092'})
     print("Kafka Bootstrap Server:", producer)
 
     # Initialize API

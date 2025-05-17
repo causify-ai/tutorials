@@ -46,9 +46,20 @@ RUN pip3 install \
 # Install Java 11 for PySpark
 RUN apt-get update && apt-get install -y openjdk-11-jdk-headless
 
-# Set JAVA_HOME correctly for ARM64
-ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-arm64
-ENV PATH="${JAVA_HOME}/bin:${PATH}"
+# Dynamically find the installed Java path and set JAVA_HOME
+RUN apt-get update && apt-get install -y openjdk-11-jdk-headless && \
+    JAVA_PATH=$(dirname $(dirname $(readlink -f $(which java)))) && \
+    echo "export JAVA_HOME=$JAVA_PATH" >> /etc/profile.d/java_home.sh && \
+    echo "export PATH=\$JAVA_HOME/bin:\$PATH" >> /etc/profile.d/java_home.sh && \
+    echo $JAVA_PATH > /java_home_path
+
+# Load JAVA_HOME into the environment
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ENV PATH="$JAVA_HOME/bin:$PATH"
+
+
+
+
 
 
 RUN mkdir /install
