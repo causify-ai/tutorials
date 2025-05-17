@@ -1,13 +1,13 @@
+
 #  bitcoin.API.md  
 **Module:** `bitcoin.API.ipynb`  
 **Author:** Shruti Gajipara 
 **Project:** Real-Time Bitcoin Data Processing with DVC  
 
+
 ---
-
-## Overview
-
-This notebook demonstrates the usage of a custom Python API wrapper (`bitcoin_utils.py`) to perform real-time Bitcoin price monitoring and analysis. It provides a clean interface to fetch live BTC prices, store them with timestamps, perform basic time series analysis, and visualize the trends — all using open-source tools and integrated into a reproducible DVC pipeline.
+##  Purpose
+This markdown documents the usage of both the **native DVC API** and the custom **Python wrapper layer (`bitcoin_utils.py`)** for the Real-Time Bitcoin Data Processing project.
 
 ---
 
@@ -23,51 +23,78 @@ The notebook uses the following Python modules:
 **Core Flow:**
 fetch_price() → record_price() → preprocess() → plot_data()
 
-##  Features Demonstrated
+---
 
-###  Live Data Capture
-- Records the live Bitcoin price every 10 seconds for 2 minutes (12 entries)
-- Each entry includes a full timestamp and is saved to `data/bitcoin_prices.csv`
+##  Native DVC API (Programmatic Interface)
+The notebook demonstrates how to programmatically interact with the DVC project using `dvc.repo.Repo`. It includes:
 
-###  Timestamp-Aware Logging
-- Each recorded price is formatted as:  
-  “On Tuesday, May 21, 2025 at 12:44 PM UTC, the Bitcoin price was $64,123.87”
+- **Connecting to the DVC Repo:**
+  ```python
+  from dvc.repo import Repo
+  repo = Repo(".")
+  ```
 
-###  Preprocessing Pipeline
-- Automatically adds:
-  - `price_diff`: Change since last entry
-  - `rolling_avg`: Smoothed trend using a 5-point moving average
-- Cleaned data is saved to `data/cleaned_bitcoin.csv`
+- **Listing DVC Stages (via `dvc.yaml`)**:
+  ```python
+  import yaml
+  with open("dvc.yaml", "r") as file:
+      dvc_data = yaml.safe_load(file)
+  # Iterates through defined pipeline stages
+  ```
 
-###  Visualizations
-- Line chart of raw prices (`plot_data`)
-- Dual-line plot showing:
-  - Price change spikes (Δ)
-  - Rolling average trend
-
-###  Summary Stats
-- Displays key descriptive statistics for price, difference, and trend
-
-###  Formatted Tables
-- Tables for:
-  - Last 12 recorded entries (2-minute loop)
-  - BTC prices in last 30 minutes (if available)
-- All timestamps are human-readable (Day, Date, Time)
+- **Programmatically Running the Pipeline:**
+  ```python
+  repo.reproduce()
+  ```
+This enables reproducibility and automation of data workflows directly inside the notebook.
 
 ---
 
-##  Files Used
+##  Custom Wrapper API: `bitcoin_utils.py`
 
-| File | Purpose |
-|------|---------|
-| `bitcoin_utils.py` | Main API wrapper |
-| `data/bitcoin_prices.csv` | Raw log of prices |
-| `data/cleaned_bitcoin.csv` | Processed data |
-| `Output/bitcoin_price_plot.png` | Auto-generated plot |
-| `bitcoin.API.ipynb` | This notebook |
-| `bitcoin.API.md` | This documentation |
+The notebook also demonstrates usage of the custom wrapper functions developed in `bitcoin_utils.py`, which abstract various components of the pipeline.
+
+### Core Functions Used:
+- `record_price(filepath)`: Records current BTC price from CoinGecko into a CSV.
+- `preprocess()`: Adds rolling average, price difference, and returns a cleaned DataFrame.
+- `plot_data(df)`: Generates and saves a BTC price plot.
 
 ---
+
+##  Visual and Statistical Enhancements
+Additional visualizations were added to explore price behavior:
+
+### Plots:
+-  Line plot of BTC price over time
+- Histogram of BTC prices with mean and median lines
+-  Rolling average + volatility band visualization
+
+### Descriptive Stats:
+- Summary table for `price`, `price_diff`, `rolling_avg`
+
+### Export:
+- Cleaned data is saved as `bitcoin_data_latest.xlsx`
+
+---
+
+##  Output Files Used
+| File | Description |
+|------|-------------|
+| `data/bitcoin_prices.csv` | Raw prices recorded |
+| `data/cleaned_bitcoin.csv` | Preprocessed and enriched data |
+| `Output/bitcoin_price_plot.png` | Auto-generated chart from `plot_data()` |
+| `Output/bitcoin_data_latest.xlsx` | Exported table from cleaned data |
+
+---
+
+##  Summary
+This notebook serves as both a testbed and demonstration tool for:
+- Native DVC API functionality
+- High-level abstraction using a custom software layer
+- Data exploration with visual and statistical context
+
+This dual-layer approach makes the system both robust (via DVC) and user-friendly (via `bitcoin_utils.py`).
+
 
 ##  Dependencies
 pandas
