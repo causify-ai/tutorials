@@ -139,11 +139,6 @@ I conducted EDA to assess trend, volatility, and seasonal patterns in Bitcoin pr
 * 2012–2025 daily data
 * No missing or duplicate dates
 
-### Trend & Summary Stats
-
-* Mean: \\$17,415, Median: \\$6,610, Max: \~\$106,182
-* Highly volatile with exponential growth patterns
-
 ### Distribution & Outliers
 
 * Right-skewed distribution
