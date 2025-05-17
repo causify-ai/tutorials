@@ -16,6 +16,7 @@ This guide explains how to build and run the Docker container for the "Analyze R
 
 Ensure your project root contains the following:
 /your-project-folder/
+```text
 ├── Dockerfile
 ├── requirements.txt
 ├── docker_build.ps1
@@ -28,7 +29,7 @@ Ensure your project root contains the following:
 ├── bitcoin.example.ipynb
 ├── bitcoin_visualization.ipynb
 └── other project files...
-
+```
 
 ---
 
