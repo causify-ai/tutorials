@@ -190,6 +190,59 @@ def generate_sequences(df: pd.DataFrame, features: list, target: str = 'price', 
     return X, y, scaler_X, scaler_y
 
 # --------------------------------------------------------------------
+# LSTM Model Tuning with KerasTuner
+# --------------------------------------------------------------------
+import keras_tuner as kt
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dropout, Dense
+
+def tune_lstm_model(X_train, y_train, X_val, y_val, max_trials=5, epochs=10):
+    """
+    Use KerasTuner to find the best LSTM architecture.
+
+    :param X_train: Training features
+    :param y_train: Training targets
+    :param X_val: Validation features
+    :param y_val: Validation targets
+    :param max_trials: Number of hyperparameter sets to try
+    :param epochs: Epochs per trial
+    :return: (best_model, best_hyperparameters, training_history)
+    """
+
+    def build_model(hp):
+        model = Sequential()
+        model.add(LSTM(
+            units=hp.Int('lstm_units_1', 32, 128, step=32),
+            return_sequences=True,
+            input_shape=(X_train.shape[1], X_train.shape[2])
+        ))
+        model.add(Dropout(hp.Float('dropout_1', 0.1, 0.5, step=0.1)))
+        model.add(LSTM(
+            units=hp.Int('lstm_units_2', 16, 64, step=16)
+        ))
+        model.add(Dropout(hp.Float('dropout_2', 0.1, 0.5, step=0.1)))
+        model.add(Dense(1))
+        model.compile(optimizer='adam', loss='mse')
+        return model
+
+    tuner = kt.RandomSearch(
+        build_model,
+        objective='val_loss',
+        max_trials=max_trials,
+        executions_per_trial=1,
+        directory='tuning_results',
+        project_name='btc_lstm_tuning'
+    )
+
+    tuner.search(X_train, y_train, validation_data=(X_val, y_val), epochs=epochs, verbose=1)
+    best_model = tuner.get_best_models(1)[0]
+    best_hps = tuner.get_best_hyperparameters(1)[0]
+    history = best_model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=20)
+
+    return best_model, best_hps, history
+
+
+# --------------------------------------------------------------------
 # LSTM Model Builder
 # --------------------------------------------------------------------
 
