@@ -1,0 +1,9 @@
+pandas
+matplotlib
+python-dotenv
+azure-identity
+azure-eventhub
+azure-storage-blob
+scikit-learn
+statsmodels
+notebook

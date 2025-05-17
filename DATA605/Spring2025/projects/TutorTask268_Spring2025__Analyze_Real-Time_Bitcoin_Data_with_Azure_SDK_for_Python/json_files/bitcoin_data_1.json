@@ -1,252 +1,50 @@
-[
-  {
-    "currency": "BTC",
-    "price_usd": 91241.0,
-    "timestamp": 1745354408.979569
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91237.0,
-    "timestamp": 1745354469.3204622
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91235.0,
-    "timestamp": 1745354529.658773
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91240.0,
-    "timestamp": 1745354590.0001554
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91239.0,
-    "timestamp": 1745354650.3693564
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91230.0,
-    "timestamp": 1745354710.702165
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91226.0,
-    "timestamp": 1745354771.3342094
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91227.0,
-    "timestamp": 1745354831.7184932
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91223.0,
-    "timestamp": 1745354892.2906857
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91226.0,
-    "timestamp": 1745354952.625924
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91226.0,
-    "timestamp": 1745355013.246635
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91219.0,
-    "timestamp": 1745355073.6206803
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91215.0,
-    "timestamp": 1745355133.9699264
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91215.0,
-    "timestamp": 1745355194.309312
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91214.0,
-    "timestamp": 1745355254.8722003
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91214.0,
-    "timestamp": 1745355315.2492325
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91210.0,
-    "timestamp": 1745355375.593535
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91210.0,
-    "timestamp": 1745355436.1932592
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91180.0,
-    "timestamp": 1745355496.5858579
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91172.0,
-    "timestamp": 1745355556.975658
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91175.0,
-    "timestamp": 1745355617.316188
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91181.0,
-    "timestamp": 1745355677.6829453
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91172.0,
-    "timestamp": 1745355738.0270538
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91172.0,
-    "timestamp": 1745355798.6125796
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91156.0,
-    "timestamp": 1745355858.9524648
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91154.0,
-    "timestamp": 1745355919.331729
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91153.0,
-    "timestamp": 1745355979.6869533
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91162.0,
-    "timestamp": 1745356040.017774
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91187.0,
-    "timestamp": 1745356100.6172352
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91196.0,
-    "timestamp": 1745356160.985713
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91229.0,
-    "timestamp": 1745356221.3133132
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91253.0,
-    "timestamp": 1745356281.7105777
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91261.0,
-    "timestamp": 1745356342.599434
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91249.0,
-    "timestamp": 1745356402.949011
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91249.0,
-    "timestamp": 1745356463.5094357
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91253.0,
-    "timestamp": 1745356523.8616617
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91248.0,
-    "timestamp": 1745356584.475585
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91249.0,
-    "timestamp": 1745356645.1148453
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91293.0,
-    "timestamp": 1745356708.6395853
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91302.0,
-    "timestamp": 1745356769.3751283
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91302.0,
-    "timestamp": 1745356830.093225
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91344.0,
-    "timestamp": 1745356890.7700648
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91351.0,
-    "timestamp": 1745356951.5133293
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91441.0,
-    "timestamp": 1745357012.1807935
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91441.0,
-    "timestamp": 1745357072.6181343
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91493.0,
-    "timestamp": 1745357133.061486
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91583.0,
-    "timestamp": 1745357193.46768
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91577.0,
-    "timestamp": 1745357253.8894064
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91542.0,
-    "timestamp": 1745357314.3478076
-  },
-  {
-    "currency": "BTC",
-    "price_usd": 91513.0,
-    "timestamp": 1745357374.9474678
-  }
-]
+{"currency": "BTC", "price_usd": 96503.0, "timestamp": 1746246720.3255968}
+{"currency": "BTC", "price_usd": 96503.0, "timestamp": 1746246781.955164}
+{"currency": "BTC", "price_usd": 96500.0, "timestamp": 1746246842.3716834}
+{"currency": "BTC", "price_usd": 96498.0, "timestamp": 1746246902.707802}
+{"currency": "BTC", "price_usd": 96497.0, "timestamp": 1746246963.0852425}
+{"currency": "BTC", "price_usd": 96507.0, "timestamp": 1746247023.4792876}
+{"currency": "BTC", "price_usd": 96515.0, "timestamp": 1746247083.819784}
+{"currency": "BTC", "price_usd": 96523.0, "timestamp": 1746247144.1972923}
+{"currency": "BTC", "price_usd": 96524.0, "timestamp": 1746247204.5316353}
+{"currency": "BTC", "price_usd": 96523.0, "timestamp": 1746247264.8832266}
+{"currency": "BTC", "price_usd": 96518.0, "timestamp": 1746247325.298795}
+{"currency": "BTC", "price_usd": 96519.0, "timestamp": 1746247385.6614535}
+{"currency": "BTC", "price_usd": 96520.0, "timestamp": 1746247446.026223}
+{"currency": "BTC", "price_usd": 96527.0, "timestamp": 1746247506.3777997}
+{"currency": "BTC", "price_usd": 96543.0, "timestamp": 1746247566.725214}
+{"currency": "BTC", "price_usd": 96550.0, "timestamp": 1746247627.0517642}
+{"currency": "BTC", "price_usd": 96548.0, "timestamp": 1746247687.6056805}
+{"currency": "BTC", "price_usd": 96537.0, "timestamp": 1746247747.986602}
+{"currency": "BTC", "price_usd": 96535.0, "timestamp": 1746247808.3731003}
+{"currency": "BTC", "price_usd": 96535.0, "timestamp": 1746247868.70709}
+{"currency": "BTC", "price_usd": 96532.0, "timestamp": 1746247929.0481055}
+{"currency": "BTC", "price_usd": 96537.0, "timestamp": 1746247989.4092155}
+{"currency": "BTC", "price_usd": 96539.0, "timestamp": 1746248049.7676277}
+{"currency": "BTC", "price_usd": 96539.0, "timestamp": 1746248110.1262796}
+{"currency": "BTC", "price_usd": 96537.0, "timestamp": 1746248170.4863925}
+{"currency": "BTC", "price_usd": 96535.0, "timestamp": 1746248230.8663812}
+{"currency": "BTC", "price_usd": 96534.0, "timestamp": 1746248291.224099}
+{"currency": "BTC", "price_usd": 96534.0, "timestamp": 1746248351.5799778}
+{"currency": "BTC", "price_usd": 96534.0, "timestamp": 1746248411.9329212}
+{"currency": "BTC", "price_usd": 96537.0, "timestamp": 1746248472.2958043}
+{"currency": "BTC", "price_usd": 96539.0, "timestamp": 1746248532.6459255}
+{"currency": "BTC", "price_usd": 96544.0, "timestamp": 1746248592.975474}
+{"currency": "BTC", "price_usd": 96546.0, "timestamp": 1746248653.3127604}
+{"currency": "BTC", "price_usd": 96547.0, "timestamp": 1746248713.693634}
+{"currency": "BTC", "price_usd": 96546.0, "timestamp": 1746248774.0465477}
+{"currency": "BTC", "price_usd": 96542.0, "timestamp": 1746248834.386387}
+{"currency": "BTC", "price_usd": 96536.0, "timestamp": 1746248894.7440355}
+{"currency": "BTC", "price_usd": 96533.0, "timestamp": 1746248955.093472}
+{"currency": "BTC", "price_usd": 96527.0, "timestamp": 1746249015.4667578}
+{"currency": "BTC", "price_usd": 96524.0, "timestamp": 1746249075.816351}
+{"currency": "BTC", "price_usd": 96517.0, "timestamp": 1746249136.1880543}
+{"currency": "BTC", "price_usd": 96517.0, "timestamp": 1746249196.5317128}
+{"currency": "BTC", "price_usd": 96502.0, "timestamp": 1746249256.8642364}
+{"currency": "BTC", "price_usd": 96490.0, "timestamp": 1746249317.2102022}
+{"currency": "BTC", "price_usd": 96472.0, "timestamp": 1746249377.5706367}
+{"currency": "BTC", "price_usd": 96474.0, "timestamp": 1746249437.9142587}
+{"currency": "BTC", "price_usd": 96476.0, "timestamp": 1746249498.2496438}
+{"currency": "BTC", "price_usd": 96482.0, "timestamp": 1746249558.5877428}
+{"currency": "BTC", "price_usd": 96488.0, "timestamp": 1746249618.9857938}
+{"currency": "BTC", "price_usd": 96494.0, "timestamp": 1746249679.3510807}

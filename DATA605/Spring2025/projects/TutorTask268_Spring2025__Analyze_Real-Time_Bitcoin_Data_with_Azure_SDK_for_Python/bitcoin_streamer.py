@@ -1,95 +1,71 @@
-from azure.identity import ClientSecretCredential
-from azure.eventhub import EventHubProducerClient, EventData
-import requests
 import json
+import logging
+import os
 import time
 
-#latest version of code..
-
-import os
+from azure.eventhub import EventData, EventHubProducerClient
 from dotenv import load_dotenv
 
-load_dotenv()  # Load environment variables from .env file
+from bitcoin_utils import get_azure_sync_credential, fetch_bitcoin_price_usd
 
-# Azure Authentication
-TENANT_ID = os.getenv("TENANT_ID")
-CLIENT_ID = os.getenv("CLIENT_ID")
-CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+# Load environment variables
+load_dotenv()
 
-# Event Hub details
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(message)s"
+)
+logger = logging.getLogger(__name__)
+
+# Environment
 EVENT_HUB_NAMESPACE = os.getenv("EVENT_HUB_NAMESPACE")
 EVENT_HUB_NAME = os.getenv("EVENT_HUB_NAME")
 
 
-# Authenticate
-credential = ClientSecretCredential(
-    tenant_id=TENANT_ID,
-    client_id=CLIENT_ID,
-    client_secret=CLIENT_SECRET
-)
+def stream_bitcoin_data() -> None:
+    """
+    Streams live Bitcoin prices to Azure Event Hub at 60-second intervals.
+    """
+    credential = get_azure_sync_credential()
 
-producer = EventHubProducerClient(
-    fully_qualified_namespace=EVENT_HUB_NAMESPACE,
-    eventhub_name=EVENT_HUB_NAME,
-    credential=credential
-)
+    producer = EventHubProducerClient(
+        fully_qualified_namespace=EVENT_HUB_NAMESPACE,
+        eventhub_name=EVENT_HUB_NAME,
+        credential=credential
+    )
 
-# Function to fetch Bitcoin price
-def fetch_bitcoin_price():
-    url = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd'
     try:
-        response = requests.get(url, timeout=10)
-        response.raise_for_status()
-        data = response.json()
-
-        # Safe checking
-        if isinstance(data, dict) and 'bitcoin' in data:
-            bitcoin_info = data['bitcoin']
-            if isinstance(bitcoin_info, dict) and 'usd' in bitcoin_info:
-                price = bitcoin_info['usd']
-                if isinstance(price, (int, float)):
-                    return price
-
-        print(f"⚠️ Invalid API response structure: {data}")
-        return None
-
-    except Exception as e:
-        print(f"⚠️ Fetch exception: {repr(e)}")
-        return None
-
-# Main loop
-try:
-    while True:
-        try:
-            price = fetch_bitcoin_price()
+        while True:
+            price = fetch_bitcoin_price_usd()
 
             if price is not None:
+                message = {
+                    "currency": "BTC",
+                    "price_usd": price,
+                    "timestamp": time.time()
+                }
+
                 try:
-                    message = {
-                        "currency": "BTC",
-                        "price_usd": float(price),
-                        "timestamp": time.time()
-                    }
+                    batch = producer.create_batch()
+                    batch.add(EventData(json.dumps(message)))
+                    producer.send_batch(batch)
+                    logger.info("Sent: %s", message)
 
-                    event_data_batch = producer.create_batch()
-                    event_data_batch.add(EventData(json.dumps(message)))
-                    producer.send_batch(event_data_batch)
-
-                    print(f"✅ Sent: {message}")
-
-                except Exception as e:
-                    print(f"⚠️ Error sending event: {repr(e)}")
+                except Exception as send_error:
+                    logger.error("Failed to send to Event Hub: %s", repr(send_error))
             else:
-                print("⚠️ Skipped sending due to invalid price.")
+                logger.warning("Skipped sending: Invalid price")
 
             time.sleep(60)
 
-        except Exception as e:
-            print(f"⚠️ Unexpected error inside loop: {repr(e)}")
-            time.sleep(5)
+    except KeyboardInterrupt:
+        logger.info("Streamer stopped manually")
 
-except KeyboardInterrupt:
-    print("❗ Script stopped manually.")
+    finally:
+        producer.close()
+        logger.info("EventHub producer closed")
 
-finally:
-    producer.close()
+
+if __name__ == "__main__":
+    stream_bitcoin_data()
