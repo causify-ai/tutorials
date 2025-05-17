@@ -1,7 +1,5 @@
 import streamlit as st
-from utils.file_scanner import scan_files
-from utils.build_index import build_faiss_index
-from utils.processing import extract_text  # Import extract_text function
+import Ollama_utils as ou
 import os
 import subprocess
 
@@ -24,13 +22,31 @@ if 'index_version' not in st.session_state:
 st.title("📁 Document Search Engine")
 
 st.sidebar.title("📁 Indexing Configuration")
-user_path = st.sidebar.text_input("Enter the directory or drive to index:", "C:/Users/YOUR_USERNAME/")
+user_path = st.sidebar.text_input("Enter the local file path to index:", ".", 
+                                help="Enter a folder path like 'C:\\Users\\Documents' or '.' for current directory")
+
+# Help text for drag and drop
+st.sidebar.info("💡 **Tip**: You can enter any local folder path to index its files.")
+
+# File types to include
+file_types = st.sidebar.multiselect(
+    "Select file types to index",
+    [".txt", ".md", ".py", ".js", ".html", ".css", ".json", ".csv", ".pdf"],
+    default=[".txt", ".md", ".py"]
+)
 
 # Step 1: Scan files
 if st.sidebar.button("🔍 Scan Files"):
     with st.spinner("Scanning for documents..."):
-        files = scan_files(user_path)
-        st.session_state['found_files'] = files
+        try:
+            # Check if path exists
+            if not os.path.exists(user_path):
+                st.sidebar.error(f"Path not found: {user_path}")
+            else:
+                files = ou.scan_directory(user_path, extensions=file_types)
+                st.session_state['found_files'] = files
+        except Exception as e:
+            st.sidebar.error(f"Error scanning files: {str(e)}")
 
 # Step 2: Show results if available
 if 'found_files' in st.session_state:
@@ -66,8 +82,13 @@ if 'found_files' in st.session_state:
                         st.session_state['indexing_progress'] = progress
                         st.session_state['indexing_message'] = message
                     
-                    # Call build_faiss_index with the progress callback and max_workers
-                    build_faiss_index(found_files, progress_callback=update_progress)
+                    # Call build_document_index with the progress callback
+                    ou.build_document_index(
+                        found_files, 
+                        progress_callback=update_progress,
+                        index_path="index/faiss_index.bin",
+                        metadata_path="index/metadata.pkl"
+                    )
                     st.session_state['indexed_files_count'] = total_files
                     
                     # Increment index version to invalidate cache
@@ -113,8 +134,13 @@ if 'found_files' in st.session_state:
                         st.session_state['indexing_progress'] = progress
                         st.session_state['indexing_message'] = message
                     
-                    # Call build_faiss_index with the progress callback and max_workers
-                    build_faiss_index(found_files, progress_callback=update_progress)
+                    # Call build_document_index with the progress callback
+                    success = ou.build_document_index(
+                        found_files, 
+                        progress_callback=update_progress,
+                        index_path="index/faiss_index.bin",
+                        metadata_path="index/metadata.pkl"
+                    )
                     
                     # Increment index version to invalidate cache
                     st.session_state['index_version'] += 1
@@ -131,21 +157,14 @@ if 'found_files' in st.session_state:
     else:
         st.warning("No supported documents found in the selected path.")
 
-from utils.search import load_index_and_metadata, search_documents
-from sentence_transformers import SentenceTransformer
-from utils.ollama_client import chat_with_ollama
-
-
- # Load model + index + metadata once
+# Caching for search components
 @st.cache_resource
-def load_search_components(_index_version=None):
+def load_embedding_model(_index_version=None):
     """
-    Load the search components. The _index_version parameter ensures the cache is invalidated
+    Load the embedding model. The _index_version parameter ensures the cache is invalidated
     when the index is updated, even though it's not used in the function.
     """
-    model = SentenceTransformer("sentence-transformers/all-mpnet-base-v2")
-    index, metadata = load_index_and_metadata()
-    return model, index, metadata
+    return ou.get_embedding_model()
 
 # Section: Search
 st.markdown("---")
@@ -163,39 +182,93 @@ if query and st.button("🔍 Search"):
 # Only run the search if the search button is clicked
 if search_button:
     with st.spinner("Refining query using Ollama..."):
-        refined_query = chat_with_ollama(
-            f"""
-            You are a helpful assistant designed to improve search queries for document retrieval.
+        try:
+            # Attempt to enhance the query using Ollama
+            refined_query = ou.query_ollama(
+                f"""
+                You are a helpful assistant designed to improve search queries for document retrieval.
 
-            Your task is to rewrite the following user query to make it more descriptive and specific, using just a single line. Do not answer the query or provide examples.
+                Your task is to rewrite the following user query to make it more descriptive and specific, using just a single line. Do not answer the query or provide examples.
 
-            ONLY return the rewritten query — no explanations, no suggestions, and no lists.
+                ONLY return the rewritten query — no explanations, no suggestions, and no lists.
 
-            Query: "{query}"
+                Query: "{query}"
 
-            Rewritten Query:
-            """
+                Rewritten Query:
+                """
             )
-        refined_query = refined_query.split('\n')[0].strip()
-        st.info(f"🔁 Refined Query: **{refined_query}**")
+            refined_query = refined_query.split('\n')[0].strip()
+            st.info(f"🔁 Refined Query: **{refined_query}**")
+        except Exception as e:
+            st.warning(f"Could not refine query with Ollama: {str(e)}. Using original query.")
+            refined_query = query
         
         with st.spinner("Searching..."):
-            # Pass the index_version to invalidate cache when needed
-            model, index, metadata = load_search_components(_index_version=st.session_state['index_version'])
-            results = search_documents(refined_query, model, index, metadata)
-            st.session_state['search_results'] = results
+            # Make sure the model is loaded (with cache invalidation via index_version)
+            _ = load_embedding_model(_index_version=st.session_state['index_version'])
+            
+            # Search documents
+            results = ou.search_documents(
+                refined_query, 
+                top_k=10, 
+                index_path="index/faiss_index.bin", 
+                metadata_path="index/metadata.pkl"
+            )
+            
+            if isinstance(results, list):
+                st.session_state['search_results'] = results
+            elif isinstance(results, dict) and "error" in results:
+                st.error(results["error"])
+                st.session_state['search_results'] = []
 
 # Always display results if they exist in session state
 if st.session_state['search_results']:
     st.subheader("Top Results:")
     for i, r in enumerate(st.session_state['search_results']):
-        with st.expander(f"**Result {i+1}** - Score: {r['score']:.4f} - {os.path.basename(r['path'])}", expanded=False):
-            st.markdown(f"**Snippet**: {r['snippet']}")
-            st.markdown(f"📄 **File**: `{r['path']}`")
-            st.markdown(f"📁 **Folder**: `{r['folder']}`")
+        # Prepare snippet for display - ensure it's not empty and format it nicely
+        snippet = r['snippet'] if r['snippet'] else "No preview available for this file type."
+        
+        # Format the snippet - break long lines and limit width
+        formatted_snippet = snippet
+        # Replace tabs with spaces to prevent layout issues
+        formatted_snippet = formatted_snippet.replace('\t', '    ')
+        
+        # Determine if file is likely code based on extension
+        code_extensions = ['.py', '.js', '.html', '.css', '.json', '.md', '.ts', '.jsx', '.tsx', '.cpp', '.c', '.java']
+        is_code_file = any(r['file_path'].lower().endswith(ext) for ext in code_extensions)
+        
+        # Determine language for syntax highlighting
+        file_ext = os.path.splitext(r['file_path'])[1][1:] if os.path.splitext(r['file_path'])[1] else ""
+        lang_map = {
+            'py': 'python',
+            'js': 'javascript',
+            'html': 'html',
+            'css': 'css',
+            'json': 'json',
+            'md': 'markdown',
+            'ts': 'typescript',
+            'jsx': 'jsx',
+            'tsx': 'tsx',
+            'cpp': 'cpp',
+            'c': 'c',
+            'java': 'java'
+        }
+        code_lang = lang_map.get(file_ext, "text")
+        
+        with st.expander(f"**Result {i+1}** - Score: {r['score']:.4f} - {os.path.basename(r['file_path'])}", expanded=False):
+            # Display snippet with code formatting if it's a code file
+            if is_code_file and snippet != "No preview available for this file type.":
+                st.markdown("**Snippet**:")
+                st.code(formatted_snippet, language=code_lang)
+            else:
+                st.markdown("**Snippet**:")
+                st.text_area("", formatted_snippet, height=min(200, 30 + 20 * (formatted_snippet.count('\n') + 1)), label_visibility="collapsed")
+            
+            st.markdown(f"📄 **File**: `{r['file_path']}`")
+            st.markdown(f"📁 **Folder**: `{os.path.dirname(r['file_path'])}`")
             
             # Document preview button
-            if st.button(f"📄 Preview Document", key=f"preview_{i}", on_click=preview_document, args=(r['path'], i)):
+            if st.button(f"📄 Preview Document", key=f"preview_{i}", on_click=preview_document, args=(r['file_path'], i)):
                 pass  # The on_click handler does the work
             
             st.markdown("---")
@@ -226,7 +299,7 @@ if st.session_state['preview_document']:
     
     try:
         with st.spinner("Loading document preview..."):
-            document_text = extract_text(doc_path)
+            document_text = ou.extract_text(doc_path)
             
             if document_text:
                 st.text_area("Document Content", document_text, height=300)
