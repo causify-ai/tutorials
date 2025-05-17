@@ -1,0 +1,73 @@
+# Environment variables
+.env
+
+../../../../.DS_Store
+../../../.DS_Store
+../../.DS_Store
+../.DS_Store
+../../../../tutorial_neo4j/.DS_Store
+../../../../tutorial_neo4j/dev_scripts_tutorial_neo4j/.DS_Store
+../../../../tutorial_neo4j/devops/.DS_Store
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+.DS_Store
+*.DS_Store
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Data files
+# *.csv
+*.json
+*.db
+# data/
+
+# Logs
+logs/
+*.log
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Cache
+.cache/
+.pytest_cache/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
