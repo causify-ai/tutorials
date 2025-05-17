@@ -4,6 +4,26 @@
 
 ![Databricks UI: new cluster RUNNING](images/api_flowchart.png)
 
+
+## Table of Contents
+
+- [Workflow Overview](#workflow-overview)
+- [Project Files](#project-files)
+- [1. Introduction](#1-introduction)
+- [2. Prerequisites & Setup](#2-prerequisites--setup)
+  - [2.1 Install the Databricks CLI](#21-install-the-databricks-cli)
+  - [2.2 Authenticate](#22-authenticate)
+- [3. Cluster Configuration](#3-cluster-configuration)
+- [Create a Databricks Job via the UI](#create-a-databricks-job-via-the-ui)
+- [4. Core Databricks CLI Commands](#4-core-databricks-cli-commands)
+  - [4.1 Clusters](#41-clusters)
+  - [4.2 File System (DBFS)](#42-file-system-dbfs)
+  - [4.3 Jobs & Runs](#43-jobs--runs)
+- [5. Python Wrappers (`databricks_cli_utils.py`)](#5-python-wrappers-databricks_cli_utilspy)
+- [6. Demo Script: `databricks_cli.API.py`](#6-demo-script-databricks_cliapipy)
+- [7. References](#7-references)
+
+
 ## Project Files
 
 - **`databricks_cli_utils.py`**  

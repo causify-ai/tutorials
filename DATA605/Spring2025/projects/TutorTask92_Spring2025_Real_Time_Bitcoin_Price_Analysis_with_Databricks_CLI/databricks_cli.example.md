@@ -4,6 +4,16 @@
 
 ![Databricks UI: new cluster RUNNING](images/example_flowchart.png)
 
+## Table of Contents
+
+- [Workflow Overview](#workflow-overview)
+- [Project Files](#project-files)
+- [1. Introduction](#1-introduction)
+- [2. Prerequisites & Setup](#2-prerequisites--setup)
+- [3. Pipeline Steps](#3-pipeline-steps)
+- [4. Example Script](#4-example-script)
+- [5. Interactive Notebook](#5-interactive-notebook)
+- [6. References](#6-references)
 
 ## Project Files
 

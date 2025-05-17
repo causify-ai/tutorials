@@ -1,65 +1,3 @@
-#!/bin/bash
-# #
-# # Execute run_jupyter.sh in the container.
-# # 
-# # Usage:
-# # > docker_jupyter.sh -d /Users/saggese/src/git_gp1/code/book.2018.Martin.Bayesian_Analysis_with_Python.2e -v -u -p 8889
-# #
-
-# set -e
-# #set -x
-
-# # Parse params.
-# export JUPYTER_HOST_PORT=8888
-# export JUPYTER_USE_VIM=0
-# export TARGET_DIR=""
-# export VERBOSE=0
-
-# OLD_CMD_OPTS=$@
-# while getopts p:d:uv flag
-# do
-#     case "${flag}" in
-#         p) JUPYTER_HOST_PORT=${OPTARG};;
-#         u) JUPYTER_USE_VIM=1;;
-#         d) TARGET_DIR=${OPTARG};;
-#         # /Users/saggese/src/git_gp1/code/
-#         v) VERBOSE=1;;
-#     esac
-# done
-
-# if [[ $VERBOSE == 1 ]]; then
-#     set -x
-# fi;
-
-# # Import the utility functions.
-# GIT_ROOT=$(git rev-parse --show-toplevel)
-# source $GIT_ROOT/docker_common/utils.sh
-
-# # Execute the script setting the vars for this tutorial.
-# get_docker_vars_script ${BASH_SOURCE[0]}
-# source $DOCKER_NAME
-# print_docker_vars
-
-# # Run the script.
-# DOCKER_RUN_OPTS="-p $JUPYTER_HOST_PORT:$JUPYTER_HOST_PORT"
-# if [[ $TARGET_DIR != "" ]]; then
-#     DOCKER_RUN_OPTS="$DOCKER_RUN_OPTS -v $TARGET_DIR:/data"
-# fi;
-# CMD="/curr_dir/run_jupyter.sh $OLD_CMD_OPTS"
-
-# # From docker_cmd.sh passing DOCKER_OPTS.
-# run "docker image ls $FULL_IMAGE_NAME"
-# (docker manifest inspect $FULL_IMAGE_NAME | grep arch) || true
-
-# CONTAINER_NAME=$IMAGE_NAME
-# run "docker run \
-#     --rm -ti \
-#     --name $CONTAINER_NAME \
-#     $DOCKER_RUN_OPTS \
-#     -v $(pwd):/curr_dir \
-#     $FULL_IMAGE_NAME \
-#     $CMD"
-
 set -xeuo pipefail
 
 REPO_NAME=umd_data605
@@ -69,41 +7,29 @@ CONTAINER_NAME="${IMAGE_NAME}_jupyter"
 JUPYTER_HOST_PORT=8888
 MOUNT_CFG=""
 
-# On Windows/Git-bash we'll translate paths differently:
+# 1) Figure out where the host’s .databrickscfg really lives
 if [[ "$(uname -o 2>/dev/null)" =~ Msys|Cygwin ]]; then
-  # the Unix‐style path for testing:
-  TEST_CFG="$(cygpath -u "$USERPROFILE/.databrickscfg")"
-  # the Windows‐style path for Docker‐mount
-  WIN_PATH="$(echo "$USERPROFILE" | sed 's|\\|/|g')/.databrickscfg"
+  if command -v cygpath &>/dev/null; then
+    TEST_CFG="$(cygpath -u ~/.databrickscfg)"
+    WIN_PATH="$(cygpath -w ~/.databrickscfg | sed 's|\\|/|g')"
+  else
+    TEST_CFG="${HOME}/.databrickscfg"
+    WIN_PATH="$(cmd.exe /C "echo %USERPROFILE%" 2>/dev/null | tr -d '\r')/.databrickscfg"
+  fi
 else
-  TEST_CFG="$HOME/.databrickscfg"
+  TEST_CFG="${HOME}/.databrickscfg"
   WIN_PATH="$TEST_CFG"
 fi
 
-# parse flags
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --mount-config)
-      echo "→ looking for host config at $TEST_CFG"
-      if [[ -f "$TEST_CFG" ]]; then
-        echo "→ will mount host config from $WIN_PATH"
-        MOUNT_CFG="-v ${WIN_PATH}:/root/.databrickscfg:ro"
-      else
-        echo "warning: no config found at $TEST_CFG, your CLI calls will fail"
-      fi
-      shift
-      ;;
-    -p|--port)
-      JUPYTER_HOST_PORT="$2"
-      shift 2
-      ;;
-    *)
-      shift
-      ;;
-  esac
-done
+# 2) If the config exists on the host, prepare the mount
+if [[ -f "$TEST_CFG" ]]; then
+  echo "→ mounting Databricks config from $WIN_PATH"
+  MOUNT_CFG="-v ${WIN_PATH}:/root/.databrickscfg:ro"
+else
+  echo "no config found at $TEST_CFG; CLI calls will fail"
+fi
 
-# figure out your project directory
+# 3) Determine your project folder (Windows vs. Linux pathing)
 if [[ "$(uname -o 2>/dev/null)" =~ Msys|Cygwin ]]; then
   HOST_DIR="$(pwd -W)"
 else
@@ -112,11 +38,19 @@ fi
 
 docker image ls "${FULL_IMAGE_NAME}"
 
+# 4) Run container: mount config, mount code, then inside do a mount check & launch Jupyter
 docker run --rm -it \
   --name "${CONTAINER_NAME}" \
   -p "${JUPYTER_HOST_PORT}:${JUPYTER_HOST_PORT}" \
   ${MOUNT_CFG} \
   -v "${HOST_DIR}:/data" \
   "${FULL_IMAGE_NAME}" \
-  bash -lc "cd /data && jupyter notebook \
-     --no-browser --ip=0.0.0.0 --port=${JUPYTER_HOST_PORT} --allow-root"
+  bash -lc '\
+    if [ -f /root/.databrickscfg ]; then \
+      echo "/root/.databrickscfg is mounted"; \
+    else \
+      echo "/root/.databrickscfg NOT found"; \
+    fi; \
+    cd /data && \
+    jupyter notebook --no-browser --ip=0.0.0.0 --port='"${JUPYTER_HOST_PORT}"' --allow-root \
+  '
