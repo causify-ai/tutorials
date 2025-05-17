@@ -1,130 +1,164 @@
 # ActiveCampaign Email Campaign Analysis Tutorial
 
-This project demonstrates how to connect to the **ActiveCampaign** REST API, retrieve real-world email campaign data, and analyze user engagement patterns by combining real and simulated datasets. It is structured as a hands-on tutorial that can be completed and understood in under 60 minutes.
+This tutorial project demonstrates how to fetch and analyze email engagement data from the **ActiveCampaign API**, simulate realistic engagement metrics, and visualize the trends using Python. It combines **real-time events** and **simulated campaign data** to showcase patterns in email opens, clicks, and unsubscribes.
+
+**Estimated Duration**: Under 60 minutes  
+**Dockerized**: Runs in a reproducible container  
+**Real + Simulated Data**: Hybrid analysis approach
 
 ---
 
 ## What You'll Learn
 
-- How to fetch campaign metadata using the ActiveCampaign API
-- Secure authentication using `.env` and `dotenv`
-- Simulating realistic email metrics (opens, CTR, unsubscribes)
-- Merging & cleaning real + synthetic datasets
-- Visualizing trends in engagement
-- Using Docker to package a reproducible data science environment
+- How to securely connect to the ActiveCampaign REST API using `.env` credentials
+- Simulate email campaign metrics like opens, clicks, and unsubscribes
+- Merge real and synthetic datasets into one analysis-ready format
+- Create visualizations for daily trends, weekday patterns, open rate, CTR, and heatmaps
+- Package and run the entire workflow inside Docker and Jupyter Notebook
 
 ---
 
-## 🛠️ Project Structure
-├── ActiveCampaign.API.md # Markdown tutorial for ActiveCampaign API usage
-├── ActiveCampaign.example.md # Markdown walkthrough of the campaign analysis example
-├── activecampaign_api.py # Python wrapper to fetch data from ActiveCampaign
-├── activecampaign_example.py # Full example pipeline: simulation, merging, plotting
-├── activecampaign_utils.py # (Optional) Utility module for reusable logic
-├── requirements.txt # Python dependencies
-├── .env # Environment file storing API keys (DO NOT COMMIT)
-├── .gitignore # Ignores .env, pycache, ipynb_checkpoints
-├── Dockerfile # Dockerfile for setting up the project environment
-├── docker_build.sh # Script to build Docker image
-├── docker_jupyter.sh # Script to launch Jupyter Notebook inside container
-└── README.md # This file
+## Project Structure
+
+```
+├── ActiveCampaign.API.md              # Tutorial for fetching data via API
+├── ActiveCampaign.example.md          # Walkthrough of analysis pipeline
+├── activecampaign.api.ipynb           # Notebook to fetch real campaign data via API
+├── activecampaign.example.ipynb       # Main notebook with simulation, merging, and plots
+├── activecampaign_utils.py            # Utility functions (optional)
+├── campaign_trends_plot.png           # Daily opens vs clicks
+├── engagement_by_weekday.png          # Opens/clicks/unsubscribes by weekday
+├── openrate_ctr_trends.png            # Average open rate and CTR over time
+├── opens_heatmap.png                  # Heatmap of opens by weekday/hour
+├── moving_avg_trend.png               # 3-day moving average trends
+├── combined_campaign_data.csv         # Final hybrid dataset (real + simulated)
+├── top_campaigns.csv                  # Top 10 performing campaigns
+├── Dockerfile                         # Docker config to run project
+├── docker_build.sh                    # Builds Docker image
+├── docker_jupyter.sh                  # Launches Jupyter inside container
+├── .env                               # API credentials (not committed)
+├── .gitignore                         # Ignores .env, __pycache__, checkpoints
+└── README.md                          # This file
+```
 
 ---
 
-## 🚀 Setup Instructions
+## Setup Instructions
 
 ### 1. Clone this repository
 
 ```bash
 git clone https://github.com/pyellapu07/pyellapututorials.git
-cd activecampaign-tutorial
+cd pyellapututorials/ActiveCampaign_Tutorial
 ```
 
-### 2. Create a .env file with your API credentials
-# .env
+### 2. Add Your API Credentials
+
+Create a `.env` file in the root:
+
+```env
 ACTIVE_CAMPAIGN_API_URL=https://your-subdomain.api-us1.com
 ACTIVE_CAMPAIGN_API_KEY=your_token_here
+```
 
-### 3. Build the Docker image
-```bash docker_build.sh
+---
+
+### 3. Run via Docker (Recommended)
+
+#### Build Docker Image:
+
+```bash
+./docker_build.sh
 ```
-### 4. Launch Jupyter Notebook inside Docker
-```bash docker_jupyter.sh -p 8888
+
+#### Launch Jupyter Notebook:
+
+```bash
+./docker_jupyter.sh -p 8888
 ```
-Then open http://localhost:8888 in your browser to access the notebooks.
+
+Then open: [http://localhost:8888](http://localhost:8888) to access the notebooks.
+
+---
 
 ### Output Files
 
-After running the notebook/script, you’ll get:
+These are generated after running the notebooks:
 
-    combined_campaign_data.csv: Real + simulated campaign data
+| File | Description |
+|------|-------------|
+| `combined_campaign_data.csv` | Final merged dataset (real + synthetic) |
+| `campaign_trends_plot.png` | Daily opens vs clicks |
+| `engagement_by_weekday.png` | Bar chart of metrics by weekday |
+| `openrate_ctr_trends.png` | Trends in Open Rate & CTR |
+| `opens_heatmap.png` | Heatmap of opens by weekday/hour |
+| `moving_avg_trend.png` | Smoothed opens/clicks using 3-day MA |
+| `top_campaigns.csv` | Top 10 campaigns by linkclicks |
 
-    campaign_trends_plot.png: Daily open/click trend
+---
 
-    engagement_by_weekday.png: Bar chart for weekly behavior
+## Hybrid Data Simulation
 
-    openrate_ctr_trends.png: Trends in open rate and CTR
+Due to limited access to historical ActiveCampaign data, we introduced a **hybrid dataset**:
+- **Real-time data**: Manually created contacts, campaigns, and performed interactions (opens, clicks).
+- **Simulated data**: Generated using realistic distributions (Poisson, Binomial) to mimic production-scale usage.
 
-    opens_heatmap.png: Hourly opens heatmap
+**Spikes around April 25, 2025** validate this hybrid setup, as they reflect real user actions on test campaigns.
 
-    moving_avg_trend.png: 3-day moving averages
+---
 
-    top_campaigns.csv: Top 10 campaigns by performance
-    
-### Dependencies
+## Dependencies
 
-The environment comes pre-installed with:
+Pre-installed in Docker:
 
-    requests
+- `pandas`
+- `numpy`
+- `requests`
+- `matplotlib`
+- `seaborn`
+- `python-dotenv`
+- `jupyter`
 
-    pandas
+If you're running locally:
 
-    python-dotenv
-
-    matplotlib
-
-    seaborn
-
-    numpy
-
-If you're not using Docker, you can install manually:
-``` pip install -r requirements.txt
+```bash
+pip install -r requirements.txt
 ```
-### Tutorial Files
 
-    ActiveCampaign.API.md
-    Full breakdown of how the API works, how authentication is handled, and how to fetch data.
+---
 
-    ActiveCampaign.example.md
-    A walkthrough of the full pipeline combining real and simulated data, visualizing results, and summarizing insights.
+## Tutorial Files
 
-### Tips & Best Practices
+- `ActiveCampaign.API.md`: Learn how API tokens work and how to fetch campaign data.
+- `ActiveCampaign.example.md`: Complete walkthrough of data simulation, analysis, and visualization.
 
-    Keep API calls modular (e.g., get_campaigns())
+---
 
-    Use .env for secret storage
+## Best Practices
 
-    Cache large API responses to avoid hitting rate limits
+- Use `.env` to store secrets (never commit!)
+- Modularize API calls into `get_campaigns()` functions
+- Use Docker to eliminate dependency mismatches
+- Use Jupyter for experimentation, `.py` for production logic
+- Always visualize trends before modeling
 
-    Clean your plots before saving (rotate ticks, set layout, etc.)
+---
 
-    Keep notebooks lean by offloading logic to .py files
+## Questions?
 
-### Questions?
+- Ensure your `.env` file exists and is correctly formatted
+- Check Docker logs for port or volume errors
+- Use print/debug blocks (`df.head()`) to validate each step
+- Re-run API cell if rate-limited or empty
 
-If you face any issues:
+---
 
-    Double-check your .env file path and variable names
+## Future Roadmap
 
-    Run scripts inside Docker to avoid missing dependencies
+- Add `/campaigns/stats` endpoint integration
+- Generate weekly auto-reports
+- Deploy a Streamlit dashboard for stakeholder interaction
 
-    Use print(df.head()) to validate API data quickly
+---
 
-### Future Enhancements
-
-    Integrate with campaign performance endpoints (/stats)
-
-    Automate weekly report generation
-
-    Add a Streamlit dashboard for dynamic filtering
-
+Created with by [Pradeep Yellapu](https://github.com/pyellapu07)
