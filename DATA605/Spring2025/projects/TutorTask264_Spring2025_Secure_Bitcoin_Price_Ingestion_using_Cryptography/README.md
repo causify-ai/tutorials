@@ -1,45 +1,133 @@
-# Tutorial Template: Two Docker Approaches
+# Secure Bitcoin Price Ingestion and Analysis System
 
-- This directory provides two versions of the same tutorial setup to help you
-  work with Jupyter notebooks and Python scripts inside Docker environments
+A comprehensive system for secure Bitcoin price data collection, encryption, and analysis using Docker containerization.
 
-- Both versions run the same code but use different Docker approaches, with
-  different level of complexity and maintainability
+## Project Overview
 
-## 1. `data605_style` (Simple Docker Environment)
+This project demonstrates secure handling of Bitcoin price data with:
+- Real-time price ingestion from CoinGecko API
+- Military-grade encryption (AES-CBC)
+- Interactive visualization dashboard
+- Advanced time series analysis
+- Docker containerization for consistent environments
 
-- This version is modeled after the setup used in DATA605 tutorials
-- This template provides a ready-to-run environment, including scripts to build,
-  run, and clean the Docker container.
+## Quick Start
 
-- For your specific project, you should:
-  - Modify the Dockerfile to add project-specific dependencies
-  - Update bash/scripts accordingly
-  - Expose additional ports if your project requires them
+1. **Build the Docker container**  
+   ```bash
+   ./docker_build.sh
+   ```
+2. **Run the container**  
+   ```bash
+   ./docker_bash.sh
+   ```
+3. **Launch Jupyter Notebook**  
+   ```bash
+   jupyter notebook --ip 0.0.0.0 --port 8888 --allow-root
+   ```
+4. **Start Streamlit Dashboard**  
+   ```bash
+   streamlit run streamlit_app.py
+   ```
 
-## 2. `causify_style` (Causify AI dev-system)
+## Project Structure
 
-- This setup reflects the approach commonly used in Causify AI dev-system
-- **Recommended** for students familiar with Docker or those wishing to explore a
-  production-like setup
-- Pros
-  - Docker layer written in Python to make it easy to extend and test
-  - Less redundant since code is factored out
-  - Used for real-world development, production workflows
-  - Used for all internships, RA / TA, full-time at UMD DATA605 / MSML610 /
-    Causify 
-- Cons
-  - It is more complex to use and configure
-  - More dependencies from the 
-- For thin environment setup instructions, refer to:  
-  [How to Set Up Development on Laptop](https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
+\`\`\`
+.
+├── Dockerfile                    # Docker configuration
+├── docker_build.sh               # Script to build Docker image
+├── docker_bash.sh                # Script to run Docker container
+├── requirements.txt              # Python dependencies
+├── SecureBitcoin_utils.py        # Core utility functions
+├── streamlit_app.py              # Interactive dashboard
+├── SecureBitcoin.example.ipynb   # Example notebook
+└── data_store.jsonl              # Encrypted data storage
+\`\`\`
 
-## Reference Tutorials
+## Dependencies
 
-- The `tutorial_github` example has been implemented in both environments for you
-  to refer to:
-  - `tutorial_github_data605_style` uses the simpler DATA605 approach
-  - `tutorial_github_causify_style` uses the more complex Causify approach
+- \`pycryptodome==3.22.0\`  
+- \`requests==2.31.0\`  
+- \`pandas==2.2.0\`  
+- \`streamlit==1.32.0\`  
+- \`plotly==5.18.0\`  
+- \`statsmodels==0.14.1\`  
+- \`matplotlib==3.8.0\`  
 
-- Choose the approach that best fits your comfort level and project needs. Both
-  are valid depending on your use case.
+All dependencies are managed via \`requirements.txt\` and Docker.
+
+## Docker Environment Setup
+
+1. **Building the Image**  
+   ```bash
+   ./docker_build.sh
+   ```
+2. **Running the Container**  
+   ```bash
+   ./docker_bash.sh
+   ```
+3. **Development Environment**  
+   - Jupyter Notebook server on port 8888  
+   - Streamlit server on port 8501  
+   - Live code via volume mount  
+
+## Security Features
+
+- **AES-CBC encryption** with PBKDF2 key derivation  
+- **Digital signatures** (SHA-256) for integrity  
+- **Encrypted JSONL storage**  
+
+## Analysis Capabilities
+
+- **Moving averages** (SMA, EMA)  
+- **Bollinger Bands** and **MACD**  
+- **Time series decomposition** and **ACF**  
+- **Holt-Winters forecasting**  
+- **Anomaly detection** via multiple methods  
+
+## Interactive Dashboard
+
+- Real-time price monitoring  
+- Historical price charts with Plotly  
+- Technical indicators overlays  
+- Forecasting and anomaly highlights  
+- CSV download  
+
+## Usage Examples
+
+\`\`\`python
+from SecureBitcoin_utils import *
+
+# Fetch & encrypt
+key = derive_key("your_password")
+price = fetch_bitcoin_price()
+encrypted = encrypt_data(price, key)
+
+# Launch dashboard
+streamlit run streamlit_app.py
+\`\`\`
+
+## Development Guidelines
+
+- Follow **PEP 8** and use type hints  
+- **Do not commit** encryption keys  
+- Validate inputs and handle errors  
+
+## Contributing
+
+1. Fork the repository  
+2. Create a feature branch  
+3. Make your changes  
+4. Submit a pull request  
+
+## License
+
+MIT License (see \`LICENSE\`)  
+
+## Acknowledgments
+
+CoinGecko API • Streamlit • Docker • DATA605  
+
+## Contact
+
+Open a GitHub issue for questions.
