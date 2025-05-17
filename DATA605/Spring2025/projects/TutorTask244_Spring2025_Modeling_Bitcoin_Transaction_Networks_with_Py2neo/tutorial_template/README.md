@@ -1,5 +1,40 @@
 # Project README: Bitcoin Graph Analysis with Py2Neo + Neo4j
 
+- **Author**: Rishi Koushik Sridharan  
+- **Date**: 2025-05-XX
+
+This project contains the following files and folders:
+
+---
+
+## `docker_data605_style`
+
+This folder contains all Docker-related files for running Jupyter and Neo4j in isolated containers:
+- `Dockerfile`, `docker-compose.yml`, and various `*.sh` scripts for building, running, and managing services
+
+---
+
+## Project Files
+
+- `README.md` — Main documentation for running and understanding the project
+
+- `coingecko.API.ipynb` — Jupyter notebook for fetching Bitcoin price/volume data from CoinGecko and inserting it into Neo4j
+
+- `coingecko.example.ipynb` — Notebook to perform analysis using Cypher queries and generate visualizations
+
+- `coingecko_dashboard.py` — Streamlit dashboard that allows interactive exploration of Bitcoin graph data
+
+- `coingecko.API.md` — Markdown file explaining the API ingestion notebook
+
+- `coingecko.example.md` — Markdown file describing the analysis notebook
+
+- `neo4j_utils.py` — Python utility functions to connect to Neo4j, ingest data, run Cypher queries, and classify wallets
+
+- `neo4j_utils.md` — Tutorial-style documentation for learning Py2Neo with practical Cypher examples
+
+---
+
+
 This project builds an end-to-end pipeline to ingest, store, and analyze Bitcoin transaction and market data using CoinGecko API, Neo4j, Py2Neo, and Docker.
 
 ## Understanding Neo4j and Py2Neo
