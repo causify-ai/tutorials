@@ -306,7 +306,7 @@ The Prophet model was used to generate forecasts along with upper and lower boun
 
 ## Streamlit Dashboard
 
-An interactive Streamlit dashboard was developed to visualize Bitcoin price forecasts and historical trends. The dashboard enhances user experience by offering real-time exploration, customizable filters, and professional-quality visualizations.
+An interactive Streamlit dashboard was developed to visualize Bitcoin price forecasts and historical trends. The dashboard enhances user experience by offering real-time exploration, customizable filters and  visualizations.
 
 *Live Dashboard Link*: [Bitcoin Forecast Dashboard](https://btc-forecasting-using-facebook-prophet.streamlit.app/)
 
