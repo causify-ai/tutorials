@@ -1,45 +1,177 @@
-# Tutorial Template: Two Docker Approaches
+<!-- toc -->
 
-- This directory provides two versions of the same tutorial setup to help you
-  work with Jupyter notebooks and Python scripts inside Docker environments
+- [Introduction](#introduction)
+  * [Key Components](#key-components)
+    + [1. BitcoinAPI](#1-bitcoinapi)
+      - [Key Features:](#key-features)
+      - [Example:](#example)
+    + [2. Kafka Producer](#2-kafka-producer)
+      - [Key Features:](#key-features-1)
+      - [Example:](#example-1)
+    + [3. Spark Consumer](#3-spark-consumer)
+      - [Key Features:](#key-features-2)
+      - [Example:](#example-2)
+    + [4. utils.py](#4-utilspy)
+      - [Key Features:](#key-features-3)
+      - [Example:](#example-3)
+    + [5. entrypoint.sh](#5-entrypointsh)
+      - [Key Features:](#key-features-4)
+      - [Example Flow:](#example-flow)
+  * [Complete Workflow](#complete-workflow)
+  * [Example Output](#example-output)
 
-- Both versions run the same code but use different Docker approaches, with
-  different level of complexity and maintainability
+<!-- tocstop -->
 
-## 1. `data605_style` (Simple Docker Environment)
+# Introduction
 
-- This version is modeled after the setup used in DATA605 tutorials
-- This template provides a ready-to-run environment, including scripts to build,
-  run, and clean the Docker container.
+This project demonstrates a full real-time data pipeline that:
+- Fetches real-time Bitcoin price data using the CoinGecko API.
+- Sends data to a Kafka topic.
+- Consumes the Kafka stream using Spark Structured Streaming.
+- Computes moving average and volatility metrics.
+- Outputs results to Parquet files.
 
-- For your specific project, you should:
-  - Modify the Dockerfile to add project-specific dependencies
-  - Update bash/scripts accordingly
-  - Expose additional ports if your project requires them
+![Pipeline Diagram](figures/pipeline_diagram.png)
 
-## 2. `causify_style` (Causify AI dev-system)
+---
 
-- This setup reflects the approach commonly used in Causify AI dev-system
-- **Recommended** for students familiar with Docker or those wishing to explore a
-  production-like setup
-- Pros
-  - Docker layer written in Python to make it easy to extend and test
-  - Less redundant since code is factored out
-  - Used for real-world development, production workflows
-  - Used for all internships, RA / TA, full-time at UMD DATA605 / MSML610 /
-    Causify 
-- Cons
-  - It is more complex to use and configure
-  - More dependencies from the 
-- For thin environment setup instructions, refer to:  
-  [How to Set Up Development on Laptop](https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
+## Key Components
 
-## Reference Tutorials
+### 1. BitcoinAPI
 
-- The `tutorial_github` example has been implemented in both environments for you
-  to refer to:
-  - `tutorial_github_data605_style` uses the simpler DATA605 approach
-  - `tutorial_github_causify_style` uses the more complex Causify approach
+A class to fetch Bitcoin price and volume data via the CoinGecko REST API.
 
-- Choose the approach that best fits your comfort level and project needs. Both
-  are valid depending on your use case.
+#### Key Features:
+
+- Lightweight API wrapper.
+- Returns timestamped price and volume data.
+- Logs output using Python’s `logging` module.
+
+#### Example:
+
+```python
+api = BitcoinAPI()
+print(api.fetch_bitcoin_price())
+```
+
+---
+
+### 2. Kafka Producer
+
+Streams real-time Bitcoin data to a Kafka topic called `bitcoin_prices`.
+
+#### Key Features:
+
+- Uses `confluent_kafka.Producer`.
+- Serializes data using Avro (defined in `utils.py`).
+- Sends data every 60 seconds.
+
+#### Example:
+
+```bash
+python3 kafka_producer.py
+```
+
+![Kafka Producer Flow](figures/kafka_producer_flow.png)
+
+---
+
+### 3. Spark Consumer
+
+Reads the Kafka topic and processes the stream using PySpark.
+
+#### Key Features:
+
+- Computes 5-minute moving averages of Bitcoin price.
+- Computes 5-minute rolling standard deviation (volatility).
+- Labels price trends (rising, falling, stable).
+- Outputs to Parquet.
+
+#### Example:
+
+```bash
+python3 spark_consumer.py
+```
+
+![Spark Consumer Flow](figures/spark_consumer_flow.png)
+
+---
+
+### 4. utils.py
+
+Defines the Avro schema and contains a helper function for serializing data.
+
+#### Key Features:
+
+- Encodes dictionary to Avro bytes using `avro-python3`.
+- Central schema definition for reuse across components.
+
+#### Example:
+
+```python
+avro_bytes = serialize_to_avro({
+  "timestamp": 1747459847,
+  "price": 103559.0,
+  "currency": "USD",
+  "volume": 25412480008.35425
+})
+```
+
+![Utils Flow](figures/utils_usage_flow.png)
+
+---
+
+### 5. entrypoint.sh
+
+Orchestrates the end-to-end pipeline execution.
+
+#### Key Features:
+
+- Ensures Kafka is ready before producing data.
+- Starts the Kafka producer and Spark consumer.
+- Lists generated output files.
+- Keeps the container running.
+
+#### Example Flow:
+
+```bash
+./entrypoint.sh
+```
+
+##### Steps:
+1. Sets Java environment.
+2. Waits for Kafka to be ready.
+3. Cleans previous outputs.
+4. Launches producer and consumer.
+5. Lists output Parquet files.
+6. Keeps the process alive.
+
+![Entrypoint Flow](figures/entrypoint_flow.png)
+
+---
+
+## Complete Workflow
+
+1. `BitcoinAPI` fetches real-time price and volume.
+2. `kafka_producer.py` serializes and sends data to Kafka.
+3. `spark_consumer.py` processes the stream and computes aggregates.
+4. `utils.py` handles Avro serialization.
+5. `entrypoint.sh` glues the components together.
+
+![Complete Workflow](figures/complete_workflow.png)
+
+---
+
+## Example Output
+
+### Moving Average Parquet
+```
+/workspace/output/bitcoin_price_avg/part-00000-abc.snappy.parquet
+```
+
+### Volatility Parquet
+```
+/workspace/output/bitcoin_volatility/part-00000-def.snappy.parquet
+```
+
+---
