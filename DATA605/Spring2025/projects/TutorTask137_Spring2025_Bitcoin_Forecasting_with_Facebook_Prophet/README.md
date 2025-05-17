@@ -197,10 +197,6 @@ After identifying these key inflection points through trend and volatility analy
 
 ---
 
-Here’s the fully detailed and explanatory version of the *Modeling, **Forecasting, and **Evaluation* sections:
-
----
-
 ## Modeling
 
 ###  *Data Preparation & Feature Engineering (In-Depth)*
