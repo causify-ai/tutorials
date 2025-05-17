@@ -8,7 +8,7 @@ from activecampaign_api import get_campaigns
 
 def simulate_email_data_spikey() -> pd.DataFrame:
     names = [
-        'Newsletter', 'Promo Blast', 'Weekly Update', ' Career Hack Alert',
+        'Newsletter', 'Promo Blast', 'Weekly Update', 'Career Hack Alert',
         'UMD RecWell Notice', '50% Pro Discount', 'Free Fries Friday',
         'Job Alerts', 'AI Tips Newsletter'
     ]
@@ -40,6 +40,7 @@ def simulate_email_data_spikey() -> pd.DataFrame:
     df['cdate'] = pd.to_datetime(df['cdate'])
     return df
 
+
 # Load data
 real_df = get_campaigns()
 real_df['cdate'] = pd.to_datetime(real_df['cdate']).dt.tz_localize(None)
@@ -56,12 +57,8 @@ for col in cols_to_convert:
 combined_df.fillna(0, inplace=True)
 combined_df = combined_df.infer_objects(copy=False)
 
-
-# Plot daily engagement
-daily_summary = combined_df.groupby('cdate').agg({
-    'opens': 'sum',
-    'linkclicks': 'sum'
-})
+# Daily engagement plot
+daily_summary = combined_df.groupby('cdate').agg({'opens': 'sum', 'linkclicks': 'sum'})
 plt.figure(figsize=(12, 6))
 plt.plot(daily_summary.index, daily_summary['opens'], label='Opens', marker='o')
 plt.plot(daily_summary.index, daily_summary['linkclicks'], label='Clicks', marker='x')
@@ -147,3 +144,4 @@ plt.legend()
 plt.tight_layout()
 plt.savefig("moving_avg_trend.png")
 print("Saved: moving_avg_trend.png")
+
