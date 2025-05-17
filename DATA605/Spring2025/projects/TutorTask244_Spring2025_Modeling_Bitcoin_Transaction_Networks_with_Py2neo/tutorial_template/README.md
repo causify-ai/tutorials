@@ -1,4 +1,4 @@
-# Project README: Bitcoin Graph Analysis with Py2Neo + Neo4j
+# Project README: Modeling Bitcoin Transaction Networks with with Py2Neo
 
 - **Author**: Rishi Koushik Sridharan  
 - **Date**: 2025-05-17
