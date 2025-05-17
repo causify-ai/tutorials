@@ -1,9 +1,3 @@
-#!/bin/bash -e
-
-GIT_ROOT=$(git rev-parse --show-toplevel)
-source $GIT_ROOT/tutorial_github_simple/docker_common/utils.sh
-
-REPO_NAME=umd_data605
-IMAGE_NAME=umd_data605_template
-
-exec_container
+#!/usr/bin/env bash
+# drop you into a shell inside the running container
+docker exec -it data605_streamz /bin/bash
