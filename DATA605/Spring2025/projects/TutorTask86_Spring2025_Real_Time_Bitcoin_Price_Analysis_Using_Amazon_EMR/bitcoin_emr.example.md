@@ -18,7 +18,7 @@ This example demonstrates a real-time Bitcoin price analysis system that continu
 
 ## Architecture
 
-[CoinGecko API] → [bitcoin_producer.py] → [Amazon S3 (data_v2/)] → [EMR Spark Job via bitcoin_streaming_consumer_emr.py] → [Amazon S3 (output_streaming/)]
+[CoinGecko API] → [bitcoin_producer.py] → [Amazon S3 (data_v2/)] → [EMR Spark Job via bitcoin_streaming_consumer_emr_debug.py] → [Amazon S3 (output_streaming/)]
 
 ---
 
@@ -28,10 +28,11 @@ This example demonstrates a real-time Bitcoin price analysis system that continu
    - Periodically (every 60 seconds) fetches the current Bitcoin price in USD.
    - Stores each record with a timestamp as a JSON object in an S3 bucket under `data_v2/`.
 
-2. `bitcoin_streaming_consumer_emr.py`:
+2. `bitcoin_streaming_consumer_emr_debug.py`:
    - Runs a Spark Structured Streaming job on EMR.
-   - Reads new JSON files from `data_v2/`, converts timestamps, and performs a 1-minute windowed aggregation to compute the average price.
-   - Writes the aggregated results to `output_streaming/` in S3.
+   - Reads new JSON files from `data_v2/`, processes them using Spark SQL functions (e.g., from_json, window), and performs a 1-minute windowed aggregation to compute the average price.
+   - Writes the aggregated results to `output/` in S3 in JSON format.
+
 
 ---
 

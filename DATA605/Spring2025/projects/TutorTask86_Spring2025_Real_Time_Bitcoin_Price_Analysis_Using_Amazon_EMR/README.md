@@ -1,59 +1,65 @@
 # Real-Time Bitcoin Price Analysis Using Amazon EMR
 
-This project focuses on **real-time ingestion and processing of Bitcoin price data** using Amazon EMR and Apache Spark.  
-Bitcoin prices are fetched from a public API (such as CoinGecko) every few seconds and saved to Amazon S3. These records are then processed using Spark jobs running on an EMR cluster to enable near real-time analytics.
+This project demonstrates a real-time data processing pipeline that collects Bitcoin price data from a public API, stores it in Amazon S3, and processes it using Apache Spark on Amazon EMR for time-series analysis.
 
 ---
 
-## ✅ Project Objective
+## 🚀 Technologies Used
 
-- Simulate real-time Bitcoin price ingestion using a producer script
-- Save price records to Amazon S3 in near real-time
-- Configure and run a Spark job using EMR to process the records
-- Demonstrate the real-time pipeline through API, notebook, and markdown tutorials
-
----
-
-## 🔧 Technologies Used
-
-- **Amazon EMR** — cluster-based execution of Apache Spark
-- **Amazon S3** — used as a storage sink for real-time records
-- **Apache Spark (PySpark)** — for data transformation and analysis
-- **Python** — for scripting and logic
-- **CoinGecko API** — source for Bitcoin price data
+- **CoinGecko API** – For fetching live Bitcoin price in USD
+- **Python** – Core scripting language
+- **Boto3** – AWS SDK to interact with Amazon S3
+- **Amazon S3** – For storing raw and processed data
+- **Apache Spark (Structured Streaming)** – For windowed aggregation
+- **Amazon EMR** – Cluster to run Spark jobs at scale
 
 ---
 
-## 📂 Directory Structure
+## 📁 Project Structure
 
-DATA605/Spring2025/projects/TutorTask86_Spring2025_Real_Time_Bitcoin_Price_Analysis_Using_Amazon_EMR/
-├── bitcoin_streaming_consumer_emr.py
-├── bitcoin_producer.py
-├── bitcoin_emr_utils.py
-├── bitcoin_emr.API.ipynb
-├── bitcoin_emr.example.ipynb
-├── bitcoin_emr.API.md
-├── bitcoin_emr.example.md
-└── README.md
-
----
-
-## 🚀 Real-Time Data Flow
-
-1. `bitcoin_producer.py`: Fetches real-time Bitcoin prices from CoinGecko API and saves them to S3.
-2. `bitcoin_streaming_consumer_emr.py`: Processes incoming JSON files from the S3 bucket using Apache Spark.
-3. Spark job is launched via Amazon EMR cluster and performs transformations or aggregations.
-4. Final results are written back to S3.
+| File | Description |
+|------|-------------|
+| `bitcoin_producer.py` | Fetches real-time Bitcoin prices and writes JSON records to S3 (`data_v2/`) |
+| `bitcoin_streaming_consumer_emr_debug.py` | Spark job that reads S3 input, performs 1-min windowed average, and writes to S3 (`output_streaming/`) |
+| `bitcoin_emr_utils.py` | Reusable helper functions for API calls, S3 writes, and Spark logic |
+| `bitcoin_emr.API.ipynb` | Demonstrates the API utility layer |
+| `bitcoin_emr.example.ipynb` | Demonstrates full real-time example |
+| `bitcoin_emr.API.md` | Markdown documenting the native and custom API layer |
+| `bitcoin_emr.example.md` | Markdown explaining full system architecture and end-to-end flow |
 
 ---
 
-## 🧪 Sample Output (Stored in S3)
+## 🧪 Output
 
-```json
+- **Raw Input:** S3 path: `s3://<your-bucket>/data_v2/`  
+  JSON format:
+  ```json
+  {
+    "timestamp": "2025-05-15T19:25:00",
+    "price_usd": 71500.45
+  }
+
+## Processed Output: 
+S3 path: s3://<bitcoin-price-streaming-data >/output/
+
+Windowed JSON format:
+
 {
-  "timestamp": "2025-05-15T13:40:00",
-  "price_usd": 71234.56
+  "window": {
+    "start": "2025-05-15T19:25:00",
+    "end": "2025-05-15T19:26:00"
+  },
+  "avg_price": 71480.22
 }
 
+## Status
+Real-time pipeline tested and running successfully on Amazon EMR
+
+Output verified in S3
+
+All components structured as per project template and tutorial guidelines
+
+## Author
+Rithika Baskaran — Spring 2025
 
 
