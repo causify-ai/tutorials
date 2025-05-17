@@ -1,65 +1,97 @@
+# bitcoin_utils.py
 """
-template_utils.py
-
-This file contains utility functions that support the tutorial notebooks.
-
-- Notebooks should call these functions instead of writing raw logic inline.
-- This helps keep the notebooks clean, modular, and easier to debug.
-- Students should implement functions here for data preprocessing,
-  model setup, evaluation, or any reusable logic.
+Utility functions for real-time Bitcoin data ingestion and Snowflake interaction.
 """
 
-import pandas as pd
+import os
 import logging
-from sklearn.model_selection import train_test_split
-from pycaret.classification import compare_models
+import requests
+from datetime import datetime
+import pandas as pd
+import snowflake.connector
+from dotenv import load_dotenv
 
-# -----------------------------------------------------------------------------
-# Logging
-# -----------------------------------------------------------------------------
+# Load environment variables from .env file
+load_dotenv()
 
-logging.basicConfig(level=logging.INFO)
+# Setup logger
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
-# -----------------------------------------------------------------------------
-# Example 1: Split the dataset into train and test sets
-# -----------------------------------------------------------------------------
-
-def split_data(df: pd.DataFrame, target_column: str, test_size: float = 0.2):
+def connect_to_snowflake():
     """
-    Split the dataset into training and testing sets.
+    Establish connection to Snowflake using credentials from the .env file.
 
-    :param df: full dataset
-    :param target_column: name of the target column
-    :param test_size: proportion of test data (default = 0.2)
-
-    :return: X_train, X_test, y_train, y_test
+    :return: Snowflake connection object
     """
-    logger.info("Splitting data into train and test sets")
-    X = df.drop(columns=[target_column])
-    y = df[target_column]
-    return train_test_split(X, y, test_size=test_size, random_state=42)
+    conn = snowflake.connector.connect(
+        user=os.getenv("SNOWFLAKE_USER"),
+        password=os.getenv("SNOWFLAKE_PASSWORD"),
+        account=os.getenv("SNOWFLAKE_ACCOUNT"),
+        warehouse=os.getenv("SNOWFLAKE_WAREHOUSE"),
+        database=os.getenv("SNOWFLAKE_DATABASE"),
+        schema=os.getenv("SNOWFLAKE_SCHEMA")
+    )
+    logger.info("✅ Connected to Snowflake")
+    return conn
 
-# -----------------------------------------------------------------------------
-# Example 2: PyCaret classification pipeline
-# -----------------------------------------------------------------------------
 
-def run_pycaret_classification(df: pd.DataFrame, target_column: str) -> pd.DataFrame:
+def create_btc_table(conn):
     """
-    Run a basic PyCaret classification experiment.
+    Create the BTC_PRICES table if it does not exist.
 
-    :param df: dataset containing features and target
-    :param target_column: name of the target column
-
-    :return: comparison of top-performing models
+    :param conn: Snowflake connection object
+    :return: None
     """
-    logger.info("Initializing PyCaret classification setup")
-    ...
+    create_stmt = """
+    CREATE TABLE IF NOT EXISTS BTC_PRICES (
+        timestamp TIMESTAMP,
+        price_usd FLOAT
+    );
+    """
+    conn.cursor().execute(create_stmt)
+    logger.info("✅ Table BTC_PRICES is ready.")
 
-    logger.info("Comparing models")
-    results = compare_models()
-    ...
 
-    return results
+def fetch_bitcoin_price():
+    """
+    Fetch the current Bitcoin price in USD using the CoinGecko API.
+
+    :return: Latest price as float
+    """
+    url = "https://api.coingecko.com/api/v3/simple/price"
+    params = {"ids": "bitcoin", "vs_currencies": "usd"}
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    price = response.json()["bitcoin"]["usd"]
+    logger.info(f"💰 Current Bitcoin Price: ${price}")
+    return price
 
 
+def insert_bitcoin_price(conn, price_usd):
+    """
+    Insert a new Bitcoin price with current timestamp into the Snowflake table.
+
+    :param conn: Snowflake connection object
+    :param price_usd: Bitcoin price in USD (float)
+    :return: None
+    """
+    insert_stmt = """
+    INSERT INTO BTC_PRICES (timestamp, price_usd)
+    VALUES (%s, %s);
+    """
+    conn.cursor().execute(insert_stmt, (datetime.utcnow(), price_usd))
+    logger.info("📥 Inserted Bitcoin price into Snowflake.")
+
+
+def fetch_btc_data(conn):
+    """
+    Retrieve all rows from BTC_PRICES table in Snowflake.
+
+    :param conn: Snowflake connection object
+    :return: Pandas DataFrame of BTC_PRICES
+    """
+    query = "SELECT * FROM BTC_PRICES ORDER BY timestamp ASC;"
+    df = pd.read_sql(query, conn)
+    logger.info("📊 Fetched data from Snowflake.")
+    return df
