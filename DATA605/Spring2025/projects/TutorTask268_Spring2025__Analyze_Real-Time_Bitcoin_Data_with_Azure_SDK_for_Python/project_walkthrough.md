@@ -294,14 +294,13 @@ The diagram below shows how real-time Bitcoin price data flows from the source A
 
 ```mermaid
 flowchart TD
-    A[CoinGecko API<br><sub>Fetch live BTC price</sub>] --> B[bitcoin_streamer.py<br><sub>Send event every 60 sec</sub>]
-    B --> C[Azure Event Hub<br><sub>Real-time event ingestion</sub>]
-    C --> D[bitcoin_receiver.py<br><sub>Async receive + buffer</sub>]
-    D --> E[Azure Blob Storage<br><sub>Store JSON every 50 records</sub>]
-    E --> F[merge_json_to_csv.py<br><sub>Convert to clean CSV</sub>]
-    F --> G[Azure Synapse Analytics<br><sub>Time series queries + charts</sub>]
-    G --> H[Jupyter Notebooks<br><sub>Advanced ML & visualization</sub>]
-
+    A[CoinGecko API\nFetch BTC Price] --> B[bitcoin_streamer.py\nSend every 60s]
+    B --> C[Azure Event Hub\nIngest real-time events]
+    C --> D[bitcoin_receiver.py\nAsync buffer + upload]
+    D --> E[Azure Blob Storage\nSave every 50 records]
+    E --> F[merge_json_to_csv.py\nConvert JSON to CSV]
+    F --> G[Azure Synapse Analytics\nRun time series queries]
+    G --> H[Jupyter Notebooks\nVisualize + detect anomalies]
 ```
 
 

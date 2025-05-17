@@ -32,3 +32,4 @@ flowchart TD
     A[bitcoin_streamer.py<br>(sync script)] -->|Fetches BTC price<br>from CoinGecko| B[Azure Event Hub]
     B -->|Streams messages| C[bitcoin_receiver.py<br>(async script)]
     C -->|Buffers 50 events<br>in memory| D[Azure Blob Storage<br>(JSON Files)]
+```

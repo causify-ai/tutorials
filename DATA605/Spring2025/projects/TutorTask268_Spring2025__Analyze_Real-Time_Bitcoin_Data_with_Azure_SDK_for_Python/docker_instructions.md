@@ -57,22 +57,14 @@ run this in powershell
 
 ### 3. Launch Jupyter Notebook from Docker
 
-run this in powershell  
+Run the following command in PowerShell:
 
+powershell
 .\docker_jupyter.ps1
-(This starts Jupyter Notebook inside the Docker container and mounts your project files)
 
-Expected terminal output
+To access the notebook, open this file in a browser: 
+  http://localhost:8888/?token=your-unique-token
 
-[C 2025-05-17 03:13:29.054 ServerApp]
-
-    To access the server, open this file in a browser:
-        file:///root/.local/share/jupyter/runtime/jpserver-1-open.html
-    Or copy and paste one of these URLs:
-        http://94ae97e5208c:8888/tree?token=efb847317378bedb076fa19f6d2d578eadd724adb38a4142
-        http://127.0.0.1:8888/tree?token=efb847317378bedb076fa19f6d2d578eadd724adb38a4142
-
-Copy the URL shown (e.g., http://localhost:8888/?token=abc123...) and open it in your browser.
 You’ll see a file browser where you can run all your notebooks (.ipynb files) inside the container.
 
 
