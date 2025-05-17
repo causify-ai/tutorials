@@ -5,7 +5,7 @@
 #1 DONE 0.0s
 
 #2 [internal] load metadata for docker.io/library/ubuntu:20.04
-#2 DONE 0.3s
+#2 DONE 0.4s
 
 #3 [internal] load .dockerignore
 #3 transferring context: 2B done
@@ -18,37 +18,37 @@
 #5 transferring context: 2.69kB done
 #5 DONE 0.0s
 
-#6 [ 4/13] RUN python3 -m pip install --upgrade pip
+#6 [ 7/13] COPY install_jupyter_extensions.sh /install/
 #6 CACHED
 
-#7 [ 8/13] RUN chmod +x /install/install_jupyter_extensions.sh && /install/install_jupyter_extensions.sh || true
+#7 [10/13] COPY bashrc /root/.bashrc
 #7 CACHED
 
-#8 [ 6/13] RUN pip3 install -r /install/requirements.txt
+#8 [12/13] RUN chmod +x /install/version.sh && /install/version.sh 2>&1 | tee /install/version.log
 #8 CACHED
 
-#9 [ 7/13] COPY install_jupyter_extensions.sh /install/
+#9 [ 2/13] RUN apt-get -y update && apt-get -y upgrade
 #9 CACHED
 
-#10 [ 3/13] RUN apt-get install -y --no-install-recommends     sudo     curl     gnupg     git     vim     python3     python3-pip     python3-dev     build-essential     libatlas-base-dev     libffi-dev     libssl-dev     libpq-dev
+#10 [ 4/13] RUN python3 -m pip install --upgrade pip
 #10 CACHED
 
-#11 [11/13] COPY version.sh /install/
+#11 [ 9/13] COPY etc_sudoers /etc/sudoers
 #11 CACHED
 
-#12 [12/13] RUN chmod +x /install/version.sh && /install/version.sh 2>&1 | tee /install/version.log
+#12 [ 5/13] COPY requirements.txt /install/requirements.txt
 #12 CACHED
 
-#13 [ 9/13] COPY etc_sudoers /etc/sudoers
+#13 [11/13] COPY version.sh /install/
 #13 CACHED
 
-#14 [ 2/13] RUN apt-get -y update && apt-get -y upgrade
+#14 [ 3/13] RUN apt-get install -y --no-install-recommends     sudo     curl     gnupg     git     vim     python3     python3-pip     python3-dev     build-essential     libatlas-base-dev     libffi-dev     libssl-dev     libpq-dev
 #14 CACHED
 
-#15 [ 5/13] COPY requirements.txt /install/requirements.txt
+#15 [ 6/13] RUN pip3 install -r /install/requirements.txt
 #15 CACHED
 
-#16 [10/13] COPY bashrc /root/.bashrc
+#16 [ 8/13] RUN chmod +x /install/install_jupyter_extensions.sh && /install/install_jupyter_extensions.sh || true
 #16 CACHED
 
 #17 [13/13] WORKDIR /data

@@ -13,8 +13,11 @@ This file contains helper functions to:
 # --------------------------------------------------------------------
 
 import pandas as pd
-import logging
+import numpy as np
 import requests
+from sklearn.preprocessing import MinMaxScaler
+import logging
+
 
 # --------------------------------------------------------------------
 # Logging Setup
@@ -151,35 +154,119 @@ def technical_features(df: pd.DataFrame):
 # Sequence Generator for LSTM
 # --------------------------------------------------------------------
 
-from sklearn.preprocessing import MinMaxScaler
-import numpy as np
-
-def generate_sequences(df: pd.DataFrame, feature: str = 'price', window_size: int = 60):
+def generate_sequences(df: pd.DataFrame, features: list, target: str = 'price', window_size: int = 60):
     """
-    Generate sequences and targets for LSTM from a cleaned DataFrame.
+    Generate multivariate sequences and targets for LSTM from a cleaned DataFrame.
 
-    :param df: Cleaned DataFrame with a datetime index and numeric columns
-    :param feature: Column name to predict (default='price')
+    :param df: Cleaned DataFrame with engineered features
+    :param features: List of column names to use as input features
+    :param target: Column name to predict (usually 'price')
     :param window_size: Number of timesteps per input sequence
     :return: X (sequences), y (targets), scaler object
     """
-    logger.info(f"Generating sequences using feature '{feature}' with window size {window_size}")
+    logger.info(f"Generating sequences using features {features} and target '{target}'")
 
-    # Extract the feature column
-    series = df[feature].values.reshape(-1, 1)
+    # Select feature matrix and target vector
+    X_data = df[features].values
+    y_data = df[target].values.reshape(-1, 1)
 
-    # Scale the data between 0 and 1
-    scaler = MinMaxScaler()
-    scaled = scaler.fit_transform(series)
+    # Scale both X and y
+    scaler_X = MinMaxScaler()
+    scaler_y = MinMaxScaler()
+
+    X_scaled = scaler_X.fit_transform(X_data)
+    y_scaled = scaler_y.fit_transform(y_data)
 
     X, y = [], []
-    for i in range(window_size, len(scaled)):
-        X.append(scaled[i - window_size:i])
-        y.append(scaled[i])
+    for i in range(window_size, len(df)):
+        X.append(X_scaled[i - window_size:i])
+        y.append(y_scaled[i])
 
     X = np.array(X)
     y = np.array(y)
 
-    logger.info(f"Generated {X.shape[0]} sequences of shape {X.shape[1:]}")
+    logger.info(f"Generated {X.shape[0]} sequences with shape {X.shape[1:]}")
 
-    return X, y, scaler
+    return X, y, scaler_X, scaler_y
+
+# --------------------------------------------------------------------
+# LSTM Model Builder
+# --------------------------------------------------------------------
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dropout, Dense
+
+def build_lstm_model(input_shape):
+    """
+    Builds and compiles a stacked LSTM model.
+
+    :param input_shape: Tuple (timesteps, features)
+    :return: Compiled Keras model
+    """
+    logger.info(f"Building LSTM model with input shape {input_shape}")
+
+    model = Sequential([
+        LSTM(64, return_sequences=True, input_shape=input_shape),
+        Dropout(0.3),
+        LSTM(32),
+        Dropout(0.2),
+        Dense(1)
+    ])
+    model.compile(optimizer='adam', loss='mse')
+    return model
+
+# --------------------------------------------------------------------
+# LSTM Model Training Function
+# --------------------------------------------------------------------
+
+from tensorflow.keras.callbacks import EarlyStopping
+
+def train_lstm_model(model, X_train, y_train, X_val, y_val, epochs=50, batch_size=32):
+    """
+    Trains the LSTM model using early stopping.
+
+    :param model: Compiled LSTM model
+    :param X_train: Training sequences
+    :param y_train: Training targets
+    :param X_val: Validation sequences
+    :param y_val: Validation targets
+    :param epochs: Training epochs
+    :param batch_size: Batch size
+    :return: Tuple of (trained model, training history)
+    """
+    logger.info(f"Training LSTM model for {epochs} epochs with batch size {batch_size}")
+    
+    early_stop = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
+    history = model.fit(
+        X_train, y_train,
+        validation_data=(X_val, y_val),
+        epochs=epochs,
+        batch_size=batch_size,
+        callbacks=[early_stop],
+        verbose=1
+    )
+    logger.info("Model training complete.")
+    return model, history
+
+# --------------------------------------------------------------------
+# Training Loss Plot
+# --------------------------------------------------------------------
+
+import matplotlib.pyplot as plt
+
+def plot_training_loss(history):
+    """
+    Plots training and validation loss curves from Keras history object.
+
+    :param history: Keras history object from model.fit()
+    """
+    logger.info("Plotting training and validation loss.")
+    plt.figure(figsize=(10, 5))
+    plt.plot(history.history['loss'], label='Train Loss')
+    plt.plot(history.history['val_loss'], label='Validation Loss')
+    plt.title('Training & Validation Loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
