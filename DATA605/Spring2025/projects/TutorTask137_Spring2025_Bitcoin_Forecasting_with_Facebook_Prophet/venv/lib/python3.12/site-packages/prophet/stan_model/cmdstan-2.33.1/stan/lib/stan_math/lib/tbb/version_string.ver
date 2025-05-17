@@ -1,0 +1,11 @@
+#define __TBB_VERSION_STRINGS(N) \
+#N": BUILD_HOST\t\t8e89249d3ec0 (x86_64)" ENDL \
+#N": BUILD_OS\t\tCentOS Linux release 7.9.2009 (Core)" ENDL \
+#N": BUILD_KERNEL\tLinux 6.8.0-1014-azure #16~22.04.1-Ubuntu SMP Thu Aug 15 21:31:41 UTC 2024" ENDL \
+#N": BUILD_GCC\t\tg++ (GCC) 10.2.1 20210130 (Red Hat 10.2.1-11)" ENDL \
+#N": BUILD_LIBC\t2.17" ENDL \
+#N": BUILD_LD\t\tGNU ld version 2.35-5.el7.4" ENDL \
+#N": BUILD_TARGET\tintel64 on cc10.2.1_libc2.17_kernel6.8.0" ENDL \
+#N": BUILD_COMMAND\tg++ -O2 -g -DDO_ITT_NOTIFY -DUSE_PTHREAD -pthread -m64 -mrtm -Wall -Wextra -Wno-unknown-warning-option -Wno-deprecated-copy -Wno-missing-attributes -Wno-class-memaccess -Wno-sized-deallocation -DTBB_SUPPRESS_DEPRECATED_MESSAGES=1 -std=c++1y -I../tbb_2020.3/src -I../tbb_2020.3/src/rml/include -I../tbb_2020.3/include" ENDL \
+
+#define __TBB_DATETIME "Wed Oct 2 23:58:22 UTC 2024"
