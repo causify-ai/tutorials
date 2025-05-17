@@ -1,56 +1,5 @@
 # Bitcoin Price Forecasting with Facebook Prophet
 
-Welcome to my capstone project for DATA605: an end-to-end Bitcoin forecasting system using Facebook Prophet, built with real-time data ingestion, EDA, time-series modeling, and optional Streamlit deployment.
-
-## Project Objective
-
-Forecasting cryptocurrency prices, particularly Bitcoin, is a challenging yet valuable task due to the asset’s high volatility and market sensitivity. Investors, analysts, and trading platforms rely on timely insights to make informed decisions. This project seeks to develop a reliable, real-time forecasting system that predicts short-term Bitcoin price movements using both historical and live data. Leveraging Facebook Prophet, a time series forecasting tool, the project is designed to process noisy and irregular financial data, model seasonality and trends, and produce accurate, interpretable forecasts. The system is also built to be robust against missing data, customizable for future improvements, and scalable for real-time applications.
-
------
-
-## General Guidelines
-
-This section outlines general project practices followed to ensure a clean, reproducible implementation.
-
-* **Docker + Jupyter Image**: The project is containerized with Docker. A Jupyter Lab image was used to execute all notebooks consistently across environments.
-* **Clean Folder Structure**: Follows a modular layout (`data/`, `scripts/`, `notebooks/`, etc.).
-* **Environment Management**: All dependencies are tracked in `requirements.txt` and used within a virtual environment.
-* **Version Control**: Git is used with large data excluded via `.gitignore`.
-* **Code Modularity**: Functions are separated into `utils.py` to keep notebooks clean.
-* **Prophet Setup**:
-
-  * Data uses `ds` and `y` columns.
-  * Weekly seasonality disabled due to flat weekly trends.
-  * Changepoint detection and log return analysis are used.
-* **Deployment**: Streamlit used for an interactive forecast dashboard.
-
----
-
-## Architecture Overview
-
-1. **Data Ingestion**: Load historical CSV, fetch live API data
-2. **Preprocessing**: Merge, clean, and validate continuity
-3. **EDA**: Trend analysis, seasonality, volatility
-4. **Modeling**: Prophet training
-5. **Forecasting**: 7–30 day predictions
-6. **Evaluation**: RMSE, MAE (planned)
-7. **Deployment**:  Streamlit dashboard
-
----
-
-## Technologies & Libraries Using in The Project
-
-| Component     | Libraries/Tools             |
-| ------------- | --------------------------- |
-| Forecasting   | Facebook Prophet            |
-| Data Handling | pandas, numpy               |
-| API Ingestion | requests, json              |
-| Visualization | matplotlib, seaborn, plotly |
-| Evaluation    | sklearn.metrics             |
-| Dashboard     | streamlit                   |
-
----
-
 ## Dataset Sources
 
 ### Historical Data
