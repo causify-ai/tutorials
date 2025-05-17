@@ -1,3 +1,13 @@
+# SHAP Bitcoin Forecasting Example
+
+This project demonstrates how to build a real-time Bitcoin price prediction pipeline using **XGBoost**, with interpretability powered by **SHAP (SHapley Additive Explanations)**.
+
+The pipeline uses **hourly Bitcoin price data**, retrieved live using the CoinGecko API, and applies engineered time series features (lags, volatility) to forecast next-hour price movements.
+
+## Table of Contents
+
+This markdown provides a full breakdown of data loading, analysis, modeling, and interpretation using SHAP. All major processes are modularized for reusability.
+
 <!-- toc -->
 
 - [SHAP Bitcoin Forecasting Example](#shap-bitcoin-forecasting-example)
@@ -17,16 +27,6 @@
 - [9. File Naming Convention](#9-file-naming-convention)
 
 <!-- tocstop -->
-
-# SHAP Bitcoin Forecasting Example
-
-This project demonstrates how to build a real-time Bitcoin price prediction pipeline using **XGBoost**, with interpretability powered by **SHAP (SHapley Additive Explanations)**.
-
-The pipeline uses **hourly Bitcoin price data**, retrieved live using the CoinGecko API, and applies engineered time series features (lags, volatility) to forecast next-hour price movements.
-
-## Table of Contents
-
-This markdown provides a full breakdown of data loading, analysis, modeling, and interpretation using SHAP. All major processes are modularized for reusability.
 
 ### Hierarchy
 

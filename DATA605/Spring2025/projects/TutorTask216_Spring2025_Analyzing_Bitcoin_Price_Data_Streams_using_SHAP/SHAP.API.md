@@ -1,3 +1,11 @@
+# SHAP API Tutorial
+
+This markdown file documents key functionalities of the SHAP Python library and serves as a companion to the `SHAP.API.ipynb` tutorial notebook. It provides a high-level overview of available SHAP explainers and visual tools for interpreting machine learning model predictions.
+
+## Table of Contents
+
+The structure mirrors the SHAP API walkthrough provided in the notebook, covering both explainer initialization and output interpretation.
+
 <!-- toc -->
 
 - [SHAP API Tutorial](#shap-api-tutorial)
@@ -16,14 +24,6 @@
 - [6. Future Improvements](#6-future-improvements)
 
 <!-- tocstop -->
-
-# SHAP API Tutorial
-
-This markdown file documents key functionalities of the SHAP Python library and serves as a companion to the `SHAP.API.ipynb` tutorial notebook. It provides a high-level overview of available SHAP explainers and visual tools for interpreting machine learning model predictions.
-
-## Table of Contents
-
-The structure mirrors the SHAP API walkthrough provided in the notebook, covering both explainer initialization and output interpretation.
 
 ### Hierarchy
 
