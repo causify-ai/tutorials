@@ -1,53 +1,70 @@
-# push_to_powerbi.py
-
+#!/usr/bin/env python3
+import os
+import json
 import requests
 import pandas as pd
-from prophet import Prophet
-from datetime import datetime
 
-# Load your input CSV file (this must exist and be updated with new data)
-df = pd.read_csv("bitcoin_price_transformed.csv")
+# ——— Configuration ———
+# Set to True to print the payload instead of actually pushing
+DRY_RUN = False
 
-# Prepare data for Prophet
-df_prophet = df[['timestamp', 'price_usd']].copy()
-df_prophet.columns = ['ds', 'y']
-df_prophet['ds'] = pd.to_datetime(df_prophet['ds'])
+# Your Power BI push URL (streaming dataset)
+PUSH_URL = (
+    "https://api.powerbi.com/beta/ee2d6d72-9535-4242-a077-acf185782f9b"
+    "/datasets/afbad650-0150-4703-bbb9-e046dec7b061/rows"
+    "?experience=power-bi&key=YOUR_KEY_HERE"
+)
 
-# Train Prophet model
-model = Prophet()
-model.fit(df_prophet)
+# CSV produced by your forecasting notebook
+FORECAST_CSV = "forecast_prophet.csv"
 
-# Predict next 60 minutes
-future = model.make_future_dataframe(periods=60, freq='min')
-forecast_prophet = model.predict(future)
+# ——— Functions ———
+def load_forecast(csv_path: str) -> pd.DataFrame:
+    """
+    Load the Prophet forecast output. Expect columns:
+      - ds (datetime string)
+      - yhat (forecasted price)
+      - moving_avg_price
+      - volatility_15m
+    """
+    df = pd.read_csv(csv_path)
+    # Ensure numeric types
+    for col in ["yhat", "moving_avg_price", "volatility_15m"]:
+        df[col] = pd.to_numeric(df[col], errors="coerce")
+    return df
 
-# Add 7-minute moving average to forecast
-forecast_prophet['moving_avg_price'] = forecast_prophet['yhat'].rolling(window=7).mean()
+def build_rows(df: pd.DataFrame) -> list[dict]:
+    """
+    Transform each row into the JSON shape Power BI expects.
+    """
+    rows = []
+    for _, row in df.iterrows():
+        rows.append({
+            "timestamp": row["ds"],                     # ISO 8601 string
+            "price_usd": float(row["yhat"]),
+            "moving_avg_price": float(row["moving_avg_price"]),
+            "volatility_15m": float(row["volatility_15m"])
+        })
+    return rows
 
-# Compute % change (optional: based on yhat)
-forecast_prophet['price_change_pct'] = forecast_prophet['yhat'].pct_change().fillna(0) * 100
+def push_to_powerbi(rows: list[dict]) -> None:
+    """
+    Send the batched rows to Power BI.
+    """
+    payload = {"rows": rows}
+    if DRY_RUN:
+        print("DRY_RUN payload:")
+        print(json.dumps(payload, indent=2))
+    else:
+        resp = requests.post(PUSH_URL, json=payload)
+        resp.raise_for_status()
+        print(f"Pushed {len(rows)} rows to Power BI.")
 
-# Select only the last 60 forecasted rows
-forecast_tail = forecast_prophet.tail(60)[['ds', 'yhat', 'moving_avg_price', 'price_change_pct']]
+# ——— Main ———
+if __name__ == "__main__":
+    if not os.path.exists(FORECAST_CSV):
+        raise FileNotFoundError(f"Forecast CSV not found: {FORECAST_CSV}")
 
-# Convert to Power BI-compatible format
-rows = []
-for _, row in forecast_tail.iterrows():
-    rows.append({
-        "timestamp": row['ds'].strftime('%Y-%m-%dT%H:%M:%SZ'),
-        "price_usd": float(row['yhat']),
-        "moving_avg_price": float(row['moving_avg_price']),
-        "price_change_pct": float(row['price_change_pct'])
-    })
-
-# Your actual streaming dataset URL
-push_url = "https://api.powerbi.com/beta/ee2d6d72-9535-4242-a077-acf185782f9b/datasets/afbad650-0150-4703-bbb9-e046dec7b061/rows?experience=power-bi&key=oLBJptO3M8eQMVxjI%2BZjy7cSfNhuR%2BjRfNLqCXwmSq9ux6%2FeN422pmpaeVTj5QCLMtndCH4bACN1zNDJixYt1w%3D%3D"
-
-# Send the data
-response = requests.post(push_url, json=rows)
-print(rows[:5])  # preview a few rows
-
-if response.ok:
-    print("✅ Forecast pushed!")
-else:
-    print(f"❌ Push failed: {response.status_code}")
+    df = load_forecast(FORECAST_CSV)
+    rows = build_rows(df)
+    push_to_powerbi(rows)

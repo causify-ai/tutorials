@@ -1,81 +1,94 @@
-# Real-Time Bitcoin Data Ingestion and Time Series Analysis using Microsoft Power BI
+# Real-Time Bitcoin Data Ingestion & Analysis Pipeline
 
 **Author:** Abhishek Rithik Origanti  
 **Date:** May 2025  
-**Course:** DATA605 — Big Data Systems  
+**Course:** DATA 605 – Big Data Systems  
 **Instructor:** Prof. Giovanni Saggesse
 
 ---
 
-## 📌 Objective
+## 📌 Project Overview
 
-This project demonstrates real-time ingestion, transformation, visualization, and forecasting of Bitcoin price data using a full-stack Python and Microsoft Power BI pipeline. It integrates data streaming and time series analysis techniques to produce a live dashboard with analytical insights.
+This project implements a full-stack pipeline to fetch, transform, forecast and visualize live Bitcoin price data:
 
----
-
-## 📦 Project Components
-
-### 🔁 1. API Data Ingestion
-- Python script (`bitcoin_data_ingestion.py`) pulls real-time Bitcoin price and market cap data using the [CoinGecko API](https://www.coingecko.com/).
-- Data is pushed to a `.csv` file (`bitcoin_price_transformed.csv`) or optionally streamed to Power BI using the REST API.
-
-### 🧹 2. Data Preparation
-- Cleaning, calculating moving averages, and computing percentage change.
-- CSV data is updated every 60 seconds.
-
-### 📊 3. Power BI Dashboard
-- Live streaming dataset created via Power BI REST API.
-- Dashboard shows:
-  - Current Price (USD)
-  - 7-Point Moving Average
-  - Price Change (%)
-  - Market Capitalization
-  - Historical trends
-
-### ⏱️ 4. Real-Time Analytics
-- Uses **push dataset** to simulate real-time data updates in Power BI service.
-- Streamed via `push_to_powerbi.py`.
-
-### 📈 5. Time Series Analysis
-Implemented in `bitcoin_example.ipynb` using:
-- 7-minute Moving Average (Trend)
-- **SARIMA model** to forecast next 60 minutes of price
-- **Prophet model** for comparison
-- **Seasonal decomposition** using `seasonal_decompose()` to detect trends, seasonality, and noise
+1. **Data Ingestion**  
+   • A Python script polls the CoinGecko API every 60 seconds and appends raw price & market-cap records to a CSV.  
+2. **Transformation**  
+   • Raw data is converted into a “full history” CSV with timestamp parsing, percent-change, 7-point moving average, and 15-point rolling volatility.  
+3. **Forecasting & Decomposition**  
+   • A secondary script runs both Prophet and SARIMA forecasts for the next 60 minutes, saves them to CSV, and produces a seasonal-decompose plot.  
+4. **Real-Time Dashboard**  
+   • A “push” script reads the latest forecast CSV and streams the new data into a Power BI streaming dataset.  
+   • The Power BI report connects to that dataset and displays:  
+     - Current price  
+     - 7-point moving average  
+     - Volatility  
+     - Percent change  
+     - Forecasted future trend  
 
 ---
 
-## 📂 File Overview
+## 📂 File Descriptions
 
-| File | Description |
-|------|-------------|
-| `bitcoin_data_ingestion.py` | Script to fetch data from CoinGecko API |
-| `bitcoin_price_transformed.csv` | Transformed data written by ingestion script |
-| `push_to_powerbi.py` | Pushes real-time data to Power BI |
-| `bitcoin_utils.py` | Helper functions for ingestion and transformation |
-| `bitcoin_example.ipynb` | Notebook for trend, seasonality, and forecast analysis |
-| `bitcoin_api.ipynb` | Describes API interaction with CoinGecko |
-| `bitcoin_example.md` | Markdown documentation of time series and forecasting |
-| `bitcoin_api.md` | Markdown documentation of the ingestion API |
-| `Real-Time_Bitcoin_Dashboard.pbix` | Power BI dashboard file |
-| `README.md` | This file |
-| `docker_data605_style/` | Docker setup used for development |
-| `bitcoin_example.html` | Exported version of the final notebook |
-| `bitcoin_ingestion.log` | Logging output of the ingestion process |
+| File                                | Purpose                                                                         |
+|-------------------------------------|---------------------------------------------------------------------------------|
+| `bitcoin_data_ingestion.py`         | Polls CoinGecko, appends raw data to `bitcoin_price_data.csv`                   |
+| `bitcoin_utils.py`                  | Fetch + store helper and `transform_bitcoin_data()` to build `*_full.csv`       |
+| `bitcoin_price_data.csv`            | Raw ingestion log (timestamp, price_usd, market_cap_usd)                        |
+| `bitcoin_price_transformed_full.csv`| Full history with `price_change_pct`, `moving_avg_price`, `volatility_15m`      |
+| `bitcoin_example.py`                | Runs Prophet & SARIMA forecasts and seasonal decomposition, outputs forecast CSVs and PNG |
+| `forecast_prophet.csv`              | Prophet forecast + rolling metrics                                              |
+| `push_to_powerbi.py`                | Reads `forecast_prophet.csv` and streams rows into Power BI (or prints JSON)    |
+| `README.md`                         | This document                                                                  |
+| `Real-Time_Bitcoin_Dashboard.pbix`  | Power BI Desktop report, configured for streaming dataset                       |
 
 ---
 
-## 🐳 Docker & Development
+## 🚀 Step-by-Step Usage
 
-- Developed inside a thin-client Docker container using the `data605_style` setup.
-- Source path:  
-  `~/src/tutorials1/DATA605/Spring2025/projects/TutorTask174_Spring2025_Real-Time_Bitcoin_Data_Ingestion_and_Time_Series_Analysis_using_Microsoft_Power_BI_2/`
-
----
-
-## 🚀 How to Run
-
-1. **Run Data Ingestion (Locally or via Push API)**
+1. ### **Activate your Python environment**  
    ```bash
-   python bitcoin_data_ingestion.py
+   cd ~/…/Real-Time_Bitcoin_Data_Ingestion_and_Time_Series_Analysis_using_Microsoft_Power_BI_3
+   source venv/bin/activate
+## ⚙️ Setup & Execution Steps
 
+```bash
+# Activate your environment
+cd ~/src/.../Power_BI_2
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+# or, at minimum:
+pip install pandas prophet statsmodels matplotlib requests
+
+# Run ingestion
+python bitcoin_data_ingestion.py
+# Fetches new data every 60 s into bitcoin_price_data.csv
+
+# Transform & enrich data
+python - <<EOF
+from bitcoin_utils import transform_bitcoin_data
+transform_bitcoin_data(
+  input_file='bitcoin_price_data.csv',
+  output_file='bitcoin_price_transformed_full.csv'
+)
+EOF
+
+# Generate forecasts & decomposition
+python bitcoin_example.py
+# Creates forecast_prophet.csv, forecast_sarima.csv, seasonal_decompose.png
+
+# Preview JSON payload (dry-run)
+# In push_to_powerbi.py, set DRY_RUN = True.
+python push_to_powerbi.py
+# Verify the printed JSON includes "volatility_15m" and all metrics.
+
+# Push to Power BI
+# Set DRY_RUN = False.
+python push_to_powerbi.py
+# You should see “Pushed to Power BI” and your real-time dashboard update automatically.
+
+# Open & present dashboard
+# Publish or open Real-Time_Bitcoin_Dashboard.pbix in Power BI Service.
+# Confirm visuals are set to “Don’t summarize” and cards display current metrics and forecasts.

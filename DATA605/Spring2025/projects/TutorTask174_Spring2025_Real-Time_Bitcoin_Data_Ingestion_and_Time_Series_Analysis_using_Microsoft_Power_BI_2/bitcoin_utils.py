@@ -53,13 +53,25 @@ def transform_bitcoin_data(input_file='bitcoin_price_data.csv', output_file='bit
     Transform raw Bitcoin price data:
     - Parse timestamp
     - Calculate percentage change in price
+    - Calculate 7-period moving average
+    - Calculate 15-period rolling volatility
     - Save transformed data
     """
     try:
         df = pd.read_csv(input_file)
         df['timestamp'] = pd.to_datetime(df['timestamp'])
         df.sort_values(by='timestamp', inplace=True)
+
+        # Percentage change
         df['price_change_pct'] = df['price_usd'].pct_change().fillna(0) * 100
+
+        # 7-period moving average
+        df['moving_avg_price'] = df['price_usd'].rolling(window=7).mean()
+
+        # --- add rolling 15-period volatility (std dev) ---
+        df['volatility_15m'] = df['price_usd'].rolling(window=15).std()
+
+        # Write out
         df.to_csv(output_file, index=False)
         print(f"Transformed data saved to {output_file}")
     except Exception as e:
