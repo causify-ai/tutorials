@@ -4,7 +4,7 @@ This project builds an end-to-end pipeline to ingest, store, and analyze Bitcoin
 
 ---
 
-## 1. How to Navigate and Run Docker Compose
+## Step 1. How to Navigate and Run Docker Compose
 
 Navigate to the folder that contains the Docker setup files:
 
@@ -25,7 +25,7 @@ This will launch two services:
 
 ---
 
-## 2. How to Launch Jupyter and Streamlit
+## Step 2. How to Launch Jupyter and Streamlit
 
 ### Jupyter Notebook
 
@@ -35,11 +35,14 @@ After running `docker compose up`, open your browser and go to:
 http://localhost:8888
 ```
 
+If the above link does not work, check the terminal for a port that starts with 127.0.1.1 and use that link in the browser.
+
 You can now open:
 - `coingecko_API.ipynb` for data ingestion
 - `coingecko_example.ipynb` for analysis
 
 ---
+
 
 ### Streamlit Dashboard
 
@@ -54,15 +57,35 @@ Then, open your browser and go to:
 http://localhost:8501
 ```
 
-Then open in your browser:
+---
 
+## Understanding Neo4j and Py2Neo
+
+**Neo4j** is a graph database that stores data using nodes and relationships instead of traditional rows and tables. It’s ideal for scenarios where relationships are just as important as the data itself — such as social networks, recommendation systems, or transaction histories.
+
+In this project:
+- Each wallet is a **node** labeled `Address`
+- Each Bitcoin transaction is a **relationship** labeled `SENT`
+- Each market data point is stored as a `PriceSnapshot` node
+
+This structure makes it easy to visualize who is transacting with whom, detect patterns, and run graph-based queries like "who are the top senders?" or "which wallets interact frequently?"
+
+**Py2Neo** is a Python client library that allows you to connect to a Neo4j database and work with it directly from Python. Instead of writing raw database queries all the time, you can create, query, and manage graph data using Python objects.
+
+Example:
 ```
-http://localhost:8501
+from py2neo import Node, Relationship
+
+a = Node("Address", address="wallet_1")
+b = Node("Address", address="wallet_2")
+graph.create(Relationship(a, "SENT", b, amount=1.5))
 ```
+
+This project uses Py2Neo to insert data fetched from the CoinGecko API and to perform Cypher queries for analysis.
 
 ---
 
-## 3. Order of Execution
+## Step 3. Order of Execution
 
 Follow these steps to run the project in order:
 
