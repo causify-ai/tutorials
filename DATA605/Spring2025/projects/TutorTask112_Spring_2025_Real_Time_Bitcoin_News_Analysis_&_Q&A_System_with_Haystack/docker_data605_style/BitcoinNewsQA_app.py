@@ -8,15 +8,16 @@ from BitcoinNewsQA_utils import (
     fetch_crypto_news,
     create_documents,
     split_documents,
-    analyze_sentiment
+    analyze_sentiment,
+    clean_text  # must be exposed in utils
 )
 
 # Page setup
 st.set_page_config(page_title="Bitcoin News Q&A", layout="centered")
 st.title("Real-Time Bitcoin News Q&A System")
-st.write("Ask a question about recent Bitcoin news. The system will fetch the latest headlines, find the most relevant context, and provide a summarized answer along with sentiment.")
+st.write("Ask a question about recent Bitcoin news. The system fetches the latest headlines, finds the most relevant context, and provides an answer with sentiment analysis.")
 
-# Example questions for dropdown
+# Example questions
 example_questions = [
     "Why did Bitcoin rise this week?",
     "Which company recently added Bitcoin to its treasury?",
@@ -25,41 +26,44 @@ example_questions = [
     "How is Asia influencing Bitcoin markets now?"
 ]
 
-# Dropdown for selecting examples
-st.subheader("Example Question")
-selected_example = st.selectbox("Choose an example:", [""] + example_questions)
+# Input
+st.subheader("Example or Custom Question")
+selected_example = st.selectbox("Select an example question:", [""] + example_questions)
+user_input = st.text_input("Or enter your own question:")
 
-# Or let user enter their own
-st.subheader("Or Ask Your Own")
-user_input = st.text_input("Your question:")
-
-# Choose the query based on user input or example
 query = user_input if user_input else selected_example
 
-# When user provides a question
 if query:
-    with st.spinner("Fetching news and generating response..."):
+    with st.spinner("Processing your question..."):
 
-        # Step 1: Fetch and preprocess news
+        # Fetch and chunk news
         news_data = fetch_crypto_news()
         documents = create_documents(news_data)
         chunks = split_documents(documents)
 
-        # Step 2: Setup pipeline
+        # Haystack pipeline setup
         document_store = InMemoryDocumentStore(use_bm25=True)
         document_store.write_documents(chunks)
         retriever = BM25Retriever(document_store=document_store)
         reader = FARMReader(model_name_or_path="deepset/roberta-base-squad2", use_gpu=False)
         pipe = ExtractiveQAPipeline(reader=reader, retriever=retriever)
 
-        # Step 3: Get result
+        # Run Q&A pipeline
         result = pipe.run(query=query, params={"Retriever": {"top_k": 5}, "Reader": {"top_k": 1}})
-        answer = result["answers"][0]
+        answer = result['answers'][0]
 
-        # Step 4: Sentiment analysis
-        sentiment, score = analyze_sentiment(answer.context)
+        # Clean and analyze sentiment
+        cleaned_text = clean_text(answer.context)
+        sentiment, confidence = analyze_sentiment(cleaned_text)
 
-        # Step 5: Show output
+        # Determine color
+        sentiment_color = {
+            "POSITIVE": "green",
+            "NEGATIVE": "red",
+            "NEUTRAL": "gray"
+        }.get(sentiment.upper(), "black")
+
+        # Display results
         st.markdown("### Answer")
         st.write(answer.answer)
 
@@ -70,4 +74,8 @@ if query:
         st.write(answer.meta.get("source", "N/A"))
 
         st.markdown("### Sentiment")
-        st.write(f"{sentiment} (Confidence Score: {score:.2f})")
+        st.markdown(f"<span style='color:{sentiment_color}; font-weight:bold'>{sentiment} (Confidence Score: {confidence:.2f})</span>", unsafe_allow_html=True)
+
+        # Optional: show cleaned input
+        with st.expander("Show cleaned sentiment input (debugging)"):
+            st.code(cleaned_text)

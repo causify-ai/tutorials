@@ -1,28 +1,30 @@
 import requests
+import re
 from haystack.schema import Document
 from haystack.nodes import PreProcessor
 from config import CRYPTOPANIC_API_KEY
 
-# -------------------------------
+# ----------------------------------------
 # Initialize Sentiment Analyzer
-# -------------------------------
+# ----------------------------------------
 from transformers import pipeline
 
-# Load Hugging Face sentiment-analysis pipeline once with a fixed model
+# Option 1: General-purpose sentiment model (default)
 sentiment_analyzer = pipeline(
     "sentiment-analysis",
     model="distilbert/distilbert-base-uncased-finetuned-sst-2-english"
 )
 
+# Option 2: Financial sentiment model (uncomment to use)
+# sentiment_analyzer = pipeline(
+#     "sentiment-analysis",
+#     model="ProsusAI/finbert"
+# )
+
 
 def fetch_crypto_news(api_token=CRYPTOPANIC_API_KEY, currency="BTC", filter="news"):
     """
     Fetch Bitcoin-related news articles using the CryptoPanic API.
-
-    Parameters:
-        api_token (str): API key for CryptoPanic.
-        currency (str): Cryptocurrency symbol to filter news (default: "BTC").
-        filter (str): Type of news (e.g., "news", "sentiment").
 
     Returns:
         List[Dict]: A list of parsed news article metadata.
@@ -45,12 +47,6 @@ def fetch_crypto_news(api_token=CRYPTOPANIC_API_KEY, currency="BTC", filter="new
 def create_documents(news_data):
     """
     Convert raw news dictionaries into Haystack Document objects.
-
-    Parameters:
-        news_data (List[Dict]): News articles returned from fetch_crypto_news.
-
-    Returns:
-        List[Document]: A list of Haystack-compatible Document objects.
     """
     return [
         Document(
@@ -64,12 +60,6 @@ def create_documents(news_data):
 def split_documents(documents):
     """
     Split longer documents into chunks for better retrieval.
-
-    Parameters:
-        documents (List[Document]): Haystack Document objects.
-
-    Returns:
-        List[Document]: Chunked and preprocessed documents.
     """
     preprocessor = PreProcessor(
         split_length=100,
@@ -81,15 +71,33 @@ def split_documents(documents):
     return preprocessor.process(documents)
 
 
-def analyze_sentiment(text):
+def clean_text(text):
     """
-    Analyze sentiment of a given text using Hugging Face transformers.
+    Clean input text by removing URLs, special symbols, and extra whitespace.
 
     Parameters:
-        text (str): Input text to analyze (e.g., context of an answer).
+        text (str): Raw input text
 
     Returns:
-        Tuple[str, float]: Sentiment label (e.g., "POSITIVE") and score (confidence).
+        str: Cleaned, plain text suitable for sentiment analysis
     """
-    result = sentiment_analyzer(text[:512])[0]  # Limit to 512 characters
-    return result['label'], result['score']
+    text = re.sub(r"http\S+", "", text)  # Remove URLs
+    text = re.sub(r"[^A-Za-z0-9\s.,!?]", "", text)  # Remove special characters like $, @
+    return text.strip()
+
+
+def analyze_sentiment(text):
+    """
+    Analyze sentiment of cleaned input text using a transformer model.
+
+    Parameters:
+        text (str): Input text to analyze
+
+    Returns:
+        Tuple[str, float]: Sentiment label and confidence score
+    """
+    cleaned = clean_text(text[:512])
+    if not cleaned:
+        return "NEUTRAL", 0.0
+    result = sentiment_analyzer(cleaned)[0]
+    return result["label"], result["score"]
