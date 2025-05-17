@@ -237,7 +237,7 @@ Bitcoin halving events were explicitly included as custom holidays, as these eve
 
 The Prophet model was carefully tuned to capture the non-linear and highly volatile nature of Bitcoin price movements.
 
-- *Growth Type: Set to **Linear*, as this allows the model to track general growth trends while relying on changepoints to capture sudden shifts.
+- Growth Type: Set to **Linear*, as this allows the model to track general growth trends while relying on changepoints to capture sudden shifts.
 
 * *Seasonality*:
 
