@@ -2,6 +2,45 @@
 
 This project builds an end-to-end pipeline to ingest, store, and analyze Bitcoin transaction and market data using CoinGecko API, Neo4j, Py2Neo, and Docker.
 
+## Understanding Neo4j and Py2Neo
+
+**Neo4j** is a graph database that stores data using nodes and relationships instead of traditional rows and tables. It’s ideal for scenarios where relationships are just as important as the data itself — such as social networks, recommendation systems, or transaction histories.
+
+In this project:
+- Each wallet is a **node** labeled `Address`
+- Each Bitcoin transaction is a **relationship** labeled `SENT`
+- Each market data point is stored as a `PriceSnapshot` node
+
+This structure makes it easy to visualize who is transacting with whom, detect patterns, and run graph-based queries like "who are the top senders?" or "which wallets interact frequently?"
+
+**Py2Neo** is a Python client library that allows you to connect to a Neo4j database and work with it directly from Python. Instead of writing raw database queries all the time, you can create, query, and manage graph data using Python objects.
+
+Example:
+```
+from py2neo import Node, Relationship
+
+a = Node("Address", address="wallet_1")
+b = Node("Address", address="wallet_2")
+graph.create(Relationship(a, "SENT", b, amount=1.5))
+```
+
+This project uses Py2Neo to insert data fetched from the CoinGecko API and to perform Cypher queries for analysis.
+
+---
+
+
+Here is the overall architecture of the project. The overall steps involved are: 
+1) Docker environment is setup and Containers for Jupyter and Neo4J are created.
+2) In Jupyter, when the coingecko.API.ipynb is run, the data is fetched from the Bitcoin API, Py2Neo is used to run Cypher queries to store the data in GraphBD.
+3) Once the data is ingested, it is ready to be used in the analysis notebook and Streamlit app
+4) Execute coingecko.example.ipynb to run the analysis notebook
+5) Open the streamlit app in the appropriate app to vary the parameters and look at different visualizations.
+
+   More in depth instructions are available below.
+
+![Analysis](https://github.com/user-attachments/assets/1392461d-d311-48e0-9ba8-d7ba387916df)
+
+
 ---
 
 ## Step 1. How to Navigate and Run Docker Compose
@@ -59,31 +98,6 @@ http://localhost:8501
 
 ---
 
-## Understanding Neo4j and Py2Neo
-
-**Neo4j** is a graph database that stores data using nodes and relationships instead of traditional rows and tables. It’s ideal for scenarios where relationships are just as important as the data itself — such as social networks, recommendation systems, or transaction histories.
-
-In this project:
-- Each wallet is a **node** labeled `Address`
-- Each Bitcoin transaction is a **relationship** labeled `SENT`
-- Each market data point is stored as a `PriceSnapshot` node
-
-This structure makes it easy to visualize who is transacting with whom, detect patterns, and run graph-based queries like "who are the top senders?" or "which wallets interact frequently?"
-
-**Py2Neo** is a Python client library that allows you to connect to a Neo4j database and work with it directly from Python. Instead of writing raw database queries all the time, you can create, query, and manage graph data using Python objects.
-
-Example:
-```
-from py2neo import Node, Relationship
-
-a = Node("Address", address="wallet_1")
-b = Node("Address", address="wallet_2")
-graph.create(Relationship(a, "SENT", b, amount=1.5))
-```
-
-This project uses Py2Neo to insert data fetched from the CoinGecko API and to perform Cypher queries for analysis.
-
----
 
 ## Step 3. Order of Execution
 
