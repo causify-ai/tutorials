@@ -96,6 +96,12 @@ Access Jupyter at: [http://localhost:8888](http://localhost:8888)
 * *Source*: CoinGecko API
 * *Used*: Last 365 days’ prices for live forecasting
 
+### Data Preparation
+
+- Merged historical data from Kaggle with real-time data from the CoinGecko API.
+- Ensured continuity by removing any duplicate records based on the date column.
+- Final dataset contains continuous daily price data from 2012 to 2025, formatted for Prophet with `ds` (date) and `y` (closing price) columns.
+
 ---
 
 ## Utility Functions Explained (utils.py)
