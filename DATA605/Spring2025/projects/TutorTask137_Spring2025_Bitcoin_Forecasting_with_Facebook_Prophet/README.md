@@ -7,7 +7,7 @@ Welcome to my capstone project for DATA605: an end-to-end Bitcoin forecasting sy
 ## Table of Contents
 
 1. [Project Objective](#project-objective)  
-2. [How to Run the Project](#how-to-run-the-project-brief)  
+2. [How to Run the Project](#how-to-run-the-project)  
 3. [General Guidelines](#general-guidelines)  
 4. [Architecture Overview](#architecture-overview)  
 5. [Technologies & Libraries Used](#technologies--libraries-used)  
