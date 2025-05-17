@@ -211,7 +211,7 @@ Here’s the fully detailed and explanatory version of the *Modeling, **Forecast
 
 The modeling process begins with meticulous data preparation to ensure the time series data is clean, continuous, and properly structured for analysis.
 
-- *Dataset Range: Spanning from **2012 to 2025*, this project combines long-term historical data with real-time data, capturing multiple Bitcoin market cycles, including bull runs, crashes, and recoveries.
+- Dataset Range: Spanning from 2012 to 2025, this project combines long-term historical data with real-time data, capturing multiple Bitcoin market cycles, including bull runs, crashes, and recoveries.
 - *Target Variable*: Bitcoin's closing price (y), which represents the daily final price and serves as the prediction target.
 - *Datetime Handling*: The Prophet library requires a ds column representing dates. All datetime columns were standardized to meet this requirement.
 
