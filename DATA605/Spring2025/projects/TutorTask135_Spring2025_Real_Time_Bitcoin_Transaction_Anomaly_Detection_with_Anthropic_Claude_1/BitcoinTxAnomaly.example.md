@@ -60,7 +60,7 @@ flowchart TD
     C --> F[Claude Explanations]
     D & E & F --> G[Forecast with Prophet]
     G --> H[Slack Alerts + Report CSV]
-
+```
 ---
 
 ## Step-by-Step Pipeline
