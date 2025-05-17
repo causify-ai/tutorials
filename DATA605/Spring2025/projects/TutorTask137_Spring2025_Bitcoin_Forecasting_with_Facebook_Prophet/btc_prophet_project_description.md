@@ -22,7 +22,7 @@ This section outlines general project practices followed to ensure a clean, repr
   * Data uses `ds` and `y` columns.
   * Weekly seasonality disabled due to flat weekly trends.
   * Changepoint detection and log return analysis are used.
-* **Deployment**: Streamlit used for an optional interactive forecast dashboard.
+* **Deployment**: Streamlit used for an interactive forecast dashboard.
 
 ---
 
@@ -47,7 +47,7 @@ This section outlines general project practices followed to ensure a clean, repr
 | API Ingestion | requests, json              |
 | Visualization | matplotlib, seaborn, plotly |
 | Evaluation    | sklearn.metrics             |
-| Dashboard     | streamlit (optional)        |
+| Dashboard     | streamlit                   |
 
 ---
 
