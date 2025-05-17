@@ -1,13 +1,14 @@
+version: '3.9'
+
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
+    ports:
+      - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-    ports:
-      - "2181:2181"
 
-#I have used a custom internal port since in my local i was running something else on the default import for kafka
   kafka:
     image: confluentinc/cp-kafka:latest
     depends_on:
@@ -19,5 +20,14 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://host.docker.internal:9093
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  bitcoin-pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka
+    volumes:
+      - .:/workspace
+    tty: true

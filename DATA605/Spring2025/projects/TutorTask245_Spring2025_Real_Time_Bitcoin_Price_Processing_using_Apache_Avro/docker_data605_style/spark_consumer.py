@@ -94,14 +94,6 @@ moving_avg_query = moving_avg_df.writeStream \
     .option("checkpointLocation", "/workspace/output/checkpoints_avg/") \
     .start()
 
-# Save trend labels
-trend_query = trend_df.writeStream \
-    .outputMode("append") \
-    .format("parquet") \
-    .option("path", "/workspace/output/bitcoin_trends/") \
-    .option("checkpointLocation", "/workspace/output/checkpoints_trend/") \
-    .start()
-
 # Save volatility stats
 volatility_query = volatility_df.writeStream \
     .outputMode("append") \

@@ -72,3 +72,13 @@ EXPOSE 8888
 
 COPY . /workspace
 WORKDIR /workspace
+
+#Code to execute the pipeline
+
+# Copy your pipeline starter script into container
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Set it as the default command
+ENTRYPOINT ["/entrypoint.sh"]
+
