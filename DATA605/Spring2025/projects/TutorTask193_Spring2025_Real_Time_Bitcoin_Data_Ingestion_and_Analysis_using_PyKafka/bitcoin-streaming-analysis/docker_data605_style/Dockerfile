@@ -36,9 +36,6 @@ RUN pip3 install \
     psycopg2-binary \
     yapf
 
-COPY requirements.txt /install/
-RUN pip3 install -r /install/requirements.txt
-
 RUN mkdir /install
 
 # Install Jupyter extensions.
@@ -57,9 +54,15 @@ RUN /install/version.sh 2>&1 | tee version.log
 # Jupyter.
 EXPOSE 8888
 
-# Kafka broker
-EXPOSE 9092
+# --- Bitcoin Streaming Project Setup ---
 
-# Plotly
-EXPOSE 8050
+# Install project dependencies
+COPY project/requirements.txt /app/requirements.txt
+RUN pip3 install --no-cache-dir -r /app/requirements.txt
 
+# Copy project code
+COPY project/ /app/project/
+WORKDIR /app/project
+
+# Run the pipeline
+CMD ["python3", "run_pipeline.py"]
