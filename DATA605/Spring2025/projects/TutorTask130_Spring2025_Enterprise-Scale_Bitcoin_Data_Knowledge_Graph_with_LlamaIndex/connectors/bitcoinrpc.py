@@ -152,7 +152,7 @@ class BitcoinNodeConnector:
                 if "scriptPubKey" in vout and "address" in vout["scriptPubKey"]:
                     addresses.append(vout["scriptPubKey"]["address"])
         
-        return list(set(addresses))  # Remove duplicates
+        return list(set(addresses))
     
 
     def save_to_json(self, data: Any, filename: str) -> None:
@@ -170,7 +170,6 @@ class BitcoinNodeConnector:
             block_copy = block.copy()
             if "tx" in block_copy:
                 block_copy["tx_count"] = len(block_copy.get("tx", []))
-                # Remove the tx array to avoid huge DataFrames
                 block_copy.pop("tx", None)
             if "time" in block_copy:
                 block_copy["datetime"] = pd.to_datetime(block_copy["time"], unit='s')
@@ -221,7 +220,6 @@ class BitcoinNodeConnector:
         elif isinstance(start_date, datetime):
             start_timestamp = int(start_date.timestamp())
         else:
-            # Default to beginning of current year if not specified
             start_timestamp = int(datetime(datetime.now().year, 1, 1).timestamp())
         
         if isinstance(end_date, str):
@@ -229,7 +227,6 @@ class BitcoinNodeConnector:
         elif isinstance(end_date, datetime):
             end_timestamp = int(end_date.timestamp())
         else:
-            # Default to current time if not specified
             end_timestamp = int(datetime.now().timestamp())
         
         # Calculate number of days in the period

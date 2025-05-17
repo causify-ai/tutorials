@@ -5,9 +5,6 @@
 # 2. Building a Knowledge Graph in LlamaIndex with a Neo4J Graph Store
 # 3. Intelligent querying using LlamaIndex Agents
 
-###################################################
-# Refer to llamaindex.example.md for more details #
-
 import logging
 from llamaindex_utils import (
     ingest_raw_block_data, 
@@ -17,7 +14,7 @@ from llamaindex_utils import (
     get_onchain_metrics,
     get_economic_indicators)
 from datetime import timedelta, datetime
-from triplets import TripletGenerator
+from utils.triplets import TripletGenerator
 from dotenv import load_dotenv
 import os
 from llama_index.llms.openai import OpenAI
@@ -37,11 +34,13 @@ import asyncio
 import uvicorn
 from datetime import timedelta, datetime
 from fastapi import FastAPI, Request, BackgroundTasks
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from prometheus_client import Counter, Histogram, Gauge, generate_latest, CONTENT_TYPE_LATEST
+import time
 
 # Configure logging
 for handler in logging.root.handlers[:]:
@@ -74,6 +73,15 @@ llama_agents = None
 last_update_time = None
 is_updating = False
 live = False
+
+# Prometheus metrics
+QUERY_COUNT = Counter('bitcoin_kg_query_total', 'Total number of queries')
+QUERY_DURATION = Histogram('bitcoin_kg_query_duration_seconds', 'Query duration in seconds')
+KG_UPDATES = Counter('bitcoin_kg_updates_total', 'Total number of knowledge graph updates')
+UPDATE_DURATION = Histogram('bitcoin_kg_update_duration_seconds', 'Knowledge graph update duration in seconds')
+NODE_COUNT = Gauge('bitcoin_kg_node_count', 'Number of nodes in the knowledge graph')
+RELATION_COUNT = Gauge('bitcoin_kg_relation_count', 'Number of relations in the knowledge graph')
+LAST_UPDATE = Gauge('bitcoin_kg_last_update_timestamp', 'Timestamp of last knowledge graph update')
 
 class QueryRequest(BaseModel):
     query: str
@@ -114,6 +122,7 @@ async def generate_and_embed_triplets():
         text_node.embedding = embedding
     
     logger.info(f"Generated and embedded {len(nodes)} nodes, {len(relations)} relations")
+    
     return nodes, relations, text_nodes
 
 # Create a new Knowledge Graph
@@ -135,56 +144,114 @@ async def build_knowledge_graph(nodes=None, relations=None, text_nodes=None):
         llm=llm
     )
     
+    # Query actual node and relation counts from Neo4j
+    try:
+        # Count nodes
+        node_count_query = "MATCH (n) RETURN count(n) as count"
+        node_count_result = graph_store.structured_query(node_count_query, {})
+        if node_count_result and len(node_count_result) > 0:
+            node_count = node_count_result[0]['count']
+            NODE_COUNT.set(node_count)
+            logger.info(f"Current node count: {node_count}")
+        
+        # Count relationships
+        rel_count_query = "MATCH ()-[r]->() RETURN count(r) as count"
+        rel_count_result = graph_store.structured_query(rel_count_query, {})
+        if rel_count_result and len(rel_count_result) > 0:
+            rel_count = rel_count_result[0]['count']
+            RELATION_COUNT.set(rel_count)
+            logger.info(f"Current relation count: {rel_count}")
+    except Exception as e:
+        logger.error(f"Error querying graph metrics: {str(e)}")
+    
     llama_agents = LlamaAgents(kg_index=kg_index)
     logger.info("Knowledge graph updated")
 
 # Update existing Knowledge Graph
 async def update_knowledge_graph():
-   """
-   Update the knowledge graph with new data
-   """
-   global last_update_time, is_updating
+    """
+    Update the knowledge graph with new data
+    """
+    global last_update_time, is_updating
 
-   if is_updating:
-      logger.info("Update already in progress, skipping...")
-      return
+    if is_updating:
+        logger.info("Update already in progress, skipping...")
+        return
 
-   is_updating = True
-   try:
-      await ingest_data(timedelta(days=1))  # Get last day's data
-      nodes, relations, text_nodes = await generate_and_embed_triplets()
-      await build_knowledge_graph(nodes, relations, text_nodes)
-      last_update_time = datetime.now()
-      logger.info(f"Knowledge graph updated at {last_update_time}")
-   except Exception as e:
-      logger.error(f"Error updating knowledge graph: {str(e)}")
-   finally:
-      is_updating = False
+    is_updating = True
+    start_time = time.time()
+    try:
+        await ingest_data(timedelta(days=1))  # Get last day's data
+        nodes, relations, text_nodes = await generate_and_embed_triplets()
+        await build_knowledge_graph(nodes, relations, text_nodes)
+        last_update_time = datetime.now()
+        LAST_UPDATE.set(last_update_time.timestamp())
+        KG_UPDATES.inc()
+        logger.info(f"Knowledge graph updated at {last_update_time}")
+    except Exception as e:
+        logger.error(f"Error updating knowledge graph: {str(e)}")
+    finally:
+        is_updating = False
+        UPDATE_DURATION.observe(time.time() - start_time)
 
 
 ###################
 # FastAPI Setup #
+async def update_metrics():
+    """
+    Update Prometheus metrics from Neo4j
+    """
+    if not kg_index:
+        logger.info("Knowledge graph not initialized yet, skipping metrics update")
+        return
+        
+    try:
+        graph_store = kg_index.property_graph_store
+        
+        # Count nodes
+        node_count_query = "MATCH (n) RETURN count(n) as count"
+        node_count_result = graph_store.structured_query(node_count_query, {})
+        if node_count_result and len(node_count_result) > 0:
+            node_count = node_count_result[0]['count']
+            NODE_COUNT.set(node_count)
+            
+        # Count relationships
+        rel_count_query = "MATCH ()-[r]->() RETURN count(r) as count"
+        rel_count_result = graph_store.structured_query(rel_count_query, {})
+        if rel_count_result and len(rel_count_result) > 0:
+            rel_count = rel_count_result[0]['count']
+            RELATION_COUNT.set(rel_count)
+            
+        logger.info(f"Updated metrics: {node_count} nodes, {rel_count} relations")
+    except Exception as e:
+        logger.error(f"Error updating metrics: {str(e)}")
+
 @app.on_event("startup")
 async def startup_event():
-   global last_update_time, live
+    global last_update_time, live
 
-   # Initial setup
-   logger.info("Performing initial knowledge graph setup...")
-   if live:
-      await ingest_data(timedelta(days=10))
-      nodes, relations, text_nodes = await generate_and_embed_triplets()
-   else:
-      nodes, relations, text_nodes = None, None, None
+    # Initial setup
+    logger.info("Performing initial knowledge graph setup...")
+    if live:
+        await ingest_data(timedelta(days=10))
+        nodes, relations, text_nodes = await generate_and_embed_triplets()
+    else:
+        nodes, relations, text_nodes = None, None, None
 
-   await build_knowledge_graph(nodes, relations, text_nodes)
-   last_update_time = datetime.now()
+    await build_knowledge_graph(nodes, relations, text_nodes)
+    last_update_time = datetime.now()
+    LAST_UPDATE.set(last_update_time.timestamp())
 
-   # Set up scheduler for periodic updates
-   if live:
-      scheduler = AsyncIOScheduler()
-      scheduler.add_job(update_knowledge_graph, 'interval', hours=1)
-      scheduler.start()
-      logger.info("Scheduled hourly updates for knowledge graph")
+    # Set up scheduler for periodic updates
+    scheduler = AsyncIOScheduler()
+    if live:
+        scheduler.add_job(update_knowledge_graph, 'interval', hours=1)
+    
+    # Add metrics update job (runs every 5 minutes)
+    scheduler.add_job(update_metrics, 'interval', minutes=5)
+    
+    scheduler.start()
+    logger.info("Scheduled jobs started")
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
@@ -195,12 +262,17 @@ async def query(query_request: QueryRequest):
     if not llama_agents:
         return {"error": "Knowledge graph not initialized yet"}
     
+    QUERY_COUNT.inc()
+    start_time = time.time()
+    
     try:
         result = await llama_agents.query(query_request.query)
         return {"result": result}
     except Exception as e:
         logger.error(f"Error processing query: {str(e)}")
         return {"error": f"Error processing query: {str(e)}"}
+    finally:
+        QUERY_DURATION.observe(time.time() - start_time)
 
 @app.get("/api/status")
 async def status():
@@ -209,6 +281,10 @@ async def status():
         "last_update": last_update_time.isoformat() if last_update_time else None,
         "is_updating": is_updating
     }
+
+@app.get("/metrics")
+async def metrics():
+    return Response(content=generate_latest(), media_type="text/plain")
 
 if __name__ == "__main__":
     import uvicorn
