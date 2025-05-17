@@ -91,7 +91,7 @@ def get_price_data():
         # Convert to list of dictionaries for JSON serialization
         result = []
         if not price_df.empty:
-            # Convert timestamps to ISO format strings
+            # Convert timestamps to ISO format strings without UTC indicator and no milliseconds
             price_df['timestamp'] = price_df['timestamp'].dt.strftime('%Y-%m-%dT%H:%M:%S')
             result = price_df.to_dict(orient='records')
             
@@ -113,7 +113,7 @@ def get_prediction_data():
         # Convert to list of dictionaries for JSON serialization
         result = []
         if not pred_df.empty:
-            # Convert timestamps to ISO format strings
+            # Convert timestamps to ISO format strings without UTC indicator and no milliseconds
             pred_df['timestamp'] = pred_df['timestamp'].dt.strftime('%Y-%m-%dT%H:%M:%S')
             result = pred_df.to_dict(orient='records')
             
@@ -129,8 +129,8 @@ def get_metrics_data():
         # Load metrics data
         metrics_df = load_csv_safely(METRICS_FILE)
         
-        # Filter to last 60 minutes
-        metrics_df = filter_last_n_minutes(metrics_df, 60)
+        # Keep all available metrics data for error distribution chart
+        # Don't filter by time window for metrics to ensure enough data for distribution
         
         # Load prediction data to calculate actual error if needed
         if 'actual_error' not in metrics_df.columns and not metrics_df.empty:
@@ -139,12 +139,15 @@ def get_metrics_data():
                 price_df = load_csv_safely(PRICE_FILE)
                 
                 if not pred_df.empty and not price_df.empty:
+                    logger.info("Calculating actual_error field for metrics data")
+                    
                     # Merge prediction and price data on timestamp
                     merged_df = pd.merge_asof(
                         pred_df.sort_values('timestamp'),
                         price_df.sort_values('timestamp'),
                         on='timestamp',
-                        direction='nearest'
+                        direction='nearest',
+                        tolerance=pd.Timedelta('1min')  # Add tolerance to improve matching
                     )
                     
                     # Calculate actual error (actual - predicted)
@@ -156,19 +159,29 @@ def get_metrics_data():
                             metrics_df.sort_values('timestamp'),
                             merged_df[['timestamp', 'actual_error']].sort_values('timestamp'),
                             on='timestamp',
-                            direction='nearest'
+                            direction='nearest',
+                            tolerance=pd.Timedelta('1min')  # Add tolerance to improve matching
                         )
                         
-                        logger.info("Added actual_error field to metrics data")
+                        logger.info(f"Added actual_error field to {len(metrics_df)} metrics data points")
+                    else:
+                        logger.warning("Missing required columns for error calculation")
             except Exception as e:
                 logger.warning(f"Could not calculate actual_error: {e}")
         
         # Convert to list of dictionaries for JSON serialization
         result = []
         if not metrics_df.empty:
-            # Convert timestamps to ISO format strings
+            # Convert timestamps to ISO format strings without UTC indicator and no milliseconds
             metrics_df['timestamp'] = metrics_df['timestamp'].dt.strftime('%Y-%m-%dT%H:%M:%S')
+            
+            # Ensure actual_error exists (use 0 if missing)
+            if 'actual_error' not in metrics_df.columns:
+                metrics_df['actual_error'] = 0
+                logger.warning("Using default value 0 for missing actual_error field")
+                
             result = metrics_df.to_dict(orient='records')
+            logger.info(f"Returning {len(result)} metrics data points")
             
         return jsonify(result)
     except Exception as e:

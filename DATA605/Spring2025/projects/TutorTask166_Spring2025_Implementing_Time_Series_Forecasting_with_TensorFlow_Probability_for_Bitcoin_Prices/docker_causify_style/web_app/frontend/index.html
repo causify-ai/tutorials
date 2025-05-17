@@ -219,26 +219,31 @@
                 <div id="status-box" class="info-box">
                     Normal mode: Showing 30 minutes of data
                 </div>
+                <h3>Dashboard Info</h3>
+                <p><strong>Last Update (UTC):</strong> <span id="last-update">Loading...</span></p>
             </div>
             
             <div class="main-content">
                 <div class="metrics-container">
                     <div class="metric-card">
-                        <div class="metric-title">Latest Price</div>
-                        <div id="latest-price" class="metric-value">$---.--</div>
-                        <div id="price-change" class="metric-change">$0.00</div>
+                        <div class="metric-title">Current Price</div>
+                        <div class="metric-value" id="current-price">Loading...</div>
+                        <div class="metric-change" id="price-change">-</div>
                     </div>
-                    
                     <div class="metric-card">
-                        <div class="metric-title">Last Update (UTC)</div>
-                        <div id="last-update" class="metric-value">YYYY-MM-DDThh:mm:ss (UTC)</div>
-                        <div class="metric-change">&nbsp;</div>
+                        <div class="metric-title">Predicted Price</div>
+                        <div class="metric-value" id="predicted-price">Loading...</div>
+                        <div class="metric-change" id="prediction-accuracy">-</div>
                     </div>
-                    
                     <div class="metric-card">
-                        <div class="metric-title">Latest Prediction</div>
-                        <div id="latest-prediction" class="metric-value">$---.--</div>
-                        <div id="prediction-change" class="metric-change">$0.00</div>
+                        <div class="metric-title">Mean Absolute Error</div>
+                        <div class="metric-value" id="mae-value">Loading...</div>
+                        <div class="metric-change" id="mae-change">-</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-title">Confidence Level</div>
+                        <div class="metric-value" id="confidence-level">Loading...</div>
+                        <div class="metric-change" id="confidence-change">-</div>
                     </div>
                 </div>
                 
@@ -320,10 +325,17 @@
             return change >= 0 ? `+${formatted}` : `-${formatted}`;
         }
         
-        // Format date for display
-        function formatDate(dateString) {
+        // Format timestamp for display (with UTC indicator)
+        function formatTimestamp(dateString) {
             const date = new Date(dateString);
-            return date.toISOString().replace('T', ' ').substring(0, 19);
+            return dateString; // Keep the ISO format without UTC indicator
+        }
+        
+        // Format timestamp for chart display (simplified)
+        function formatChartTimestamp(dateString) {
+            const date = new Date(dateString);
+            return date.getHours().toString().padStart(2, '0') + ':' + 
+                   date.getMinutes().toString().padStart(2, '0');
         }
         
         // Filter data to last N minutes
@@ -344,54 +356,74 @@
                 return;
             }
             
-            const layout = {
-                title: 'Bitcoin Price (Candlestick Chart)',
-                yaxis: {
-                    title: 'Price (USD)',
-                    tickformat: '$,.0f',
-                    autorange: true
-                },
-                xaxis: {
-                    title: 'Time (UTC)',
-                    tickformat: '%H:%M',
-                    tickangle: -45,
-                    nticks: 8
-                },
-                template: 'plotly_white',
-                showlegend: false,
-                xaxis_rangeslider_visible: false,
-                margin: {
-                    l: 60,
-                    r: 40,
-                    t: 50,
-                    b: 80
-                },
-                autosize: true,
-                width: null  // Let Plotly use container width
-            };
-            
-            // Set fixed time window
-            const maxTime = new Date(Math.max(...data.map(d => new Date(d.timestamp))));
-            const minTime = new Date(maxTime);
-            minTime.setMinutes(minTime.getMinutes() - config.timeWindowMinutes);
-            layout.xaxis.range = [minTime, maxTime];
-            
-            const trace = {
-                x: data.map(d => d.timestamp),
-                open: data.map(d => d.open),
-                high: data.map(d => d.high),
-                low: data.map(d => d.low),
-                close: data.map(d => d.close),
-                type: 'candlestick',
-                name: 'Bitcoin Price',
-                increasing: { line: { color: config.colors.actualUp } },
-                decreasing: { line: { color: config.colors.actualDown } }
-            };
-            
-            Plotly.newPlot('price-chart', [trace], layout, {
-                responsive: true,
-                displayModeBar: false
-            });
+            try {
+                const layout = {
+                    title: 'Bitcoin Price (Candlestick Chart)',
+                    yaxis: {
+                        title: 'Price (USD)',
+                        tickformat: '$,.0f',
+                        autorange: true
+                    },
+                    xaxis: {
+                        title: 'Time (UTC)',
+                        tickformat: '%H:%M',
+                        tickangle: -45,
+                        nticks: 8
+                    },
+                    template: 'plotly_white',
+                    showlegend: false,
+                    xaxis_rangeslider_visible: false,
+                    margin: {
+                        l: 60,
+                        r: 40,
+                        t: 50,
+                        b: 80
+                    },
+                    height: 600,
+                    autosize: true,
+                    width: null  // Let Plotly use container width
+                };
+                
+                // Make sure we have valid data
+                const validData = data.filter(d => 
+                    d && d.timestamp && d.open !== undefined && 
+                    d.high !== undefined && d.low !== undefined && 
+                    d.close !== undefined
+                );
+                
+                if (validData.length === 0) {
+                    document.getElementById('price-chart').innerHTML = 
+                        '<div class="info-box">No valid price data available</div>';
+                    return;
+                }
+                
+                // Set fixed time window
+                const maxTime = new Date(Math.max(...validData.map(d => new Date(d.timestamp))));
+                const minTime = new Date(maxTime);
+                minTime.setMinutes(minTime.getMinutes() - config.timeWindowMinutes);
+                layout.xaxis.range = [minTime, maxTime];
+                
+                const trace = {
+                    x: validData.map(d => d.timestamp),
+                    open: validData.map(d => d.open),
+                    high: validData.map(d => d.high),
+                    low: validData.map(d => d.low),
+                    close: validData.map(d => d.close),
+                    type: 'candlestick',
+                    name: 'Bitcoin Price',
+                    increasing: { line: { color: config.colors.actualUp } },
+                    decreasing: { line: { color: config.colors.actualDown } }
+                };
+                
+                Plotly.newPlot('price-chart', [trace], layout, {
+                    responsive: true,
+                    displayModeBar: false
+                });
+            } catch (error) {
+                console.error('Error creating price chart:', error);
+                document.getElementById('price-chart').innerHTML = 
+                    '<div class="error-box">Error creating price chart: ' + error.message + '</div>';
+            }
         }
         
         // Create prediction chart with confidence interval
@@ -402,142 +434,107 @@
                 return;
             }
             
-            const traces = [];
-            const layout = {
-                title: 'Predicted Price with Confidence Interval vs Actual',
-                yaxis: {
-                    title: 'Price (USD)',
-                    tickformat: '$,.0f',
-                    autorange: true
-                },
-                xaxis: {
-                    title: 'Time (UTC)',
-                    tickformat: '%H:%M',
-                    tickangle: -45,
-                    nticks: 8
-                },
-                template: 'plotly_white',
-                showlegend: true,
-                margin: {
-                    l: 60,
-                    r: 40,
-                    t: 50,
-                    b: 80
-                },
-                autosize: true,
-                width: null  // Let Plotly use container width
-            };
-            
-            // Set fixed time window
-            const maxTime = new Date(Math.max(...priceData.map(d => new Date(d.timestamp))));
-            const minTime = new Date(maxTime);
-            minTime.setMinutes(minTime.getMinutes() - config.timeWindowMinutes);
-            layout.xaxis.range = [minTime, maxTime];
-            
-            // Determine if we need dual-axis presentation
-            let useSecondaryY = false;
-            
-            if (priceData && priceData.length > 0 && predictionData && predictionData.length > 0) {
-                // Get time ranges to compare
-                const priceMinTime = new Date(Math.min(...priceData.map(d => new Date(d.timestamp))));
-                const priceMaxTime = new Date(Math.max(...priceData.map(d => new Date(d.timestamp))));
-                const predMinTime = new Date(Math.min(...predictionData.map(d => new Date(d.timestamp))));
-                const predMaxTime = new Date(Math.max(...predictionData.map(d => new Date(d.timestamp))));
-                
-                // Check if the timestamp ranges overlap (with a 1-day buffer)
-                const oneDay = 24 * 60 * 60 * 1000; // 1 day in milliseconds
-                const rangesOverlap = (
-                    predMinTime.getTime() - oneDay <= priceMaxTime.getTime() && 
-                    predMaxTime.getTime() + oneDay >= priceMinTime.getTime()
+            try {
+                // Make sure we have valid data
+                const validPriceData = priceData.filter(d => 
+                    d && d.timestamp && d.close !== undefined
                 );
                 
-                if (!rangesOverlap) {
-                    useSecondaryY = true;
-                    layout.title = 'Actual Price and Predicted Price (Different Time Periods)';
+                const validPredictionData = predictionData.filter(d => 
+                    d && d.timestamp && d.pred_price !== undefined &&
+                    d.pred_lower !== undefined && d.pred_upper !== undefined
+                );
+                
+                if (validPriceData.length === 0 || validPredictionData.length === 0) {
+                    document.getElementById('prediction-chart').innerHTML = 
+                        '<div class="info-box">No valid prediction data available</div>';
+                    return;
                 }
-            }
-            
-            // Add actual price line if data exists
-            if (priceData && priceData.length > 0) {
+                
+                const traces = [];
+                const layout = {
+                    title: 'Predicted Price with Confidence Interval vs Actual',
+                    yaxis: {
+                        title: 'Price (USD)',
+                        tickformat: '$,.0f',
+                        autorange: true
+                    },
+                    xaxis: {
+                        title: 'Time (UTC)',
+                        tickformat: '%H:%M',
+                        tickangle: -45,
+                        nticks: 8
+                    },
+                    template: 'plotly_white',
+                    showlegend: true,
+                    margin: {
+                        l: 60,
+                        r: 40,
+                        t: 50,
+                        b: 80
+                    },
+                    height: 500,
+                    autosize: true,
+                    width: null  // Let Plotly use container width
+                };
+                
+                // Set fixed time window using price data
+                const maxTime = new Date(Math.max(...validPriceData.map(d => new Date(d.timestamp))));
+                const minTime = new Date(maxTime);
+                minTime.setMinutes(minTime.getMinutes() - config.timeWindowMinutes);
+                layout.xaxis.range = [minTime, maxTime];
+                
+                // Add actual price line
                 traces.push({
-                    x: priceData.map(d => d.timestamp),
-                    y: priceData.map(d => d.close),
+                    x: validPriceData.map(d => d.timestamp),
+                    y: validPriceData.map(d => d.close),
                     type: 'scatter',
                     mode: 'lines',
                     name: 'Actual Price',
                     line: { color: config.colors.actual, width: 2 }
                 });
-            }
-            
-            // Add prediction line and confidence interval if data exists
-            if (predictionData && predictionData.length > 0) {
-                // Determine if we should use a time-label for the prediction based on date differences
-                let timeLabel = "";
-                if (priceData && priceData.length > 0 && predictionData.length > 0) {
-                    const latestPriceDate = new Date(priceData[priceData.length - 1].timestamp).toDateString();
-                    const latestPredDate = new Date(predictionData[predictionData.length - 1].timestamp).toDateString();
-                    
-                    if (latestPriceDate !== latestPredDate) {
-                        const dateStr = new Date(predictionData[predictionData.length - 1].timestamp)
-                            .toISOString().split('T')[0];
-                        timeLabel = ` (${dateStr})`;
-                    }
-                }
                 
-                const predictionName = `Predicted Price${timeLabel}`;
-                const upperBoundName = `Upper Bound${timeLabel}`;
-                const lowerBoundName = `Lower Bound${timeLabel}`;
-                
-                // Add prediction trace
+                // Add prediction line
                 traces.push({
-                    x: predictionData.map(d => d.timestamp),
-                    y: predictionData.map(d => d.pred_price),
+                    x: validPredictionData.map(d => d.timestamp),
+                    y: validPredictionData.map(d => d.pred_price),
                     type: 'scatter',
                     mode: 'lines',
-                    name: predictionName,
-                    line: { color: config.colors.predicted, width: 2 },
-                    yaxis: useSecondaryY ? 'y2' : 'y'
+                    name: 'Predicted Price',
+                    line: { color: config.colors.predicted, width: 2 }
                 });
                 
                 // Add upper bound
                 traces.push({
-                    x: predictionData.map(d => d.timestamp),
-                    y: predictionData.map(d => d.pred_upper),
+                    x: validPredictionData.map(d => d.timestamp),
+                    y: validPredictionData.map(d => d.pred_upper),
                     type: 'scatter',
                     mode: 'lines',
-                    name: upperBoundName,
-                    line: { color: config.colors.predicted, width: 1, dash: 'dash' },
-                    yaxis: useSecondaryY ? 'y2' : 'y'
+                    name: 'Upper Bound',
+                    line: { color: config.colors.predicted, width: 1, dash: 'dash' }
                 });
                 
                 // Add lower bound with fill
                 traces.push({
-                    x: predictionData.map(d => d.timestamp),
-                    y: predictionData.map(d => d.pred_lower),
+                    x: validPredictionData.map(d => d.timestamp),
+                    y: validPredictionData.map(d => d.pred_lower),
                     type: 'scatter',
                     mode: 'lines',
-                    name: lowerBoundName,
+                    name: 'Lower Bound',
                     line: { color: config.colors.predicted, width: 1, dash: 'dash' },
                     fill: 'tonexty',
-                    fillcolor: config.colors.confidence,
-                    yaxis: useSecondaryY ? 'y2' : 'y'
+                    fillcolor: config.colors.confidence
                 });
                 
-                // Configure the secondary y-axis if needed
-                if (useSecondaryY) {
-                    layout.yaxis2 = {
-                        title: 'Predicted Price (USD)',
-                        side: 'right',
-                        overlaying: 'y',
-                        tickformat: '$,.0f'
-                    };
-                }
+                Plotly.newPlot('prediction-chart', traces, layout, {
+                    responsive: true,
+                    displayModeBar: false
+                });
+            } catch (error) {
+                console.error('Error creating prediction chart:', error);
+                document.getElementById('prediction-chart').innerHTML = 
+                    '<div class="error-box">Error creating prediction chart: ' + error.message + '</div>';
             }
-            
-            Plotly.newPlot('prediction-chart', traces, layout, {
-                responsive: true,
-                displayModeBar: false
-            });
         }
         
         // Create MAE (Mean Absolute Error) chart
@@ -548,10 +545,11 @@
                 return;
             }
             
-            // Calculate average error
+            // Calculate average error and MAE
             const actualErrors = metricsData.map(d => d.actual_error || 0);
+            const absErrors = actualErrors.map(Math.abs);
+            const avgAbsError = absErrors.reduce((sum, val) => sum + val, 0) / absErrors.length;
             const avgError = actualErrors.reduce((sum, val) => sum + val, 0) / actualErrors.length;
-            const roundedAvgError = Math.round(avgError * 100) / 100;
             
             // Create traces
             const traces = [];
@@ -566,13 +564,13 @@
                 line: { color: '#2ecc71', width: 2 }
             });
             
-            // MAE trace
+            // MAE trace - this should be a horizontal line at the average absolute error
             traces.push({
-                x: metricsData.map(d => d.timestamp),
-                y: metricsData.map(d => d.mae),
+                x: [metricsData[0].timestamp, metricsData[metricsData.length - 1].timestamp],
+                y: [avgAbsError, avgAbsError],
                 type: 'scatter',
                 mode: 'lines',
-                name: 'MAE',
+                name: `MAE: ${Math.round(avgAbsError * 100) / 100}`,
                 line: { color: '#f39c12', width: 2, dash: 'dot' }
             });
             
@@ -592,7 +590,7 @@
                 y: [avgError, avgError],
                 type: 'scatter',
                 mode: 'lines',
-                name: `Avg Error: ${roundedAvgError}`,
+                name: `Avg Error: ${Math.round(avgError * 100) / 100}`,
                 line: { color: '#3498db', width: 1 }
             });
             
@@ -621,6 +619,7 @@
                     t: 50,
                     b: 80
                 },
+                height: 500,
                 autosize: true,
                 width: null  // Let Plotly use container width
             };
@@ -637,201 +636,397 @@
             });
         }
         
+        // Update error distribution chart
+        function updateErrorDistributionChart(metricsData) {
+            try {
+                // For the error distribution chart, we recreate it completely
+                // using all available data points (not just the time window)
+                createErrorDistributionChart(metricsData);
+            } catch (error) {
+                console.error('Error updating error distribution chart:', error);
+                document.getElementById('error-distribution-chart').innerHTML = 
+                    '<div class="error-box">Error updating error distribution chart: ' + error.message + '</div>';
+            }
+        }
+        
         // Create error distribution chart
         function createErrorDistributionChart(metricsData) {
-            if (!metricsData || metricsData.length === 0 || !metricsData[0].hasOwnProperty('actual_error')) {
+            if (!metricsData || metricsData.length === 0 || !metricsData[0]) {
                 document.getElementById('error-distribution-chart').innerHTML = 
                     '<div class="info-box">No error distribution data available</div>';
                 return;
             }
             
-            // Extract error values
-            const errors = metricsData.map(d => d.actual_error || 0).filter(e => !isNaN(e));
-            
-            if (errors.length === 0) {
-                document.getElementById('error-distribution-chart').innerHTML = 
-                    '<div class="info-box">No valid error data available</div>';
-                return;
-            }
-            
-            // Calculate statistics
-            const mean = errors.reduce((sum, val) => sum + val, 0) / errors.length;
-            const median = [...errors].sort((a, b) => a - b)[Math.floor(errors.length / 2)];
-            const roundedMean = Math.round(mean * 100) / 100;
-            const roundedMedian = Math.round(median * 100) / 100;
-            
-            // Create histogram trace
-            const histTrace = {
-                x: errors,
-                type: 'histogram',
-                name: 'Error Distribution',
-                marker: {
-                    color: 'rgba(52, 152, 219, 0.7)',
+            try {
+                // Extract error values - use ALL available data points for the distribution
+                // Don't filter by time window for the error distribution to ensure we have enough data points
+                const errors = metricsData
+                    .filter(d => d && d.hasOwnProperty('actual_error'))
+                    .map(d => d.actual_error || 0)
+                    .filter(e => !isNaN(e));
+                
+                if (errors.length === 0) {
+                    document.getElementById('error-distribution-chart').innerHTML = 
+                        '<div class="info-box">No valid error data available</div>';
+                    return;
+                }
+                
+                // Calculate statistics
+                const mean = errors.reduce((sum, val) => sum + val, 0) / errors.length;
+                const median = [...errors].sort((a, b) => a - b)[Math.floor(errors.length / 2)];
+                const roundedMean = Math.round(mean * 100) / 100;
+                const roundedMedian = Math.round(median * 100) / 100;
+                
+                // Calculate standard deviation
+                const variance = errors.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / errors.length;
+                const std = Math.sqrt(variance);
+                
+                // Determine appropriate number of bins based on data size
+                const binCount = Math.min(20, Math.max(5, Math.ceil(Math.sqrt(errors.length))));
+                
+                // Create histogram trace with consistent binning
+                const histTrace = {
+                    x: errors,
+                    type: 'histogram',
+                    name: 'Error Distribution',
+                    marker: {
+                        color: 'rgba(173, 216, 230, 0.7)',  // lightblue with transparency
+                        line: {
+                            color: 'rgba(173, 216, 230, 1)',
+                            width: 1
+                        }
+                    },
+                    opacity: 0.8,
+                    nbinsx: binCount,
+                    autobinx: false  // Disable automatic binning
+                };
+                
+                // Calculate normal distribution overlay
+                const xValues = [];
+                const yValues = [];
+                const min = Math.min(...errors);
+                const max = Math.max(...errors);
+                const range = max - min || 1; // Prevent division by zero
+                const step = range / 100;
+                
+                // Generate normal distribution curve with more points for smoothness
+                for (let x = min - range * 0.3; x <= max + range * 0.3; x += step) {
+                    xValues.push(x);
+                    // Normal distribution PDF
+                    const y = (1 / (std * Math.sqrt(2 * Math.PI))) * 
+                            Math.exp(-Math.pow(x - mean, 2) / (2 * Math.pow(std, 2)));
+                    yValues.push(y);
+                }
+                
+                // Simple approach to estimate bin heights
+                let maxBinHeight = 10; // Default value
+                try {
+                    // Simple histogram calculation
+                    const binSize = range / binCount;
+                    const bins = Array(binCount).fill(0);
+                    
+                    errors.forEach(error => {
+                        if (binSize > 0) {
+                            const binIndex = Math.min(Math.floor((error - min) / binSize), binCount - 1);
+                            if (binIndex >= 0 && binIndex < binCount) {
+                                bins[binIndex]++;
+                            }
+                        }
+                    });
+                    
+                    maxBinHeight = Math.max(...bins, 1); // Ensure it's at least 1
+                } catch (e) {
+                    console.error('Error calculating histogram bins:', e);
+                    // Use a reasonable default based on data size
+                    maxBinHeight = Math.ceil(errors.length / binCount);
+                }
+                
+                // Find the maximum value in the normal PDF
+                const maxPdfValue = Math.max(...yValues, 0.001); // Ensure it's not zero
+                
+                // Scale factor to match histogram height
+                const scaleFactor = maxBinHeight / maxPdfValue;
+                
+                // Apply scaling
+                const scaledYValues = yValues.map(y => y * scaleFactor);
+                
+                const normalCurve = {
+                    x: xValues,
+                    y: scaledYValues,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'Normal Distribution',
                     line: {
-                        color: 'rgba(52, 152, 219, 1)',
-                        width: 1
+                        color: 'rgb(0, 0, 139)',  // darkblue
+                        width: 2
                     }
-                },
-                opacity: 0.75,
-                xbins: {
-                    // Auto-determine bin size based on data range
-                    size: Math.max(1, (Math.max(...errors) - Math.min(...errors)) / 20)
-                }
-            };
-            
-            // Calculate normal distribution overlay
-            const std = Math.sqrt(errors.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / errors.length);
-            const xValues = [];
-            const yValues = [];
-            const min = Math.min(...errors);
-            const max = Math.max(...errors);
-            const range = max - min;
-            const step = range / 100;
-            
-            // Generate normal distribution curve
-            for (let x = min - range * 0.2; x <= max + range * 0.2; x += step) {
-                xValues.push(x);
-                // Normal distribution PDF
-                const y = (1 / (std * Math.sqrt(2 * Math.PI))) * 
-                          Math.exp(-Math.pow(x - mean, 2) / (2 * Math.pow(std, 2)));
-                // Scale to match histogram height
-                yValues.push(y * errors.length * histTrace.xbins.size);
+                };
+                
+                // Add vertical lines for mean, median, and perfect prediction
+                const perfectLine = {
+                    x: [0, 0],
+                    y: [0, maxBinHeight * 1.1],  // Slightly higher than the tallest bin
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'Perfect',
+                    line: {
+                        color: 'black',
+                        width: 2
+                    },
+                    hoverinfo: 'none'
+                };
+                
+                const medianLine = {
+                    x: [median, median],
+                    y: [0, maxBinHeight * 1.1],
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: `Median: ${roundedMedian}`,
+                    line: {
+                        color: 'green',
+                        width: 2,
+                        dash: 'dash'
+                    },
+                    hoverinfo: 'none'
+                };
+                
+                const meanLine = {
+                    x: [mean, mean],
+                    y: [0, maxBinHeight * 1.1],
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: `Mean: ${roundedMean}`,
+                    line: {
+                        color: 'red',
+                        width: 2,
+                        dash: 'dash'
+                    },
+                    hoverinfo: 'none'
+                };
+                
+                const layout = {
+                    title: `Prediction Error Distribution (${errors.length} data points)<br>Median: ${roundedMedian} Mean: ${roundedMean}`,
+                    xaxis: {
+                        title: 'Error (USD)',
+                        tickformat: '$,.2f',  // Show 2 decimal places for better precision
+                        autorange: true,
+                        zeroline: true,
+                        zerolinecolor: 'black',
+                        zerolinewidth: 2
+                    },
+                    yaxis: {
+                        title: 'Frequency',
+                        autorange: true
+                    },
+                    template: 'plotly_white',
+                    bargap: 0.05,
+                    showlegend: true,
+                    margin: {
+                        l: 60,
+                        r: 40,
+                        t: 60,
+                        b: 60
+                    },
+                    height: 500,
+                    autosize: true,
+                    width: null  // Let Plotly use container width
+                };
+                
+                Plotly.newPlot('error-distribution-chart', [histTrace, normalCurve, perfectLine, medianLine, meanLine], layout, {
+                    responsive: true,
+                    displayModeBar: false
+                });
+            } catch (error) {
+                console.error('Error creating error distribution chart:', error);
+                document.getElementById('error-distribution-chart').innerHTML = 
+                    '<div class="error-box">Error creating chart: ' + error.message + '</div>';
             }
-            
-            const normalCurve = {
-                x: xValues,
-                y: yValues,
-                type: 'scatter',
-                mode: 'lines',
-                name: 'Normal Distribution',
-                line: {
-                    color: 'rgb(0, 0, 255)',
-                    width: 2
-                }
-            };
-            
-            const layout = {
-                title: `Prediction Error Distribution<br>Median: ${roundedMedian} Mean: ${roundedMean}`,
-                xaxis: {
-                    title: 'Error (USD)',
-                    tickformat: '$,.2f',
-                    autorange: true
-                },
-                yaxis: {
-                    title: 'Frequency',
-                    autorange: true
-                },
-                template: 'plotly_white',
-                bargap: 0.05,
-                showlegend: true,
-                margin: {
-                    l: 60,
-                    r: 40,
-                    t: 60,
-                    b: 60
-                },
-                autosize: true,
-                width: null  // Let Plotly use container width
-            };
-            
-            Plotly.newPlot('error-distribution-chart', [histTrace, normalCurve], layout, {
-                responsive: true,
-                displayModeBar: false
-            });
         }
         
         // Update metrics display
         function updateMetricsDisplay() {
-            if (state.priceData && state.priceData.length > 0) {
-                const latestPrice = state.priceData[state.priceData.length - 1];
-                
-                // Update latest price
-                document.getElementById('latest-price').textContent = formatPrice(latestPrice.close);
-                
-                // Update price change
-                let priceChange = 0;
-                if (state.priceData.length > 1) {
-                    const previousPrice = state.priceData[state.priceData.length - 2];
-                    priceChange = latestPrice.close - previousPrice.close;
-                }
-                
-                const priceChangeElement = document.getElementById('price-change');
-                priceChangeElement.textContent = formatPriceChange(priceChange);
-                priceChangeElement.className = 'metric-change ' + 
-                    (priceChange >= 0 ? 'positive-change' : 'negative-change');
-                
+            try {
                 // Update last update time
-                document.getElementById('last-update').textContent = 
-                    new Date(latestPrice.timestamp).toISOString().split('.')[0] + " (UTC)";
-            }
-            
-            if (state.predictionData && state.predictionData.length > 0) {
-                const latestPrediction = state.predictionData[state.predictionData.length - 1];
-                
-                // Update latest prediction
-                document.getElementById('latest-prediction').textContent = formatPrice(latestPrediction.pred_price);
-                
-                // Update prediction change
-                let predChange = 0;
-                if (state.predictionData.length > 1) {
-                    const previousPrediction = state.predictionData[state.predictionData.length - 2];
-                    predChange = latestPrediction.pred_price - previousPrediction.pred_price;
+                if (state.lastUpdate) {
+                    document.getElementById('last-update').textContent = 
+                        state.lastUpdate.toISOString().replace(/\.\d+Z$/, '');
                 }
                 
-                const predChangeElement = document.getElementById('prediction-change');
-                predChangeElement.textContent = formatPriceChange(predChange);
-                predChangeElement.className = 'metric-change ' + 
-                    (predChange >= 0 ? 'positive-change' : 'negative-change');
-            }
-            
-            // Update status box
-            const statusBox = document.getElementById('status-box');
-            if (state.isColdStart) {
-                statusBox.className = 'warning-box';
-                statusBox.textContent = `Cold start mode active: Showing ${state.coldStartMinutes.toFixed(1)} minutes of data. ` +
-                    `Full ${config.timeWindowMinutes}-minute view will be used once sufficient data is available.`;
-            } else {
-                statusBox.className = 'info-box';
-                statusBox.textContent = `Normal mode: Showing ${config.timeWindowMinutes} minutes of data`;
+                // Update cold start info
+                const coldStartInfoElement = document.getElementById('cold-start-info');
+                if (state.isColdStart) {
+                    coldStartInfoElement.innerHTML = 
+                        `<div class="warning-box">Cold Start Mode: ${Math.round(state.coldStartMinutes)} minutes of data</div>`;
+                } else {
+                    coldStartInfoElement.innerHTML = '';
+                }
+                
+                // Update metrics if we have data
+                if (state.priceData && state.priceData.length > 0) {
+                    const latestPrice = state.priceData[state.priceData.length - 1];
+                    
+                    // Update latest price
+                    document.getElementById('current-price').textContent = formatPrice(latestPrice.close);
+                    
+                    // Update price change
+                    if (state.priceData.length > 1) {
+                        const previousPrice = state.priceData[state.priceData.length - 2];
+                        const priceChange = latestPrice.close - previousPrice.close;
+                        
+                        const priceChangeElement = document.getElementById('price-change');
+                        priceChangeElement.textContent = formatPriceChange(priceChange);
+                        priceChangeElement.className = 'metric-change ' + 
+                            (priceChange >= 0 ? 'positive-change' : 'negative-change');
+                    }
+                }
+                
+                // Update prediction metrics
+                if (state.predictionData && state.predictionData.length > 0 && 
+                    state.priceData && state.priceData.length > 0) {
+                    
+                    const latestPrediction = state.predictionData[state.predictionData.length - 1];
+                    const latestPrice = state.priceData[state.priceData.length - 1];
+                    
+                    // Update latest prediction
+                    if (latestPrediction.pred_price !== undefined) {
+                        document.getElementById('predicted-price').textContent = formatPrice(latestPrediction.pred_price);
+                        
+                        // Update prediction change
+                        if (latestPrice.close !== undefined) {
+                            const predChange = latestPrediction.pred_price - latestPrice.close;
+                            
+                            const predChangeElement = document.getElementById('prediction-accuracy');
+                            predChangeElement.textContent = formatPriceChange(predChange);
+                            predChangeElement.className = 'metric-change ' + 
+                                (Math.abs(predChange) < 100 ? 'positive-change' : 'negative-change');
+                        }
+                    }
+                    
+                    // Update confidence level
+                    if (latestPrediction.pred_upper !== undefined && 
+                        latestPrediction.pred_lower !== undefined) {
+                        
+                        const range = latestPrediction.pred_upper - latestPrediction.pred_lower;
+                        const confidence = 100 - (range / latestPrediction.pred_price * 100);
+                        
+                        document.getElementById('confidence-level').textContent = 
+                            confidence.toFixed(1) + '%';
+                            
+                        // Determine if confidence is good
+                        const confidenceChangeElement = document.getElementById('confidence-change');
+                        confidenceChangeElement.textContent = 
+                            confidence > 90 ? 'High' : confidence > 80 ? 'Medium' : 'Low';
+                        confidenceChangeElement.className = 'metric-change ' + 
+                            (confidence > 90 ? 'positive-change' : 
+                             confidence > 80 ? '' : 'negative-change');
+                    }
+                }
+                
+                // Update MAE if we have metrics data
+                if (state.metricsData && state.metricsData.length > 0) {
+                    const latestMetrics = state.metricsData[state.metricsData.length - 1];
+                    
+                    if (latestMetrics.mae !== undefined) {
+                        document.getElementById('mae-value').textContent = formatPrice(latestMetrics.mae);
+                        
+                        // Determine if MAE is good
+                        const maeChangeElement = document.getElementById('mae-change');
+                        const maePercent = (latestMetrics.mae / latestMetrics.price) * 100;
+                        
+                        maeChangeElement.textContent = 
+                            maePercent < 0.5 ? 'Excellent' : 
+                            maePercent < 1 ? 'Good' : 
+                            maePercent < 2 ? 'Fair' : 'Poor';
+                            
+                        maeChangeElement.className = 'metric-change ' + 
+                            (maePercent < 1 ? 'positive-change' : 
+                             maePercent < 2 ? '' : 'negative-change');
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating metrics display:', error);
             }
         }
         
         // Fetch data from API
         async function fetchData() {
+            let hasNewData = false;
+            
             try {
-                // In a real implementation, these would be actual API calls
-                // For this example, we'll simulate the API responses
-                
-                // Simulate price data
-                const priceResponse = await fetch(endpoints.priceData);
-                if (priceResponse.ok) {
-                    state.priceData = await priceResponse.json();
+                // Fetch price data
+                try {
+                    const priceResponse = await fetch(endpoints.priceData);
+                    if (priceResponse.ok) {
+                        const priceData = await priceResponse.json();
+                        if (Array.isArray(priceData) && priceData.length > 0) {
+                            state.priceData = priceData;
+                            hasNewData = true;
+                        } else {
+                            console.warn('Received empty or invalid price data');
+                        }
+                    } else {
+                        console.error('Failed to fetch price data:', priceResponse.status);
+                    }
+                } catch (error) {
+                    console.error('Error fetching price data:', error);
                 }
                 
-                // Simulate prediction data
-                const predictionResponse = await fetch(endpoints.predictionData);
-                if (predictionResponse.ok) {
-                    state.predictionData = await predictionResponse.json();
+                // Fetch prediction data
+                try {
+                    const predictionResponse = await fetch(endpoints.predictionData);
+                    if (predictionResponse.ok) {
+                        const predictionData = await predictionResponse.json();
+                        if (Array.isArray(predictionData) && predictionData.length > 0) {
+                            state.predictionData = predictionData;
+                            hasNewData = true;
+                        } else {
+                            console.warn('Received empty or invalid prediction data');
+                        }
+                    } else {
+                        console.error('Failed to fetch prediction data:', predictionResponse.status);
+                    }
+                } catch (error) {
+                    console.error('Error fetching prediction data:', error);
                 }
                 
-                // Simulate metrics data
-                const metricsResponse = await fetch(endpoints.metricsData);
-                if (metricsResponse.ok) {
-                    state.metricsData = await metricsResponse.json();
+                // Fetch metrics data
+                try {
+                    const metricsResponse = await fetch(endpoints.metricsData);
+                    if (metricsResponse.ok) {
+                        const metricsData = await metricsResponse.json();
+                        if (Array.isArray(metricsData) && metricsData.length > 0) {
+                            // Check if we have actual_error field in the data
+                            const hasActualError = metricsData.some(d => d && d.hasOwnProperty('actual_error'));
+                            if (hasActualError) {
+                                state.metricsData = metricsData;
+                                hasNewData = true;
+                            } else {
+                                console.warn('Metrics data missing actual_error field');
+                            }
+                        } else {
+                            console.warn('Received empty or invalid metrics data');
+                        }
+                    } else {
+                        console.error('Failed to fetch metrics data:', metricsResponse.status);
+                    }
+                } catch (error) {
+                    console.error('Error fetching metrics data:', error);
                 }
                 
-                // Update charts and metrics
-                if (state.chartsInitialized) {
-                    updateCharts();
-                } else {
-                    initializeCharts();
-                    state.chartsInitialized = true;
+                // Only update charts if we have new data
+                if (hasNewData) {
+                    if (state.chartsInitialized) {
+                        updateCharts();
+                    } else {
+                        initializeCharts();
+                        state.chartsInitialized = true;
+                    }
+                    updateMetricsDisplay();
                 }
-                updateMetricsDisplay();
                 
                 state.lastUpdate = new Date();
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error('Error in fetchData:', error);
                 
                 // Show error message
                 const errorBox = document.createElement('div');
@@ -839,35 +1034,128 @@
                 errorBox.textContent = `Error updating dashboard: ${error.message}`;
                 
                 // Remove previous error messages
-                document.querySelectorAll('.error-box').forEach(box => box.remove());
+                document.querySelectorAll('.error-box').forEach(box => {
+                    if (box.parentNode === document.querySelector('.main-content')) {
+                        box.remove();
+                    }
+                });
                 
                 // Add new error message at the top of main content
                 const mainContent = document.querySelector('.main-content');
-                mainContent.insertBefore(errorBox, mainContent.firstChild);
+                if (mainContent) {
+                    mainContent.insertBefore(errorBox, mainContent.firstChild);
+                    
+                    // Auto-remove error after 10 seconds
+                    setTimeout(() => {
+                        if (errorBox.parentNode === mainContent) {
+                            errorBox.remove();
+                        }
+                    }, 10000);
+                }
             }
         }
         
         // Initialize charts
         function initializeCharts() {
-            createPriceChart(state.priceData);
-            createPredictionChart(state.priceData, state.predictionData);
-            createMaeChart(state.metricsData);
-            createErrorDistributionChart(state.metricsData);
+            try {
+                // Price chart
+                if (state.priceData && state.priceData.length > 0) {
+                    try {
+                        createPriceChart(state.priceData);
+                    } catch (error) {
+                        console.error('Error creating price chart:', error);
+                        document.getElementById('price-chart').innerHTML = 
+                            '<div class="info-box">Error creating price chart: ' + error.message + '</div>';
+                    }
+                } else {
+                    document.getElementById('price-chart').innerHTML = 
+                        '<div class="info-box">Waiting for price data...</div>';
+                }
+                
+                // Prediction chart
+                if (state.priceData && state.priceData.length > 0 && 
+                    state.predictionData && state.predictionData.length > 0) {
+                    try {
+                        createPredictionChart(state.priceData, state.predictionData);
+                    } catch (error) {
+                        console.error('Error creating prediction chart:', error);
+                        document.getElementById('prediction-chart').innerHTML = 
+                            '<div class="info-box">Error creating prediction chart: ' + error.message + '</div>';
+                    }
+                } else {
+                    document.getElementById('prediction-chart').innerHTML = 
+                        '<div class="info-box">Waiting for prediction data...</div>';
+                }
+                
+                // MAE chart
+                if (state.metricsData && state.metricsData.length > 0) {
+                    try {
+                        createMaeChart(state.metricsData);
+                    } catch (error) {
+                        console.error('Error creating MAE chart:', error);
+                        document.getElementById('mae-chart').innerHTML = 
+                            '<div class="info-box">Error creating MAE chart: ' + error.message + '</div>';
+                    }
+                } else {
+                    document.getElementById('mae-chart').innerHTML = 
+                        '<div class="info-box">Waiting for metrics data...</div>';
+                }
+                
+                // Error distribution chart - always use all available data
+                if (state.metricsData && state.metricsData.length > 0) {
+                    try {
+                        createErrorDistributionChart(state.metricsData);
+                    } catch (error) {
+                        console.error('Error creating error distribution chart:', error);
+                        document.getElementById('error-distribution-chart').innerHTML = 
+                            '<div class="info-box">Error creating error distribution chart: ' + error.message + '</div>';
+                    }
+                } else {
+                    document.getElementById('error-distribution-chart').innerHTML = 
+                        '<div class="info-box">Waiting for error distribution data...</div>';
+                }
+            } catch (error) {
+                console.error('Error initializing charts:', error);
+            }
         }
         
         // Update charts with new data
         function updateCharts() {
+            // Update price chart
             if (state.priceData && state.priceData.length > 0) {
-                updatePriceChart(state.priceData);
+                try {
+                    updatePriceChart(state.priceData);
+                } catch (error) {
+                    console.error('Error updating price chart:', error);
+                }
             }
             
-            if (state.predictionData && state.predictionData.length > 0) {
-                updatePredictionChart(state.priceData, state.predictionData);
+            // Update prediction chart
+            if (state.priceData && state.priceData.length > 0 && 
+                state.predictionData && state.predictionData.length > 0) {
+                try {
+                    updatePredictionChart(state.priceData, state.predictionData);
+                } catch (error) {
+                    console.error('Error updating prediction chart:', error);
+                }
             }
             
+            // Update MAE chart
             if (state.metricsData && state.metricsData.length > 0) {
-                updateMaeChart(state.metricsData);
-                updateErrorDistributionChart(state.metricsData);
+                try {
+                    updateMaeChart(state.metricsData);
+                } catch (error) {
+                    console.error('Error updating MAE chart:', error);
+                }
+            }
+            
+            // Update error distribution chart - always use all available data
+            if (state.metricsData && state.metricsData.length > 0) {
+                try {
+                    updateErrorDistributionChart(state.metricsData);
+                } catch (error) {
+                    console.error('Error updating error distribution chart:', error);
+                }
             }
         }
         
@@ -875,93 +1163,129 @@
         function updatePriceChart(data) {
             if (!data || data.length === 0) return;
             
-            const maxTime = new Date(Math.max(...data.map(d => new Date(d.timestamp))));
-            const minTime = new Date(maxTime);
-            minTime.setMinutes(minTime.getMinutes() - config.timeWindowMinutes);
-            
-            Plotly.update('price-chart', {
-                x: [data.map(d => d.timestamp)],
-                open: [data.map(d => d.open)],
-                high: [data.map(d => d.high)],
-                low: [data.map(d => d.low)],
-                close: [data.map(d => d.close)]
-            }, {
-                xaxis: {
-                    range: [minTime, maxTime]
-                }
-            });
+            try {
+                // Filter data to the last 30 minutes for a fixed window
+                const maxTime = new Date(Math.max(...data.map(d => new Date(d.timestamp || 0))));
+                const minTime = new Date(maxTime);
+                minTime.setMinutes(minTime.getMinutes() - config.timeWindowMinutes);
+                
+                // Filter data to only include points within the time window
+                const filteredData = data.filter(d => d.timestamp && new Date(d.timestamp) >= minTime);
+                
+                if (filteredData.length === 0) return;
+                
+                // Update the chart with the filtered data
+                Plotly.update('price-chart', {
+                    x: [filteredData.map(d => d.timestamp)],
+                    open: [filteredData.map(d => d.open)],
+                    high: [filteredData.map(d => d.high)],
+                    low: [filteredData.map(d => d.low)],
+                    close: [filteredData.map(d => d.close)]
+                }, {
+                    xaxis: {
+                        range: [minTime, maxTime]
+                    }
+                });
+            } catch (error) {
+                console.error('Error updating price chart:', error);
+            }
         }
         
         // Update prediction chart with new data
         function updatePredictionChart(priceData, predictionData) {
             if (!priceData || priceData.length === 0 || !predictionData || predictionData.length === 0) return;
             
-            const maxTime = new Date(Math.max(...priceData.map(d => new Date(d.timestamp))));
-            const minTime = new Date(maxTime);
-            minTime.setMinutes(minTime.getMinutes() - config.timeWindowMinutes);
-            
-            // Update data for each trace
-            const updateData = {
-                x: [
-                    priceData.map(d => d.timestamp), // Actual price
-                    predictionData.map(d => d.timestamp), // Predicted price
-                    predictionData.map(d => d.timestamp), // Upper bound
-                    predictionData.map(d => d.timestamp)  // Lower bound
-                ],
-                y: [
-                    priceData.map(d => d.close),
-                    predictionData.map(d => d.pred_price),
-                    predictionData.map(d => d.pred_upper),
-                    predictionData.map(d => d.pred_lower)
-                ]
-            };
-            
-            Plotly.update('prediction-chart', updateData, {
-                xaxis: {
-                    range: [minTime, maxTime]
-                }
-            });
+            try {
+                // Filter data to the last 30 minutes for a fixed window
+                const maxTime = new Date(Math.max(...priceData.map(d => new Date(d.timestamp || 0))));
+                const minTime = new Date(maxTime);
+                minTime.setMinutes(minTime.getMinutes() - config.timeWindowMinutes);
+                
+                // Filter data to only include points within the time window
+                const filteredPriceData = priceData.filter(d => d.timestamp && new Date(d.timestamp) >= minTime);
+                const filteredPredictionData = predictionData.filter(d => d.timestamp && new Date(d.timestamp) >= minTime);
+                
+                if (filteredPriceData.length === 0 || filteredPredictionData.length === 0) return;
+                
+                // Update data for each trace
+                const updateData = {
+                    x: [
+                        filteredPriceData.map(d => d.timestamp), // Actual price
+                        filteredPredictionData.map(d => d.timestamp), // Predicted price
+                        filteredPredictionData.map(d => d.timestamp), // Upper bound
+                        filteredPredictionData.map(d => d.timestamp)  // Lower bound
+                    ],
+                    y: [
+                        filteredPriceData.map(d => d.close),
+                        filteredPredictionData.map(d => d.pred_price),
+                        filteredPredictionData.map(d => d.pred_upper),
+                        filteredPredictionData.map(d => d.pred_lower)
+                    ]
+                };
+                
+                Plotly.update('prediction-chart', updateData, {
+                    xaxis: {
+                        range: [minTime, maxTime]
+                    }
+                });
+            } catch (error) {
+                console.error('Error updating prediction chart:', error);
+            }
         }
         
         // Update MAE chart with new data
         function updateMaeChart(metricsData) {
             if (!metricsData || metricsData.length === 0) return;
             
-            const maxTime = new Date(Math.max(...metricsData.map(d => new Date(d.timestamp))));
-            const minTime = new Date(maxTime);
-            minTime.setMinutes(minTime.getMinutes() - config.timeWindowMinutes);
-            
-            // Calculate average error
-            const actualErrors = metricsData.map(d => d.actual_error || 0);
-            const avgError = actualErrors.reduce((sum, val) => sum + val, 0) / actualErrors.length;
-            
-            // Update data for each trace
-            const updateData = {
-                x: [
-                    metricsData.map(d => d.timestamp), // Actual error
-                    metricsData.map(d => d.timestamp), // MAE
-                    [metricsData[0].timestamp, metricsData[metricsData.length - 1].timestamp], // Perfect prediction
-                    [metricsData[0].timestamp, metricsData[metricsData.length - 1].timestamp]  // Average error
-                ],
-                y: [
-                    metricsData.map(d => d.actual_error || 0),
-                    metricsData.map(d => d.mae),
-                    [0, 0],
-                    [avgError, avgError]
-                ]
-            };
-            
-            Plotly.update('mae-chart', updateData, {
-                xaxis: {
-                    range: [minTime, maxTime]
-                }
-            });
-        }
-        
-        // Update error distribution chart
-        function updateErrorDistributionChart(metricsData) {
-            // For the histogram, we need to recreate it completely
-            createErrorDistributionChart(metricsData);
+            try {
+                // Filter data to the last 30 minutes for a fixed window
+                const maxTime = new Date(Math.max(...metricsData.map(d => new Date(d.timestamp || 0))));
+                const minTime = new Date(maxTime);
+                minTime.setMinutes(minTime.getMinutes() - config.timeWindowMinutes);
+                
+                // Filter data to only include points within the time window
+                const filteredMetricsData = metricsData.filter(d => d.timestamp && new Date(d.timestamp) >= minTime);
+                
+                if (filteredMetricsData.length === 0) return;
+                
+                // Calculate average error and MAE
+                const actualErrors = filteredMetricsData.map(d => d.actual_error || 0);
+                const absErrors = actualErrors.map(Math.abs);
+                const avgAbsError = absErrors.reduce((sum, val) => sum + val, 0) / absErrors.length;
+                const avgError = actualErrors.reduce((sum, val) => sum + val, 0) / actualErrors.length;
+                
+                // Update data for each trace
+                const updateData = {
+                    x: [
+                        filteredMetricsData.map(d => d.timestamp), // Actual error
+                        [filteredMetricsData[0].timestamp, filteredMetricsData[filteredMetricsData.length - 1].timestamp], // MAE
+                        [filteredMetricsData[0].timestamp, filteredMetricsData[filteredMetricsData.length - 1].timestamp], // Perfect prediction
+                        [filteredMetricsData[0].timestamp, filteredMetricsData[filteredMetricsData.length - 1].timestamp]  // Average error
+                    ],
+                    y: [
+                        filteredMetricsData.map(d => d.actual_error || 0),
+                        [avgAbsError, avgAbsError],
+                        [0, 0],
+                        [avgError, avgError]
+                    ]
+                };
+                
+                // Update the trace names to include the current values
+                const roundedAvgError = Math.round(avgError * 100) / 100;
+                const roundedAvgAbsError = Math.round(avgAbsError * 100) / 100;
+                
+                const updateLayout = {
+                    xaxis: {
+                        range: [minTime, maxTime]
+                    },
+                    'legend.traces[1].name': `MAE: ${roundedAvgAbsError}`,
+                    'legend.traces[3].name': `Avg Error: ${roundedAvgError}`
+                };
+                
+                Plotly.update('mae-chart', updateData, updateLayout);
+            } catch (error) {
+                console.error('Error updating MAE chart:', error);
+            }
         }
         
         // Initialize dashboard
