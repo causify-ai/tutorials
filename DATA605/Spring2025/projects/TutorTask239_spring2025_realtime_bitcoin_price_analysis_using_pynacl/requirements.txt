@@ -1,7 +1,0 @@
-websocket-client
-PyNaCl
-matplotlib
-duckdb
-statsmodels
-mplfinance
-dash
