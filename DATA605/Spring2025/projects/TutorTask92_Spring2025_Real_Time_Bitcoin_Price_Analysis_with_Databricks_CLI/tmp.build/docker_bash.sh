@@ -28,14 +28,20 @@ CONTAINER_NAME="${IMAGE_NAME}_bash"
 #   MOUNT_CFG="-v ${HOME}/.databrickscfg:/root/.databrickscfg:ro"
 # fi
 MOUNT_CFG=""
-if [[ "${1:-}" == "--mount-config" ]]; then
-  if [[ "$(uname -o)" =~ Msys|Cygwin ]]; then
-    HOST_CFG_PATH="//c/Users/Ritik/.databrickscfg"
-  else
-    HOST_CFG_PATH="${HOME}/.databrickscfg"
-  fi
-  MOUNT_CFG="-v ${HOST_CFG_PATH}:/root/.databrickscfg:ro"
+# if [[ "${1:-}" == "--mount-config" ]]; then
+#   if [[ "$(uname -o)" =~ Msys|Cygwin ]]; then
+#     HOST_CFG_PATH="//c/Users/Ritik/.databrickscfg"
+#   else
+#     HOST_CFG_PATH="${HOME}/.databrickscfg"
+#   fi
+#   MOUNT_CFG="-v ${HOST_CFG_PATH}:/root/.databrickscfg:ro"
+# fi
+if [[ "$(uname -o 2>/dev/null)" =~ Msys|Cygwin ]]; then
+#   HOST_CFG_PATH="//c/Users/Ritik/.databrickscfg"
+# else
+  HOST_CFG_PATH="${HOME}/.databrickscfg"
 fi
+MOUNT_CFG="-v ${HOST_CFG_PATH}:/root/.databrickscfg:ro"
 
 # show the image
 docker image ls "${FULL_IMAGE_NAME}"

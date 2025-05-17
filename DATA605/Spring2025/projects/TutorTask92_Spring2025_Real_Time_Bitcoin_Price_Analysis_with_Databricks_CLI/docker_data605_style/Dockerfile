@@ -27,9 +27,9 @@ RUN apt install -y --no-install-recommends \
 WORKDIR /data
 
 
-COPY requirements.txt ./
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
+
+RUN pip install --upgrade pip
+    
 
 RUN pip install --upgrade pip && \
     pip install \
