@@ -9,7 +9,7 @@ This project builds an end-to-end pipeline to ingest, store, and analyze Bitcoin
 Navigate to the folder that contains the Docker setup files:
 
 ```bash
-cd /tutorials/DATA605/Spring2025/projects/TutorTask245_Spring2025_Real_Time_Bitcoin_Price_Processing_using_Apache_Avro/docker_data605_style/docker_data605_style/
+cd /tutorials/DATA605/Spring2025/projects/TutorTask244_Spring2025_Modeling_Bitcoin_Transaction_Networks_with_Py2neo/tutorial_template/docker_data605_style/
 ```
 
 Then build and run the containers:
