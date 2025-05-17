@@ -1,0 +1,5 @@
+farm-haystack[all]
+elasticsearch
+transformers
+requests
+streamlit

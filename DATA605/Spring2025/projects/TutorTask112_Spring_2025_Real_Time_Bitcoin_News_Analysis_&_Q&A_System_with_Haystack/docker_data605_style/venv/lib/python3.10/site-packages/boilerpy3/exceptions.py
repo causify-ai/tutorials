@@ -1,0 +1,2 @@
+class HTMLExtractionError(Exception):
+    pass
