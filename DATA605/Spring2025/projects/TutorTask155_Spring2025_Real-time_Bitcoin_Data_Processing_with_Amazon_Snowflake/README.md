@@ -1,45 +1,98 @@
-# Tutorial Template: Two Docker Approaches
+# TutorTask155_Spring2025_Real-time_Bitcoin_Data_Processing_with_Amazon_Snowflake
 
-- This directory provides two versions of the same tutorial setup to help you
-  work with Jupyter notebooks and Python scripts inside Docker environments
+🙋‍♀️ Author
+Palak Wadhwa
+Graduate Student – Data Science, University of Maryland
+This project was developed as part of the Spring 2025 DATA605 course.
 
-- Both versions run the same code but use different Docker approaches, with
-  different level of complexity and maintainability
+> A DATA605 tutorial project demonstrating real-time Bitcoin price ingestion using the CoinGecko API and storage/analysis using Snowflake.
 
-## 1. `data605_style` (Simple Docker Environment)
+---
 
-- This version is modeled after the setup used in DATA605 tutorials
-- This template provides a ready-to-run environment, including scripts to build,
-  run, and clean the Docker container.
+## 🧭 Objective
 
-- For your specific project, you should:
-  - Modify the Dockerfile to add project-specific dependencies
-  - Update bash/scripts accordingly
-  - Expose additional ports if your project requires them
+This project shows how to use the native `snowflake-connector-python` API to:
+- Ingest real-time Bitcoin price data from CoinGecko
+- Log it to a cloud-based Snowflake data warehouse
+- Analyze and visualize price trends using Python
 
-## 2. `causify_style` (Causify AI dev-system)
+---
 
-- This setup reflects the approach commonly used in Causify AI dev-system
-- **Recommended** for students familiar with Docker or those wishing to explore a
-  production-like setup
-- Pros
-  - Docker layer written in Python to make it easy to extend and test
-  - Less redundant since code is factored out
-  - Used for real-world development, production workflows
-  - Used for all internships, RA / TA, full-time at UMD DATA605 / MSML610 /
-    Causify 
-- Cons
-  - It is more complex to use and configure
-  - More dependencies from the 
-- For thin environment setup instructions, refer to:  
-  [How to Set Up Development on Laptop](https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
+## 🔧 Technologies Used
 
-## Reference Tutorials
+- **CoinGecko API** – for real-time Bitcoin price data
+- **Snowflake** – as cloud-based data warehouse
+- **Python** – for API interaction, SQL execution, and analytics
+- **Jupyter Notebook** – for reproducible data workflows
+- **Matplotlib** – for plotting trends and volatility
 
-- The `tutorial_github` example has been implemented in both environments for you
-  to refer to:
-  - `tutorial_github_data605_style` uses the simpler DATA605 approach
-  - `tutorial_github_causify_style` uses the more complex Causify approach
+---
 
-- Choose the approach that best fits your comfort level and project needs. Both
-  are valid depending on your use case.
+## 🔄 Pipeline Flow
+
+1. Load API keys and credentials securely from `.env`
+2. Connect to Snowflake using `snowflake-connector-python`
+3. Fetch real-time Bitcoin prices from CoinGecko every 10 seconds
+4. Insert timestamped prices into a `BTC_PRICES` table
+5. Retrieve the data for analysis
+6. Compute indicators (moving average, volatility)
+7. Visualize results
+
+---
+
+## 🔍 Tutorials Included
+
+| File                     | Description                                                  |
+|--------------------------|--------------------------------------------------------------|
+| `bitcoin.API.ipynb`      | Shows how to connect to Snowflake, create tables, run SQL    |
+| `bitcoin.example.ipynb`  | Real-time logging of Bitcoin prices with full analysis       |
+| `bitcoin_utils.py`       | Functions to cleanly abstract connection + ingestion logic   |
+| `bitcoin.API.md`         | Theory + capabilities of Snowflake connector + wrapper       |
+| `bitcoin.example.md`     | Full project write-up and architecture description           |
+
+---
+
+## 🧪 How to Run
+
+> Pre-requisite: Docker setup from Causify tutorial template  
+> Follow these steps:
+
+1. Build the Docker container (one-time):
+```bash
+bash docker_build.sh
+```
+
+2. Launch the Jupyter server:
+```
+bash docker_jupyter.sh
+```
+
+3. Open the notebooks and run each cell from top to bottom.
+```
+Ensure your .env file includes:
+
+SNOWFLAKE_USER=
+SNOWFLAKE_PASSWORD=
+SNOWFLAKE_ACCOUNT=
+SNOWFLAKE_WAREHOUSE=
+SNOWFLAKE_DATABASE=BITCOIN_DB
+SNOWFLAKE_SCHEMA=PUBLIC
+
+```
+
+📊 Output Sample
+You’ll see visualizations like:
+
+A line plot of actual prices
+
+A 3-point moving average
+
+Volatility measured via rolling standard deviation
+
+These are saved as bitcoin_price_analysis.png in your working directory.
+
+
+
+
+
+
