@@ -142,11 +142,12 @@ Ensure Kibana is running at [http://localhost:5601](http://localhost:5601)
 
 ## Run the Full Pipeline
 
+```bash 
 docker cp run_all.sh bitcoin-tutorial-worker:/app/run_all.sh
 docker exec -it bitcoin-tutorial-worker bash
 chmod +x run_all.sh
 bash run_all.sh
-
+```
 This will:
 
 1. Fetch BTC price (live or historic)
