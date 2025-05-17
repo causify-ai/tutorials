@@ -2,57 +2,6 @@
 
 Welcome to my capstone project for DATA605: an end-to-end Bitcoin forecasting system using Facebook Prophet, built with real-time data ingestion, EDA, time-series modeling, and  Streamlit deployment.
 
-----
-
-## Table of Contents
-
-1. [Project Objective](#project-objective)
-2. [General Guidelines](#general-guidelines)
-3. [Architecture Overview](#architecture-overview)
-4. [Technologies & Libraries Used](#technologies--libraries-used)
-5. [Dataset Sources](#dataset-sources)
-6. [Utility Functions Explained (utils.py)](#utility-functions-explained-utilspy)
-7. [Exploratory Data Analysis (EDA)](#exploratory-data-analysis-eda)
-8. [Modeling](#modeling)
-9. [Forecasting](#forecasting)
-10. [Evaluation](#evaluation)
-11. [Streamlit Dashboard](#streamlit-dashboard)
-12. [Project Status](#project-status)
-
----
-
-## Project Objective
-
-Forecasting cryptocurrency prices, particularly Bitcoin, is a challenging yet valuable task due to the asset’s high volatility and market sensitivity. Investors, analysts, and trading platforms rely on timely insights to make informed decisions. This project seeks to develop a reliable, real-time forecasting system that predicts short-term Bitcoin price movements using both historical and live data. Leveraging Facebook Prophet, a time series forecasting tool, the project is designed to process noisy and irregular financial data, model seasonality and trends, and produce accurate, interpretable forecasts. The system is also built to be robust against missing data, customizable for future improvements, and scalable for real-time applications.
-
------
-
-## General Guidelines
-
-This section outlines general project practices followed to ensure a clean, reproducible implementation.
-
-* *Docker + Jupyter Image*: The project is containerized with Docker. A Jupyter Lab image was used to execute all notebooks consistently across environments.
-* *Clean Folder Structure*: Follows a modular layout (data/, scripts/, notebooks/, etc.).
-* *Environment Management*: All dependencies are tracked in requirements.txt and used within a virtual environment.
-* *Version Control*: Git is used with large data excluded via .gitignore.
-* *Code Modularity*: Functions are separated into utils.py to keep notebooks clean.
-* *Prophet Setup*:
-
-  * Data uses ds and y columns.
-  * Weekly seasonality disabled due to flat weekly trends.
-  * Changepoint detection and log return analysis are used.
-* *Deployment*: Streamlit used for an interactive forecast dashboard.
-
----
-Here is the **final, fully integrated README** including the **How to Run the Project (Brief)** section.
-
----
-
-# Bitcoin Price Forecasting with Facebook Prophet
-
-Welcome to my capstone project for DATA605: an end-to-end Bitcoin forecasting system using Facebook Prophet, built with real-time data ingestion, EDA, time-series modeling, and Streamlit deployment.
-
----
 
 ## Table of Contents
 
@@ -89,6 +38,22 @@ Forecasting cryptocurrency prices, particularly Bitcoin, is a challenging yet va
 * **Deployment**: Streamlit used for interactive dashboard.
 
 ---
+
+## How to Run the Project  
+
+1. **Start Docker Container**
+
+```bash
+docker run -it --rm -p 8888:8888 -v "$PWD":/workspace -w /workspace umd_data605/umd_data605_template bash
+```
+
+2. **Launch Jupyter Notebook**
+
+```bash
+jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --NotebookApp.token='' --allow-root
+```
+
+Access Jupyter at: [http://localhost:8888](http://localhost:8888)
 
 ## Architecture Overview
 
