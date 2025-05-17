@@ -4,7 +4,7 @@ import pandas as pd
 # Define constants for consistent timestamp handling
 UTC_TIMEZONE = timezone.utc
 DEFAULT_TIMESTAMP_FORMAT = "%Y-%m-%dT%H:%M:%S"  # ISO-8601 format without timezone
-DEFAULT_TIMESTAMP_FORMAT_TZ = "%Y-%m-%dT%H:%M:%S%z"  # ISO-8601 format with timezone
+DEFAULT_TIMESTAMP_FORMAT_TZ = "%Y-%m-%dT%H:%M:%S UTC"  # ISO-8601 format with timezone (simplified)
 
 def to_iso8601(ts, include_timezone=True):
     """
@@ -25,8 +25,8 @@ def to_iso8601(ts, include_timezone=True):
     
     # Format with timezone info based on preference
     if include_timezone:
-        # Always use the standard +00:00 format for timezone
-        return ts_dt.strftime(DEFAULT_TIMESTAMP_FORMAT_TZ)
+        # Use simplified UTC format for consistency with web app
+        return ts_dt.strftime(DEFAULT_TIMESTAMP_FORMAT) + " UTC"
     else:
         # Use format without timezone
         return ts_dt.strftime(DEFAULT_TIMESTAMP_FORMAT)
@@ -54,15 +54,14 @@ def format_timestamp(ts, use_t_separator=True, include_timezone=False):
     
     # Add timezone info if requested
     if include_timezone:
-        format_string += "%z"
-        # Ensure timestamp is timezone-aware
-        if ts_dt.tzinfo is None:
-            ts_dt = ts_dt.replace(tzinfo=UTC_TIMEZONE)
-    elif ts_dt.tzinfo is not None:
+        # Use simplified UTC format for consistency with web app
+        return ts_dt.strftime(format_string) + " UTC"
+    else:
         # If we don't want timezone but have one, strip it
-        ts_dt = ts_dt.replace(tzinfo=None)
-        
-    return ts_dt.strftime(format_string)
+        if ts_dt.tzinfo is not None:
+            ts_dt = ts_dt.replace(tzinfo=None)
+            
+        return ts_dt.strftime(format_string)
 
 def parse_timestamp(s, assume_utc=True):
     """
@@ -86,6 +85,10 @@ def parse_timestamp(s, assume_utc=True):
     
     # Handle string timestamps
     try:
+        # Handle UTC suffix in string format
+        if isinstance(s, str) and s.endswith(" UTC"):
+            s = s.replace(" UTC", "")
+        
         # Use pandas for flexible parsing
         dt = pd.to_datetime(s, utc=assume_utc)
         
@@ -185,8 +188,8 @@ def ensure_consistent_formats(df, timestamp_column='timestamp', include_timezone
     
     # Convert datetime objects to consistent string format if needed
     if include_timezone:
-        # With timezone
-        df[timestamp_column] = df[timestamp_column].dt.strftime(DEFAULT_TIMESTAMP_FORMAT_TZ)
+        # With timezone - use simplified UTC format for consistency
+        df[timestamp_column] = df[timestamp_column].dt.strftime(DEFAULT_TIMESTAMP_FORMAT) + " UTC"
     else:
         # Without timezone
         # Convert to UTC, then remove timezone, then format
