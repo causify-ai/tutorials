@@ -29,9 +29,9 @@
         }
         
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 10px;
         }
         
         header {
@@ -49,8 +49,8 @@
         
         .dashboard {
             display: grid;
-            grid-template-columns: 250px 1fr;
-            gap: 20px;
+            grid-template-columns: 200px 1fr;
+            gap: 15px;
             margin-top: 20px;
         }
         
@@ -80,6 +80,10 @@
             padding: 20px;
             box-shadow: var(--box-shadow);
             text-align: center;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         
         .metric-title {
@@ -89,9 +93,10 @@
         }
         
         .metric-value {
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             font-weight: bold;
             margin-bottom: 5px;
+            word-break: break-word;
         }
         
         .metric-change {
@@ -109,9 +114,10 @@
         .chart-container {
             background-color: white;
             border-radius: var(--border-radius);
-            padding: 20px;
+            padding: 10px 5px 5px 5px;
             box-shadow: var(--box-shadow);
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            width: 100%;
         }
         
         .info-box {
@@ -191,8 +197,8 @@
                     </div>
                     
                     <div class="metric-card">
-                        <div class="metric-title">Last Update</div>
-                        <div id="last-update" class="metric-value">--:--:--</div>
+                        <div class="metric-title">Last Update (UTC)</div>
+                        <div id="last-update" class="metric-value">YYYY-MM-DDThh:mm:ss (UTC)</div>
                         <div class="metric-change">&nbsp;</div>
                     </div>
                     
@@ -204,11 +210,11 @@
                 </div>
                 
                 <div class="chart-container">
-                    <div id="price-chart" style="height: 400px;"></div>
+                    <div id="price-chart" style="height: 600px;"></div>
                 </div>
                 
                 <div class="chart-container">
-                    <div id="prediction-chart" style="height: 400px;"></div>
+                    <div id="prediction-chart" style="height: 500px;"></div>
                 </div>
                 
                 <div class="chart-container">
@@ -302,16 +308,25 @@
                 title: 'Bitcoin Price (Candlestick Chart)',
                 yaxis: {
                     title: 'Price (USD)',
-                    tickformat: '$,.0f'
+                    tickformat: '$,.0f',
+                    autorange: true,
+                    fixedrange: false
                 },
                 xaxis: {
-                    title: 'Time',
+                    title: 'Time (UTC)',
                     tickformat: '%H:%M',
-                    tickangle: -45
+                    tickangle: -45,
+                    nticks: 8
                 },
                 template: 'plotly_white',
                 showlegend: false,
-                xaxis_rangeslider_visible: false
+                xaxis_rangeslider_visible: false,
+                margin: {
+                    l: 60,
+                    r: 40,
+                    t: 50,
+                    b: 80
+                }
             };
             
             if (data && data.length > 0) {
@@ -366,15 +381,23 @@
                 title: 'Predicted Price with Confidence Interval vs Actual',
                 yaxis: {
                     title: 'Price (USD)',
-                    tickformat: '$,.0f'
+                    tickformat: '$,.0f',
+                    autorange: true
                 },
                 xaxis: {
-                    title: 'Time',
+                    title: 'Time (UTC)',
                     tickformat: '%H:%M',
-                    tickangle: -45
+                    tickangle: -45,
+                    nticks: 8
                 },
                 template: 'plotly_white',
-                showlegend: true
+                showlegend: true,
+                margin: {
+                    l: 60,
+                    r: 40,
+                    t: 50,
+                    b: 80
+                }
             };
             
             // Determine if we need dual-axis presentation
@@ -505,7 +528,7 @@
                     tickformat: '$,.2f'
                 },
                 xaxis: {
-                    title: 'Time',
+                    title: 'Time (UTC)',
                     tickformat: '%H:%M',
                     tickangle: -45
                 },
@@ -589,7 +612,7 @@
                 
                 // Update last update time
                 document.getElementById('last-update').textContent = 
-                    new Date(latestPrice.timestamp).toISOString().replace('T', ' ').substring(11, 19);
+                    new Date(latestPrice.timestamp).toISOString().split('.')[0] + " (UTC)";
             }
             
             if (state.predictionData && state.predictionData.length > 0) {
