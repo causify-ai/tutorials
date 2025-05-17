@@ -87,7 +87,12 @@ List all available Ollama models.
 ```python
 def extract_text(file_path)
 ```
-Extract plain text from a file.
+Extract plain text from a file. Supports various formats:
+- Plain text files (.txt)
+- Markdown documents (.md)
+- PDF documents using PyMuPDF
+- Word documents (.docx) using python-docx
+- Will attempt to read other file types as text
 
 ```python
 def chunk_text(text, chunk_size=1000, overlap=200)

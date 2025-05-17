@@ -16,6 +16,13 @@ try:
 except ImportError:
     HAS_FITZ = False
 
+# Try to import docx for Word document processing
+try:
+    import docx
+    HAS_DOCX = True
+except ImportError:
+    HAS_DOCX = False
+
 # Any folder name (not full path) in this list will be skipped
 EXCLUDED_DIR_NAMES = {
     'AppData', 'anaconda3', 'node_modules', '__pycache__', 'WindowsNoEditor',
@@ -88,6 +95,26 @@ def extract_text(file_path):
                     return ""
             else:
                 print(f"PyMuPDF (fitz) not installed, skipping PDF file: {file_path}")
+                return ""
+        # Handle Word documents (.docx)
+        elif file_path.lower().endswith('.docx'):
+            if HAS_DOCX:
+                try:
+                    doc = docx.Document(file_path)
+                    full_text = []
+                    for para in doc.paragraphs:
+                        full_text.append(para.text)
+                    # Also extract text from tables
+                    for table in doc.tables:
+                        for row in table.rows:
+                            for cell in row.cells:
+                                full_text.append(cell.text)
+                    return '\n'.join(full_text)
+                except Exception as e:
+                    print(f"Error extracting text from Word document {file_path}: {e}")
+                    return ""
+            else:
+                print(f"python-docx not installed, skipping Word file: {file_path}")
                 return ""
         # Handle text files
         else:

@@ -6,7 +6,7 @@ An intelligent document search engine that uses Ollama and FAISS to power semant
 
 - **AI-Powered Semantic Search**: Find relevant content based on meaning, not just keywords
 - **Multiple Searchable Collections**: Organize documents into different searchable groups
-- **Support for Various File Types**: Process PDFs, text files, Markdown, code files, and more
+- **Support for Various File Types**: Process PDFs, Word documents (.docx), text files, Markdown, code files, and more
 - **Document Preview**: View document content directly within the application
 - **Real-time Query Refinement**: Ollama enhances your search queries for better results
 - **User-Friendly Interface**: Clean, intuitive Streamlit interface

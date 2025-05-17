@@ -16,6 +16,17 @@ This example demonstrates how to build a semantic document search engine using O
   - requests
   - numpy
   - streamlit
+  - python-docx (for Word document support)
+  - PyMuPDF (for PDF support)
+
+## Supported Document Types
+
+The search engine can process the following document formats:
+- Plain text files (.txt)
+- Markdown documents (.md)
+- PDF documents (.pdf)
+- Microsoft Word documents (.docx)
+- Code files (Python, JavaScript, HTML, etc.)
 
 ## Installation
 

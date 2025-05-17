@@ -27,7 +27,7 @@ if 'searchables' not in st.session_state:
     st.session_state['searchables'] = {
         'Default': {
             'paths': [],
-            'file_types': [".txt", ".md", ".pdf"],
+            'file_types': [".txt", ".md", ".pdf", ".docx"],
             'is_indexed': False,
             'index_path': "index/default",
             'indexed_files': []
@@ -48,7 +48,7 @@ def load_searchables():
                     if 'paths' not in searchable:
                         searchable['paths'] = []
                     if 'file_types' not in searchable:
-                        searchable['file_types'] = [".txt", ".md", ".pdf"]
+                        searchable['file_types'] = [".txt", ".md", ".pdf", ".docx"]
                     if 'is_indexed' not in searchable:
                         searchable['is_indexed'] = False
                     if 'index_path' not in searchable:
@@ -149,7 +149,7 @@ with st.sidebar.expander("➕ Create New Searchable", expanded=False):
         if new_searchable_name and new_searchable_name not in st.session_state['searchables']:
             st.session_state['searchables'][new_searchable_name] = {
                 'paths': [],
-                'file_types': [".txt", ".md", ".pdf"],
+                'file_types': [".txt", ".md", ".pdf", ".docx"],
                 'is_indexed': False,
                 'index_path': f"index/{new_searchable_name.lower().replace(' ', '_')}",
                 'indexed_files': []
@@ -241,8 +241,8 @@ else:
 st.sidebar.markdown("### File Types to Include:")
 file_types = st.sidebar.multiselect(
     "Select file types:",
-    [".txt", ".md", ".py", ".js", ".html", ".css", ".json", ".csv", ".pdf"],
-    default=current_searchable.get('file_types', [".txt", ".md", ".pdf"]),
+    [".txt", ".md", ".py", ".js", ".html", ".css", ".json", ".csv", ".pdf", ".docx"],
+    default=current_searchable.get('file_types', [".txt", ".md", ".pdf", ".docx"]),
     key="file_types_select"
 )
 if file_types != current_searchable.get('file_types', []):
