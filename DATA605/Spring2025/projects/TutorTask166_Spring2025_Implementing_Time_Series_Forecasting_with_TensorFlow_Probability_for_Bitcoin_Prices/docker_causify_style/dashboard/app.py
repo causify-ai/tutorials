@@ -15,6 +15,8 @@ from utilities.timestamp_format import parse_timestamp, format_timestamp
 from utilities.price_format import usd_to_display_str
 from utilities.unified_config import get_service_config
 import numpy as np
+import sys
+import json
 
 # Try to import scipy.stats, but handle if not available
 try:
@@ -56,13 +58,13 @@ logger.info(f"Starting {SERVICE_NAME} service with unified configuration")
 
 # Set page config
 st.set_page_config(
-    page_title="Bitcoin Price Dashboard",
+    page_title="Bitcoin Price Forecasting Dashboard",
     page_icon="📈",
     layout="wide"
 )
 
 # Constants
-REFRESH_INTERVAL = config['dashboard']['refresh_interval']
+REFRESH_INTERVAL = 1  # 1 second to match web app
 PRICE_FILE = config['data']['raw_data']['instant_data']['file']
 PREDICTIONS_FILE = config['data']['predictions']['instant_data']['predictions_file']
 METRICS_FILE = config['data']['predictions']['instant_data']['metrics_file']
@@ -74,6 +76,7 @@ TIME_WINDOW_MINUTES = 30
 if 'plot_settings' not in config['dashboard']:
     config['dashboard']['plot_settings'] = {}
 config['dashboard']['plot_settings']['time_window_minutes'] = TIME_WINDOW_MINUTES
+config['dashboard']['refresh_interval'] = REFRESH_INTERVAL  # Ensure config is updated with new refresh interval
 
 # Add a cold start handling configuration
 if 'cold_start' not in config['dashboard']:
@@ -81,6 +84,14 @@ if 'cold_start' not in config['dashboard']:
         'enabled': True,
         'min_data_points': 10  # Minimum number of data points to consider valid for visualizing
     }
+
+# Add parent directory to path for imports
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if parent_dir not in sys.path:
+    sys.path.append(parent_dir)
+
+# Import utility functions
+from utilities.config_parser import load_config
 
 def load_csv_safely(file_path, columns, skip_rows=1):
     """Safely load CSV data with error handling"""
@@ -558,7 +569,7 @@ def create_mae_chart(metrics_df):
                 x=filtered_df['timestamp'],
                 y=filtered_df['actual_error'],
                 name='Actual Error',
-                line=dict(color='green', width=2),
+                line=dict(color='#3498db', width=2),  # Blue color to match web app
                 hovertemplate='%{y:,.2f}'
             ))
             
@@ -570,29 +581,38 @@ def create_mae_chart(metrics_df):
                 line=dict(color='gray', width=1, dash='dash')
             ))
             
-            # Calculate average error and RMSE
+            # Calculate average error (arithmetic mean of all errors, including sign)
             avg_error = filtered_df['actual_error'].mean()
             
-            # Calculate the true MAE (Mean Absolute Error) - average of absolute errors
+            # Calculate MAE (Mean Absolute Error - arithmetic mean of absolute errors)
             abs_errors = filtered_df['actual_error'].abs()
-            mean_abs_error = abs_errors.mean()
+            mae = abs_errors.mean()
+            
+            # Round to 2 decimal places for display consistency with web app
+            avg_error = round(avg_error, 2)
+            mae = round(mae, 2)
+            
+            # Log the error calculations for comparison with web app
+            logger.info(f"Error statistics - Avg Error: {avg_error:.2f}, MAE: {mae:.2f}")
             
             # Add a horizontal line for the average error
             fig.add_trace(go.Scatter(
                 x=[filtered_df['timestamp'].min(), filtered_df['timestamp'].max()],
                 y=[avg_error, avg_error],
                 name=f'Avg Error: {avg_error:.2f}',
-                line=dict(color='blue', width=1, dash='dash')
+                line=dict(color='blue', width=1, dash='dash'),
+                visible=True  # Ensure the line is visible
             ))
             
             # Add MAE as a horizontal line
             fig.add_trace(go.Scatter(
                 x=[filtered_df['timestamp'].min(), filtered_df['timestamp'].max()],
-                y=[mean_abs_error, mean_abs_error],
-                name=f'MAE: {mean_abs_error:.2f}',
-                line=dict(color='orange', width=2, dash='dot'),
+                y=[mae, mae],
+                name=f'MAE: {mae:.2f}',
+                line=dict(color='#e74c3c', width=2, dash='dot'),  # Red color to match web app
                 opacity=0.7,
-                hovertemplate='%{y:,.2f}'
+                hovertemplate='%{y:,.2f}',
+                visible=True  # Ensure the line is visible
             ))
         else:
             # If no actual_error column, use the mae column if available
@@ -600,32 +620,19 @@ def create_mae_chart(metrics_df):
             filtered_df['mae'] = pd.to_numeric(filtered_df['mae'], errors='coerce')
             filtered_df = filtered_df.dropna(subset=['mae'])
             
-            # Filter out extreme outliers in MAE
-            median_mae = filtered_df['mae'].median()
-            q1 = filtered_df['mae'].quantile(0.25)
-            q3 = filtered_df['mae'].quantile(0.75)
-            iqr = q3 - q1
-            upper_threshold = median_mae + 3 * iqr
-            
-            mae_filtered_df = filtered_df[filtered_df['mae'] <= upper_threshold].copy()
-            
-            # If we filtered out too many points (>50%), use a simpler approach
-            if len(mae_filtered_df) < len(filtered_df) * 0.5:
-                # Fall back to using the 95th percentile as the cutoff
-                p95 = filtered_df['mae'].quantile(0.95)
-                mae_filtered_df = filtered_df[filtered_df['mae'] <= p95].copy()
-            
             # Calculate the average of the mae column
-            mean_mae = mae_filtered_df['mae'].mean()
+            mean_mae = filtered_df['mae'].mean()
+            mean_mae = round(mean_mae, 2)  # Round to 2 decimal places for consistency
             
             # Add MAE as a horizontal line
             fig.add_trace(go.Scatter(
-                x=[mae_filtered_df['timestamp'].min(), mae_filtered_df['timestamp'].max()],
+                x=[filtered_df['timestamp'].min(), filtered_df['timestamp'].max()],
                 y=[mean_mae, mean_mae],
                 name=f'MAE: {mean_mae:.2f}',
-                line=dict(color='orange', width=2, dash='dot'),
+                line=dict(color='#e74c3c', width=2, dash='dot'),  # Red color to match web app
                 opacity=0.7,
-                hovertemplate='%{y:,.2f}'
+                hovertemplate='%{y:,.2f}',
+                visible=True  # Ensure the line is visible
             ))
     
     fig.update_layout(
@@ -680,6 +687,14 @@ def create_error_distribution_chart(metrics_df):
             mean_error = filtered_df['actual_error'].mean()
             median_error = filtered_df['actual_error'].median()
             std_error = filtered_df['actual_error'].std()
+            
+            # Round to 2 decimal places for consistency with web app
+            mean_error = round(mean_error, 2)
+            median_error = round(median_error, 2)
+            std_error = round(std_error, 2)
+            
+            # Log the statistics for comparison with web app
+            logger.info(f"Error distribution statistics - Mean: {mean_error:.2f}, Median: {median_error:.2f}, StdDev: {std_error:.2f}")
             
             # Create histogram of errors with consistent binning (20 bins)
             fig.add_trace(go.Histogram(
@@ -777,148 +792,190 @@ def create_error_distribution_chart(metrics_df):
     
     return fig
 
-def main():
-    """Main dashboard function."""
-    st.title("Bitcoin Price Dashboard")
+def get_last_update_time(price_df, pred_df):
+    """Get the most recent timestamp from either price or prediction data"""
+    last_update = None
     
-    # Create placeholders for dynamic content
-    metrics_placeholder = st.empty()
-    price_placeholder = st.empty()
-    prediction_placeholder = st.empty()
-    mae_placeholder = st.empty()
-    distribution_placeholder = st.empty()
+    if price_df is not None and not price_df.empty:
+        price_time = price_df['timestamp'].max()
+        last_update = price_time
     
-    # Sidebar configuration
-    st.sidebar.title("Dashboard Settings")
+    if pred_df is not None and not pred_df.empty:
+        pred_time = pred_df['timestamp'].max()
+        if last_update is None or pred_time > last_update:
+            last_update = pred_time
     
-    # Display the time window setting
-    st.sidebar.info(f"Target chart window: {TIME_WINDOW_MINUTES} minutes")
-    
-    # Cold start mode information
-    if config['dashboard']['cold_start']['enabled']:
-        st.sidebar.success(
-            "Cold start mode is enabled. For new systems with less than "
-            f"{TIME_WINDOW_MINUTES} minutes of data, charts will automatically "
-            "adjust to show all available data."
-        )
+    if last_update is not None:
+        return format_timestamp(last_update, use_t_separator=True)
     else:
-        st.sidebar.info(
-            "Cold start mode is disabled. Charts will always show exactly "
-            f"{TIME_WINDOW_MINUTES} minutes of data."
+        return "No data available"
+
+def check_cold_start(price_df):
+    """Check if we're in a cold start scenario (less than the full time window)"""
+    is_cold_start = False
+    cold_start_minutes = 0
+    
+    if price_df is not None and not price_df.empty and len(price_df) >= config['dashboard']['cold_start']['min_data_points']:
+        # Calculate time span
+        time_span = price_df['timestamp'].max() - price_df['timestamp'].min()
+        cold_start_minutes = time_span.total_seconds() / 60
+        
+        # If less than the full time window, we're in cold start
+        if cold_start_minutes < TIME_WINDOW_MINUTES:
+            is_cold_start = True
+    
+    return is_cold_start, cold_start_minutes
+
+def get_current_price(price_df):
+    """Get the most recent price"""
+    if price_df is not None and not price_df.empty:
+        return price_df['close'].iloc[-1]
+    return None
+
+def get_price_change(price_df):
+    """Calculate price change over the available time period"""
+    if price_df is not None and not price_df.empty and len(price_df) > 1:
+        latest_price = price_df['close'].iloc[-1]
+        first_price = price_df['close'].iloc[0]
+        price_change = latest_price - first_price
+        price_change_pct = (price_change / first_price) * 100
+        return price_change, price_change_pct
+    return None, None
+
+def get_prediction_error_metrics(metrics_df):
+    """Calculate prediction error metrics"""
+    if metrics_df is not None and not metrics_df.empty and 'actual_error' in metrics_df.columns:
+        # Make sure actual_error is numeric
+        metrics_df['actual_error'] = pd.to_numeric(metrics_df['actual_error'], errors='coerce')
+        
+        # Filter out NaN values
+        filtered_df = metrics_df.dropna(subset=['actual_error'])
+        
+        if not filtered_df.empty:
+            # Calculate average error (arithmetic mean of all errors, including sign)
+            avg_error = filtered_df['actual_error'].mean()
+            
+            # Calculate MAE (Mean Absolute Error - arithmetic mean of absolute errors)
+            mae = filtered_df['actual_error'].abs().mean()
+            
+            return round(avg_error, 2), round(mae, 2)
+    
+    return None, None
+
+def main():
+    """Main function for the Streamlit dashboard."""
+    try:
+        # Set page config is already called at the beginning of the file
+        # No need to call it again here
+        
+        # Add title and description
+        st.title("Bitcoin Price Forecasting Dashboard")
+        st.markdown(
+            """
+            This dashboard shows real-time Bitcoin price data and forecasts.
+            """
         )
-    
-    # Add information for status
-    status_placeholder = st.sidebar.empty()
-    
-    # Main dashboard loop
-    while True:
-        try:
-            # Load all data
-            price_df, pred_df, metrics_df = load_data()
-            
-            # Generate a unique timestamp for this iteration to avoid duplicate keys
-            timestamp_str = datetime.now().strftime("%Y%m%d%H%M%S%f")
-            
-            # Log data info after loading
-            logger.info(f"Raw data loaded - price: {len(price_df)} rows, predictions: {len(pred_df)} rows, metrics: {len(metrics_df)} rows")
-            
-            # Filter all data to the last TIME_WINDOW_MINUTES minutes
-            price_df = filter_last_n_minutes(price_df, TIME_WINDOW_MINUTES, check_time=True)
-            pred_df = filter_last_n_minutes(pred_df, TIME_WINDOW_MINUTES, check_time=True)
-            metrics_df = filter_last_n_minutes(metrics_df, TIME_WINDOW_MINUTES, check_time=True)
-            
-            # Log data info after filtering
-            logger.info(f"After filtering - price: {len(price_df)} rows, predictions: {len(pred_df)} rows, metrics: {len(metrics_df)} rows")
-            
-            # Display metrics if price data is available
-            if price_df is not None and not price_df.empty and 'close' in price_df.columns:
-                latest_price = price_df['close'].iloc[-1]
-                latest_time = price_df['timestamp'].iloc[-1]
-                
-                with metrics_placeholder.container():
-                    col1, col2, col3 = st.columns(3)
-                    
-                    # Price metric
-                    with col1:
-                        if len(price_df) > 1:
-                            price_diff = price_df['close'].iloc[-1] - price_df['close'].iloc[-2]
-                        else:
-                            price_diff = 0
-                        st.metric(
-                            "Latest Price",
-                            usd_to_display_str(latest_price),
-                            usd_to_display_str(price_diff)
-                        )
-                    
-                    # Timestamp metric
-                    with col2:
-                        st.metric(
-                            "Last Update (UTC)",
-                            format_timestamp(latest_time, use_t_separator=True) + " UTC",
-                            ""
-                        )
-                    
-                    # Prediction metric
-                    with col3:
-                        if pred_df is not None and not pred_df.empty and 'pred_price' in pred_df.columns:
-                            latest_pred = pred_df['pred_price'].iloc[-1]
-                            if len(pred_df) > 1:
-                                pred_diff = pred_df['pred_price'].iloc[-1] - pred_df['pred_price'].iloc[-2]
-                            else:
-                                pred_diff = 0
-                            
-                            st.metric(
-                                "Latest Prediction",
-                                usd_to_display_str(latest_pred),
-                                usd_to_display_str(pred_diff)
-                            )
-                        else:
-                            st.metric("Latest Prediction", "No data", "")
-                
-                # Create and display price chart
-                with price_placeholder.container():
-                    st.plotly_chart(
-                        create_price_chart(price_df),
-                        use_container_width=True,
-                        config={'displayModeBar': False}
-                    )
-                
-                # Create and display prediction chart if prediction data exists
-                with prediction_placeholder.container():
-                    st.plotly_chart(
-                        create_prediction_chart(price_df, pred_df),
-                        use_container_width=True,
-                        config={'displayModeBar': False}
-                    )
-                
-                # Create and display error charts if metrics data exists
-                if metrics_df is not None and not metrics_df.empty:
-                    with mae_placeholder.container():
-                        st.plotly_chart(
-                            create_mae_chart(metrics_df),
-                            use_container_width=True,
-                            config={'displayModeBar': False}
-                        )
-                    
-                    with distribution_placeholder.container():
-                        st.plotly_chart(
-                            create_error_distribution_chart(metrics_df),
-                            use_container_width=True,
-                            config={'displayModeBar': False}
-                        )
-            else:
-                # No data available
-                with metrics_placeholder.container():
-                    st.warning("No price data available. Waiting for data...")
-            
-            # Wait for the specified refresh interval
-            time.sleep(REFRESH_INTERVAL)
-            
-        except Exception as e:
-            logger.error(f"Error in main loop: {e}\n{traceback.format_exc()}")
-            with metrics_placeholder.container():
-                st.error(f"Error updating dashboard: {e}")
-            time.sleep(REFRESH_INTERVAL)
+        
+        # Load data
+        price_df, pred_df, metrics_df = load_data()
+        
+        # Log raw data info
+        logger.info(f"Raw data loaded - price: {len(price_df)} rows, predictions: {len(pred_df)} rows, metrics: {len(metrics_df)} rows")
+        
+        # Filter data to last 30 minutes
+        filtered_price_df = filter_last_n_minutes(price_df, 30)
+        filtered_pred_df = filter_last_n_minutes(pred_df, 30)
+        filtered_metrics_df = filter_last_n_minutes(metrics_df, 30)
+        
+        # Log filtered data info
+        logger.info(f"After filtering - price: {len(filtered_price_df)} rows, predictions: {len(filtered_pred_df)} rows, metrics: {len(filtered_metrics_df)} rows")
+        
+        # Display last update time
+        last_update = get_last_update_time(filtered_price_df, filtered_pred_df)
+        if last_update:
+            st.sidebar.markdown(f"**Last Update:** {last_update}")
+        
+        # Display cold start warning if needed
+        is_cold_start, cold_start_minutes = check_cold_start(filtered_price_df)
+        if is_cold_start:
+            st.sidebar.warning(f"Cold Start Mode: Only {cold_start_minutes:.1f} minutes of data available")
+        
+        # Display metrics
+        col1, col2, col3 = st.columns(3)
+        
+        # Current price
+        current_price = get_current_price(filtered_price_df)
+        if current_price:
+            col1.metric(
+                "Current Price (USD)",
+                f"${current_price:.2f}"
+            )
+        else:
+            col1.metric("Current Price (USD)", "Loading...")
+        
+        # Price change
+        price_change, price_change_pct = get_price_change(filtered_price_df)
+        if price_change is not None:
+            col2.metric(
+                "Price Change (30m)",
+                f"${price_change:.2f}",
+                f"{price_change_pct:.2f}%",
+                delta_color="normal" if price_change >= 0 else "inverse"
+            )
+        else:
+            col2.metric("Price Change (30m)", "Loading...")
+        
+        # Prediction error
+        avg_error, mae = get_prediction_error_metrics(filtered_metrics_df)
+        if mae is not None:
+            col3.metric(
+                "Prediction MAE",
+                f"${mae:.2f}",
+                f"Avg Error: ${avg_error:.2f}",
+                delta_color="normal" if abs(avg_error) < mae else "inverse"
+            )
+        else:
+            col3.metric("Prediction MAE", "Loading...")
+        
+        # Display charts
+        st.plotly_chart(
+            create_price_chart(filtered_price_df),
+            use_container_width=True,
+            key="price_chart"
+        )
+        
+        st.plotly_chart(
+            create_prediction_chart(filtered_price_df, filtered_pred_df),
+            use_container_width=True,
+            key="prediction_chart"
+        )
+        
+        st.plotly_chart(
+            create_mae_chart(filtered_metrics_df),
+            use_container_width=True,
+            key="mae_chart"
+        )
+        
+        st.plotly_chart(
+            create_error_distribution_chart(filtered_metrics_df),
+            use_container_width=True,
+            key="error_distribution_chart"
+        )
+        
+        # Add footer with refresh info
+        st.sidebar.markdown("---")
+        st.sidebar.markdown(f"Dashboard auto-refreshes every {REFRESH_INTERVAL} second(s)")
+        
+        # Auto-refresh using the current API with consistent interval
+        time.sleep(REFRESH_INTERVAL)
+        st.rerun()
+        
+    except Exception as e:
+        logger.error(f"Error in main loop: {e}")
+        logger.error(traceback.format_exc())
+        st.error(f"An error occurred: {e}")
+        time.sleep(1)
+        st.rerun()
 
 if __name__ == "__main__":
     main() 

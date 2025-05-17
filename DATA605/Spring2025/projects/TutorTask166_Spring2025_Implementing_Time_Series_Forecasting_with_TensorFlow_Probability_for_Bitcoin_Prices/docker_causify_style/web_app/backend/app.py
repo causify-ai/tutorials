@@ -129,6 +129,27 @@ def get_metrics_data():
         # Load metrics data
         metrics_df = load_csv_safely(METRICS_FILE)
         
+        # Calculate recent metrics statistics (last 30 minutes)
+        if not metrics_df.empty and 'actual_error' in metrics_df.columns:
+            # Convert timestamp to datetime if it's not already
+            if not pd.api.types.is_datetime64_any_dtype(metrics_df['timestamp']):
+                metrics_df['timestamp'] = pd.to_datetime(metrics_df['timestamp'])
+            
+            # Get the most recent timestamp
+            max_time = metrics_df['timestamp'].max()
+            # Calculate the time window (30 minutes ago)
+            min_time = max_time - pd.Timedelta(minutes=30)
+            
+            # Filter to last 30 minutes
+            recent_metrics_df = metrics_df[metrics_df['timestamp'] >= min_time]
+            
+            if not recent_metrics_df.empty:
+                # Calculate statistics on the recent data
+                recent_avg_error = recent_metrics_df['actual_error'].mean()
+                recent_mae = recent_metrics_df['actual_error'].abs().mean()
+                
+                logger.info(f"Recent metrics statistics - Avg Error: {recent_avg_error:.2f}, MAE: {recent_mae:.2f}")
+        
         # Keep all available metrics data for error distribution chart
         # Don't filter by time window for metrics to ensure enough data for distribution
         
@@ -139,50 +160,65 @@ def get_metrics_data():
                 price_df = load_csv_safely(PRICE_FILE)
                 
                 if not pred_df.empty and not price_df.empty:
-                    logger.info("Calculating actual_error field for metrics data")
-                    
-                    # Merge prediction and price data on timestamp
+                    logger.info("Calculating actual_error field for metrics")
+                    # Join predictions and actual prices
                     merged_df = pd.merge_asof(
                         pred_df.sort_values('timestamp'),
                         price_df.sort_values('timestamp'),
                         on='timestamp',
                         direction='nearest',
-                        tolerance=pd.Timedelta('1min')  # Add tolerance to improve matching
+                        tolerance=pd.Timedelta('1 minute')
                     )
                     
-                    # Calculate actual error (actual - predicted)
-                    if 'close' in merged_df.columns and 'pred_price' in merged_df.columns:
-                        merged_df['actual_error'] = merged_df['close'] - merged_df['pred_price']
+                    if not merged_df.empty:
+                        # Calculate actual error
+                        merged_df['actual_error'] = merged_df['predicted_price'] - merged_df['price']
                         
-                        # Merge actual_error back to metrics_df
+                        # Join with metrics
                         metrics_df = pd.merge_asof(
                             metrics_df.sort_values('timestamp'),
-                            merged_df[['timestamp', 'actual_error']].sort_values('timestamp'),
+                            merged_df[['timestamp', 'actual_error']],
                             on='timestamp',
                             direction='nearest',
-                            tolerance=pd.Timedelta('1min')  # Add tolerance to improve matching
+                            tolerance=pd.Timedelta('1 minute')
                         )
-                        
-                        logger.info(f"Added actual_error field to {len(metrics_df)} metrics data points")
-                    else:
-                        logger.warning("Missing required columns for error calculation")
             except Exception as e:
-                logger.warning(f"Could not calculate actual_error: {e}")
+                logger.error(f"Error calculating actual_error: {e}")
         
-        # Convert to list of dictionaries for JSON serialization
-        result = []
-        if not metrics_df.empty:
-            # Convert timestamps to ISO format strings without UTC indicator and no milliseconds
-            metrics_df['timestamp'] = metrics_df['timestamp'].dt.strftime('%Y-%m-%dT%H:%M:%S')
+        # Calculate final metrics statistics
+        if not metrics_df.empty and 'actual_error' in metrics_df.columns:
+            # Calculate statistics on all data (for comparison with recent)
+            avg_error = metrics_df['actual_error'].mean()
+            mae = metrics_df['actual_error'].abs().mean()
             
-            # Ensure actual_error exists (use 0 if missing)
-            if 'actual_error' not in metrics_df.columns:
-                metrics_df['actual_error'] = 0
-                logger.warning("Using default value 0 for missing actual_error field")
+            logger.info(f"Final metrics statistics - Avg Error: {avg_error:.2f}, MAE: {mae:.2f}")
+            
+            # Add a metadata record with the recent metrics
+            if 'recent_avg_error' in locals() and 'recent_mae' in locals():
+                metadata_record = {
+                    'timestamp': metrics_df['timestamp'].max().strftime('%Y-%m-%dT%H:%M:%S'),
+                    'is_metadata': True,
+                    'recent_avg_error': float(f"{recent_avg_error:.2f}"),
+                    'recent_mae': float(f"{recent_mae:.2f}"),
+                    'total_avg_error': float(f"{avg_error:.2f}"),
+                    'total_mae': float(f"{mae:.2f}")
+                }
                 
+                # Convert metrics_df to list of dictionaries
+                result = metrics_df.to_dict(orient='records')
+                # Add metadata record at the beginning
+                result.insert(0, metadata_record)
+            else:
+                result = metrics_df.to_dict(orient='records')
+        else:
             result = metrics_df.to_dict(orient='records')
-            logger.info(f"Returning {len(result)} metrics data points")
-            
+        
+        # Convert timestamps to ISO format strings
+        for record in result:
+            if 'timestamp' in record and not isinstance(record['timestamp'], str):
+                record['timestamp'] = record['timestamp'].strftime('%Y-%m-%dT%H:%M:%S')
+        
+        logger.info(f"Returning {len(metrics_df)} metrics data points")
         return jsonify(result)
     except Exception as e:
         logger.error(f"Error in metrics data endpoint: {e}")

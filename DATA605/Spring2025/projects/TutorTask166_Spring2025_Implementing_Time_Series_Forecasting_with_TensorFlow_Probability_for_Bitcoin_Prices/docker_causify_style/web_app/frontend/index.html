@@ -269,7 +269,7 @@
     <script>
         // Configuration
         const config = {
-            refreshInterval: 1000, // 1 second
+            refreshInterval: 1000, // 1 second - matches Streamlit dashboard
             timeWindowMinutes: 30,
             apiBaseUrl: '/api',
             coldStart: {
@@ -535,105 +535,6 @@
                 document.getElementById('prediction-chart').innerHTML = 
                     '<div class="error-box">Error creating prediction chart: ' + error.message + '</div>';
             }
-        }
-        
-        // Create MAE (Mean Absolute Error) chart
-        function createMaeChart(metricsData) {
-            if (!metricsData || metricsData.length === 0) {
-                document.getElementById('mae-chart').innerHTML = 
-                    '<div class="info-box">No prediction error metrics available</div>';
-                return;
-            }
-            
-            // Calculate average error and MAE
-            const actualErrors = metricsData.map(d => d.actual_error || 0);
-            const absErrors = actualErrors.map(Math.abs);
-            const avgAbsError = absErrors.reduce((sum, val) => sum + val, 0) / absErrors.length;
-            const avgError = actualErrors.reduce((sum, val) => sum + val, 0) / actualErrors.length;
-            
-            // Create traces
-            const traces = [];
-            
-            // Actual error trace
-            traces.push({
-                x: metricsData.map(d => d.timestamp),
-                y: metricsData.map(d => d.actual_error || 0),
-                type: 'scatter',
-                mode: 'lines',
-                name: 'Actual Error',
-                line: { color: '#2ecc71', width: 2 }
-            });
-            
-            // MAE trace - this should be a horizontal line at the average absolute error
-            traces.push({
-                x: [metricsData[0].timestamp, metricsData[metricsData.length - 1].timestamp],
-                y: [avgAbsError, avgAbsError],
-                type: 'scatter',
-                mode: 'lines',
-                name: `MAE: ${Math.round(avgAbsError * 100) / 100}`,
-                line: { color: '#f39c12', width: 2, dash: 'dot' }
-            });
-            
-            // Perfect prediction line
-            traces.push({
-                x: [metricsData[0].timestamp, metricsData[metricsData.length - 1].timestamp],
-                y: [0, 0],
-                type: 'scatter',
-                mode: 'lines',
-                name: 'Perfect Prediction',
-                line: { color: '#7f8c8d', width: 1, dash: 'dash' }
-            });
-            
-            // Average error line
-            traces.push({
-                x: [metricsData[0].timestamp, metricsData[metricsData.length - 1].timestamp],
-                y: [avgError, avgError],
-                type: 'scatter',
-                mode: 'lines',
-                name: `Avg Error: ${Math.round(avgError * 100) / 100}`,
-                line: { color: '#3498db', width: 1 }
-            });
-            
-            const layout = {
-                title: 'Prediction Error Over Time',
-                yaxis: {
-                    title: 'Error (USD)',
-                    tickformat: '$,.2f',
-                    zeroline: true
-                },
-                xaxis: {
-                    title: 'Time (UTC)',
-                    tickformat: '%H:%M',
-                    tickangle: -45,
-                    nticks: 8
-                },
-                template: 'plotly_white',
-                showlegend: true,
-                legend: {
-                    orientation: 'h',
-                    y: -0.2
-                },
-                margin: {
-                    l: 60,
-                    r: 40,
-                    t: 50,
-                    b: 80
-                },
-                height: 500,
-                autosize: true,
-                width: null  // Let Plotly use container width
-            };
-            
-            // Set fixed time window
-            const maxTime = new Date(Math.max(...metricsData.map(d => new Date(d.timestamp))));
-            const minTime = new Date(maxTime);
-            minTime.setMinutes(minTime.getMinutes() - config.timeWindowMinutes);
-            layout.xaxis.range = [minTime, maxTime];
-            
-            Plotly.newPlot('mae-chart', traces, layout, {
-                responsive: true,
-                displayModeBar: false
-            });
         }
         
         // Update error distribution chart
@@ -1017,11 +918,11 @@
                 if (hasNewData) {
                     if (state.chartsInitialized) {
                         updateCharts();
+                        updateMetricsDisplay(); // Ensure metrics are updated
                     } else {
                         initializeCharts();
                         state.chartsInitialized = true;
                     }
-                    updateMetricsDisplay();
                 }
                 
                 state.lastUpdate = new Date();
@@ -1053,6 +954,9 @@
                     }, 10000);
                 }
             }
+            
+            // Schedule the next data fetch regardless of success/failure
+            setTimeout(fetchData, config.refreshInterval);
         }
         
         // Initialize charts
@@ -1233,67 +1137,177 @@
             }
         }
         
-        // Update MAE chart with new data
-        function updateMaeChart(metricsData) {
-            if (!metricsData || metricsData.length === 0) return;
+        // Create MAE (Mean Absolute Error) chart
+        function createMaeChart(metricsData) {
+            if (!metricsData || metricsData.length === 0) {
+                document.getElementById('mae-chart').innerHTML = 
+                    '<div class="info-box">No prediction error metrics available</div>';
+                return;
+            }
             
             try {
+                // Check for metadata record (first record with is_metadata flag)
+                let metadataRecord = metricsData.find(d => d.is_metadata === true);
+                
                 // Filter data to the last 30 minutes for a fixed window
                 const maxTime = new Date(Math.max(...metricsData.map(d => new Date(d.timestamp || 0))));
                 const minTime = new Date(maxTime);
                 minTime.setMinutes(minTime.getMinutes() - config.timeWindowMinutes);
                 
                 // Filter data to only include points within the time window
-                const filteredMetricsData = metricsData.filter(d => d.timestamp && new Date(d.timestamp) >= minTime);
+                const filteredMetricsData = metricsData
+                    .filter(d => !d.is_metadata && d.timestamp && new Date(d.timestamp) >= minTime);
                 
-                if (filteredMetricsData.length === 0) return;
+                let recentAvgError = 0;
+                let recentMae = 0;
                 
-                // Calculate average error and MAE
+                if (filteredMetricsData.length > 0) {
+                    // Calculate metrics from the filtered data
+                    const actualErrors = filteredMetricsData
+                        .map(d => d.actual_error || 0)
+                        .filter(e => !isNaN(e));
+                    
+                    if (actualErrors.length > 0) {
+                        // Calculate average error (arithmetic mean of all errors, including sign)
+                        recentAvgError = actualErrors.reduce((sum, val) => sum + val, 0) / actualErrors.length;
+                        
+                        // Calculate MAE (Mean Absolute Error - arithmetic mean of absolute errors)
+                        recentMae = actualErrors.map(Math.abs).reduce((sum, val) => sum + val, 0) / actualErrors.length;
+                        
+                        // Round to 2 decimal places for display
+                        recentAvgError = Math.round(recentAvgError * 100) / 100;
+                        recentMae = Math.round(recentMae * 100) / 100;
+                        
+                        console.log(`Calculated from filtered data: Avg Error = ${recentAvgError}, MAE = ${recentMae}`);
+                    } else if (metadataRecord) {
+                        // Fall back to metadata if no filtered data points have actual_error
+                        recentAvgError = metadataRecord.recent_avg_error || 0;
+                        recentMae = metadataRecord.recent_mae || 0;
+                        console.log(`Using metadata values: Avg Error = ${recentAvgError}, MAE = ${recentMae}`);
+                    }
+                } else if (metadataRecord) {
+                    // Fall back to metadata if no filtered data
+                    recentAvgError = metadataRecord.recent_avg_error || 0;
+                    recentMae = metadataRecord.recent_mae || 0;
+                    console.log(`Using metadata values: Avg Error = ${recentAvgError}, MAE = ${recentMae}`);
+                }
+                
+                // Prepare data for chart
+                const timestamps = filteredMetricsData.map(d => new Date(d.timestamp));
                 const actualErrors = filteredMetricsData.map(d => d.actual_error || 0);
-                const absErrors = actualErrors.map(Math.abs);
-                const avgAbsError = absErrors.reduce((sum, val) => sum + val, 0) / absErrors.length;
-                const avgError = actualErrors.reduce((sum, val) => sum + val, 0) / actualErrors.length;
+                const maes = filteredMetricsData.map(d => d.mae || 0);
                 
-                // Update data for each trace
-                const updateData = {
-                    x: [
-                        filteredMetricsData.map(d => d.timestamp), // Actual error
-                        [filteredMetricsData[0].timestamp, filteredMetricsData[filteredMetricsData.length - 1].timestamp], // MAE
-                        [filteredMetricsData[0].timestamp, filteredMetricsData[filteredMetricsData.length - 1].timestamp], // Perfect prediction
-                        [filteredMetricsData[0].timestamp, filteredMetricsData[filteredMetricsData.length - 1].timestamp]  // Average error
-                    ],
-                    y: [
-                        filteredMetricsData.map(d => d.actual_error || 0),
-                        [avgAbsError, avgAbsError],
-                        [0, 0],
-                        [avgError, avgError]
-                    ]
+                // Create chart
+                const trace1 = {
+                    x: timestamps,
+                    y: actualErrors,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'Actual Error',
+                    line: {
+                        color: '#3498db',
+                        width: 2
+                    }
                 };
                 
-                // Update the trace names to include the current values
-                const roundedAvgError = Math.round(avgError * 100) / 100;
-                const roundedAvgAbsError = Math.round(avgAbsError * 100) / 100;
-                
-                const updateLayout = {
-                    xaxis: {
-                        range: [minTime, maxTime]
+                const trace2 = {
+                    x: timestamps,
+                    y: maes,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'MAE',
+                    line: {
+                        color: '#e74c3c',
+                        width: 2
                     },
-                    'legend.traces[1].name': `MAE: ${roundedAvgAbsError}`,
-                    'legend.traces[3].name': `Avg Error: ${roundedAvgError}`
+                    visible: 'legendonly' // Hide by default
                 };
                 
-                Plotly.update('mae-chart', updateData, updateLayout);
+                const layout = {
+                    title: {
+                        text: `Prediction Error Over Time<br><span style="font-size:0.8em">Avg Error: ${recentAvgError}, MAE: ${recentMae}</span>`,
+                        font: {
+                            size: 16
+                        }
+                    },
+                    xaxis: {
+                        title: 'Time',
+                        type: 'date',
+                        tickformat: '%H:%M:%S',
+                        gridcolor: '#f5f5f5'
+                    },
+                    yaxis: {
+                        title: 'Error',
+                        gridcolor: '#f5f5f5'
+                    },
+                    legend: {
+                        orientation: 'h',
+                        y: -0.2
+                    },
+                    margin: {
+                        l: 50,
+                        r: 20,
+                        t: 60,
+                        b: 80
+                    },
+                    plot_bgcolor: '#ffffff',
+                    paper_bgcolor: '#ffffff',
+                    hovermode: 'closest'
+                };
+                
+                const plotConfig = {
+                    responsive: true,
+                    displayModeBar: false
+                };
+                
+                Plotly.newPlot('mae-chart', [trace1, trace2], layout, plotConfig);
+                
+                // Update metrics display
+                document.getElementById('mae-value').textContent = formatPrice(recentMae);
+                
+                // Determine if MAE is good
+                const maeChangeElement = document.getElementById('mae-change');
+                const latestPrice = state.priceData && state.priceData.length > 0 ? 
+                    state.priceData[state.priceData.length - 1].close : 0;
+                
+                if (latestPrice > 0) {
+                    const maePercent = (recentMae / latestPrice) * 100;
+                    
+                    maeChangeElement.textContent = 
+                        maePercent < 0.5 ? 'Excellent' : 
+                        maePercent < 1 ? 'Good' : 
+                        maePercent < 2 ? 'Fair' : 'Poor';
+                        
+                    maeChangeElement.className = 'metric-change ' + 
+                        (maePercent < 1 ? 'positive-change' : 
+                         maePercent < 2 ? '' : 'negative-change');
+                }
+                
+            } catch (error) {
+                console.error('Error creating MAE chart:', error);
+                document.getElementById('mae-chart').innerHTML = 
+                    '<div class="error-box">Error creating MAE chart: ' + error.message + '</div>';
+            }
+        }
+        
+        // Update MAE chart with new data
+        function updateMaeChart(metricsData) {
+            if (!metricsData || metricsData.length === 0) return;
+            
+            try {
+                // For the MAE chart, we recreate it completely
+                // since we need to recalculate metrics and update annotations
+                createMaeChart(metricsData);
             } catch (error) {
                 console.error('Error updating MAE chart:', error);
+                document.getElementById('mae-chart').innerHTML = 
+                    '<div class="error-box">Error updating MAE chart: ' + error.message + '</div>';
             }
         }
         
         // Initialize dashboard
         function initDashboard() {
-            // Set up refresh interval
-            setInterval(fetchData, config.refreshInterval);
-            
-            // Initial data fetch
+            // Initial data fetch - this will start the continuous fetch cycle
             fetchData();
         }
         
