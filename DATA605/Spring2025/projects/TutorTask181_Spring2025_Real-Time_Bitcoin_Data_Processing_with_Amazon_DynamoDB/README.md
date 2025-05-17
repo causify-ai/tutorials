@@ -1,84 +1,52 @@
-# Tutorial Template: Two Docker Approaches
-
-- This directory provides two versions of the same tutorial setup to help you
-  work with Jupyter notebooks and Python scripts inside Docker environments
-
-- Both versions run the same code but use different Docker approaches, with
-  different level of complexity and maintainability
-
-## 1. `data605_style` (Simple Docker Environment)
-
-- This version is modeled after the setup used in DATA605 tutorials
-- This template provides a ready-to-run environment, including scripts to build,
-  run, and clean the Docker container.
-
-- For your specific project, you should:
-  - Modify the Dockerfile to add project-specific dependencies
-  - Update bash/scripts accordingly
-  - Expose additional ports if your project requires them
-
-## 2. `causify_style` (Causify AI dev-system)
-
-- This setup reflects the approach commonly used in Causify AI dev-system
-- **Recommended** for students familiar with Docker or those wishing to explore a
-  production-like setup
-- Pros
-  - Docker layer written in Python to make it easy to extend and test
-  - Less redundant since code is factored out
-  - Used for real-world development, production workflows
-  - Used for all internships, RA / TA, full-time at UMD DATA605 / MSML610 /
-    Causify 
-- Cons
-  - It is more complex to use and configure
-  - More dependencies from the 
-- For thin environment setup instructions, refer to:  
-  [How to Set Up Development on Laptop](https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
-
-## Reference Tutorials
-
-- The `tutorial_github` example has been implemented in both environments for you
-  to refer to:
-  - `tutorial_github_data605_style` uses the simpler DATA605 approach
-  - `tutorial_github_causify_style` uses the more complex Causify approach
-
-- Choose the approach that best fits your comfort level and project needs. Both
-  are valid depending on your use case.
-
-
 # Real-Time Bitcoin Data Processing with Amazon DynamoDB
 
-## Introduction
-This project tracks Bitcoin’s price in real time and logs the data into an Amazon DynamoDB table. The project fetches the latest Bitcoin price (in USD) from the CoinGecko API and stores each data point in DynamoDB.
+## Author: Varad Tambe
+## Course: DATA605 Spring 2025
+
+## Overview
+This project demonstrates how to ingest real-time Bitcoin price data from the CoinGecko API and store it in Amazon DynamoDB. We then perform time-series analysis to identify trends and visualize the data using Python.
+
+## Key Technologies:
+- **CoinGecko API** — For real-time Bitcoin price data.
+- **Amazon DynamoDB** — A NoSQL database for durable, scalable storage.
+- **Boto3** — AWS SDK for Python to interact with DynamoDB.
+- **Pandas & Matplotlib** — For analysis and visualization of price trends.
+- **Jupyter Notebook** — For interactive data exploration.
 
 ---
 
-## Setup Instructions
-1. **Install dependencies:**
-    ```bash
-    pip install boto3 requests pandas matplotlib
-    ```
+## Project Structure:
+├── dynamodb.API.md # API documentation for interacting with DynamoDB
+├── dynamodb.example.md # Step-by-step example to run the project
+├── README.md # Project overview and setup instructions
+├── cleanup.sh # Shell script to clean up temp files and logs
+├── dynamodb.API.ipynb # ipynb file for API execution
+├── dynamodb.example.ipynb # ipynb file to run the actual project
+├── realtime_ingestor.py # Script to fetch and store Bitcoin price data
+└── template_utils.py # Utility functions for API and database interactions
 
-2. **Configure AWS credentials:**
-    ```bash
-    aws configure
-    ```
-
-3. **Create a DynamoDB table:**
-    - Table Name: `BitcoinPrices`
-    - Primary Key: `timestamp` (Number)
-
----
-
-## Running the Real-Time Ingestor
+## Setup Instructions:
+### **Clone the Repository**
 ```bash
+git clone <repository-link>
+cd Real-Time_Bitcoin_Data_Processing_with_Amazon_DynamoDB
+
+### **Install Dependencies**
+pip install boto3 pandas matplotlib requests
+
+### **Configure AWS Credentials**
+aws configure
+You should have permissions for:
+AmazonDynamoDBFullAccess
+AWSLambdaFullAccess
+
+### **Create DynamoDB Table**
+Run the following script to create the DynamoDB table:
+python3 template_utils.py
+
+### **Run Real-Time Data Ingestion**
+To begin collecting Bitcoin prices in real-time:
 python3 realtime_ingestor.py
 
-This script will log the latest BTC price to DynamoDB every 60 seconds.
-
-# Viewing the Data
-Open the provided Jupyter notebook to visualize and analyze the collected data.
-
-# Cleanup Script
-You can run cleanup.sh to remove temporary files:
-./cleanup.sh
-
+### **Analyze Data**
+Launch the Jupyter Notebook for analysis
