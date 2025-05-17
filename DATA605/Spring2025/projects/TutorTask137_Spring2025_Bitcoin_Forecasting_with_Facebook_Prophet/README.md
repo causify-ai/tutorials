@@ -312,10 +312,6 @@ The Prophet model was used to generate forecasts along with upper and lower boun
 
 ----
 
-Here’s a concise yet detailed version for the *Streamlit Dashboard* section:
-
----
-
 ## Streamlit Dashboard
 
 An interactive Streamlit dashboard was developed to visualize Bitcoin price forecasts and historical trends. The dashboard enhances user experience by offering real-time exploration, customizable filters, and professional-quality visualizations.
@@ -352,10 +348,6 @@ An interactive Streamlit dashboard was developed to visualize Bitcoin price fore
 * *Historical Events & Articles*:
 
   * Highlights of major Bitcoin market events like the 2013 Bull Run, 2017 ICO Boom, 2022 FTX Collapse, and the 2024 Halving, providing context to market movements.
-
----
-
-This dashboard provides an interactive and insightful platform for understanding Bitcoin’s historical behavior and forecasting future price trends, making data-driven decision-making easier for investors and enthusiasts.
 
 ---
 
