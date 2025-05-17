@@ -1,23 +1,25 @@
 # Bitcoin Price Forecasting with Facebook Prophet
 
-Welcome to my capstone project for DATA605: an end-to-end Bitcoin forecasting system using Facebook Prophet, built with real-time data ingestion, EDA, time-series modeling, and  Streamlit deployment.
+Welcome to my capstone project for DATA605: An end-to-end Bitcoin forecasting system using Facebook Prophet, built with real-time data ingestion, EDA, time-series modeling, and Streamlit deployment.
 
+---
 
 ## Table of Contents
 
-1. [Project Objective](#project-objective)
-2. [General Guidelines](#general-guidelines)
-3. [Architecture Overview](#architecture-overview)
-4. [Technologies & Libraries Used](#technologies--libraries-used)
-5. [Dataset Sources](#dataset-sources)
-6. [Utility Functions Explained (utils.py)](#utility-functions-explained-utilspy)
-7. [Exploratory Data Analysis (EDA)](#exploratory-data-analysis-eda)
-8. [Modeling](#modeling)
-9. [Forecasting](#forecasting)
-10. [Evaluation](#evaluation)
-11. [Streamlit Dashboard](#streamlit-dashboard)
-12. [Project Status](#project-status)
-13. [How to Run the Project (Brief)](#how-to-run-the-project-brief)
+1. [Project Objective](#project-objective)  
+2. [How to Run the Project](#how-to-run-the-project-brief)  
+3. [General Guidelines](#general-guidelines)  
+4. [Architecture Overview](#architecture-overview)  
+5. [Technologies & Libraries Used](#technologies--libraries-used)  
+6. [Dataset Sources](#dataset-sources)  
+7. [Utility Functions Explained (utils.py)](#utility-functions-explained-utilspy)  
+8. [Exploratory Data Analysis (EDA)](#exploratory-data-analysis-eda)  
+9. [Modeling](#modeling)  
+10. [Forecasting](#forecasting)  
+11. [Evaluation](#evaluation)  
+12. [Streamlit Dashboard](#streamlit-dashboard)  
+13. [Project Status](#project-status)  
+
 
 ---
 
