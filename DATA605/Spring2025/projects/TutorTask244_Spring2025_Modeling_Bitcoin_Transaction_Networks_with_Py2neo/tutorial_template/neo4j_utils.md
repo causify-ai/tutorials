@@ -16,7 +16,41 @@
 
 # neo4j_utils.py - Py2Neo Tutorial
 
-This file contains utility functions to help you connect to a Neo4j graph database and work with data using the Py2Neo library. It’s designed to help you learn the basics of using Neo4j with Python in under an hour — including how to connect, insert data, run Cypher queries, and do simple graph analysis.
+## What is Neo4j?
+
+Neo4j is a graph database that stores information as **nodes**, **relationships**, and **properties**. It's particularly good for applications where connections between entities matter — like social networks, recommendation systems, or transaction networks.
+
+In Neo4j:
+- A **node** can represent an object (e.g., a wallet).
+- A **relationship** connects two nodes (e.g., a transaction from one wallet to another).
+- A **property** is metadata (e.g., timestamp, amount).
+
+Neo4j uses a query language called **Cypher**, which is designed for querying graph structures. Cypher is similar to SQL, but optimized for pattern matching.
+
+Example:
+```cypher
+MATCH (a:Address)-[:SENT]->(b:Address)
+RETURN a.address, b.address
+```
+
+## What is Py2Neo?
+
+**Py2Neo** is a Python library that allows you to interact with a Neo4j database. It supports:
+- Connecting to Neo4j from Python
+- Creating and querying nodes and relationships
+- Running Cypher queries programmatically
+
+Instead of manually writing Cypher for every operation, Py2Neo allows you to define objects in Python:
+
+```python
+from py2neo import Node, Relationship
+a = Node("Address", address="wallet_1")
+b = Node("Address", address="wallet_2")
+r = Relationship(a, "SENT", b, amount=5.0)
+graph.create(r)
+```
+
+This is helpful for projects that combine external data sources (like APIs) with graph modeling.
 
 ---
 
