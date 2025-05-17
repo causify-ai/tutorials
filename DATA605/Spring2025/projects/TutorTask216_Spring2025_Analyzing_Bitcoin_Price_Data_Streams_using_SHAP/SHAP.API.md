@@ -1,15 +1,17 @@
 <!-- toc -->
 
 - [SHAP API Tutorial](#shap-api-tutorial)
-  * [Table of Contents](#table-of-contents)
-    + [Hierarchy](#hierarchy)
-  * [General Guidelines](#general-guidelines)
+  - [Table of Contents](#table-of-contents)
+    - [Hierarchy](#hierarchy)
+  - [General Guidelines](#general-guidelines)
 - [1. Overview](#1-overview)
-- [2. Native API Endpoints Used](#2-native-api-endpoints-used)
-- [3. Wrapper Functions](#3-wrapper-functions)
-  * [3.1 `fetch_market_chart_data()`](#31-fetch_market_chart_data)
-  * [3.2 `save_market_data()`](#32-save_market_data)
-- [4. Environment Configuration](#4-environment-configuration)
+- [2. SHAP Explainers Covered](#2-shap-explainers-covered)
+- [3. Visualization Functions](#3-visualization-functions)
+  - [3.1 `summary_plot()`](#31-summary_plot)
+  - [3.2 `dependence_plot()`](#32-dependence_plot)
+  - [3.3 `force_plot()`](#33-force_plot)
+  - [3.4 `decision_plot()`](#34-decision_plot)
+- [4. Model Types Supported](#4-model-types-supported)
 - [5. Usage Example (Notebook)](#5-usage-example-notebook)
 - [6. Future Improvements](#6-future-improvements)
 
@@ -17,11 +19,11 @@
 
 # SHAP API Tutorial
 
-This markdown file serves as documentation for the native CoinGecko API and the custom wrapper layer built in this project. It complements the `SHAP.API.ipynb` notebook by providing detailed explanations of the API interactions and the utility functions developed.
+This markdown file documents key functionalities of the SHAP Python library and serves as a companion to the `SHAP.API.ipynb` tutorial notebook. It provides a high-level overview of available SHAP explainers and visual tools for interpreting machine learning model predictions.
 
 ## Table of Contents
 
-The markdown file follows a clear structure with nested sections and examples for both native and wrapped API calls.
+The structure mirrors the SHAP API walkthrough provided in the notebook, covering both explainer initialization and output interpretation.
 
 ### Hierarchy
 
@@ -33,71 +35,60 @@ The markdown file follows a clear structure with nested sections and examples fo
 
 ## General Guidelines
 
-- This markdown file complements the usage shown in `SHAP.API.ipynb`.
-- It documents both the CoinGecko API and the project’s Python-based wrapper functions.
-- Follows the naming format `SHAP.API.md`.
+- This documentation complements `SHAP.API.ipynb`.
+- It focuses on explaining SHAP’s official Python API (not CoinGecko).
+- All functions shown are directly usable via the `shap` Python package.
 
 ---
 
 ## 1. Overview
 
-This document outlines how the project interfaces with the [CoinGecko API](https://www.coingecko.com/en/api), using both native REST calls and reusable Python functions. These utilities streamline access to time-series cryptocurrency data for use in machine learning and SHAP-based interpretability.
+The SHAP library offers model interpretability by attributing prediction outcomes to input features using Shapley values from game theory. This project uses SHAP to:
+
+- Explain both global and local model behavior
+- Visualize prediction drivers
+- Support both tree-based and black-box models
+- Extend explanations to image and text data
 
 ---
 
-## 2. Native API Endpoints Used
+## 2. SHAP Explainers Covered
 
-| Endpoint | Purpose | Example Usage |
-|----------|---------|----------------|
-| `/coins/{id}/market_chart` | Historical BTC prices, volume, and market cap | Used to build time-series datasets |
-| `/coins/list` | List of supported coin IDs | Useful for ID validation |
-| `/simple/price` | Real-time price quotes for multiple coins | Used in dashboards or alerts |
-| `/coins/{id}` | Coin metadata (description, links, images) | Used for exploratory data tasks |
-
----
-
-## 3. Wrapper Functions
-
-Located in: `src/ingestion/fetch_data.py`
-
-### 3.1 `fetch_market_chart_data(config: dict, override_days: Optional[int] = None) → pd.DataFrame`
-
-Fetches price, volume, and market cap for Bitcoin and returns a merged and timestamped DataFrame.
-
-**Parameters**:
-- `config`: Dictionary with API config (URL, currency, days)
-- `override_days`: Optional override for the number of days
-
-**Returns**:
-- DataFrame with columns: `timestamp`, `price`, `market_cap`, `volume`
-
-**Example**:
-```python
-config = {
-    "api": {
-        "base_url": "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart",
-        "vs_currency": "usd",
-        "days": 30
-    }
-}
-df = fetch_market_chart_data(config)
-```
+| Explainer                | Use Case                                      |
+| ------------------------ | --------------------------------------------- |
+| `TreeExplainer`          | Fast and exact SHAP values for tree models    |
+| `KernelExplainer`        | Model-agnostic explanations (any ML model)    |
+| `DeepExplainer`          | Explaining deep learning models (e.g. CNNs)   |
+| `Explainer` (text/image) | General entry point for modern SHAP workflows |
 
 ---
 
-### 3.2 `save_market_data(df: pd.DataFrame, folder: str = "data") → str`
+## 3. Visualization Functions
 
-Saves a timestamped `.csv` of the given DataFrame to the specified folder.
+### 3.1 `summary_plot()`
+
+Summarizes global feature importance using SHAP values across all instances.
+
+### 3.2 `dependence_plot()`
+
+Shows how a single feature's value affects its SHAP contribution, and highlights interactions.
+
+### 3.3 `force_plot()`
+
+Visualizes SHAP values for one or multiple predictions — great for local explanation.
+
+### 3.4 `decision_plot()`
+
+Tracks how model decisions accumulate over features for one or many predictions.
 
 ---
 
-## 4. Environment Configuration
+## 4. Model Types Supported
 
-API keys are stored securely in a `.env` file and loaded using `python-dotenv`:
-
-```env
-COINGECKO_API_KEY=your-demo-or-pro-api-key-here
-```
+- XGBoost, LightGBM, CatBoost (via `TreeExplainer`)
+- Any sklearn-compatible model (via `KernelExplainer`)
+- Deep learning models in TensorFlow/Keras (via `DeepExplainer`)
+- Text and image models using SHAP’s modern `Explainer` interface
 
 ---
 
@@ -105,14 +96,16 @@ COINGECKO_API_KEY=your-demo-or-pro-api-key-here
 
 The notebook `SHAP.API.ipynb` demonstrates:
 
-- Using `requests` to call the native API
-- Using wrapper functions for standardized output
-- Exploring multiple endpoints including metadata and real-time pricing
+- Training a classifier (XGBoost, MLP)
+- Creating SHAP explainers for different model types
+- Generating summary, force, dependence, decision, and interaction plots
+- Explaining predictions on tabular, image, and text data
 
 ---
 
 ## 6. Future Improvements
 
-- Move all wrapper functions to a centralized `SHAP_utils.py`
-- Add error handling and retry logic
-- Expand to multi-coin ingestion via dynamic parameters
+- Move reusable logic into a centralized `SHAP_utils.py`
+- Add support for multi-class interpretation tools
+- Integrate SHAP value aggregation across folds for cross-validation
+- Add CLI-based interface for batch SHAP runs
