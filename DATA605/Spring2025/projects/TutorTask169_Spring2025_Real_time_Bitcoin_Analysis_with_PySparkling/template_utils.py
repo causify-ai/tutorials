@@ -1,65 +1,92 @@
 """
 template_utils.py
 
-This file contains utility functions that support the tutorial notebooks.
+Utility functions for real-time Bitcoin analysis with PySparkling.
 
-- Notebooks should call these functions instead of writing raw logic inline.
-- This helps keep the notebooks clean, modular, and easier to debug.
-- Students should implement functions here for data preprocessing,
-  model setup, evaluation, or any reusable logic.
+- Fetch live Bitcoin prices via CoinGecko.
+- Wrap results in pandas DataFrames.
+- Convert pandas DataFrame → Spark DataFrame with explicit schema.
+- Run H2O AutoML on a Spark DataFrame.
 """
 
-import pandas as pd
 import logging
-from sklearn.model_selection import train_test_split
-from pycaret.classification import compare_models
+from datetime import datetime
+
+import requests
+import pandas as pd
+from pyspark.sql import SparkSession
+from pyspark.sql.types import StructType, StructField, TimestampType, DoubleType
+from pysparkling import H2OContext
+from h2o.automl import H2OAutoML
 
 # -----------------------------------------------------------------------------
 # Logging
 # -----------------------------------------------------------------------------
-
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # -----------------------------------------------------------------------------
-# Example 1: Split the dataset into train and test sets
+# Data Fetching
 # -----------------------------------------------------------------------------
-
-def split_data(df: pd.DataFrame, target_column: str, test_size: float = 0.2):
+def fetch_bitcoin_price() -> float:
     """
-    Split the dataset into training and testing sets.
-
-    :param df: full dataset
-    :param target_column: name of the target column
-    :param test_size: proportion of test data (default = 0.2)
-
-    :return: X_train, X_test, y_train, y_test
+    Fetch the current Bitcoin price in USD from CoinGecko.
+    :return: price as Python float
     """
-    logger.info("Splitting data into train and test sets")
-    X = df.drop(columns=[target_column])
-    y = df[target_column]
-    return train_test_split(X, y, test_size=test_size, random_state=42)
+    url = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd'
+    resp = requests.get(url)
+    resp.raise_for_status()
+    data = resp.json()
+    price = float(data['bitcoin']['usd'])
+    logger.debug("Fetched Bitcoin price: %s", price)
+    return price
+
+def fetch_data() -> pd.DataFrame:
+    """
+    Wrap the latest price into a one-row pandas DataFrame
+    with UTC timestamp and float price.
+    """
+    price = fetch_bitcoin_price()
+    ts = datetime.utcnow()
+    df = pd.DataFrame([{"timestamp": ts, "price": price}])
+    logger.debug("Wrapped data into DataFrame:\n%s", df)
+    return df
 
 # -----------------------------------------------------------------------------
-# Example 2: PyCaret classification pipeline
+# Spark Conversion
 # -----------------------------------------------------------------------------
-
-def run_pycaret_classification(df: pd.DataFrame, target_column: str) -> pd.DataFrame:
+def to_spark_df(spark: SparkSession, pdf: pd.DataFrame):
     """
-    Run a basic PyCaret classification experiment.
-
-    :param df: dataset containing features and target
-    :param target_column: name of the target column
-
-    :return: comparison of top-performing models
+    Convert a pandas DataFrame (datetime + float) into a Spark DataFrame
+    using an explicit schema so types align for TimestampType and DoubleType.
     """
-    logger.info("Initializing PyCaret classification setup")
-    ...
+    # Ensure python datetimes and float types
+    pdf = pdf.copy()
+    pdf['timestamp'] = pdf['timestamp'].dt.to_pydatetime()
+    pdf['price'] = pdf['price'].astype(float)
 
-    logger.info("Comparing models")
-    results = compare_models()
-    ...
+    schema = StructType([
+        StructField("timestamp", TimestampType(), nullable=True),
+        StructField("price",     DoubleType(),    nullable=True),
+    ])
+    sdf = spark.createDataFrame(pdf, schema=schema)
+    logger.debug("Converted to Spark DataFrame with schema %s", sdf.schema)
+    return sdf
 
-    return results
-
-
+# -----------------------------------------------------------------------------
+# AutoML
+# -----------------------------------------------------------------------------
+def run_automl(hc: H2OContext, sdf, target_col: str = "price",
+               max_models: int = 5, max_runtime_secs: int = 30, seed: int = 42):
+    """
+    Upload Spark DataFrame to H2O, run AutoML, and return the AutoML object.
+    """
+    # Convert to H2OFrame
+    hf = hc.as_h2o_frame(sdf, framename="bitcoin_data")
+    logger.info("Starting H2O AutoML with max_models=%s, max_runtime_secs=%s",
+                max_models, max_runtime_secs)
+    aml = H2OAutoML(max_models=max_models,
+                    max_runtime_secs=max_runtime_secs,
+                    seed=seed)
+    aml.train(y=target_col, training_frame=hf)
+    logger.info("AutoML run complete. Leader model: %s", aml.leader.model_id)
+    return aml
