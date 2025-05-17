@@ -18,8 +18,6 @@
 - [LLM Agent System](#llm-agent-system)
   * [Master-Slave Architecture](#master-slave-architecture)
   * [Agent Specialization](#agent-specialization)
-  * [Query Processing Flow](#query-processing-flow)
-  * [Information Retrieval Techniques](#information-retrieval-techniques)
 - [API and Web Interface](#api-and-web-interface)
   * [FastAPI Implementation](#fastapi-implementation)
   * [Asynchronous Processing](#asynchronous-processing)
@@ -29,15 +27,10 @@
   * [Grafana Dashboards](#grafana-dashboards)
   * [System Health Indicators](#system-health-indicators)
 - [Complete System Architecture](#complete-system-architecture)
-  * [Component Integration](#component-integration)
-  * [Data Flow](#data-flow)
-  * [Scaling Considerations](#scaling-considerations)
 - [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
   * [Usage Examples](#usage-examples)
-- [Future Enhancements](#future-enhancements)
-- [Appendix](#appendix)
 
 <!-- tocstop -->
 
@@ -50,7 +43,7 @@ Key features include:
 - Knowledge graph construction with optimized entity-relationship modeling
 - Specialized agent system for intelligent, domain-specific querying
 - FastAPI service with background processing and real-time updates
-- Full production monitoring with Prometheus and Grafana
+- Monitoring with Prometheus and Grafana
 
 ## Data Connectors
 
@@ -92,7 +85,7 @@ The On-Chain Metrics Connector (`blockchaininfo.py`) collects Bitcoin network me
 **Design Decisions:**
 - **Complementary Metrics**: Selected metrics that aren't directly available in raw blockchain data but provide crucial network insights.
 - **Historical Retrieval**: Implemented timespan-based fetching to collect historical metric snapshots.
-- `Metric Mapping**: Created a standardized taxonomy of metrics across different source APIs.
+- **Metric Mapping**: Created a standardized taxonomy of metrics across different source APIs.
 
 **Key Methods:**
 - `get_metric()`: Fetches any supported metric with time-based filtering
@@ -116,21 +109,16 @@ flowchart LR
     I --> J
 ```
 
-The data flow architecture is designed to be:
-- **Fault-Tolerant**: Each connector operates independently, so failures in one data source don't affect others
-- **Time-Synchronized**: Data is aligned by timestamp to create temporal relationships
-- **Incrementally Updatable**: New data can be ingested without rebuilding the entire graph
-
 ## Knowledge Graph Construction
 
 The knowledge graph forms the foundation of our system, enabling complex queries across heterogeneous data sources.
 
-### Triplets: The Building Blocks
+### Triplets
 
 Our knowledge graph is built from "triplets" - a fundamental structure of subject-predicate-object relationships (e.g., "Block 700000 CONTAINS Transaction abc123").
 
 **Design Decisions:**
-- **Unified Triplet Generation**: Rather than building separate graph structures for each data source, we use the `TripletGenerator` class to create a cohesive, interlinked knowledge graph.
+- **Code-based Triplet Generation**: Since we have structured data, we can avoid prompting LLM for triplet generation and instead use the `TripletGenerator` class to create a cohesive, interlinked knowledge graph. This saves us a lot of API calls.
 - **Rich Property Set**: Each node and relationship contains comprehensive properties beyond just identifiers, enabling complex filtering and pattern matching.
 - **Semantic Embedding**: We generate natural language descriptions of entities and relationships, embed them with a sentence transformer, and store these vectors to enable semantic search.
 
@@ -173,8 +161,7 @@ classDiagram
         +unit: string
     }
     
-    Block "1" --> "*" Transaction: CONTAINS
-    Block --> Block: FOLLOWS
+    Block --> "*" Transaction: CONTAINS
     Transaction --> Address: SENDS_TO
     Address --> Transaction: SPENDS_FROM
     Block --> Indicator: HAS_ECONOMIC_CONTEXT
@@ -187,6 +174,8 @@ classDiagram
 - **Temporal Properties**: All time-relevant nodes include consistent datetime fields (year, month, day, timestamp) to enable time-based filtering without complex joins.
 - **Value Representation**: Values are stored as typed properties rather than embedded in node names, ensuring proper numeric operations and comparison.
 
+**See Appendix for more details**
+
 ### Neo4j Graph Database
 
 We chose Neo4j as our graph database for its maturity, performance, and Cypher query language.
@@ -198,15 +187,16 @@ We chose Neo4j as our graph database for its maturity, performance, and Cypher q
 
 ### Knowledge Graph Index
 
-LlamaIndex's `PropertyGraphIndex` provides the crucial bridge between our Neo4j graph database and the LLM-powered query system.
+LlamaIndex's `PropertyGraphIndex` provides the bridge between our Neo4j graph database and the LLM-powered query system.
 
 ```mermaid
 flowchart LR
-    A[Neo4j Database] --> B[Neo4jPropertyGraphStore]
+    A[Neo4j Database] <--> B[Neo4jPropertyGraphStore]
+    G[Local Cache] --> H[TripletGenerator] -->
     B --> C[PropertyGraphIndex]
     C --> D[Vector Retriever]
     C --> E[Cypher Retriever]
-    D --> F[LLM Agent System]
+    D --> F[User Query]
     E --> F
 ```
 
@@ -242,8 +232,7 @@ flowchart TD
 
 **Design Decisions:**
 - **Query Routing Logic**: The MasterAgent analyzes query intent to determine the most appropriate specialized agent, using explicit domain knowledge of each agent's capabilities.
-- **Function Registry**: Each slave agent has a registry of specialized functions it can invoke based on query intent.
-- **Confidence-Based Delegation**: Queries are routed based on both topic match and confidence levels.
+- **Specialized Tools**: Each slave agent has a registry of specialized function tools it can invoke based on query intent.
 
 ### Agent Specialization
 
@@ -260,41 +249,6 @@ Each specialized agent focuses on a specific domain, with custom functions and d
 - **Tool Selection Strategy**: Agents have a curated set of tools optimized for their specific domain.
 - **Metadata Enrichment**: Query responses include domain context that might not be explicitly requested.
 
-### Query Processing Flow
-
-The query processing follows a deliberate workflow to ensure accurate and comprehensive responses:
-
-```mermaid
-sequenceDiagram
-    User->>MasterAgent: Natural language query
-    MasterAgent->>SlaveAgent: Route to appropriate agent
-    SlaveAgent->>ToolDispatcher: Select appropriate tools
-    ToolDispatcher->>Neo4j: Execute Cypher queries
-    Neo4j->>ToolDispatcher: Return structured results
-    ToolDispatcher->>SlaveAgent: Raw query results
-    SlaveAgent->>LLM: Format and contextualize
-    LLM->>SlaveAgent: Generate natural response
-    SlaveAgent->>User: Return final answer
-```
-
-**Design Decisions:**
-- **Progress Indicators**: We display dynamic progress indicators during complex queries to improve user experience.
-- **Context Preservation**: Query context is maintained throughout the handoff between agents.
-- **Result Formatting**: Raw query results are transformed into human-readable, contextually rich responses.
-
-### Information Retrieval Techniques
-
-Our system employs multiple retrieval strategies to handle different query types:
-
-1. **Cypher Query Generation**: For structured, pattern-matching queries (e.g., "Find transactions between addresses X and Y")
-2. **Vector Search**: For conceptual or semantic queries (e.g., "How does Bitcoin mining difficulty relate to hash rate?")
-3. **Hybrid Retrieval**: Combining both approaches for complex queries
-
-**Design Decisions:**
-- **Retrieval Strategy Selection**: The generalist agent determines which retrieval method is most appropriate based on query structure.
-- **Vector Context Window**: For vector search, we include a configurable context window around matched nodes.
-- **Search Path Depth**: Graph traversal depth is tuned based on query complexity and context requirements.
-
 ## API and Web Interface
 
 The system is exposed through a FastAPI service with both API endpoints and a web interface.
@@ -305,19 +259,17 @@ Our FastAPI implementation provides RESTful endpoints for querying and system st
 
 ```mermaid
 flowchart LR
-    A[Client] --> B[FastAPI Server]
-    B --> C[/api/query]
-    B --> D[/api/status]
-    B --> E[/metrics]
-    B --> F[Web UI]
+    A[Client] --> B[FastAPI Server with WebUI]
+    B --> C["/api/query"]
+    B --> D["/api/status"]
+    B --> E["/metrics"]
     C --> G[LlamaAgents]
     G --> H[Knowledge Graph]
 ```
 
 **Design Decisions:**
-- **API-First Design**: Core functionality is exposed through RESTful endpoints, with the web UI as a consumer of these APIs.
+- **API-Design**: Core functionality is exposed through RESTful endpoints, with the web UI as a consumer of these APIs.
 - **Response Standardization**: All responses follow a consistent format with clear error handling.
-- **Rate Limiting**: Implemented to prevent abuse and ensure fair resource allocation.
 
 ### Asynchronous Processing
 
@@ -343,7 +295,7 @@ Complete monitoring ensures system health and performance tracking in production
 
 ### Prometheus Metrics
 
-We implement detailed Prometheus metrics to track system performance:
+We implement basic Prometheus metrics to track system performance:
 
 **Design Decisions:**
 - **Counter Metrics**: Track total queries, updates, and other cumulative events.
@@ -365,7 +317,7 @@ Key indicators are exposed to monitor overall system health:
 
 ```mermaid
 flowchart LR
-    A[FastAPI Server] --> B[/metrics]
+    A[FastAPI Server] --> B["/metrics"]
     B --> C[Prometheus]
     C --> D[Grafana]
     D --> E[Dashboard]
@@ -379,19 +331,17 @@ flowchart LR
 - **Update Status Tracking**: The system tracks whether an update is in progress and when the last update completed.
 - **Error Tracking**: Failed operations are logged and exposed through metrics.
 
-## Complete System Architecture
+## Overall Architecture
 
 The complete system integrates all components into a cohesive architecture.
 
-### Component Integration
-
 ```mermaid
 flowchart TD
-    User[User] --> WebUI[Web UI]
+    User[User] <--> WebUI[Web UI]
     WebUI --> FastAPI[FastAPI Server]
     FastAPI --> LLMAgents[LLM Agent System]
     LLMAgents --> PropertyGraphIndex[Property Graph Index]
-    PropertyGraphIndex --> Neo4j[Neo4j Database]
+    PropertyGraphIndex <--> Neo4j[Neo4j Database]
     
     subgraph "Data Ingestion"
     BitcoinNode[Bitcoin Node API] --> Connector1[BitcoinNodeConnector]
@@ -411,31 +361,7 @@ flowchart TD
     Metrics --> Prometheus[Prometheus]
     Prometheus --> Grafana[Grafana Dashboards]
     end
-    
-    subgraph "Background Tasks"
-    Scheduler[APScheduler] --> Update[Knowledge Graph Update]
-    Update --> DataIngestion[Data Ingestion]
-    DataIngestion --> GraphUpdate[Graph Update]
-    end
 ```
-
-### Data Flow
-
-The end-to-end data flow shows how information moves through the system:
-
-**Design Decisions:**
-- **Unidirectional Flow**: Data generally flows in one direction from sources to knowledge graph to queries.
-- **Update Isolation**: Graph updates occur independently from query processing.
-- **Caching Strategy**: Frequent queries are cached to reduce database load.
-
-### Scaling Considerations
-
-The architecture is designed to scale in several dimensions:
-
-**Design Decisions:**
-- **Horizontal Scaling**: FastAPI workers can be scaled horizontally for more concurrent queries.
-- **Incremental Updates**: The knowledge graph is updated incrementally rather than rebuilt.
-- **Neo4j Clustering**: For very large graphs, Neo4j can be deployed in a clustered configuration.
 
 ## Getting Started
 
@@ -443,7 +369,7 @@ The architecture is designed to scale in several dimensions:
 
 To run this project, you'll need:
 - Docker and Docker Compose
-- Python 3.9+
+- Python 3.10+
 - API keys for:
   - OpenAI API (for LLM)
   - FRED API (for economic data)
@@ -451,12 +377,12 @@ To run this project, you'll need:
 
 ### Installation
 
-1. Clone the repository
-2. Run the setup script:
+1. Follow root README.md for initial project setup
+2. Configure API keys in `devops/env/default.env` based on the `devops/env/default.example.env`
+3. Run the setup script:
    ```bash
    python setup.py
    ```
-3. Configure API keys in `devops/env/default.env`
 4. Start the service:
    ```bash
    python llamaindex.example.py
@@ -465,260 +391,7 @@ To run this project, you'll need:
 ### Usage Examples
 
 Basic query examples:
-- "How did the Federal Funds Rate correlate with Bitcoin transaction volume in 2023?"
+- "How did the Federal Funds Rate correlate with Bitcoin transaction volume in 2025?"
 - "Show me blocks mined during periods of high inflation"
 - "What happens to Bitcoin hash rate when the S&P 500 declines?"
 - "Analyze transaction patterns for address 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
-
-## Future Enhancements
-
-Potential improvements to the system include:
-- Integration with more data sources (Twitter sentiment, mining pool data)
-- Fine-tuning a domain-specific LLM on Bitcoin knowledge
-- Implementing a streaming update pipeline for near-real-time data
-- Extending the agent system with reinforcement learning for improved query routing
-"""
-## Appendix
-
-## Graph Structure
-
-## 1. Entity Structure Overview
-
-### Entity Labeling Strategy
-
-We'll implement a hierarchical labeling system with two tiers:
-- **Primary Label**: Represents the broad category (e.g., `Block`, `Transaction`, `Metric`, `Indicator`)
-- **Secondary Label**: Specifies the exact entity type (e.g., `HashRate`, `SP500`, `FederalFundsRate`)
-
-This dual-label approach ensures both broad categorization for simple queries and specific identification for detailed analysis. Every entity will have at least one label, with specialized entities having two or more.
-
-### Temporal Properties Framework
-
-All time-relevant nodes will consistently include:
-- `year`: Integer (e.g., 2025)
-- `month`: Integer (1-12)
-- `day`: Integer (1-31)
-- `timestamp`: ISO format string (e.g., "2025-04-18T14:23:15Z")
-- `date`: YYYY-MM-DD format (e.g., "2025-04-18")
-
-This consistent temporal property pattern enables efficient time-based filtering across all entity types without complex joins.
-
-### Value Representation
-
-Values will be stored as typed properties rather than embedded in node names:
-- Numeric values as actual numbers (not strings)
-- Units as separate string properties
-- Boolean flags for special conditions
-- Descriptive metrics with appropriate types
-
-## 2. Core Entity Types in Detail
-
-### Blockchain Entities
-
-#### Block Nodes
-- **Labels**: `:Block`
-- **Identifier Properties**:
-  - `height`: Integer (primary identifier)
-  - `hash`: String (cryptographic hash)
-- **Temporal Properties**: Full datetime suite (year, month, day, timestamp, date)
-- **Metric Properties**:
-  - `difficulty`: Numeric
-  - `transaction_count`: Integer
-  - `size`: Integer (bytes)
-  - `weight`: Integer
-  - `version`: Integer
-  - `merkle_root`: String
-  - `bits`: String
-  - `nonce`: Integer
-  - `avg_transaction_value`: Numeric (BTC)
-  - `median_transaction_value`: Numeric (BTC)
-  - `min_transaction_value`: Numeric (BTC)
-  - `max_transaction_value`: Numeric (BTC)
-  - `fee_total`: Numeric (BTC)
-  - `fee_rate_avg`: Numeric (sat/vByte)
-
-#### Transaction Nodes
-- **Labels**: `:Transaction`
-- **Identifier Properties**:
-  - `txid`: String (transaction hash, primary identifier)
-- **Temporal Properties**: Full datetime suite (inherited from containing block)
-- **Metric Properties**:
-  - `size`: Integer (bytes)
-  - `virtual_size`: Integer (vBytes)
-  - `weight`: Integer
-  - `fee`: Numeric (BTC)
-  - `fee_rate`: Numeric (sat/vByte)
-  - `input_count`: Integer
-  - `output_count`: Integer
-  - `total_input_value`: Numeric (BTC)
-  - `total_output_value`: Numeric (BTC)
-  - `is_coinbase`: Boolean
-
-#### Address Nodes
-- **Labels**: `:Address`
-- **Identifier Properties**:
-  - `address`: String (primary identifier)
-- **Metric Properties**:
-  - `type`: String (p2pkh, p2sh, bech32, etc.)
-  - `first_seen`: Timestamp
-  - `last_seen`: Timestamp
-  - `total_received`: Numeric (BTC)
-  - `total_sent`: Numeric (BTC)
-  - `balance`: Numeric (BTC)
-  - `transaction_count`: Integer
-
-### Economic Indicators
-
-#### Indicator Nodes
-- **Labels**: `:Indicator`, plus specific indicator type (e.g., `:SP500`, `:FederalFundsRate`)
-- **Identifier Properties**:
-  - `name`: String (canonical name)
-  - `id`: String (machine-readable identifier)
-- **Temporal Properties**: Full datetime suite
-- **Value Properties**:
-  - `value`: Numeric (appropriately typed for the indicator)
-  - `unit`: String
-  - `change`: Numeric (day-over-day change)
-  - `percent_change`: Numeric (percentage)
-  - `source`: String (data source identifier)
-
-#### Specific Indicator Types
-- **S&P 500**: `:Indicator:SP500` with value in points
-- **Federal Funds Rate**: `:Indicator:FederalFundsRate` with value as percentage
-- **Consumer Price Index**: `:Indicator:CPI` with value as index points
-- **U.S. Dollar Index**: `:Indicator:DollarIndex` with value as index points
-- **GDP Growth Rate**: `:Indicator:GDPGrowth` with value as percentage
-- **Unemployment Rate**: `:Indicator:UnemploymentRate` with value as percentage
-- **M2 Money Supply**: `:Indicator:M2MoneySupply` with value in trillions USD
-
-### Bitcoin Network Metrics
-
-#### Metric Nodes
-- **Labels**: `:Metric`, plus specific metric type (e.g., `:HashRate`, `:TransactionVolume`)
-- **Identifier Properties**:
-  - `name`: String (canonical name)
-  - `id`: String (machine-readable identifier)
-- **Temporal Properties**: Full datetime suite
-- **Value Properties**:
-  - `value`: Numeric (appropriately typed for the metric)
-  - `unit`: String
-  - `change`: Numeric (day-over-day change)
-  - `percent_change`: Numeric (percentage)
-  - `source`: String (data source identifier)
-
-#### Specific Metric Types
-- **Hash Rate**: `:Metric:HashRate` with value in TH/s
-- **Transaction Volume BTC**: `:Metric:TransactionVolumeBTC` with value in BTC
-- **Transaction Volume USD**: `:Metric:TransactionVolumeUSD` with value in USD
-- **Active Addresses**: `:Metric:ActiveAddresses` with value as count
-- **Transaction Fees**: `:Metric:TransactionFees` with value in BTC
-- **Mempool Size**: `:Metric:MempoolSize` with value in bytes
-- **UTXO Set Size**: `:Metric:UTXOSetSize` with value as count
-- **Mining Difficulty**: `:Metric:Difficulty` with value as numeric difficulty
-
-### Market Events
-
-#### Event Nodes
-- **Labels**: `:Event`, plus event type (e.g., `:Regulatory`, `:Market`)
-- **Identifier Properties**:
-  - `name`: String (descriptive name)
-  - `id`: String (machine-readable identifier)
-- **Temporal Properties**: Full datetime suite
-- **Property Fields**:
-  - `description`: String
-  - `impact`: String (qualitative assessment)
-  - `impact_value`: Numeric (quantitative assessment if available)
-  - `source`: String (data source)
-  - `url`: String (reference link)
-
-## 3. Relationship Structure in Detail
-
-### Block-centric Relationships
-
-#### Block Sequence
-- **Type**: `[:FOLLOWS]`
-- **Direction**: Block → Previous Block
-- **Properties**:
-  - `time_difference`: Integer (seconds between blocks)
-
-#### Block Composition
-- **Type**: `[:CONTAINS]`
-- **Direction**: Block → Transaction
-- **Properties**:
-  - `position`: Integer (transaction index in block)
-
-#### Block Economic Context
-- **Type**: `[:HAS_ECONOMIC_CONTEXT]`
-- **Direction**: Block → Indicator
-- **Properties**:
-  - `relevance`: Numeric (correlation coefficient if available)
-  - `context_type`: String (market, monetary, etc.)
-
-#### Block Metric Context
-- **Type**: `[:HAS_METRIC_CONTEXT]`
-- **Direction**: Block → Metric
-- **Properties**:
-  - `relevance`: Numeric (correlation coefficient if available)
-
-### Transaction Relationships
-
-#### Transaction Input/Output
-- **Type**: `[:SENDS_TO]`
-- **Direction**: Transaction → Address
-- **Properties**:
-  - `value`: Numeric (BTC)
-  - `position`: Integer (output index)
-  - `script_type`: String
-
-#### Transaction Source
-- **Type**: `[:SPENDS_FROM]`
-- **Direction**: Transaction → Address
-- **Properties**:
-  - `value`: Numeric (BTC)
-  - `position`: Integer (input index)
-
-### Metric and Indicator Relationships
-
-#### Correlation Relationships
-- **Type**: `[:CORRELATES_WITH]`
-- **Direction**: Metric ↔ Indicator (bidirectional representation)
-- **Properties**:
-  - `correlation`: Numeric (Pearson correlation coefficient)
-  - `p_value`: Numeric (statistical significance)
-  - `time_period`: String (e.g., "2025-Q1")
-  - `sample_size`: Integer
-  - `influence_direction`: String ("positive" or "negative")
-  - `strength`: String ("weak", "moderate", "strong")
-
-#### Causal Relationships
-- **Type**: `[:INFLUENCES]`
-- **Direction**: Indicator → Metric or Metric → Indicator
-- **Properties**:
-  - `influence_strength`: Numeric (coefficient)
-  - `lag_period`: String (time lag for effect)
-  - `confidence`: Numeric (statistical confidence)
-
-#### Temporal Aggregation
-- **Type**: `[:AGGREGATES]`
-- **Direction**: TimePeriod → Metric/Indicator
-- **Properties**:
-  - `aggregation_type`: String ("average", "sum", "max", "min")
-  - `count`: Integer (number of data points)
-
-### Event Relationships
-
-#### Event Impact
-- **Type**: `[:IMPACTS]`
-- **Direction**: Event → Metric/Indicator
-- **Properties**:
-  - `impact_type`: String ("immediate", "delayed", "sustained")
-  - `magnitude`: Numeric
-  - `direction`: String ("increase", "decrease")
-  - `duration`: String (duration of impact)
-
-#### Event Sequence
-- **Type**: `[:FOLLOWS_EVENT]`
-- **Direction**: Event → Event
-- **Properties**:
-  - `causality`: Boolean (whether directly causal)
-  - `time_between`: String (duration between events)
