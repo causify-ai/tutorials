@@ -1,8 +1,0 @@
-#!/Users/priyamchhonkar/Documents/GitHub/tutorials/DATA605/Spring2025/projects/TutorTask112_Spring_2025_Real_Time_Bitcoin_News_Analysis_&_Q&A_System_with_Haystack/docker_data605_style/venv/bin/python
-# -*- coding: utf-8 -*-
-import re
-import sys
-from pip._internal.cli.main import main
-if __name__ == '__main__':
-    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
-    sys.exit(main())
