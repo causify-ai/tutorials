@@ -7,7 +7,7 @@ import numpy as np
 from pycaret.time_series import setup, compare_models, finalize_model, predict_model
 
 # Setup logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 # API Wrapper
@@ -16,10 +16,12 @@ class CoinGeckoAPI:
 
     def __init__(self):
         self.session = requests.Session()
+        logger.info("Initialized CoinGecko API session.")
 
     def get_ohlc(self, coin_id="bitcoin", vs_currency="usd", days="max"):
         endpoint = f"{self.BASE_URL}/coins/{coin_id}/ohlc"
         params = {"vs_currency": vs_currency, "days": days}
+        logger.info(f"Requesting OHLC data from CoinGecko for {coin_id} in {vs_currency} over {days} days.")
 
         try:
             response = self.session.get(endpoint, params=params)
@@ -28,20 +30,22 @@ class CoinGeckoAPI:
             df = pd.DataFrame(data, columns=['timestamp', 'open', 'high', 'low', 'close'])
             df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
             df.set_index('timestamp', inplace=True)
-            logger.info(f"Fetched {len(df)} records.")
+            logger.info(f"Fetched {len(df)} records from CoinGecko API.")
             return df
         except Exception as e:
             logger.error(f"API Error: {e}")
             raise
 
 def fetch_and_validate_data(client, days=90):
+    logger.info("Fetching and validating data from API client.")
     raw_data = client.get_ohlc(days=days)
 
-    assert isinstance(raw_data, pd.DataFrame)
-    assert not raw_data.empty
-    assert {'open', 'high', 'low', 'close'}.issubset(raw_data.columns)
+    assert isinstance(raw_data, pd.DataFrame), "Data fetched is not a DataFrame."
+    assert not raw_data.empty, "Fetched data is empty."
+    assert {'open', 'high', 'low', 'close'}.issubset(raw_data.columns), "Missing required OHLC columns."
 
     data = raw_data[~raw_data.index.duplicated(keep='first')].copy()
+    logger.info("Calculating derived metrics: daily return, 7-day volatility, and 14-day EMA volume.")
     data['daily_return'] = data['close'].pct_change()
     data['volatility_7d'] = data['daily_return'].rolling(7).std()
     data['volume_ema_14'] = data['close'].ewm(span=14).mean()
@@ -49,12 +53,16 @@ def fetch_and_validate_data(client, days=90):
     return data
 
 def prepare_data_for_pycaret(data):
+    logger.info("Preparing data for PyCaret.")
     formatted = data[['close']].copy()
     formatted = formatted.asfreq('D').ffill()
+    logger.info("Data formatted with daily frequency and forward-filled missing values.")
     return formatted
 
 def run_pycaret_experiment(data):
+    logger.info("Running PyCaret setup for time series forecasting.")
     if not isinstance(data.index, pd.DatetimeIndex):
+        logger.error("Data index is not datetime.")
         raise ValueError("Index must be datetime")
 
     numeric_data = data.select_dtypes(include=np.number).dropna()
@@ -68,51 +76,22 @@ def run_pycaret_experiment(data):
         fh=7,
         verbose=True
     )
+    logger.info("PyCaret setup completed.")
     return exp
 
 def forecast_best_model():
+    logger.info("Comparing models using PyCaret.")
     best_model = compare_models()
+    logger.info(f"Best model selected: {best_model}")
     final_model = finalize_model(best_model)
+    logger.info("Final model trained and ready for prediction.")
     future_predictions = predict_model(final_model)
+    logger.info("Future predictions generated.")
     return best_model, future_predictions
 
 def add_lag_features(df, lags=[1, 2, 3]):
+    logger.info(f"Adding lag features: {lags}")
     for lag in lags:
         df[f'lag_{lag}'] = df['close'].shift(lag)
+    logger.info("Lag features added.")
     return df.dropna()
-
-# In PyCaret_utils.py
-import pandas as pd
-import numpy as np
-import plotly.graph_objs as go
-from plotly.subplots import make_subplots
-import plotly.express as px
-
-def create_plotly_dashboard(btc_data, forecast_df, top_models_preds, residuals, filename="bitcoin_dashboard.html"):
-    fig = make_subplots(rows=3, cols=1,
-                        subplot_titles=("Historical vs Forecast", "Top 3 Model Comparison", "Forecast Residuals"),
-                        shared_xaxes=True,
-                        vertical_spacing=0.15)
-
-    # 1. Historical vs Forecast
-    fig.add_trace(go.Scatter(x=btc_data.index, y=btc_data['close'], name='Historical', line=dict(color='lightgray')),
-                  row=1, col=1)
-
-    fig.add_trace(go.Scatter(x=forecast_df.index, y=forecast_df['y_pred'], name='Forecast', mode='lines+markers',
-                             line=dict(color='orange')), row=1, col=1)
-
-    # 2. Top 3 Model Comparison
-    for model_name, df in top_models_preds.items():
-        fig.add_trace(go.Scatter(x=df.index, y=df['y_pred'], name=model_name, mode='lines'), row=2, col=1)
-
-    # 3. Residuals Plot
-    fig.add_trace(go.Scatter(x=residuals.index, y=residuals, name='Residuals', mode='lines+markers',
-                             line=dict(color='red')), row=3, col=1)
-
-    # Layout
-    fig.update_layout(height=1000, width=900, title_text="Bitcoin Forecasting Dashboard", template="plotly_dark")
-
-    # Save to HTML
-    import plotly.io as pio
-    pio.write_html(fig, file=filename, auto_open=True)
-

@@ -1,72 +1,126 @@
 
 
+## Documentation: `PyCaret_utils.py`
 
-# PyCaret_utils.py Documentation
+This module contains reusable utility functions and a custom API wrapper class designed to support the Bitcoin price forecasting pipeline using PyCaret’s time series module. It handles data fetching from CoinGecko, preprocessing, lag feature engineering, model setup, and forecasting.
 
-The `PyCaret_utils.py` module serves as the backbone of the time series forecasting pipeline by offering well-structured and reusable utility components. Its purpose is to streamline data acquisition, preprocessing, and feature engineering using real-time cryptocurrency price data. The module achieves this through a robust API wrapper for CoinGecko and a comprehensive data preparation function tailored to PyCaret workflows.
+---
 
-### Module: `PyCaret_utils.py`
+### Logging Setup
 
+At the top of the module, Python’s built-in `logging` library is initialized to capture detailed runtime information. The log format includes timestamps, the module name, and message level. Throughout the module, `logger.info()` and `logger.error()` statements provide visibility into key actions and errors, which helps with debugging and monitoring.
 
-## CoinGeckoAPI Class
+---
 
-The `CoinGeckoAPI` class encapsulates all interactions with the CoinGecko OHLC (Open, High, Low, Close) data endpoint. It initializes a session using Python’s `requests` library and optionally accepts an API key, although CoinGecko does not currently require one for public endpoints. Once initialized, users can call the `get_ohlc` method to retrieve OHLC data for any cryptocurrency supported by CoinGecko. By default, the class fetches Bitcoin data in USD for a given number of days.
+#### 1. Class: `CoinGeckoAPI`
 
-The `get_ohlc` method returns a pandas DataFrame with datetime indices and the typical OHLC columns. It ensures the data is converted to a readable timestamp format and is ready for additional processing or modeling. It also includes robust error handling to catch malformed responses or connectivity issues.
-##### `__init__(self, api_key=None)`
+This class acts as a wrapper around the CoinGecko public API. It is responsible for retrieving historical OHLC (Open, High, Low, Close) data for a specified cryptocurrency.
 
-* Initializes the API client with an optional API key.
-* Sets up a requests session and basic rate limiting.
+###### `__init__(self)`
 
-##### `get_ohlc(...)`
+* Initializes a persistent session using the `requests` library.
+* Logs a message confirming successful session setup.
 
-*Fetches historical OHLC (Open, High, Low, Close) data from the CoinGecko API.
+###### `get_ohlc(self, coin_id="bitcoin", vs_currency="usd", days="max")`
 
-| Parameter     | Type    | Description                                |
-| ------------- | ------- | ------------------------------------------ |
-| `coin_id`     | str     | Cryptocurrency name (e.g., `"bitcoin"`)    |
-| `vs_currency` | str     | Target currency (e.g., `"usd"`)            |
-| `days`        | int/str | Number of days or `"max"` for full history |
+* Constructs a GET request to the CoinGecko endpoint that returns OHLC data for the specified `coin_id`, `vs_currency`, and time range (`days`).
+* Sends the request and checks for HTTP errors using `raise_for_status()`.
+* Parses the returned JSON into a Pandas DataFrame with columns: `timestamp`, `open`, `high`, `low`, and `close`.
+* Converts UNIX timestamps into human-readable datetime objects and sets this as the DataFrame index.
+* Logs the number of records fetched and returns the cleaned DataFrame.
 
-**Returns**: `pd.DataFrame` with OHLC values and timestamp index.
+This method provides a standardized, clean interface for pulling historical cryptocurrency prices in a structured format.
 
+---
 
+#### 2. Function: `fetch_and_validate_data(client, days=90)`
 
-## fetch_and_validate_data Function
+This function coordinates the process of retrieving, validating, and enriching raw Bitcoin price data.
 
-The `fetch_and_validate_data` function acts as a wrapper around the CoinGeckoAPI instance. It combines data acquisition and transformation in a single step. First, it fetches raw OHLC data using the API wrapper. Then, it converts the data into a structured DataFrame with time-based indexing. 
+* Calls the `get_ohlc()` method from the `CoinGeckoAPI` client for the specified time period (`days`).
+* Performs data validation checks:
 
-Beyond simply cleaning the data, this function performs additional transformations such as computing daily returns, calculating 7-day rolling volatility, and estimating the 14-period Exponential Moving Average (EMA) of the close prices to represent smoothed volume. These derived features significantly enhance the predictive capabilities of time series models used in PyCaret or other forecasting frameworks. 
+  * Ensures the result is a non-empty DataFrame.
+  * Confirms that the necessary OHLC columns are present.
+* Drops duplicate timestamps, retaining the first occurrence to maintain chronological integrity.
+* Computes and adds several derived features:
 
-The function returns a clean and enriched DataFrame, making it immediately ready for model training and evaluation. This encapsulation ensures that the same preprocessing logic can be reused across notebooks and scripts without duplicating code.
+  * **daily\_return**: The percentage change in closing price relative to the previous timestamp. This indicates short-term price momentum.
+  * **volatility\_7d**: A rolling standard deviation of the daily returns over a 7-day window, providing insight into weekly market variability.
+  * **volume\_ema\_14**: The 14-period exponential moving average of the closing price, used to highlight underlying trends while minimizing noise.
 
+The function returns a cleaned and feature-enhanced DataFrame ready for further modeling.
 
-This function performs an end-to-end process of:
+---
 
-1. Fetching OHLC data.
-2. Validating and deduplicating the data.
-3. Adding feature engineering:
+#### 3. Function: `prepare_data_for_pycaret(data)`
 
-   * Daily return
-   * 7-day rolling volatility
-   * 14-period EMA of volume
+This function prepares the dataset in a format compatible with PyCaret’s time series requirements.
 
-## Parameters
+* Selects only the `close` column from the input DataFrame, which is the target variable for forecasting.
+* Converts the data to a daily frequency using `.asfreq('D')`, ensuring that every day has an entry.
+* Applies forward fill (`ffill`) to handle any missing days by copying the previous day’s value.
 
-| Name         | Type           | Description                                |
-| ------------ | -------------- | ------------------------------------------ |
-| `api_client` | `CoinGeckoAPI` | API wrapper instance                       |
-| `days`       | `int`          | Number of days of historical data to fetch |
+This process results in a regularly spaced time series, which is essential for most time series algorithms.
 
-**Returns**: A clean and enriched `pandas.DataFrame` ready for modeling.
+---
 
+#### 4. Function: `run_pycaret_experiment(data)`
 
+This function sets up a time series forecasting experiment using PyCaret.
 
-##  Summary
+* Validates that the DataFrame has a `DatetimeIndex`, which is mandatory for time series analysis.
+* Filters to retain only numeric columns and drops rows with missing values.
+* Calls `pycaret.time_series.setup()` with the following parameters:
 
-The utilities in `PyCaret_utils.py` are responsible for:
+  * `data`: the cleaned time series data.
+  * `target`: the column to forecast, in this case, `close`.
+  * `fold_strategy`: set to `expanding`, which progressively increases the training window.
+  * `fold`: number of cross-validation folds (set to 3).
+  * `numeric_imputation_target`: specifies how to handle missing target values (uses forward fill).
+  * `session_id`: sets a fixed random seed for reproducibility.
+  * `fh`: the forecast horizon, here set to 7 (i.e., predicting the next 7 time steps).
+  * `verbose`: enables detailed setup logs for transparency.
 
-* Abstracting API calls into a robust and reusable interface.
-* Validating and preparing time series data.
-* Creating derived features that enhance forecasting models.
+The function returns the PyCaret experiment object, allowing further actions like model comparison and prediction.
+
+---
+
+#### 5. Function: `forecast_best_model()`
+
+This function automates model selection, final training, and future forecasting.
+
+* Calls `compare_models()`, which evaluates a variety of time series models and selects the one with the best cross-validation performance based on default metrics like MAE or RMSE.
+* Finalizes the best model using `finalize_model()`, which retrains the model on the entire dataset (not just training folds).
+* Generates predictions for the next 7 time periods using `predict_model()` on the finalized model.
+
+The function returns both the best model object and the future predictions as a DataFrame. This enables users to understand which model was chosen and view its near-term forecasts.
+
+---
+
+#### 6. Function: `add_lag_features(df, lags=[1, 2, 3])`
+
+This function adds lag features to the dataset, which are often used in auto-regressive forecasting models.
+
+* Accepts a DataFrame (`df`) and a list of lags (e.g., `[1, 2, 3]`).
+* For each lag `n` in the list, a new column `lag_n` is created by shifting the `close` column by `n` time steps backward.
+
+  * For example, `lag_1` contains the closing price from one day ago, `lag_2` from two days ago, etc.
+* These features provide the model with access to past observations, which can improve its ability to capture temporal dependencies and make accurate predictions.
+* After adding lag features, the function drops rows with missing values caused by the shifting process (e.g., the first few rows).
+
+It returns the DataFrame with new lag-based columns, cleaned of null entries.
+
+---
+
+# Summary
+
+The `PyCaret_utils.py` module abstracts and organizes the core functionalities needed for time series forecasting using PyCaret:
+
+* **`CoinGeckoAPI`** fetches clean OHLC data from CoinGecko.
+* **`fetch_and_validate_data`** processes and enriches the time series.
+* **`prepare_data_for_pycaret`** formats the data for PyCaret compatibility.
+* **`run_pycaret_experiment`** configures and initializes a time series experiment.
+* **`forecast_best_model`** selects, finalizes, and forecasts with the best model.
+* **`add_lag_features`** introduces auto-regressive features for enhanced learning.
 
