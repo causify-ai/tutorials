@@ -269,7 +269,7 @@ Below are screenshots of the graphs and analysis panels created inside Synapse:
 ![Rate of Change](Images/Azure_Synapse/roc.png)
 ![Syanapse Rolling Average](Images/Azure_Synapse/roll.png)
 ![Rolling SD Volitality](Images/Azure_Synapse/volatality.png)
-```
+
 
 ---
 
