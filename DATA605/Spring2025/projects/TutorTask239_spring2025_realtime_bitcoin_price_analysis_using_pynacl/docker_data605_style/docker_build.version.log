@@ -1,0 +1,82 @@
+[
+    {
+        "Id": "sha256:4c3f2c6fc4061bcb2006cc805a21a4198163432641dc87732f2c7620efdbcacb",
+        "RepoTags": [
+            "bitcoin-analysis:latest"
+        ],
+        "RepoDigests": [
+            "bitcoin-analysis@sha256:4c3f2c6fc4061bcb2006cc805a21a4198163432641dc87732f2c7620efdbcacb"
+        ],
+        "Parent": "",
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2025-05-17T11:22:43.075300042Z",
+        "DockerVersion": "",
+        "Author": "",
+        "Config": {
+            "Hostname": "",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "8050/tcp": {},
+                "8888/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LANG=C.UTF-8",
+                "GPG_KEY=E3FF2839C048B25C084DEBE9B26995E310250568",
+                "PYTHON_VERSION=3.9.22",
+                "PYTHON_SHA256=8c136d199d3637a1fce98a16adc809c1d83c922d02d41f3614b34f8b6e7d38ec",
+                "PYTHONUNBUFFERED=1",
+                "DEBIAN_FRONTEND=noninteractive"
+            ],
+            "Cmd": null,
+            "Image": "",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": [
+                "/usr/bin/supervisord",
+                "-c",
+                "/etc/supervisor/conf.d/bitcoin-analysis.conf"
+            ],
+            "OnBuild": null,
+            "Labels": null
+        },
+        "Architecture": "arm64",
+        "Os": "linux",
+        "Size": 503150656,
+        "GraphDriver": {
+            "Data": null,
+            "Name": "overlayfs"
+        },
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:66a307619b8c32f57cf19fc334bb43ba2d3cfdda26f19dfc6e87b49b73e41be9",
+                "sha256:9d8ed1e112930b8c84cc5d1ec21bda09560539d9e07674e35eea9a55a3592402",
+                "sha256:a03c36b25106181cf9686e0a6dccc9e94b8418c7f7a216f3a32a051f9628c1d9",
+                "sha256:3258edb6dfc9fbb8f2457844d6619afe54b373851c440b8f884f341f8cf4655b",
+                "sha256:cab774e5d2f8a5e6403611bc3d8c4d99b4fb7eb74d27d9caa5593f393a8cae8c",
+                "sha256:bfc180a6799ba35a5d73195db038f75a85abd36100b371140f33bb27e46d4f37",
+                "sha256:afd7531199b63f033bb0f329fefe4b5bb75b401046a0fb42c995a0c22b79feb8",
+                "sha256:697a63bc58dcd8426ac228140f15b660a220b382a6f48423059eac95c8f889d3",
+                "sha256:40ffc29d66e7da1f11bfc72eec0a8641e6d6f8a210a60bebd76fe93e5ea7f2be",
+                "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+                "sha256:f8582b9f41b973b88bd093b5b04e9d663fe9fcdaa2243c5a920212ab99da2b12"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2025-05-17T11:22:52.26002763Z"
+        },
+        "Descriptor": {
+            "mediaType": "application/vnd.oci.image.index.v1+json",
+            "digest": "sha256:4c3f2c6fc4061bcb2006cc805a21a4198163432641dc87732f2c7620efdbcacb",
+            "size": 856
+        }
+    }
+]
