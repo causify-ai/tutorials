@@ -14,6 +14,84 @@ This project demonstrates:
 * Anomaly detection and semantic news correlation using vector embeddings
 * Live dashboards with Kibana
 
+## Features Implemented:
+
+# fetch_live_bitcoin_price()
+
+* Pulls current BTC price every 45s from CoinGecko API
+
+* Stores time-stamped records in data/bitcoin_prices.json
+
+# ingest_prices_to_opensearch()
+
+* Computes % change in price
+
+* Indexes prices with timestamp + pct_change into bitcoin-prices
+
+# scrape_crypto_news()
+
+* Pulls Bitcoin news using CryptoPanic API
+
+* Stores articles in data/crypto_news.json
+
+# embed_and_ingest_semantic_news()
+
+* Uses sentence-transformers to embed news titles
+
+* Indexes into crypto-news-semantic with dense_vector field
+
+# detect_price_anomalies_and_correlate()
+
+* Detects price changes > ±2%
+
+* For each anomaly, retrieves news around that date
+
+* If semantic index exists, does top-3 nearest neighbor retrieval
+
+* Outputs JSON report in results/anomaly_correlation_report.json
+
+# bm25_search() and semantic_vector_search()
+
+* BM25: keyword match from crypto-news
+
+* Vector: cosine similarity from crypto-news-semantic
+
+## OpenSearch Dashboards
+
+# Created visualizations using Kibana (localhost:5601):
+
+* Bitcoin price trend over time
+
+* Anomaly count histogram
+
+* News volume over time
+
+* News titles correlated with price events
+
+# Dashboards use the following index patterns:
+
+* bitcoin-prices
+
+* crypto-news
+
+* crypto-news-semantic
+
+## Dockerized Architecture
+
+The project is fully containerized using docker-compose:
+
+## Services:
+
+elasticsearch: local OpenSearch node on port 9200
+
+kibana: OpenSearch Dashboards on port 5601
+
+bitcoin-worker: for all ingestion scripts
+
+bitcoin-nlp: for embedding & correlation scripts
+
+
+
 ---
 
 ## Technologies Used
@@ -49,10 +127,8 @@ bitcoin-price-analysis/
 
 ## Installation
 
-```bash
-git clone https://github.com/yourname/bitcoin-price-analysis.git
-cd bitcoin-price-analysis
-```
+Clone the repository
+Enter into the repository
 
 ### Start Docker
 
@@ -97,7 +173,6 @@ Use `semantic_search_query.py` to ask questions like:
 
 ```bash
 python scripts/semantic_search_query.py
-# Query: regulation crackdown on bitcoin
 ```
 
 ---
@@ -111,19 +186,5 @@ python scripts/semantic_search_query.py
 | `bitcoin_utils.py`      | All functions used in notebooks              |
 | `Bitcoin.API.ipynb`     | Clean usage demo of the API layer            |
 | `Bitcoin.example.ipynb` | Full example notebook (end-to-end)           |
-
----
-
-## To Do (Optional Enhancements)
-
-* Add authentication for OpenSearch if needed
-* Deploy on cloud (e.g., EC2 or GCP)
-* Add auto-reload or stream processing for live news
-
----
-
-## Project Goal
-
-> This repository is structured as a hands-on tutorial for learning OpenSearch, time series pipelines, and LLM-based semantic search.
 
 ---
