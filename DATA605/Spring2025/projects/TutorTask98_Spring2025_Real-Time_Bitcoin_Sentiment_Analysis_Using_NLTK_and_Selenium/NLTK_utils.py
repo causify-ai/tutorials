@@ -926,33 +926,10 @@ def concat_and_save_to_csv(new_data, output_file="./tweets/all_tweets.csv", post
     new_df = preprocess_text_column(new_df)
     try:
         df = pd.read_csv(output_file)
-        # unit_new = df['unit'].max()+1
-        # new_df['unit'] = unit_new
         df = pd.concat([df, new_df])
     except:
-        # unit_new = 0
-        # new_df['unit'] = unit_new
         df = new_df
     df.to_csv(output_file, index=False)
-    
-    # new_df1 = preprocess_text_column(new_df)
-    # apply_vader(new_df1)
-
-    # # Check if the output file already exists
-    # if os.path.exists(output_file):
-    #     existing_df = pd.read_csv(output_file)
-    #     combined_df = pd.concat([existing_df, new_df], ignore_index=True)
-    # else:
-    #     combined_df = new_df
-    
-    # # Drop duplicates based on 'Tweet ID'
-    # if 'Tweet ID' in combined_df.columns:
-    #     combined_df = combined_df.drop_duplicates(subset=['Tweet ID'], keep='last')
-
-    # # Save combined data
-    # combined_df.to_csv(output_file, index=False, encoding="utf-8")
-    # print(f"Saved {len(new_df)} new tweets. Total tweets now: {len(combined_df)}")
-    # new_df.to_csv(output_file, index=False, encoding="utf-8")
     print(f"Saved {len(new_df)} new tweets. All tweets {len(df)}")
 
 
@@ -982,25 +959,6 @@ def apply_vader(df, text_col='cleaned_text'):
             return 'neutral'
 
     df['sentiment_label'] = df['compound'].apply(label_sentiment)
-
-    # sentiment_score = df['compound'].mean()
-    # if sentiment_score >= 0.05:
-    #     final_sentiment = 'Positive'
-    # elif sentiment_score <= -0.05:
-    #     final_sentiment = 'Negative'
-    # else:
-    #     final_sentiment = 'Neutral'
-    # bitcoin_price = fetch_price()
-    # finaldf1 = pd.DataFrame({'time': [timestamp], 'sentiment': [final_sentiment], 'price': [bitcoin_price]})
-    # try:
-    #     finaldf = pd.read_csv("final.csv")
-    #     finaldf = pd.concat([finaldf, finaldf1])
-    # except:
-    #     finaldf = finaldf1.copy()
-    # # Save to file
-    # finaldf.to_csv("final.csv", index=False)
-    # df.to_csv("sentiment_labeled.csv", index=False)
-    # print("Saved labeled data to sentiment_labeled.csv")
 
     return df
 
@@ -1044,38 +1002,6 @@ def plot_sentiment_timeseries(df):
 
     plt.tight_layout()
     plt.show()
-    # Ensure Timestamp is in datetime format
-    # df['Timestamp'] = pd.to_datetime(df['time'], errors='coerce')
-    # print(df.head())
-    # df = df.dropna(subset=['Timestamp'])  # Drop rows with invalid timestamps
-
-    # # Set Timestamp as index
-    # df = df.set_index('Timestamp')
-
-    # # Resample: average compound score over time (e.g., hourly)
-    # sentiment_time = df['compound'].resample('H').mean()
-
-    # # Plot sentiment over time
-    # plt.figure(figsize=(8, 4))
-    # sentiment_time.plot()
-    # plt.title('Average Sentiment (Compound Score) Over Time')
-    # plt.xlabel('Time')
-    # plt.ylabel('Average Compound Score')
-    # plt.grid(True)
-    # plt.tight_layout()
-    # plt.show()
-
-    # # EDA: Count of sentiment labels over time (hourly)
-    # sentiment_counts = df.resample('H')['sentiment_label'].value_counts().unstack().fillna(0)
-
-    # # Plot stacked bar chart
-    # sentiment_counts.plot(kind='bar', stacked=True, figsize=(8, 4), cmap='Blues')
-    # plt.title('Sentiment Label Distribution Over Time')
-    # plt.xlabel('Time')
-    # plt.ylabel('Tweet Count')
-    # plt.legend(title='Sentiment')
-    # plt.tight_layout()
-    # plt.show()
 
 def final_corr(df):
     df = df.groupby(['UnitTime']).agg({'Bitcoin_Price':'max','compound':'mean'}).reset_index()
@@ -1105,22 +1031,6 @@ def final_corr(df):
     print(df.shape)
     print(df.head())
 
-
-    # sentiment_score = df['compound'].mean()
-    # df = pd.read_csv("final.csv")
-    # df = df.sort_values(by=['time'])
-    # df['perc_change'] = df['price'].pct_change() * 100
-    # df['perc_change'] = df['perc_change'].fillna(0)
-
-    # def categorize(pct):
-    #     if pct > 0.02:
-    #         return 'Up'
-    #     elif pct < -0.02:
-    #         return 'Down'
-    #     else:
-    #         return 'Stable'
-
-    # df['movement'] = df['perc_change'].apply(categorize)
     crosstab = pd.crosstab(df['Sentiment'], df['Movement'], normalize='index')  # Row-wise normalization
 
     # Step 2: Plot heatmap
