@@ -9,7 +9,7 @@ This project builds an end-to-end pipeline to ingest, store, and analyze Bitcoin
 Navigate to the folder that contains the Docker setup files:
 
 ```bash
-cd docker_data605_style/
+cd /tutorials/DATA605/Spring2025/projects/TutorTask245_Spring2025_Real_Time_Bitcoin_Price_Processing_using_Apache_Avro/docker_data605_style/docker_data605_style/
 ```
 
 Then build and run the containers:
@@ -43,11 +43,15 @@ You can now open:
 
 ### Streamlit Dashboard
 
-If your `coingecko_dashboard.py` file is in the root project folder, run:
-
-```bash
+After running `docker compose up`, run the following script in a separate terminal:
+```
 docker exec -it jupyter_data605 bash
 streamlit run coingecko_dashboard.py
+```
+
+Then, open your browser and go to:
+```
+http://localhost:8501
 ```
 
 Then open in your browser:
