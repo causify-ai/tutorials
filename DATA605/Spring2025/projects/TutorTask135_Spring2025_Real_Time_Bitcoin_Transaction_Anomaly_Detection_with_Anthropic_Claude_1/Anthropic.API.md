@@ -145,7 +145,7 @@ sequenceDiagram
     API->>Claude: Forward for reasoning
     Claude-->>API: Generate explanation
     API-->>You: Return natural-language summary
-
+```
 ---
 
 ## 9. Example Use Case: Bitcoin Anomaly Detection
