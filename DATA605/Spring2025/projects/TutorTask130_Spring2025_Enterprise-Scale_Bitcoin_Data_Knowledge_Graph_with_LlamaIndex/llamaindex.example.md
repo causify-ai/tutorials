@@ -174,7 +174,7 @@ classDiagram
 - **Temporal Properties**: All time-relevant nodes include consistent datetime fields (year, month, day, timestamp) to enable time-based filtering without complex joins.
 - **Value Representation**: Values are stored as typed properties rather than embedded in node names, ensuring proper numeric operations and comparison.
 
-**See Appendix for more details**
+**See [triplets.md](utils/triplets.md) for more details**
 
 ### Neo4j Graph Database
 
