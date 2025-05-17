@@ -170,12 +170,17 @@ This will:
 
 ## Semantic Search
 
-Use `semantic_search_query.py` to ask questions like:
+Use `semantic_search_query.py` to find news articles related to the keyword:
 
 ```bash
 python scripts/semantic_search_query.py
+python scripts/bm25_news_search.py
 ```
 
+## Simple Plot to target Anomalies
+```bash
+python scripts/plot_price_andanomalies.py
+```
 ---
 
 ## Documentation
