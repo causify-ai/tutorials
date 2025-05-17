@@ -3,7 +3,7 @@ __pycache__/
 *.ipynb_checkpoints
 .env
 *.env
-data/
+data/raw/
 *.json
 *.log
 .DS_Store
