@@ -2,11 +2,7 @@
 
 Welcome to my capstone project for DATA605: an end-to-end Bitcoin forecasting system using Facebook Prophet, built with real-time data ingestion, EDA, time-series modeling, and optional Streamlit deployment.
 
----
-
-Here’s your updated **Table of Contents** reflecting all final sections:
-
----
+----
 
 ## Table of Contents
 
