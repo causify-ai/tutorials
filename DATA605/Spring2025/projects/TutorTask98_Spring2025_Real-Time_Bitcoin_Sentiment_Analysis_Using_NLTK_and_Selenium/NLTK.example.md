@@ -1,6 +1,7 @@
 # Real-Time Bitcoin Sentiment Analysis Using NLTK and Selenium
-
+This tutorial will cover how to fetch
 - [Real-Time Bitcoin Sentiment Analysis Using NLTK and Selenium](#real-time-bitcoin-sentiment-analysis-using-nltk-and-selenium)
+- [Data Extraction](#data-extraction)
   - [Function: `Progress.__init__(self, current, total)`](#function-progress__init__self-current-total)
   - [Function: `Progress.print_progress(self, current)`](#function-progressprint_progressself-current)
   - [Function: `Scroller.__init__(self, driver)`](#function-scroller__init__self-driver)
@@ -13,12 +14,20 @@
   - [Function: `save_to_csv()`](#function-save_to_csv)
   - [Function: `concat_and_save_to_csv(new_data, output_file, poster_details)`](#function-concat_and_save_to_csvnew_data-output_file-poster_details)
   - [Function: `fetch_price()`](#function-fetch_price)
+- [Data Transformation](#data-transformation)
   - [Function: `preprocess_text_column(df)`](#function-preprocess_text_columndf)
+- [Sentiment Analysis](#sentiment-analysis)
   - [Function: `apply_vader(df, text_col='cleaned_text')`](#function-apply_vaderdf-text_colcleaned_text)
+- [Training model](#training-model)
   - [Function: `train_and_evaluate(df, text_col='cleaned_text', label_col='sentiment_label')`](#function-train_and_evaluatedf-text_colcleaned_text-label_colsentiment_label)
-  - [Function: `plot_sentiment_timeseries(file_path='sentiment_labeled.csv')`](#function-plot_sentiment_timeseriesfile_pathsentiment_labeledcsv)
+- [Data Visualization](#data-visualization)
+  - [Function: `plot_sentiment_timeseries(df)`](#function-plot_sentiment_timeseriesdf)
   - [Function: `final_corr()`](#function-final_corr)
 
+
+
+
+# Data Extraction
 
 ## Function: `Progress.__init__(self, current, total)`
 **Purpose:** Initialize a progress tracking object for scraping tasks. 
@@ -211,6 +220,7 @@ btc_price = fetch_price()
 ```
 
 
+# Data Transformation
 
 ## Function: `preprocess_text_column(df)`
 **Purpose:** Cleans and tokenizes tweet text for further analysis. 
@@ -227,6 +237,7 @@ df = preprocess_text_column(df)
 **Output File:** Modifies `df` in-place, returns it with `cleaned_text` and `tokens` columns.
 
 ---
+# Sentiment Analysis
 
 ## Function: `apply_vader(df, text_col='cleaned_text')`
 **Purpose:** Applies VADER sentiment analysis and labels tweets as positive, negative, or neutral.  
@@ -242,10 +253,11 @@ df = preprocess_text_column(df)
 df = apply_vader(df)
 ```
 **Output Files:**
-- `sentiment_labeled.csv`: Full dataset with sentiment scores and labels.
-- `final.csv`: Time-stamped sentiment and BTC price summary used for correlation.
+- Updates `df` ineplace, with sentiment scores, labels with Bitcoin price summary
 
 ---
+
+# Training model
 
 ## Function: `train_and_evaluate(df, text_col='cleaned_text', label_col='sentiment_label')`
 **Purpose:** Train a Logistic Regression classifier to predict sentiment labels.  
@@ -265,13 +277,15 @@ train_and_evaluate(df)
 
 ---
 
-## Function: `plot_sentiment_timeseries(file_path='sentiment_labeled.csv')`
+# Data Visualization
+
+## Function: `plot_sentiment_timeseries(df)`
 **Purpose:** Visualizes sentiment trends and distribution over time.  
 
 **Why:** To observe changes in sentiment and how tweet emotions vary with time. 
 
 **Arguments:**
-- `file_path`: Path to the CSV with sentiment-labeled tweets.  
+- `df`: Dataframe with sentiment-labeled tweets and Bitcoin prices.  
 
 **Example Usage:**
 ```python

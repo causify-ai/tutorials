@@ -87,12 +87,16 @@ A **positive correlation** would suggest that as tweet sentiment gets more posit
 ---
 
 ## Results Summary
-- Most tweets tend to be **neutral or slightly positive**, indicating general optimism in Bitcoin discussions.
+- Most tweets tend to be **positive or neutral**, indicating general optimism in Bitcoin discussions.
+- Overall, **positive shifts** in tweet sentiment generally align with **price increases** (and negative shifts with declines), though brief divergences show that price can sometimes lead or lag public mood.
 - The correlation matrix shows a **noticeable link** between public sentiment and price — supporting the hypothesis that Twitter sentiment can reflect or even predict market behavior.
+  - Every time the aggregate sentiment dipped below the negative threshold, the price essentially held steady rather than falling further. 
+  - Neutral chatter surprisingly aligned exclusively with upward moves.
+  - Positive sentiments mostly accompanied rises, but sometimes showed minor corrections.
 
 ---
 
 ## Conclusion
-This project demonstrates the power of combining **social media analysis** and **financial data** to uncover market signals. By using freely available tools and public data, we’ve built a pipeline that shows how people’s opinions can potentially forecast economic trends. This could be the first step toward building smarter trading bots or real-time sentiment dashboards.
+This project demonstrates the power of combining **social media analysis** and **financial data** to uncover market signals. By using freely available tools and public data, a pipeline has been built that shows how people’s opinions can potentially forecast economic trends. This could be the first step toward building smarter trading bots or real-time sentiment dashboards.
 
 ---

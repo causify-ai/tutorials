@@ -11,17 +11,7 @@ RUN apt install -y --no-install-recommends \
     systemctl \
     gnupg \
     git \
-    vim \
-    fake-headers \
-    selenium \
-    webdriver-manager \
-    nltk \
-    pandas \
-    numpy \
-    matplotlib \
-    seaborn \
-    scikit-learn \
-    requests
+    vim 
 
 # Install Python.
 RUN apt install -y --no-install-recommends \
@@ -44,7 +34,17 @@ RUN pip3 install \
     jupyter-contrib-core \
     jupyter-contrib-nbextensions \
     psycopg2-binary \
-    yapf
+    yapf \
+    fake-headers \
+    selenium \
+    webdriver-manager \
+    nltk \
+    pandas \
+    numpy \
+    matplotlib \
+    seaborn \
+    scikit-learn \
+    requests
 
 RUN mkdir /install
 
