@@ -57,7 +57,7 @@ NEWSAPI_KEY=your_actual_newsapi_key_here
 
 ---
 
-## 📗 How It Works
+## How It Works
 
 ### Phase 1 – API Layer
 
