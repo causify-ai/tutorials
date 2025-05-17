@@ -361,4 +361,4 @@ An interactive Streamlit dashboard was developed to visualize Bitcoin price fore
 | Modeling      | Done   | Prophet trained               |
 | Forecasting   | Done   | Forecast generated            |
 | Evaluation    | Done   | Metrics computation upcoming  |
-| Streamlit App |Deployed| Web app development           |
+| Streamlit App |Deployed| Web app for dashboards         |
