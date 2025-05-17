@@ -1,0 +1,81 @@
+Metadata-Version: 2.1
+Name: prophet
+Version: 1.1.6
+Summary: Automatic Forecasting Procedure
+Author-email: "Sean J. Taylor" <sjtz@pm.me>, Ben Letham <bletham@fb.com>
+Maintainer-email: Cuong Duong <cuong.duong242@gmail.com>
+License: MIT
+Project-URL: Homepage, https://facebook.github.io/prophet/
+Project-URL: Documentation, https://facebook.github.io/prophet/
+Project-URL: Repository, https://github.com/facebook/prophet
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: cmdstanpy>=1.0.4
+Requires-Dist: numpy>=1.15.4
+Requires-Dist: matplotlib>=2.0.0
+Requires-Dist: pandas>=1.0.4
+Requires-Dist: holidays<1,>=0.25
+Requires-Dist: tqdm>=4.36.1
+Requires-Dist: importlib-resources
+Provides-Extra: dev
+Requires-Dist: setuptools>=64; extra == "dev"
+Requires-Dist: wheel; extra == "dev"
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: jupyterlab; extra == "dev"
+Requires-Dist: nbconvert; extra == "dev"
+Requires-Dist: plotly; extra == "dev"
+Provides-Extra: parallel
+Requires-Dist: dask[dataframe]; extra == "parallel"
+Requires-Dist: distributed; extra == "parallel"
+
+# Prophet: Automatic Forecasting Procedure
+
+Prophet is a procedure for forecasting time series data based on an additive model where non-linear trends are fit with yearly, weekly, and daily seasonality, plus holiday effects. It works best with time series that have strong seasonal effects and several seasons of historical data. Prophet is robust to missing data and shifts in the trend, and typically handles outliers well.
+
+Prophet is [open source software](https://code.facebook.com/projects/>)  released by [Facebook's Core Data Science team ](https://research.fb.com/category/data-science/).
+
+Full documentation and examples available at the homepage: https://facebook.github.io/prophet/
+
+## Important links
+
+- HTML documentation: https://facebook.github.io/prophet/docs/quick_start.html
+- Issue tracker: https://github.com/facebook/prophet/issues
+- Source code repository: https://github.com/facebook/prophet
+- Implementation of Prophet in R: https://cran.r-project.org/package=prophet
+
+## Other forecasting packages
+
+- Rob Hyndman's [forecast package](http://robjhyndman.com/software/forecast/)
+- [Statsmodels](http://statsmodels.sourceforge.net/)
+
+## Installation - PyPI release
+
+See [Installation in Python - PyPI release](https://github.com/facebook/prophet#installation-in-python---pypi-release)
+
+## Installation - Development version
+
+See [Installation in Python - Development version](https://github.com/facebook/prophet#installation-in-python---development-version)
+
+### Installation using Docker and docker-compose (via Makefile)
+
+Simply type `make build` and if everything is fine you should be able to `make shell` or alternative jump directly to `make py-shell`.
+
+To run the tests, inside the container `cd python/prophet` and then `python -m pytest prophet/tests/`
+
+### Example usage
+
+```python
+  >>> from prophet import Prophet
+  >>> m = Prophet()
+  >>> m.fit(df)  # df is a pandas.DataFrame with 'y' and 'ds' columns
+  >>> future = m.make_future_dataframe(periods=365)
+  >>> m.predict(future)
+```
