@@ -215,7 +215,7 @@ This section explains how all the components — Python scripts, Azure services,
 
 ###  Visual Architecture
 
-```markdown
+```mermaid
 flowchart TD
     A[CoinGecko API] --> B[bitcoin_streamer.py]
     B --> C[Azure Event Hub]
@@ -269,7 +269,7 @@ Below are screenshots of the graphs and analysis panels created inside Synapse:
 ![Rate of Change](Images/Azure_Synapse/roc.png)
 ![Syanapse Rolling Average](Images/Azure_Synapse/roll.png)
 ![Rolling SD Volitality](Images/Azure_Synapse/volatality.png)
-
+```
 
 ---
 
