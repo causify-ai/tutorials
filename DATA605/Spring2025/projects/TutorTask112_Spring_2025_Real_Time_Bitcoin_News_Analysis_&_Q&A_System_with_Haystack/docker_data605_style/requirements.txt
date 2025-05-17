@@ -1,7 +1,6 @@
 farm-haystack[all]
 elasticsearch
-haystack==1.18.0
-transformers==4.37.2
+transformers==4.46.0
 torch==2.1.2
 streamlit==1.31.1
 requests==2.31.0
