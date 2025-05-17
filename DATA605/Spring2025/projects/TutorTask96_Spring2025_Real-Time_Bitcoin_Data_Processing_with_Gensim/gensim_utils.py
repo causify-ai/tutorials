@@ -647,7 +647,7 @@ def time_analysis(model, corpus, df):
     })
     
     df_trends['trend'].value_counts().plot(kind='bar', color=['crimson', 'green'])
-    plt.title('Market Trend Distribution (LSI Topic Inference)')
+    plt.title('Market Trend Distribution (Topic Inference)')
     plt.xlabel('Trend')
     plt.ylabel('Number of Windows')
     plt.show()
