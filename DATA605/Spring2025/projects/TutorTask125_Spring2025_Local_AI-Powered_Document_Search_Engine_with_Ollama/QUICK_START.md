@@ -16,14 +16,14 @@ streamlit run app.py
 ### Docker Installation (Windows)
 ```powershell
 # Build the Docker image
-docker build -t document_search_engine -f ./docker_data605_style/Dockerfile .
+docker build -t ollama-notebook -f ./docker_data605_style/Dockerfile .
 
 # If you have an existing container, remove it
-docker stop doc-search
-docker rm doc-search
+docker stop ollama-notebook
+docker rm ollama-notebook
 
 # Run the container
-docker run -d --name doc-search -p 8501:8501 -p 11434:11434 -v ${PWD}:/app document_search_engine
+docker run -d --name ollama-notebook -p 8501:8501 -p 8888:8888 -p 11434:11434 -v ${PWD}:/app -v C:/Users:/data/home -v C:/Documents:/data/documents ollama-notebook
 ```
 
 Then open your browser and go to: http://localhost:8501
