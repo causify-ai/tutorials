@@ -199,6 +199,7 @@ Sample Output:
 
 ### Processing Flow
 
+![spark_consumer_flow](https://github.com/user-attachments/assets/c31632b1-a3a5-4044-9d44-14673e9216b0)
 
 ---
 
