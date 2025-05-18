@@ -1,0 +1,335 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Bitcoin News Keyword Trends</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                    background-color: #f5f5f5;
+                    color: #333;
+                }
+                .container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 20px;
+                }
+                header {
+                    background-color: #f2a900;
+                    color: #fff;
+                    padding: 20px 0;
+                    text-align: center;
+                    margin-bottom: 30px;
+                    border-bottom: 5px solid #4d4d4d;
+                    position: relative;
+                }
+                h1 {
+                    margin: 0;
+                    font-size: 28px;
+                }
+                .dashboard-section {
+                    background-color: white;
+                    border-radius: 5px;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    padding: 20px;
+                    margin-bottom: 30px;
+                }
+                h2 {
+                    color: #f2a900;
+                    border-bottom: 2px solid #eee;
+                    padding-bottom: 10px;
+                    margin-top: 0;
+                }
+                .iframe-container {
+                    position: relative;
+                    overflow: hidden;
+                    width: 100%;
+                    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+                    margin: 20px 0;
+                }
+                .iframe-container iframe {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    bottom: 0;
+                    right: 0;
+                    width: 100%;
+                    height: 100%;
+                    border: none;
+                }
+                .footer {
+                    text-align: center;
+                    padding: 20px;
+                    color: #777;
+                    font-size: 12px;
+                    margin-top: 50px;
+                }
+                .keyword-tabs {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 5px;
+                    margin: 20px 0;
+                    border-bottom: 2px solid #f2a900;
+                    padding-bottom: 10px;
+                }
+                .keyword-tab {
+                    background-color: #e7e7e7;
+                    color: #333;
+                    border: none;
+                    padding: 10px 15px;
+                    border-radius: 5px 5px 0 0;
+                    cursor: pointer;
+                    font-weight: bold;
+                    transition: background-color 0.3s;
+                }
+                .keyword-tab:hover {
+                    background-color: #d4d4d4;
+                }
+                .keyword-tab.active {
+                    background-color: #f2a900;
+                    color: white;
+                }
+                .tab-content {
+                    display: none;
+                }
+                .tab-content.active {
+                    display: block;
+                }
+                .chart-container {
+                    height: 400px;
+                    margin: 20px 0;
+                }
+                .current-price-box {
+                    position: absolute;
+                    top: 20px;
+                    right: 20px;
+                    background-color: rgba(255, 255, 255, 0.9);
+                    border-radius: 5px;
+                    padding: 10px 15px;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                    text-align: right;
+                    color: #333;
+                }
+                .price-label {
+                    font-size: 14px;
+                    margin-bottom: 5px;
+                    color: #555;
+                }
+                .price-value {
+                    font-size: 24px;
+                    font-weight: bold;
+                    color: #333;
+                    margin-bottom: 5px;
+                }
+                .price-change {
+                    font-size: 14px;
+                    font-weight: bold;
+                }
+                .positive {
+                    color: green;
+                }
+                .negative {
+                    color: red;
+                }
+                .neutral {
+                    color: gray;
+                }
+                .granger-container {
+                    display: flex;
+                    justify-content: center;
+                    margin: 20px 0;
+                }
+                .granger-container img {
+                    max-width: 100%;
+                    height: auto;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                }
+                .granger-info {
+                    background-color: #f9f9f9;
+                    border-left: 4px solid #f2a900;
+                    padding: 10px 15px;
+                    margin: 15px 0;
+                    border-radius: 0 4px 4px 0;
+                }
+                .significant-keyword {
+                    background-color: #f2a900;
+                    color: white;
+                    border-radius: 3px;
+                    padding: 2px 5px;
+                    margin: 0 3px;
+                    font-weight: bold;
+                }
+                @media (max-width: 768px) {
+                    .container {
+                        padding: 10px;
+                    }
+                    h1 {
+                        font-size: 24px;
+                    }
+                    .dashboard-section {
+                        padding: 15px;
+                    }
+                    .chart-container {
+                        height: 300px;
+                    }
+                    .current-price-box {
+                        position: relative;
+                        top: 0;
+                        right: 0;
+                        margin: 10px auto;
+                        text-align: center;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <header>
+                <h1>🔍 Bitcoin News Keyword Trends Analysis</h1>
+                <p>Exploring relationships between news keywords and Bitcoin price</p>
+                
+                <div class="current-price-box">
+                    <div class="price-label">Current Bitcoin Price:</div>
+                    <div class="price-value">$103,288.00</div>
+                    <div class="price-change positive">0.07%</div>
+                </div>
+            </header>
+            
+            <div class="container">
+                <div class="dashboard-section">
+                    <h2>Keyword Correlation with Bitcoin Price</h2>
+                    <p>This visualization shows how strongly different keywords are correlated with Bitcoin price movements.</p>
+                    <div class="iframe-container">
+                        <iframe src="./figures/html/keyword_correlation_interactive.html" frameborder="0"></iframe>
+                    </div>
+                </div>
+        
+                <div class="dashboard-section">
+                    <h2>Granger Causality Analysis</h2>
+                    <p>This analysis shows which keywords might have predictive power for Bitcoin price movements.</p>
+                    
+                    <div class="granger-info">
+                        <p><strong>What is Granger Causality?</strong> Granger causality tests whether past values of one variable (keyword frequency) 
+                        can predict future values of another variable (Bitcoin price). A small p-value (&lt; 0.05) indicates a significant predictive relationship.</p>
+                        Significant keywords: <span class="significant-keyword">key</span> <span class="significant-keyword">ethereum</span> <span class="significant-keyword">eth</span>
+                    </div>
+                    
+                    <div class="granger-container">
+                        <img src="./figures/granger_causality_tests.png" alt="Granger Causality Test Results">
+                    </div>
+                </div>
+            
+                <div class="dashboard-section">
+                    <h2>Keyword Trends over Time</h2>
+                    <p>Select a keyword to see how its frequency in news relates to Bitcoin price:</p>
+                    
+                    <div class="keyword-tabs">
+        <button class="keyword-tab active" onclick="openTab(event, 'key')">key</button>
+<button class="keyword-tab " onclick="openTab(event, 'ethereum')">ethereum</button>
+<button class="keyword-tab " onclick="openTab(event, 'eth')">eth</button>
+<button class="keyword-tab " onclick="openTab(event, 'bitcoin')">bitcoin</button>
+<button class="keyword-tab " onclick="openTab(event, 'crypto')">crypto</button>
+<button class="keyword-tab " onclick="openTab(event, 'cryptocurrency')">cryptocurrency</button>
+<button class="keyword-tab " onclick="openTab(event, 'btc')">btc</button>
+<button class="keyword-tab " onclick="openTab(event, 'blackrock')">blackrock</button>
+<button class="keyword-tab " onclick="openTab(event, 'american')">american</button>
+<button class="keyword-tab " onclick="openTab(event, 'profits')">profits</button>
+
+                    </div>
+        
+                    <div id="key" class="tab-content active">
+                        <div class="iframe-container">
+                            <iframe src="./figures/html/key_vs_price_interactive.html" frameborder="0"></iframe>
+                        </div>
+                    </div>
+            
+                    <div id="ethereum" class="tab-content ">
+                        <div class="iframe-container">
+                            <iframe src="./figures/html/ethereum_vs_price_interactive.html" frameborder="0"></iframe>
+                        </div>
+                    </div>
+            
+                    <div id="eth" class="tab-content ">
+                        <div class="iframe-container">
+                            <iframe src="./figures/html/eth_vs_price_interactive.html" frameborder="0"></iframe>
+                        </div>
+                    </div>
+            
+                    <div id="bitcoin" class="tab-content ">
+                        <div class="iframe-container">
+                            <iframe src="./figures/html/bitcoin_vs_price_interactive.html" frameborder="0"></iframe>
+                        </div>
+                    </div>
+            
+                    <div id="crypto" class="tab-content ">
+                        <div class="iframe-container">
+                            <iframe src="./figures/html/crypto_vs_price_interactive.html" frameborder="0"></iframe>
+                        </div>
+                    </div>
+            
+                    <div id="cryptocurrency" class="tab-content ">
+                        <div class="iframe-container">
+                            <iframe src="./figures/html/cryptocurrency_vs_price_interactive.html" frameborder="0"></iframe>
+                        </div>
+                    </div>
+            
+                    <div id="btc" class="tab-content ">
+                        <div class="iframe-container">
+                            <iframe src="./figures/html/btc_vs_price_interactive.html" frameborder="0"></iframe>
+                        </div>
+                    </div>
+            
+                    <div id="blackrock" class="tab-content ">
+                        <div class="iframe-container">
+                            <iframe src="./figures/html/blackrock_vs_price_interactive.html" frameborder="0"></iframe>
+                        </div>
+                    </div>
+            
+                    <div id="american" class="tab-content ">
+                        <div class="iframe-container">
+                            <iframe src="./figures/html/american_vs_price_interactive.html" frameborder="0"></iframe>
+                        </div>
+                    </div>
+            
+                    <div id="profits" class="tab-content ">
+                        <div class="iframe-container">
+                            <iframe src="./figures/html/profits_vs_price_interactive.html" frameborder="0"></iframe>
+                        </div>
+                    </div>
+            
+                </div>
+                
+                <div class="footer">
+                    <p>Dashboard generated on 2025-05-18 03:22:40</p>
+                </div>
+            </div>
+            
+            <script>
+                function openTab(evt, keywordName) {
+                    // Hide all tab content
+                    var tabcontent = document.getElementsByClassName("tab-content");
+                    for (var i = 0; i < tabcontent.length; i++) {
+                        tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+                    }
+                    
+                    // Remove active class from all tabs
+                    var tabs = document.getElementsByClassName("keyword-tab");
+                    for (var i = 0; i < tabs.length; i++) {
+                        tabs[i].className = tabs[i].className.replace(" active", "");
+                    }
+                    
+                    // Show the specific tab content
+                    document.getElementById(keywordName).className += " active";
+                    
+                    // Add active class to the button that opened the tab
+                    evt.currentTarget.className += " active";
+                }
+            </script>
+        </body>
+        </html>
+        
