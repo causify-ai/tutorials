@@ -1,0 +1,26 @@
+# Application settings
+spark:
+  app_name: BitcoinAnalysis
+  master: local[*]
+  driver_memory: 2g
+  extra_java_options:
+    - "--add-opens java.base/java.nio=ALL-UNNAMED"
+    - "--add-opens java.base/java.lang=ALL-UNNAMED"
+
+paths:
+  raw_data_path: data/raw_bitcoin_data.parquet
+  processed_data_path: data/processed_bitcoin_data.parquet
+  model_path: models/bitcoin_gbm_model
+
+features:
+  lag_periods: [1, 5, 10]
+
+model:
+  max_iter: 50
+
+stream:
+  trigger_interval_secs: 10
+
+ingestion:
+  api_url: "https://api.coindesk.com/v1/bpi/currentprice.json"
+  polling_interval_secs: 60

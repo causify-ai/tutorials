@@ -1,0 +1,7 @@
+pandas
+requests
+pyspark
+h2o
+h2o-pysparkling-3.1
+matplotlib
+seaborn
