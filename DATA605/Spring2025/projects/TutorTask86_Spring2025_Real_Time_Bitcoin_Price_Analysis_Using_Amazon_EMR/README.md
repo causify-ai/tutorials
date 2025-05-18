@@ -21,10 +21,12 @@ This project demonstrates a real-time data processing pipeline that collects Bit
 | File/Folder | Description |
 |-------------|-------------|
 | `bitcoin_producer.py` | Fetches real-time Bitcoin prices and writes records to S3 (`data_v2/`) |
-| `bitcoin_streaming_consumer_emr_debug.py` | Spark job to compute 1-min windowed average from S3 and write to `output_streaming/` |
+| `bitcoin_streaming_consumer_emr_debug.py` | Spark job to compute 1-min windowed average from S3 and write to `output/` |
 | `bitcoin_kafka/bitcoin_emr_utils.py` | Helper functions for API fetching, timestamping, and S3 upload |
 | `bitcoin_emr.API.ipynb` | Demonstrates utility API functions (with simulated S3 upload fallback) |
 | `bitcoin_emr.example.ipynb` | Simulates full pipeline with producer input and EMR output |
+| `bitcoin_emr.API.md` | Markdown documenting the API and helper layer |
+| `bitcoin_emr.example.md` | Markdown documenting the full pipeline example |
 | `requirements.txt` | Python package requirements |
 | `Dockerfile` + `*.sh` | Docker setup and run scripts |
 
@@ -101,44 +103,115 @@ http://localhost:8888
 
 - `bitcoin_emr.API.ipynb` – Test API functions, simulate S3 upload  
 - `bitcoin_emr.example.ipynb` – Simulate full pipeline input + output  
+- Corresponding Markdown Documentation:
+  - `bitcoin_emr.API.md`
+  - `bitcoin_emr.example.md`
 
-Both run without requiring cloud setup.
+Both notebooks run without requiring cloud setup.
 
 ---
 
 ## Running the Spark Job on Amazon EMR (Optional)
 
-To run the Spark job (`bitcoin_streaming_consumer_emr_debug.py`) on an actual EMR cluster:
+To run the Spark job (`bitcoin_streaming_consumer_emr_debug.py`) on an actual Amazon EMR cluster and process the real-time Bitcoin data stored in S3:
 
-### 1. Set Up Input Data
+### 1. Upload Input Data
 
-Ensure input records are stored at:
+Ensure the producer script or notebook has pushed data to:
 
 ```text
 s3://bitcoin-price-streaming-data/data_v2/
 ```
 
-### 2. Launch EMR Cluster
+This folder should contain timestamped `.json` records with the following structure:
 
-- EMR version: **6.x**  
-- Applications: **Spark**  
-- Instance type: `m5.xlarge` or similar
-
-### 3. Submit Spark Job
-
-Upload the script to the cluster or S3 and run:
-
-```bash
-spark-submit   --deploy-mode cluster   --master yarn   bitcoin_streaming_consumer_emr_debug.py
+```json
+{
+  "timestamp": "YYYY-MM-DDTHH:MM:SS",
+  "price_usd": FLOAT
+}
 ```
+
+---
+
+### 2. Launch and Configure EMR Cluster
+
+Navigate to the [EMR Console](https://console.aws.amazon.com/elasticmapreduce/) and create a cluster with the following configurations:
+
+#### Software Configuration
+
+- **Release version**: EMR 6.x (e.g., 6.13.0)
+- **Applications**: Spark (uncheck others if not needed)
+
+#### Hardware Configuration
+
+- **Instance type**: `m5.xlarge` (for both Master and Core)
+- **Core nodes**: At least 1
+- **Auto-termination**: Enable if needed to save costs
+
+#### General Configuration
+
+- **Cluster name**: `bitcoin-emr-cluster`
+- **Logging**: Enable and set an S3 log path (e.g., `s3://your-bucket/emr-logs/`)
+- **EC2 key pair**: Select a key pair for SSH access (optional but recommended)
+
+#### Networking
+
+- **VPC**: Use the default or a custom one with public subnet
+- **Permissions**:
+  - Use a service role with `AmazonS3FullAccess` and `AmazonEMRFullAccessPolicy_v2`
+  - Ensure the EC2 instance profile also has access to S3
+
+---
+
+### 3. Submit the Spark Job
+
+You can submit the job in one of two ways:
+
+#### (a) Add a Step from the Console
+
+- Upload `bitcoin_streaming_consumer_emr_debug.py` to S3 (e.g., `s3://your-bucket/scripts/`)
+- In the cluster’s "Steps" tab, add a new step:
+  - **Type**: Spark
+  - **Name**: `Run Bitcoin Streaming Job`
+  - **Script location**:
+    ```bash
+    s3://your-bucket/scripts/bitcoin_streaming_consumer_emr_debug.py
+    ```
+  - **Arguments**: Leave blank
+
+#### (b) SSH and Run Manually
+
+1. SSH into the master node:
+   ```bash
+   ssh -i your-key.pem hadoop@<master-node-public-dns>
+   ```
+
+2. Run the script using:
+   ```bash
+   spark-submit      --deploy-mode cluster      --master yarn      s3://your-bucket/scripts/bitcoin_streaming_consumer_emr_debug.py
+   ```
+
+---
 
 ### 4. Output Location
 
-Results will be written to:
+After execution, check the results in your S3 bucket:
 
 ```text
-s3://bitcoin-price-streaming-data/output_streaming/
+s3://bitcoin-price-streaming-data/output/
 ```
+
+Each file contains windowed average price data over 1-minute intervals in JSON format.
+
+---
+
+### 📝 Tip
+
+To reduce costs:
+- Use **auto-termination** after job completion
+- Always **terminate idle clusters**
+- Monitor logs in `emr-logs/` for errors or debug output
 
 ---
 
