@@ -60,7 +60,8 @@ Keeps the Docker container alive so that the streaming job remains active indefi
 
 ## Process FlowChart
 
-![entrypoint_flow](https://github.com/user-attachments/assets/fcda0cd9-f7d4-41fd-97c7-5a0e5f8386d9)
+<img src="https://github.com/user-attachments/assets/fcda0cd9-f7d4-41fd-97c7-5a0e5f8386d9" width="500"/>
+
 
 
 ## Example Output
