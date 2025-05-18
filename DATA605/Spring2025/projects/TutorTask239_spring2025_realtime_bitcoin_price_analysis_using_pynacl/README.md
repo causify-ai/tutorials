@@ -40,6 +40,7 @@ A modular and secure Python-based platform to ingest, encrypt, store, and analyz
 ---
 
 ## 🧩 Project Structure
+```
 bitcoin_analysis_project/
 ├── crypto/                  # Encryption utilities
 │   └── encrypt.py           # Functions for encrypting and decrypting data
@@ -50,7 +51,7 @@ bitcoin_analysis_project/
 ├── bitcoin_analysis.db      # SQLite database containing encrypted Bitcoin price data
 ├── requirements.txt         # List of Python dependencies
 └── README.md                # Project documentation and usage instructions
-
+```
 ---
 
 ## ⚙️ Getting Started
