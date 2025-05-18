@@ -1,4 +1,0 @@
-api_key: "CG-oF6aKFTXhvY2NZcMGQ9QP5fV"
-data_csv_path: /workspace/griptape/warehouse/bitcoin_prices.csv
-checkpoint_path: pipeline/checkpoint.yaml
-default_start_date: 2024-11-01
