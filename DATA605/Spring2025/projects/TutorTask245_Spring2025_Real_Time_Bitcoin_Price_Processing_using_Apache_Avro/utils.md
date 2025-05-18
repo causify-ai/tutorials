@@ -55,29 +55,15 @@ data = {
 
 avro_message = serialize_to_avro(data)
 
-
-
-# Complete Workflow
-
-Bitcoin data is fetched using the API module.
-
-The dictionary is passed to serialize_to_avro().
-
-The function uses DatumWriter and BinaryEncoder to encode it into binary format using the declared Avro schema.
-
-The binary is published to Kafka for downstream processing (e.g., Spark consumer).
-
-from utils import serialize_to_avro
-
-# Dictionary representing Bitcoin price data
-btc_record = {
-    "timestamp": 1747460147,
-    "price": 103550.0,
-    "currency": "USD",
-    "volume": 25325166301.682724
-}
-
-serialized_data = serialize_to_avro(btc_record)
-producer.produce(topic='bitcoin_prices', value=serialized_data)
-
 ```
+
+## Complete Workflow
+
+1.Bitcoin data is fetched using the API module.
+
+2.The dictionary is passed to serialize_to_avro().
+
+3.The function uses DatumWriter and BinaryEncoder to encode it into binary format using the declared Avro schema.
+
+4.The binary is published to Kafka for downstream processing (e.g., Spark consumer).
+
