@@ -12,8 +12,8 @@
     "datasette-dashboards": {
       "bitcoin-kpis": {
         "title": "Bitcoin KPI Overview",
-        "description": "Key metrics for Bitcoin pricing data.<br><br><a href=\"/-/dashboards/bitcoin-visuals\" style=\"background:#007acc;padding:8px 12px;border-radius:5px;color:white;text-decoration:none;\">View Charts</a>",
-        "layout": [
+        "description": "Key metrics for Bitcoin pricing data.",
+          "layout": [
           [
             "kpi-max",
             "kpi-min",
