@@ -1,63 +1,47 @@
-# Real-Time Bitcoin Data Processing with BigDL
 
-## 🚀 Overview
+# 📈 Real-Time Bitcoin Price Prediction Pipeline
 
-This project leverages **BigDL**, a distributed deep learning library built on **Apache Spark**, to build a real-time Bitcoin price prediction pipeline. It combines data ingestion, distributed processing, and deep learning using an RNN to analyze trends and make predictions.
+This project implements a real-time Bitcoin price forecasting system using **BigDL** and **Apache Spark**, integrated with the **CoinGecko API** for fetching live market data.
+
+---
+
+## 🚀 Key Features
+
+- 🔄 **ETL Pipeline**: Fetch, clean, and transform data using Spark.
+- 🧠 **RNN Model Training**: Leverages LSTM layers on historical data.
+- 🔮 **Forecasting**: Predict future price trends using autoregressive techniques.
+- 📊 **Visualization**: Compare actual vs. predicted prices using Matplotlib.
+- 🐳 **Dockerized**: Environment packaged in Docker for easy reproducibility.
 
 ---
 
 ## 🧠 Technologies Used
 
-### 📊 BigDL
-- Deep learning library integrated with Apache Spark.
-- Enables scalable model training and inference across clusters.
-
-### 🔥 Apache Spark
-- Used for distributed data ingestion and transformation via Spark DataFrames.
-
-### 🧾 CoinGecko API
-- Real-time data source for Bitcoin prices.
-
-### 🧮 Matplotlib
-- Used for generating plots of historical and predicted trends.
+| Tool          | Purpose                          |
+|---------------|----------------------------------|
+| **BigDL**     | Distributed deep learning        |
+| **Spark**     | Scalable data processing         |
+| **Matplotlib**| Visualization of results         |
+| **CoinGecko** | Real-time Bitcoin data API       |
+| **Docker**    | Containerized environment setup  |
 
 ---
 
-## 📦 Core Functionalities
+## 🛠️ Project Structure
 
-1. **Data Ingestion**  
-   Pull real-time Bitcoin prices using the CoinGecko API and parse responses.
-
-2. **ETL Processing**  
-   Use Spark DataFrames to clean, transform, and window the time series.
-
-3. **RNN Model Training**  
-   Create and train a recurrent neural network (RNN) using BigDL to detect patterns.
-
-4. **Prediction & Visualization**  
-   Use trained models to predict future prices and visualize them with Matplotlib.
-
----
-
-## 📂 Project Structure
-
-| File                | Purpose                                      |
+| File                | Description                                  |
 |---------------------|----------------------------------------------|
-| `Bitcoin_pipeline.py` | Main driver script                          |
-| `Bitcoin_API.py`      | Module to interact with the CoinGecko API  |
-| `requirements.txt`    | Dependency list                            |
-| `Dockerfile`          | Docker image for running project (optional) |
+| `Bitcoin_pipeline.py` | Main pipeline: ETL, training, prediction     |
+| `bitcoin_api.py`      | Fetch, clean and transform Bitcoin data      |
+| `Dockerfile`          | Docker image definition                     |
+| `docker_build.sh`     | Builds the Docker image                     |
+| `docker_bash.sh`      | Launches shell in container                 |
+| `docker_jupyter.sh`   | Runs Jupyter Notebook inside container      |
+| `requirements.txt`    | Python dependencies                         |
 
 ---
 
-
----
-
-## 📊 Pipeline Diagram (Live Mermaid)
-
-You can explore the real-time editable flowchart here:
-
-🔗 [Click to open Mermaid Chart](https://www.mermaidchart.com/app/projects/5373cd39-f84c-4dea-a47d-48802de5f28e/diagrams/e97200d7-4e93-4a95-87aa-18660446908c/version/v0.1/edit)
+## 🧪 How It Works
 
 ```mermaid
 flowchart TD
@@ -68,10 +52,38 @@ flowchart TD
     E --> F[Visualize Trends<br>using Matplotlib]
     F --> G[End]
 ```
-## ⚙️ Setup & Installation
 
-### Option 1: Local Python Environment
+---
+
+## ⚙️ Installation
+
+### 🐍 Local Python Setup
 
 ```bash
-pip install --pre bigdl-spark -f https://developer.intel.com/ipex-whl-stable
-pip install pyspark requests matplotlib
+pip install -r requirements.txt
+```
+
+### 🐳 Docker Setup
+
+```bash
+bash docker_build.sh
+bash docker_jupyter.sh  # Access at http://localhost:8888
+```
+
+---
+
+## 📈 Sample Output
+
+- 📉 Rolling average
+- 📊 Price change %
+- 📈 Predicted vs actual trendline
+
+---
+
+## 🔮 Future Enhancements
+
+- Multi-currency prediction
+- Alerts on volatility spikes
+- Model tuning using GRU/Transformers
+
+---
