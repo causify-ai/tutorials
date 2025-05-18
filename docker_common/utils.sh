@@ -4,7 +4,7 @@ build_container_image() {
     echo "FULL_IMAGE_NAME=$FULL_IMAGE_NAME"
     # Prepare build area.
     #tar -czh . | docker build $OPTS -t $IMAGE_NAME -
-    DIR="tmp.build"
+    DIR="../tmp.build"
     if [[ -d $DIR ]]; then
         rm -rf $DIR
     fi;
