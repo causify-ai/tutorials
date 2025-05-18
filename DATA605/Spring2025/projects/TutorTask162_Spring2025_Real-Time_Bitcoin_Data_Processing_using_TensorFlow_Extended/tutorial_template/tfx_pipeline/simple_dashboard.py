@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-"""
-Enhanced Bitcoin Price Forecasting Dashboard with fully interactive chart
-"""
 
 import os
 import pandas as pd
