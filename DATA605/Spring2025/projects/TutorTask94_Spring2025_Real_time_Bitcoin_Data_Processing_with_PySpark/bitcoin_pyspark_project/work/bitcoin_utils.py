@@ -342,8 +342,8 @@ def train_and_evaluate_gbt_regressor():
     # 🔁 Upload to the specified S3 bucket
     s3 = boto3.resource(
         's3',
-        aws_access_key_id=aws_access_key,
-        aws_secret_access_key=aws_secret_key,
+        aws_access_key_id=aws_access_key, # gitleaks:allow
+        aws_secret_access_key=aws_secret_key # gitleaks:allow,
         region_name=aws_region
     )
 
