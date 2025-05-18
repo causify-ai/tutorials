@@ -1,0 +1,13 @@
+apiVersion: 1
+datasources:
+- access: proxy
+  isDefault: true
+  jsonData:
+    defaultBucket: crypto-bucket
+    organization: data-605
+    version: Flux
+  name: InfluxDB
+  org: data-605
+  token: 8k0hvIvY0desnwwro39vM92CGwRoMGX3w5SuhDB88-4
+  type: influxdb
+  url: http://influxdb:8086

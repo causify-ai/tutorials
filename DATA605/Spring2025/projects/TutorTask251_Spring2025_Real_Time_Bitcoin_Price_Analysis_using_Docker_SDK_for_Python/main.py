@@ -1,6 +1,10 @@
 import docker
 import time
 import os
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("main")
 
 def build_and_run_containers():
     client = docker.from_env()
@@ -33,11 +37,11 @@ def build_and_run_containers():
 
     try:
         # Step 1: Pull InfluxDB image
-        print("Pulling InfluxDB image...")
+        logger.info("Pulling InfluxDB image...")
         client.images.pull(influxdb_image)
 
         # Step 2: Run InfluxDB container
-        print("Starting InfluxDB container...")
+        logger.info("Starting InfluxDB container...")
         try:
             container = client.containers.get(influxdb_container_name)
             container.stop()
@@ -53,18 +57,18 @@ def build_and_run_containers():
             volumes={"influxdb-data": {"bind": "/var/lib/influxdb2", "mode": "rw"}},
             detach=True
         )
-        print(f"InfluxDB container '{influxdb_container_name}' is running on port {influxdb_port}.")
+        logger.info(f"InfluxDB container '{influxdb_container_name}' is running on port {influxdb_port}.")
 
         # Wait for InfluxDB to initialize
-        print("Waiting for InfluxDB to initialize...")
+        logger.info("Waiting for InfluxDB to initialize...")
         time.sleep(10)
 
         # Step 3: Build the fetch data scheduler image
-        print("Building the fetch data scheduler image...")
+        logger.info("Building the fetch data scheduler image...")
         client.images.build(path=scheduler_dockerfile_path, tag=scheduler_image_name)
 
         # Step 4: Run the fetch data scheduler container
-        print("Starting fetch data scheduler container...")
+        logger.info("Starting fetch data scheduler container...")
         try:
             container = client.containers.get(scheduler_container_name)
             container.stop()
@@ -78,12 +82,12 @@ def build_and_run_containers():
             network_mode="host",  # Use host networking to communicate with InfluxDB
             detach=True
         )
-        print(f"Fetch data scheduler container '{scheduler_container_name}' is running.")
+        logger.info(f"Fetch data scheduler container '{scheduler_container_name}' is running.")
 
     except docker.errors.APIError as e:
-        print(f"Docker API error: {e}")
+        logger.error(f"Docker API error: {e}")
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(f"An error occurred: {e}")
 
 if __name__ == "__main__":
     build_and_run_containers()

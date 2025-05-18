@@ -1,0 +1,98 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.20kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.10-slim
+#2 DONE 0.2s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [18/23] ADD docker_data605_style/version.sh /install/
+#5 CACHED
+
+#6 [15/23] RUN /install/install_jupyter_extensions.sh
+#6 CACHED
+
+#7 [ 8/23] RUN apt install -y --no-install-recommends     sudo     curl     systemctl     gnupg     git     vim
+#7 CACHED
+
+#8 [16/23] COPY docker_data605_style/etc_sudoers /etc/sudoers
+#8 CACHED
+
+#9 [ 2/23] WORKDIR /app
+#9 CACHED
+
+#10 [ 7/23] RUN apt-get -y upgrade
+#10 CACHED
+
+#11 [12/23] RUN pip3 install     ipython     tornado==6.1     jupyter-client==7.3.2     jupyter-contrib-core     apscheduler    influxdb-client    docker    jupyter-contrib-nbextensions     psycopg2-binary     yapf    pandas    matplotlib    requests    numpy    statsmodels
+#11 CACHED
+
+#12 [20/23] COPY ../main.py /app/
+#12 CACHED
+
+#13 [21/23] COPY ../docker_sdk_utils.py /app/
+#13 CACHED
+
+#14 [14/23] ADD docker_data605_style/install_jupyter_extensions.sh /install/
+#14 CACHED
+
+#15 [13/23] RUN mkdir /install
+#15 CACHED
+
+#16 [11/23] RUN python3 -m pip install --upgrade pip
+#16 CACHED
+
+#17 [ 3/23] COPY fetch_btc_data.py .
+#17 CACHED
+
+#18 [ 5/23] RUN pip install requests influxdb-client
+#18 CACHED
+
+#19 [22/23] COPY ../docker_sdk.example.ipynb /app/
+#19 CACHED
+
+#20 [10/23] RUN ln -s /usr/bin/python3 /usr/bin/python
+#20 CACHED
+
+#21 [ 4/23] COPY docker_sdk_utils.py .
+#21 CACHED
+
+#22 [ 9/23] RUN apt install -y --no-install-recommends     python3     python3-pip     python3-dev
+#22 CACHED
+
+#23 [19/23] RUN /install/version.sh 2>&1 | tee version.log
+#23 CACHED
+
+#24 [17/23] COPY docker_data605_style/bashrc /root/.bashrc
+#24 CACHED
+
+#25 [ 6/23] RUN apt-get -y update
+#25 CACHED
+
+#26 [23/23] COPY ../docker_sdk.API.ipynb /app/
+#26 ERROR: failed to calculate checksum of ref ii3f85h6r98eab65x992iv64u::zcb8s1y1kn4zdm15t7yb9mdkg: "/docker_sdk.API.ipynb": not found
+
+#27 [ 1/23] FROM docker.io/library/python:3.10-slim@sha256:e1013c40c02a7875ae30c78c69b68ea7bee31713e8ac1c0f5469c1206258d6d7
+#27 resolve docker.io/library/python:3.10-slim@sha256:e1013c40c02a7875ae30c78c69b68ea7bee31713e8ac1c0f5469c1206258d6d7 done
+#27 CANCELED
+------
+ > [23/23] COPY ../docker_sdk.API.ipynb /app/:
+------
+Dockerfile:73
+--------------------
+  71 |     COPY ../docker_sdk_utils.py /app/
+  72 |     COPY ../docker_sdk.example.ipynb /app/
+  73 | >>> COPY ../docker_sdk.API.ipynb /app/
+  74 |     # COPY ../requirements.txt /app/
+  75 |     
+--------------------
+ERROR: failed to solve: failed to compute cache key: failed to calculate checksum of ref ii3f85h6r98eab65x992iv64u::zcb8s1y1kn4zdm15t7yb9mdkg: "/docker_sdk.API.ipynb": not found

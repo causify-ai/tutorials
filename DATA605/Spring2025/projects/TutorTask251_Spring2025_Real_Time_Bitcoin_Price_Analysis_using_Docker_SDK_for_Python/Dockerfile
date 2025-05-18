@@ -70,13 +70,19 @@ RUN /install/version.sh 2>&1 | tee version.log
 COPY ../main.py /app/
 COPY ../docker_sdk_utils.py /app/
 COPY ../docker_sdk.example.ipynb /app/
+COPY fetch_btc_data.py /app/
+COPY logger_config.py /app/
 COPY ../docker_sdk.API.ipynb /app/
+COPY ../docker_sdk.example.py /app/
+COPY ../analysis/analyze.py /app/
 # COPY ../requirements.txt /app/
 
 # Jupyter.
 EXPOSE 8888
 
 # Set default command to start Jupyter Notebook
+# To run a demonstration script instead of Jupyter, change CMD to:
+# CMD ["python", "docker_sdk.example.py"]
 CMD ["jupyter-notebook", "--ip=0.0.0.0", "--port=8888", "--allow-root", "--NotebookApp.token=", "--NotebookApp.password="]
 
 

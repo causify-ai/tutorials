@@ -1,0 +1,129 @@
+{
+    "annotations": {
+        "list": []
+    },
+    "editable": true,
+    "panels": [
+        {
+            "datasource": "InfluxDB",
+            "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 24,
+                "x": 0,
+                "y": 0
+            },
+            "id": 1,
+            "options": {},
+            "targets": [
+                {
+                    "query": "from(bucket: \"crypto-bucket\") |> range(start: -1h) |> filter(fn: (r) => r[\"_measurement\"] == \"crypto_prices\" and r[\"_field\"] == \"close\" and r[\"source\"] == \"${source}\")",
+                    "refId": "A"
+                }
+            ],
+            "title": "BTC/USD Close Price",
+            "type": "timeseries"
+        },
+        {
+            "title": "Current BTC/USD Price",
+            "type": "stat",
+            "gridPos": {
+                "h": 5,
+                "w": 6,
+                "x": 0,
+                "y": 8
+            },
+            "id": 2,
+            "datasource": "InfluxDB",
+            "targets": [
+                {
+                    "query": "from(bucket: \"crypto-bucket\") |> range(start: -5m) |> filter(fn: (r) => r[\"_measurement\"] == \"crypto_prices\" and r[\"_field\"] == \"close\" and r[\"source\"] == \"${source}\") |> last()",
+                    "refId": "A"
+                }
+            ],
+            "interval": "10s",
+            "intervalMs": 10000
+        },
+        {
+            "title": "5-Minute Moving Average",
+            "type": "timeseries",
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 6,
+                "y": 8
+            },
+            "id": 3,
+            "datasource": "InfluxDB",
+            "targets": [
+                {
+                    "query": "from(bucket: \"crypto-bucket\") |> range(start: -1h) |> filter(fn: (r) => r[\"_measurement\"] == \"crypto_prices\" and r[\"_field\"] == \"close\" and r[\"source\"] == \"${source}\") |> aggregateWindow(every: 5m, fn: mean, createEmpty: false) |> yield(name: \"5min_avg\")",
+                    "refId": "A"
+                }
+            ]
+        }
+    ,
+        {
+          "title": "Real-Time BTC/USD Price",
+          "type": "timeseries",
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 16
+          },
+          "id": 4,
+          "datasource": "InfluxDB",
+          "targets": [
+            {
+              "query": "from(bucket: \"crypto-bucket\") |> range(start: -1h) |> filter(fn: (r) => r[\"_measurement\"] == \"crypto_prices\" and r[\"_field\"] == \"close\" and r[\"source\"] == \"${source}\")",
+              "refId": "A"
+            }
+          ],
+          "options": {
+            "legend": {
+              "displayMode": "table",
+              "placement": "bottom"
+            }
+          }
+        }
+    ],
+    "schemaVersion": 30,
+    "style": "dark",
+    "tags": [],
+    "time": {
+        "from": "now-1h",
+        "to": "now"
+    },
+    "timepicker": {},
+    "refresh": "10s",
+    "timezone": "browser",
+    "title": "BTC Dashboard",
+    "version": 1,
+    "templating": {
+      "list": [
+        {
+          "name": "source",
+          "type": "query",
+          "datasource": "InfluxDB",
+          "refresh": 1,
+          "query": {
+            "query": "import \"influxdata/influxdb/schema\"\nschema.tagValues(bucket: \"crypto-bucket\", tag: \"source\")",
+            "refId": "A"
+          },
+          "current": {
+            "selected": true,
+            "text": "realtime",
+            "value": "realtime"
+          },
+          "hide": 0,
+          "label": "Data Source",
+          "multi": false,
+          "includeAll": false
+        }
+      ]
+    }
+}

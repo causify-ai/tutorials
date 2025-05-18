@@ -93,18 +93,3 @@ class CryptoDataFetcher:
             self._log.info("Scheduler stopped.")
 
 
-if __name__ == "__main__":
-    # InfluxDB configuration
-    INFLUXDB_URL = "http://localhost:8086"
-    INFLUXDB_TOKEN = os.getenv("INFLUXDB_ADMIN_TOKEN")
-    INFLUXDB_ORG = os.getenv("INFLUXDB_ORG")
-    INFLUXDB_BUCKET = os.getenv("INFLUXDB_BUCKET")
-
-    # Initialize the fetcher and start the scheduler
-    fetcher = CryptoDataFetcher(
-        influxdb_url=INFLUXDB_URL,
-        influxdb_token=INFLUXDB_TOKEN,
-        influxdb_org=INFLUXDB_ORG,
-        influxdb_bucket=INFLUXDB_BUCKET
-    )
-    fetcher.start_scheduler()
