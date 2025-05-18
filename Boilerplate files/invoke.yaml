@@ -1,0 +1,29 @@
+project:
+  name: tutor_bitcoin_s3fs
+  author: Karthik Vakada
+  python_version: "3.10"
+
+env:
+  default_stage: local
+  default_version: 1.0.0
+
+paths:
+  helpers_root: ../helpers_root
+  dev_scripts_root: ../dev_scripts_tutorial_bitcoin
+  docker_build: ../devops/docker_build
+  thin_client_root: ../dev_scripts_tutorial_bitcoin/thin_client
+  docker_env_config: ../devops/docker_build/env_config.yaml
+
+docker:
+  base_image: python:3.10-slim
+  image_name: tutor_bitcoin_s3fs
+  exposed_ports: ["8888"]
+  volumes: ["$(pwd):/app"]
+
+jupyter:
+  port: 8888
+  token: ""
+  password: ""
+
+notebook:
+  entrypoint: main.ipynb

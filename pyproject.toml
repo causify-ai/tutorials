@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "bitcoin-timeseries-s3fs"
+version = "0.1.0"
+description = "Time Series Analysis of Bitcoin Prices using s3fs"
+authors = ["Karthik Vakada <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.12"
+pandas = "*"
+matplotlib = "*"
+statsmodels = "*"
+scikit-learn = "*"
+s3fs = "*"
+requests = "*"
+jupyterlab = "^4.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

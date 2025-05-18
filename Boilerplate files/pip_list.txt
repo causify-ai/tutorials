@@ -1,0 +1,7 @@
+pandas
+matplotlib
+numpy
+s3fs
+statsmodels
+scipy
+requests
