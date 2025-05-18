@@ -1,6 +1,3 @@
-# bitcoin_utils.py
-
-
 import os
 import time
 import requests
@@ -9,39 +6,8 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 
 # ---------------------------
-# Data Ingestion (from data_ingestion.py)
+# 1. Fetch Current BTC Price
 # ---------------------------
-# src/data_ingestion.py
-
-import os
-import pandas as pd
-from datetime import datetime
-from src.live_fetcher import fetch_price
-
-def record_price(filepath="data/bitcoin_prices.csv"):
-    """
-    Fetch current price and append it to a CSV with timestamp.
-    """
-    os.makedirs(os.path.dirname(filepath), exist_ok=True)
-    price = fetch_price()
-    if price is None:
-        print("Price not available.")
-        return
-    timestamp = datetime.utcnow().isoformat()
-    df = pd.DataFrame([[timestamp, price]], columns=["timestamp", "price"])
-
-    if os.path.exists(filepath):
-        df.to_csv(filepath, mode='a', header=False, index=False)
-    else:
-        df.to_csv(filepath, index=False)
-
-# ---------------------------
-# Real-Time Fetch Loop (from live_fetcher.py)
-# ---------------------------
-# src/live_fetcher.py
-
-import requests
-
 def fetch_price():
     """
     Fetch real-time Bitcoin price in USD from CoinGecko.
@@ -56,22 +22,55 @@ def fetch_price():
         print("Error fetching price:", e)
         return None
 
+# ---------------------------
+# 2. Record Price with Timestamp
+# ---------------------------
+def record_price(filepath="data/bitcoin_prices.csv"):
+    """
+    Fetch current price and append it to a CSV with UTC timestamp.
+    """
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    price = fetch_price()
+    if price is None:
+        print("Price not available.")
+        return
+
+    timestamp = datetime.utcnow().isoformat()
+    df = pd.DataFrame([[timestamp, price]], columns=["timestamp", "price"])
+
+    if os.path.exists(filepath):
+        df.to_csv(filepath, mode='a', header=False, index=False)
+    else:
+        df.to_csv(filepath, index=False)
 
 # ---------------------------
-# Preprocessing + Plot (from preprocess_eda.py)
+# 3. Loop to Fetch for N Seconds
 # ---------------------------
-# src/preprocess_eda.py
+def record_live_prices(duration_seconds=120, interval_seconds=10, output_file="data/bitcoin_prices.csv"):
+    """
+    Repeatedly record BTC price every interval for total duration.
+    """
+    iterations = duration_seconds // interval_seconds
+    print(f"Recording Bitcoin prices every {interval_seconds} seconds for {duration_seconds} seconds...\n")
+    for i in range(iterations):
+        record_price(output_file)
+        print(f"✔️ Recorded price {i+1}/{iterations}")
+        time.sleep(interval_seconds)
+    print("\n✅ Finished recording.")
 
-import os
-import pandas as pd
-import matplotlib.pyplot as plt
-
+# ---------------------------
+# 4. Preprocess + Save Cleaned CSV
+# ---------------------------
 def preprocess(filepath="data/bitcoin_prices.csv", outpath="data/cleaned_bitcoin.csv"):
     """
-    Load BTC price data, compute diff and rolling average, save cleaned CSV.
+    Load BTC price data, clean timestamps, compute price diff and rolling avg.
+    Save cleaned version to CSV.
     """
     df = pd.read_csv(filepath)
-    df['timestamp'] = pd.to_datetime(df['timestamp'])
+    df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
+    df = df.dropna(subset=['timestamp'])
+
+    df = df.sort_values(by='timestamp')
     df['price_diff'] = df['price'].diff()
     df['rolling_avg'] = df['price'].rolling(window=5).mean()
 
@@ -79,12 +78,25 @@ def preprocess(filepath="data/bitcoin_prices.csv", outpath="data/cleaned_bitcoin
     df.to_csv(outpath, index=False)
     return df
 
+# ---------------------------
+# 5. Plot Line Chart of Price
+# ---------------------------
 def plot_data(df, output_path="Output/bitcoin_price_plot.png"):
     """
-    Save a time series line chart from the cleaned data.
+    Create a line chart of Bitcoin prices over time.
     """
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    df.plot(x='timestamp', y='price', title="Bitcoin Price Over Time", figsize=(10, 5))
+
+    plt.figure(figsize=(10, 5))
+    plt.plot(df['timestamp'], df['price'], label='Price (USD)', linewidth=2)
+    plt.xlabel('Time')
+    plt.ylabel('Bitcoin Price')
+    plt.title('Bitcoin Price Over Time')
+    plt.xticks(rotation=45)
+    plt.legend()
+    plt.grid(True)
     plt.tight_layout()
     plt.savefig(output_path)
     plt.close()
+
+    print(f"✅ Plot saved to {output_path}")

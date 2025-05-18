@@ -22,13 +22,13 @@ stages:
       size: 50
     - path: src/preprocess_eda.py
       hash: md5
-      md5: e2383efce8c44bf00a95da2a3bee8524
-      size: 920
+      md5: 377e946a032450d7c9b15cfb7dd12809
+      size: 1377
     outs:
     - path: Output/bitcoin_price_plot.png
       hash: md5
-      md5: 43e0f9a7f69f90dbb92ccf3caa3db17c
-      size: 20650
+      md5: 4c714fdf7389f8d0fbee20493946bf3f
+      size: 24228
     - path: data/cleaned_bitcoin.csv
       hash: md5
       md5: d64e0ca18e625d5c104a6140665e2bb6
