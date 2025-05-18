@@ -1,65 +1,51 @@
-FROM ubuntu:20.04
+# Dockerfile
+FROM python:3.10-slim-bullseye
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get -y update
-RUN apt-get -y upgrade
+# 1) Install sudo, Chromium + driver, and all needed libs
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      sudo \
+      chromium \
+      chromium-driver \
+      wget \
+      ca-certificates \
+      fonts-liberation \
+      libx11-xcb1 \
+      libxcomposite1 \
+      libxdamage1 \
+      libxext6 \
+      libxfixes3 \
+      libxi6 \
+      libxtst6 \
+      libatk1.0-0 \
+      libatk-bridge2.0-0 \
+      libgtk-3-0 \
+      libnss3 \
+      libxrandr2 \
+      libasound2 \
+      libpangocairo-1.0-0 \
+      xdg-utils \
+  && rm -rf /var/lib/apt/lists/*
 
-# Install system utilities.
-RUN apt install -y --no-install-recommends \
-    sudo \
-    curl \
-    systemctl \
-    gnupg \
-    git \
-    vim 
+# 2) Install Python & Jupyter/Selenium stack
+RUN pip install --no-cache-dir \
+      notebook \
+      jupyter-contrib-nbextensions \
+      selenium \
+      webdriver-manager \
+      nltk \
+      pandas \
+      numpy \
+      matplotlib \
+      seaborn \
+      scikit-learn \
+      requests
 
-# Install Python.
-RUN apt install -y --no-install-recommends \
-    python3 \
-    python3-pip \
-    python3-dev
+# 3) Run your existing Jupyter-extensions installer
+COPY install_jupyter_extensions.sh /install/install_jupyter_extensions.sh
+RUN chmod +x /install/install_jupyter_extensions.sh \
+ && /install/install_jupyter_extensions.sh
 
-RUN python3 -m pip install --upgrade pip
-    
-# Install Python packages.
-# There is a bug:
-#   File "/opt/homebrew/lib/python3.10/site-packages/tornado/iostream.py", line 182, in advance
-#   assert 0 < size <= self._size
-# for tornado==6.2 and jupyter-client==8.0.2.
-# https://discourse.jupyter.org/t/jupyter-notebook-zmq-message-arrived-on-closed-channel-error/17869/10
-RUN pip3 install \
-    ipython \
-    tornado==6.1 \
-    jupyter-client==7.3.2 \
-    jupyter-contrib-core \
-    jupyter-contrib-nbextensions \
-    psycopg2-binary \
-    yapf \
-    fake-headers \
-    selenium \
-    webdriver-manager \
-    nltk \
-    pandas \
-    numpy \
-    matplotlib \
-    seaborn \
-    scikit-learn \
-    requests
-
-RUN mkdir /install
-
-# Install Jupyter extensions.
-ADD install_jupyter_extensions.sh /install
-RUN /install/install_jupyter_extensions.sh
-
-# Config.
-ADD etc_sudoers /install/
-COPY etc_sudoers /etc/sudoers
-COPY bashrc /root/.bashrc
-
-# Report package versions.
-ADD version.sh /install/
-RUN /install/version.sh 2>&1 | tee version.log
-
-# Jupyter.
+# 4) Expose and launch Jupyter
 EXPOSE 8888
+CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--no-browser", "--allow-root"]
