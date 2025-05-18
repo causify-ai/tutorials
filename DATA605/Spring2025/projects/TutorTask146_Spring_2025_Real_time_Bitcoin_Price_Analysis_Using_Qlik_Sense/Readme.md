@@ -98,7 +98,7 @@ graph TD
 
 ### **Live Analytics Dashboard Example**
 
-![Qlik Dashboard](Images/qlik_dashboard.png)
+![Qlik Dashboard](Images/qlik_dashborad.png)
 *This dashboard shows the real-time Bitcoin price, moving average, and rolling maximum values, all interactively filterable by time. Key metrics are displayed below for fast insights.*
 
 ---
@@ -130,7 +130,7 @@ While building a truly real-time, automated analytics solution on a free/student
 
 * Google Drive or Google Sheets integration was tested, but Qlik’s connectors frequently produced authentication or query errors for non-enterprise users.
 
-![Google Drive Connector Error](Images/qlik_gdrive_error.png)
+![Google Drive Connector Error](Images/qlik_Gdrive_error.png)
 
 ---
 
@@ -162,20 +162,26 @@ While building a truly real-time, automated analytics solution on a free/student
 
 ```
 .
-├── images/                    # Project screenshots & diagrams
+├── Images/                            # Screenshots & error samples
 │   ├── qlik_dashboard.png
 │   ├── qlik_automation_error.png
 │   └── qlik_gdrive_error.png
-├── datafetch.py               # Python data fetching & analytics
-├── gitpush.py                 # Python script to automate GitHub push
-├── Analysis.py                # Data analytics and forecasting
-├── bitcoin_realtime.csv       # Real-time data
-├── bitcoin_analytics.csv      # Rolling analytics
-├── bitcoin_forecast.csv       # Forecasted data
-├── QlikAnalysis_utils.py      # Shared Python utilities
-├── requirements.txt           # Project dependencies
-├── README.md                  # Project documentation (this file)
-└── ...
+├── Analysis.py                       # Analytics and rolling calculations
+├── bitcoin_analytics.csv             # Includes ma_6 and volatility_12
+├── bitcoin_forecast.csv              # Placeholder for predictive analysis
+├── bitcoin_realtime.csv              # Raw Bitcoin price log
+├── datafetch.py                      # Real-time data collection from API
+├── docker_bash.sh                    # Shell script for Docker bash entry
+├── docker_build.sh                   # Shell script to build Docker image
+├── Dockerfile                        # Build Docker container
+├── gitpush.py                        # GitHub automation logic
+├── QlikAnalysis_utils.py             # Shared utility functions
+├── QlikAnalysis.API.json             # Qlik export
+├── QlikAnalysis.export.json          # Exported configuration
+├── QlikAnalysis.excel.xlsx           # Optional export format
+├── Readme.md                         # Primary documentation
+├── real.md                           # Backup notes
+├── requirements.txt                  # Python dependencies
 ```
 
 ---
