@@ -37,6 +37,7 @@ Thumbs.db
 # === Build Artifacts ===
 dist/
 *.egg-info/
+tmp.build/
 
 # === Docker ===
 *.pid

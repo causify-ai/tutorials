@@ -97,11 +97,17 @@ The `download_btc_data.sh` script uses the [Kaggle API](https://www.kaggle.com/d
    - `~/.kaggle/` (Linux/macOS)
    - `%USERPROFILE%\.kaggle\` (Windows)
 
-4. Run the script:
+4. Make the script executable:
 
-   ```bash
-   bash download_btc_data.sh
-   ```
+```bash
+   chmod +x download_btc_data.sh
+```
+
+5. Run the script:
+
+```bash
+bash download_btc_data.sh
+```
 
 **Alternatively:**
 
