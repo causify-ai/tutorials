@@ -92,3 +92,11 @@ python push_to_powerbi.py
 # Open & present dashboard
 # Publish or open Real-Time_Bitcoin_Dashboard.pbix in Power BI Service.
 # Confirm visuals are set to “Don’t summarize” and cards display current metrics and forecasts.
+## Docker Compose Demo
+
+You can run the entire real-time ingestion → forecast → push pipeline locally via Docker Compose.
+
+### 1. Build and start all services
+
+```bash
+docker compose up --build

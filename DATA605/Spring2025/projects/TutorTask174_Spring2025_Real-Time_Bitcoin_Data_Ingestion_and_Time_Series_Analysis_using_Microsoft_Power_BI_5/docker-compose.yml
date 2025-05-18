@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  ingestion:
+    build: .
+    container_name: btc_ingestion
+    command: python bitcoin_data_ingestion.py
+    volumes:
+      - ./:/app
+    restart: unless-stopped
+
+  forecast:
+    build: .
+    container_name: btc_forecast
+    depends_on:
+      - ingestion
+    command: python bitcoin_example.py
+    volumes:
+      - ./:/app
+    restart: "no"
+
+  push:
+    build: .
+    container_name: btc_push
+    depends_on:
+      - forecast
+    command: python push_to_powerbi.py
+    volumes:
+      - ./:/app
+    restart: "no"
