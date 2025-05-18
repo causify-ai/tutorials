@@ -59,7 +59,8 @@ This module runs a Kafka producer that periodically fetches real-time Bitcoin pr
 
 ## Process Flowchart
 
-![kafka_producer_flow](https://github.com/user-attachments/assets/8a639286-3d5f-4bc5-8c93-e570f8a48955)
+<img src="https://github.com/user-attachments/assets/8a639286-3d5f-4bc5-8c93-e570f8a48955" width="500"/>
+
 
 ## Example Usage
 
