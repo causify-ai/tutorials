@@ -614,7 +614,7 @@ else:
             # Visual representation of progress
             st.markdown("### Your Progress")
             progress_html = """
-            <div style="background-color:#3b3b3b;border-radius:10px;padding:10px;">
+            <div style="background-color:var(--background-color);border-radius:10px;padding:10px;">
                 <div style="display:flex;align-items:center;margin-bottom:10px;">
                     <div style="background-color:#4CAF50;color:white;border-radius:50%;width:25px;height:25px;display:flex;align-items:center;justify-content:center;margin-right:10px;">1</div>
                     <div><strong>Select folder</strong> ✅</div>
