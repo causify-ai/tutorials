@@ -1,0 +1,6 @@
+stable-baselines3==2.1.0
+gymnasium==0.29.1
+numpy>=1.23
+pandas>=1.5
+matplotlib>=3.5
+requests>=2.28

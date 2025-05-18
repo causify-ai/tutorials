@@ -1,6 +1,6 @@
 # stablebaseline3.example.md
 
-## 🧠 Project Summary
+## Project Summary
 
 This notebook presents an end-to-end reinforcement learning (RL) application for forecasting Bitcoin price trends using real-time and historical data.
 
@@ -9,6 +9,13 @@ We use Stable-Baselines3’s PPO (Proximal Policy Optimization) algorithm and a 
 ---
 
 ## Workflow Overview
+
+graph TD
+    A[Fetch Data from CoinGecko] --> B[Normalize Prices]
+    B --> C[Custom Gym Environment]
+    C --> D[Train PPO Model]
+    D --> E[Evaluate + Visualize Results]
+
 
 ### 1. Data Loading
 The dataset `bitcoin_historical.csv` is generated using the CoinGecko API and contains 30 days of hourly BTC prices.
@@ -40,6 +47,10 @@ Training shows improving `ep_rew_mean` with time, indicating learning.
 - Agent tends to hold when uncertain (no penalty for inactivity)
 
 ---
+# Final Results:
+- Total Profit: $8,221.45
+- Actions Taken: 21 Buy, 18 Sell, 671 Hold
+
 
 ## Limitations & Improvements
 
