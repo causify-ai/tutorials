@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  influxdb:
+    image: influxdb:2.0
+    container_name: influxdb_container
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=admin123
+      - DOCKER_INFLUXDB_INIT_ORG=crypto
+      - DOCKER_INFLUXDB_INIT_BUCKET=bitcoin_prices
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_TOKEN}
+    networks:
+      - flink_influx_network   # <-- Add this line!
+
+  app:
+    build: .
+    container_name: umd_data605_app
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./:/data
+    env_file:
+      - .env
+    environment:
+      - INFLUXDB_URL=http://influxdb_container:8086
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
+      - INFLUXDB_ORG=crypto
+      - INFLUXDB_BUCKET=bitcoin_prices
+    networks:
+      - flink_influx_network
+    depends_on:
+      - influxdb
+
+networks:
+  flink_influx_network:
+    driver: bridge
+
+volumes:
+  influxdb_data:

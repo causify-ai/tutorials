@@ -1,56 +1,50 @@
 FROM ubuntu:20.04
+
+# Set environment variables to avoid interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Etc/UTC
 
-RUN apt-get -y update
-RUN apt-get -y upgrade
+# Install system dependencies
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends \
+        openjdk-11-jdk \
+        python3 \
+        python3-pip \
+        python3-dev \
+        curl \
+        git \
+        build-essential \
+        tzdata && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install system utilities.
-RUN apt install -y --no-install-recommends \
-    sudo \
-    curl \
-    systemctl \
-    gnupg \
-    git \
-    vim
+# Set JAVA path for Flink (needed on ARM64)
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-arm64
+ENV PATH=$JAVA_HOME/bin:$PATH
 
-# Install Python.
-RUN apt install -y --no-install-recommends \
-    python3 \
-    python3-pip \
-    python3-dev
+# Upgrade pip and install base Python packages (excluding prophet/pystan)
+RUN python3 -m pip install --upgrade pip setuptools wheel && \
+    pip install \
+        apache-flink==1.17.1 \
+        ipython \
+        tornado==6.1 \
+        jupyter-client==7.3.2 \
+        jupyter-contrib-core \
+        jupyter-contrib-nbextensions \
+        notebook \
+        influxdb-client \
+        requests \
+        psycopg2-binary \
+        yapf \
+        numpy \
+        pandas \
+        matplotlib \
+        yfinance
 
-RUN python3 -m pip install --upgrade pip
-    
-# Install Python packages.
-# There is a bug:
-#   File "/opt/homebrew/lib/python3.10/site-packages/tornado/iostream.py", line 182, in advance
-#   assert 0 < size <= self._size
-# for tornado==6.2 and jupyter-client==8.0.2.
-# https://discourse.jupyter.org/t/jupyter-notebook-zmq-message-arrived-on-closed-channel-error/17869/10
-RUN pip3 install \
-    ipython \
-    tornado==6.1 \
-    jupyter-client==7.3.2 \
-    jupyter-contrib-core \
-    jupyter-contrib-nbextensions \
-    psycopg2-binary \
-    yapf
+# Create working directory
+WORKDIR /data
 
-RUN mkdir /install
-
-# Skipping custom config and Jupyter extensions for now
-# Install Jupyter extensions.
-#ADD install_jupyter_extensions.sh /install
-#RUN /install/install_jupyter_extensions.sh
-
-# Config.
-#ADD etc_sudoers /install/
-#COPY etc_sudoers /etc/sudoers
-#COPY bashrc /root/.bashrc
-
-# Report package versions.
-ADD version.sh /install/
-RUN /install/version.sh 2>&1 | tee version.log
-
-# Jupyter.
+# Expose Jupyter port
 EXPOSE 8888
+
+# Start Jupyter on container boot
+CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--allow-root", "--NotebookApp.token=''"]
