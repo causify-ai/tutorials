@@ -84,9 +84,9 @@ This project implements a full-stack pipeline to fetch, transform, forecast and 
 
    ```bash
    python push_to_powerbi.py
+   ```
 
-
-  You should see "Pushed X rows to Power BI."
+     You should see "Pushed X rows to Power BI."
 
 8. **Open & present dashboard**
    - Publish or open `Real-Time_Bitcoin_Dashboard.pbix` in Power BI Service.
