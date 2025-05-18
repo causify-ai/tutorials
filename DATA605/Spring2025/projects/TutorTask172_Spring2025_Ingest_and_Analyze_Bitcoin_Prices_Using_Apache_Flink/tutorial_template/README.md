@@ -139,4 +139,38 @@ Open and run the following notebooks:
   - Trend, weekly, and yearly seasonality components
 - Prints forecast for the next 7 days.
 
----
+
+**Why we use two Docker containers for clean separation of concerns:**
+
+- **influxdb_container**: Runs the InfluxDB service to store time-series data.
+- **umd_data605_app**: Runs the application (Python + Jupyter + PyFlink) that fetches Bitcoin prices and sends metrics to InfluxDB.
+
+Keeping them separate ensures:
+
+- Each container has a single responsibility.
+- Easier debugging, scaling, and maintenance.
+- Flexibility to replace or upgrade one service without touching the other.
+
+
+**Why Docker Network**
+
+Docker containers are isolated by default. To allow them to communicate (e.g., the app pushing data into InfluxDB), we connect them using a custom bridge network (flink_influx_network):
+This makes sure:
+
+- The app can reach InfluxDB at http://influxdb_container:8086 (container name acts like a hostname).
+- Both services remain discoverable to each other but isolated from the host unless explicitly exposed.
+
+
+
+**Why Set Up InfluxDB and Generate Tokens**
+
+- InfluxDB 2.x uses token-based authentication for secure access.
+- On first-time setup, we must:
+- Run only the InfluxDB container.
+- Open http://localhost:8086 and manually:
+- Create an admin user, org, and bucket.
+- Generate an All-Access Token.
+- This token is needed so the app container can authenticate and write metrics to the InfluxDB service securely.
+- Once the token is created:
+- We store it in a .env file.
+- It is automatically injected into the app via docker-compose.yml
