@@ -67,3 +67,8 @@ avro_message = serialize_to_avro(data)
 
 4.The binary is published to Kafka for downstream processing (e.g., Spark consumer).
 
+
+
+
+<img src="https://github.com/user-attachments/assets/49c3300b-c1a5-49f9-a8a6-2bfbb4980679" alt="spark_consumer_flow" width="500"/>
+

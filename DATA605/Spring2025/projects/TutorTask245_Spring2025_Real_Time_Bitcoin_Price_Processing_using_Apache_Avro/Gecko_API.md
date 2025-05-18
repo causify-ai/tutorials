@@ -36,6 +36,13 @@ The `BitcoinAPI` class is a utility wrapper around the CoinGecko `/simple/price`
 - **Logging Enabled**:
   - Uses `_LOG.info()` and `_LOG.error()` to provide traceable logs, replacing raw `print()` calls.
 
+
+## Process Flowchart
+
+<img src="https://github.com/user-attachments/assets/a42a1580-5d08-409a-8409-7cc75ca67ea1" width="500"/>
+
+
+
 #### Example:
 
 ```python
