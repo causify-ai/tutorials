@@ -42,3 +42,4 @@ htmlcov/
 .tox/
 .cache/
 pytest_cache/
+dagster_env/
