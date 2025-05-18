@@ -55,6 +55,10 @@ TutorTask136_Spring2025_Predict_Bitcoin_Prices_Using_XGBoost/
     ├── docker_build.sh              # Script to build Docker container
     ├── docker_jupyter.sh            # Script to run Jupyter inside container
     └── Dockerfile                   # Docker build configuration
+    ├── bitcoin.example.ipynb            # Main notebook for full analysis
+    ├── bitcoin.API.ipynb                # Data collection from APIs
+    ├── bitcoin_utils.py                 # Feature engineering and helper functions
+    ├── BTC-USD-Historical.xlsx          # Yahoo Finance data dump
 ```
 
 ## 6. Running with Docker
