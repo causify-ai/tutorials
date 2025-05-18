@@ -162,14 +162,6 @@ The project uses a Docker-based setup with the following components:
 - `USE_CACHED_DATA`: Set to 'true' to use cached data
 - `PYTHONPATH`: Set to '/app' for proper module imports
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.

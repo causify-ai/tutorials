@@ -52,28 +52,6 @@ The project uses:
    streamlit run BitcoinSentimentPulse/app.py
    ```
 
-## Dependencies
-
-- Python 3.9+
-- PostgreSQL
-- Streamlit
-- PyTorch
-- Prophet
-- Statsmodels
-- Pandas
-- NumPy
-- Scikit-learn
-- NLTK
-- TextBlob
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details. 
