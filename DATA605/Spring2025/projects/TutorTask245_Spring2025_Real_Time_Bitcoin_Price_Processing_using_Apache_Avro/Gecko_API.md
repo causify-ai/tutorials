@@ -39,7 +39,9 @@ The `BitcoinAPI` class is a utility wrapper around the CoinGecko `/simple/price`
 
 ## Process Flowchart
 
-![geckp_api_flow](https://github.com/user-attachments/assets/a42a1580-5d08-409a-8409-7cc75ca67ea1)
+<img src="https://github.com/user-attachments/assets/a42a1580-5d08-409a-8409-7cc75ca67ea1" width="500"/>
+
+
 
 #### Example:
 
