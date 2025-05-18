@@ -27,47 +27,42 @@ Sets up the `JAVA_HOME` and appends it to `PATH` to ensure PySpark can find the 
 export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
 export PATH=$JAVA_HOME/bin:$PATH
 
+```
 
-# Kafka Readiness and Cleanup
-# Waits for Kafka services to start and clears any previous output from the workspace directory.
+## 2. Kafka Readiness and Cleanup
 
-echo " Waiting for Kafka to start..."
-sleep 15
-
-echo " Cleaning old output..."
-rm -rf /workspace/output/*
+ Waits for Kafka services to start and clears any previous output from the workspace directory.
 
 
-#  Launching the Kafka Producer
-# Starts the kafka_producer.py script in the background, which continuously fetches Bitcoin price data and sends it to the Kafka topic bitcoin_prices.
-
-echo " Starting Kafka producer..."
-python3 /workspace/kafka_producer.py &
 
 
-# Launching the Spark Consumer
-# Runs the spark_consumer.py script, which reads from Kafka, performs real-time analytics (moving average and volatility), and writes the results to Parquet.
+## 3. Launching the Kafka Producer
 
-echo " Launching Spark consumer (this will block)..."
-python3 /workspace/spark_consumer.py &
+Starts the kafka_producer.py script in the background, which continuously fetches Bitcoin price data and sends it to the Kafka topic bitcoin_prices.
 
 
-# Listing Output Files
-# After giving some time for Spark to write the outputs, lists all Parquet files generated under the /workspace/output/ directory.
 
-sleep 30
-echo " Listing Parquet output files:"
-find /workspace/output -type f -name '*.parquet'
+## 4. Launching the Spark Consumer
+
+ Runs the spark_consumer.py script, which reads from Kafka, performs real-time analytics (moving average and volatility), and writes the results to Parquet.
 
 
-# Container Persistence
-# Keeps the Docker container alive so that the streaming job remains active indefinitely.
+## 5. Listing Output Files
 
-tail -f /dev/null
+After giving some time for Spark to write the outputs, lists all Parquet files generated under the /workspace/output/ directory.
 
 
-# Example Output
 
+## 6. Container Persistence
+
+Keeps the Docker container alive so that the streaming job remains active indefinitely.
+
+
+
+
+## Example Output
+
+```
  Waiting for Kafka to start...
  Cleaning old output...
  Starting Kafka producer...
