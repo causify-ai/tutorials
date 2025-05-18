@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: timescaledb
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: timescaledb
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: timescaledb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: timescaledb
+  template:
+    metadata:
+      labels:
+        app: timescaledb
+    spec:
+      containers:
+        - name: timescaledb
+          image: timescale/timescaledb:latest-pg14
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: testpass
+            - name: POSTGRES_DB
+              value: bitcoin_db
+

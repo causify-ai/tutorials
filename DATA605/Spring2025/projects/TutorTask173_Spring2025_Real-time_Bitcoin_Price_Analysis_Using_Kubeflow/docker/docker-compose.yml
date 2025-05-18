@@ -1,0 +1,31 @@
+services:
+  timescaledb:
+    image: timescale/timescaledb:latest-pg14
+    container_name: timescaledb
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: testpass
+      POSTGRES_DB: bitcoin_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescale_data:/var/lib/postgresql/data
+    restart: always   # <-- ADD THIS LINE
+
+  fetcher:
+    build:
+      context: .
+    container_name: bitcoin-fetcher
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: testpass
+      DB_HOST: timescaledb
+      DB_PORT: 5432
+      DB_NAME: bitcoin_db
+      COINGECKO_API_KEY: your-api-key-here
+    depends_on:
+      - timescaledb
+    restart: on-failure  # <-- OPTIONAL: restart if error occurs
+
+volumes:
+  timescale_data:

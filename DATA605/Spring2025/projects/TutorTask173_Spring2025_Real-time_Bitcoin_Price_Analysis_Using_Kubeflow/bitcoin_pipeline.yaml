@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: bitcoin-price-fetch-pipeline-
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.22, pipelines.kubeflow.org/pipeline_compilation_time: '2025-05-17T15:32:13.959636',
+    pipelines.kubeflow.org/pipeline_spec: '{"description": "Fetch Bitcoin price and
+      save to DB + CSV using a Docker container", "name": "Bitcoin Price Fetch Pipeline"}'}
+  labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.22}
+spec:
+  entrypoint: bitcoin-price-fetch-pipeline
+  templates:
+  - name: bitcoin-price-fetch-pipeline
+    dag:
+      tasks:
+      - {name: fetch-bitcoin-price, template: fetch-bitcoin-price}
+  - name: fetch-bitcoin-price
+    container:
+      command: [python, fetch_bitcoin_price.py]
+      image: antodelinxavier/bitcoin-project-fetcher:v1
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.22
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+  arguments:
+    parameters: []
+  serviceAccountName: pipeline-runner
