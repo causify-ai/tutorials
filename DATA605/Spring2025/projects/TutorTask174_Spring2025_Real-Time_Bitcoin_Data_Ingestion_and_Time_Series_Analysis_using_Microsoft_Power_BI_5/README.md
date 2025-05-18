@@ -3,7 +3,7 @@
 **Author:** Abhishek Rithik Origanti  
 **Date:** May 2025  
 **Course:** DATA 605 – Big Data Systems  
-**Instructor:** Prof. Giovanni Saggesse
+**Instructor:** Prof. Dr. GP Saggese
 
 ## 📌 Project Overview
 
