@@ -202,7 +202,6 @@ Sample Output:
 <img src="https://github.com/user-attachments/assets/c31632b1-a3a5-4044-9d44-14673e9216b0" alt="spark_consumer_flow" width="600"/>
 
 
-![spark_consumer_flow](https://github.com/user-attachments/assets/c31632b1-a3a5-4044-9d44-14673e9216b0)
 
 ---
 
