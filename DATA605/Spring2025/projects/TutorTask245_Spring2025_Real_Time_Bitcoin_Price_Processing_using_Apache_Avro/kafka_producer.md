@@ -57,6 +57,10 @@ This module runs a Kafka producer that periodically fetches real-time Bitcoin pr
 3. Publish it to the Kafka topic `bitcoin_prices`.
 4. Wait 60 seconds before repeating the process.
 
+## Process Flowchart
+
+![kafka_producer_flow](https://github.com/user-attachments/assets/8a639286-3d5f-4bc5-8c93-e570f8a48955)
+
 ## Example Usage
 
 ```python
