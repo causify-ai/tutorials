@@ -1,5 +1,4 @@
 FROM ubuntu:20.04
-
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Update and upgrade
@@ -18,6 +17,7 @@ RUN apt-get install -y --no-install-recommends \
 # Upgrade pip
 RUN python3 -m pip install --upgrade pip
 
+# Create install directory (for optional files/scripts)
 RUN mkdir /install
 
 # Copy and install Python packages from requirements.txt
@@ -33,9 +33,6 @@ RUN pip3 install notebook \
     tensorflow \
     scikit-learn \
     fastparquet
-
-# Create install directory (for optional files/scripts)
-#RUN mkdir install
 
 # Install Jupyter extensions if script is present
 COPY install_jupyter_extensions.sh /install/
