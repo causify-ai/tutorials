@@ -1,0 +1,3 @@
+REPO_NAME=umd_data605
+IMAGE_NAME=bitcoin_cli_project
+FULL_IMAGE_NAME=$REPO_NAME/$IMAGE_NAME
