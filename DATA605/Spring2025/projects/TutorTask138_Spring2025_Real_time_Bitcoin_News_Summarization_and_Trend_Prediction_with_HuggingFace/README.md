@@ -4,6 +4,21 @@ This document explains how the structured output from the API module was used to
 This project was developed as part of the DATA605 course at the University of Maryland. It demonstrates a full-stack data science pipeline that incorporates real-time data ingestion, natural language processing using HuggingFace Transformers, sentiment analysis, topic modeling via TF-IDF, and supervised machine learning with XGBoost to model and predict financial trends. It concludes with a deployable Streamlit dashboard to explore news-driven Bitcoin price predictions interactively.
 
 ---
+# Table of Contents
+
+    ## Introduction
+    ## Dataset Overview
+
+    ## Step-by-Step Explanation
+    ### ├── 1. Preprocessing Sentiment
+    ### ├── 2. Topic Feature Extraction with TF-IDF
+    ### ├── 3. Bitcoin Price Data
+    ### └── 4. Target Variable (Next-Day Price Prediction)
+
+    ## Result Summary
+    ## Evaluation Metrics
+    ## Deployment with Streamlit
+    ## Key Insights
 
 ## Project Structure
 
