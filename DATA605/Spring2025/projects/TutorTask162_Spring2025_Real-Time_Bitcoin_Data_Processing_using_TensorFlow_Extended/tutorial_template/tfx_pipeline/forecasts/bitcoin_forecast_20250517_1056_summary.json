@@ -1,0 +1,25 @@
+{
+  "forecast_file": "C:\\Users\\raviv\\OneDrive\\Documents\\Sem2 Assignments\\Big Data Project\\bitcoin605\\DATA605\\Spring2025\\projects\\TutorTask162_Spring2025_Real-Time_Bitcoin_Data_Processing_using_TensorFlow_Extended\\tutorial_template\\tfx_pipeline\\forecasts\\bitcoin_forecast_20250517_1056.csv",
+  "generation_time": "2025-05-17T18:09:06.393040",
+  "initial_price": 103417.6345818702,
+  "final_price": 146380.52846654234,
+  "total_change_pct": 41.54310244899357,
+  "max_price": 146454.55360580684,
+  "min_price": 103417.6345818702,
+  "average_price": 124898.00336845063,
+  "volatility": 13148.716720703653,
+  "predictions": {
+    "24-Hour": {
+      "price": 112649.96511371247,
+      "change": 8.927230417877663
+    },
+    "3-Day": {
+      "price": 125104.26068429807,
+      "change": 20.96994984473344
+    },
+    "7-Day": {
+      "price": 146380.52846654234,
+      "change": 41.54310244899357
+    }
+  }
+}
