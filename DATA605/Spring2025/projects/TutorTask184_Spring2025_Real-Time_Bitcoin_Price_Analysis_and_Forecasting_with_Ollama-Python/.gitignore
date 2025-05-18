@@ -1,8 +1,0 @@
-# Ignore Python virtual environments
-venv/
-
-# macOS system file
-.DS_Store
-
-# Log files
-*.log
