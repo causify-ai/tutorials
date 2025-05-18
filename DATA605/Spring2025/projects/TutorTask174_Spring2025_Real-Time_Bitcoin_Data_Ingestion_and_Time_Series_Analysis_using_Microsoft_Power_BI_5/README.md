@@ -83,5 +83,32 @@ Fetches new data every 60s into bitcoin_price_data.csv.
 
    ```bash
    python push_to_powerbi.py
+
+
+  You should see "Pushed X rows to Power BI."
+
+8. **Open & present dashboard**
+   - Publish or open `Real-Time_Bitcoin_Dashboard.pbix` in Power BI Service.
+   - Confirm visuals use **Average** summarization and display current metrics and forecasts.
+
+## 🐳 Docker Compose Demo
+You can run the entire real-time ingestion → forecast → push pipeline locally via Docker Compose.
+
+## Architecture Flowchart
+
+```mermaid
+flowchart TD
+    A[CoinGecko API] -->|fetch every 60s| B[Ingestion Script]
+    B --> C[Raw CSV: bitcoin_price_data.csv]
+    C --> D[Transformation]
+    D --> E[Transformed CSV: bitcoin_price_transformed_full.csv]
+    E --> F[Forecast Script]
+    F --> G[Forecast CSV: forecast_prophet.csv]
+    G --> H[Push Script]
+    H --> I[Power BI Streaming Dataset]
+    I --> J[Power BI Dashboard]
+
+
    
-You should see "Pushed X rows to Power BI."
+
+
