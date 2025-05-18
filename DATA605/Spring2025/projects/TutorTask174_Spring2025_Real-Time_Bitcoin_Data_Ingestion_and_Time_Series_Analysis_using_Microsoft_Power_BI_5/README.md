@@ -107,8 +107,35 @@ flowchart TD
     G --> H[Push Script]
     H --> I[Power BI Streaming Dataset]
     I --> J[Power BI Dashboard]
+```
+1. **Build and start all services**
+   ```bash
+   docker compose up --build
+
+ This will:
+- **btc_ingestion**: continuously fetch live Bitcoin data every 60 s  
+- **btc_forecast**: run Prophet/SARIMA forecasts once on the latest data  
+- **btc_push**: push the forecast rows (with `moving_avg_price` and `volatility_15m`) to your Power BI streaming dataset  
+
+2. **Stop the demo**  
+   Press <kbd>Ctrl</kbd>+<kbd>C</kbd> in the terminal to stop the ingestion loop (forecast and push exit automatically).
+
+3. **Tear everything down**  
+   To remove all containers and the network, run:
+   ```bash
+   docker compose down
+
+```bash
+docker compose down
+```
+## 🎯 Future Work
+
+- Integrate additional cryptocurrencies (e.g., Ethereum).  
+- Add LSTM-based forecasting for deep-learning insights.  
+- Implement real-time alerts for anomalous volatility via Microsoft Teams.  
+- Extend static CSV refresh with Power BI Dataflows for historical analysis.  
 
 
-   
+
 
 
