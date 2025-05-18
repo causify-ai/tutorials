@@ -81,7 +81,7 @@ def create_pipeline():
 
 # Main function to run the pipeline and perform analysis
 def main():
-    max_iterations = 50  # Maximum iterations
+    max_iterations = 5000  # Maximum iterations
 
     for i in range(max_iterations):
         logging.info(f"Iteration {i+1}/{max_iterations}")
