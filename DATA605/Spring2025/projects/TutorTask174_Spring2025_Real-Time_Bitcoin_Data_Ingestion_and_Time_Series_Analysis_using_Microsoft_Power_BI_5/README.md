@@ -125,9 +125,6 @@ flowchart TD
    ```bash
    docker compose down
 
-```bash
-docker compose down
-```
 ## 🎯 Future Work
 
 - Integrate additional cryptocurrencies (e.g., Ethereum).  
