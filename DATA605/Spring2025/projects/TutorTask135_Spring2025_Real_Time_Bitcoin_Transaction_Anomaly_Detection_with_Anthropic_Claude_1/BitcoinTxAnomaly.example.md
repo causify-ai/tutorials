@@ -138,11 +138,6 @@ This structured alert helps distinguish high-risk clustering behavior, often lin
     - Sample transaction hash (for coordination)
 
 
-
-**Sample Alert Screenshot:**
-
-![Slack Alert Screenshot](../report/sample_slack_alert.png)
-
 ### 5.8 Dash Dashboard Launch
 - A Dash app was created (but not run in this pipeline execution).
 - Located in `dashboards/dashboard_app.py`.
