@@ -1,0 +1,128 @@
+version: '3.8'
+
+services:
+  # Main application service - Bitcoin Price Forecasting System
+  app:
+    container_name: bitcoin-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./app.py:/app/app.py
+      - ./src:/app/src
+      - ./assets:/app/assets
+      - ./.streamlit:/app/.streamlit
+    ports:
+      - "5001:5001"
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/bitcoin_sentiment
+      - PGUSER=postgres
+      - PGPASSWORD=postgres
+      - PGDATABASE=bitcoin_sentiment
+      - PGHOST=db
+      - PGPORT=5432
+      - NEWS_API_KEY=${NEWS_API_KEY}
+      - UPDATE_INTERVAL_SECONDS=${UPDATE_INTERVAL_SECONDS:-60}  # Default: update every minute
+    networks:
+      bitcoin-forecast-network:
+        aliases:
+          - app
+    depends_on:
+      db:
+        condition: service_healthy
+      sentiment-analyzer:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Sentiment Analysis Service
+  sentiment-analyzer:
+    container_name: bitcoin-sentiment-analyzer
+    build:
+      context: ./sentiment_analysis
+      dockerfile: Dockerfile
+    volumes:
+      - ./sentiment_analysis:/app
+      - sentiment_logs:/app/logs
+      - sentiment_data:/app/data/sentiment
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/bitcoin_sentiment
+      - PGUSER=postgres
+      - PGPASSWORD=postgres
+      - PGDATABASE=bitcoin_sentiment
+      - PGHOST=db
+      - PGPORT=5432
+      - NEWS_API_KEY=${NEWS_API_KEY}
+      - NEWSAPI_FREE_TIER=${NEWSAPI_FREE_TIER:-true}
+      - UPDATE_INTERVAL_SECONDS=${SENTIMENT_UPDATE_INTERVAL:-3600}  # Default: update every hour
+      - LOG_LEVEL=INFO
+      - SENTIMENT_DATA_DIR=/app/data/sentiment
+    networks:
+      bitcoin-forecast-network:
+        aliases:
+          - sentiment-analyzer
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/data/sentiment/sentiment_backup.csv", "||", "echo", "Waiting for sentiment data..."]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # PostgreSQL Database
+  db:
+    container_name: bitcoin-db
+    image: postgres:14
+    environment:
+      POSTGRES_DB: bitcoin_sentiment
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      bitcoin-forecast-network:
+        aliases:
+          - db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  postgres_data:
+  sentiment_logs:
+  sentiment_data:
+
+networks:
+  bitcoin-forecast-network:
+    name: bitcoin-forecast-network
+    driver: bridge

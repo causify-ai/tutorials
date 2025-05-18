@@ -1,0 +1,16 @@
+keras>=2.14.0
+newsapi>=0.1.1
+newsapi-python>=0.2.7
+numpy>=2.2.5
+pandas>=2.2.3
+plotly>=6.1.0
+psycopg2-binary>=2.9.10
+pytz>=2025.2
+scikit-learn>=1.6.1
+statsmodels>=0.14.4
+streamlit>=1.45.1
+tensorflow>=2.14.0
+tensorflow-probability>=0.25.0
+textblob>=0.19.0
+trafilatura>=2.0.0
+yfinance>=0.2.61
