@@ -149,7 +149,9 @@ Orchestrates the end-to-end pipeline execution.
 5. Lists output Parquet files.
 6. Keeps the process alive.
 
-![entrypoint_flow](https://github.com/user-attachments/assets/0c4ebff0-2650-4898-b7a1-48f5fc156d18)
+<img src="https://github.com/user-attachments/assets/0c4ebff0-2650-4898-b7a1-48f5fc156d18" width="500"/>
+
+
 
 <img src="[https://github.com/user-attachments/assets/5087a2b8-cd7a-4cc2-8b08-003056235416](https://github.com/user-attachments/assets/4199ba1d-f5c5-4b26-bc27-275476970079)" width="500"/>
 
