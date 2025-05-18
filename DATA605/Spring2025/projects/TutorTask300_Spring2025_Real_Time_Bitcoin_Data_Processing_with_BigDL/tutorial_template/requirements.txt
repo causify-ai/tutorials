@@ -1,0 +1,4 @@
+bigdl-spark
+pyspark
+requests
+matplotlib

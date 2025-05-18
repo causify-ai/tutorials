@@ -1,45 +1,77 @@
-# Tutorial Template: Two Docker Approaches
+# Real-Time Bitcoin Data Processing with BigDL
 
-- This directory provides two versions of the same tutorial setup to help you
-  work with Jupyter notebooks and Python scripts inside Docker environments
+## 🚀 Overview
 
-- Both versions run the same code but use different Docker approaches, with
-  different level of complexity and maintainability
+This project leverages **BigDL**, a distributed deep learning library built on **Apache Spark**, to build a real-time Bitcoin price prediction pipeline. It combines data ingestion, distributed processing, and deep learning using an RNN to analyze trends and make predictions.
 
-## 1. `data605_style` (Simple Docker Environment)
+---
 
-- This version is modeled after the setup used in DATA605 tutorials
-- This template provides a ready-to-run environment, including scripts to build,
-  run, and clean the Docker container.
+## 🧠 Technologies Used
 
-- For your specific project, you should:
-  - Modify the Dockerfile to add project-specific dependencies
-  - Update bash/scripts accordingly
-  - Expose additional ports if your project requires them
+### 📊 BigDL
+- Deep learning library integrated with Apache Spark.
+- Enables scalable model training and inference across clusters.
 
-## 2. `causify_style` (Causify AI dev-system)
+### 🔥 Apache Spark
+- Used for distributed data ingestion and transformation via Spark DataFrames.
 
-- This setup reflects the approach commonly used in Causify AI dev-system
-- **Recommended** for students familiar with Docker or those wishing to explore a
-  production-like setup
-- Pros
-  - Docker layer written in Python to make it easy to extend and test
-  - Less redundant since code is factored out
-  - Used for real-world development, production workflows
-  - Used for all internships, RA / TA, full-time at UMD DATA605 / MSML610 /
-    Causify 
-- Cons
-  - It is more complex to use and configure
-  - More dependencies from the 
-- For thin environment setup instructions, refer to:  
-  [How to Set Up Development on Laptop](https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
+### 🧾 CoinGecko API
+- Real-time data source for Bitcoin prices.
 
-## Reference Tutorials
+### 🧮 Matplotlib
+- Used for generating plots of historical and predicted trends.
 
-- The `tutorial_github` example has been implemented in both environments for you
-  to refer to:
-  - `tutorial_github_data605_style` uses the simpler DATA605 approach
-  - `tutorial_github_causify_style` uses the more complex Causify approach
+---
 
-- Choose the approach that best fits your comfort level and project needs. Both
-  are valid depending on your use case.
+## 📦 Core Functionalities
+
+1. **Data Ingestion**  
+   Pull real-time Bitcoin prices using the CoinGecko API and parse responses.
+
+2. **ETL Processing**  
+   Use Spark DataFrames to clean, transform, and window the time series.
+
+3. **RNN Model Training**  
+   Create and train a recurrent neural network (RNN) using BigDL to detect patterns.
+
+4. **Prediction & Visualization**  
+   Use trained models to predict future prices and visualize them with Matplotlib.
+
+---
+
+## 📂 Project Structure
+
+| File                | Purpose                                      |
+|---------------------|----------------------------------------------|
+| `Bitcoin_pipeline.py` | Main driver script                          |
+| `Bitcoin_API.py`      | Module to interact with the CoinGecko API  |
+| `requirements.txt`    | Dependency list                            |
+| `Dockerfile`          | Docker image for running project (optional) |
+
+---
+
+
+---
+
+## 📊 Pipeline Diagram (Live Mermaid)
+
+You can explore the real-time editable flowchart here:
+
+🔗 [Click to open Mermaid Chart](https://www.mermaidchart.com/app/projects/5373cd39-f84c-4dea-a47d-48802de5f28e/diagrams/e97200d7-4e93-4a95-87aa-18660446908c/version/v0.1/edit)
+
+```mermaid
+flowchart TD
+    A[Start] --> B[Fetch Bitcoin Data<br>from CoinGecko API]
+    B --> C[Preprocess Data<br>using Spark DataFrames]
+    C --> D[Train RNN Model<br>using BigDL]
+    D --> E[Generate Predictions]
+    E --> F[Visualize Trends<br>using Matplotlib]
+    F --> G[End]
+```
+## ⚙️ Setup & Installation
+
+### Option 1: Local Python Environment
+
+```bash
+pip install --pre bigdl-spark -f https://developer.intel.com/ipex-whl-stable
+pip install pyspark requests matplotlib
