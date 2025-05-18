@@ -56,6 +56,7 @@ This project implements a full-stack pipeline to fetch, transform, forecast and 
    ```bash
    python bitcoin_data_ingestion.py
 Fetches new data every 60s into bitcoin_price_data.csv.
+
 4. **Transform & enrich data**
    ```bash
    python - <<EOF
