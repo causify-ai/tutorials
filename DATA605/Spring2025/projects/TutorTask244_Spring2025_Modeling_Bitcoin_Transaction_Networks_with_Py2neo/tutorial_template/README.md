@@ -134,7 +134,7 @@ http://localhost:8501
 ---
 
 
-## Order of Execution
+## Order of Execution- Summary
 
 Follow these steps to run the project in order:
 
