@@ -9,8 +9,10 @@ import os
 import joblib
 import numpy as np
 
+
 model_path = os.path.join(os.path.dirname(__file__), "isolation_forest_model.pkl")
 scaler_path = os.path.join(os.path.dirname(__file__), "scaler.pkl")
+#print(model_path)
 model = joblib.load(model_path)
 scaler = joblib.load(scaler_path)
 # Load environment variables from .env file
@@ -125,9 +127,13 @@ def detect_anomaly(data):
     price = data.get("price")
     volume = data.get("volume")
     timestamp = data.get("timestamp")
-    features = scaler.transform([[price, volume]])
-    score = model.decision_function(features)[0]
-    if score < -0.0001:
+    features = np.array([[price, volume]])
+    scaled = scaler.transform(features)
+
+    score = model.decision_function(scaled)[0]
+    score = model.predict(scaled)
+
+    if score[0]==-1:
         is_anomaly = True
     else:
         is_anomaly = False
@@ -136,6 +142,6 @@ def detect_anomaly(data):
         "price": price,
         "volume": volume,
         "timestamp": timestamp,
-        "anomaly_score": score,
+        "anomaly_score": int(score[0]),
         "is_anomaly": is_anomaly
     }
