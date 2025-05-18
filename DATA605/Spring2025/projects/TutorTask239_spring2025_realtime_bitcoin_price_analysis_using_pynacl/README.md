@@ -94,7 +94,7 @@ chmod +x docker_build.sh
 ./docker_build.sh
 ```
 
-### How to run Docker Clean
+### How to run Docker Run
 ### Step 1: Make It Executable
 ```bash
 chmod +x docker_run.sh
@@ -107,8 +107,12 @@ chmod +x docker_run.sh
 
 ## Access to DashBoard
 
-```bash
+```Locally
 http://localhost:8050
+```
+
+```AWS
+http://13.203.213.228:8050/
 ```
 
 ## ✨ Features & Functionality
