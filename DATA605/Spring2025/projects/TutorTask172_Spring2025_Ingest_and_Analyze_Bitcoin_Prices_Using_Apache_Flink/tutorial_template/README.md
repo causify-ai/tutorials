@@ -1,10 +1,10 @@
-# 📈 Real-Time Bitcoin Price Analysis with InfluxDB and PyFlink
+#  Real-Time Bitcoin Price Analysis with InfluxDB and PyFlink
 
 This project demonstrates a real-time Bitcoin analytics pipeline that fetches live prices, stores them in InfluxDB, and uses NeuralProphet to forecast future prices.
 
 ---
 
-## 📁 Folder Structure
+##  Folder Structure
 
 ```
 bitcoin-analytics-project/
@@ -26,7 +26,7 @@ bitcoin-analytics-project/
 
 ---
 
-## ✅ Prerequisites
+##  Prerequisites
 
 - Install **Docker** and **Docker Compose**.
 - Ensure the following ports are free:
@@ -48,7 +48,7 @@ docker-compose up influxdb
 ```
 
 Then, open your browser and go to:  
-👉 http://localhost:8086
+ http://localhost:8086
 
 Complete the setup form using the following:
 
@@ -57,7 +57,7 @@ Complete the setup form using the following:
 - **Organization**: `crypto`  
 - **Bucket**: `bitcoin_prices`
 
-### 🎟 Generate Token
+###  Generate Token
 
 1. Go to the **"Data"** section in the left sidebar.
 2. Navigate to the **"Tokens"** tab.
@@ -66,7 +66,7 @@ Complete the setup form using the following:
 
 ---
 
-## ✍️ Step 2: Save the Token
+##  Step 2: Save the Token
 
 Paste the token inside your `.env` file:
 
@@ -74,7 +74,7 @@ Paste the token inside your `.env` file:
 INFLUXDB_TOKEN=<YOUR_GENERATED_TOKEN_HERE>
 ```
 
-> ⚠️ Do not commit `.env` to GitHub.
+>  Do not commit `.env` to GitHub.
 
 ---
 
@@ -98,7 +98,7 @@ docker-compose up --build
 ## 📓 Access Jupyter Notebook
 
 Once up, visit:  
-👉 http://localhost:8888
+ http://localhost:8888
 
 Open and run the following notebooks:
 
@@ -107,7 +107,7 @@ Open and run the following notebooks:
 
 ---
 
-## 📘 Notebook Summaries
+##  Notebook Summaries
 
 ### `bitcoin.API.ipynb`
 
@@ -130,6 +130,7 @@ Open and run the following notebooks:
 **Purpose**: Complete forecast pipeline.
 
 **What it does**:
+- Uses Pyflink a apache flink framework to extract real time data and print it 
 - Fetches historical BTC data using `yfinance`.
 - Trains a `NeuralProphet` model.
 - Forecasts prices for the next 365 days.
