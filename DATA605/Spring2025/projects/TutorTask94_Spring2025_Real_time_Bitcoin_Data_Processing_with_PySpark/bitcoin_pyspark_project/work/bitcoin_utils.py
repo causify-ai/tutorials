@@ -40,7 +40,7 @@ def configure_streaming_paths_and_schedule():
     global HISTORY_FILE
     HISTORY_FILE = "Data/bitcoin_combined.json"
     global DURATION
-    DURATION = 90  # 5 minutes
+    DURATION = 300  # 5 minutes
     global INTERVAL
     INTERVAL = 30   # fetch every 30 seconds
 
@@ -141,20 +141,7 @@ def count_historical_records():
     print(f"Total records: {line_count}")
 
 
-def preview_historical_data():
-    spark = SparkSession.builder.appName("BitcoinFileStreaming").getOrCreate()
 
-    # Schema for the JSON data
-    schema = StructType() \
-        .add("Datetime", StringType()) \
-        .add("Open", DoubleType()) \
-        .add("High", DoubleType()) \
-        .add("Low", DoubleType()) \
-        .add("Close", DoubleType()) \
-        .add("Volume", StringType())
-    df = spark.read.schema(schema).json("Data/bitcoin_combined.json")
-    df.head(5)
-    df.count()
 
 
 def aggregate_hourly_daily_moving_average():
@@ -239,28 +226,14 @@ def count_filtered_rows():
     df_filtered.count()
 
 
-def prepare_features_for_linear_regression():
-    from pyspark.sql.functions import unix_timestamp
-    from pyspark.ml.feature import VectorAssembler
-    from pyspark.ml.regression import LinearRegression
-    from pyspark.ml import Pipeline
-
-    # Convert timestamp to numeric (e.g., seconds since epoch)
-    df_ts = df_filtered.withColumn("timestamp_numeric", unix_timestamp(col("Datetime")))
-
-    # Select features and label
-    data = df_ts.select("timestamp_numeric", "Close")
-
-    # Prepare features for MLlib
-    vec_assembler = VectorAssembler(inputCols=["timestamp_numeric"], outputCol="features")
-
 
 
 
 
 def train_and_evaluate_gbt_regressor():
     from pyspark.ml.feature import VectorAssembler
-    from pyspark.ml.regression import GBTRegressor    from pyspark.ml import Pipeline
+    from pyspark.ml.regression import GBTRegressor   
+    from pyspark.ml import Pipeline
     from pyspark.ml.evaluation import RegressionEvaluator
     from pyspark.sql.functions import unix_timestamp, hour, dayofweek
 
@@ -328,7 +301,7 @@ def train_and_evaluate_gbt_regressor():
     s3 = boto3.resource(
         's3',
         aws_access_key_id=aws_access_key, # gitleaks:allow
-        aws_secret_access_key=aws_secret_key # gitleaks:allow,
+        aws_secret_access_key=aws_secret_key, # gitleaks:allow,
         region_name=aws_region
     )
 

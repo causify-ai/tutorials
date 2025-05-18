@@ -106,8 +106,10 @@ graph LR
 ### 1. Clone the Repo
 
 ```bash
-git clone https://github.com/your-username/bitcoin_pyspark_project.git
-cd bitcoin_pyspark_project
+git clone https://github.com/causify-ai/tutorials.git
+cd /tutorials/DATA605/Spring2025/projects/TutorTask94_Spring2025_Real_time_Bitcoin_Data_Processing_with_PySpark/bitcoin_pyspark_project
+
+- Run the code from the above mentioned location
 ```
 
 ### 2. Prepare `.env` File
@@ -118,8 +120,11 @@ AWS_SECRET_ACCESS_KEY=your_aws_secret_key
 AWS_DEFAULT_REGION=us-east-2
 S3_BUCKET_NAME=your_bucket_name
 
-# Then edit it to include your own AWS credentials and bucket name.
+# creat this file inside below mentioned location
+```bash
+cd /tutorials/DATA605/Spring2025/projects/TutorTask94_Spring2025_Real_time_Bitcoin_Data_Processing_with_PySpark/bitcoin_pyspark_project
 ```
+ # Then edit it to include your own AWS credentials and bucket name.
 
 ### 3. Build and Run Dockerized Spark + Jupyter
 
@@ -137,6 +142,8 @@ This will:
 
 
 
+
+
 ## ✅ Outputs
 - writes stream of json files to the already existed history data
 - Spark stream and parses json to Spark 
@@ -144,9 +151,11 @@ This will:
 - Machine Learning Forecasts (GBTRegressor)
 - RMSE and R² metrics
 - Parquet file and zipped archive
-- Upload to AWS S3
+- Upload to AWS S3(**Check the latest modified data-time inside the bucket**)
 - Visualization plot (`output_plot.png`)
-
+```bash
+# To visulize output_plot.png, go to below mentioned location
+cd /tutorials/DATA605/Spring2025/projects/TutorTask94_Spring2025_Real_time_Bitcoin_Data_Processing_with_PySpark/bitcoin_pyspark_project/work
 ---
 
 ## 📚 Documentation
