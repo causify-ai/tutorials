@@ -1,9 +1,10 @@
 
 # Real-Time Bitcoin Price Analysis with Kubeflow and Docker
 
-**Author**: Anto Delin Xavier  
-**Course**: DATA605 — 121287793 
-**Project Title**: TutorTask173_Spring2025_Real-Time_Bitcoin_Price_Analysis_Using_Kubeflow
+**Name**: Anto Delin Xavier  
+**UID** : 121287793
+**Course**: DATA605
+**Project**: Real-Time_Bitcoin_Price_Analysis_Using_Kubeflow
 
 ---
 
@@ -16,31 +17,59 @@ This project sets up an end-to-end pipeline that:
 - Visualizes the results in real time via local scripts
 - Integrates with **Kubeflow Pipelines** to automate recurring fetch jobs in a Kubernetes cluster
 
-There are **two main execution**:
-- **Docker Compose Setup**: Uses Docker for development/testing
-- **Kubeflow Pipelines Deployment**: Runs automated jobs in a Kubernetes cluster
+Key components:
+- Live price fetching using the **CoinGecko API**
+- Scheduled execution through **Kubeflow Pipelines**
+- Real-time storage in **TimescaleDB**
+- Containerization with **Docker**
+- Data visualization and forecasting using **Python**
+
 
 ---
 
 ## 2. Folder Structure
 
 ```
-bitcoin_project/
-├── fetch_bitcoin_price.py         # main fetch script used by container
-├── bitcoin_utils.py               # helper functions
-├── bitcoin_pipeline.py            # pipeline definition for Kubeflow
-├── compile_pipeline.py            # compiles to YAML pipeline
-├── csv_converter.py               # CSV + plot
-├── bitcoin_price_log.csv          # DB entries
-├── Dockerfile                     # Docker image spec
-├── docker-compose.yml             # Local setup for DB + fetcher
-├── timescaledb-deployment.yaml    # TimescaleDB deployment for Kubernetes
-├── bitcoin.API.md                 # documentation of API usage
-├── bitcoin.example.md             # documentation for example
-└── README.md                      # this file
+TutorTask173_Spring2025_Real-time_Bitcoin_Price_Analysis_Using_Kubeflow/
+│
+├── notebook/               
+│   ├── bitcoin.API.ipynb   # documentation of API usage
+│   └── bitcoin_price_log_from_db.csv # DB entries
+│   
+│
+├── markdowns/               
+│   ├── bitcoin.API.md  # documentation of API usage
+│   └── bitcoin.example.md  # documentation for example
+│
+├── scripts/                 
+│   ├── fetch_bitcoin_price.py     # main fetch script used by container
+│   ├── bitcoin_pipeline.py        # pipeline definition for Kubeflow
+│   ├── compile_pipeline.py        # compiles to YAML pipeline
+│   ├── csv_converter.py.py        # data from db to CSV + plot
+│   
+│
+├── utils/                   
+│   └── bitcoin_utils.py           # helper functions
+│
+├── docker/                  
+│   ├── Dockerfile                 # Docker image spec
+│   └── docker-compose.yml         # setup for DB + fetcher
+│ 
+│                    
+│   
+│── bitcoin.example.ipynb
+├── bitcoin_pipeline.yaml          # generated yaml file to upload to Kubeflow UI
+└── README.md
+
+
+
 ```
 
 ---
+
+There are **two main execution**:
+- **Docker Compose Setup**: Uses Docker for development/testing
+- **Kubeflow Pipelines Deployment**: Runs automated jobs in a Kubernetes cluster
 
 ## 3. Docker-Based Setup
 
@@ -59,7 +88,7 @@ docker-compose up --build
 
 2. This will:
    - Start TimescaleDB
-   - Run the fetcher container once (exits after writing data)
+   - Run the fetcher container once
 
 3. You can view saved data using:
 ```bash
@@ -70,7 +99,6 @@ python csv_converter.py
 
 ## 4. Kubeflow Pipelines Setup
 
-> This path requires a working Kubernetes cluster with Kubeflow installed.
 
 ### Step 1: Compile Pipeline
 
