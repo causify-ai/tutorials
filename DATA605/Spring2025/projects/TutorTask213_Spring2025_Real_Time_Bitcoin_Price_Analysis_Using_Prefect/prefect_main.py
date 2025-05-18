@@ -11,9 +11,7 @@ import smtplib
 from email.mime.text import MIMEText
 
 # 🔐 Constants directly defined here instead of loading from .env
-POSTGRES_URL = "postgresql://sahithivankayala:sahithi2024@localhost:5432/bitcoin_etl"
-ALERT_EMAIL = "sahithiv@umd.edu"
-EMAIL_APP_PASSWORD = "hcysipwlwlgtuxpv"
+POSTGRES_URL = os.getenv("POSTGRES_URL")
 
 # ✅ Email alert function
 def send_email_alert(subject, body):
