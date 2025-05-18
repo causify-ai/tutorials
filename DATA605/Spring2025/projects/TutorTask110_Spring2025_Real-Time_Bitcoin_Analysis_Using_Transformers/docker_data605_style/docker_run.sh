@@ -1,15 +1,13 @@
-#!/bin/bash -xe
+#!/bin/bash -e
 
 REPO_NAME=umd_data605
 IMAGE_NAME=umd_data605_template
 FULL_IMAGE_NAME=$REPO_NAME/$IMAGE_NAME
+CONTAINER_NAME=btc_streamlit_app
 
-docker image ls $FULL_IMAGE_NAME
-
-CONTAINER_NAME=$IMAGE_NAME
+# Run the container with port 8501 mapped for Streamlit
 docker run --rm -ti \
     --name $CONTAINER_NAME \
-    --entrypoint /data/docker_data605_style/run_jupyter.sh \
-    -p 8888:8888 \
+    -p 8501:8501 \
     -v $(pwd)/../:/data \
     $FULL_IMAGE_NAME

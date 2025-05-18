@@ -55,30 +55,17 @@ COPY bashrc /root/.bashrc
 ADD version.sh /install/
 RUN /install/version.sh 2>&1 | tee version.log
 
-# # Jupyter runtime script
-# COPY run_jupyter.sh /data/run_jupyter.sh
-# RUN chmod +x /data/run_jupyter.sh
 
-# COPY docker_jupyter.sh /data/docker_jupyter.sh
-# RUN chmod +x /data/docker_jupyter.sh
-
-# COPY docker_pr1.sh /data/docker_pr1.sh
-# RUN chmod +x /data/docker_pr1.sh
-
-# WORKDIR /data
-# ENTRYPOINT ["/data/run_jupyter.sh"]
-
+# Expose Jupyter and Streamlit ports
 EXPOSE 8888
-
-# Expose Streamlit's default port
 EXPOSE 8501
 
-# # Entry point controlled via script
-# COPY run_services.sh .
-# RUN chmod +x run_services.sh
+WORKDIR /data
+
+# Launch Streamlit app on container start
+CMD ["streamlit", "run", "btc_predictor_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
 
 
 
-# CMD ["./run_services.sh"]
 
 

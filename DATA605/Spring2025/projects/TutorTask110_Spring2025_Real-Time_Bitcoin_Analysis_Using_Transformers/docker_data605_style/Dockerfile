@@ -56,10 +56,14 @@ ADD version.sh /install/
 RUN /install/version.sh 2>&1 | tee version.log
 
 
+# Expose Jupyter and Streamlit ports
 EXPOSE 8888
-
-# # Expose Streamlit's default port
 EXPOSE 8501
+
+WORKDIR /data
+
+# Launch Streamlit app on container start
+CMD ["streamlit", "run", "btc.API.py", "--server.port=8501", "--server.address=0.0.0.0"]
 
 
 

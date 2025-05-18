@@ -10,4 +10,3 @@ IMAGE_NAME=umd_data605_template
 export DOCKER_BUILDKIT=1
 #export DOCKER_BUILDKIT=0
 build_container_image
-

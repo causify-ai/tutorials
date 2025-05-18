@@ -10,6 +10,3 @@ IMAGE_NAME=umd_data605_template
 export DOCKER_BUILDKIT=1
 #export DOCKER_BUILDKIT=0
 build_container_image
-
-chmod +x docker_pr1.sh
-chmod +x run_services.sh

@@ -9,7 +9,7 @@ docker image ls $FULL_IMAGE_NAME
 CONTAINER_NAME=$IMAGE_NAME
 docker run --rm -ti \
     --name $CONTAINER_NAME \
-    --entrypoint /data/run_jupyter.sh \
+    --entrypoint /data/docker_data605_style/run_jupyter.sh \
     -p 8888:8888 \
-    -v $(pwd):/data \
+    -v $(pwd)/../:/data \
     $FULL_IMAGE_NAME
