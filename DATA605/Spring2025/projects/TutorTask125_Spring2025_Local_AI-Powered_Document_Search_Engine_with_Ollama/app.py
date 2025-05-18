@@ -223,10 +223,8 @@ if st.sidebar.button("Add Path", key="add_path_button"):
             st.sidebar.error("Path not found. Please enter a valid path.")
 st.sidebar.info("""
 ### Running in Docker?
-When adding paths, use Docker container paths:
-- `/data` for your mounted data directory
-- `/app` for files in the project directory
-Example: `/data/my_documents`
+When adding paths, use the data directory:
+Example: `data/dummy.txt` or `data/`
 """)
 # Display current paths and allow removal
 if current_searchable['paths']:
