@@ -1,0 +1,9 @@
+# data/nlu.yml
+
+version: "3.0"
+nlu:
+- intent: ask_btc_price
+  examples: |
+    - what's the bitcoin price?
+    - current BTC price
+    - how much is bitcoin worth?

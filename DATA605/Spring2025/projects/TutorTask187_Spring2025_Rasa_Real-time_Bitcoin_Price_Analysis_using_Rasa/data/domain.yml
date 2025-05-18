@@ -1,0 +1,10 @@
+version: "3.0"
+intents:
+  - ask_btc_price
+
+actions:
+  - action_get_btc_price
+
+responses:
+  utter_greet:
+    - text: "Hey there! Ask me for the Bitcoin price."

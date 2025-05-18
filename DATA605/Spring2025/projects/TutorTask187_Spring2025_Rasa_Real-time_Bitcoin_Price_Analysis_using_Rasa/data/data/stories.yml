@@ -1,0 +1,8 @@
+# data/stories.yml
+
+version: "3.0"
+stories:
+- story: user asks for price
+  steps:
+  - intent: ask_btc_price
+  - action: action_get_btc_price
