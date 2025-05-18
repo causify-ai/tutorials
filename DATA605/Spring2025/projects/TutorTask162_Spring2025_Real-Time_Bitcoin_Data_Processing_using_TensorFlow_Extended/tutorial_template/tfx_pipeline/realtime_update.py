@@ -11,13 +11,12 @@ import sys
 
 from tf_bitcoin_utils import fetch_bitcoin_prices
 
-# Try to import run_pipeline, if it fails, use subprocess as fallback
 try:
     from tf_pipeline import run_pipeline
     USE_IMPORT = True
     print("✓ Successfully imported run_pipeline from tf_pipeline")
 except ImportError as e:
-    print(f"⚠️  Could not import run_pipeline: {e}")
+    print(f" Could not import run_pipeline: {e}")
     print("Will use subprocess to run tf_pipeline.py instead")
     USE_IMPORT = False
 
@@ -26,7 +25,7 @@ try:
     USE_PREDICT_IMPORT = True
     print("✓ Successfully imported generate_forecast from predict")
 except ImportError as e:
-    print(f"⚠️  Could not import from predict: {e}")
+    print(f"Could not import from predict: {e}")
     print("Will use subprocess to run predict.py instead")
     USE_PREDICT_IMPORT = False
 
@@ -70,7 +69,7 @@ def update_data():
         else:
             new_data.to_csv(data_path, index=False)
             logging.info(f"Created new dataset with {len(new_data)} records")
-            print(f"✓ Created new dataset with {len(new_data)} records")
+            print(f"Created new dataset with {len(new_data)} records")
             return True
     except Exception as e:
         logging.error(f"Data update failed: {e}")
@@ -187,7 +186,6 @@ def evaluate_model():
         return False
 
 def generate_forecast_safe():
-    """Generate forecast with fallback to subprocess if import fails"""
     try:
         if USE_PREDICT_IMPORT:
             # Use imported function
@@ -218,13 +216,13 @@ def generate_forecast_safe():
 def main_loop():
     """Main loop for real-time updates"""
     logging.info("Starting Bitcoin production update loop")
-    print("🚀 Starting Bitcoin real-time update system")
+    print("Starting Bitcoin real-time update system")
     
     # Initialize with historical data if needed
     data_path = "data/bitcoin/bitcoin_prices.csv"
     if not os.path.exists(data_path):
         logging.info("Initializing with historical data")
-        print("📥 Fetching initial historical data...")
+        print("Fetching initial historical data...")
         try:
             data = fetch_bitcoin_prices(days=90)
             os.makedirs("data/bitcoin", exist_ok=True)
@@ -232,7 +230,7 @@ def main_loop():
             print(f"✓ Initialized with {len(data)} historical records")
             
             # Run initial pipeline
-            print("🔧 Running initial pipeline...")
+            print("Running initial pipeline...")
             run_pipeline_safe()
         except Exception as e:
             print(f"✗ Initialization failed: {e}")
@@ -244,43 +242,43 @@ def main_loop():
         cycle_count += 1
         current_time = datetime.now()
         logging.info(f"Starting update cycle #{cycle_count} at {current_time}")
-        print(f"\n🔄 Update cycle #{cycle_count} - {current_time.strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"\nUpdate cycle #{cycle_count} - {current_time.strftime('%Y-%m-%d %H:%M:%S')}")
         
         # Step 1: Update data
         if update_data():
-            print("📊 New data found, proceeding with pipeline...")
+            print("New data found, proceeding with pipeline...")
             
             # Step 2: Run pipeline (retrain model)
             if run_pipeline_safe():
-                print("🤖 Model retraining completed")
+                print("Model retraining completed")
                 
                 # Step 3: Evaluate model
                 if evaluate_model():
-                    print("📈 Model evaluation completed")
+                    print("Model evaluation completed")
                 
                 # Step 4: Generate new forecast
                 if generate_forecast_safe():
-                    print("🔮 New forecast generated")
+                    print(" New forecast generated")
                 else:
-                    print("⚠️  Forecast generation failed, but continuing...")
+                    print(" Forecast generation failed, but continuing...")
             else:
                 print("✗ Pipeline failed, skipping evaluation and forecast")
         else:
-            print("ℹ️  No new data, skipping pipeline")
+            print("ℹ No new data, skipping pipeline")
         
         # Wait for next cycle
         next_update = current_time + timedelta(hours=1)
-        print(f"⏰ Next update at: {next_update.strftime('%Y-%m-%d %H:%M:%S')}")
-        print("💤 Sleeping for 1 hour...")
+        print(f" Next update at: {next_update.strftime('%Y-%m-%d %H:%M:%S')}")
+        print(" Sleeping for 1 hour...")
         time.sleep(3600)
 
 if __name__ == "__main__":
     try:
         main_loop()
     except KeyboardInterrupt:
-        print("\n\n⚠️  Received interrupt signal. Shutting down gracefully...")
+        print("\n\n Received interrupt signal. Shutting down gracefully...")
         logging.info("Realtime update system stopped by user")
     except Exception as e:
-        print(f"\n✗ Unexpected error: {e}")
+        print(f"\n Unexpected error: {e}")
         logging.error(f"Unexpected error in main loop: {e}")
         raise
