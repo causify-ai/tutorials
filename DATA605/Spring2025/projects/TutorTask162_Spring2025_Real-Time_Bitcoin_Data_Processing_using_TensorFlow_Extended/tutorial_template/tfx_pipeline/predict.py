@@ -89,8 +89,6 @@ def save_forecast(forecast_df):
     forecast_df.to_csv(output_file, index=False)
     return output_file
 
-# Add this function to your existing predict.py file
-
 def analyze_existing_forecast(csv_file_path):
     """
     Analyze and visualize an existing forecast CSV file
