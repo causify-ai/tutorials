@@ -1,61 +1,56 @@
-FROM ubuntu:20.04
+# Base Python image
+FROM python:3.10-slim
 
-ENV DEBIAN_FRONTEND=noninteractive
+# Environment setup
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Update and upgrade base packages
-RUN apt-get -y update && apt-get -y upgrade
-
-# Install system utilities and Python
-RUN apt-get install -y --no-install-recommends \
-    sudo \
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
     curl \
-    gnupg \
     git \
-    vim \
-    python3 \
-    python3-pip \
-    python3-dev
+    libatlas-base-dev \
+    libglib2.0-0 \
+    libgomp1 \
+    liblapack-dev \
+    libpq-dev \
+    libffi-dev \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libcairo2 \
+    libgdk-pixbuf2.0-0 \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip
-RUN python3 -m pip install --upgrade pip
-
-# Install Python packages including Jupyter and PyArrow
-RUN pip3 install \
-    ipython \
-    tornado==6.1 \
-    jupyter-client==7.3.2 \
+# Install Python packages
+RUN pip install --upgrade pip && pip install \
     jupyter \
-    jupyter-contrib-core \
-    jupyter-contrib-nbextensions \
-    pyarrow \
     pandas \
-    requests \
+    numpy==1.23.5 \
     matplotlib \
-    numpy \
-    psycopg2-binary \
-    yapf
+    seaborn \
+    requests \
+    pyarrow \
+    scikit-learn \
+    statsmodels \
+    prophet \
+    plotly \
+    pmdarima \
+    weasyprint \
+    ipython \
+    notebook \
+    openpyxl \
+    tzdata
 
-# Create working directory
-RUN mkdir /install
+# Set working directory
+WORKDIR /workspace/bitcoin-pyarrow
 
-# # Install Jupyter extensions
-# COPY install_jupyter_extensions.sh /install/
-# RUN chmod +x /install/install_jupyter_extensions.sh && /install/install_jupyter_extensions.sh
+# Copy project files into container
+COPY . /workspace/bitcoin-pyarrow
 
-# Set up sudoers and bashrc
-COPY etc_sudoers /etc/sudoers
-COPY bashrc /root/.bashrc
+# Expose ports
+EXPOSE 8888
 
-# Report version info
-COPY version.sh /install/
-RUN chmod +x /install/version.sh && /install/version.sh 2>&1 | tee /install/version.log
-
-# Copy all project files (if needed)
-COPY . /app
-WORKDIR /app
-
-# # Expose Jupyter port
-# EXPOSE 8888
-
-# # Run Jupyter Notebook
-# CMD ["bash", "run_jupyter.sh"]
+# Default command to start Jupyter Notebook (if applicable)
+CMD ["bash", "entrypoint.sh"]

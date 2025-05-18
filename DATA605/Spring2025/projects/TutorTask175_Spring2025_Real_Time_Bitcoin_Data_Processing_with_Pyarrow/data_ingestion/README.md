@@ -1,45 +1,125 @@
-# Tutorial Template: Two Docker Approaches
 
-- This directory provides two versions of the same tutorial setup to help you
-  work with Jupyter notebooks and Python scripts inside Docker environments
+# 📈 Real-Time Bitcoin Data Processing with PyArrow
 
-- Both versions run the same code but use different Docker approaches, with
-  different level of complexity and maintainability
+This project provides a pipeline for ingesting, storing, processing, and analyzing real-time Bitcoin price data using PyArrow, Parquet, and forecasting models like ARIMA.
 
-## 1. `data605_style` (Simple Docker Environment)
+---
 
-- This version is modeled after the setup used in DATA605 tutorials
-- This template provides a ready-to-run environment, including scripts to build,
-  run, and clean the Docker container.
+## 📂 Project Structure
 
-- For your specific project, you should:
-  - Modify the Dockerfile to add project-specific dependencies
-  - Update bash/scripts accordingly
-  - Expose additional ports if your project requires them
+```
+data_ingestion/
+├── datalake/
+│   ├── bitcoin_price_stream.parquet       # Historical + real-time BTC data
+│   └── load_log.parquet                   # Logging for each ingestion
+├── reports/
+│   ├── forecast_report.html               # Forecast + financial metrics report
+│   ├── forecast_report_forecast.png       # Forecast plot
+│   ├── forecast_report_ma.png             # Moving average plot
+│   ├── forecast_report_vol.png            # Volatility plot
+├── config.py                              # Stores API keys and constants
+├── utils.py                               # Core utility functions (fetch, clean, forecast)
+├── main.py                                # Main ingestion + report orchestration script
+├── ingestion.ipynb                        # Jupyter orchestration + exploration
+├── Dockerfile                             # Container setup
+├── entrypoint.sh                          # Starts script + Jupyter in container
+└── *.sh                                   # Helper scripts for Docker
+```
 
-## 2. `causify_style` (Causify AI dev-system)
+---
 
-- This setup reflects the approach commonly used in Causify AI dev-system
-- **Recommended** for students familiar with Docker or those wishing to explore a
-  production-like setup
-- Pros
-  - Docker layer written in Python to make it easy to extend and test
-  - Less redundant since code is factored out
-  - Used for real-world development, production workflows
-  - Used for all internships, RA / TA, full-time at UMD DATA605 / MSML610 /
-    Causify 
-- Cons
-  - It is more complex to use and configure
-  - More dependencies from the 
-- For thin environment setup instructions, refer to:  
-  [How to Set Up Development on Laptop](https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
+## 🚀 Features
 
-## Reference Tutorials
+- 🔄 **Real-time ingestion** of hourly Bitcoin price data from CoinGecko API
+- 🪵 **Automated logging** of ingestion events (`load_log.parquet`)
+- 📦 **Storage** in efficient columnar Parquet format using PyArrow
+- 📊 **Time series processing**: moving averages, anomalies, volatility
+- 📈 **Forecasting**: 30-day forecast with ARIMA
+- 📑 **HTML report generation** with plots and summary statistics
 
-- The `tutorial_github` example has been implemented in both environments for you
-  to refer to:
-  - `tutorial_github_data605_style` uses the simpler DATA605 approach
-  - `tutorial_github_causify_style` uses the more complex Causify approach
+---
 
-- Choose the approach that best fits your comfort level and project needs. Both
-  are valid depending on your use case.
+## ⚙️ Configuration
+
+Edit the `config.py` file to set your CoinGecko API key:
+
+```python
+COINGECKO_API_KEY = "your-api-key-here"
+```
+
+---
+
+## 🐳 Docker Usage
+
+### ✅ Build the Docker Image
+
+```bash
+bash docker_build.sh
+```
+
+### ▶️ Run the Container
+
+```bash
+bash docker_exec.sh
+```
+
+This will:
+
+1. Run `main.py` to ingest data and generate reports
+2. Start a Jupyter Notebook server on port `8888`
+
+---
+
+## 📌 Scripts
+
+- `main.py`: Runs full pipeline: ingestion → processing → logging → report
+- `entrypoint.sh`: Entry script for Docker container
+- `utils.py`: Utility functions for fetching, anomaly detection, ARIMA forecasting
+- `run_jupyter.sh`: Starts Jupyter server standalone (if needed)
+
+---
+
+## 📈 Example Output
+
+- `reports/forecast_report.html`: Interactive report
+- Includes:
+  - 30-day Bitcoin forecast plot
+  - Moving averages (7-day, 30-day)
+  - Rolling volatility (7-day)
+  - Daily return metrics
+
+---
+
+## 📝 How to Run Locally (Outside Docker)
+
+```bash
+python main.py
+```
+
+Or open `ingestion.ipynb` in Jupyter Notebook for interactive usage.
+
+---
+
+## 📚 Dependencies
+
+All dependencies are defined in the Dockerfile and installed automatically, including:
+
+- `pandas`, `pyarrow`, `requests`
+- `matplotlib`, `statsmodels`, `prophet`, `pmdarima`
+- `jupyter`, `seaborn`, `plotly`
+
+---
+
+## ✅ Next Steps / TODOs
+
+- [ ] Add unit tests for utility functions
+- [ ] Enable email or Slack alerts on forecast/report generation
+- [ ] Add support for multiple crypto assets
+- [ ] Generate PDF reports with `weasyprint`
+
+---
+
+## 📬 Contact
+
+Maintained by: **Sreevarshini Srinivasan**  
+Feel free to reach out for collaboration or questions!

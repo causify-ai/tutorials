@@ -13,11 +13,6 @@ echo "docker run --rm -ti \
     -v $(pwd):/data \
     $FULL_IMAGE_NAME"
 
-# docker run --rm -ti \
-#   --name $CONTAINER_NAME \
-#   -p 8888:8888 \
-#   -v "/c/Users/varsh/OneDrive/Documents/grad school/tutorials1/DATA605/Spring2025/projects/TutorTask175_Spring2025_Real_Time_Bitcoin_Data_Processing_with_Pyarrow/docker_data605_style:/data" \
-#   pyarrow-btc
 
 docker run --rm -ti \
     --name $CONTAINER_NAME \
