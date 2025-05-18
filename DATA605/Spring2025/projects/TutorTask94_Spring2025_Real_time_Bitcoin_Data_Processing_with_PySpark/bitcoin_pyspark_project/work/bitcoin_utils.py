@@ -255,27 +255,12 @@ def prepare_features_for_linear_regression():
     vec_assembler = VectorAssembler(inputCols=["timestamp_numeric"], outputCol="features")
 
 
-def train_and_predict_with_linear_regression():
-    # Split into train/test
-    train, test = data.randomSplit([0.8, 0.2], seed=42)
-
-    # Build pipeline
-    lr = LinearRegression(featuresCol="features", labelCol="Close")
-    pipeline = Pipeline(stages=[vec_assembler, lr])
-
-    # Train
-    model = pipeline.fit(train)
-
-    # Predict
-    predictions = model.transform(test)
-    predictions.select("timestamp_numeric", "Close", "prediction").show(10, truncate=False)
 
 
 
 def train_and_evaluate_gbt_regressor():
     from pyspark.ml.feature import VectorAssembler
-    from pyspark.ml.regression import GBTRegressor
-    from pyspark.ml import Pipeline
+    from pyspark.ml.regression import GBTRegressor    from pyspark.ml import Pipeline
     from pyspark.ml.evaluation import RegressionEvaluator
     from pyspark.sql.functions import unix_timestamp, hour, dayofweek
 
