@@ -1,0 +1,34 @@
+[project]
+name = "bitcoin_pipeline"
+version = "0.1.0"
+description = "Dagster-based Bitcoin price pipeline"
+readme = "README.md"
+requires-python = ">=3.9,<3.13"
+dependencies = [
+    "dagster",
+    "dagster-cloud",
+    "pandas",
+    "matplotlib",
+    "statsmodels",
+    "requests",
+    "seaborn",
+    "numpy",
+]
+
+[project.optional-dependencies]
+dev = [
+    "dagster-webserver",
+    "pytest",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.dagster]
+module_name = "bitcoin_pipeline.definitions"
+code_location_name = "bitcoin_pipeline"
+
+[tool.setuptools.packages.find]
+include = ["bitcoin_pipeline"]
+exclude = ["bitcoin_pipeline_tests"]

@@ -1,0 +1,44 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+*.pyo
+
+# Virtual environments
+venv/
+env/
+dagster_env/
+*.env/
+.env/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+
+# Output / data files
+*.csv
+*.db
+*.log
+
+# Dagster storage
+.dagster_home/
+
+# IDE and editor folders
+.vscode/
+.idea/
+
+# System-specific files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+*.bak
+*.swp
+
+# Test/coverage
+.coverage
+htmlcov/
+.tox/
+.cache/
+pytest_cache/
