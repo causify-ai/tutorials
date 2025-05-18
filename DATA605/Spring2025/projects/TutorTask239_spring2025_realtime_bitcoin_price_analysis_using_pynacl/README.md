@@ -186,4 +186,4 @@ This project focuses on real-time Bitcoin price analysis with strong data securi
 
 ### 📊 Phase 6: Visualization Dashboard
 - [x] Create interactive plots using Plotly Dash
-- [x] Deploy dashboard to Streamlit Cloud or AWS
+- [x] Deploy dashboard to AWS
