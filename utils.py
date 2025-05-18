@@ -108,14 +108,67 @@ def evaluate_model(model, X_test, y_test):
     }
 
 def plot_predictions(y_test, predictions):
-    """Plot actual vs predicted prices"""
-    plt.figure(figsize=(12, 6))
-    plt.plot(y_test.index, y_test.values, label='Actual Prices', color='blue')
-    plt.plot(y_test.index, predictions, label='Predicted Prices', color='red', linestyle='--')
-    plt.title('Bitcoin Price Prediction: Actual vs. Predicted')
-    plt.xlabel('Date')
-    plt.ylabel('Price (USD)')
-    plt.grid(True)
-    plt.legend()
+    """Plot actual vs predicted prices with detailed analysis"""
+    # Create figure with subplots
+    fig = plt.figure(figsize=(15, 10))
+    
+    # Plot 1: Time series of actual vs predicted
+    ax1 = plt.subplot(2, 2, 1)
+    ax1.plot(y_test.index, y_test.values, label='Actual Prices', color='blue', linewidth=2)
+    ax1.plot(y_test.index, predictions, label='Predicted Prices', color='red', linestyle='--', linewidth=2)
+    ax1.set_title('Bitcoin Price: Actual vs Predicted Over Time')
+    ax1.set_xlabel('Date')
+    ax1.set_ylabel('Price (USD)')
+    ax1.grid(True)
+    ax1.legend()
+    
+    # Plot 2: Scatter plot of predicted vs actual
+    ax2 = plt.subplot(2, 2, 2)
+    ax2.scatter(y_test.values, predictions, alpha=0.5)
+    ax2.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', lw=2)  # Perfect prediction line
+    ax2.set_title('Predicted vs Actual Prices')
+    ax2.set_xlabel('Actual Price (USD)')
+    ax2.set_ylabel('Predicted Price (USD)')
+    ax2.grid(True)
+    
+    # Plot 3: Prediction error over time
+    ax3 = plt.subplot(2, 2, 3)
+    errors = predictions - y_test.values
+    ax3.plot(y_test.index, errors, color='green', label='Prediction Error')
+    ax3.axhline(y=0, color='r', linestyle='--')
+    ax3.set_title('Prediction Error Over Time')
+    ax3.set_xlabel('Date')
+    ax3.set_ylabel('Error (USD)')
+    ax3.grid(True)
+    ax3.legend()
+    
+    # Plot 4: Error distribution
+    ax4 = plt.subplot(2, 2, 4)
+    ax4.hist(errors, bins=30, edgecolor='black')
+    ax4.axvline(x=0, color='r', linestyle='--')
+    ax4.set_title('Error Distribution')
+    ax4.set_xlabel('Prediction Error (USD)')
+    ax4.set_ylabel('Frequency')
+    ax4.grid(True)
+    
+    # Add some statistics as text
+    stats_text = f'Mean Error: ${np.mean(errors):.2f}\n'
+    stats_text += f'Std Error: ${np.std(errors):.2f}\n'
+    stats_text += f'Max Error: ${np.max(np.abs(errors)):.2f}\n'
+    stats_text += f'RMSE: ${np.sqrt(mean_squared_error(y_test, predictions)):.2f}'
+    ax4.text(0.95, 0.95, stats_text,
+             transform=ax4.transAxes,
+             verticalalignment='top',
+             horizontalalignment='right',
+             bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+    
     plt.tight_layout()
-    plt.show() 
+    plt.show()
+    
+    # Print summary statistics
+    print("\nPrediction Performance Summary:")
+    print(f"Mean Absolute Error: ${np.mean(np.abs(errors)):.2f}")
+    print(f"Root Mean Squared Error: ${np.sqrt(mean_squared_error(y_test, predictions)):.2f}")
+    print(f"Mean Error: ${np.mean(errors):.2f}")
+    print(f"Error Standard Deviation: ${np.std(errors):.2f}")
+    print(f"Maximum Absolute Error: ${np.max(np.abs(errors)):.2f}") 

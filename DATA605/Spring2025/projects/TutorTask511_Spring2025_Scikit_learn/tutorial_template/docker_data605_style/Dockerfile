@@ -4,16 +4,25 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get -y update
 RUN apt-get -y upgrade
 
-# Install system utilities.
+# Install system utilities
 RUN apt install -y --no-install-recommends \
     sudo \
     curl \
-    systemctl \
+    wget \
     gnupg \
     git \
-    vim
+    vim \
+    build-essential \
+    libssl-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    libffi-dev \
+    ca-certificates \
+    lsb-release
 
-# Install Python.
+# Install Python
 RUN apt install -y --no-install-recommends \
     python3 \
     python3-pip \
@@ -21,35 +30,26 @@ RUN apt install -y --no-install-recommends \
 
 RUN python3 -m pip install --upgrade pip
     
-# Install Python packages.
-# There is a bug:
-#   File "/opt/homebrew/lib/python3.10/site-packages/tornado/iostream.py", line 182, in advance
-#   assert 0 < size <= self._size
-# for tornado==6.2 and jupyter-client==8.0.2.
-# https://discourse.jupyter.org/t/jupyter-notebook-zmq-message-arrived-on-closed-channel-error/17869/10
+# Install Python packages with fixed versions for compatibility
 RUN pip3 install \
     ipython \
     tornado==6.1 \
     jupyter-client==7.3.2 \
-    jupyter-contrib-core \
-    jupyter-contrib-nbextensions \
-    psycopg2-binary \
-    yapf
+    notebook \
+    jupyter \
+    python-docx \
+    pandas \
+    numpy \
+    scikit-learn \
+    scipy \
+    matplotlib
 
-RUN mkdir /install
+# Setup app
+WORKDIR /app
+COPY . /app
 
-# Install Jupyter extensions.
-ADD install_jupyter_extensions.sh /install
-RUN /install/install_jupyter_extensions.sh
-
-# Config.
-ADD etc_sudoers /install/
-COPY etc_sudoers /etc/sudoers
-COPY bashrc /root/.bashrc
-
-# Report package versions.
-ADD version.sh /install/
-RUN /install/version.sh 2>&1 | tee version.log
-
-# Jupyter.
+# Jupyter 
 EXPOSE 8888
+
+# Start Ollama service alongside Jupyter
+CMD ["bash", "-c", "jupyter notebook --ip 0.0.0.0 --port 8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''"]

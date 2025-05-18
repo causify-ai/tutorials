@@ -59,40 +59,69 @@ def preprocess_data(df):
         print("No data to preprocess.")
         return None, None, None, None, None
 
-    # Create features from the time series data
-    df['price_previous_day'] = df['price'].shift(1)
-    df['price_2days_ago'] = df['price'].shift(2)
-    df['price_3days_ago'] = df['price'].shift(3)
-
-    # Add rolling averages as features
-    df['rolling_mean_3d'] = df['price'].rolling(window=3).mean()
-    df['rolling_mean_7d'] = df['price'].rolling(window=7).mean()
-
-    # Add day of week as a feature (0 = Monday, 6 = Sunday)
-    df['day_of_week'] = df.index.dayofweek
-
-    # Drop rows with NaN values (first few rows due to shifting)
+    # Create features using only past data
+    df['returns'] = df['price'].pct_change()  # Daily returns
+    df['volatility'] = df['returns'].rolling(window=7).std()  # 7-day volatility
+    df['price_7d_ago'] = df['price'].shift(7)  # Price 7 days ago
+    df['price_14d_ago'] = df['price'].shift(14)  # Price 14 days ago
+    df['price_30d_ago'] = df['price'].shift(30)  # Price 30 days ago
+    
+    # Technical indicators
+    df['MA7'] = df['price'].rolling(window=7).mean()
+    df['MA30'] = df['price'].rolling(window=30).mean()
+    df['RSI'] = calculate_rsi(df['price'], periods=14)
+    
+    # Market trend features
+    df['trend_7d'] = (df['price'] - df['price_7d_ago']) / df['price_7d_ago']
+    df['trend_14d'] = (df['price'] - df['price_14d_ago']) / df['price_14d_ago']
+    
+    # Drop rows with NaN values
     df = df.dropna()
 
     # Prepare features (X) and target variable (y)
-    X = df[['price_previous_day', 'price_2days_ago', 'price_3days_ago',
-            'rolling_mean_3d', 'rolling_mean_7d', 'day_of_week']]
+    feature_columns = [
+        'returns', 'volatility', 
+        'price_7d_ago', 'price_14d_ago', 'price_30d_ago',
+        'MA7', 'MA30', 'RSI', 
+        'trend_7d', 'trend_14d'
+    ]
+    
+    X = df[feature_columns]
     y = df['price']
 
     # Scale the features
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     
-    # Split the data
-    X_train, X_test, y_train, y_test = train_test_split(
-        X_scaled, y, test_size=0.2, shuffle=False
-    )
+    # Split the data - use earlier data for training, later data for testing
+    train_size = int(len(df) * 0.8)
+    X_train = X_scaled[:train_size]
+    X_test = X_scaled[train_size:]
+    y_train = y[:train_size]
+    y_test = y[train_size:]
 
     return X_train, X_test, y_train, y_test, scaler
 
+def calculate_rsi(prices, periods=14):
+    """Calculate Relative Strength Index"""
+    delta = prices.diff()
+    gain = (delta.where(delta > 0, 0)).rolling(window=periods).mean()
+    loss = (-delta.where(delta < 0, 0)).rolling(window=periods).mean()
+    
+    rs = gain / loss
+    rsi = 100 - (100 / (1 + rs))
+    return rsi
+
 def train_model(X_train, y_train):
-    """Train a linear regression model"""
-    model = LinearRegression()
+    """Train a more complex model"""
+    from sklearn.ensemble import GradientBoostingRegressor
+    
+    model = GradientBoostingRegressor(
+        n_estimators=100,
+        learning_rate=0.1,
+        max_depth=4,
+        random_state=42
+    )
     model.fit(X_train, y_train)
     return model
 
