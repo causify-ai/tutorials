@@ -1,73 +1,149 @@
 # Real-Time Bitcoin Price Analysis Example
 
-This example shows how to use the `bitcoin_petl_utils` module to stream, ETL-transform, analyze, and visualize live Bitcoin price data in the tutorial notebook ('BitcoinPetl.example.ipynb').
+<!-- toc -->
 
-**Workflow & Design**
+- [Project Overview](#project-overview)
+- [Prerequisites](#prerequisites)
+- [Workflow Steps](#workflow-steps)
+  - [1. Environment Setup](#1-environment-setup)
+  - [2. CSV Initialization](#2-csv-initialization)
+  - [3. Demo ETL with Petl](#3-demo-etl-with-petl)
+  - [4. Continuous Ingestion](#4-continuous-ingestion)
+  - [5. Time-Series Analysis](#5-time-series-analysis)
+  - [6. Static Visualizations](#6-static-visualizations)
+  - [7. Seasonal Decomposition](#7-seasonal-decomposition)
+  - [8. Interactive Dashboard](#8-interactive-dashboard)
+- [How to Run](#how-to-run)
+- [General Guidelines](#general-guidelines)
 
-1. **Ingestion**: fetch live BTC price rows and append to a CSV.  
-2. **ETL Transformation**: demonstrate raw→converted→filtered Petl tables.  
-3. **Analysis**: load into pandas, compute moving averages & volatility.  
-4. **Visualization**: create static plots (matplotlib, seaborn) and an interactive Plotly live-refresh loop.  
-5. **Modularity**: all code calls into `bitcoin_petl_utils.py` so the notebook remains concise.
+<!-- tocstop -->
 
----
+## Project Overview
 
-## 1. Setup & Imports
+This tutorial notebook (`BitcoinPetl.example.ipynb`) demonstrates a complete, end-to-end pipeline for:
 
-- Install and import dependencies:  
-  `petl`, `pandas`, `matplotlib`, `seaborn`, `statsmodels`, `plotly`, and `bitcoin_petl_utils`.
+1. Fetching live BTC price data  
+2. Performing ETL transformations with Petl  
+3. Conducting time series analysis in pandas  
+4. Visualizing results statically and interactively  
 
-- Define display settings and constants (e.g. `CSV_FILE = "btc_prices.csv"`).
+## Prerequisites
 
----
+- Python libraries: `petl`, `requests`, `pandas`, `matplotlib`, `seaborn`, `statsmodels`, `plotly`  
+- Docker environment set up via `docker_common/docker_build.sh`
 
-## 2. CSV Initialization & ETL Demo
+## Workflow Steps
 
-1. **`init_csv(CSV_FILE)`**: create or reset `btc_prices.csv` with headers.  
-2. **`expand_demo_rows()`**: generate a 5-row demo table from one live fetch.  
-3. Show the raw 5-row table, then convert UNIX timestamps to human-readable strings and cast prices to floats.  
-4. Filter out prices below $20,000 as an example PETL `select()`.
+### 1. Environment Setup
 
----
+Install and import dependencies:
 
-## 3. Real-Time Ingestion
+```bash
+pip install petl requests pandas matplotlib seaborn statsmodels plotly
+```
 
-- Loop 10 times, calling **`append_price(CSV_FILE)`** every 30 s to append fresh data.  
-- Demonstrates continuous data ingestion into a file.
+```python
+import os, time
+from datetime import datetime, timedelta
+import petl as etl
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import statsmodels.api as sm
+import plotly.graph_objects as go
+from IPython.display import clear_output
 
----
+from bitcoin_petl_utils import (
+    init_csv, append_price, fetch_btc_price_table,
+    expand_demo_rows, filter_recent, load_dataframe,
+    add_indicators, fetch_historical_range
+)
+```
 
-## 4. Time-Series Analysis
+### 2. CSV Initialization
 
-1. Load `btc_prices.csv` into pandas via **`load_dataframe()`**.  
-2. Compute a 3-point moving average and rolling volatility with **`add_indicators()`**.  
-3. Inspect the first few rows of the resulting DataFrame.
+Create/reset the CSV file:
 
----
+```python
+init_csv("btc_prices.csv")
+```
 
-## 5. Static Visualization
+### 3. Demo ETL with Petl
 
-- **Matplotlib**: plot price vs. MA(3)  
-- **Seaborn**: plot rolling volatility (VOL_3) with default styling
+Generate and transform a 5-row demo table:
 
----
+```python
+demo = expand_demo_rows(fetch_btc_price_table(), n=5, dt=60)
+converted = (
+    demo
+    .convert('timestamp', lambda t: datetime.fromtimestamp(t).strftime('%Y-%m-%d %H:%M:%S'))
+    .convert('price_usd', float)
+    .rename('price_usd', 'price_usd_float')
+    .sort('price_usd_float', reverse=True)
+)
+print(etl.look(converted))
+```
 
-## 6. Statsmodels Decomposition
+### 4. Continuous Ingestion
 
-- Perform seasonal decomposition on the price series (`period=3, model="additive"`) when enough data is available.
+Append live data every 30 seconds:
 
----
+```python
+for _ in range(10):
+    append_price("btc_prices.csv")
+    time.sleep(30)
+```
 
-## 7. Interactive Visualization
+### 5. Time-Series Analysis
 
-- Run a live-refresh Plotly loop showing the last 7 days up to 3 minutes ago.  
-- Updates every 30 s, with hover-unified tooltips for price and MA(10).  
-- Stop the loop manually when you’re done.
+Load into pandas and compute indicators:
 
----
+```python
+df = load_dataframe("btc_prices.csv")
+df = add_indicators(df, window=3)
+df.head()
+```
+
+### 6. Static Visualizations
+
+Plot price and moving average:
+
+```python
+plt.figure(figsize=(10,4))
+plt.plot(df.index, df["price_usd"], label="Price")
+plt.plot(df.index, df["MA_3"], label="MA (3)")
+plt.legend(); plt.show()
+```
+
+Plot rolling volatility:
+
+```python
+sns.lineplot(data=df.reset_index(), x="timestamp", y="VOL_3")
+plt.show()
+```
+
+### 7. Seasonal Decomposition
+
+```python
+from statsmodels.tsa.seasonal import seasonal_decompose
+decomp = seasonal_decompose(df["price_usd"].dropna(), period=3, model="additive", two_sided=False)
+decomp.plot(); plt.show()
+```
+
+### 8. Interactive Dashboard
+
+Fetch last 7 days trailing by 3 minutes, compute MA(10), and display:
+
+```python
+# inside a loop with clear_output and fig.show(renderer="notebook")
+```
 
 ## How to Run
 
-1. Build and launch your Docker container (using the tutorial’s `docker_build.sh` and related scripts).  
-2. Open **Jupyter**, navigate to `BitcoinPetl.example.ipynb`, and select **Restart & Run All**.  
-3. Follow each section in order; interrupt the live-loop cell when finished.
+1. Build & launch Docker:
+   ```bash
+   bash docker_common/docker_build.sh
+   bash docker_common/docker_bash.sh
+   ```
+2. In Jupyter, **Restart & Run All** on both notebooks.  
+3. Interrupt the live cell when finished.

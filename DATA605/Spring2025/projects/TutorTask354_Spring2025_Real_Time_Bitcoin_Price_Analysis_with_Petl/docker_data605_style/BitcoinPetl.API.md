@@ -1,83 +1,155 @@
-# BitcoinPetl API Documentation
+# BitcoinPetl API Tutorial
 
-This document describes the utility functions in `bitcoin_petl_utils.py` for fetching and ETLing Bitcoin price data with Petl.
+<!-- toc -->
+- [Introduction](#introduction)
+- [Architecture Overview](#architecture-overview)
+- [Setup & Dependencies](#setup--dependencies)
+- [Fetch Layer](#fetch-layer)
+- [Demo & Transformation Layer](#demo--transformation-layer)
+- [Analysis Helpers](#analysis-helpers)
+- [I/O Utilities](#io-utilities)
+- [General Guidelines](#general-guidelines)
+<!-- tocstop -->
 
-**Architecture & Design**
+## Introduction
 
-- **Layered design**:  
-  1. **Fetch layer**: `fetch_btc_price_table()` hits the CoinGecko API and returns a raw Petl table.  
-  2. **Demo layer**: `expand_demo_rows()` clones that single row into multi-row tables for tutorial demos.  
-  3. **Filter layer**: `filter_recent()` applies time-based filters directly on Petl tables.  
+The BitcoinPetl API provides a lightweight, modular ETL interface to fetch and transform real-time Bitcoin price data. Built on top of CoinGecko’s public API and the Petl library, it simplifies continuous ingestion, time series analysis, and alerting workflows.
 
-- **Why Petl tables?**  
-  - Consistent tabular interface for small/medium ETL tasks.  
-  - Easy chaining of transforms (`convert`, `select`, etc.) without moving into pandas too early.
+## Architecture Overview
 
-- **Dependencies**  
-  - `requests` for HTTP  
-  - `petl` for table operations  
-  - Standard Python libs: `time`, `datetime`
+- **Fetch Layer**  
+  - `fetch_btc_price_table()`: Retrieves the latest Bitcoin price as a one-row Petl table.  
+  - `fetch_historical_range()`: Fetches historical price data over a specified UNIX timestamp range.
 
----
+- **Demo & Transformation Layer**  
+  - `expand_demo_rows()`: Clones a single-row table into multiple rows for demonstration.  
+  - Built-in Petl operations shown in examples: `convert()`, `rename()`, `sort()`, `aggregate()`.
 
-## 1. `fetch_btc_price_table() -> petl.Table`
+- **Analysis Helpers**  
+  - `compute_indicators()`: Adds rolling moving average and volatility columns.  
+  - `alert_on_threshold()`: Filters for price crossings above a given threshold.
 
-Fetch the latest Bitcoin price in USD from CoinGecko.
+- **I/O Utilities**  
+  - `init_csv()`: Creates or resets a CSV file with header.  
+  - `append_price()`: Appends the latest price row to CSV.  
+  - `load_dataframe()`: Loads CSV into a pandas DataFrame and sets the timestamp index.  
+  - `add_indicators()`: Computes and appends indicators to a DataFrame.
 
-- **Returns**  
-  A one-row PETL table with fields:
+## Setup & Dependencies
+
+Install required packages:
+
+```bash
+pip install requests petl pandas matplotlib seaborn statsmodels plotly
+```
+
+Imports in your notebook or script:
+
+```python
+import requests
+import petl as etl
+import pandas as pd
+from datetime import datetime, timedelta
+from bitcoin_petl_utils import (
+    fetch_btc_price_table,
+    fetch_historical_range,
+    expand_demo_rows,
+    filter_recent,
+    compute_indicators,
+    alert_on_threshold,
+    init_csv,
+    append_price,
+    load_dataframe,
+    add_indicators,
+)
+```
+
+## Fetch Layer
+
+### `fetch_btc_price_table() -> petl.Table`
+
+Fetches the current BTC/USD price.
+
+- **Returns**: Petl table with fields:
   - `timestamp` (int): UNIX epoch seconds  
-  - `price_usd`  (float): price in USD  
+  - `price_usd` (float): price in USD  
 
 **Example**
 
 ```python
-from bitcoin_petl_utils import fetch_btc_price_table
-import petl as etl
-
 tbl = fetch_btc_price_table()
 print(etl.look(tbl))
 ```
 
----
+### `fetch_historical_range(from_ts: int, to_ts: int) -> petl.Table`
 
-## 2. `expand_demo_rows(single_row: petl.Table, n: int = 5, dt: int = 60) -> petl.Table`
+Retrieves BTC prices between UNIX timestamps.
 
-Clone a one-row table into a small multi-row table for demonstrations.
-
-- **Parameters**  
-  - `single_row`: one-row PETL table (e.g. output of `fetch_btc_price_table()`)  
-  - `n`: number of rows to generate  
-  - `dt`: seconds to subtract per successive row  
-
-- **Returns**  
-  A PETL table with `n` rows sorted by ascending `timestamp`.
+- **Parameters**: `from_ts`, `to_ts` (seconds)  
+- **Returns**: Petl table of `{timestamp, price_usd}` rows  
 
 **Example**
 
 ```python
-from bitcoin_petl_utils import expand_demo_rows
+hist = fetch_historical_range(1620000000, 1620003600)
+print(etl.look(hist))
+```
+
+## Demo & Transformation Layer
+
+### `expand_demo_rows(single_row: petl.Table, n: int=5, dt: int=60) -> petl.Table`
+
+Creates `n` clones of `single_row`, each offset by `dt` seconds.
+
+- **Parameters**: `single_row`, `n`, `dt`  
+- **Returns**: Sorted multi-row table  
+
+**Example**
+
+```python
 demo = expand_demo_rows(tbl, n=5, dt=60)
 print(etl.look(demo))
 ```
 
----
+Common Petl operations demonstrated:
 
-## 3. `filter_recent(table: petl.Table, lookback_min: int = 15) -> petl.Table`
+```python
+converted = (
+    demo
+    .convert('timestamp', lambda t: datetime.fromtimestamp(t).strftime('%Y-%m-%d %H:%M:%S'))
+    .convert('price_usd', float)
+    .rename('price_usd', 'price_usd_float')
+    .sort('price_usd_float', reverse=True)
+)
+```
 
-Keep only rows whose `timestamp` is within the last `lookback_min` minutes.
+## Analysis Helpers
 
-- **Parameters**  
-  - `table`: PETL table with a `timestamp` column of ints or strings  
-  - `lookback_min`: lookback window in minutes  
+### `compute_indicators(table: petl.Table, window: int=3) -> petl.Table`
 
-- **Returns**  
-  A filtered PETL table containing only recent rows.
+Adds `MA_{window}` and `VOL_{window}` columns.
 
 **Example**
 
 ```python
-from bitcoin_petl_utils import filter_recent
-recent = filter_recent(demo, lookback_min=10)
-print(etl.look(recent))
+ind_tbl = compute_indicators(tbl, window=5)
+print(etl.look(ind_tbl))
 ```
+
+### `alert_on_threshold(table: petl.Table, threshold: float) -> petl.Table`
+
+Filters rows where `price_usd` ≥ `threshold`.
+
+**Example**
+
+```python
+alerts = alert_on_threshold(tbl, 30000.0)
+print(etl.look(alerts))
+```
+
+## I/O Utilities
+
+- **`init_csv(path: str)`**: Create/reset CSV with header.  
+- **`append_price(path: str)`**: Append latest price row to CSV.  
+- **`load_dataframe(path: str) -> pd.DataFrame`**: Load and parse CSV into DataFrame.  
+- **`add_indicators(df: pd.DataFrame, window: int=3) -> pd.DataFrame`**: Compute and append MA & volatility.
