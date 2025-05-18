@@ -1,6 +1,7 @@
 # Real-Time Bitcoin News Summarization and Trend Prediction
 
-This project demonstrates how to fetch real-time Bitcoin news, summarize it using HuggingFace Transformers, analyze sentiment, and apply machine learning for short-term price trend prediction. It is built with reproducibility and tutorial clarity in mind, and it supports two Docker-based development styles.
+This document explains how the structured output from the API module was used to generate meaningful time series features and predict Bitcoin price movement using natural language and sentiment signals. The analysis focuses on converting unstructured textual summaries into quantifiable signals and aligning them with actual market data.
+This project was developed as part of the DATA605 course at the University of Maryland. It demonstrates a full-stack data science pipeline that incorporates real-time data ingestion, natural language processing using HuggingFace Transformers, sentiment analysis, topic modeling via TF-IDF, and supervised machine learning with XGBoost to model and predict financial trends. It concludes with a deployable Streamlit dashboard to explore news-driven Bitcoin price predictions interactively.
 
 ---
 
@@ -14,7 +15,6 @@ TutorTask138_Spring2025_Real_time_Bitcoin_News_Summarization_and_Trend_Predictio
 ├── bitcoin_100_articles_summary.csv  # Summarized dataset (output from API)
 ├── README.md                     # This file
 ├── docker_data605_style/         # Simple student-friendly Docker setup
-├── docker_causify_style/         # Thin-layer production-style Docker setup
 ├── .env                          # Contains NewsAPI key
 ```
 
@@ -74,6 +74,44 @@ NEWSAPI_KEY=your_actual_newsapi_key_here
 * Plots actual vs predicted prices
 
 ---
+## Dataset Overview
+
+We used the bitcoin_100_articles_summary.csv file, which contains 100 articles with:
+Title
+Model-generated summary
+Sentiment label (POSITIVE / NEGATIVE / NEUTRAL)
+Published date
+Source
+This served as the primary dataset for downstream processing.
+
+The articles were fetched over a span of 30 days using NewsAPI and summarized using the facebook/bart-large-cnn model. Each article was also analyzed for sentiment using HuggingFace’s sentiment classification pipeline. The result was a structured, sentiment-aware, and time-tagged dataset ready for analysis.
+
+## 1. Preprocessing Sentiment
+
+Sentiment refers to the emotional tone of the news — whether it’s positive, negative, or neutral.
+To use this for modeling, we mapped each category to a numerical value:
+POSITIVE → 1
+NEUTRAL → 0
+NEGATIVE → -1
+
+## 2. Topic Feature Extraction with TF-IDF
+
+TF-IDF stands for Term Frequency-Inverse Document Frequency. It is a statistical technique that evaluates how important a word is to a document in a collection.
+Term Frequency (TF): How often a word appears in a document.
+Inverse Document Frequency (IDF): How rare the word is across all documents.
+In this context, each day's combined summaries form one document. TF-IDF helps extract the top words (topics) for each day that are both frequent and unique. 
+
+## 3. Bitcoin Price Data
+
+We retrieved historical Bitcoin prices using the CoinGecko API, a free cryptocurrency price data source. For each date, we collected:
+The closing price of Bitcoin (in USD)
+We then joined this with the news data using the date field.
+
+## 4. Target Variable (Next-Day Price Prediction)
+To train a model that can forecast Bitcoin price trends, we shifted the price column by one day to create a "target" — the value we want the model to predict.
+This approach assumes that today’s news affects tomorrow’s price.
+
+
 
 ## Example Outputs
 
@@ -91,6 +129,14 @@ get_100_summarized_articles(api_key=YOUR_KEY)
 
 ---
 
+## Deployment with Streamlit
+
+To make this project interactive, we created a Streamlit dashboard that:
+Lets users explore article titles, summaries, and sentiment by date
+Visualizes daily average sentiment scores over time
+Presents predicted vs actual Bitcoin prices
+The app reads from the structured CSV file and loads the trained model to show predictions.
+
 ## Key Learnings
 
 * How to use HuggingFace for summarization & sentiment
@@ -99,6 +145,7 @@ get_100_summarized_articles(api_key=YOUR_KEY)
 * How to structure and containerize an ML project using Docker
 
 ---
+
 
 ## Contact & Contributors
 
