@@ -1,12 +1,12 @@
-## ✅ Final `README.md` 
+## `README.md` 
 
-# 📈 Real-Time Bitcoin Price Prediction with TensorFlow
+#  Real-Time Bitcoin Price Prediction with TensorFlow
 
 This project demonstrates a real-time, LSTM-based forecasting system for Bitcoin prices. It leverages public data from the CoinGecko API and deep learning models built with TensorFlow/Keras. The project follows a modular structure using a reusable utility layer to support both Jupyter workflows and real-time inference.
 
 ---
 
-## 🚀 Project Highlights
+##  Project Highlights
 
 - ✅ Real-time data ingestion from CoinGecko
 - ✅ Anomaly filtering for robust training
@@ -67,13 +67,13 @@ Key packages include:
 
 This project includes a Docker image pre-configured with all dependencies.
 
-#### ✅ Step 1: Navigate to your local project folder
+####  Step 1: Navigate to your local project folder
 
 ```bash
 cd ~/tutorials/DATA605/Spring2025/projects/TutorTask183_Spring2025_Real-time_Bitcoin_Price_Analysis_with_TensorFlow/docker_data605_style
 ```
 
-#### ✅ Step 2: Start the Docker container
+####  Step 2: Start the Docker container
 
 ```bash
 ./docker_bash.sh
@@ -85,7 +85,7 @@ This script:
 * Mounts your full project into the container under `/data`
 * Exposes ports for interactive tools like Jupyter and Streamlit
 
-#### ✅ Step 3: Inside the Docker container
+####  Step 3: Inside the Docker container
 
 Once inside the container shell, navigate into the Jupyter start directory:
 
@@ -102,7 +102,7 @@ http://localhost:8888
 
 ---
 
-## 🧪 Run the Project
+##  Run the Project
 
 ### 1. Minimal API Demo
 
@@ -165,14 +165,14 @@ streamlit run btc_dashboard.py
 
 ---
 
-## 📈 Example Output
+##  Example Output
 Predicted Next Price: $87,919.57
 ![LSTM Predicted Bitcoin Price vs History](assets/image-1.png)
 ![Real-Time Streamlit Dashboard Screenshot](assets/image.png)
 
 ---
 
-## 📜 References
+##  References
 
 * [CoinGecko API Docs](https://www.coingecko.com/en/api/documentation)
 * [TensorFlow LSTM](https://www.tensorflow.org/api_docs/python/tf/keras/layers/LSTM)
@@ -180,7 +180,7 @@ Predicted Next Price: $87,919.57
 
 ---
 
-## 📬 Author
+##  Author
 
 **Ibrahim Ahmed Mohammed**
 Graduate Student, MS in Data Science
