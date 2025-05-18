@@ -17,12 +17,12 @@ def create_directories():
     ]
     for directory in directories:
         os.makedirs(directory, exist_ok=True)
-        print(f"✓ Created directory: {directory}")
+        print(f"Created directory: {directory}")
 
 def create_dummy_data():
     data_path = "data/bitcoin/bitcoin_prices.csv"
     if os.path.exists(data_path):
-        print(f"✓ Data file already exists at: {data_path}")
+        print(f"Data file already exists at: {data_path}")
         return
 
     sys.path.append(os.getcwd())
@@ -31,7 +31,7 @@ def create_dummy_data():
         print("Fetching Bitcoin prices from API...")
         data = fetch_bitcoin_prices(days=30)
         data.to_csv(data_path, index=False)
-        print(f"✓ Saved Bitcoin price data with {len(data)} records")
+        print(f"Saved Bitcoin price data with {len(data)} records")
         return
     except Exception as e:
         print(f"API fetch failed: {e}")
@@ -56,13 +56,13 @@ def create_dummy_data():
     })
 
     dummy_data.to_csv(data_path, index=False)
-    print(f"✓ Created dummy Bitcoin price data with {len(dummy_data)} records")
+    print(f"Created dummy Bitcoin price data with {len(dummy_data)} records")
 
 def create_dummy_forecast():
     forecast_dir = "forecasts"
     existing_forecasts = [f for f in os.listdir(forecast_dir) if f.endswith('.csv') or f.endswith('.png')]
     if existing_forecasts:
-        print(f"✓ Forecast files already exist: {existing_forecasts[:2]}")
+        print(f"Forecast files already exist: {existing_forecasts[:2]}")
         return
 
     print("Creating dummy forecast files...")
@@ -84,7 +84,7 @@ def create_dummy_forecast():
 
     csv_path = f"{forecast_dir}/bitcoin_forecast_{timestamp}.csv"
     forecast_data.to_csv(csv_path, index=False)
-    print(f"✓ Created dummy forecast CSV: {csv_path}")
+    print(f"Created dummy forecast CSV: {csv_path}")
 
     try:
         import matplotlib.pyplot as plt
@@ -97,16 +97,16 @@ def create_dummy_forecast():
         png_path = f"{forecast_dir}/bitcoin_forecast_{timestamp}.png"
         plt.savefig(png_path)
         plt.close()
-        print(f"✓ Created dummy forecast visualization: {png_path}")
+        print(f"Created dummy forecast visualization: {png_path}")
     except Exception as e:
         print(f"Could not create forecast visualization: {e}")
 
 def main():
-    print("\n=== Bitcoin Price Forecasting System Setup ===\n")
+    print("\n Bitcoin Price Forecasting System Setup \n")
     create_directories()
     create_dummy_data()
     create_dummy_forecast()
-    print("\n✓ Setup completed successfully!")
+    print("\nSetup completed successfully!")
 
 if __name__ == "__main__":
     main()
