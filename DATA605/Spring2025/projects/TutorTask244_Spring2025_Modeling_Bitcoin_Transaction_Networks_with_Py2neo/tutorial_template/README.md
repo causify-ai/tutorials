@@ -134,7 +134,7 @@ http://localhost:8501
 ---
 
 
-## Step 3. Order of Execution
+## Order of Execution
 
 Follow these steps to run the project in order:
 
@@ -150,6 +150,7 @@ Follow these steps to run the project in order:
 4. (Optional) Launch the dashboard:  
    `docker exec -it jupyter_data605 bash`  
    `streamlit run coingecko_dashboard.py`
+   Launch the streamlit app at `http://localhost:8501`
 
 ---
 
