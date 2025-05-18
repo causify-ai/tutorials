@@ -116,34 +116,59 @@ def update_dataset_with_latest(csv_path: str):
 # --------------------------------------------------------------------
 # Feature Engineering
 # --------------------------------------------------------------------
-def technical_features(df: pd.DataFrame):
+def technical_features(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Adds feature-engineered columns to the DataFrame:
-    - Daily returns
-    - Rolling means
-    - Rolling volatility
+    Adds technical indicators to the DataFrame:
+    - Returns
+    - Simple Moving Averages (SMA)
+    - Rolling Volatility
+    - Lag features
+    - Relative Strength Index (RSI)
+    - Moving Average Convergence Divergence (MACD)
+    - Bollinger Bands
 
-    :param df: Cleaned DataFrame
-    :return: DataFrame with new feature columns
+    :param df: Cleaned DataFrame with 'price' column
+    :return: Enriched DataFrame
     """
-    logger.info("Adding technical feature columns")
+    logger.info("Adding extended technical features...")
 
-    # Daily returns
     df['returns'] = df['price'].pct_change()
 
-    # Rolling means
+    # SMAs
     df['SMA_7'] = df['price'].rolling(window=7).mean()
     df['SMA_30'] = df['price'].rolling(window=30).mean()
 
-    # Rolling volatility (std dev)
+    # Volatility
     df['volatility_7'] = df['price'].rolling(window=7).std()
     df['volatility_30'] = df['price'].rolling(window=30).std()
 
-    # Lag features (previous day's price)
+    # Lag
     df['lag_1day'] = df['price'].shift(1)
 
-    logger.info("Feature engineering complete")
+    # RSI
+    delta = df['price'].diff()
+    gain = delta.where(delta > 0, 0)
+    loss = -delta.where(delta < 0, 0)
+    avg_gain = gain.rolling(window=14).mean()
+    avg_loss = loss.rolling(window=14).mean()
+    rs = avg_gain / avg_loss
+    df['RSI_14'] = 100 - (100 / (1 + rs))
+
+    # MACD
+    ema12 = df['price'].ewm(span=12, adjust=False).mean()
+    ema26 = df['price'].ewm(span=26, adjust=False).mean()
+    df['MACD'] = ema12 - ema26
+    df['MACD_signal'] = df['MACD'].ewm(span=9, adjust=False).mean()
+
+    # Bollinger Bands
+    sma20 = df['price'].rolling(window=20).mean()
+    std20 = df['price'].rolling(window=20).std()
+    df['BB_upper'] = sma20 + (2 * std20)
+    df['BB_lower'] = sma20 - (2 * std20)
+
+    logger.info("Technical feature engineering complete.")
     return df
+
 
 
 # --------------------------------------------------------------------
@@ -351,6 +376,59 @@ def plot_training_loss(history):
     plt.title('Training & Validation Loss')
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+# --------------------------------------------------------------------
+# Model Evaluation
+# --------------------------------------------------------------------
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+import numpy as np
+
+def evaluate_predictions(y_true_scaled, y_pred_scaled, scaler_y, plot=False):
+    """
+    Inverse transforms scaled predictions and evaluates using MAE, RMSE.
+
+    :param y_true_scaled: True values (scaled)
+    :param y_pred_scaled: Predicted values (scaled)
+    :param scaler_y: Target scaler (MinMaxScaler)
+    :param plot: Whether to plot actual vs predicted
+    :return: Dict of MAE and RMSE
+    """
+    logger.info("Evaluating model predictions...")
+
+    y_true = scaler_y.inverse_transform(y_true_scaled.reshape(-1, 1)).flatten()
+    y_pred = scaler_y.inverse_transform(y_pred_scaled.reshape(-1, 1)).flatten()
+
+    mae = mean_absolute_error(y_true, y_pred)
+    rmse = np.sqrt(mean_squared_error(y_true, y_pred))
+
+    logger.info(f"MAE: {mae:.2f}, RMSE: {rmse:.2f}")
+
+    if plot:
+        plot_actual_vs_predicted(y_true, y_pred)
+
+    return {"MAE": mae, "RMSE": rmse}
+
+# --------------------------------------------------------------------
+#  Plot Actual vs. Predicted
+# --------------------------------------------------------------------
+import matplotlib.pyplot as plt
+
+def plot_actual_vs_predicted(y_true, y_pred):
+    """
+    Plot actual vs. predicted prices.
+
+    :param y_true: Actual prices
+    :param y_pred: Predicted prices
+    """
+    plt.figure(figsize=(12, 6))
+    plt.plot(y_true, label='Actual')
+    plt.plot(y_pred, label='Predicted')
+    plt.title("Actual vs Predicted Bitcoin Prices")
+    plt.xlabel("Time Step")
+    plt.ylabel("Price (USD)")
     plt.legend()
     plt.grid(True)
     plt.show()
