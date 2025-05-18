@@ -1,4 +1,4 @@
-#Real Time Bitcoin Price Analysis with PETL
+# Real Time Bitcoin Price Analysis with PETL
 <!-- toc -->
 
 - [Project Overview](#project-overview)
