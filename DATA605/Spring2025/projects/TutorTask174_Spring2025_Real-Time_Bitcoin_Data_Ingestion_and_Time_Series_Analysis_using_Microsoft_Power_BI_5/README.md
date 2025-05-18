@@ -55,7 +55,8 @@ This project implements a full-stack pipeline to fetch, transform, forecast and 
 3. **Run ingestion**
    ```bash
    python bitcoin_data_ingestion.py
-Fetches new data every 60s into bitcoin_price_data.csv.
+   ```
+   Fetches new data every 60s into bitcoin_price_data.csv.
 
 4. **Transform & enrich data**
    ```bash
@@ -111,11 +112,11 @@ flowchart TD
 1. **Build and start all services**
    ```bash
    docker compose up --build
-
- This will:
-- **btc_ingestion**: continuously fetch live Bitcoin data every 60 s  
-- **btc_forecast**: run Prophet/SARIMA forecasts once on the latest data  
-- **btc_push**: push the forecast rows (with `moving_avg_price` and `volatility_15m`) to your Power BI streaming dataset  
+   ```
+    This will:
+   - **btc_ingestion**: continuously fetch live Bitcoin data every 60 s  
+   - **btc_forecast**: run Prophet/SARIMA forecasts once on the latest data  
+   - **btc_push**: push the forecast rows (with `moving_avg_price` and `volatility_15m`) to your Power BI streaming dataset  
 
 2. **Stop the demo**  
    Press <kbd>Ctrl</kbd>+<kbd>C</kbd> in the terminal to stop the ingestion loop (forecast and push exit automatically).
