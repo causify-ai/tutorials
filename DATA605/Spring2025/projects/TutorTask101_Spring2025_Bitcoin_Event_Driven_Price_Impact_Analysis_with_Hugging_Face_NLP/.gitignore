@@ -1,3 +1,40 @@
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook Checkpoints
 .ipynb_checkpoints/
+
+# Temporary files
+*.DS_Store
+*.tmp
+*.log
+
+# Environment and dependency files
+.env
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Build directories
+build/
+dist/
+*.egg-info/
+
+# PyInstaller
+*.spec
+
+# Docker
+*.dockerfile
+docker-compose.yml
+
+# VSCode
+.vscode/
+
+# Causify temp builds
 tmp.build/
-.DS_Store

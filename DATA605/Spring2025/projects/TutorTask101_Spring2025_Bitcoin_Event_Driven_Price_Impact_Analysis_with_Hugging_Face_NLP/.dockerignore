@@ -1,0 +1,13 @@
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+*.pyc
+*.pyo
+*.pyd
+*.env
+*.venv
+.env
+.venv/
+tmp.build/
+*.log
+node_modules/
