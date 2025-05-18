@@ -52,12 +52,10 @@ This will start the MCP server in stdio transport mode. The server exposes vario
 
 For detailed documentation on the MCP framework and how to interact with this server, refer to the MCP documentation.
 
-## Development
-
+- [Anthropic MCP Documentation](https://modelcontextprotocol.io/introduction)
 
 ## Data Source
 
 This script uses the CoinGecko API to fetch Bitcoin price data. No API key is required for the basic functionality used in this script.
 
-## License
 
