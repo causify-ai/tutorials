@@ -1,20 +1,55 @@
-# GitHub Tutorial DATA605 style
+# 📈 Real-Time Bitcoin Price Forecasting with Amazon SageMaker
 
-## Run instructions
+A fully AWS-integrated time series forecasting project that fetches real-time Bitcoin price data, streams it using Kinesis, preprocesses it with SageMaker Processing Jobs, and trains + deploys models including DeepAR, ARIMA, and Prophet — complete with autoscaling and live visualization.
 
-1. Build the container
-   ```bash
-   > ./docker_build.sh
-   ```
+---
 
-2. Start the Jupyter inside the container
-   ```bash
-   > ./docker_jupyter.sh
-   ```
+## 🚀 Project Highlights
 
-3. Open in browser
-   - Go to [http://localhost:8888](http://localhost:8888) in your web browser
+- 🔄 **Real-Time Data Ingestion** using CoinGecko API and **Amazon Kinesis**
+- 🗃️ **Data Storage & Management** using Amazon S3
+- 🧪 **Data Processing & Feature Engineering** via **SageMaker Processing Jobs**
+- 📈 **Time Series Modeling** with:
+  - SageMaker **DeepAR** (built-in)
+  - Local **ARIMA** (statsmodels)
+  - Local **Prophet** (Facebook Prophet)
+- 🧠 **Model Evaluation** using MAPE and RMSE
+- 🌐 **Model Deployment** as a real-time **SageMaker Endpoint**
+- 📊 **Visualization** using Plotly, Matplotlib
+- 📉 Optional: **Autoscaling the endpoint** for production simulation
 
-4. Open the notebook
-   - Navigate to `curr_dir/github.example.ipynb`
-   - Run the cells to in the notebook using the provided code.
+---
+
+## 🧱 Architecture Overview
+
+```plaintext
+             [CoinGecko API]
+                    ↓
+     ┌──────────────────────────────┐
+     │    Real-Time Ingestion       │
+     │ Python + Boto3 → Kinesis     │
+     └──────────────────────────────┘
+                    ↓
+     ┌──────────────────────────────┐
+     │     Data Lake (S3 Bucket)    │
+     └──────────────────────────────┘
+                    ↓
+     ┌──────────────────────────────┐
+     │  SageMaker Processing Job    │
+     │  + Pandas, NumPy, CSV Upload │
+     └──────────────────────────────┘
+                    ↓
+     ┌──────────────────────────────┐
+     │      Model Training          │
+     │ DeepAR (SageMaker Estimator) │
+     └──────────────────────────────┘
+                    ↓
+     ┌──────────────────────────────┐
+     │       Model Deployment       │
+     │  SageMaker Endpoint + Test  │
+     └──────────────────────────────┘
+                    ↓
+     ┌──────────────────────────────┐
+     │      Visual Comparison       │
+     │ DeepAR vs ARIMA vs Prophet  │
+     └──────────────────────────────┘
