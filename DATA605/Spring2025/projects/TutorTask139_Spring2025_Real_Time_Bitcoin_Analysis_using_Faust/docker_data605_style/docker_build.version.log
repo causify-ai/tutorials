@@ -1,4 +1,0 @@
-# Capture build version info
-echo "Build Date: $(date)" > docker_build.version.log
-echo "Git Commit: $(git rev-parse HEAD 2>/dev/null || echo 'N/A')" >> docker_build.version.log
-echo "Image: $IMAGE_NAME" >> docker_build.version.log

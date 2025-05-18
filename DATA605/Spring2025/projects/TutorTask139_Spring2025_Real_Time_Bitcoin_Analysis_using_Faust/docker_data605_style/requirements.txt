@@ -1,0 +1,4 @@
+faust-streaming
+requests
+pandas
+matplotlib

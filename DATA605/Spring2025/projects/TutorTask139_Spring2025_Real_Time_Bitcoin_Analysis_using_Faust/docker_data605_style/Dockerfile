@@ -1,38 +1,29 @@
 # Use official Python base image
 FROM python:3.10-slim
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Install dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
     git \
-    sudo \
-    libffi-dev \
-    libssl-dev \
-    && rm -rf /var/lib/apt/lists/*
+    sudo
 
-# Create app directory
+# Set up working directory
 WORKDIR /app
 
-# Copy project files into container
+# Copy project files
 COPY . /app
 
-# Install Python packages
+# Install Python dependencies
 RUN pip install --upgrade pip && \
     pip install \
         faust-streaming \
         requests \
         pandas \
         matplotlib \
-        statsmodels \
-        jupyterlab
+        jupyter \
+        statsmodels
 
-# Expose ports for Jupyter and Faust
-EXPOSE 8888 6066
-
-# Run Jupyter by default (can override in exec scripts)
-CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
+# Set up Jupyter
+EXPOSE 8888
+CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
