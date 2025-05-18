@@ -199,7 +199,7 @@ Sample Output:
 
 ### Processing Flow
 
-<img src="https://github.com/user-attachments/assets/c31632b1-a3a5-4044-9d44-14673e9216b0" alt="spark_consumer_flow" width="600"/>
+<img src="https://github.com/user-attachments/assets/c31632b1-a3a5-4044-9d44-14673e9216b0" alt="spark_consumer_flow" width="500"/>
 
 
 
