@@ -30,45 +30,41 @@ logger = logging.getLogger(__name__)
 # Data Loading & Cleaning
 # --------------------------------------------------------------------
 
-def load_and_clean_csv(file_path: str):
+def load_and_clean_csv(file_path: str, remove_anomalies=True, z_threshold=3.0):
     """
-    Load and clean the historical Bitcoin dataset from CSV.
+    Load, clean, and optionally remove anomalous data points from the Bitcoin dataset.
 
-    :param file_path: Path to the CSV file (e.g., 'data/btc-usd-max.csv')
-    :return: Cleaned DataFrame with datetime index and numeric columns
+    :param file_path: Path to the CSV file
+    :param remove_anomalies: Whether to apply anomaly filtering (based on z-score)
+    :param z_threshold: Z-score threshold for anomaly removal
+    :return: Cleaned DataFrame
     """
     logger.info(f"Loading dataset from {file_path}")
 
-    # Load CSV into DataFrame
     df = pd.read_csv(file_path)
-
-    # Convert 'snapped_at' column to datetime
     df['snapped_at'] = pd.to_datetime(df['snapped_at'], utc=True)
-
-    # Sort by timestamp to ensure chronological order
     df = df.sort_values('snapped_at')
-
-    # Set datetime as index (good practice for time series)
     df.set_index('snapped_at', inplace=True)
 
-    # Ensure columns are numeric
     for col in ['price', 'market_cap', 'total_volume']:
         df[col] = pd.to_numeric(df[col], errors='coerce')
 
-    # Drop rows where price is missing (critical target)
     df = df.dropna(subset=['price'])
-
-    # Fill missing market_cap and total_volume if needed
     df['market_cap'] = df['market_cap'].fillna(method='ffill')
     df['total_volume'] = df['total_volume'].fillna(method='ffill')
-
-    # Drop duplicate timestamps (if any)
     df = df[~df.index.duplicated(keep='last')]
 
-    # Log shape and column names
-    logger.info(f"Dataset loaded: {df.shape[0]} rows; columns: {list(df.columns)}")
+    if remove_anomalies:
+        from scipy.stats import zscore
+        df['zscore'] = zscore(df['price'].fillna(method='ffill'))
+        original_len = len(df)
+        df = df[np.abs(df['zscore']) < z_threshold]
+        df.drop(columns='zscore', inplace=True)
+        logger.info(f"Removed {original_len - len(df)} anomalous rows based on z-score > {z_threshold}")
 
+    logger.info(f"Dataset loaded: {df.shape[0]} rows; columns: {list(df.columns)}")
     return df
+
 
 # --------------------------------------------------------------------
 # Update Dataset with Latest Data
@@ -331,7 +327,7 @@ def fine_tune_model(model_path: str, X_recent, y_recent, epochs: int = 5, batch_
     model.fit(X_recent, y_recent, epochs=epochs, batch_size=batch_size, verbose=1)
 
     model.save(model_path)
-    logger.info("✅ Model fine-tuned and saved.")
+    logger.info(" Model fine-tuned and saved.")
     
     return model
 
@@ -359,3 +355,40 @@ def plot_training_loss(history):
     plt.grid(True)
     plt.show()
 
+# --------------------------------------------------------------------
+# Next Price Prediction & Plotting
+# --------------------------------------------------------------------
+
+def predict_next_price(model, X_input, scaler_y, recent_prices=None, plot=True):
+    """
+    Predict the next Bitcoin price from the most recent input sequence and optionally plot it.
+
+    :param model: Trained Keras LSTM model
+    :param X_input: Last input sequence, shape (1, window_size, features)
+    :param scaler_y: Scaler used to inverse transform the prediction
+    :param recent_prices: Optional array of recent actual prices for plotting (length = window_size)
+    :param plot: Whether to plot the prediction
+    :return: Predicted price (float)
+    """
+    import matplotlib.pyplot as plt
+
+    logger.info("Predicting next Bitcoin price using latest sequence...")
+    
+    # Make prediction
+    y_pred_scaled = model.predict(X_input)
+    y_pred = scaler_y.inverse_transform(y_pred_scaled)[0][0]
+
+    if plot and recent_prices is not None:
+        logger.info("Plotting recent prices with prediction...")
+        plt.figure(figsize=(12, 6))
+        plt.plot(range(len(recent_prices)), recent_prices, label="Past Prices")
+        plt.plot(len(recent_prices), y_pred, 'ro', label="Predicted Next Price")
+        plt.title("Bitcoin Price Forecast")
+        plt.xlabel("Time Step")
+        plt.ylabel("Price (USD)")
+        plt.legend()
+        plt.grid(True)
+        plt.show()
+
+    logger.info(f"Predicted price: ${y_pred:,.2f}")
+    return y_pred

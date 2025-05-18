@@ -11,11 +11,15 @@ def load_data():
     try:
         df = pd.read_csv(log_file)
         df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
-        df = df.dropna(subset=['timestamp'])  # remove rows with invalid timestamps
+        df = df.dropna(subset=['timestamp'])  # Remove invalid timestamps
+
+        # Ensure both columns exist
+        if "note" not in df.columns:
+            df["note"] = ""
         return df
     except Exception as e:
         st.error(f"Error loading data: {e}")
-        return pd.DataFrame(columns=["timestamp", "predicted_price"])
+        return pd.DataFrame(columns=["timestamp", "predicted_price", "note"])
 
 df = load_data()
 
@@ -23,16 +27,21 @@ if df.empty:
     st.warning("Waiting for predictions to be logged...")
 else:
     try:
-        # Format timestamp for better X-axis readability
-        df["formatted_time"] = df["timestamp"].dt.strftime("%Y-%m-%d %H:%M:%S")
-        df_display = df.set_index("formatted_time")
+        # Filter valid price predictions only
+        pred_df = df.dropna(subset=["predicted_price"])
 
-        # Display line chart
-        st.line_chart(df_display["predicted_price"])
+        # Format for display
+        pred_df["formatted_time"] = pred_df["timestamp"].dt.strftime("%Y-%m-%d %H:%M:%S")
+        pred_df = pred_df.set_index("formatted_time")
 
-        # Display last 10 predictions in a table
-        st.dataframe(df.sort_values("timestamp", ascending=False).tail(10), use_container_width=True)
+        # Line chart
+        st.line_chart(pred_df["predicted_price"])
+
+        # Table view with annotations
+        display_df = df.sort_values("timestamp", ascending=False).tail(10)
+        st.subheader("📋 Recent Predictions")
+        st.dataframe(display_df[["timestamp", "predicted_price", "note"]], use_container_width=True)
     except Exception as e:
         st.error(f"Error rendering dashboard: {e}")
 
-st.caption("Updates every 60 seconds. Make sure the scheduler is running.")
+st.caption("Updates every 60 seconds. Make sure the scheduler is running and btc_predictions_log.csv is available.")

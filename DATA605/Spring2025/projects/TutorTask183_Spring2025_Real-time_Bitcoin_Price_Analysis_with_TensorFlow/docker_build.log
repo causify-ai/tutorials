@@ -1,11 +1,11 @@
 #0 building with "default" instance using docker driver
 
 #1 [internal] load build definition from Dockerfile
-#1 transferring dockerfile: 1.39kB done
+#1 transferring dockerfile: 1.41kB done
 #1 DONE 0.0s
 
 #2 [internal] load metadata for docker.io/library/ubuntu:20.04
-#2 DONE 0.2s
+#2 DONE 0.1s
 
 #3 [internal] load .dockerignore
 #3 transferring context: 2B done
@@ -15,40 +15,40 @@
 #4 DONE 0.0s
 
 #5 [internal] load build context
-#5 transferring context: 2.73kB done
+#5 transferring context: 2.75kB done
 #5 DONE 0.0s
 
-#6 [ 8/13] RUN chmod +x /install/install_jupyter_extensions.sh && /install/install_jupyter_extensions.sh || true
+#6 [ 2/13] RUN apt-get -y update && apt-get -y upgrade
 #6 CACHED
 
-#7 [ 5/13] COPY requirements.txt /install/requirements.txt
+#7 [11/13] COPY version.sh /install/
 #7 CACHED
 
-#8 [10/13] COPY bashrc /root/.bashrc
+#8 [ 5/13] COPY requirements.txt /install/requirements.txt
 #8 CACHED
 
-#9 [ 7/13] COPY install_jupyter_extensions.sh /install/
+#9 [ 4/13] RUN python3 -m pip install --upgrade pip
 #9 CACHED
 
-#10 [ 6/13] RUN pip3 install -r /install/requirements.txt
+#10 [ 9/13] COPY etc_sudoers /etc/sudoers
 #10 CACHED
 
-#11 [ 9/13] COPY etc_sudoers /etc/sudoers
+#11 [ 7/13] COPY install_jupyter_extensions.sh /install/
 #11 CACHED
 
-#12 [12/13] RUN chmod +x /install/version.sh && /install/version.sh 2>&1 | tee /install/version.log
+#12 [10/13] COPY bashrc /root/.bashrc
 #12 CACHED
 
-#13 [11/13] COPY version.sh /install/
+#13 [12/13] RUN chmod +x /install/version.sh && /install/version.sh 2>&1 | tee /install/version.log
 #13 CACHED
 
-#14 [ 2/13] RUN apt-get -y update && apt-get -y upgrade
+#14 [ 3/13] RUN apt-get install -y --no-install-recommends     sudo     curl     gnupg     git     vim     python3     python3-pip     python3-dev     build-essential     libatlas-base-dev     libffi-dev     libssl-dev     libpq-dev
 #14 CACHED
 
-#15 [ 3/13] RUN apt-get install -y --no-install-recommends     sudo     curl     gnupg     git     vim     python3     python3-pip     python3-dev     build-essential     libatlas-base-dev     libffi-dev     libssl-dev     libpq-dev
+#15 [ 8/13] RUN chmod +x /install/install_jupyter_extensions.sh && /install/install_jupyter_extensions.sh || true
 #15 CACHED
 
-#16 [ 4/13] RUN python3 -m pip install --upgrade pip
+#16 [ 6/13] RUN pip3 install -r /install/requirements.txt
 #16 CACHED
 
 #17 [13/13] WORKDIR /data
@@ -56,6 +56,6 @@
 
 #18 exporting to image
 #18 exporting layers done
-#18 writing image sha256:243f92233d69de8ee8db934a86f3bbd4e22be365657ca8a467927e765e42e90f done
+#18 writing image sha256:b973cb27ded9121f542f606b89371039434211f24f0f6062fa927e870eae8c6c done
 #18 naming to docker.io/umd_data605/umd_data605_real_time_bitcoin_price_analysis_with_tensorflow done
 #18 DONE 0.0s

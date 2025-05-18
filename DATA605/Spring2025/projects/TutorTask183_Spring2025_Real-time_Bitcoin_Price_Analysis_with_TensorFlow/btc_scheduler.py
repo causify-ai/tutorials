@@ -1,62 +1,38 @@
-# btc_scheduler.py
-# Real-time Bitcoin prediction scheduler (every 5 minutes)
-
-from apscheduler.schedulers.blocking import BlockingScheduler
-from bitcoin_utils import (
-    update_dataset_with_latest,
-    load_and_clean_csv,
-    technical_features,
-    generate_sequences,
-    fine_tune_model
-)
-from tensorflow.keras.models import load_model
+import streamlit as st
 import pandas as pd
-import numpy as np
-import os
-from datetime import datetime
 
-# Configuration
-CSV_PATH = "btc-usd-max.csv"
-MODEL_PATH = "models/final_lstm_model.h5"
-FEATURES = ["price", "returns", "SMA_7", "SMA_30", "volatility_7", "volatility_30", "lag_1day"]
-WINDOW_SIZE = 60
-LOG_PATH = "btc_predictions_log.csv"
+st.set_page_config(page_title="BTC Price Predictor Dashboard", layout="centered")
+st.title("📈 Real-Time Bitcoin Price Prediction Dashboard")
 
-def update_and_predict():
-    print("\n⏱️ Running scheduled update at:", datetime.utcnow())
+log_file = "btc_predictions_log.csv"
 
-    # Step 1: Update the dataset
-    update_dataset_with_latest(CSV_PATH)
+@st.cache_data(ttl=60)
+def load_data():
+    try:
+        df = pd.read_csv(log_file)
+        df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
+        df = df.dropna(subset=['timestamp'])  # remove rows with invalid timestamps
+        return df
+    except Exception as e:
+        st.error(f"Error loading data: {e}")
+        return pd.DataFrame(columns=["timestamp", "predicted_price"])
 
-    # Step 2: Load updated dataset
-    df = load_and_clean_csv(CSV_PATH)
-    df = technical_features(df)
-    df = df.dropna(subset=FEATURES + ["price"])
+df = load_data()
 
-    # Step 3: Generate sequences
-    X, y, scaler_X, scaler_y = generate_sequences(df, FEATURES, target="price", window_size=WINDOW_SIZE)
+if df.empty:
+    st.warning("Waiting for predictions to be logged...")
+else:
+    try:
+        # Format timestamp for better X-axis readability
+        df["formatted_time"] = df["timestamp"].dt.strftime("%Y-%m-%d %H:%M:%S")
+        df_display = df.set_index("formatted_time")
 
-    # Step 4: Load and fine-tune model on last 500 examples
-    model = fine_tune_model(MODEL_PATH, X[-500:], y[-500:], epochs=3)
+        # Display line chart
+        st.line_chart(df_display["predicted_price"])
 
-    # Step 5: Predict the next price
-    latest_input = X[-1].reshape(1, X.shape[1], X.shape[2])
-    y_pred_scaled = model.predict(latest_input)
-    y_pred = scaler_y.inverse_transform(y_pred_scaled)
-    pred_price = float(y_pred[0][0])
+        # Display last 10 predictions in a table
+        st.dataframe(df.sort_values("timestamp", ascending=False).tail(10), use_container_width=True)
+    except Exception as e:
+        st.error(f"Error rendering dashboard: {e}")
 
-    print(f"\U0001F4C8 Predicted BTC price: ${pred_price:,.2f}")
-
-    # Step 6: Log the prediction
-    log_entry = pd.DataFrame({
-        "timestamp": [datetime.utcnow().isoformat()],
-        "predicted_price": [pred_price]
-    })
-    log_entry.to_csv(LOG_PATH, mode="a", header=not os.path.exists(LOG_PATH), index=False)
-
-# Scheduler setup
-scheduler = BlockingScheduler()
-scheduler.add_job(update_and_predict, "interval", minutes=5)
-
-print("✅ Scheduler started. Predicting every 5 minutes...")
-scheduler.start()
+st.caption("Updates every 60 seconds. Make sure the scheduler is running.")
