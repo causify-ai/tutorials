@@ -76,6 +76,9 @@ RUN pip3 install \
     scikit-learn \
     requests
 
+RUN ln -s /usr/bin/chromium /usr/bin/google-chrome-stable \
+&& ln -s /usr/bin/chromedriver /usr/local/bin/chromedriver
+   
 # 4) Install Jupyter extensions (your existing script)
 COPY install_jupyter_extensions.sh /install/install_jupyter_extensions.sh
 RUN chmod +x /install/install_jupyter_extensions.sh \

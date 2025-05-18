@@ -38,6 +38,9 @@ import requests
 import pandas as pd
 import numpy as np
 import time
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 # Progress Class
 class Progress:
@@ -445,46 +448,62 @@ class Twitter_Scraper:
         pass
 
     def _get_driver(self):
-        print("Setup WebDriver...")
+        print("Setup WebDriver…")
         header = Headers().generate()["User-Agent"]
 
-        browser_option = ChromeOptions()
-        browser_option.add_argument("--no-sandbox")
-        browser_option.add_argument("--disable-dev-shm-usage")
-        browser_option.add_argument("--ignore-certificate-errors")
-        browser_option.add_argument("--disable-gpu")
-        browser_option.add_argument("--log-level=3")
-        browser_option.add_argument("--disable-notifications")
-        browser_option.add_argument("--disable-popup-blocking")
-        browser_option.add_argument("--user-agent={}".format(header))
+        # Build common ChromeOptions
+        opts = Options()
+        opts.add_argument(f"--user-agent={header}")
+        for flag in (
+            "--headless",
+            "--no-sandbox",
+            "--disable-dev-shm-usage",
+            "--disable-gpu",
+            "--disable-setuid-sandbox",
+            "--ignore-certificate-errors",
+            "--disable-notifications",
+            "--disable-popup-blocking",
+        ):
+            opts.add_argument(flag)
 
-        # For Hiding Browser
-        browser_option.add_argument("--headless")
-
+        # 1) Try remote Selenium first
+        remote_url = os.getenv(
+            "SELENIUM_REMOTE_URL",
+            "http://host.docker.internal:4444/wd/hub"
+        )
+        print(f"Attempting remote WebDriver at {remote_url}")
         try:
-            print("Initializing ChromeDriver...")
-            driver = webdriver.Chrome(
-                options=browser_option,
+            driver = webdriver.Remote(
+                command_executor=remote_url,
+                options=opts
             )
-
-            print("WebDriver Setup Complete")
+            print("Remote WebDriver connected")
             return driver
+
+        except Exception as e:
+            print(f"Remote WebDriver failed ({e}), falling back to local ChromeDriver")
+
+        # 2) Fallback: local ChromeDriver
+        try:
+            print("Initializing local ChromeDriver via webdriver.Chrome()")
+            driver = webdriver.Chrome(options=opts)
+            print("Local WebDriver setup complete")
+            return driver
+
         except WebDriverException:
+            # 3) If that also fails, download and install via webdriver-manager
             try:
-                print("Downloading ChromeDriver...")
+                print("Downloading ChromeDriver with webdriver-manager…")
                 chromedriver_path = ChromeDriverManager().install()
-                chrome_service = ChromeService(executable_path=chromedriver_path)
+                service = ChromeService(executable_path=chromedriver_path)
 
-                print("Initializing ChromeDriver...")
-                driver = webdriver.Chrome(
-                    service=chrome_service,
-                    options=browser_option,
-                )
-
-                print("WebDriver Setup Complete")
+                print("Initializing ChromeDriver via downloaded binary")
+                driver = webdriver.Chrome(service=service, options=opts)
+                print("Local WebDriver (downloaded) setup complete")
                 return driver
-            except Exception as e:
-                print(f"Error setting up WebDriver: {e}")
+
+            except Exception as e2:
+                print(f"Error setting up any WebDriver: {e2}")
                 sys.exit(1)
         pass
 
