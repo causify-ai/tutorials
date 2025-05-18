@@ -31,7 +31,6 @@ This project demonstrates a full real-time data pipeline that:
 - Computes moving average and volatility metrics.
 - Outputs results to Parquet files.
 
-![Pipeline Diagram](figures/pipeline_diagram.png)
 
 ---
 
@@ -71,8 +70,9 @@ Streams real-time Bitcoin data to a Kafka topic called `bitcoin_prices`.
 ```bash
 python3 kafka_producer.py
 ```
+<img src="https://github.com/user-attachments/assets/f1fb83ba-f397-4062-ba18-9fa6f3a39895" width="500"/>
 
-![Kafka Producer Flow](figures/kafka_producer_flow.png)
+
 
 ---
 
@@ -93,7 +93,9 @@ Reads the Kafka topic and processes the stream using PySpark.
 python3 spark_consumer.py
 ```
 
-![Spark Consumer Flow](figures/spark_consumer_flow.png)
+<img src="https://github.com/user-attachments/assets/5087a2b8-cd7a-4cc2-8b08-003056235416" width="500"/>
+
+
 
 ---
 
@@ -117,7 +119,8 @@ avro_bytes = serialize_to_avro({
 })
 ```
 
-![Utils Flow](figures/utils_usage_flow.png)
+
+<img src="https://github.com/user-attachments/assets/5f200690-433d-4c7e-9671-16e727b8a2d0" width="500"/>
 
 ---
 
@@ -146,7 +149,9 @@ Orchestrates the end-to-end pipeline execution.
 5. Lists output Parquet files.
 6. Keeps the process alive.
 
-![Entrypoint Flow](figures/entrypoint_flow.png)
+![entrypoint_flow](https://github.com/user-attachments/assets/0c4ebff0-2650-4898-b7a1-48f5fc156d18)
+
+<img src="[https://github.com/user-attachments/assets/5087a2b8-cd7a-4cc2-8b08-003056235416](https://github.com/user-attachments/assets/4199ba1d-f5c5-4b26-bc27-275476970079)" width="500"/>
 
 ---
 
@@ -158,7 +163,9 @@ Orchestrates the end-to-end pipeline execution.
 4. `utils.py` handles Avro serialization.
 5. `entrypoint.sh` glues the components together.
 
-![Complete Workflow](figures/complete_workflow.png)
+
+
+<img src="https://github.com/user-attachments/assets/4199ba1d-f5c5-4b26-bc27-275476970079" width="500"/>
 
 ---
 
