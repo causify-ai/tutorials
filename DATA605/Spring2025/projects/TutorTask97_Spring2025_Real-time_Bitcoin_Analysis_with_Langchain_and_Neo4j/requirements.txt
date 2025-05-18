@@ -5,3 +5,13 @@ websocket-client
 urllib3
 numpy
 tqdm
+langchain
+langchain_community
+langchain-core
+streamlit
+langchain_openai
+langchain-ollama
+python-dotenv
+langchain_groq
+psutil
+orjson

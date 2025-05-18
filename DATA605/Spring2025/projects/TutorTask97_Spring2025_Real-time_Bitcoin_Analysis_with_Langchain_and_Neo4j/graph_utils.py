@@ -2,13 +2,16 @@ from langchain_neo4j import Neo4jGraph
 from config import NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
 import json
 
-def insert_transaction(transaction_data):
+def connection_to_graph():
     graphConnection = Neo4jGraph(
         url=NEO4J_URI,
         username=NEO4J_USERNAME,
         password=NEO4J_PASSWORD
     )
+    return graphConnection
 
+def insert_transaction(transaction_data):
+    graphConnection = connection_to_graph()
     txid = transaction_data["txid"]
     status = transaction_data.get("status", {})
     vin = transaction_data.get("vin", [])
@@ -19,6 +22,10 @@ def insert_transaction(transaction_data):
     total_received = sum(vout_entry.get("value", 0) for vout_entry in vout)
     fee = total_sent - total_received
 
+    # Extract block height and block hash from status
+    block_height = status.get("block_height")
+    block_hash = status.get("block_hash")
+
     # Store status as JSON string for easy retrieval/visualization
     status_json = json.dumps(status)
 
@@ -27,14 +34,32 @@ def insert_transaction(transaction_data):
         MERGE (t:Transaction {txid: $txid})
         SET t.value = $total_sent,
             t.fee = $fee,
-            t.status = $status_json
-    """
+            t.status = $status_json,
+            t.name = $txid
+        """
+
     graphConnection.query(cypher_tx, {
         "txid": txid,
         "total_sent": total_sent,
         "fee": fee,
         "status_json": status_json
     })
+
+    # If block_height is not null, create Block node and relationship
+    if block_height is not None:
+        cypher_block = """
+            MERGE (b:Block {height: $block_height})
+            SET b.hash = $block_hash,
+                b.name = toString($block_height)
+            WITH b
+            MATCH (t:Transaction {txid: $txid})
+            MERGE (t)-[r:INCLUDED_IN]->(b)
+        """
+        graphConnection.query(cypher_block, {
+            "block_height": block_height,
+            "block_hash": block_hash,
+            "txid": txid
+        })
 
     # Create Wallet nodes and SENT relationships (vin)
     for vin_entry in vin:
@@ -70,3 +95,8 @@ def insert_transaction(transaction_data):
                 "txid": txid,
                 "value": received_value
             })
+
+def query_Neo4j_database(query):
+    graphConnection = connection_to_graph()
+    records = graphConnection.query(query)
+    return records

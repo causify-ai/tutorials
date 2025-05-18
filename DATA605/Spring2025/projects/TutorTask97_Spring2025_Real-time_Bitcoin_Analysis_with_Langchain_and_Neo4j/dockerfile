@@ -4,12 +4,13 @@ WORKDIR /app
 
 # Install dependencies first for Docker layer caching
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt streamlit
 
 # Copy your code
 COPY . .
 
-# If you have a utilfunctions directory, copy it as well
-# COPY utilfunctions ./utilfunctions
+# Expose Streamlit port
+EXPOSE 8501
 
-CMD ["python", "load_backup_to_db.py"]
+# Run scripts sequentially: first the loader, then the Streamlit app
+CMD ["/bin/bash", "-c", "python load_backup_to_db.py && streamlit run app.py --server.address=0.0.0.0"]
