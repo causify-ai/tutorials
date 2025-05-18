@@ -162,6 +162,35 @@ Orchestrates the end-to-end pipeline execution.
 
 ---
 
+
+## How to Run the Pipeline
+
+To execute the entire real-time analytics pipeline from start to finish, simply run the following command from your project root directory:
+
+```bash
+docker compose up --build
+
+```
+## This command performs the following steps:
+
+1.Builds all Docker images and starts the required services.
+
+2.Executes entrypoint.sh inside the main pipeline container.
+
+3.Waits for Kafka to be ready.
+
+4.Clears the previous output directory.
+
+5.Starts the Kafka producer (in background).
+
+6.Starts the Spark consumer (in blocking mode).
+
+7.Lists the generated .parquet files once they are created.
+
+8.Keeps the container alive to allow continuous streaming and monitoring.
+
+---
+
 ## Example Output
 
 ### Moving Average Parquet
