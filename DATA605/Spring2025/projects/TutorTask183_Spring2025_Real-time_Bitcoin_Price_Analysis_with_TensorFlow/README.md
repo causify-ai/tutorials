@@ -166,13 +166,9 @@ streamlit run btc_dashboard.py
 ---
 
 ## 📈 Example Output
-
-```plaintext
-📈 Predicted Next Price: $27,392.14
-```
-
-> *(Optional: Add plot here if using GitHub)*
-> ![Bitcoin Forecast Plot](assets/predicted_price_plot.png)
+Predicted Next Price: $87,919.57
+![LSTM Predicted Bitcoin Price vs History](assets/image-1.png)
+![Real-Time Streamlit Dashboard Screenshot](assets/image.png)
 
 ---
 
