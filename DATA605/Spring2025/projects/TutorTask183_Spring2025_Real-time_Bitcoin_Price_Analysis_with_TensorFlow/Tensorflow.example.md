@@ -67,6 +67,7 @@ The model uses:
 
 Training is done using `train_lstm_model()` with early stopping on validation loss.
 
+
 ---
 
 ## ⚙️ Fine-Tuning and Real-Time Inference
@@ -83,15 +84,39 @@ Training is done using `train_lstm_model()` with early stopping on validation lo
 - Training/validation losses show good convergence without overfitting.
 - Predicted next price is plotted against recent prices to visually confirm model behavior.
 
-Example output:$90,300.85   
+**Example output:**  
+📈 Predicted Next Price: `$90,300.85`
 
----
+------
+
+## 🖥️ Real-Time Inference: Scheduler + Dashboard
+
+Beyond static predictions, this project supports live, ongoing inference:
+
+### 📅 `btc_scheduler.py`:
+- Periodically fetches new Bitcoin price data
+- Fine-tunes the existing LSTM model on recent sequences
+- Generates the next predicted price
+- Designed to run every 5 minutes (via `cron` or a simple loop)
+
+This makes the model adaptive to recent market shifts, without full retraining.
+
+
+### 📊 `btc_dashboard.py` (Streamlit):
+- Offers a real-time visual interface
+- Displays current BTC price, prediction, and trendline
+- Can be run interactively from the Docker container or host machine
+
+Together, these tools make the model production-ready for real-time streaming use cases.
+
 
 ## 🧠 Key Takeaways
 
 - The modular design allows easy integration with Streamlit dashboards or schedulers.
 - The utility layer simplifies the complex workflow of live data ingestion and deep learning.
 - Anomaly filtering improves robustness against API noise or missing data.
+- The scheduler enables continuous model refinement without requiring full retraining.
+- The Streamlit dashboard provides an accessible way to visualize model outputs in real time.
 
 ---
 
