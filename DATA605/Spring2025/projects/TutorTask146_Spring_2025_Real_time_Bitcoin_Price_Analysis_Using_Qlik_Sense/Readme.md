@@ -98,7 +98,7 @@ graph TD
 
 ### **Live Analytics Dashboard Example**
 
-![Qlik Dashboard](images/qlik_dashboard.png)
+![Qlik Dashboard](Images/qlik_dashboard.png)
 *This dashboard shows the real-time Bitcoin price, moving average, and rolling maximum values, all interactively filterable by time. Key metrics are displayed below for fast insights.*
 
 ---
@@ -124,13 +124,13 @@ While building a truly real-time, automated analytics solution on a free/student
 * **REST/Connector Limitations:**
   Sometimes, repeated data reloads would hit rate limits or API restrictions.
 
-![Automation Blocked Error](images/qlik_automation_error.png)
+![Automation Blocked Error](Images/qlik_automation_error.png)
 
 ### External Data Source Errors
 
 * Google Drive or Google Sheets integration was tested, but Qlik’s connectors frequently produced authentication or query errors for non-enterprise users.
 
-![Google Drive Connector Error](images/qlik_gdrive_error.png)
+![Google Drive Connector Error](Images/qlik_gdrive_error.png)
 
 ---
 
