@@ -539,10 +539,6 @@ metrics = evaluate_forecast(actual_data, forecast)
    - Include tests
    - Update documentation
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## Acknowledgments
 
 - Dataprep library for data processing capabilities
