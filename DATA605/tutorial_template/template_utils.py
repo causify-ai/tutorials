@@ -1,5 +1,5 @@
 """
-utils.py
+avro_utils.py
 
 This file contains utility functions that support the tutorial notebooks.
 

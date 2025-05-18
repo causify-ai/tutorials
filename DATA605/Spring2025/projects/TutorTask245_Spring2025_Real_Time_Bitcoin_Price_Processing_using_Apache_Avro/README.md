@@ -69,7 +69,7 @@ Streams real-time Bitcoin data to a Kafka topic called `bitcoin_prices`.
 #### Example:
 
 ```bash
-python3 kafka_producer.py
+python3 kafka_producer_example.py
 ```
 
 ![Kafka Producer Flow](figures/kafka_producer_flow.png)
@@ -90,7 +90,7 @@ Reads the Kafka topic and processes the stream using PySpark.
 #### Example:
 
 ```bash
-python3 spark_consumer.py
+python3 spark_consumer_example.py
 ```
 
 ![Spark Consumer Flow](figures/spark_consumer_flow.png)

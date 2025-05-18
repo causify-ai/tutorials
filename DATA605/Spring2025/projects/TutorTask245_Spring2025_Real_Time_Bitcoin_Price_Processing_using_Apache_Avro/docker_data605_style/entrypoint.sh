@@ -14,11 +14,11 @@ rm -rf /workspace/output/*
 
 # 3. Start Producer in background
 echo " Starting Kafka producer..."
-python3 /workspace/kafka_producer.py &
+python3 /workspace/kafka_producer_example.py &
 
 # 4. Start Spark consumer
 echo " Launching Spark consumer (this will block)..."
-python3 /workspace/spark_consumer.py &
+python3 /workspace/spark_consumer_example.py &
 
 # 5. Wait a bit for data to be generated
 sleep 30

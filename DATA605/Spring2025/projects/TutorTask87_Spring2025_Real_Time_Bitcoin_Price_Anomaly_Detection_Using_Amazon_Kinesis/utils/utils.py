@@ -1,4 +1,4 @@
-# utils/utils.py
+# utils/avro_utils.py
 
 import boto3
 import json

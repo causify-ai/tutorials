@@ -1,7 +1,7 @@
 from confluent_kafka import Producer
 import logging
 import time
-from utils import serialize_to_avro
+from avro_utils import serialize_to_avro
 from Gecko_API import BitcoinAPI
 
 #Calling API call to fetch bitcoin data
