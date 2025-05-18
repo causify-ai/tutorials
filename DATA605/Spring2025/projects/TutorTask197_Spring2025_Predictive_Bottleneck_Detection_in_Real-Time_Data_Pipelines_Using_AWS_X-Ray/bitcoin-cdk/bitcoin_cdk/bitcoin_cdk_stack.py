@@ -61,7 +61,7 @@ class BitcoinCdkStack(Stack):
                 "BUCKET_NAME": bucket.bucket_name,
                 "TABLE_NAME": table.table_name
             },
-            tracing=_lambda.Tracing.ACTIVE, 
+            tracing=_lambda.Tracing.ACTIVE,
             timeout=Duration.seconds(30),
         )
 

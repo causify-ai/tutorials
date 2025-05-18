@@ -66,4 +66,3 @@ def get_bitcoin_price_history_hourly_chunks():
         current_start = current_end
 
     return all_prices
-

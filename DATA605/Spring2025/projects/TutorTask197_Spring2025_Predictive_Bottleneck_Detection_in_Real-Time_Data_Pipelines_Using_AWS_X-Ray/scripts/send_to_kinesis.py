@@ -7,8 +7,6 @@ from datetime import datetime
 from utils.kinesis_client import create_kinesis_client
 from utils.fetch_bitcoin import fetch_current_bitcoin_price, get_bitcoin_price_history_hourly_chunks
 
-
-
 # Create a Kinesis client
 kinesis_client = create_kinesis_client()
 stream_name = 'bitcoin-stream'  
@@ -101,4 +99,3 @@ def send_current_bitcoin_price_to_kinesis():
 # if __name__ == "__main__":
 #     send_historical_bitcoin_prices_to_kinesis()
 #     send_current_bitcoin_price_to_kinesis()
-   
