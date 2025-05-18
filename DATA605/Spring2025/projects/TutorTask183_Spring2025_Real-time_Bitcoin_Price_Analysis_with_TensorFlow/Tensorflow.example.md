@@ -4,127 +4,93 @@ This project implements a real-time Bitcoin price prediction pipeline using LSTM
 
 This markdown describes the design decisions, implementation workflow, and results shown in the companion notebook: [`tensorflow.example.ipynb`](tensorflow.example.ipynb).
 
----
-
-## 🎯 Objective
-
-The goal is to build a time series modeling system that:
-
-- Fetches live Bitcoin price data from CoinGecko
-- Processes and cleans the dataset with anomaly detection
-- Extracts relevant financial indicators
-- Trains an LSTM model to predict the next day's price
-- Supports real-time model fine-tuning and inference
 
 ---
 
-## 🏗️ Pipeline Overview
+## Project Goals
 
-### ✅ Step 1: Data Loading & Real-Time Update
+The goal of this project is to:
 
-- Loads historical data from `btc-usd-max.csv`
-- Automatically fetches the latest price via the CoinGecko API using `update_dataset_with_latest()`
-- Uses `load_and_clean_csv()` to sanitize timestamps, enforce types, and optionally filter anomalies
-
-### ✅ Step 2: Exploratory Data Analysis (EDA)
-
-The notebook includes key EDA plots to visualize:
-
-- Raw price trends (linear + log scale)
-- Relationship between price and market cap
-- Moving averages (30-day, 90-day) to highlight trend direction
-
-These plots guide our feature selection and show how Bitcoin’s market behavior evolves over time.
-
-### ✅ Step 3: Feature Engineering
-
-Using `technical_features()` we add:
-
-- Daily returns
-- SMA (7 and 30-day)
-- Rolling volatility
-- Lagged prices
-
-These are used to generate multivariate sequences with `generate_sequences()`.
+- Collect live Bitcoin data via CoinGecko
+- Engineer features for time series modeling
+- Train and fine-tune an LSTM model
+- Predict future prices in real time
+- Power both static notebooks and live services (dashboard + scheduler)
 
 ---
 
-## 🧠 Modeling Approach
+## Workflow Summary
 
-### Model Type: LSTM (Long Short-Term Memory)
-
-We chose LSTM over traditional RNNs or simple autoregressive models due to its ability to:
-
-- Capture long-term dependencies in time series
-- Handle high volatility and non-stationarity
-- Generalize well in financial prediction tasks
-
-The model uses:
-
-- Two LSTM layers (`128`, `48` units) with dropout
-- Mean squared error loss
-- Adam optimizer
-
-Training is done using `train_lstm_model()` with early stopping on validation loss.
-
+| Stage                       | Description |
+|-----------------------------|-------------|
+| Data Ingestion              | Load historical BTC prices from CSV, update with live data |
+| Preprocessing               | Clean missing values, normalize, and remove anomalies |
+| Feature Engineering         | Compute returns, SMAs, volatility, and lag features |
+| Sequence Generation         | Convert to LSTM-compatible time windows |
+| Model Training              | Train LSTM with early stopping |
+| Fine-Tuning                 | Update model with recent market data |
+| Prediction & Visualization  | Predict next price and plot against history |
 
 ---
 
-## ⚙️ Fine-Tuning and Real-Time Inference
+## Design Decisions
 
-- Once the model is saved as `models/final_lstm_model.h5`, it can be reused by the scheduler or dashboard.
-- We demonstrate how to fine-tune the model on the last 100 sequences with `fine_tune_model()` to adapt to new market conditions.
-- Finally, we use `predict_next_price()` to generate the next Bitcoin price and plot it against the last 60 prices.
+### Why LSTM?
 
----
+LSTM was selected because:
 
-## 📈 Results
+- Time series data like Bitcoin prices have long-term dependencies
+- LSTM mitigates vanishing gradients better than standard RNNs
+- It is widely used in financial modeling and forecasting
 
-- The model captures Bitcoin's general price trend with reasonable prediction quality.
-- Training/validation losses show good convergence without overfitting.
-- Predicted next price is plotted against recent prices to visually confirm model behavior.
-
-**Example output:**  
-📈 Predicted Next Price: `$90,300.85`
-
-------
-
-## 🖥️ Real-Time Inference: Scheduler + Dashboard
-
-Beyond static predictions, this project supports live, ongoing inference:
-
-### 📅 `btc_scheduler.py`:
-- Periodically fetches new Bitcoin price data
-- Fine-tunes the existing LSTM model on recent sequences
-- Generates the next predicted price
-- Designed to run every 5 minutes (via `cron` or a simple loop)
-
-This makes the model adaptive to recent market shifts, without full retraining.
-
-
-### 📊 `btc_dashboard.py` (Streamlit):
-- Offers a real-time visual interface
-- Displays current BTC price, prediction, and trendline
-- Can be run interactively from the Docker container or host machine
-
-Together, these tools make the model production-ready for real-time streaming use cases.
-
-
-## 🧠 Key Takeaways
-
-- The modular design allows easy integration with Streamlit dashboards or schedulers.
-- The utility layer simplifies the complex workflow of live data ingestion and deep learning.
-- Anomaly filtering improves robustness against API noise or missing data.
-- The scheduler enables continuous model refinement without requiring full retraining.
-- The Streamlit dashboard provides an accessible way to visualize model outputs in real time.
+Model architecture:
+- LSTM(128) → Dropout(0.4)
+- LSTM(48) → Dropout(0.2)
+- Dense(1) with MSE loss
 
 ---
 
-## 🔗 References
+### Feature Selection
+Feature choices were based on technical indicators relevant in financial analysis:
 
-- `tensorflow.example.ipynb`: Full demo notebook
-- `bitcoin_utils.py`: Core utility module
-- [CoinGecko API](https://www.coingecko.com/en/api)
-- [TensorFlow LSTM Docs](https://www.tensorflow.org/api_docs/python/tf/keras/layers/LSTM)
+| Feature                         | Purpose                          |
+|------------------------------   |----------------------------------|
+| `returns`                       | Captures price momentum          |
+| `SMA_7`, `SMA_30`               | Short/medium trend tracking      |
+| `volatility_7`, `volatility_30` | Measures risk                    |
+| `lag_1day`                      | Introduces recency context       |
+| `price`                         | The target for prediction        |
 
 ---
+
+###  Anomaly Detection
+
+We included robust anomaly filtering to improve model quality:
+
+- Uses Z-score filtering with configurable threshold
+- Removes price points beyond `|z| > 3.0`
+- Controlled via `remove_anomalies=True` flag
+
+---
+
+###  Real-Time Update Strategy
+
+Rather than retraining the model from scratch:
+
+- We fine-tune using the latest 100 sequences
+- This is done via the `fine_tune_model()` function
+- Scheduler (`btc_scheduler.py`) runs this every 5 minutes
+
+This makes the system lightweight and production-ready.
+
+---
+
+##  Results
+
+- Smooth convergence of training and validation loss
+- Predictions align well with recent market trends
+- Final model is saved as `models/final_lstm_model.h5`
+
+**Example Output**:
+
+ Predicted Next Price: $90,300.85

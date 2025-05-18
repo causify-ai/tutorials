@@ -1,109 +1,131 @@
-# TensorFlow API Layer Documentation
+# 🧠 TensorFlow API Layer for Real-Time Bitcoin Price Prediction
 
-This document describes the software layer implemented in `bitcoin_utils.py`, which wraps around native APIs like CoinGecko and TensorFlow. It modularizes the data processing and modeling steps required to build a real-time Bitcoin price prediction system.
-
----
-
-## 🔍 Project Motivation
-
-The native APIs (CoinGecko, TensorFlow, Keras) offer powerful tools, but their raw usage involves repetitive code and loose structure. The wrapper functions in this module:
-
-- Reduce boilerplate
-- Enforce reproducibility
-- Support real-time retraining and prediction
-- Decouple implementation from experimentation
+This document describes the utility API implemented in `bitcoin_utils.py`, which wraps TensorFlow and CoinGecko into a modular, reusable system for time series modeling. It powers both our Jupyter workflows and real-time components like the scheduler and dashboard.
 
 ---
 
-## 📦 Utility Overview: `bitcoin_utils.py`
+## 🚀 Why Build This API Layer?
 
-This module defines a pipeline-friendly API with clean, reusable components:
+The goal was to abstract away boilerplate and standardize the data and modeling pipeline. While native libraries (e.g., TensorFlow, requests, Keras) are powerful, using them directly creates fragmented code and limited reusability.
 
-| Function                        | Purpose                                               |
-|---------------------------------|--------------------------------------------------------|
-| `load_and_clean_csv()`          | Loads and sanitizes time series data                  |
-| `update_dataset_with_latest()`  | Fetches new price data using CoinGecko API            |
-| `technical_features()`          | Adds domain-relevant indicators (returns, SMA, etc.)  |
-| `generate_sequences()`          | Prepares windowed, normalized sequences for LSTM      |
-| `build_lstm_model()`            | Instantiates a 2-layer LSTM architecture              |
-| `train_lstm_model()`            | Trains model with early stopping                      |
-| `fine_tune_model()`             | Adapts the model to the latest data in real-time      |
-| `predict_next_price()`          | Outputs next price + optional visualization           |
-| `plot_training_loss()`          | Shows model learning curves                           |
+Our `bitcoin_utils.py` solves this by:
+
+- Encapsulating logic for I/O, transformation, and modeling
+- Supporting real-time fine-tuning with live data
+- Enabling fast experimentation through Jupyter + deployment via Streamlit
 
 ---
 
-## 🧠 Design Decisions & Logic
+## 🧰 API Overview: `bitcoin_utils.py`
 
-### 🧩 Why LSTM?
-Bitcoin price prediction is a sequential task with temporal dependencies. LSTM (Long Short-Term Memory) networks are a natural fit:
-- They retain memory across timesteps
-- Outperform standard RNNs in long-horizon prediction
-- Handle vanishing gradients better in deep networks
-
-The model:
-- Uses two LSTM layers with dropout
-- Is pre-configured for real-time fine-tuning
-- Accepts sequences of shape `(window_size, num_features)`
-
----
-
-### 📊 Why These Features?
-We chose features grounded in technical analysis:
-
-- `returns`: Captures daily price momentum
-- `SMA_7`, `SMA_30`: Highlight short- and medium-term trends
-- `volatility_7`, `volatility_30`: Reflect short/long uncertainty
-- `lag_1day`: Acts as a temporal anchor
-- `price`: Original signal, retained for completeness
-
-These were selected to balance signal strength with model simplicity.
+| Function                       | Description |
+|--------------------------------|-------------|
+| `load_and_clean_csv()`         | Reads CSV, parses datetime, removes anomalies (optional Z-score filtering) |
+| `update_dataset_with_latest()` | Queries CoinGecko for the newest price and appends if new |
+| `technical_features()`         | Adds `returns`, SMAs, volatility bands, and lags |
+| `generate_sequences()`         | Transforms features into `(X, y)` LSTM-ready sequences |
+| `build_lstm_model()`           | Builds a 2-layer LSTM with dropout |
+| `train_lstm_model()`           | Trains the LSTM with early stopping |
+| `tune_lstm_model()`            | (Optional) Runs KerasTuner to optimize model architecture |
+| `fine_tune_model()`            | Updates a pretrained model using recent sequences |
+| `predict_next_price()`         | Predicts the next value and plots vs. history |
+| `plot_training_loss()`         | Visualizes model training and validation loss |
 
 ---
 
-### 🔍 Anomaly Detection Logic
-Real-time data ingestion can lead to anomalies or API glitches. To prevent the model from learning on corrupted data:
+## 🧠 Design Decisions
 
-- `load_and_clean_csv()` includes optional Z-score-based filtering
-- Outliers above a configurable threshold (e.g., 3.0) are removed
-- This is toggled via `remove_anomalies=True`
+### 📈 Why LSTM?
+
+LSTM is used instead of vanilla RNN or CNN because:
+
+- Bitcoin pricing is **non-stationary and autocorrelated**
+- LSTMs maintain long-term memory across timesteps
+- They’re resilient to gradient vanishing (vs RNN)
+
+We used:
+- Two LSTM layers: 128 → 48 units
+- Dropout for regularization
+- MSE loss with Adam optimizer
 
 ---
 
-### 🔁 Real-Time Update Strategy
-Instead of full retraining:
-- The system uses `fine_tune_model()` on the latest N sequences
-- This allows for lightweight, frequent updates with live data
+### 🧪 Feature Design
+
+We selected features based on **technical indicators** commonly used in financial modeling:
+
+- `returns`: Captures momentum
+- `SMA_7`, `SMA_30`: Trend strength
+- `volatility_7`, `volatility_30`: Market uncertainty
+- `lag_1day`: Recent context
+- `price`: The core prediction target
+
+These were chosen for interpretability, signal quality, and efficiency.
 
 ---
 
-### 🧪 Optional Hyperparameter Tuning
-The `tune_lstm_model()` function wraps KerasTuner for reproducible optimization:
-- Number of LSTM units
+### 🚨 Anomaly Filtering
+
+Live APIs can return noisy or erroneous data. We use:
+
+- Z-score thresholding on price
+- Configurable filtering in `load_and_clean_csv()`
+- Toggle via `remove_anomalies=True`
+
+This improves model robustness for real-time inference.
+
+---
+
+### 🔁 Real-Time Strategy
+
+Instead of full retraining, we use:
+
+- Lightweight fine-tuning via `fine_tune_model()`
+- Performed on the latest N sequences (e.g., 100)
+- Integrated into a live scheduler for updates every 5 minutes
+
+This design makes the model suitable for production-style inference with minimal overhead.
+
+---
+
+## 🧪 Optional: Hyperparameter Tuning
+
+The module supports tuning with KerasTuner (`tune_lstm_model()`):
+
+- Layer sizes
 - Dropout rates
-- Trial count + early stopping for fast convergence
+- Early stopping
+- Trial counts
 
-This tuning is **optional** and was commented out in the demo for runtime reasons.
+We comment this section in notebooks to preserve runtime simplicity — but it’s valuable for optimizing production models.
 
 ---
 
-## 🔧 Abstraction Strategy
+## 🖥️ API in Action
 
-We chose to:
+The API is consumed by:
 
-- Centralize all logic in `bitcoin_utils.py`
-- Keep notebooks as thin, readable demos
-- Maintain modularity for testing, debugging, and deployment
+- ✅ `tensorflow.API.ipynb` — Basic usage examples
+- ✅ `tensorflow.example.ipynb` — Full model training and evaluation
+- ✅ `btc_scheduler.py` — Live update + predict loop
+- ✅ `btc_dashboard.py` — Streamlit UI calling prediction utilities
 
-This ensures that:
-- The dashboard, scheduler, and Jupyter demo all reuse the same core
-- You can scale to other coins or timeframes by reusing this structure
+---
+
+## ⚙️ Abstraction Strategy
+
+We designed the API to be:
+
+- **Thin notebooks** — Easy to follow and modify
+- **Reusable** — Shared logic for Streamlit, CLI, and scheduler
+- **Maintainable** — New features or changes only require updates in `bitcoin_utils.py`
 
 ---
 
 ## 📁 References
 
-- CoinGecko API: https://www.coingecko.com/en/api
-- TensorFlow LSTM: https://www.tensorflow.org/api_docs/python/tf/keras/layers/LSTM
-- KerasTuner: https://keras.io/keras_tuner/
-- Companion notebook: `tensorflow.API.ipynb`
+- 📄 [`bitcoin_utils.py`](./bitcoin_utils.py)
+- 📓 [`tensorflow.API.ipynb`](./tensorflow.API.ipynb)
+- [TensorFlow LSTM Layer](https://www.tensorflow.org/api_docs/python/tf/keras/layers/LSTM)
+- [CoinGecko API](https://www.coingecko.com/en/api)
+- [KerasTuner Docs](https://keras.io/keras_tuner/)

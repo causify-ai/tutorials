@@ -1,4 +1,4 @@
-## ✅ Final `README.md` (Now Fully Complete)
+## ✅ Final `README.md` 
 
 # 📈 Real-Time Bitcoin Price Prediction with TensorFlow
 
