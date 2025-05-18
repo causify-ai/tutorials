@@ -2,7 +2,7 @@
 
 This project implements a real-time data processing pipeline to fetch, transform, store, and analyze Bitcoin price data using the [CoinGecko API](https://www.coingecko.com/en/api/documentation) and the [Bonobo](https://www.bonobo-project.org/) ETL framework.
 
-![Bitcoin Pipeline Diagram](https://drive.google.com/file/d/1dwQrs-sosXH6d6cufYWjFCz-9Rh-hqLF/view?usp=drive_link)
+![Bitcoin Pipeline Diagram](https://drive.google.com/file/d/1dwQrs-sosXH6d6cufYWjFCz-9Rh-hqLF/view?usp=sharing)
 
 ---
 
