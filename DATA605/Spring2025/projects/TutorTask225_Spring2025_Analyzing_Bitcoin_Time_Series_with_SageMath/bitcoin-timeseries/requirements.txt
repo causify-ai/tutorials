@@ -3,3 +3,4 @@ matplotlib
 requests
 sympy
 notebook
+statsmodels
