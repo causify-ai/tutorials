@@ -1,16 +1,19 @@
 #!/bin/bash -xe
 
 REPO_NAME=umd_data605
-IMAGE_NAME=document_search_engine
-FULL_IMAGE_NAME=$IMAGE_NAME
-CONTAINER_NAME=doc-search
 
-docker image ls $FULL_IMAGE_NAME
+IMAGE_NAME=ollama-notebook
+CONTAINER_NAME=ollama-notebook
 
-# Run container with interactive bash shell
-docker run -it \
-    --name $CONTAINER_NAME \
+docker image ls $IMAGE_NAME
+
+# Run container with Jupyter, Streamlit and Ollama ports
+docker run \
+    -p 8888:8888 \
     -p 8501:8501 \
     -p 11434:11434 \
     -v $(pwd):/app \
-    $FULL_IMAGE_NAME /bin/bash
+    -v /home:/data/home \
+    -v /Documents:/data/documents \
+    --name $CONTAINER_NAME \
+    $IMAGE_NAME

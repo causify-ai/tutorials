@@ -154,7 +154,7 @@ classDiagram
    ./docker_data605_style/docker_build.sh
    
    # For Windows PowerShell
-   docker build -t document_search_engine -f ./docker_data605_style/Dockerfile .
+   docker build -t ollama-notebook -f ./docker_data605_style/Dockerfile .
    ```
 
 3. **Run the Docker container**:
@@ -163,14 +163,23 @@ classDiagram
    ./docker_data605_style/docker_run.sh
    
    # For Windows PowerShell
-   docker run -d --name doc-search -p 8501:8501 -p 11434:11434 -v ${PWD}:/app document_search_engine
+   docker run -p 8888:8888 -p 8501:8501 -p 11434:11434 `
+     -v ${PWD}:/app `
+     -v C:/Users:/data/users `
+     -v C:/Documents:/data/documents `
+     --name ollama-notebook ollama-notebook
    
-   # Note: If services don't start automatically, use the explicit command:
-   # docker run -d --name doc-search -p 8501:8501 -p 11434:11434 -v ${PWD}:/app document_search_engine bash -c "ollama serve & streamlit run app.py --server.port=8501 --server.address=0.0.0.0"
+   # For Windows Command Prompt
+   docker run -p 8888:8888 -p 8501:8501 -p 11434:11434 -v %cd%:/app -v C:/Users:/data/users -v C:/Documents:/data/documents --name ollama-notebook ollama-notebook
    ```
 
-4. **Access the application**:
-   Open your browser and go to http://localhost:8501
+4. **Access the applications**:
+   - Open your browser and go to http://localhost:8501 for the Streamlit app
+   - Access Jupyter Notebook at http://localhost:8888 to run the example notebooks
+   - When using the search engine, use Docker paths:
+     - `/app` - Project files
+     - `/data/users` - Files in C:/Users
+     - `/data/documents` - Files in C:/Documents
 
 ## Usage Guide
 

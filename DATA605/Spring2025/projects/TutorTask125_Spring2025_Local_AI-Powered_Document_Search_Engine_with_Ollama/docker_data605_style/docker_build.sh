@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
 REPO_NAME=umd_data605
-IMAGE_NAME=document_search_engine
+IMAGE_NAME=ollama-notebook
 FULL_IMAGE_NAME=$IMAGE_NAME
 
 docker image ls $FULL_IMAGE_NAME

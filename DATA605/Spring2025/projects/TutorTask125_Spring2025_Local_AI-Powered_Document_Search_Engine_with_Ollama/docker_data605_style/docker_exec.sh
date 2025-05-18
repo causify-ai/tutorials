@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 
-CONTAINER_NAME=doc-search
+CONTAINER_NAME=ollama-notebook
 
 # Check if container is running
 if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then

@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
-CONTAINER_NAME=doc-search
-IMAGE_NAME=document_search_engine
+CONTAINER_NAME=ollama-notebook
+IMAGE_NAME=ollama-notebook
 
 # Stop and remove container if running
 if [ "$(docker ps -a -q -f name=$CONTAINER_NAME)" ]; then
