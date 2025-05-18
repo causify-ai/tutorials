@@ -1,193 +1,130 @@
 # 🧠 Time Series Analysis of Bitcoin Prices Using s3fs
 
 **Author:** Karthik Vakada  
-**Email:** kvakada@umd.edu  
-**Project Tag:** TutorTask114_Spring2025_Time_Series_Analysis_of_Bitcoin_Prices_Using_s3fs  
-**Date:** May 2025
+**Email:** [kvakada@umd.edu](mailto:kvakada@umd.edu)  
+**Course:** DATA605 – Spring 2025  
+**Live Dashboard:** [bitcoin-price-dashboard.onrender.com](https://bitcoin-price-dashboard.onrender.com)  
+**GitHub Repo:** [TimeSeries-Analysis](https://github.com/kvakada/TimeSeries-Analysis)  
 
 ---
 
 ## 📝 Project Overview
 
-This project demonstrates a reproducible, cloud-native pipeline for analyzing and forecasting Bitcoin prices using Python, ARIMA models, and native S3 access via `s3fs`. Unlike traditional pipelines that rely on static CSVs, this setup dynamically fetches data using the CoinGecko API and writes/reads directly from S3. All code runs inside a standardized Docker environment based on the official `data605_style` template.
+This project presents a **cloud-native, reproducible pipeline** for analyzing and forecasting Bitcoin prices using Python, ARIMA models, and live data integration with AWS S3 through `s3fs`. Forecast results and anomaly detections are displayed in an interactive Plotly dashboard.
 
 ---
 
-## 📁 Project Structure
+## 📁 Folder Structure
 
 ```
 
 TutorTask114\_Spring2025\_Time\_Series\_Analysis\_of\_Bitcoin\_Prices\_Using\_s3fs/
-├── bitcoin\_utils.py                      <- Utility functions (fetching, preprocessing, plotting)
-├── Spring2025\_s3fs.API.ipynb             <- Notebook demonstrating native s3fs API usage
-├── Spring2025\_s3fs.API.md                <- Markdown explanation of native s3 API and use cases
-├── Spring2025\_s3fs.API.py                <- Script version of the API notebook
-├── Spring2025\_s3fs.example.ipynb         <- Main notebook for end-to-end analysis and modeling
-├── Spring2025\_s3fs.example.md            <- Markdown summary of the project pipeline
-├── Spring2025\_s3fs.example.py            <- Script version of the example notebook
-├── requirements.txt                      <- Standard pip dependencies
-├── pyproject.toml                        <- Poetry-based dependency manager
-├── Dockerfile                            <- Docker environment setup
-├── start.sh                              <- Docker run script
-├── dev\_scripts\_tutorial\_s3fs/            <- Boilerplate files from `data605_style`
-│   ├── bashrc
-│   ├── docker\_build.sh
-│   ├── docker\_jupyter.sh
-│   ├── docker\_clean.sh
-│   ├── docker\_exec.sh
-│   ├── docker\_push.sh
-│   ├── install\_jupyter\_extensions.sh
-│   ├── version.sh
-│   └── etc\_sudoers
+├── Spring2025\_s3fs.API.ipynb / .md / .py   <- S3 interface usage
+├── Spring2025\_s3fs.example.ipynb / .md / .py <- Main pipeline
+├── bitcoin\_utils.py / fetch\_bitcoin\_data.py <- Utility scripts
+├── Dockerfile / start.sh / docker\_\*.sh      <- Docker setup
+├── requirements.txt / pyproject.toml         <- Dependencies
+├── figures/
+│   ├── bitcoin\_forecast\_plot.png
+│   └── bitcoin\_anomalies\_plot.png
+├── Bitcoin\_Prices\_Prediction\_Dashboard/     <- Dashboard app (Plotly)
+├── dev\_scripts\_tutorial\_s3fs/               <- data605\_style scripts
+├── README.md
 
 ````
 
 ---
 
-## ⚙️ Setup and Dependencies
+## ⚙️ Setup Instructions
 
-### Core Dependencies
-
-- Python 3.10+
-- `pandas`, `matplotlib`, `statsmodels`, `scikit-learn`
-- `s3fs`, `requests`, `seaborn`, `ARIMA`
-- Jupyter for notebooks
-
-Install via:
-
-```bash
-pip install -r requirements.txt
-````
-
-or
-
-```bash
-poetry install
-```
-
----
-
-## 🐳 Building and Running the Docker Container
-
-> 🧪 This project uses the `data605_style` Docker template.
-
-```bash
-# Go to root
-cd TutorTask114_Spring2025_Time_Series_Analysis_of_Bitcoin_Prices_Using_s3fs
-
-# Build image
-bash dev_scripts_tutorial_s3fs/docker_build.sh
-
-# Launch notebook
-bash dev_scripts_tutorial_s3fs/docker_jupyter.sh
-```
-
-📍 Make sure `~/.aws` is available for S3 access.
-
----
-
-## 🌐 Environment Setup (Non-Docker)
+### 🔧 Install Requirements (Local)
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 jupyter lab
-```
+````
 
----
-
-## 🧪 Jupyter Notebooks Overview
-
-### 🔹 Spring2025\_s3fs.API.ipynb
-
-* Connects to S3 using `s3fs`
-* Demonstrates listing, reading, writing, and direct `s3://` usage with pandas
-* Aligned with [s3fs official examples](https://s3fs.readthedocs.io/en/latest/#examples)
-
-### 🔹 Spring2025\_s3fs.example.ipynb
-
-* Fetches historical Bitcoin data from CoinGecko using `fetch_bitcoin_data()`
-* Performs time series decomposition, moving averages, anomaly detection (Z-score)
-* Fits ARIMA and log-ARIMA models for forecasting
-* Uploads results to S3 using native API
-
----
-
-## 📷 Sample Output Plots
-
-#### 🔮 Forecast Curve (ARIMA)
-
-![Forecast](figures/bitcoin_forecast_plot.png)
-
-#### 🚨 Anomalies Detected (Z-Score)
-
-![Anomalies](figures/bitcoin_anomalies_plot.png)
-
----
-
-## 🔐 API Configuration
-
-To fetch Bitcoin data:
-
-```python
-from bitcoin_utils import fetch_bitcoin_data
-df = fetch_bitcoin_data(days=365)
-```
-
-For authenticated S3 access, configure `~/.aws/credentials` or use environment variables.
-
----
-
-## 📊 Output Summary
-
-* 📈 Daily price trends with moving average
-* 📉 Seasonal-Trend decomposition (STL)
-* 🚨 Z-score based anomaly detection
-* 🔮 Forecasting with ARIMA and log-ARIMA
-* ☁️ Dynamic S3 integration for data read/write
-
----
-
-## 🔁 How to Reproduce This Project
+### 🐳 Docker Setup (Recommended)
 
 ```bash
-# Clone the project
-git clone https://github.com/YOUR-USERNAME/TutorTask114_Spring2025_Time_Series_Analysis_of_Bitcoin_Prices_Using_s3fs.git
+# Build Docker image
+bash dev_scripts_tutorial_s3fs/docker_build.sh
+
+# Launch Jupyter inside Docker
+bash dev_scripts_tutorial_s3fs/docker_jupyter.sh
+```
+
+> 📌 AWS credentials (`~/.aws/credentials`) are required for S3 access.
+
+---
+
+## 📊 Notebook Overview
+
+### 🔹 `Spring2025_s3fs.API.ipynb`
+
+* Connects to AWS S3 using `s3fs`
+* Reads and writes directly to/from `s3://bitcoin-timeseries-data-kv/`
+
+### 🔹 `Spring2025_s3fs.example.ipynb`
+
+* Fetches Bitcoin price data using CoinGecko API
+* Preprocesses and analyzes time series
+* Detects anomalies (Z-score)
+* Forecasts prices using ARIMA and log-ARIMA
+* Saves all results back to S3 and CSV
+
+---
+
+## 📷 Output Plots
+
+| Forecast (ARIMA)                    | Anomaly Detection                    |
+| ----------------------------------- | ------------------------------------ |
+| `figures/bitcoin_forecast_plot.png` | `figures/bitcoin_anomalies_plot.png` |
+
+---
+
+## 🌐 Live Dashboard
+
+Hosted with Plotly Dash (in `/Bitcoin_Prices_Prediction_Dashboard`)
+🔗 [View Dashboard](https://bitcoin-price-dashboard.onrender.com)
+
+---
+
+## 📐 Evaluation Metrics
+
+| Model     | RMSE    | MAPE (%) |
+| --------- | ------- | -------- |
+| ARIMA     | 1520.45 | 6.32%    |
+| Log-ARIMA | 1387.62 | 5.94%    |
+
+✔️ **ADF test passed** → Stationary time series (p = 0.003)
+
+---
+
+## 🔁 How to Reproduce
+
+```bash
+git clone https://github.com/kvakada/TimeSeries-Analysis.git
 cd TutorTask114_Spring2025_Time_Series_Analysis_of_Bitcoin_Prices_Using_s3fs
 
-# Build and run Docker
+# Use Docker
 bash dev_scripts_tutorial_s3fs/docker_build.sh
 bash dev_scripts_tutorial_s3fs/docker_jupyter.sh
 ```
 
-Or run locally using a virtual environment:
+---
 
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-jupyter lab
-```
+## 🔮 Future Enhancements
+
+* Add trading volume + sentiment data (LSTM, multivariate ARIMA)
+* Improve anomaly detection with Isolation Forest
+* Migrate to serverless (AWS Lambda)
+* Real-time dashboard with WebSocket support
 
 ---
 
-## 💡 Optional Extensions
+## 🙏 Acknowledgment
 
-* Integrate real-time dashboard using Dash or Streamlit
-* Use Facebook Prophet for more robust forecasting
-* Integrate anomaly alerts via AWS SNS
-
----
-
-## ✅ Final Notes
-
-This project was developed for **DATA605 – Spring 2025** using the official Causify AI guidelines.
-It demonstrates:
-
-* Time series modeling with ARIMA
-* Cloud-native data handling via `s3fs`
-* Docker-based reproducibility using `data605_style`
-
-📫 Questions? Email: [kvakada@umd.edu](mailto:kvakada@umd.edu)
-
+This project was developed under the **DATA605 Spring 2025** course, using official Causify.AI project templates. Special thanks to reviewers for their detailed feedback and improvements.
