@@ -221,7 +221,7 @@ class AlertTask(luigi.Task):
 
 
 class StoreToS3Task(luigi.Task):
-    date = luigi.DateParameter(default=datetime.utcnow().date())
+    date = luigi.DateParameter(default=datetime.now(timezone.utc).date())
 
     def requires(self):
         return AnalyzeDataTask(self.date)
