@@ -48,6 +48,8 @@ WORKDIR /data
 
 # Expose Jupyter port
 EXPOSE 8888
+EXPOSE 8501
+
 
 # Default command to launch Jupyter
 CMD ["jupyter-notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
