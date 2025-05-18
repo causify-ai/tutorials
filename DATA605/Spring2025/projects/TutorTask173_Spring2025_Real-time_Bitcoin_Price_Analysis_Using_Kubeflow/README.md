@@ -41,24 +41,17 @@ TutorTask173_Spring2025_Real-time_Bitcoin_Price_Analysis_Using_Kubeflow/
 │   ├── bitcoin.API.md  # documentation of API usage
 │   └── bitcoin.example.md  # documentation for example
 │
-├── scripts/                 
+├── scripts and docker fetcher/                 
 │   ├── fetch_bitcoin_price.py     # main fetch script used by container
 │   ├── bitcoin_pipeline.py        # pipeline definition for Kubeflow
 │   ├── compile_pipeline.py        # compiles to YAML pipeline
 │   ├── csv_converter.py.py        # data from db to CSV + plot
-│   
-│
-├── utils/                   
-│   └── bitcoin_utils.py           # helper functions
-│
-├── docker/                  
+│   ├── bitcoin_utils.py           # helper functions
 │   ├── Dockerfile                 # Docker image spec
-│   └── docker-compose.yml         # setup for DB + fetcher
-│ 
-│                    
+│   ├── docker-compose.yml         # setup for DB + fetcher
+│   ├── bitcoin_pipeline.yaml      # generated yaml file to upload to Kubeflow UI
 │   
-│── bitcoin.example.ipynb
-├── bitcoin_pipeline.yaml          # generated yaml file to upload to Kubeflow UI
+│── bitcoin.example.ipynb        
 └── README.md
 
 
