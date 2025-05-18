@@ -1,12 +1,12 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+set -e
 
-GIT_ROOT=$(git rev-parse --show-toplevel)
-source $GIT_ROOT/docker_common/utils.sh
+# Load version and image name
+VERSION=$(bash version.sh)            # ← make sure this actually echoes something—
+IMAGE=$(bash docker_name.sh)
 
-REPO_NAME=umd_data605
-IMAGE_NAME=umd_data605_template
-
-# Build container.
-export DOCKER_BUILDKIT=1
-#export DOCKER_BUILDKIT=0
-build_container_image
+# Build with both a version tag and “latest”
+docker build \
+  -t "${IMAGE}:${VERSION}" \
+  -t "${IMAGE}:latest" \
+  .

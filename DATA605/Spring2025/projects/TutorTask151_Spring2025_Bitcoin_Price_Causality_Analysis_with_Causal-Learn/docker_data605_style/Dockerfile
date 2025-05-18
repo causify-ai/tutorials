@@ -1,55 +1,37 @@
-FROM ubuntu:20.04
-ENV DEBIAN_FRONTEND=noninteractive
+# Start from Jupyter's Python notebook base
+FROM jupyter/base-notebook:python-3.10.8
 
-RUN apt-get -y update
-RUN apt-get -y upgrade
+# Switch to root to install OS deps
+USER root
 
-# Install system utilities.
-RUN apt install -y --no-install-recommends \
-    sudo \
-    curl \
-    systemctl \
-    gnupg \
-    git \
-    vim
+# 1. Install system packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git build-essential sudo \
+  && rm -rf /var/lib/apt/lists/*
 
-# Install Python.
-RUN apt install -y --no-install-recommends \
-    python3 \
-    python3-pip \
-    python3-dev
+# 2. Allow passwordless sudo for jovyan
+COPY etc_sudoers /etc/sudoers.d/jovyan
+RUN chmod 0440 /etc/sudoers.d/jovyan
 
-RUN python3 -m pip install --upgrade pip
-    
-# Install Python packages.
-# There is a bug:
-#   File "/opt/homebrew/lib/python3.10/site-packages/tornado/iostream.py", line 182, in advance
-#   assert 0 < size <= self._size
-# for tornado==6.2 and jupyter-client==8.0.2.
-# https://discourse.jupyter.org/t/jupyter-notebook-zmq-message-arrived-on-closed-channel-error/17869/10
-RUN pip3 install \
-    ipython \
-    tornado==6.1 \
-    jupyter-client==7.3.2 \
-    jupyter-contrib-core \
-    jupyter-contrib-nbextensions \
-    psycopg2-binary \
-    yapf
+# 3. Install optional Jupyter extensions
+COPY install_jupyter_extensions.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/install_jupyter_extensions.sh \
+  && /usr/local/bin/install_jupyter_extensions.sh
 
-RUN mkdir /install
+# 4. Install Python libraries
+RUN pip install --no-cache-dir \
+    causallearn statsmodels seaborn yfinance networkx matplotlib numpy pandas
 
-# Install Jupyter extensions.
-ADD install_jupyter_extensions.sh /install
-RUN /install/install_jupyter_extensions.sh
+# 5. Copy run script and set permissions
+COPY run_jupyter.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/run_jupyter.sh
 
-# Config.
-ADD etc_sudoers /install/
-COPY etc_sudoers /etc/sudoers
-COPY bashrc /root/.bashrc
+# 6. Copy in project code and notebooks
+WORKDIR /home/jovyan/project
+COPY . /home/jovyan/project
 
-# Report package versions.
-ADD version.sh /install/
-RUN /install/version.sh 2>&1 | tee version.log
-
-# Jupyter.
+# 7. Expose Jupyter port
 EXPOSE 8888
+
+# 8. Launch via your script
+ENTRYPOINT ["bash","/usr/local/bin/run_jupyter.sh"]

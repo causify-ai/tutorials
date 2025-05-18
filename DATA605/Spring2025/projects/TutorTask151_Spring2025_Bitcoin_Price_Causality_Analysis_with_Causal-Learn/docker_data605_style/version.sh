@@ -1,11 +1,6 @@
-#!/bin/bash
-echo "# Pytho3"
-python3 --version
-echo "# pip3"
-pip3 --version
-echo "# jupyter"
-jupyter --version
-echo "# Python packages"
-pip3 list
-echo "# mongo"
-mongod --version
+#!/usr/bin/env bash
+# Defines the project version tag
+
+VERSION=1.0.0
+
+echo "$VERSION"

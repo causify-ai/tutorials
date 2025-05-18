@@ -1,9 +1,11 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+set -e
 
-GIT_ROOT=$(git rev-parse --show-toplevel)
-source $GIT_ROOT/tutorial_github_simple/docker_common/utils.sh
+# Run a shell inside the built image, mounting your project for live edits
+VERSION=$(bash version.sh)
+IMAGE=$(bash docker_name.sh)
 
-REPO_NAME=umd_data605
-IMAGE_NAME=umd_data605_template
-
-exec_container
+docker run --rm -it \
+  -v "$(pwd)":/home/jovyan/project \
+  -p 8888:8888 \
+  "${IMAGE}:${VERSION}" bash

@@ -1,3 +1,6 @@
-REPO_NAME=umd_data605
-IMAGE_NAME=umd_data605_template
-FULL_IMAGE_NAME=$REPO_NAME/$IMAGE_NAME
+#!/usr/bin/env bash
+# Defines the Docker image repository/name
+
+IMAGE_NAME="causal-learn-env"
+
+echo "$IMAGE_NAME"
