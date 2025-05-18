@@ -1,0 +1,26 @@
+# version: '3.8'
+
+services:
+  bitcoin-sentiment-notebook:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bitcoin-sentiment-notebook
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./src:/app/src
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./Advanced_BitCoin_Sentiment.ipynb:/app/Advanced_BitCoin_Sentiment.ipynb
+      - ./notebook_config:/root/.jupyter
+    environment:
+      - PYTHONPATH=/app
+      - JUPYTER_ENABLE_LAB=yes
+      - USE_CACHED_DATA=true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3 
