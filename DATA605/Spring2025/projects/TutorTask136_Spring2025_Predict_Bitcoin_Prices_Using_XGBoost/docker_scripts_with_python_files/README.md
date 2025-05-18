@@ -104,8 +104,6 @@ Key insights:
 
 ## 9. Author
 
-## 9. Author
-
 **maruti kameshwar**  
 Graduate Student, University of Maryland  
 
