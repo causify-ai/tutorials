@@ -1,11 +1,15 @@
 import pandas as pd
 import s3fs
+import os
 from bitcoin_utils import fetch_bitcoin_data
 
-# Set your API key
-api_key = "CG-5pibUvyXCBs3EpUFkQg3nDoX"
+# Set API key from environment variable
+api_key = os.getenv("COINGECKO_API_KEY")
 
-# Fetch data using utility function
+if not api_key:
+    raise ValueError("COINGECKO_API_KEY not set in environment variables.")
+
+# Fetch data
 df = fetch_bitcoin_data(api_key=api_key, days=365)
 
 # Save locally
