@@ -1,0 +1,43 @@
+# version: '3.8'
+
+services:
+  bitcoin-sentiment-notebook:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bitcoin-sentiment-notebook
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./src:/app/src:delegated
+      - ./data:/app/data:delegated
+      - ./logs:/app/logs:delegated
+      - ./Advanced_BitCoin_Sentiment.ipynb:/app/Advanced_BitCoin_Sentiment.ipynb:delegated
+      - ./notebook_config:/root/.jupyter:delegated
+      - ./requirements.txt:/app/requirements.txt:ro
+    environment:
+      - PYTHONPATH=/app
+      - JUPYTER_ENABLE_LAB=yes
+      - USE_CACHED_DATA=true
+      - NEWS_API_KEY=${NEWS_API_KEY}
+    restart: unless-stopped
+    networks:
+      - bitcoin-sentiment-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 2G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  bitcoin-sentiment-network:
+    driver: bridge 

@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+pip-log.txt
+.coverage
+.coverage.*
+.pytest_cache/
+.ipynb_checkpoints
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Logs
+logs/
+*.log
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Replit specific
+.replit
+.breakpoints
+replit.nix
+
+# Editor configs
+.vscode/
+.idea/

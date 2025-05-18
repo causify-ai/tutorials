@@ -1,0 +1,4 @@
+setuptools==69.0.3
+wheel==0.42.0
+pip==23.3.2
+python-dotenv==1.0.0 
