@@ -2,9 +2,16 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from statsmodels.tsa.arima.model import ARIMA
 from bitcoin_utils import fetch_bitcoin_data
+import os
+
+# Set API key from environment variable
+api_key = os.getenv("COINGECKO_API_KEY")
+
+if not api_key:
+    raise ValueError("COINGECKO_API_KEY not set in environment variables.")
 
 # Fetch and prepare data
-df = fetch_bitcoin_data(api_key="CG-5pibUvyXCBs3EpUFkQg3nDoX", days=365)
+df = fetch_bitcoin_data(api_key=api_key, days=365)
 df["date"] = pd.to_datetime(df["date"])
 df.set_index("date", inplace=True)
 
