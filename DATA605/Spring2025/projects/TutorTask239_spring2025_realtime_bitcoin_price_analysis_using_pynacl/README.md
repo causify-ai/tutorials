@@ -41,15 +41,15 @@ A modular and secure Python-based platform to ingest, encrypt, store, and analyz
 
 ## 🧩 Project Structure
 bitcoin_analysis_project/
-├── crypto/                 # Encryption utilities
-│   └── encrypt.py
-├── docker_data605_style/  # Docker deployment scripts
-├── static/                # Assets (e.g., plots)
-├── main.py                # Orchestrates ingestion + storage
-├── generate_keys.py       # Generates RSA keys
-├── bitcoin_analysis.db    # Encrypted price data (SQLite)
-├── requirements.txt       # Python dependencies
-└── README.md
+├── crypto/                  # Encryption utilities
+│   └── encrypt.py           # Functions for encrypting and decrypting data
+├── docker_data605_style/    # Docker setup and deployment scripts
+├── static/                  # Static assets (e.g., generated plots)
+├── main.py                  # Main script to orchestrate data ingestion and storage
+├── generate_keys.py         # Script to generate RSA key pairs
+├── bitcoin_analysis.db      # SQLite database containing encrypted Bitcoin price data
+├── requirements.txt         # List of Python dependencies
+└── README.md                # Project documentation and usage instructions
 
 ---
 
