@@ -1,4 +1,5 @@
 # 📈 Bitcoin Real-Time Analysis PyNaCl
+# By Dhanush Vasa (121227645)
 
 A modular and secure Python-based platform to ingest, encrypt, store, and analyze real-time Bitcoin price data using Binance APIs. Built with extensibility in mind, it supports encrypted storage, hourly forecasting, and visual insights via dashboards.
 
