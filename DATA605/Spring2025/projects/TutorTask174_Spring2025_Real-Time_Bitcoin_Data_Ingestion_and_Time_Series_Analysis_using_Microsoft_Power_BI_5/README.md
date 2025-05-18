@@ -62,8 +62,17 @@ Fetches new data every 60s into bitcoin_price_data.csv.
    python - <<EOF
    from bitcoin_utils import transform_bitcoin_data
    transform_bitcoin_data(
-  input_file='bitcoin_price_data.csv',
-  output_file='bitcoin_price_transformed_full.csv'
+   input_file='bitcoin_price_data.csv',
+   output_file='bitcoin_price_transformed_full.csv'
    )
    EOF
+
+5. **Generate forecasts & decomposition**
+   ```bash
+   python bitcoin_example.py
+
+6. **Preview JSON payload (dry-run)**
+   In push_to_powerbi.py, set DRY_RUN = True.
+   ```bash
+   python push_to_powerbi.py
 
