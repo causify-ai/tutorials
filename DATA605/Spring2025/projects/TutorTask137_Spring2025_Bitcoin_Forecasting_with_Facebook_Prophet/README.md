@@ -214,7 +214,7 @@ After identifying these key inflection points through trend and volatility analy
 
 ## Modeling
 
-###  *Data Preparation & Feature Engineering (In-Depth)*
+###  *Data Preparation & Feature Engineering *
 
 The modeling process begins with meticulous data preparation to ensure the time series data is clean, continuous, and properly structured for analysis.
 
@@ -251,7 +251,7 @@ The Prophet model was carefully tuned to capture the non-linear and highly volat
   * *Yearly Seasonality*: Enabled to model yearly cycles observed in the crypto market.
   * *Weekly Seasonality*: Disabled after EDA confirmed weekly trends had minimal influence.
   * *Monthly Seasonality*: Manually added with a Fourier order of 5 to capture known monthly trends, especially price increases between January and April.
-  * *Seasonality Mode: Set to **Multiplicative* to handle the exponential growth patterns seen in Bitcoin.
+  * *Seasonality Mode*: Set to **Multiplicative* to handle the exponential growth patterns seen in Bitcoin.
 
 * *Changepoint Detection*:
 
