@@ -3,30 +3,44 @@
 This document explains how the structured output from the API module was used to generate meaningful time series features and predict Bitcoin price movement using natural language and sentiment signals. The analysis focuses on converting unstructured textual summaries into quantifiable signals and aligning them with actual market data.
 This project was developed as part of the DATA605 course at the University of Maryland. It demonstrates a full-stack data science pipeline that incorporates real-time data ingestion, natural language processing using HuggingFace Transformers, sentiment analysis, topic modeling via TF-IDF, and supervised machine learning with XGBoost to model and predict financial trends. It concludes with a deployable Streamlit dashboard to explore news-driven Bitcoin price predictions interactively.
 
----
-# Table of Contents     
+# Real-Time Bitcoin News Summarization and Trend Prediction
 
-Introduction
+##  Table of Contents
 
-Dataset Overview
+* [Introduction](#introduction)
+* [Table of Contents](#table-of-contents)
+* [Project Structure](#project-structure)
+* [Technology Stack](#technology-stack)
+* [Setup Instructions](#setup-instructions)
 
-Step-by-Step Explanation
+  * [1. Clone the repo](#1-clone-the-repo)
+  * [2. Create your .env file](#2-create-your-env-file)
+  * [3. Choose Docker Setup](#3-choose-docker-setup)
+* [How It Works](#how-it-works)
 
-1. Preprocessing Sentiment
+  * [Phase 1 – API Layer](#phase-1--api-layer)
+  * [Phase 2 – Modeling Layer](#phase-2--modeling-layer)
+* [Dataset Overview](#dataset-overview)
+* [1. Preprocessing Sentiment](#1-preprocessing-sentiment)
+* [2. Topic Feature Extraction with TF-IDF](#2-topic-feature-extraction-with-tf-idf)
+* [3. Bitcoin Price Data](#3-bitcoin-price-data)
+* [4. Target Variable (Next-Day Price Prediction)](#4-target-variable-next-day-price-prediction)
+* [Explanation of Utility Files](#explanation-of-utility-files)
+* [Example Outputs](#example-outputs)
+* [Sample Commands](#sample-commands)
+* [Deployment with Streamlit](#deployment-with-streamlit)
+* [Key Learnings](#key-learnings)
+* [Contact & Contributors](#contact--contributors)
+* [References](#references)
 
-2. Topic Feature Extraction with TF-IDF
+----
 
-3. Bitcoin Price Data
+# Introduction
 
-4. Target Variable (Next-Day Price Prediction)
+This document explains how the structured output from the API module was used to generate meaningful time series features and predict Bitcoin price movement using natural language and sentiment signals...
 
-Result Summary
+\[...remaining content unchanged from your original post...]
 
-Evaluation Metrics
-
-Deployment with Streamlit
-
-Key Insights
 
 ## Project Structure
 
@@ -134,6 +148,40 @@ We then joined this with the news data using the date field.
 To train a model that can forecast Bitcoin price trends, we shifted the price column by one day to create a "target" — the value we want the model to predict.
 This approach assumes that today’s news affects tomorrow’s price.
 
+# Explanation of Utility Files
+1. bitcoin_utils.py
+
+    Your main utility module that encapsulates all reusable logic for:
+    Fetching, summarizing, and analyzing news articles
+    Preprocessing text data for modeling
+    Structuring sentiment and summary information
+
+Key Functions:
+    fetch_article_for_day(...): Gets a single Bitcoin-related article for a specific date via NewsAPI
+    summarize_article(text): Uses HuggingFace’s facebook/bart-large-cnn to summarize articles
+    analyze_sentiment(text): Classifies sentiment using HuggingFace’s sentiment pipeline
+    get_100_summarized_articles(api_key): Main function that combines all steps to collect, summarize, and label 100 articles from the past 30 days
+
+     Purpose: Keeps  logic modular and notebooks clean by moving processing out of the notebook and into functions.
+
+2. streamlit_app.py
+
+     A lightweight Python script that launches your Streamlit dashboard.
+
+🔧 Key Elements:
+
+    Loads the CSV and model using pandas and joblib/pickle
+    Displays the dataset using st.dataframe() or st.table()
+    Uses matplotlib and seaborn to show:
+        Daily sentiment trend chart
+        Actual vs Predicted Bitcoin price chart
+     Purpose: Deploy a user-facing app that allows dynamic interaction with your NLP and forecasting pipeline.
+
+3. .env
+     A hidden environment file (never committed!) that stores sensitive keys like:
+    NEWSAPI_KEY=your_actual_newsapi_key_here
+    Purpose: Keeps secrets like API keys separate from code, making your project safe to share and deploy.
+
 
 
 ## Example Outputs
@@ -159,6 +207,7 @@ Lets users explore article titles, summaries, and sentiment by date
 Visualizes daily average sentiment scores over time
 Presents predicted vs actual Bitcoin prices
 The app reads from the structured CSV file and loads the trained model to show predictions.
+https://btc-summarization-hugging-face.streamlit.app/-Link to streamlit app
 
 ## Key Learnings
 
