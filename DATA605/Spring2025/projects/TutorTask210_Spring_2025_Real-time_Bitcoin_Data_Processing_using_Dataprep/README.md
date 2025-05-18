@@ -1,8 +1,5 @@
 # Real-time Bitcoin Data Processing using Dataprep
 
-![Bitcoin Price Analysis](path_to_your_visualization.png)
-
-![Bitcoin Price Time Series Analysis](1.png)
 
 ## Table of Contents
 - [Project Overview](#project-overview)
@@ -137,16 +134,6 @@ The data processing pipeline is designed to handle various data quality issues a
 #### 3. Time Series Analysis
 The project implements comprehensive time series analysis to understand Bitcoin price patterns:
 
-- **Stationarity Testing**
-  ```python
-  def test_stationarity(timeseries):
-      # Perform Augmented Dickey-Fuller test
-      result = adfuller(timeseries)
-      print('ADF Statistic:', result[0])
-      print('p-value:', result[1])
-      return result[1] < 0.05
-  ```
-
 - **Seasonality Analysis**
   - Decomposition of time series
   - Seasonal pattern identification
@@ -154,40 +141,10 @@ The project implements comprehensive time series analysis to understand Bitcoin 
   - Cyclical component analysis
 
 #### 4. ARIMA Modeling
-The project implements both manual and automatic ARIMA modeling approaches:
-
-- **Manual ARIMA**
-  ```python
-  def train_manual_arima(data, order):
-      model = ARIMA(data, order=order)
-      results = model.fit()
-      return results
-  ```
-
-- **Auto ARIMA**
-  ```python
-  def run_auto_arima(data):
-      model = auto_arima(data,
-                        start_p=0, start_q=0,
-                        max_p=5, max_q=5,
-                        seasonal=False,
-                        d=None, trace=True,
-                        error_action='ignore',
-                        suppress_warnings=True)
-      return model
-  ```
+The project implements both manual and automatic ARIMA modeling 
 
 #### 5. Performance Evaluation
 Comprehensive evaluation metrics are implemented to assess model performance:
-
-- **Error Metrics**
-  ```python
-  def calculate_metrics(actual, predicted):
-      rmse = np.sqrt(mean_squared_error(actual, predicted))
-      mae = mean_absolute_error(actual, predicted)
-      mape = np.mean(np.abs((actual - predicted) / actual)) * 100
-      return {'RMSE': rmse, 'MAE': mae, 'MAPE': mape}
-  ```
 
 ### Project Structure Details
 
@@ -320,16 +277,16 @@ sequenceDiagram
 ## Features
 
 ### 1. Data Collection and Processing
-Our system implements a sophisticated real-time data collection pipeline that ensures reliable and continuous Bitcoin price data acquisition. The data collection process is built on a robust API integration framework that handles real-time price updates, trading volumes, and market metrics. The system features configurable collection intervals ranging from 1-minute to daily data points, with built-in rate limiting and automatic retry mechanisms to ensure data completeness. The processing pipeline incorporates advanced data cleaning techniques, including outlier detection using IQR methodology, missing value interpolation, and timestamp standardization. This ensures that the data fed into our analysis pipeline is of the highest quality and consistency.
+The system implements a sophisticated real-time data collection pipeline that ensures reliable and continuous Bitcoin price data acquisition. The data collection process is built on a robust API integration framework that handles real-time price updates, trading volumes, and market metrics. The system features configurable collection intervals ranging from 1-minute to daily data points, with built-in rate limiting and automatic retry mechanisms to ensure data completeness. The processing pipeline incorporates advanced data cleaning techniques, including outlier detection using IQR methodology, missing value interpolation, and timestamp standardization. 
 
 ### 2. Exploratory Data Analysis
 The project includes a comprehensive exploratory data analysis framework that provides deep insights into Bitcoin price patterns and market behavior. Our time series analysis tools enable detailed examination of price trends, seasonal patterns, and market cycles. The statistical analysis component offers robust tools for distribution analysis, correlation studies, and volatility assessment. The system automatically generates descriptive statistics, performs stationarity testing using the Augmented Dickey-Fuller test, and conducts thorough seasonality analysis through time series decomposition. These analyses are presented through interactive visualizations that help identify key market patterns and potential trading opportunities.
 
-![Bitcoin Price Trend Analysis](2.png)
 
 ### 3. Time Series Modeling
-Our time series modeling implementation offers both manual and automated approaches to ARIMA modeling, providing flexibility and accuracy in price forecasting. The manual ARIMA implementation allows for precise control over model parameters, enabling fine-tuned predictions based on specific market conditions. The auto-ARIMA component automatically identifies optimal model parameters through systematic grid search and cross-validation. The modeling process includes comprehensive parameter tuning, model validation, and performance benchmarking. This dual approach ensures that we can capture both short-term price movements and long-term market trends with high accuracy.
+Our time series modeling implementation offers both manual and automated approaches to ARIMA modeling, providing flexibility and accuracy in price forecasting. The manual ARIMA implementation allows for precise control over model parameters, enabling fine-tuned predictions based on specific market conditions. The auto-ARIMA component automatically identifies optimal model parameters through systematic grid search and cross-validation. This dual approach ensures that we can capture both short-term price movements and long-term market trends with high accuracy.
 
+Comparison of Arima Vs Auto Arima 
 ![Bitcoin Price Forecasting Results](3.png)
 
 ### 4. Forecasting and Evaluation
@@ -339,7 +296,7 @@ The forecasting system provides sophisticated price prediction capabilities with
 The project features an advanced visualization system that transforms complex data and model outputs into intuitive, interactive displays. The visualization framework includes real-time price charts, forecast plots, and performance metric dashboards. Users can interact with the visualizations to explore different time periods, adjust forecast parameters, and analyze model performance. The system also generates comprehensive reports that include key findings, statistical analyses, and forecast results. These visualizations and reports are designed to be both informative for technical users and accessible for those new to cryptocurrency analysis.
 
 ### 6. System Integration and Deployment
-Our implementation includes a complete containerization solution using Docker, making the system easy to deploy and scale. The containerized environment includes all necessary dependencies and configurations, ensuring consistent performance across different deployment scenarios. The system can be deployed either locally or in cloud environments, with built-in support for both development and production configurations. The deployment process is automated through shell scripts that handle container building, dependency installation, and service initialization. This makes the system accessible to users with varying levels of technical expertise.
+Our implementation includes a complete containerization solution using Docker, making the system easy to deploy and scale. The containerized environment includes all necessary dependencies and configurations, ensuring consistent performance across different deployment scenarios. The system can be deployed either locally or in cloud environments, with built-in support for both development and production configurations. The deployment process is automated through shell scripts that handle container building, dependency installation, and service initialization. This makes the system accessible to users with varying levels of technical expertise. 
 
 ## Technical Architecture
 
