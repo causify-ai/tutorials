@@ -1,0 +1,19 @@
+Bitcoin-S3fs-TimeSeries/
+├── app.py                     # Flask web server and routes
+├── config.py                  # Config for AWS and paths
+├── Dockerfile                 # Container setup
+├── requirements.txt           # All dependencies
+├── ingestion/fetch.py         # API data fetching
+├── storage/s3_handler.py      # Read/write S3 utilities using s3fs
+├── processing/
+│   ├── preprocess.py          # Load and clean data
+│   └── analysis.py            # Trend, MA, anomaly detection
+├── forecasting/prophet_model.py # Prophet forecasting
+├── visualization/
+│   ├── plots.py               # Static visualizations
+│   └── interactive.py         # (planned) dynamic plots with Plotly
+├── templates/index.html       # Web dashboard frontend
+├── static/styles.css          # Optional UI styling
+├── notebooks/exploration.ipynb # Jupyter EDA
+├── docs/Bitcoin.API.md        # API + module documentation
+├── docs/Bitcoin.example.md    # Example usage

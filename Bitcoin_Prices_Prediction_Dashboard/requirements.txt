@@ -1,0 +1,21 @@
+# --- Web Framework ---
+flask
+
+# --- Cloud Storage ---
+s3fs>=2023.6.0
+
+# --- Data Processing ---
+pandas>=1.5
+requests>=2.28
+
+# --- Time Series & Forecasting ---
+statsmodels>=0.13
+prophet>=1.1
+
+# --- Visualization ---
+matplotlib>=3.5
+seaborn>=0.11
+plotly>=5.0
+
+# --- Optional for Deployment ---
+gunicorn          # (Optional) For production WSGI server if deploying on Render/Heroku

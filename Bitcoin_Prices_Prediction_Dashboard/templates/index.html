@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Bitcoin Intelligence Dashboard</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    .tab-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+      gap: 10px;
+    }
+    .tab-btn {
+      background: var(--primary);
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .tab-btn:hover {
+      background: var(--accent);
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+</head>
+
+<body class="dark-mode">
+  <div class="container">
+    {% if error %}<div class="error-banner">⚠️ {{ error }}</div>{% endif %}
+
+    <div class="header-bar">
+      <div class="left">
+        <span class="material-icons" style="font-size:32px;color:var(--primary);">insights</span>
+        <h1>Bitcoin Intelligence Dashboard</h1>
+      </div>
+      <div class="right">
+        <button id="refreshBtn" onclick="refreshData()">
+          <span class="material-icons">sync</span> Refresh
+        </button>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 10px; font-size: 14px; color: gray; display: flex; justify-content: space-between;">
+      <span><span class="material-icons" style="font-size: 16px; vertical-align: middle;">schedule</span> Last updated: <strong id="lastUpdated"></strong></span>
+      <span><span class="material-icons" style="font-size: 16px; vertical-align: middle;">access_time</span> Time now: <strong id="clock"></strong></span>
+    </div>
+
+    <div class="tab-container">
+      <button class="tab-btn" onclick="showTab('dashboard')">📊 Dashboard</button>
+      <button class="tab-btn" onclick="showTab('forecast')">🔮 Forecast</button>
+    </div>
+
+    <div id="dashboard" class="tab-content active">
+      <div class="plot-grid">
+        <section class="plot-section animate"><h2><span class="material-icons">show_chart</span> BTC Price Over Time</h2><div class="plotly-container">{{ btc_plot | safe }}</div></section>
+        <section class="plot-section animate"><h2><span class="material-icons">timeline</span> Moving Average (SMA)</h2><div class="plotly-container">{{ ma_plot | safe }}</div></section>
+        <section class="plot-section animate"><h2><span class="material-icons">warning</span> Anomaly Detection</h2><div class="plotly-container">{{ anomaly_plot | safe }}</div></section>
+        <section class="plot-section animate"><h2><span class="material-icons">leaderboard</span> MA 7 vs MA 30</h2><div class="plotly-container">{{ ma_comparison_plot | safe }}</div></section>
+        <section class="plot-section animate"><h2><span class="material-icons">equalizer</span> Exponential Moving Averages</h2><div class="plotly-container">{{ ema_plot | safe }}</div></section>
+        <section class="plot-section animate"><h2><span class="material-icons">show_chart</span> MACD and Signal Line</h2><div class="plotly-container">{{ macd_plot | safe }}</div></section>
+        <section class="plot-section animate"><h2><span class="material-icons">trending_down</span> Hourly Returns</h2><div class="plotly-container">{{ returns_plot | safe }}</div></section>
+        <section class="plot-section animate"><h2><span class="material-icons">timeline</span> Cumulative Returns</h2><div class="plotly-container">{{ cumulative_plot | safe }}</div></section>
+        <section class="plot-section animate"><h2><span class="material-icons">swap_vert</span> Price Change per Hour</h2><div class="plotly-container">{{ price_change_plot | safe }}</div></section>
+        <section class="plot-section animate"><h2><span class="material-icons">trending_up</span> Volatility (10-Hour Std Dev)</h2><div class="plotly-container">{{ volatility_plot | safe }}</div></section>
+      </div>
+    </div>
+
+    <div id="forecast" class="tab-content">
+      <section class="plot-section animate">
+        <h2><span class="material-icons">table_view</span> 24hr Forecast Table</h2>
+        <div class="table-container">{{ forecast_table | safe }}</div>
+      </section>
+
+      <section class="plot-section animate">
+        <h2><span class="material-icons">stacked_line_chart</span> Interactive Forecast Plot</h2>
+        <div class="plotly-container">{{ forecast_plot | safe }}</div>
+      </section>
+    </div>
+
+    <footer style="text-align:center; margin-top:40px; color:gray; font-size:14px;">
+      🚀 Built by <strong>Karthik Vakada</strong> • 
+      <a href="https://github.com/kvakada" target="_blank" style="color:var(--primary); text-decoration:none;">GitHub</a>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast">✅ Data updated successfully</div>
+  <div id="spinner" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:#fff8fcb0; backdrop-filter:blur(4px); z-index:9999; justify-content:center; align-items:center;">
+    <div style="font-size: 18px; font-weight: 500; display: flex; align-items: center; gap: 10px;">
+      <span class="material-icons">hourglass_top</span> Updating data...
+    </div>
+  </div>
+
+  <script>
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    function refreshData() {
+      const btn = document.getElementById("refreshBtn");
+      const toast = document.getElementById("toast");
+      const spinner = document.getElementById("spinner");
+
+      btn.innerHTML = '<span class="material-icons">hourglass_top</span> Fetching...';
+      btn.disabled = true;
+      spinner.style.display = "flex";
+
+      fetch('/api/refresh')
+        .then(res => res.json())
+        .then(() => {
+          toast.classList.add("show");
+          setTimeout(() => {
+            toast.classList.remove("show");
+            location.reload();
+          }, 1500);
+        })
+        .catch(err => {
+          alert("❌ Fetch failed: " + err);
+          btn.disabled = false;
+          spinner.style.display = "none";
+          btn.innerHTML = '<span class="material-icons">sync</span> Refresh';
+        });
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle("dark-mode");
+    }
+
+    function startVoice() {
+      if (!('webkitSpeechRecognition' in window)) {
+        alert("Your browser does not support Speech Recognition");
+        return;
+      }
+      const recognition = new webkitSpeechRecognition();
+      recognition.continuous = false;
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+
+      recognition.onstart = () => console.log("🎙️ Voice listening...");
+      recognition.onerror = (e) => console.error("Voice error:", e);
+
+      recognition.onresult = (e) => {
+        const command = e.results[0][0].transcript.toLowerCase();
+        if (command.includes("refresh")) refreshData();
+        else if (command.includes("dark")) toggleTheme();
+        else alert("Unrecognized command: " + command);
+      };
+      recognition.start();
+    }
+
+    setInterval(() => {
+      const timeNow = new Date().toLocaleTimeString();
+      document.getElementById("clock").textContent = timeNow;
+    }, 1000);
+
+    window.onload = () => {
+      const now = new Date();
+      document.getElementById("lastUpdated").textContent = now.toLocaleString();
+      document.querySelectorAll('.animate').forEach(el => {
+        el.style.opacity = 0;
+        el.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          el.style.transition = 'all 0.6s ease';
+          el.style.opacity = 1;
+          el.style.transform = 'translateY(0)';
+        }, 100);
+      });
+    }
+  </script>
+</body>
+</html>
