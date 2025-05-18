@@ -234,18 +234,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 👥 Authors
 
-- Your Name - Initial work
-
-## 🙏 Acknowledgments
-
-- PyMC3 development team
-- Bitcoin data providers
-- Open source community
-
-## 📞 Support
-
-For support and questions, please open an issue in the GitHub repository.
-
----
+- Madhumitha Rajagopal
 
 **Note**: This project is under active development. Features and documentation may be updated frequently. 
