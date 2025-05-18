@@ -46,12 +46,12 @@ Model trained using an 80/20 train-test split and tested via both static and rea
 ## 5. Project Structure
 
 ```
-bitcoin_price_xgboost/
+TutorTask136_Spring2025_Predict_Bitcoin_Prices_Using_XGBoost/
 ├── bitcoin.example.ipynb            # Main notebook for full analysis
 ├── bitcoin.API.ipynb                # Data collection from APIs
 ├── bitcoin_utils.py                 # Feature engineering and helper functions
 ├── BTC-USD-Historical.xlsx          # Yahoo Finance data dump
-└── docker_data605_style/
+└── docker_scripts_with_python_files/
     ├── docker_build.sh              # Script to build Docker container
     ├── docker_jupyter.sh            # Script to run Jupyter inside container
     └── Dockerfile                   # Docker build configuration
