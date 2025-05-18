@@ -72,7 +72,16 @@ Fetches new data every 60s into bitcoin_price_data.csv.
    python bitcoin_example.py
 
 6. **Preview JSON payload (dry-run)**
+   
    In push_to_powerbi.py, set DRY_RUN = True.
    ```bash
    python push_to_powerbi.py
 
+7. **Push to Power BI**
+
+    Set DRY_RUN = False in push_to_powerbi.py.
+
+   ```bash
+   python push_to_powerbi.py
+   
+You should see "Pushed X rows to Power BI."
