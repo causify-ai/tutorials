@@ -1,20 +1,21 @@
 # Real-time Bitcoin Price Analysis Using PyMC3
 
-## 📊 Project Overview
+## Project Overview
 
-This project implements a sophisticated real-time Bitcoin price analysis system using PyMC3 for Bayesian inference and statistical modeling. The system fetches live Bitcoin price data, performs advanced statistical analysis, and provides insights through interactive visualizations.
+This project presents a real-time Bitcoin price analysis system utilizing PyMC3 for Bayesian statistical modeling. The system continuously fetches live Bitcoin price data, processes it, applies probabilistic time series models, and provides analytical insights through comprehensive visualizations. The aim is to enable uncertainty-aware forecasting in volatile financial markets.
 
-## 🎯 Key Features
+## Key Features
 
-- Real-time Bitcoin price data fetching and processing
-- Bayesian statistical modeling using PyMC3
-- Time series analysis and price prediction
-- Interactive data visualization dashboard
-- Automated price alerts and notifications
-- Historical data analysis and pattern recognition
-- Model performance evaluation and diagnostics
+- Real-time Bitcoin price data acquisition and transformation
+- Bayesian modeling using PyMC3 and MCMC inference
+- Time series analysis and probabilistic forecasting
+- Interactive visualization and model diagnostics
+- Historical pattern recognition and automated price alert system
+- Integrated testing and evaluation for model performance
 
-## 🏗️ Project Structure
+
+
+## Project Structure
 
 ```
 📦 bitcoin-price-analysis
@@ -50,7 +51,9 @@ This project implements a sophisticated real-time Bitcoin price analysis system 
  ┗ 📜 README.md               # Project documentation
 ```
 
-## 🔄 System Architecture
+## System Architecture
+
+The system consists of real-time data ingestion modules, Bayesian modeling pipelines, and visualization layers. It supports both WebSocket and REST-based API connections for fetching market data and integrates real-time updates into the forecasting workflow.
 
 ```mermaid
 graph TB
@@ -94,13 +97,12 @@ sequenceDiagram
     UI->>UI: Update visualizations
 ```
 
-## 🛠️ Technical Implementation
+## Technical Implementation
 
 ### Data Collection
-- Real-time data fetching using cryptocurrency exchange APIs
-- WebSocket connections for live price updates
-- Data validation and cleaning pipelines
-- Efficient data storage and retrieval system
+- Uses public APIs (e.g., CoinGecko) to fetch Bitcoin prices.
+- Real-time updates via WebSocket or scheduled polling.
+- Data is cleaned, validated, and structured into time series using Pandas.
 
 ### Statistical Modeling
 The project employs PyMC3 for sophisticated Bayesian modeling:
@@ -137,7 +139,7 @@ graph LR
     D --> E
 ```
 
-## 📊 Visualization Components
+## Visualization Components
 
 The dashboard includes:
 1. Real-time price charts
@@ -146,9 +148,7 @@ The dashboard includes:
 4. Model diagnostics
 5. Performance metrics
 
-## 🚀 Getting Started
-
-### Prerequisites
+## Prerequisites
 - Python 3.8+
 - PyMC3
 - Pandas
@@ -174,7 +174,7 @@ pip install -r requirements.txt
 2. Add your API keys and configuration settings
 3. Adjust model parameters in `config.py`
 
-## 📈 Usage Examples
+## Usage Examples
 
 ```python
 from src.data.data_fetcher import BitcoinDataFetcher
@@ -194,7 +194,7 @@ results = model.analyze()
 model.plot_results()
 ```
 
-## 🔍 Model Diagnostics
+## Model Diagnostics
 
 The system includes comprehensive model diagnostics:
 - MCMC convergence checks
@@ -202,15 +202,7 @@ The system includes comprehensive model diagnostics:
 - Model comparison metrics
 - Residual analysis
 
-## 📝 Documentation
-
-Detailed documentation is available in the `docs` directory:
-- API Reference
-- Model Specifications
-- Configuration Guide
-- Troubleshooting Guide
-
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run all tests
@@ -220,20 +212,7 @@ pytest
 pytest tests/test_models.py
 ```
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 👥 Authors
+## Authors
 
 - Madhumitha Rajagopal
 
-**Note**: This project is under active development. Features and documentation may be updated frequently. 
