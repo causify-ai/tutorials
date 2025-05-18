@@ -33,7 +33,7 @@ Key components:
 TutorTask173_Spring2025_Real-time_Bitcoin_Price_Analysis_Using_Kubeflow/
 │
 ├── notebook/               
-│   ├── bitcoin.API.ipynb   # documentation of API usage
+│   ├── Bitcoin_TimeSeriesAnalaysis.ipynb # Timeseries analysis on real time fetched data and historical data
 │   └── bitcoin_price_log_from_db.csv # DB entries
 │   
 │
@@ -51,7 +51,8 @@ TutorTask173_Spring2025_Real-time_Bitcoin_Price_Analysis_Using_Kubeflow/
 │   ├── docker-compose.yml         # setup for DB + fetcher
 │   ├── bitcoin_pipeline.yaml      # generated yaml file to upload to Kubeflow UI
 │   
-│── bitcoin.example.ipynb        
+│── bitcoin.example.ipynb     
+│── bitcoin.API.ipynb   # documentation of API usage          
 └── README.md
 
 
