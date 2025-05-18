@@ -31,12 +31,11 @@ bitcoin_project/
 ├── bitcoin_pipeline.py            # pipeline definition for Kubeflow
 ├── compile_pipeline.py            # compiles to YAML pipeline
 ├── csv_converter.py               # CSV + plot
-├── bitcoin_price_log.csv  # backup of DB entries
+├── bitcoin_price_log.csv          # DB entries
 ├── Dockerfile                     # Docker image spec
 ├── docker-compose.yml             # Local setup for DB + fetcher
 ├── timescaledb-deployment.yaml    # TimescaleDB deployment for Kubernetes
 ├── bitcoin.API.md                 # documentation of API usage
-├── XYZ.example.ipynb              # full use-case pipeline
 ├── bitcoin.example.md             # documentation for example
 └── README.md                      # this file
 ```
