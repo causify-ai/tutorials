@@ -7,7 +7,9 @@ This project was developed as part of the DATA605 course at the University of Ma
 # Table of Contents     
 
 Introduction
+
 Dataset Overview
+
 Step-by-Step Explanation
 
 1. Preprocessing Sentiment
@@ -19,8 +21,11 @@ Step-by-Step Explanation
 4. Target Variable (Next-Day Price Prediction)
 
 Result Summary
+
 Evaluation Metrics
+
 Deployment with Streamlit
+
 Key Insights
 
 ## Project Structure
@@ -66,7 +71,7 @@ NEWSAPI_KEY=your_actual_newsapi_key_here
 
 ### 3. Choose Docker Setup
 
-#### Option A: `data605_style` (Recommended for beginners)
+#### Option A: `data605_style` 
 
 ```bash
 ./docker_data605_style/docker_build.sh
