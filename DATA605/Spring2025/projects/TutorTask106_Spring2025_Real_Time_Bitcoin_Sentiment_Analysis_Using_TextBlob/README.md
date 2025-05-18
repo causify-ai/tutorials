@@ -1,95 +1,70 @@
-# Real-Time Bitcoin Sentiment Analysis Using TextBlob
+# Bitcoin Sentiment Pulse
 
-This repository contains the implementation and analysis of a real-time Bitcoin sentiment analysis system using TextBlob for natural language processing. The project demonstrates how to analyze Bitcoin-related news and social media content to gauge market sentiment.
+A comprehensive Bitcoin price forecasting and sentiment analysis platform that combines technical analysis with news sentiment to provide more accurate price predictions.
 
 ## Project Structure
 
-### 1. Notebook Directory
-Contains Jupyter notebooks and Python scripts for Bitcoin sentiment analysis:
+The project is organized into two main components:
 
-#### Main Analysis Notebooks:
-- `BitcoinSentimentAnalysis.ipynb`: Basic sentiment analysis implementation
-- `Advanced_BitCoin_Sentiment.ipynb`: Advanced sentiment analysis with detailed metrics
-- `Bitcoin_Sentiment_Pipeline.ipynb`: Complete sentiment analysis pipeline
-- `BitSense_Analysis.ipynb`: BitSense API implementation and analysis
+### 1. Main Application (`BitcoinSentimentPulse/`)
 
-#### API Implementation:
-- `BitSense.API.py`: Core API implementation
-- `BitSense2.API.ipynb`: Enhanced API version with additional features
-- `BitSense_utils.py`: Utility functions for the BitSense API
+The main application provides:
+- Real-time Bitcoin price forecasting using multiple models (LSTM, Prophet, ARIMA)
+- Interactive visualizations of price predictions and confidence intervals
+- Technical analysis indicators and metrics
+- User-friendly interface for model parameter tuning
+- Historical data analysis and comparison
 
-#### Example and Documentation:
-- `BitSense.example.ipynb`: Example usage of the BitSense API
-- `BitSense.example.md`: Documentation for the example implementation
-- `BitSense.API.md`: API documentation
+Key features:
+- Multiple forecasting models with customizable parameters
+- Integration with sentiment analysis data
+- Real-time data updates
+- Interactive charts and visualizations
+- Technical analysis tools
 
-### 2. Data Directories
-Multiple data directories containing:
-- Historical Bitcoin price data
-- News articles and social media content
-- Sentiment analysis results
-- Log files
+### 2. Notebook (`Notebook/`)
 
-### 3. BitcoinSentimentPulse
-A production-ready implementation of the sentiment analysis system with:
-- Docker containerization
-- Real-time data processing
-- Web interface
-- Database integration
+Contains Jupyter notebooks for:
+- Data exploration and analysis
+- Model development and testing
+- Sentiment analysis implementation
+- Visualization development
+- Experimental results and findings
 
-## Key Features
+## Architecture
 
-1. **Real-time Sentiment Analysis**
-   - News article processing
-   - Social media content analysis
-   - Sentiment scoring using TextBlob
-
-2. **Data Processing Pipeline**
-   - Data collection and cleaning
-   - Text preprocessing
-   - Sentiment calculation
-   - Results aggregation
-
-3. **API Implementation**
-   - RESTful API endpoints
-   - Real-time data access
-   - Historical data retrieval
-   - Sentiment metrics calculation
-
-4. **Visualization and Analysis**
-   - Sentiment trends
-   - Price correlation analysis
-   - Market impact assessment
-   - Interactive dashboards
+The project uses:
+- Python-based implementation
+- PostgreSQL database for data storage
+- RESTful APIs for service communication
+- Streamlit for the web interface
 
 ## Getting Started
 
-1. Install dependencies:
+1. Clone the repository
+2. Install the required dependencies:
    ```bash
-   pip install -r Notebook/requirements.txt
+   pip install -r requirements.txt
    ```
-
-2. Run the example notebook:
+3. Set up PostgreSQL database
+4. Run the application:
    ```bash
-   jupyter notebook Notebook/BitSense.example.ipynb
-   ```
-
-3. Explore the advanced analysis:
-   ```bash
-   jupyter notebook Notebook/Advanced_BitCoin_Sentiment.ipynb
+   streamlit run BitcoinSentimentPulse/app.py
    ```
 
 ## Dependencies
 
 - Python 3.9+
-- TextBlob
+- PostgreSQL
+- Streamlit
+- PyTorch
+- Prophet
+- Statsmodels
 - Pandas
 - NumPy
-- Jupyter
-- Matplotlib
-- Seaborn
-- Requests
-- BeautifulSoup4
+- Scikit-learn
+- NLTK
+- TextBlob
 
 ## Contributing
 

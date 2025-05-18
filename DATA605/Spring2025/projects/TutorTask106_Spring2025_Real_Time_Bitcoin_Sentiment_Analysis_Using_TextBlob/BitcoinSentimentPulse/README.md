@@ -20,6 +20,57 @@ The system consists of three main components:
 2. **Sentiment Analysis Service**: Continuously analyzes Bitcoin news sentiment
 3. **PostgreSQL Database**: Stores historical prices and sentiment data
 
+```mermaid
+graph TD
+    subgraph "External Data Sources"
+        A[NewsAPI] -->|Bitcoin News| B[Sentiment Analyzer]
+        C[CoinGecko] -->|Real-time Price| D[Data Collector]
+        C2[YFinance] -->|Historical Data| D
+    end
+
+    subgraph "Sentiment Analysis Pipeline"
+        B -->|Raw Articles| B1[TextBlob Processing]
+        B1 -->|Sentiment Scores| B2[Sentiment Aggregator]
+        B2 -->|Daily Metrics| E[PostgreSQL DB]
+    end
+
+    subgraph "Data Processing"
+        D -->|Price Data| D1[Technical Indicators]
+        D1 -->|MA/RSI/MACD| D2[Feature Engineering]
+        D2 -->|Processed Data| E
+    end
+
+    subgraph "Database Layer"
+        E -->|Historical Data| F1[ARIMA Model]
+        E -->|Sentiment Data| F1
+        E -->|Technical Data| F1
+        F1 -->|Forecasts| F2[Model Evaluation]
+        F2 -->|Confidence Intervals| G
+    end
+
+    subgraph "Visualization & UI"
+        G -->|Price Forecasts| H1[Price Chart]
+        G -->|Technical Analysis| H2[Indicator Plots]
+        G -->|Sentiment Metrics| H3[Sentiment Dashboard]
+        H1 & H2 & H3 --> I[Streamlit Interface]
+    end
+
+    subgraph "Background Services"
+        J[Docker Container 1] -->|App Service| I
+        K[Docker Container 2] -->|Sentiment Service| B
+        L[Docker Container 3] -->|Database Service| E
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style C fill:#f9f,stroke:#333,stroke-width:2px
+    style C2 fill:#f9f,stroke:#333,stroke-width:2px
+    style E fill:#bbf,stroke:#333,stroke-width:2px
+    style I fill:#bfb,stroke:#333,stroke-width:2px
+    style J fill:#fbb,stroke:#333,stroke-width:2px
+    style K fill:#fbb,stroke:#333,stroke-width:2px
+    style L fill:#fbb,stroke:#333,stroke-width:2px
+```
+
 ## Prerequisites
 
 - Docker and Docker Compose
@@ -67,7 +118,14 @@ The following environment variables are required:
 
    Alternatively, you can use Docker Compose directly:
    ```bash
+   # Build and start all services
    docker-compose up -d
+
+   # To view logs
+   docker-compose logs -f
+
+   # To stop all services
+   docker-compose down
    ```
 
 4. Access the application at [http://localhost:5001](http://localhost:5001)

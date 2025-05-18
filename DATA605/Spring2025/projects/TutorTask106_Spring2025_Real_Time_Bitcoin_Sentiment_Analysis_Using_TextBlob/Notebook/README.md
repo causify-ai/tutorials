@@ -1,15 +1,17 @@
 # Bitcoin Sentiment Analysis with Docker
 
-This project implements real-time Bitcoin sentiment analysis using news data and price information. It uses TextBlob for sentiment analysis and integrates with various APIs to gather Bitcoin-related news and price data.
+This project implements real-time Bitcoin sentiment analysis using news data and price information. It uses TextBlob for sentiment analysis and integrates with various APIs to gather Bitcoin-related news and price data. The project includes multiple forecasting models (ARIMA, Auto ARIMA, and LSTM) for price prediction.
 
 ## Project Overview
 
-The project analyzes Bitcoin-related news articles to:
+The project analyzes Bitcoin-related news articles and price data to:
 - Fetch and process Bitcoin news articles
-- Perform sentiment analysis on news content
+- Perform sentiment analysis on news content using TextBlob
 - Track Bitcoin price movements
 - Correlate sentiment with price changes
 - Generate visualizations and insights
+- Compare multiple forecasting models (ARIMA, Auto ARIMA, LSTM)
+- Provide both historical analysis and future predictions
 
 ## System Architecture
 
@@ -35,19 +37,20 @@ graph TD
         H -->|Insights| I[Jupyter Notebook]
         I -->|Charts| J[Visualizations]
         I -->|Metrics| K[Performance Analysis]
+        I -->|Forecasts| L[Model Comparison]
     end
 
     subgraph "Docker Environment"
-        L[Docker Container] -->|Hosts| M[Jupyter Server]
-        M -->|Serves| I
-        N[Volume Mounts] -->|Persists| G
+        M[Docker Container] -->|Hosts| N[Jupyter Server]
+        N -->|Serves| I
+        O[Volume Mounts] -->|Persists| G
     end
 
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style C fill:#f9f,stroke:#333,stroke-width:2px
     style G fill:#bbf,stroke:#333,stroke-width:2px
     style I fill:#bfb,stroke:#333,stroke-width:2px
-    style L fill:#fbb,stroke:#333,stroke-width:2px
+    style M fill:#fbb,stroke:#333,stroke-width:2px
 ```
 
 ## Prerequisites
@@ -55,6 +58,8 @@ graph TD
 - Docker and Docker Compose installed on your system
 - NewsAPI key (for fetching news articles)
 - Internet connection for API access
+- Python 3.9 or higher
+- Sufficient disk space for data storage and model training
 
 ## Project Structure
 
@@ -65,7 +70,8 @@ Notebook/
 │   ├── common.py                    # Common utilities and API clients
 │   ├── fetch_data.py               # Data fetching functions
 │   ├── data_saver.py               # Data persistence utilities
-│   └── utils_analyzer.py           # Analysis utilities
+│   ├── utils_analyzer.py           # Analysis utilities
+│   └── models.py                   # Forecasting models (ARIMA, LSTM)
 ├── data/                           # Data storage directory
 ├── logs/                           # Log files directory
 ├── Dockerfile                      # Docker configuration
@@ -106,7 +112,13 @@ docker-compose up --build
 - **Sentiment Analysis**: Uses TextBlob for sentiment scoring
 - **Price Tracking**: Integrates with CoinGecko API for Bitcoin price data
 - **Data Visualization**: Generates interactive charts and insights
+- **Multiple Forecasting Models**:
+  - ARIMA for time series forecasting
+  - Auto ARIMA for automated parameter selection
+  - LSTM for deep learning-based predictions
+- **Model Comparison**: Visual comparison of different forecasting approaches
 - **Cached Data Mode**: Supports both real-time and cached data analysis
+- **Historical Analysis**: Compare sentiment and price trends over time
 
 ## Docker Setup
 
@@ -135,7 +147,12 @@ The project uses a Docker-based setup with the following components:
    - Modify parameters in the notebook as needed
    - View generated visualizations and insights
 
-3. **Data Persistence**:
+3. **Forecasting**:
+   - Compare different forecasting models
+   - Adjust forecast parameters as needed
+   - View model performance metrics
+
+4. **Data Persistence**:
    - All data is stored in the `data/` directory
    - Logs are maintained in the `logs/` directory
 
@@ -163,3 +180,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - CoinGecko for price data
 - TextBlob for sentiment analysis
 - Jupyter project for the notebook environment
+- Statsmodels for ARIMA implementation
+- TensorFlow/Keras for LSTM implementation

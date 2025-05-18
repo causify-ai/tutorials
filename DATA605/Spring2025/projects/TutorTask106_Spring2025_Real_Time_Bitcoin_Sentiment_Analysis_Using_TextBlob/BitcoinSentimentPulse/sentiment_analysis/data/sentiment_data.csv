@@ -1,0 +1,3 @@
+date,avg_polarity,avg_subjectivity,positive_count,negative_count,neutral_count,article_count
+2025-05-17,0.03927105791811674,0.40557359307359303,4,2,11,17
+2025-05-16,0.04056373722225171,0.399895796450597,30,26,36,92

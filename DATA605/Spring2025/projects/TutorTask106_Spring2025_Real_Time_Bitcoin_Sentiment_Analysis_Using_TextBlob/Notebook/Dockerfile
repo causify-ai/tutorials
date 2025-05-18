@@ -36,7 +36,6 @@ RUN mkdir -p /app/data /app/logs
 # Set environment variables
 ENV PYTHONPATH=/app:$PYTHONPATH
 ENV JUPYTER_ENABLE_LAB=yes
-ENV JUPYTER_TOKEN=""
 ENV JUPYTER_CONFIG_DIR=/app/.jupyter
 ENV JUPYTER_DATA_DIR=/app/.jupyter/data
 ENV JUPYTER_RUNTIME_DIR=/app/.jupyter/runtime
