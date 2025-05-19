@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b2bdf0b7-5d09-42a2-b739-2a7af207a235" name="Changes" comment="Live plotting fixed">
+    <list default="true" id="b2bdf0b7-5d09-42a2-b739-2a7af207a235" name="Changes" comment="REadme file updated">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker_data605_style/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/docker_data605_style/Dockerfile" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,6 +16,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../../.." />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "amansahu205"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/causify-ai/tutorials.git",
+    "accountId": "64d01b08-f11a-42eb-a4f9-b494e87bb892"
+  }
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
   </component>
@@ -34,7 +46,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "TutorTask193__Spring2025__Real__Time__Bitcoin__Data__Ingestion__and__Analysis__using__PyKafka",
+    "git-widget-placeholder": "#349 on TutorTask193__Spring2025__Real__Time…Kafka",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -60,7 +72,7 @@
       <option name="presentableId" value="Default" />
       <updated>1747621210708</updated>
       <workItem from="1747621211819" duration="382000" />
-      <workItem from="1747621606824" duration="4045000" />
+      <workItem from="1747621606824" duration="7029000" />
     </task>
     <task id="LOCAL-00001" summary="Live plotting fixed">
       <option name="closed" value="true" />
@@ -78,7 +90,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747624921647</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="REadme file updated">
+      <option name="closed" value="true" />
+      <created>1747626226819</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1747626226819</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -86,6 +106,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Live plotting fixed" />
-    <option name="LAST_COMMIT_MESSAGE" value="Live plotting fixed" />
+    <MESSAGE value="REadme file updated" />
+    <option name="LAST_COMMIT_MESSAGE" value="REadme file updated" />
   </component>
 </project>

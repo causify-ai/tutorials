@@ -1,55 +1,43 @@
-FROM ubuntu:20.04
-ENV DEBIAN_FRONTEND=noninteractive
+FROM python:3.11-slim
 
-RUN apt-get -y update
-RUN apt-get -y upgrade
+# Install Java and tools
+RUN apt-get update && \
+    apt-get install -y default-jre wget curl net-tools unzip gnupg && \
+    apt-get clean
 
-# Install system utilities.
-RUN apt install -y --no-install-recommends \
-    sudo \
-    curl \
-    systemctl \
-    gnupg \
-    git \
-    vim
+# Kafka setup
+ENV KAFKA_VERSION=3.6.1
+ENV SCALA_VERSION=2.13
+ENV KAFKA_HOME=/opt/kafka
 
-# Install Python.
-RUN apt install -y --no-install-recommends \
-    python3 \
-    python3-pip \
-    python3-dev
+RUN wget https://downloads.apache.org/kafka/${KAFKA_VERSION}/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz -O /tmp/kafka.tgz && \
+    mkdir -p ${KAFKA_HOME} && \
+    tar -xzf /tmp/kafka.tgz --strip-components=1 -C ${KAFKA_HOME} && \
+    rm /tmp/kafka.tgz
 
-RUN python3 -m pip install --upgrade pip
-    
-# Install Python packages.
-# There is a bug:
-#   File "/opt/homebrew/lib/python3.10/site-packages/tornado/iostream.py", line 182, in advance
-#   assert 0 < size <= self._size
-# for tornado==6.2 and jupyter-client==8.0.2.
-# https://discourse.jupyter.org/t/jupyter-notebook-zmq-message-arrived-on-closed-channel-error/17869/10
-RUN pip3 install \
-    ipython \
-    tornado==6.1 \
-    jupyter-client==7.3.2 \
-    jupyter-contrib-core \
-    jupyter-contrib-nbextensions \
-    psycopg2-binary \
-    yapf
+ENV PATH="${KAFKA_HOME}/bin:${PATH}"
 
-RUN mkdir /install
+# Working directory
+WORKDIR /app
 
-# Install Jupyter extensions.
-ADD install_jupyter_extensions.sh /install
-RUN /install/install_jupyter_extensions.sh
+# Copy project files
+COPY . /app
 
-# Config.
-ADD etc_sudoers /install/
-COPY etc_sudoers /etc/sudoers
-COPY bashrc /root/.bashrc
+# Install Python dependencies
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
 
-# Report package versions.
-ADD version.sh /install/
-RUN /install/version.sh 2>&1 | tee version.log
+# Make the topic creation script executable
+RUN chmod +x /app/kafka_create_topic.sh
 
-# Jupyter.
-EXPOSE 8888
+# Expose necessary ports
+EXPOSE 9092 2181
+
+# Run services and pipeline
+CMD ["sh", "-c", "\
+    ${KAFKA_HOME}/bin/zookeeper-server-start.sh ${KAFKA_HOME}/config/zookeeper.properties & \
+    sleep 5 && \
+    ${KAFKA_HOME}/bin/kafka-server-start.sh ${KAFKA_HOME}/config/server.properties & \
+    sleep 10 && \
+    ./kafka_create_topic.sh && \
+    python run.py"]
