@@ -56,7 +56,7 @@ This project demonstrates a real-time anomaly detection pipeline for Bitcoin pri
 ---
 
 ## Flowchart
-
+![Pipeline Flow](data/flow-chart.jpeg)
 ```mermaid
 graph TD
     A[Fetch Bitcoin Price using Python] --> B[Send to Kinesis Data Stream]
