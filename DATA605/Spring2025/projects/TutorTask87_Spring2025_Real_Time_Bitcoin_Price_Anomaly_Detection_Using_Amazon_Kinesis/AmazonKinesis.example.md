@@ -76,13 +76,13 @@ This project demonstrates a real-time anomaly detection pipeline for Bitcoin pri
 - Anomaly threshold tuned based on score distribution from normal and anomalous samples
 
 ## Output Examples
-✅ SNS Email Alert: "Anomaly Detected: BTC at $999999"
+- SNS Email Alert: "Anomaly Detected: BTC at $999999"
 
-✅ CloudWatch Log: "Anomaly Score: -0.32 | Flagged: True"
+- CloudWatch Log: "Anomaly Score: -0.32 | Flagged: True"
 
-✅ S3 Entry: btc-anomaly-data/2025/05/17/hour=13/data.json
+- S3 Entry: btc-anomaly-data/2025/05/17/hour=13/data.json
 
-✅ Dashboard Plot: Price spike marked in red with tooltip
+- Dashboard Plot: Price spike marked in red with tooltip
 
 
 ## Future Enhancements
@@ -96,7 +96,7 @@ This project demonstrates a real-time anomaly detection pipeline for Bitcoin pri
 
 
 ### Authors
-You – Project Lead and Developer
+Me – Project Lead and Developer
 
 AWS Docs – Platform References
 
