@@ -17,12 +17,11 @@ pip install -r requirements.txt
 
 3. Run the producer:
 ```bash
-python kafka/producer.py
+python run.py
 ```
 
 4. Run the consumer or visualization:
 ```bash
 python kafka/consumer.py
-# OR
-python visualization/plotter.py
+
 ```

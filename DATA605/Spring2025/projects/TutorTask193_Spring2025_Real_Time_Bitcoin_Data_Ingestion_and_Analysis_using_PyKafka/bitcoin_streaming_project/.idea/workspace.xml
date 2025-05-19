@@ -4,53 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b2bdf0b7-5d09-42a2-b739-2a7af207a235" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/bitcoin_streaming_project.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/TutorTask193_Spring2025_Real_Time_Bitcoin_Data_Ingestion_and_Analysis_using_PyKafka.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/docker-compose.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/docker_data605_style/Dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/docker_data605_style/bashrc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/docker_data605_style/docker_bash.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/docker_data605_style/docker_build.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/docker_data605_style/docker_build.version.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/docker_data605_style/docker_clean.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/docker_data605_style/docker_exec.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/docker_data605_style/docker_jupyter.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/docker_data605_style/docker_name.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/docker_data605_style/docker_push.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/docker_data605_style/etc_sudoers" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/docker_data605_style/install_jupyter_extensions.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/docker_data605_style/run_jupyter.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/docker_data605_style/version.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/project/analysis/btc_analysis.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/project/analysis/btc_analysis.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/project/btc_analysis.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/project/config/settings.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/project/consumer/balanced_consumer.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/project/consumer/btc_consumer.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/project/consumer/btc_consumer.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/project/consumer/run_pipeline.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/project/producer/btc_producer.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/project/producer/btc_producer.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/project/requirements.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/project/run_pipeline.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/project/run_pipeline.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/project/settings.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/project/utils/helpers.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/project/utils/helpers.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/project/utils/logger.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../bitcoin-streaming-analysis/project/utils/logger.py" beforeDir="false" />
+    <list default="true" id="b2bdf0b7-5d09-42a2-b739-2a7af207a235" name="Changes" comment="Live plotting fixed">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,11 +60,32 @@
       <option name="presentableId" value="Default" />
       <updated>1747621210708</updated>
       <workItem from="1747621211819" duration="382000" />
-      <workItem from="1747621606824" duration="2850000" />
+      <workItem from="1747621606824" duration="4045000" />
     </task>
+    <task id="LOCAL-00001" summary="Live plotting fixed">
+      <option name="closed" value="true" />
+      <created>1747624907975</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1747624907976</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Live plotting fixed">
+      <option name="closed" value="true" />
+      <created>1747624921647</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1747624921647</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Live plotting fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="Live plotting fixed" />
   </component>
 </project>
