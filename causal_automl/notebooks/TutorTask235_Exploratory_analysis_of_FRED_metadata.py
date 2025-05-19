@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.17.0
+#       jupytext_version: 1.16.7
 #   kernelspec:
 #     display_name: client_venv.helpers
 #     language: python
@@ -84,7 +84,7 @@ sns.set_theme(style="whitegrid")
 # %%
 # Set configurations.
 s3_path = "s3://causify-data-collaborators/causal_automl"
-fred_path = f"{s3_path}/metadata/fred_series_metadata_v1.0.csv"
+fred_path = f"{s3_path}/metadata/fred_metadata_original_v1.0.csv"
 country_continent_path = f"{s3_path}/supplemental_data/country_continent.csv"
 us_states_path = f"{s3_path}/supplemental_data/us_states.geojson"
 # Set top N for bar charts.
