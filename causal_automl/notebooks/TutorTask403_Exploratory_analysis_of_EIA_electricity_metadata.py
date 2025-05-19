@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.16.7
+#       jupytext_version: 1.17.1
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -26,10 +26,11 @@
 #       - [EIA Parameters Column information](#eia-parameters-column-information)
 #     - [Missing Data](#missing-data)
 #   - [Exploratory Analysis](#exploratory-analysis)
-#     - [Distribution Analyses](#distribution-analyses)
+#     - [Index Analysis](#index-analysis)
 #       - [Distribution by Dataset](#distribution-by-dataset)
 #       - [Distribution by Frequency](#distribution-by-frequency)
 #       - [Distribution by Unit](#distribution-by-unit)
+#       - [Temporal Resolution Coverage by Dataset](#temporal-resolution-coverage-by-dataset)
 #     - [Coverage Analysis](#coverage-analysis)
 #       - [Distribution by Timespan (Years)](#distribution-by-timespan-(years))
 #       - [Distribution by Time Series Start Period](#distribution-by-time-series-start-period)
@@ -38,7 +39,6 @@
 #       - [Top Facets](#top-facets)
 #       - [Facet Usage Across Dataset](#facet-usage-across-dataset)
 #       - [Facet Cardinalities](#facet-cardinalities)
-#       - [Temporal Resolution Coverage by Dataset](#temporal-resolution-coverage-by-dataset)
 
 # %% [markdown]
 # Contents:
@@ -61,19 +61,18 @@
 # %%
 # %load_ext autoreload
 # %autoreload 2
+import ast
+import io
 import logging
 import os
-import io
-import ast
-from typing import Tuple, Dict, List
+from typing import Dict, List, Tuple
 
 import helpers.hdbg as hdbg
-import helpers.henv as henv
 import helpers.hprint as hprint
 import helpers.hs3 as hs3
 import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
+import seaborn as sns
 
 import causal_automl.eda_utils as caueduti
 
@@ -84,7 +83,9 @@ _LOG = logging.getLogger(__name__)
 
 # Configure the notebook style.
 hprint.config_notebook()
+sns.set_theme(style="whitegrid")
 
+# %%
 # Configure S3.
 s3_dir = "s3://causify-data-collaborators/causal_automl/metadata/"
 aws_profile = "ck"
@@ -94,23 +95,28 @@ aws_profile = "ck"
 # <a name='helper-functions'></a>
 # ## Helper Functions
 
+
 # %%
 def _get_missing_summary(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Returns a summary of missing value count and percentage per column.
+    Get a summary of missing value count and percentage for columns with
+    missing values.
 
     :param df: data to inspect
     :return: data with count and percentage of missing values
     """
     count = df.isna().sum()
     percent = df.isna().mean() * 100
-    missing_count = pd.DataFrame({'Missing Count': count, 'Missing %': percent}).sort_values(by="Missing %", ascending=False)
-    missing_columns_df = missing_count[
-        missing_count["Missing Count"] > 0
-    ]
+    missing_count = pd.DataFrame(
+        {"Missing Count": count, "Missing %": percent}
+    ).sort_values(by="Missing %", ascending=False)
+    missing_columns_df = missing_count[missing_count["Missing Count"] > 0]
     return missing_columns_df
 
-def _plot_distribution(df_metadata: pd.DataFrame, column: str, title: str) -> None:
+
+def _plot_distribution(
+    df_metadata: pd.DataFrame, column: str, title: str
+) -> None:
     """
     Plot a distribution count for a specified metadata column.
 
@@ -120,7 +126,7 @@ def _plot_distribution(df_metadata: pd.DataFrame, column: str, title: str) -> No
     :param title: title for the plot
     """
     if column not in df_metadata.columns:
-        raise ValueError(f"Column '{column}' not found in df_metadata.")
+        _LOG.warning("Invalid column `%s`.", column)
     counts = df_metadata[column].value_counts()
     caueduti.plot_top_n_annotated_bar(
         counts=counts,
@@ -138,18 +144,20 @@ def _plot_distribution(df_metadata: pd.DataFrame, column: str, title: str) -> No
 # <a name='load-and-preprocess-data'></a>
 # ## Load and Preprocess Data
 
-# %%
-def _load_data(file_path: str, aws_profile:str) -> pd.DataFrame:
-    """
-    Load data from file path to a DataFrame.
 
-    :param file_path: path of the data to load from
+# %%
+def _load_data(file_path: str, aws_profile: str) -> pd.DataFrame:
+    """
+    Load data from the specified S3 file path.
+
+    :param file_path: Full S3 URI of the file to load
     :param aws_profile: AWS CLI profile used for access
     :return: DataFrame of the loaded data
     """
     file = hs3.from_file(file_path, aws_profile=aws_profile)
     df = pd.read_csv(io.StringIO(file))
     return df
+
 
 def _load_eia_metadata_and_parameters(
     s3_dir: str,
@@ -181,6 +189,7 @@ def _load_eia_metadata_and_parameters(
             param_dfs[key] = _load_data(full_path, aws_profile)
     return df_metadata, param_dfs
 
+
 def _normalize_facets(facets: List[Dict[str, str]]) -> List[Dict[str, str]]:
     """
     Normalize similar facet values.
@@ -189,23 +198,26 @@ def _normalize_facets(facets: List[Dict[str, str]]) -> List[Dict[str, str]]:
     :return: normalized facets
     """
     for facet in facets:
-        if facet["id"].lower() in {"state", "stateid", "stateID"}:
+        if facet["id"].lower() in {"state", "stateid", "stateID", "location"}:
             facet["id"] = "stateid"
     return facets
+
 
 def _preprocess_eia(
     df_metadata: pd.DataFrame,
     param_dfs: Dict[str, pd.DataFrame],
 ) -> Tuple[pd.DataFrame, Dict[str, pd.DataFrame]]:
     """
-    Preprocess metadata and parameter DataFrames for analysis.
+    Preprocess metadata and parameter data for analysis.
 
-    :param df_metadata: metadata index DataFrame
-    :param param_dfs: parameter DataFrames
-    :return: cleaned metadata and parameter DataFrames
+    :param df_metadata: metadata index data
+    :param param_dfs: parameter data
+    :return: cleaned metadata and parameter data
     """
     # Preprocess metadata.
-    df_metadata["frequency_id"] = df_metadata["frequency_id"].str.lower().str.strip()
+    df_metadata["frequency_id"] = (
+        df_metadata["frequency_id"].str.lower().str.strip()
+    )
     # Parse facets column if stored as string.
     df_metadata["facets"] = df_metadata["facets"].apply(ast.literal_eval)
     # Normalize similar variables.
@@ -220,9 +232,11 @@ def _preprocess_eia(
             .astype(str)
             .str.strip()
             .str.lower()
-            .replace({"state": "stateid", "stateid": "stateid", "stateid": "stateid"})
+            .replace(
+                {"state": "stateid", "stateID": "stateid", "location": "stateid"}
+            )
         )
-        # Strip and clean id field in known affected file.
+        # Strip whitespace from id field.
         df_param_cleaned["id"] = df_param_cleaned["id"].astype(str).str.strip()
         param_dfs_cleaned[file_name] = df_param_cleaned
     return df_metadata, param_dfs_cleaned
@@ -230,9 +244,11 @@ def _preprocess_eia(
 
 # %%
 # Load EIA metadata index and parameters.
-metadata_s3_path = f"eia_electricity_metadata_original_v1.0.csv"
-param_s3_dir = f"eia_parameters_v1.0"
-df_metadata, param_dfs = _load_eia_metadata_and_parameters(s3_dir, metadata_s3_path, param_s3_dir, aws_profile)
+metadata_s3_path = "eia_electricity_metadata_original_v1.0.csv"
+param_s3_dir = "eia_parameters_v1.0"
+df_metadata, param_dfs = _load_eia_metadata_and_parameters(
+    s3_dir, metadata_s3_path, param_s3_dir, aws_profile
+)
 # Preprocess EIA metadata index and parameters.
 df_metadata, param_dfs = _preprocess_eia(df_metadata, param_dfs)
 
@@ -260,15 +276,15 @@ df_metadata.head()
 # | `url`                   | Full API URL to access the time series.                                         |
 # | `id`                    | Unique identifier for the time series.                                          |
 # | `dataset_id`            | Dataset group this series belongs to.                                           |
-# | `name`                  | Human-readable title of the time series.                                        |
-# | `description`           | Full description of what the time series measures.                              |
+# | `name`                  | Human-readable title of the dataset group.                                      |
+# | `description`           | Full description of the dataset group.                                          |
 # | `frequency_id`          | Frequency label (e.g. `monthly`, `quarterly`, `hourly`).                        |
 # | `frequency_alias`       | Alternative frequency name (often missing).                                     |
 # | `frequency_description` | Sentence-style explanation of frequency (e.g. "One data point for each month"). |
 # | `frequency_query`       | Query shorthand for frequency (e.g. `M` for monthly).                           |
 # | `frequency_format`      | Formatting string used in time index.                                           |
-# | `facets`                | JSON-style list of dimension fields used for the series.                        |
-# | `data`                  | Short name of the measured value (e.g. `revenue`, `sales`).                     |
+# | `facets`                | JSON-style list of facet definitions used for filtering (e.g. `stateid`, `sectorid`).|
+# | `data`                  | Identifier for the metric being measured (e.g. `revenue`, `sales`).             |
 # | `data_alias`            | Human-readable version of the data name.                                        |
 # | `data_units`            | Units of measurement (e.g. `million dollars`, `cents per kWh`).                 |
 # | `start_period`          | Start date of available data (YYYY-MM format).                                  |
@@ -321,12 +337,47 @@ caueduti.plot_top_n_annotated_bar(
 # Only three columns contain missing values: `frequency_alias`, `data_units`, and `data_alias`, with 95.3%, 36.0% and 0.6% missing values respectively. The missing `frequency_alias` and `data_alias` are not essential, as they serve only as display-friendly labels. While `data_units` is more relevant for interpreting values (e.g., whether a series is in MW or MWh), it is often redundant with dataset context and not required for structural analysis.
 
 # %% [markdown]
+# ### Independent Dataset
+
+# %% [markdown]
+# #### Summary Dataset Overview
+#
+# The summary dataset stands out from other electricity datasets in the EIA collection. Unlike metric-specific datasets such as `retail_sales` or `net_generation`, the summary dataset aggregates high-level electricity indicators by state. These include values like total generation, retail sales, and emissions, often paired with comparative insights such as a state’s national rank. All time series in this dataset are reported on an annual basis, providing a consistent structure suitable for both cross-state and year-over-year comparisons. While most datasets use standard units (e.g., `MWh`, `dollars`), the summary dataset includes non-standard units such as `rank`, reinforcing its analytical and comparative purpose. This makes the dataset independent, not in the sense that it summarizes all other datasets, but in how it presents standalone summary insights that aren't tied to a single physical measurement.
+
+# %%
+# Preview summary dataset.
+df_summary = df_metadata[df_metadata["dataset_id"] == "summary"]
+df_summary.head()
+
+# %% [markdown]
+# #### Unit Distribution in the Summary Dataset
+#
+# To further understand what the summary dataset measures, we examine the data_units column. The most common unit is `rank`, indicating that many series are not raw values but comparative rankings across U.S. states. In addition, for every metric with a standard unit (e.g., `megawatts` or `short tons`), there exists a correlated time series using `rank`, representing the same metric but in relative terms (e.g., `net-summer-capacity` and `net-summer-capacity-rank`). This pairing reinforces the dataset's role as a state-level benchmarking tool rather than a source of detailed operational data.
+
+# %%
+# Count frequency of each unique data unit in the summary metadata
+unit_counts = df_summary["data_units"].value_counts()
+# Plot the most common data units
+plt.figure(figsize=(10, 6))
+sns.barplot(
+    y=unit_counts.index,
+    x=unit_counts.values,
+    hue=unit_counts.index,
+    palette="crest",
+)
+plt.title("Units Distribution in Summary Dataset")
+plt.xlabel("Number of Time Series")
+plt.ylabel("Data Unit")
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
 # <a name='exploratory-analysis'></a>
 # ## Exploratory Analysis
 
 # %% [markdown]
-# <a name='distribution-analyses'></a>
-# ### Distribution Analyses
+# <a name='index-analysis'></a>
+# ### Index Analysis
 
 # %% [markdown]
 # <a name='distribution-by-dataset'></a>
@@ -356,6 +407,38 @@ _plot_distribution(df_metadata, "frequency_id", "Distribution of Frequency")
 _plot_distribution(df_metadata, "data_units", "Distribution of Data Units")
 
 # %% [markdown]
+# <a name='temporal-resolution-coverage-by-dataset'></a>
+# #### Temporal Resolution Coverage by Dataset
+#
+# This heatmap shows the distribution of time series across combinations of `dataset_id` and `frequency_id`.
+#
+# - Most datasets report data at `monthly` frequency.
+#
+# - A few datasets, like `daily_region_data` or `daily_fuel_type_data`, are specifically tailored for daily reporting.
+#
+# - Some datasets support multiple frequencies, indicating they may be used across short-term and long-term analyses.
+#
+# - Datasets such as `capability`, `summary`, and `net_metering` have limited frequency options, typically annual or yearly, suggesting a more strategic rather than operational nature.
+
+# %%
+# Generate dataset and frequency crosstab.
+dataset_frequency_crosstab = pd.crosstab(
+    df_metadata["dataset_id"], df_metadata["frequency_id"]
+)
+# Plot heatmap of dataset against frequency.
+caueduti.plot_heatmap(
+    dataset_frequency_crosstab,
+    title="Heatmap of Dataset vs Frequency",
+    xlabel="Frequency ID",
+    ylabel="Dataset ID",
+    fmt="d",
+    cmap="Blues",
+    linewidths=0.5,
+    linecolor="gray",
+    figsize=(12, 6),
+)
+
+# %% [markdown]
 # <a name='coverage-analysis'></a>
 # ### Coverage Analysis
 
@@ -367,9 +450,15 @@ _plot_distribution(df_metadata, "data_units", "Distribution of Data Units")
 
 # %%
 # Compute time span.
-df_metadata["start_period_year"] = df_metadata["start_period"].str.extract(r"(\d{4})").astype(float)
-df_metadata["end_period_year"] = df_metadata["end_period"].str.extract(r"(\d{4})").astype(float)
-df_metadata["timespan_years"] = df_metadata["end_period_year"] - df_metadata["start_period_year"]
+df_metadata["start_period_year"] = (
+    df_metadata["start_period"].str.extract(r"(\d{4})").astype(int)
+)
+df_metadata["end_period_year"] = (
+    df_metadata["end_period"].str.extract(r"(\d{4})").astype(int)
+)
+df_metadata["timespan_years"] = (
+    df_metadata["end_period_year"] - df_metadata["start_period_year"]
+)
 # Plot histogram of time spans.
 caueduti.plot_histograms(
     data_series=[df_metadata["timespan_years"]],
@@ -378,7 +467,7 @@ caueduti.plot_histograms(
     bins=10,
     xlabel="Years of Coverage",
     title="Distribution of Timespan (Years)",
-    figsize=(12, 6)
+    figsize=(12, 6),
 )
 
 # %% [markdown]
@@ -396,16 +485,18 @@ caueduti.plot_histograms(
     kde=True,
     xlabel="Year",
     title="Distribution of Time Series Start Year",
-    figsize=(12, 6)
+    figsize=(12, 6),
 )
 
 # %% [markdown]
 # <a name='distribution-by-time-series-end-period'></a>
 # #### Distribution by Time Series End Period
 #
-# The distribution of time series end years is highly concentrated in just two years: 2023 and 2025. This sharp clustering suggests that these values are likely system-generated or administrative placeholders rather than natural discontinuation points. Unlike the more varied start year distribution, the end year pattern indicates a bulk update or scheduled metadata cutoff. This means that not all of the series are necessarily discontinued, as 2023 may still be too recent to make that assumption. Therefore, we assume that all time series are still active and not discontinued.
+# The distribution of time series end years is highly concentrated in just two years: 2023 and 2025. This sharp clustering suggests that these values are likely system-generated or administrative placeholders rather than natural discontinuation points. Unlike the more varied start year distribution, the end year pattern indicates a bulk update or scheduled metadata cutoff. This means that not all of the series are necessarily discontinued, as 2023 may still be too recent to make that assumption.
 
 # %%
+xticks = sorted(df_metadata["end_period_year"].unique())
+xtick_labels = [str(year) for year in xticks]
 caueduti.plot_histograms(
     data_series=[df_metadata["end_period_year"]],
     labels=["End Year"],
@@ -413,9 +504,34 @@ caueduti.plot_histograms(
     bins=10,
     kde=True,
     xlabel="Year",
-    title="Distribution of Time Series Start Year",
-    figsize=(12, 6)
+    title="Distribution of Time Series End Year",
+    xticks=xticks,
+    xtick_labels=xtick_labels,
+    xticks_rotation=45,
+    figsize=(12, 6),
 )
+
+# %% [markdown]
+# #### Distribution of Time Series End Year by Frequency
+#
+# Breaking down end years by frequency reveals that all series ending in 2023 are annual, while those ending in 2025 include monthly, quarterly, and daily series. This pattern confirms that the 2023 values are likely due to update delays rather than discontinuation. Therefore, we can assume that all time series are still active and not discontinued, just pending the next annual update.
+
+# %%
+# Count time series by end period and frequency.
+df_counts = (
+    df_metadata.groupby(["end_period_year", "frequency_id"])
+    .size()
+    .reset_index(name="count")
+)
+# Plot grouped barplot.
+sns.barplot(data=df_counts, x="end_period_year", y="count", hue="frequency_id")
+plt.title("Time Series Count by End Year and Frequency")
+plt.xlabel("End Year")
+plt.ylabel("Count")
+plt.xticks(rotation=45)
+plt.legend(title="Frequency ID")
+plt.tight_layout()
+plt.show()
 
 # %% [markdown]
 # <a name='facet-analysis'></a>
@@ -425,7 +541,7 @@ caueduti.plot_histograms(
 # <a name='top-facets'></a>
 # #### Top Facets
 #
-# The distribution of facets used across EIA time series reveals that `stateid` is by far the most common, appearing in nearly 67% of series, indicating strong geographic granularity. Other frequently used facets include `sectorid`, `fueltypeid`, and `location`, suggesting that categorization by usage sector and fuel classification is also central to the dataset structure. The presence of technical identifiers like `plantCode`, `generatorid`, and `primeMover` highlights the detailed operational scope of certain datasets. Overall, the top 15 facets cover over 250% of the time series, confirming that most series are tagged with multiple dimensions for richer filtering and analysis.
+# The distribution of facets used across EIA time series reveals that `stateid` is by far the most common, appearing in nearly 93% of series, indicating strong geographic granularity. Other frequently used facets include `sectorid`, `fueltypeid`, and `location`, suggesting that categorization by usage sector and fuel classification is also central to the dataset structure. The presence of technical identifiers like `plantCode`, `generatorid`, and `primeMover` highlights the detailed operational scope of certain datasets. Overall, the top 15 facets cover over 250% of the time series, confirming that most series are tagged with multiple dimensions for richer filtering and analysis.
 
 # %%
 # Calculate facets count.
@@ -448,7 +564,7 @@ caueduti.plot_top_n_annotated_bar(
 # <a name='facet-usage-across-dataset'></a>
 # #### Facet Usage Across Dataset
 #
-# The heatmap visualizes the presence or absence of each facet ID across EIA datasets. Some facets like `stateid`, `sectorid`, and `plantCode` appear across multiple datasets, highlighting their importance in disaggregating and analyzing energy data. Conversely, many datasets use a small, distinct subset of facets—suggesting that different datasets are specialized for particular use cases. For example, retail_sales is richly annotated, while others like summary or facility_fuel are more minimalistic. This heterogeneity underscores the need for dataset-specific handling when performing cross-dataset analysis.
+# The heatmap visualizes the presence or absence of each facet ID across EIA datasets. Some facets like `stateid`, `sectorid`, and `plantCode` appear across multiple datasets, highlighting their importance in disaggregating and analyzing energy data. Conversely, many datasets use a small, distinct subset of facets—suggesting that different datasets are specialized for particular use cases. For example, `electric_power_operational_data` is richly annotated, while others like `summary` or `retail_sales` are more minimalistic. This heterogeneity underscores the need for dataset-specific handling when performing cross-dataset analysis.
 
 # %%
 # Create data pairing dataset and facets.
@@ -460,41 +576,47 @@ df_dataset_facet = (
     .drop_duplicates()
 )
 # Create crosstab of facet presence per dataset.
-facet_crosstab = pd.crosstab(df_dataset_facet["dataset_id"], df_dataset_facet["facet_id"])
+facet_crosstab = pd.crosstab(
+    df_dataset_facet["dataset_id"], df_dataset_facet["facet_id"]
+)
 # Plot heatmap of dataset and facet pair.
 caueduti.plot_heatmap(
     matrix=facet_crosstab,
-    annot=False,
-    cmap="Blues",
     title="Facet Usage Across Datasets",
     xlabel="Facet ID",
     ylabel="Dataset ID",
-    figsize=(16, 8)
+    fmt="d",
+    cmap="Blues",
+    annot=False,
+    figsize=(18, 10),
+    linewidths=0.5,
+    linecolor="gray",
+    square=False,
 )
 
 # %% [markdown]
 # <a name='facet-cardinalities'></a>
 # #### Facet Cardinalities
 #
-# The graph shows the number of unique values each facet contributes across EIA datasets. It reveals that two facets, `operating_generator_capacity` and `facility_fuel`, dominate the total unique value count, indicating they hold highly granular or identifier-like data. This suggests most facets are used for grouping or filtering, while a few may require special handling due to their cardinality.
+# The graph shows the number of unique values each facet contributes across EIA datasets. It reveals that a small number of identifier-like facets dominate the total unique value count, while most facets have relatively low cardinality suited for grouping or filtering.
 #
-# - **Heavy Skew in Cardinality**: The `operating_generator_capacity` facet alone accounts for about 64% of all unique values, indicating extreme cardinality.
-# - **Interpretability Gap**: High-cardinality facets likely represent opaque identifiers, whereas low-cardinality facets are more interpretable and suitable for grouping.
+# - **Heavy Skew in Cardinality**: The facets `plantid`, `plantcode`, and `generatorid` dominate, together accounting for over 80% of all unique values, suggesting they are used as fine-grained technical identifiers.
+# - **Interpretability Gap**: These high-cardinality facets likely represent internal or technical identifiers, whereas lower-cardinality facets such as `sectorid` or `fueltypeid` are more interpretable and domain-relevant.
 # - **Storage Implications**: The disproportionate cardinality in a few facets can strain indexing and querying performance.
-# - **Modeling Caution**: These high-cardinality fields should be handled carefully in data modeling to avoid overfitting or inefficient joins. Facets like `operating_generator_capacity` may lead to row explosion in joins if not normalized or managed properly.
+# - **Modeling Caution**: These high-cardinality fields should be handled carefully in data modeling to avoid overfitting or inefficient joins. Facets like `plantid` may lead to row explosion in joins if not normalized or managed properly.
 
 # %%
-# Compute number of unique values for each facet.
-facet_cardinalities = {}
-for facet_id, df_param in param_dfs.items():
-    unique_count = df_param["id"].nunique()
-    facet_cardinalities[facet_id] = unique_count
-facet_card_series = pd.Series(facet_cardinalities).sort_values(ascending=False)
+# Combine all parameter data.
+df_all_params = pd.concat(param_dfs.values(), ignore_index=True)
+# Compute number of unique values per facet ID.
+facet_cardinalities = (
+    df_all_params.groupby("facet_id")["id"].nunique().sort_values(ascending=False)
+)
 # Plot bar chart of unique values.
 caueduti.plot_top_n_annotated_bar(
-    counts=facet_card_series,
-    total=facet_card_series.sum(),
-    top_n=len(facet_card_series),
+    counts=facet_cardinalities,
+    total=facet_cardinalities.sum(),
+    top_n=len(facet_cardinalities),
     title="Number of Unique Values per Facet (EIA)",
     xlabel="Facet ID",
     ylabel="Unique Value Count",
@@ -503,30 +625,4 @@ caueduti.plot_top_n_annotated_bar(
     figsize=(12, 6),
 )
 
-# %% [markdown]
-# <a name='temporal-resolution-coverage-by-dataset'></a>
-# #### Temporal Resolution Coverage by Dataset
-#
-# This heatmap shows the distribution of time series across combinations of `dataset_id` and `frequency_id`.
-#
-# - Most datasets report data at `monthly` frequency.
-#
-# - A few datasets, `like daily_region_data` or `daily_fuel_type_data`, are specifically tailored for daily reporting.
-#
-# - Some datasets support multiple frequencies, indicating they may be used across short-term and long-term analyses.
-#
-# - Datasets such as capability, summary, and net_metering have limited frequency options, typically annual or yearly, suggesting a more strategic rather than operational nature.
-
 # %%
-# Generate dataset and frequency crosstab.
-dataset_frequency_crosstab = pd.crosstab(df_metadata["dataset_id"], df_metadata["frequency_id"])
-# Plot heatmap of dataset against frequency.
-caueduti.plot_heatmap(
-    crosstab,
-    title="Heatmap of Dataset vs Frequency",
-    xlabel="Frequency ID",
-    ylabel="Dataset ID",
-    fmt="d",
-    cmap="Blues",
-    figsize=(12, 6)
-)
