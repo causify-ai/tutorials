@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.ipynb
+.dockerignore
+docker_*.sh
+.DS_Store

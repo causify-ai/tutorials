@@ -1,0 +1,6 @@
+streamlit
+pandas
+matplotlib
+requests
+jupyter
+# ...plus anything else your app or rasa_utils.py needs
