@@ -1,6 +1,0 @@
-pykafka
-requests
-pandas
-matplotlib
-plotly
-statsmodels
