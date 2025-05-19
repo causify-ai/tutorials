@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.17.1
+#       jupytext_version: 1.16.7
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -25,6 +25,9 @@
 #       - [EIA Metadata Index Column information](#eia-metadata-index-column-information)
 #       - [EIA Parameters Column information](#eia-parameters-column-information)
 #     - [Missing Data](#missing-data)
+#     - [Independent Dataset](#independent-dataset)
+#       - [Summary Dataset Overview](#summary-dataset-overview)
+#       - [Unit Distribution in the Summary Dataset](#unit-distribution-in-the-summary-dataset)
 #   - [Exploratory Analysis](#exploratory-analysis)
 #     - [Index Analysis](#index-analysis)
 #       - [Distribution by Dataset](#distribution-by-dataset)
@@ -337,9 +340,11 @@ caueduti.plot_top_n_annotated_bar(
 # Only three columns contain missing values: `frequency_alias`, `data_units`, and `data_alias`, with 95.3%, 36.0% and 0.6% missing values respectively. The missing `frequency_alias` and `data_alias` are not essential, as they serve only as display-friendly labels. While `data_units` is more relevant for interpreting values (e.g., whether a series is in MW or MWh), it is often redundant with dataset context and not required for structural analysis.
 
 # %% [markdown]
+# <a name='independent-dataset'></a>
 # ### Independent Dataset
 
 # %% [markdown]
+# <a name='summary-datast-overview'></a>
 # #### Summary Dataset Overview
 #
 # The summary dataset stands out from other electricity datasets in the EIA collection. Unlike metric-specific datasets such as `retail_sales` or `net_generation`, the summary dataset aggregates high-level electricity indicators by state. These include values like total generation, retail sales, and emissions, often paired with comparative insights such as a state’s national rank. All time series in this dataset are reported on an annual basis, providing a consistent structure suitable for both cross-state and year-over-year comparisons. While most datasets use standard units (e.g., `MWh`, `dollars`), the summary dataset includes non-standard units such as `rank`, reinforcing its analytical and comparative purpose. This makes the dataset independent, not in the sense that it summarizes all other datasets, but in how it presents standalone summary insights that aren't tied to a single physical measurement.
@@ -350,6 +355,7 @@ df_summary = df_metadata[df_metadata["dataset_id"] == "summary"]
 df_summary.head()
 
 # %% [markdown]
+# <a name='unit-distribution-in-the-summary-dataset'></a>
 # #### Unit Distribution in the Summary Dataset
 #
 # To further understand what the summary dataset measures, we examine the data_units column. The most common unit is `rank`, indicating that many series are not raw values but comparative rankings across U.S. states. In addition, for every metric with a standard unit (e.g., `megawatts` or `short tons`), there exists a correlated time series using `rank`, representing the same metric but in relative terms (e.g., `net-summer-capacity` and `net-summer-capacity-rank`). This pairing reinforces the dataset's role as a state-level benchmarking tool rather than a source of detailed operational data.
