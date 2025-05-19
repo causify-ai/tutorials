@@ -57,18 +57,7 @@ This project demonstrates a real-time anomaly detection pipeline for Bitcoin pri
 
 ## Flowchart
 ![Pipeline Flow](data/flow-chart.jpeg)
-```mermaid
-graph TD
-    A[Fetch Bitcoin Price using Python] --> B[Send to Kinesis Data Stream]
-    B --> C[Flink: Compute Rolling Metrics]
-    C --> D[Flag Potential Anomalies]
-    D --> E[Send to Processed Stream]
-    E --> F[Lambda: Load ML Model]
-    F --> G[Score Anomaly with Isolation Forest]
-    G -->|If anomaly| H[Send alert to SNS]
-    G -->|Always| I[Archive to S3 via Firehose]
-    I --> J[Visualize in Dashboard]
-```
+
 ## Deployment Notes
 ### Lambda Packaging
 - Built inside the official AWS Lambda Python 3.9 Docker image to ensure compatibility.
