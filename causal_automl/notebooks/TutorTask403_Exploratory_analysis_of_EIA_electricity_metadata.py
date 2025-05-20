@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.16.7
+#       jupytext_version: 1.17.1
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -25,9 +25,6 @@
 #       - [EIA Metadata Index Column information](#eia-metadata-index-column-information)
 #       - [EIA Parameters Column information](#eia-parameters-column-information)
 #     - [Missing Data](#missing-data)
-#     - [Independent Dataset](#independent-dataset)
-#       - [Summary Dataset Overview](#summary-dataset-overview)
-#       - [Unit Distribution in the Summary Dataset](#unit-distribution-in-the-summary-dataset)
 #   - [Exploratory Analysis](#exploratory-analysis)
 #     - [Index Analysis](#index-analysis)
 #       - [Distribution by Dataset](#distribution-by-dataset)
@@ -42,10 +39,9 @@
 #       - [Top Facets](#top-facets)
 #       - [Facet Usage Across Dataset](#facet-usage-across-dataset)
 #       - [Facet Cardinalities](#facet-cardinalities)
-
-# %% [markdown]
-# Contents:
-#
+#     - [Summary Dataset](#summary-dataset)
+#       - [Summary Dataset Overview](#summary-dataset-overview)
+#       - [Unit Distribution in the Summary Dataset](#unit-distribution-in-the-summary-dataset)
 
 # %% [markdown]
 # <a name='exploratory-data-analysis:-eia-metadata'></a>
@@ -102,8 +98,9 @@ aws_profile = "ck"
 # %%
 def _get_missing_summary(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Get a summary of missing value count and percentage for columns with
-    missing values.
+    Get a summary of missing value count and percentage per column.
+
+    Only columns with missing values are included in the output.
 
     :param df: data to inspect
     :return: data with count and percentage of missing values
@@ -128,8 +125,7 @@ def _plot_distribution(
         'frequency_id', 'data_units')
     :param title: title for the plot
     """
-    if column not in df_metadata.columns:
-        _LOG.warning("Invalid column `%s`.", column)
+    hdbg.dassert_in(column, df_metadata.columns, "Invalid column `%s`", column)
     counts = df_metadata[column].value_counts()
     caueduti.plot_top_n_annotated_bar(
         counts=counts,
@@ -153,9 +149,9 @@ def _load_data(file_path: str, aws_profile: str) -> pd.DataFrame:
     """
     Load data from the specified S3 file path.
 
-    :param file_path: Full S3 URI of the file to load
+    :param file_path: full S3 URI of the file to load
     :param aws_profile: AWS CLI profile used for access
-    :return: DataFrame of the loaded data
+    :return: the loaded data
     """
     file = hs3.from_file(file_path, aws_profile=aws_profile)
     df = pd.read_csv(io.StringIO(file))
@@ -175,7 +171,7 @@ def _load_eia_metadata_and_parameters(
     :param metadata_file: metadata CSV filename (e.g., "eia_metadata.csv")
     :param parameter_subdir: subdirectory in `s3_dir` containing parameter files
     :param aws_profile: AWS CLI profile used for access
-    :return: metadata and parameter DataFrames
+    :return: metadata and parameter data
     """
     # Load metadata CSV.
     metadata_path = os.path.join(s3_dir, metadata_file_path)
@@ -338,44 +334,6 @@ caueduti.plot_top_n_annotated_bar(
 
 # %% [markdown]
 # Only three columns contain missing values: `frequency_alias`, `data_units`, and `data_alias`, with 95.3%, 36.0% and 0.6% missing values respectively. The missing `frequency_alias` and `data_alias` are not essential, as they serve only as display-friendly labels. While `data_units` is more relevant for interpreting values (e.g., whether a series is in MW or MWh), it is often redundant with dataset context and not required for structural analysis.
-
-# %% [markdown]
-# <a name='independent-dataset'></a>
-# ### Independent Dataset
-
-# %% [markdown]
-# <a name='summary-datast-overview'></a>
-# #### Summary Dataset Overview
-#
-# The summary dataset stands out from other electricity datasets in the EIA collection. Unlike metric-specific datasets such as `retail_sales` or `net_generation`, the summary dataset aggregates high-level electricity indicators by state. These include values like total generation, retail sales, and emissions, often paired with comparative insights such as a state’s national rank. All time series in this dataset are reported on an annual basis, providing a consistent structure suitable for both cross-state and year-over-year comparisons. While most datasets use standard units (e.g., `MWh`, `dollars`), the summary dataset includes non-standard units such as `rank`, reinforcing its analytical and comparative purpose. This makes the dataset independent, not in the sense that it summarizes all other datasets, but in how it presents standalone summary insights that aren't tied to a single physical measurement.
-
-# %%
-# Preview summary dataset.
-df_summary = df_metadata[df_metadata["dataset_id"] == "summary"]
-df_summary.head()
-
-# %% [markdown]
-# <a name='unit-distribution-in-the-summary-dataset'></a>
-# #### Unit Distribution in the Summary Dataset
-#
-# To further understand what the summary dataset measures, we examine the data_units column. The most common unit is `rank`, indicating that many series are not raw values but comparative rankings across U.S. states. In addition, for every metric with a standard unit (e.g., `megawatts` or `short tons`), there exists a correlated time series using `rank`, representing the same metric but in relative terms (e.g., `net-summer-capacity` and `net-summer-capacity-rank`). This pairing reinforces the dataset's role as a state-level benchmarking tool rather than a source of detailed operational data.
-
-# %%
-# Count frequency of each unique data unit in the summary metadata
-unit_counts = df_summary["data_units"].value_counts()
-# Plot the most common data units
-plt.figure(figsize=(10, 6))
-sns.barplot(
-    y=unit_counts.index,
-    x=unit_counts.values,
-    hue=unit_counts.index,
-    palette="crest",
-)
-plt.title("Units Distribution in Summary Dataset")
-plt.xlabel("Number of Time Series")
-plt.ylabel("Data Unit")
-plt.tight_layout()
-plt.show()
 
 # %% [markdown]
 # <a name='exploratory-analysis'></a>
@@ -547,7 +505,7 @@ plt.show()
 # <a name='top-facets'></a>
 # #### Top Facets
 #
-# The distribution of facets used across EIA time series reveals that `stateid` is by far the most common, appearing in nearly 93% of series, indicating strong geographic granularity. Other frequently used facets include `sectorid`, `fueltypeid`, and `location`, suggesting that categorization by usage sector and fuel classification is also central to the dataset structure. The presence of technical identifiers like `plantCode`, `generatorid`, and `primeMover` highlights the detailed operational scope of certain datasets. Overall, the top 15 facets cover over 250% of the time series, confirming that most series are tagged with multiple dimensions for richer filtering and analysis.
+# The distribution of facets used across EIA time series reveals that `stateid` is by far the most common, appearing in nearly 93% of series, indicating strong geographic granularity. Other frequently used facets include `sectorid` and `fueltypeid`, suggesting that categorization by usage sector and fuel classification is also central to the dataset structure. The presence of technical identifiers like `plantCode`, `generatorid`, and `primeMover` highlights the detailed operational scope of certain datasets. Overall, the top 15 facets cover over 250% of the time series, confirming that most series are tagged with multiple dimensions for richer filtering and analysis.
 
 # %%
 # Calculate facets count.
@@ -570,7 +528,7 @@ caueduti.plot_top_n_annotated_bar(
 # <a name='facet-usage-across-dataset'></a>
 # #### Facet Usage Across Dataset
 #
-# The heatmap visualizes the presence or absence of each facet ID across EIA datasets. Some facets like `stateid`, `sectorid`, and `plantCode` appear across multiple datasets, highlighting their importance in disaggregating and analyzing energy data. Conversely, many datasets use a small, distinct subset of facets—suggesting that different datasets are specialized for particular use cases. For example, `electric_power_operational_data` is richly annotated, while others like `summary` or `retail_sales` are more minimalistic. This heterogeneity underscores the need for dataset-specific handling when performing cross-dataset analysis.
+# The heatmap visualizes the presence or absence of each facet ID across EIA datasets. Some facets like `stateid`, `sectorid`, and `plantCode` appear across multiple datasets, highlighting their importance in disaggregating and analyzing energy data. Conversely, many datasets use a small, distinct subset of facets—suggesting that different datasets are specialized for particular use cases. For example, `operating_generator_capacity` is richly annotated, while others like `summary` or `source_disposition` are more minimalistic. This heterogeneity underscores the need for dataset-specific handling when performing cross-dataset analysis.
 
 # %%
 # Create data pairing dataset and facets.
@@ -631,4 +589,40 @@ caueduti.plot_top_n_annotated_bar(
     figsize=(12, 6),
 )
 
+# %% [markdown]
+# <a name='summary-dataset'></a>
+# ### Summary Dataset
+
+# %% [markdown]
+# <a name='summary-datast-overview'></a>
+# #### Summary Dataset Overview
+#
+# The summary dataset stands out from other electricity datasets in the EIA collection. Unlike metric-specific datasets such as `retail_sales` or `net_generation`, the summary dataset aggregates high-level electricity indicators by state. These include values like total generation, retail sales, and emissions, often paired with comparative insights such as a state’s national rank. All time series in this dataset are reported on an annual basis, providing a consistent structure suitable for both cross-state and year-over-year comparisons. While most datasets use standard units (e.g., `MWh`, `dollars`), the summary dataset includes non-standard units such as `rank`, reinforcing its analytical and comparative purpose. The dataset presents standalone summary insights that aren't tied to a single physical measurement.
+
 # %%
+# Preview summary dataset.
+df_summary = df_metadata[df_metadata["dataset_id"] == "summary"]
+df_summary.head()
+
+# %% [markdown]
+# <a name='unit-distribution-in-the-summary-dataset'></a>
+# #### Unit Distribution in the Summary Dataset
+#
+# To further understand what the summary dataset measures, we examine the `data_units` column. The most common unit is `rank`, indicating that many series are not raw values but comparative rankings across U.S. states. In addition, for every metric with a standard unit (e.g., `megawatts` or `short tons`), there exists a correlated time series using `rank`, representing the same metric but in relative terms (e.g., `net-summer-capacity` and `net-summer-capacity-rank`). This pairing reinforces the dataset's role as a state-level benchmarking tool rather than a source of detailed operational data.
+
+# %%
+# Count frequency of each unique data unit in the summary metadata
+unit_counts = df_summary["data_units"].value_counts()
+# Plot the most common data units
+plt.figure(figsize=(10, 6))
+sns.barplot(
+    y=unit_counts.index,
+    x=unit_counts.values,
+    hue=unit_counts.index,
+    palette="crest",
+)
+plt.title("Units Distribution in Summary Dataset")
+plt.xlabel("Number of Time Series")
+plt.ylabel("Data Unit")
+plt.tight_layout()
+plt.show()
