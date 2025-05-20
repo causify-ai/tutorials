@@ -18,7 +18,7 @@
 # - [Description](#description)
 #   - [EIA Metadata API Tutorial](#eia-metadata-api-tutorial)
 #     - [Overview](#overview)
-#     - [Why Use This Notebook?](#why-use-this-notebook?)
+#     - [Why Use This Notebook](#why-use-this-notebook)
 #     - [Requirements](#requirements)
 #   - [Setup](#setup)
 #     - [Imports](#imports)
@@ -40,7 +40,7 @@
 
 # %% [markdown]
 # <a name='requirements'></a>
-# <a name='why-use-this-notebook?'></a>
+# <a name='why-use-this-notebook'></a>
 # <a name='overview'></a>
 # <a name='eia-metadata-api-tutorial'></a>
 # ## EIA Metadata API Tutorial
@@ -54,7 +54,7 @@
 # - Retrieve and flatten metadata including frequency, available metrics, and facet dimensions.
 # - Access parameter values for facets such as state, sector, or energy type.
 #
-# ### Why Use This Notebook?
+# ### Why Use This Notebook
 #
 # - Automate the discovery of available EIA datasets without browsing the web interface.
 # - Generate all valid combinations of time series from EIA metadata.
@@ -164,7 +164,7 @@ df_metadata.head()
 # <a name='preview-facet-values'></a>
 # ### Preview Facet Values
 #
-# Facets are categorical dimensions (e.g., `stateid`, `sectorid`) required to construct valid time series queries. Each dataset specifies its own required facets and the set of allowed values for each.
+# Each dataset defines one or more facets, which are categorical dimensions used to filter time series data. A valid query must specify one value per required facet (e.g., `stateid=CA`, `sectorid=COM`).
 
 # %% vscode={"languageId": "plaintext"}
 df_facet = param_entries[0][0]
@@ -183,7 +183,7 @@ df_facet.groupby("facet_id").head(1)
 # ### Construct Full URL from One Value per Facet
 
 # %%
-# The full URL contains the real API key, so we replace it with a placeholder for printing.
+# Since the URL would expose the actual API key, we overwrite it with a placeholder for safe display.
 api_key = "API_KEY"
 
 # Select sample route.
