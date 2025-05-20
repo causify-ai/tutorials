@@ -1,9 +1,0 @@
-__pycache__/
-*.py[cod]
-*.ipynb_checkpoints
-.env
-*.env
-data/
-*.json
-*.log
-.DS_Store.env.txt
