@@ -270,25 +270,25 @@ df_metadata.head()
 # <a name='eia-metadata-index-column-information'></a>
 # #### EIA Metadata Index Column information
 #
-# | **Column**              | **Description**                                                                 |
-# |-------------------------|---------------------------------------------------------------------------------|
-# | `url`                   | Full API URL to access the time series.                                         |
-# | `id`                    | Unique identifier for the time series.                                          |
-# | `dataset_id`            | Dataset group this series belongs to.                                           |
-# | `name`                  | Human-readable title of the dataset group.                                      |
-# | `description`           | Full description of the dataset group.                                          |
-# | `frequency_id`          | Frequency label (e.g. `monthly`, `quarterly`, `hourly`).                        |
-# | `frequency_alias`       | Alternative frequency name (often missing).                                     |
-# | `frequency_description` | Sentence-style explanation of frequency (e.g. "One data point for each month"). |
-# | `frequency_query`       | Query shorthand for frequency (e.g. `M` for monthly).                           |
-# | `frequency_format`      | Formatting string used in time index.                                           |
+# | **Column**              | **Description**                                                                      |
+# |-------------------------|--------------------------------------------------------------------------------------|
+# | `url`                   | Full API URL to access the time series.                                              |
+# | `id`                    | Unique identifier for the time series.                                               |
+# | `dataset_id`            | Dataset group this series belongs to.                                                |
+# | `name`                  | Human-readable title of the dataset group.                                           |
+# | `description`           | Full description of the dataset group.                                               |
+# | `frequency_id`          | Frequency label (e.g. `monthly`, `quarterly`, `hourly`).                             |
+# | `frequency_alias`       | Alternative frequency name (often missing).                                          |
+# | `frequency_description` | Sentence-style explanation of frequency (e.g. "One data point for each month").      |
+# | `frequency_query`       | Query shorthand for frequency (e.g. `M` for monthly).                                |
+# | `frequency_format`      | Formatting string used in time index.                                                |
 # | `facets`                | JSON-style list of facet definitions used for filtering (e.g. `stateid`, `sectorid`).|
-# | `data`                  | Identifier for the metric being measured (e.g. `revenue`, `sales`).             |
-# | `data_alias`            | Human-readable version of the data name.                                        |
-# | `data_units`            | Units of measurement (e.g. `million dollars`, `cents per kWh`).                 |
-# | `start_period`          | Start date of available data (YYYY-MM format).                                  |
-# | `end_period`            | End date of available data (YYYY-MM format).                                    |
-# | `parameter_values_file` | S3 path to facet value mappings for this dataset.                               |
+# | `data`                  | Identifier for the metric being measured (e.g. `combined-heat-and-pwr-comm`).        |
+# | `data_alias`            | Display-friendly name for the metric (e.g. `Net Generation from Commercial Sector`). |
+# | `data_units`            | Units of measurement (e.g. `million dollars`, `cents per kWh`).                      |
+# | `start_period`          | Start date of available data (YYYY-MM format).                                       |
+# | `end_period`            | End date of available data (YYYY-MM format).                                         |
+# | `parameter_values_file` | S3 path to facet value mappings for this dataset.                                    |
 #
 
 # %%
