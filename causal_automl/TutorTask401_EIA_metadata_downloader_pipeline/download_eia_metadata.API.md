@@ -20,32 +20,46 @@ actual numeric data.
 
 This allows users to:
 
-- **Discover dataset routes**
+- **Discover dataset routes**  
   Retrieve the full category tree exposed by the EIA API and identify dataset
   leaf paths (for example, `electricity/sales/retail`) that define related time
   series
 
-- **Identify available metrics**
+- **Identify available metrics**  
   Extract the measurable variables (referred to as metrics in the EIA API) for
   each dataset, such as total revenue, number of customers, or electricity
   consumption
 
-- **Preview supported frequencies, units, and facets**
+- **Preview supported frequencies, units, and facets**  
   Understand the temporal resolution (e.g., monthly, annual), the measurement
   units (e.g., kilowatthours or dollars), and the filtering dimensions (facets)
   required by each dataset (for example, `stateid=CA`, `sectorid=RES`)
 
-- **Flatten nested metadata into a tabular format**
-  Generate a `pd.DataFrame` where each row represents a unique time series
-  defined by a valid combination of metric, frequency, and facet values
+  Each dataset defines one or more **facets**, which are categorical filters
+  used to construct valid time series API queries. A facet includes:
+ 
+  - A **facet type**, such as `stateid` or `sectorid`
+  - A list of **allowed values**, like `CA`, `TX`, or `OTH`
+  - Optional **descriptive labels** (aliases) for UI display
+ 
+  To retrieve data for a given dataset, you must supply **exactly one value for
+  each required facet**. The required facet types vary across datasets.
+ 
+  Note: The EIA API does not indicate which combinations of facet values will
+  return data. While you can construct syntactically correct URLs using this
+  metadata, actual data availability must be tested independently.
 
-- **Construct time series query URLs**
-  Build syntactically valid EIA API URLs to retrieve specific time series,
-  without checking whether those URLs return data
+- **Flatten nested metadata into a tabular format**  
+  Generate a `pd.DataFrame` where each row represents a possible combination of
+  metric, frequency, and facet values described by the dataset metadata
+
+- **Construct time series query URLs**  
+  Build syntactically correct EIA API URLs to retrieve specific time series,
+  without checking whether those URLs actually return data
 
 ## Problem it solves
 
-The EIA API exposes thousands of datasets organized in a nested category tree
+The EIA API exposes thousands of datasets organized in a nested category tree.
 
 Each dataset is defined by:
 
@@ -66,46 +80,47 @@ downloading data. This module helps by:
 ## Design goals
 
 - Separate metadata logic from time series fetching
-- Make all outputs easy to inspect as pandas dataframes
-- Allow notebook users to generate parameterized URLs, even if some URLs may not
-  yield data
+- Make all outputs easy to inspect as `pd.DataFrame`s
+- Allow notebook users to generate parameterized URLs based on metadata,
+  even if some URLs do not yield data
 
 ## Challenges
 
-One key challenge in working with the EIA v2 API is its **tree-structured
-hierarchy**. Datasets are nested across multiple category levels (e.g.,
+One key challenge in working with the EIA v2 API is its tree-structured
+hierarchy. Datasets are nested across multiple category levels (e.g.,
 `electricity/sales/retail`) and cannot be retrieved in bulk through a single
 endpoint.
 
-To build a valid time series request, users must:
+To construct a time series query, users must:
 
-- Traverse to each **leaf dataset** in the API
-- Identify all combinations of **frequency** and **metric** that define a time
-  series
-- Parse and separate **facet types** (e.g., `stateid`, `sectorid`) and their
-  allowed values
-- Provide **exactly one value per facet** to construct a valid query
+- Traverse to each leaf dataset in the API
+- Identify all combinations of frequency and metric values available under that
+  dataset
+- Parse the list of required facets and retrieve their allowed values from the
+  metadata
+- Provide one value per required facet to construct a syntactically valid query
+  URL (see **Overview** for facet details)
 
 The EIA API does not provide availability flags for facet combinations. This
 means:
 
-- A syntactically valid URL might return no data
+- A syntactically correct URL might return no data
 - Users must flatten all metadata and facet dimensions in advance
 - Availability checks must be done after URL construction (not within this
-  layer)
+  module)
 
-This module resolves the traversal and flattening steps but deliberately leaves
-data availability validation to downstream layers or notebooks that choose to
-fetch actual responses.
+This module resolves the traversal and flattening steps but leaves data
+availability validation to downstream systems or notebooks.
 
 ## Limitations
 
 - Does not download or validate numeric time series
-- Assumes one facet value per type (e.g., `stateid=CA`, not all states)
+- Assumes one facet value per required type (e.g., `stateid=CA`, not all states)
 - Does not handle errors in downstream API calls
 
 ## Conclusion
 
 This module simplifies metadata exploration across the EIA dataset catalog. It
-does not replace a full ingestion pipeline but provides a reliable way to
-understand the structure and parameters of available time series.
+does not replace a full ingestion pipeline but provides a lightweight interface
+to understand the structure and constraints of time series metadata available
+through the EIA API.
