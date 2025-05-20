@@ -104,10 +104,10 @@ _LOG = logging.getLogger(__name__)
 # Alternatively, you can set it within the notebook:
 
 # %% vscode={"languageId": "plaintext"}
-# Set your GitHub access token here.
+# Set your EIA api key here.
 os.environ["EIA_API_KEY"] = ""
 
-# Ensure the token is set correctly.
+# Ensure the api key is set correctly.
 hdbg.dassert_in(
     "EIA_API_KEY", os.environ, msg="Missing environment variable EIA_API_KEY."
 )

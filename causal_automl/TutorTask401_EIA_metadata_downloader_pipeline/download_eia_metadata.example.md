@@ -39,29 +39,29 @@ identify high-coverage routes for further inspection.
 This metadata-first approach supports multiple use cases:
 
 - Pre-validating whether certain metrics, frequencies, and facet values exist
-  before running data pulls.
+  before running data pulls
 - Building dashboards that track schema coverage or the availability of new
-  datasets.
-- Generating documentation for ingestible datasets based on real API structure.
+  datasets
+- Generating documentation for ingestible datasets based on real API structure
 - Integrating into ingestion planning pipelines that rely on cleanly structured
-  metadata.
+  metadata
 
 ## Design highlights
 
-- Uses the `EiaMetadataDownloader` class to abstract away tree traversal.
+- Uses the `EiaMetadataDownloader` class to abstract away tree traversal
 - All plots are generated using helper functions from `eia_utils`, improving
-  reusability.
+  reusability
 - URL construction and actual data fetching are deliberately omitted to preserve
-  clarity and purpose.
+  clarity and purpose
 
 ## Wrap-up and insights
 
 This example demonstrates how to extract and visualize structural metadata from
 the EIA v2 API, enabling users to:
 
-- Understand the dimensionality of available datasets.
-- Preview the frequency and unit types across all metrics.
-- Prioritize routes based on their time series count.
+- Understand the dimensionality of available datasets
+- Preview the frequency and unit types across all metrics
+- Prioritize routes based on their time series count
 
 This helps avoid unnecessary API calls by validating the structure before
 building ingestion logic. It also supports a clean separation between discovery

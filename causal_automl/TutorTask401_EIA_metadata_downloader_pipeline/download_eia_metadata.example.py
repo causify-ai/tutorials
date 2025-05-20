@@ -102,10 +102,10 @@ _LOG = logging.getLogger(__name__)
 # Alternatively, you can set it within the notebook:
 
 # %%
-# Set your GitHub access token here.
+# Set your EIA api key here.
 os.environ["EIA_API_KEY"] = ""
 
-# Ensure the token is set correctly.
+# Ensure the api key is set correctly.
 hdbg.dassert_in(
     "EIA_API_KEY", os.environ, msg="Missing environment variable EIA_API_KEY."
 )
@@ -204,5 +204,3 @@ catemdpeu.plot_distribution(
 # - Grouping by `dataset_id` showed how some datasets expose more metric-frequency combinations than others, which is useful when prioritizing which datasets to ingest or analyze further.
 #
 # By analyzing just the metadata, we can assess the overall shape and availability of EIA time series without needing to fetch any actual data. This is especially useful for exploratory analysis, schema understanding, and preparing batch download logic.
-
-# %%
