@@ -5,30 +5,95 @@ This project analyzes Bitcoin-related news articles to identify trending keyword
 ## Features
 
 - **News Data Collection**: Fetches Bitcoin-related news articles from NewsAPI
-- **Keyword Extraction**: Uses TextBlob to extract and analyze meaningful keywords from articles
+- **Keyword Extraction**: Extracts and analyzes meaningful keywords from articles
 - **Price Data Integration**: Incorporates Bitcoin price data from CoinGecko API
-- **Trend Analysis**: Identifies trending keywords and calculates correlations with price movements
-- **Statistical Testing**: Implements Granger causality tests to detect potential lead-lag relationships
-- **Interactive Visualization**: Provides both static and interactive charts of the analysis results
-- **Dashboard**: Generates a comprehensive HTML dashboard with all visualizations
+- **Correlation Analysis**: Identifies relationships between keywords and price movements
+- **Interactive Visualization**: Provides visualizations of analysis results
 
 ## Project Structure
 
 ```
 ├── main.py                # Main script to run the complete analysis pipeline
-├── fetch_news.py          # Fetches news data from NewsAPI
-├── fetch_prices.py        # Retrieves Bitcoin price data from CoinGecko
-├── extract_keywords.py    # Extracts keywords using TextBlob
-├── analyze_trends.py      # Analyzes keyword trends and correlations
-├── granger.py             # Performs Granger causality tests
-├── visualize.py           # Creates visualizations of analysis results
-├── dashboard/             # Dashboard generation code
-│   └── dashboard.py       # Creates interactive HTML dashboard
-├── data/                  # Stores intermediate and final data (generated)
-├── figures/               # Stores visualizations (generated)
-│   └── html/              # Interactive HTML visualizations (generated)
-├── requirements.txt       # Python dependencies
-└── Dockerfile             # Container definition for Docker deployment
+├── granger.py            # Granger causality testing implementation
+├── TextBlob1_Utils.py    # Utility functions for data processing and analysis
+├── TextBlob1.example.md  # Example usage documentation
+├── TextBlob1.example.ipynb  # Example Jupyter notebook
+├── TextBlob1.API.ipynb   # API documentation notebook
+├── TextBlob.API.md       # API documentation
+├── requirements.txt      # Python dependencies
+├── .dockerignore        # Docker ignore file
+├── .gitignore          # Git ignore file
+├── data/               # Directory for storing data files
+├── figures/            # Directory for storing visualizations
+├── dashboard/          # Directory for dashboard files
+└── Dockerfile         # Container definition for Docker deployment
+```
+
+## Visual Documentation
+
+### Project Workflow
+
+```mermaid
+graph TD
+    A[Start] --> B[Fetch News Data]
+    B --> C[Fetch Price Data]
+    C --> D[Process News Articles]
+    D --> E[Extract Keywords]
+    E --> F[Correlate with Price]
+    F --> G[Generate Visualizations]
+    G --> H[End]
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style H fill:#f9f,stroke:#333,stroke-width:2px
+```
+
+### Data Flow
+
+```mermaid
+graph LR
+    A[NewsAPI] -->|News Articles| B[Data Processing]
+    C[CoinGecko] -->|Price Data| B
+    B -->|Processed Data| D[TextBlob Analysis]
+    D -->|Keywords| E[Correlation Analysis]
+    E -->|Results| F[Visualization]
+    F -->|Charts & Graphs| G[Dashboard]
+
+    style A fill:#f96,stroke:#333,stroke-width:2px
+    style C fill:#f96,stroke:#333,stroke-width:2px
+    style G fill:#9f9,stroke:#333,stroke-width:2px
+```
+
+### Component Interaction
+
+```mermaid
+graph TB
+    subgraph "Data Collection"
+        A[NewsAPI Client]
+        B[CoinGecko Client]
+    end
+
+    subgraph "Processing"
+        C[TextBlob1_Utils]
+        D[Granger Testing]
+    end
+
+    subgraph "Visualization"
+        E[Plot Generation]
+        F[Dashboard]
+    end
+
+    A --> C
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+
+    style A fill:#f96,stroke:#333,stroke-width:2px
+    style B fill:#f96,stroke:#333,stroke-width:2px
+    style C fill:#9cf,stroke:#333,stroke-width:2px
+    style D fill:#9cf,stroke:#333,stroke-width:2px
+    style E fill:#9f9,stroke:#333,stroke-width:2px
+    style F fill:#9f9,stroke:#333,stroke-width:2px
 ```
 
 ## Analysis Pipeline
@@ -39,32 +104,24 @@ This project analyzes Bitcoin-related news articles to identify trending keyword
 
 2. **Keyword Extraction**:
    - Uses TextBlob to process article text
-   - Extracts noun phrases and important terms
+   - Extracts and ranks important keywords
    - Filters out common stopwords and irrelevant terms
-   - Weights keywords by frequency and position (title vs. body)
 
-3. **Trend Analysis**:
-   - Identifies trending keywords over time
-   - Calculates correlation between keyword frequency and price
-   - Aggregates results by time window (daily/hourly)
+3. **Correlation Analysis**:
+   - Correlates keyword frequencies with Bitcoin price movements
+   - Identifies keywords with strong price relationships
+   - Analyzes temporal patterns in keyword usage
 
-4. **Statistical Analysis**:
-   - Performs Granger causality tests to determine if:
-     - Keyword trends precede price movements
-     - Price movements precede keyword trends
-   - Tests for stationarity and transforms data when necessary
-
-5. **Visualization**:
+4. **Visualization**:
    - Generates time-series charts of keyword frequencies vs. price
-   - Creates correlation heatmaps
-   - Visualizes Granger causality test results
-   - Compiles an interactive dashboard with all results
+   - Creates correlation visualizations
+   - Provides interactive plots for exploration
 
 ## Setup and Installation
 
 ### Prerequisites
 
-- Python 3.7+
+- Python 3.9+
 - NewsAPI key (get one at [newsapi.org](https://newsapi.org/))
 
 ### Option 1: Standard Installation
@@ -89,55 +146,67 @@ This project analyzes Bitcoin-related news articles to identify trending keyword
    ```
 4. Run the container:
    ```bash
-   docker run --env-file .env -v $(pwd)/figures:/app/figures -v $(pwd)/data:/app/data bitcoin-news-analysis
+   docker run -d --name bitcoin-analysis -p 8888:8888 -v ${PWD}:/app bitcoin-news-analysis
    ```
 
 ## Usage
 
-Run the full analysis pipeline:
+### Running in Docker with Jupyter Notebook
 
-```bash
-python main.py
-```
+1. Start the Docker container:
+   ```powershell
+   docker run -d --name bitcoin-analysis -p 8888:8888 -v ${PWD}:/app bitcoin-news-analysis
+   ```
 
-Or run individual components for testing:
+2. Get the Jupyter Notebook URL:
+   ```powershell
+   docker logs bitcoin-analysis
+   ```
+   Look for a URL that looks like: `http://127.0.0.1:8888/tree?token=<some_token>`
 
-```bash
-python fetch_news.py     # Test news API fetching
-python fetch_prices.py    # Test price data fetching
-python extract_keywords.py # Test keyword extraction
-python analyze_trends.py  # Test trend analysis
-python granger.py         # Test causality analysis
-python visualize.py       # Test visualizations
+3. Open the URL in your web browser
+
+4. Navigate to and open `TextBlob1.example.ipynb` to run the complete analysis pipeline
+
+The example notebook contains all the necessary code to:
+- Fetch Bitcoin news articles
+- Extract keywords
+- Analyze correlations with price
+- Generate visualizations
+
+### Running Individual Components
+
+You can also run individual components in the Jupyter notebook:
+
+```python
+import TextBlob1_Utils as utils
+
+# Fetch news data
+news_data = utils.fetch_bitcoin_news(days=30, query='bitcoin OR cryptocurrency', language='en')
+
+# Extract keywords
+keywords_df = utils.extract_keywords(news_data)
+
+# Analyze correlations
+correlation_df = utils.analyze_keyword_price_correlation(keywords_df, price_data)
+
+# Create visualizations
+utils.plot_keyword_trends(keywords_df, price_data, top_n=5)
+utils.plot_keyword_correlation(correlation_df, top_n=10)
 ```
 
 ## Example Output
 
-After running the analysis, you'll find:
+The analysis provides:
 
-1. Processed data in the `data/` directory:
-   - `bitcoin_news.csv`: Raw news data
-   - `bitcoin_news_with_keywords.csv`: News with extracted keywords
-   - `bitcoin_prices.csv`: Bitcoin price data
-   - `merged_keyword_price.csv`: Joined keyword and price data
-   - `keyword_trends.csv`: Keyword trend analysis
-   - `granger_causality_results.csv`: Statistical test results
-
-2. Visualizations in the `figures/` directory:
-   - Keyword vs. price charts
-   - Correlation heatmaps
-   - Granger causality test visualizations
-   - Interactive HTML versions in `figures/html/`
-
-3. A comprehensive dashboard at `dashboard/index.html`
+1. Sentiment analysis results showing market sentiment trends
+2. Top keywords extracted from news articles
+3. Correlation analysis between keywords and price movements
+4. Interactive visualizations of trends and relationships
 
 ## API Rate Limits and Sample Data
 
-If you don't have a NewsAPI key or exceed the API rate limits, the program will automatically use sample data for demonstration purposes. This allows you to test the functionality without actual API access.
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+If you don't have a NewsAPI key or exceed the API rate limits, the program will automatically use sample data for demonstration purposes.
 
 ## License
 
@@ -148,4 +217,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [TextBlob](https://textblob.readthedocs.io/) for NLP capabilities
 - [NewsAPI](https://newsapi.org/) for news data
 - [CoinGecko](https://www.coingecko.com/en/api) for price data
-- [Plotly](https://plotly.com/) and [Matplotlib](https://matplotlib.org/) for visualizations 
+- [Plotly](https://plotly.com/) for visualizations 
