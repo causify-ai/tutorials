@@ -7,20 +7,14 @@
 - Author: Castelan, Emily
 - Date: April 21 2025
 
-<Describe all the files in the projects>
+## This project contains the following files
 
-## This project contains the following template files
-
-- `Falcon`.API.ipynb: a notebook describing the native API of Flacon
-- `Falcon`.API.md: a description of the native API of Falcon
-- `Falcon`.API.py: code for using API of Falcon
-- `Falcon`.example.ipynb: a notebook implementing a project using <Package>
-- `Falcon`.example.md: a markdown description of the project
-- `Falcon`.example.py: code for implementing the project
-
-This project contains the following working files
-- `falcon_server`.API.md: a description of the native API of Falcon
-- `falcon_server`.API.py: code for using API of Falcon
+- `Falcon`.ipynb: a notebook describing the native API of Flacon
+- `Falcon`_utils.py: code for using API of Falcon endpoint
+- `Falcon`_Celery_Tasks.py and `Falcon_Celery_Tasks_lstm`.py: define Celery tasks
+   additional functions are on: utils_extended.py, utils.py, functions.py
+- docker_config: files set up docker environment
+   include requirements.txt., docker-compose.yml, and additional files
 
 
 ## Project Description
@@ -46,22 +40,18 @@ This README serves as both documentation and a development roadmap.
 
 ### 4. **Analytics Tasks**
 - **Anomaly Detection**: Identify sudden price changes or suspicious patterns.
-- **Sentiment Analysis** *(optional)*: Pull recent tweets about Bitcoin and score the sentiment using an NLP model.
 
 ### 5. **Model Training & Forecasting**
-- Use historical and/or streamed price data to train a forecasting model:
-  - Option A: [Facebook Prophet](https://facebook.github.io/prophet/)
-  - Option B: LSTM (via Keras)
+- Use historical price data to train a forecasting model:
+  - LSTM (via Keras)
 
 ### 6. **Prediction API Endpoint (`/predict`)**
-- Expose a Falcon endpoint that returns the predicted price (next 24h or specified window).
+- Exposes a Falcon endpoint that returns the predicted price of specified window.
 - Optionally supports parameters for time range, model type, or confidence interval.
 
 ### 7. **Caching and Optimization**
-- Store frequent API results (e.g., recent predictions) in Redis to reduce load.
-- Apply rate limiting to protect the system under heavy use.
+- Store frequent API results in RedisTS to reduce load.
 
 ### 8. **Scalability & Monitoring**
-- The full system is containerized using Docker.
-- Use Locust to simulate high request volume and test limits.
-- Monitor system metrics using `prometheus-client`.
+- The full system is containerized using Docker containers.
+- Flower is utilized for monitoring Celery tasks.
