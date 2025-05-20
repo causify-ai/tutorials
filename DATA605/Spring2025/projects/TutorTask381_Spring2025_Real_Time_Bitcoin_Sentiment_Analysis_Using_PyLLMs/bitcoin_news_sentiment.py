@@ -61,32 +61,32 @@ def main():
     def run_analysis():
         """Run a single analysis cycle."""
         print(f"\nRunning sentiment analysis at {time.strftime('%Y-%m-%d %H:%M:%S')}")
-        # Process articles with date range
-        print("\nFetching and analyzing Bitcoin news...")
-        df = process_news_articles(
-            config, 
-            page_size=args.page_size, 
-            days_back=days_back,
-            custom_from_date=args.from_date,
-            custom_to_date=args.to_date
-        )
-        
-        # Display results
-        if df.empty:
-            print("No articles found or analyzed.")
-            return
-        
-        print("\nSummary Statistics:")
-        print(f"Total articles analyzed: {len(df)}")
-        sentiment_counts = df['sentiment'].value_counts()
-        for sentiment, count in sentiment_counts.items():
-            print(f"  {sentiment}: {count} articles ({count/len(df)*100:.1f}%)")
-        
-        # Save results to data folder
-        config.DATA_DIR.mkdir(exist_ok=True)  # Ensure data directory exists
-        output_file = config.DATA_DIR / "bitcoin_sentiment_results.csv"
-        df.to_csv(output_file, index=False)
-        print(f"\nResults saved to {output_file}")
+    # Process articles with date range
+    print("\nFetching and analyzing Bitcoin news...")
+    df = process_news_articles(
+        config, 
+        page_size=args.page_size, 
+        days_back=days_back,
+        custom_from_date=args.from_date,
+        custom_to_date=args.to_date
+    )
+    
+    # Display results
+    if df.empty:
+        print("No articles found or analyzed.")
+        return
+    
+    print("\nSummary Statistics:")
+    print(f"Total articles analyzed: {len(df)}")
+    sentiment_counts = df['sentiment'].value_counts()
+    for sentiment, count in sentiment_counts.items():
+        print(f"  {sentiment}: {count} articles ({count/len(df)*100:.1f}%)")
+    
+    # Save results to data folder
+    config.DATA_DIR.mkdir(exist_ok=True)  # Ensure data directory exists
+    output_file = config.DATA_DIR / "bitcoin_sentiment_results.csv"
+    df.to_csv(output_file, index=False)
+    print(f"\nResults saved to {output_file}")
     
     if args.loop:
         print(f"Starting continuous analysis every {args.interval} minutes...")
@@ -103,7 +103,7 @@ def main():
     else:
         # Run once
         run_analysis()
-        print("\nDone! You can now view the results in the data folder.")
+    print("\nDone! You can now view the results in the data folder.")
 
 
 if __name__ == "__main__":
