@@ -46,7 +46,7 @@ class GridStatusDataDownloader:
 
         When no start and end timestamps are passed, the entire time series is downloaded.
 
-        Example of timestamp - "2010-01-01 08:00:00+00:00"
+        Example of a timestamp - "2010-01-01 08:00:00+00:00"
 
         Example of a returned series:
 
@@ -58,7 +58,7 @@ class GridStatusDataDownloader:
 
         :param id_: GridStatus dataset identifier (e.g., "caiso_as_prices")
         :param start_timestamp: first observation timestamp
-        :param end_timestamp: last observation timestamp (non inclusive)
+        :param end_timestamp: last observation timestamp
         :return: relevant GridStatus series data
         """
         # Build request parameters.
