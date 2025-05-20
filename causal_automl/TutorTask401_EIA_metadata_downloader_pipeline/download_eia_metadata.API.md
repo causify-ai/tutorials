@@ -2,12 +2,14 @@
 
 <!-- toc -->
 
-- [Overview](#overview)
-- [Problem it solves](#problem-it-solves)
-- [Design goals](#design-goals)
-- [Challenges](#challenges)
-- [Limitations](#limitations)
-- [Conclusion](#conclusion)
+- [EIA Metadata API Layer](#eia-metadata-api-layer)
+  * [Overview](#overview)
+    + [Understanding facets](#understanding-facets)
+  * [Problem it solves](#problem-it-solves)
+  * [Design goals](#design-goals)
+  * [Challenges](#challenges)
+  * [Limitations](#limitations)
+  * [Conclusion](#conclusion)
 
 <!-- tocstop -->
 
@@ -20,42 +22,44 @@ actual numeric data.
 
 This allows users to:
 
-- **Discover dataset routes**  
+- **Discover dataset routes**
   Retrieve the full category tree exposed by the EIA API and identify dataset
   leaf paths (for example, `electricity/sales/retail`) that define related time
   series
 
-- **Identify available metrics**  
+- **Identify available metrics**
   Extract the measurable variables (referred to as metrics in the EIA API) for
   each dataset, such as total revenue, number of customers, or electricity
   consumption
 
-- **Preview supported frequencies, units, and facets**  
+- **Preview supported frequencies, units, and facets**
   Understand the temporal resolution (e.g., monthly, annual), the measurement
   units (e.g., kilowatthours or dollars), and the filtering dimensions (facets)
   required by each dataset (for example, `stateid=CA`, `sectorid=RES`)
 
-  Each dataset defines one or more **facets**, which are categorical filters
-  used to construct valid time series API queries. A facet includes:
- 
-  - A **facet type**, such as `stateid` or `sectorid`
-  - A list of **allowed values**, like `CA`, `TX`, or `OTH`
-  - Optional **descriptive labels** (aliases) for UI display
- 
-  To retrieve data for a given dataset, you must supply **exactly one value for
-  each required facet**. The required facet types vary across datasets.
- 
-  Note: The EIA API does not indicate which combinations of facet values will
-  return data. While you can construct syntactically correct URLs using this
-  metadata, actual data availability must be tested independently.
-
-- **Flatten nested metadata into a tabular format**  
+- **Flatten nested metadata into a tabular format**
   Generate a `pd.DataFrame` where each row represents a possible combination of
   metric, frequency, and facet values described by the dataset metadata
 
-- **Construct time series query URLs**  
+- **Construct time series query URLs**
   Build syntactically correct EIA API URLs to retrieve specific time series,
   without checking whether those URLs actually return data
+
+### Understanding facets
+
+Each dataset defines one or more **facets**, which are categorical filters used
+to construct valid time series API queries. A facet includes:
+
+- A **facet type**, such as `stateid` or `sectorid`
+- A list of **allowed values**, like `CA`, `TX`, or `OTH`
+- Optional **descriptive labels** (aliases) for UI display
+
+To retrieve data for a given dataset, you must supply **exactly one value for
+each required facet**. The required facet types vary across datasets.
+
+Note: The EIA API does not indicate which combinations of facet values will
+return data. While you can construct syntactically correct URLs using this
+metadata, actual data availability must be tested independently.
 
 ## Problem it solves
 
@@ -81,8 +85,8 @@ downloading data. This module helps by:
 
 - Separate metadata logic from time series fetching
 - Make all outputs easy to inspect as `pd.DataFrame`s
-- Allow notebook users to generate parameterized URLs based on metadata,
-  even if some URLs do not yield data
+- Allow notebook users to generate parameterized URLs based on metadata, even if
+  some URLs do not yield data
 
 ## Challenges
 
@@ -115,7 +119,8 @@ availability validation to downstream systems or notebooks.
 ## Limitations
 
 - Does not download or validate numeric time series
-- Assumes one facet value per required type (e.g., `stateid=CA`, not all states)
+- Requires exactly one facet value per required type (e.g., `stateid=CA`, not
+  all states)
 - Does not handle errors in downstream API calls
 
 ## Conclusion
