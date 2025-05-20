@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.17.1
+#       jupytext_version: 1.16.7
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -594,7 +594,7 @@ caueduti.plot_top_n_annotated_bar(
 # ### Summary Dataset
 
 # %% [markdown]
-# <a name='summary-datast-overview'></a>
+# <a name='summary-dataset-overview'></a>
 # #### Summary Dataset Overview
 #
 # The summary dataset stands out from other electricity datasets in the EIA collection. Unlike metric-specific datasets such as `retail_sales` or `net_generation`, the summary dataset aggregates high-level electricity indicators by state. These include values like total generation, retail sales, and emissions, often paired with comparative insights such as a state’s national rank. All time series in this dataset are reported on an annual basis, providing a consistent structure suitable for both cross-state and year-over-year comparisons. While most datasets use standard units (e.g., `MWh`, `dollars`), the summary dataset includes non-standard units such as `rank`, reinforcing its analytical and comparative purpose. The dataset presents standalone summary insights that aren't tied to a single physical measurement.
