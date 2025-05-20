@@ -191,7 +191,6 @@ catemdpeu.plot_distribution(
 
 # %% [markdown]
 # <a name='wrap-up-and-insights'></a>
-# <a name='key-takeaways:'></a>
 # ## Wrap-up and Insights
 #
 # In this section, we explored the structure of the EIA metadata to understand the coverage and richness of available datasets.
@@ -205,3 +204,5 @@ catemdpeu.plot_distribution(
 # - Grouping by `dataset_id` showed how some datasets expose more metric-frequency combinations than others, which is useful when prioritizing which datasets to ingest or analyze further.
 #
 # By analyzing just the metadata, we can assess the overall shape and availability of EIA time series without needing to fetch any actual data. This is especially useful for exploratory analysis, schema understanding, and preparing batch download logic.
+
+# %%
