@@ -100,7 +100,7 @@ def _extract_and_upload_metadata(
     :param aws_profile: AWS profile name
     """
     # Extract metadata.
-    downloader = cantemdpeu.EiaMetadataDownloader(category, api_key, version_num)
+    downloader = catemdpeu.EiaMetadataDownloader(category, api_key, version_num)
     df_metadata, param_entries = downloader.run_metadata_extraction()
     # Write to S3 bucket.
     writer = _EiaMetadataWriter(bucket_path, aws_profile)
