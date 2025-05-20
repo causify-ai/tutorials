@@ -2,14 +2,13 @@
 
 <!-- toc -->
 
-- [EIA Metadata API Layer](#eia-metadata-api-layer)
-  * [Overview](#overview)
-    + [Understanding facets](#understanding-facets)
-  * [Problem it solves](#problem-it-solves)
-  * [Design goals](#design-goals)
-  * [Challenges](#challenges)
-  * [Limitations](#limitations)
-  * [Conclusion](#conclusion)
+- [Overview](#overview)
+  * [Understanding facets](#understanding-facets)
+- [Problem it solves](#problem-it-solves)
+- [Design goals](#design-goals)
+- [Challenges](#challenges)
+- [Limitations](#limitations)
+- [Conclusion](#conclusion)
 
 <!-- tocstop -->
 
@@ -22,28 +21,26 @@ actual numeric data.
 
 This allows users to:
 
-- **Discover dataset routes:**
-  Retrieve the full category tree exposed by the EIA API and identify dataset
-  leaf paths (for example, `electricity/sales/retail`) that define related time
-  series
+- **Discover dataset routes:** Retrieve the full category tree exposed by the
+  EIA API and identify dataset leaf paths (for example,
+  `electricity/sales/retail`) that define related time series
 
-- **Identify available metrics:**
-  Extract the measurable variables (referred to as metrics in the EIA API) for
-  each dataset, such as total revenue, number of customers, or electricity
-  consumption
+- **Identify available metrics:** Extract the measurable variables (referred to
+  as metrics in the EIA API) for each dataset, such as total revenue, number of
+  customers, or electricity consumption
 
-- **Preview supported frequencies, units, and facets:**
-  Understand the temporal resolution (e.g., monthly, annual), the measurement
-  units (e.g., kilowatthours or dollars), and the filtering dimensions (facets)
-  required by each dataset (for example, `stateid=CA`, `sectorid=RES`)
+- **Preview supported frequencies, units, and facets:** Understand the temporal
+  resolution (e.g., monthly, annual), the measurement units (e.g., kilowatthours
+  or dollars), and the filtering dimensions (facets) required by each dataset
+  (for example, `stateid=CA`, `sectorid=RES`)
 
-- **Flatten nested metadata into a tabular format:**
-  Generate a `pd.DataFrame` where each row represents a possible combination of
-  metric, frequency, and facet values described by the dataset metadata
+- **Flatten nested metadata into a tabular format:** Generate a `pd.DataFrame`
+  where each row represents a possible combination of metric, frequency, and
+  facet values described by the dataset metadata
 
-- **Construct time series query URLs:**
-  Build syntactically correct EIA API URLs to retrieve specific time series,
-  without checking whether those URLs actually return data
+- **Construct time series query URLs:** Build syntactically correct EIA API URLs
+  to retrieve specific time series, without checking whether those URLs actually
+  return data
 
 ### Understanding facets
 

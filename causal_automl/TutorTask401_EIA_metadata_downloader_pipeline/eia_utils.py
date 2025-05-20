@@ -1,7 +1,7 @@
 """
 Import as:
 
-import causal_automl.notebooks.TutorTask401_EIA_metadata_downloader_pipeline.eia_utils as cantemdpeu
+import causal_automl.TutorTask401_EIA_metadata_downloader_pipeline.eia_utils as catemdpeu
 """
 
 import logging
@@ -12,8 +12,6 @@ import pandas as pd
 import requests
 
 _LOG = logging.getLogger(__name__)
-
-BASE_URL = "https://api.eia.gov/v2"
 
 
 # #############################################################################
@@ -296,31 +294,28 @@ class EiaMetadataDownloader:
 
 def build_full_url(
     base_url: str,
-    df_facets: pd.DataFrame,
     api_key: str,
     facet_input: Dict[str, str],
 ) -> str:
     """
     Build a full EIA v2 API URL by appending one facet value per facet type.
 
-    Select a default or user-specified value for each facet type and
-    construct a valid query URL to fetch time series data from the EIA
-    v2 API.
+    This modifies the base metadata URL to point to the actual time series
+    data endpoint.
 
     :param base_url: base API URL with frequency and metric, excluding
-        facet values
-    :param df_facet: data containing all facet values
-    :param facet_input: specified facet values
-    :return: full EIA API URL with all required facet parameters
+        facet values,
+        e.g., "https://api.eia.gov/v2/electricity/retail-sales?api_key={API_KEY}&frequency=monthly&data[0]=revenue"
+    :param api_key: EIA API key, e.g., "abcd1234xyz"
+    :param facet_input: specified facet values, e.g., {"stateid": "KS", "sectorid": "COM"}
+    :return: full EIA API URL with all required facet parameters,
+        e.g, "https://api.eia.gov/v2/electricity/retail-sales/data?api_key=abcd1234xyz&frequency=monthly&data[0]=price&facets[stateid][]=KS&facets[sectorid][]=OTH"
     """
-    if facet_input is None:
-        facet_input = {}
+    base_url = base_url.replace("?", "/data?")
     url = base_url.replace("{API_KEY}", api_key)
-    facet_ids = df_facets["facet_id"].unique()
     query_parts = []
-    for facet_id in facet_ids:
-        value = facet_input[facet_id]
-        query_parts.append(f"&{facet_id}={value}")
+    for facet_id, value in facet_input.items():
+        query_parts.append(f"&facets[{facet_id}][]={value}")
     full_url = url + "".join(query_parts)
     return full_url
 
@@ -329,13 +324,13 @@ def plot_distribution(df_metadata: pd.DataFrame, column: str, title: str) -> Non
     """
     Plot a distribution count for a specified metadata column.
 
-    :param df_metadata: metadata table containing time series fields
+    :param df_metadata: metadata index data
     :param column: column to group and count values by (e.g.,
         'frequency_id', 'data_units')
     :param title: title for the plot
     """
     if column not in df_metadata.columns:
-        raise ValueError(f"Column '{column}' not found in df_metadata.")
+        raise ValueError(f"Column '{column}' not found in metadata index.")
     counts = df_metadata[column].value_counts()
     ax = counts.plot(kind="bar", figsize=(8, 4), title=title)
     ax.set_xlabel(column.replace("_", " ").title())

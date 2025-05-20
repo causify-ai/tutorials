@@ -25,10 +25,11 @@ import os
 
 import helpers.hdbg as hdbg
 import helpers.hio as hio
+import helpers.hs3 as hs3
 import helpers.hparser as hparser
 import pandas as pd
 
-import causal_automl.notebooks.TutorTask401_EIA_metadata_downloader_pipeline.eia_utils as cantemdpeu
+import causal_automl.TutorTask401_EIA_metadata_downloader_pipeline.eia_utils as catemdpeu
 
 _LOG = logging.getLogger(__name__)
 
@@ -47,6 +48,9 @@ class _EiaMetadataWriter:
         """
         Initialize the writer for saving metadata and facet values to S3.
 
+        :param bucket_path: base S3 path where files will be uploaded
+        (e.g., "
+        s3://bucket/dir/")
         :param bucket_path: base S3 path where files will be uploaded
             (e.g., "s3://bucket/dir/")
         :param aws_profile: AWS CLI profile name used for authentication
