@@ -1,7 +1,7 @@
 Real-Time Bitcoin Price Forecasting – Code Walkthrough
 This document provides a detailed walkthrough of the project code in ak605final.ipynb. The notebook implements a real-time Bitcoin forecasting pipeline using AWS SageMaker, Kinesis, S3, and three time series models: DeepAR, ARIMA, and Prophet.
 
-🗂️ 1. Configuration & Setup
+**🗂️ 1. Configuration & Setup**
 python
 Copy
 Edit
@@ -13,7 +13,7 @@ PREDICTION_LENGTH = 12
 KINESIS_STREAM = "btc-price-stream"
 Purpose: Sets up AWS region, IAM role, S3 bucket name, prediction horizon, and optional Kinesis stream.
 
-🌐 2. Data Ingestion
+**🌐 2. Data Ingestion**
 python
 Copy
 Edit
@@ -27,21 +27,21 @@ Format: Timestamps and prices (hourly granularity)
 
 Stored as: btc_raw.csv
 
-🔁 3. Kinesis Simulation
+**🔁 3. Kinesis Simulation**
 python
 Copy
 Edit
 send_btc_to_kinesis(df, stream_name)
 Simulates real-time streaming by sending BTC price data to a Kinesis stream.
 
-☁️ 4. Upload Raw Data to S3
+**☁️ 4. Upload Raw Data to S3**
 python
 Copy
 Edit
 s3.upload_file("btc_raw.csv", BUCKET, f"{input_prefix}/btc_raw.csv")
 Uploads the raw CSV to S3 for SageMaker Processing to access.
 
-⚙️ 5. Data Preprocessing with SageMaker Processing Job
+**⚙️ 5. Data Preprocessing with SageMaker Processing Job**
 python
 Copy
 Edit
@@ -58,7 +58,7 @@ Extract time-based features (hour, day_of_week)
 
 Save cleaned CSV to S3 as btc_cleaned.csv
 
-📊 6. Visualization: EDA & Insights
+**📊 6. Visualization: EDA & Insights**
 ➤ Rolling Mean + Volatility Plot
 python
 Copy
@@ -77,7 +77,7 @@ Edit
 seasonal_decompose(df_cleaned['price'], model='additive')
 Shows trend, seasonality, and residuals
 
-📁 7. DeepAR: Training on SageMaker
+**📁 7. DeepAR: Training on SageMaker**
 python
 Copy
 Edit
@@ -92,7 +92,7 @@ Hyperparameters include:
 
 epochs, context_length, num_cells, learning_rate, etc.
 
-🚀 8. Deployment & Autoscaling (Optional)
+**🚀 8. Deployment & Autoscaling**
 python
 Copy
 Edit
@@ -103,7 +103,7 @@ Deploys the DeepAR model as a SageMaker endpoint
 
 Enables autoscaling for production-like simulation
 
-🔮 9. Prediction & Forecast Extraction
+**🔮 9. Prediction & Forecast Extraction**
 python
 Copy
 Edit
@@ -112,7 +112,7 @@ Extracts mean, P10, and P90 predictions
 
 Generates a future time index for plotting
 
-📈 10. DeepAR Forecast Visualization
+**📈 10. DeepAR Forecast Visualization**
 python
 Copy
 Edit
@@ -123,7 +123,7 @@ go.Figure([
 ])
 Clearly shows model forecast with confidence intervals
 
-📉 11. ARIMA Forecast (Local)
+**📉 11. ARIMA Forecast (Local)**
 python
 Copy
 Edit
@@ -133,7 +133,7 @@ Classic statistical baseline
 
 Evaluation: RMSE, MAPE
 
-🔁 12. Prophet Forecast (Local)
+**🔁 12. Prophet Forecast (Local)**
 python
 Copy
 Edit
@@ -143,7 +143,7 @@ Models trend + seasonality
 
 Evaluation: RMSE, MAPE
 
-🧪 13. Evaluation Metrics
+**🧪 13. Evaluation Metrics**
 python
 Copy
 Edit
@@ -152,7 +152,7 @@ Compares model predictions against actual BTC prices
 
 Shows performance of each model (ARIMA, Prophet, DeepAR)
 
-📊 14. Final Comparison Plot
+**📊 14. Final Comparison Plot**
 python
 Copy
 Edit
