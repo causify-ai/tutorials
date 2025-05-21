@@ -25,8 +25,6 @@
 #     - [Define Config](#define-config)
 #   - [Load Metadata](#load-metadata)
 #   - [Visualize Metadata](#visualize-metadata)
-#     - [Preview Metadata](#preview-metadata)
-#     - [Visualizations](#visualizations)
 #   - [Wrap-up and Insights](#wrap-up-and-insights)
 #     - [Key Takeaways](#key-takeaways)
 
@@ -105,6 +103,7 @@ _LOG = logging.getLogger(__name__)
 # Set your EIA api key here.
 os.environ["EIA_API_KEY"] = ""
 
+# %%
 # Ensure the api key is set correctly.
 hdbg.dassert_in(
     "EIA_API_KEY", os.environ, msg="Missing environment variable EIA_API_KEY."
@@ -162,16 +161,9 @@ df_metadata, param_entries = downloader.run_metadata_extraction()
 #
 # These visualizations help assess the coverage, granularity, and diversity of the available EIA datasets before constructing any time series queries.
 
-# %% [markdown]
-# <a name='preview-metadata'></a>
-# ### Preview Metadata
-
 # %%
+# Preview metadata.
 df_metadata.head()
-
-# %% [markdown]
-# <a name='visualizations'></a>
-# ### Visualizations
 
 # %%
 # Frequency distribution plot.

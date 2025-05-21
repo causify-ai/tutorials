@@ -90,7 +90,7 @@ downloading data. This module helps by:
 
 One key challenge in working with the EIA v2 API is its tree-structured
 hierarchy. Datasets are nested across multiple category levels (e.g.,
-`electricity/sales/retail`) and cannot be retrieved in bulk through a single
+`electricity/retail-sales`) and cannot be retrieved in bulk through a single
 endpoint.
 
 To construct a time series query, users must:
@@ -101,7 +101,7 @@ To construct a time series query, users must:
 - Parse the list of required facets and retrieve their allowed values from the
   metadata
 - Provide one value per required facet to construct a syntactically query URL
-  (see `Overview` for facet details)
+  (see [Understanding facets](#understanding-facets) for details)
 
 The EIA API does not provide availability flags for facet combinations. This
 means:
@@ -118,7 +118,8 @@ availability validation to downstream systems or notebooks.
 
 - Does not download or validate numeric time series
 - Requires exactly one facet value per required type (e.g., `stateid=CA`, not
-  all states)
+  all states). This requirement applies only when retrieving numeric time series
+  data, not during metadata extraction.
 - Does not handle errors in downstream API calls
 
 ## Conclusion

@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.16.7
+#       jupytext_version: 1.17.1
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -26,9 +26,7 @@
 #     - [Define Config](#define-config)
 #   - [Load Metadata](#load-metadata)
 #   - [Preview Metadata](#preview-metadata)
-#     - [Preview Facet Values](#preview-facet-values)
-#     - [Group and Preview Facet Values by Facet Type](#group-and-preview-facet-values-by-facet-type)
-#     - [Construct Full URL from One Value per Facet](#construct-full-url-from-one-value-per-facet)
+#   - [Construct Full URL from One Value per Facet](#construct-full-url-from-one-value-per-facet)
 
 # %% [markdown]
 # <a name='description'></a>
@@ -103,10 +101,11 @@ _LOG = logging.getLogger(__name__)
 #
 # Alternatively, you can set it within the notebook:
 
-# %% vscode={"languageId": "plaintext"}
+# %%
 # Set your EIA api key here.
 os.environ["EIA_API_KEY"] = ""
 
+# %% vscode={"languageId": "plaintext"}
 # Ensure the api key is set correctly.
 hdbg.dassert_in(
     "EIA_API_KEY", os.environ, msg="Missing environment variable EIA_API_KEY."
@@ -156,23 +155,17 @@ df_metadata, param_entries = downloader.run_metadata_extraction()
 # %% [markdown]
 # <a name='preview-metadata'></a>
 # ## Preview Metadata
-
-# %% vscode={"languageId": "plaintext"}
-df_metadata.head()
-
-# %% [markdown]
-# <a name='preview-facet-values'></a>
-# ### Preview Facet Values
 #
 # Each dataset defines one or more facets, which are categorical dimensions used to filter time series data. A valid query must specify one value per required facet (e.g., `stateid=CA`, `sectorid=COM`).
 
 # %% vscode={"languageId": "plaintext"}
+# Preview metadata index.
+df_metadata.head()
+
+# %% vscode={"languageId": "plaintext"}
+# Preview facet values.
 df_facet = param_entries[0][0]
 df_facet.head()
-
-# %% [markdown]
-# <a name='group-and-preview-facet-values-by-facet-type'></a>
-# ### Group and Preview Facet Values by Facet Type
 
 # %%
 # Show unique facet types and sample values for each.
@@ -180,7 +173,7 @@ df_facet.groupby("facet_id").head(1)
 
 # %% [markdown]
 # <a name='construct-full-url-from-one-value-per-facet'></a>
-# ### Construct Full URL from One Value per Facet
+# ## Construct Full URL from One Value per Facet
 
 # %%
 # Since the URL would expose the actual API key, we overwrite it with a placeholder for safe display.
