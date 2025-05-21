@@ -1,8 +1,6 @@
 
 # Real-Time Bitcoin Price Analysis with Kubeflow and Docker
 
-**I've resolved the Gitleak Issue**
-
 **Name**: Anto Delin Xavier  
 **UID** : 121287793
 **Course**: DATA605
