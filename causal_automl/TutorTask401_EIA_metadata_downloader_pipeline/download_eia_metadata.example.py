@@ -34,7 +34,7 @@
 # <a name='description'></a>
 # # Description
 #
-# This notebook demonstrates how to extract and visualize structured metadata from the U.S. Energy Information Administration (EIA) v2 API using the `EiaMetadataDownloader`. It covers how to preview available time series, explore supported frequencies and metrics, and construct valid API query URLs.
+# This notebook demonstrates how to extract and visualize structured metadata from the U.S. Energy Information Administration (EIA) v2 API using the `EiaMetadataDownloader`. It covers how to preview available time series, explore supported frequencies and metrics.
 
 # %% [markdown]
 # <a name='analyzing-eia-time-series-metadata'></a>
@@ -49,10 +49,10 @@
 #
 # The EIA v2 API provides metadata about datasets such as electricity consumption, pricing, and production across various regions and time frequencies.
 # By programmatically accessing this metadata, you can:
-# - Discover all frequency-metric combinations available for a dataset.
-# - Retrieve valid facet (parameter) values like `state`, `sector`, or `provider`.
-# - Construct full API requests to query time series data.
-# - Automate ingestion by generating valid API URLs using metadata, even though data availability must still be verified after making the request.
+# - Discover all frequency-metric combinations available for a dataset
+# - Retrieve the list of required facet types (e.g., `stateid`, `sectorid`) for each dataset
+# - Construct full API requests to query time series data
+# - Automate ingestion by generating API URLs using metadata, even though data availability must still be verified after making the request
 #
 # This notebook walks through a real-world use case to demonstrate the utility of the metadata downloader.
 
@@ -63,9 +63,9 @@
 # The EIA metadata downloader enables a wide range of analytical and operational tasks by making time series metadata programmatically accessible.
 #
 # Practical use cases include:
-# - Creating dashboards that track the availability of new metrics or datasets over time.
-# - Automatically generating full EIA API URLs to feed into a data pipeline or fetcher script.
-# - Supporting reproducible energy-related research with clear, programmatically obtained dataset references.
+# - Creating dashboards that track the availability of new metrics or datasets over time
+# - Automatically generating full EIA API URLs to feed into a data pipeline or fetcher script
+# - Supporting reproducible energy-related research with clear, programmatically obtained dataset references
 
 # %% [markdown]
 # <a name='setup'></a>
@@ -119,8 +119,8 @@ api_key = os.getenv("EIA_API_KEY")
 #
 # This section defines the key parameters that drive the metadata extraction:
 #
-# - `category`: The root category of interest from the EIA v2 API. Example: `"electricity"`, `"natural-gas"`, `"petroleum"`.
-# - `version_num`: A version label used to tag output files or datasets.
+# - `category`: The root category of interest from the EIA v2 API. Example: `"electricity"`, `"natural-gas"`, `"petroleum"`
+# - `version_num`: A version label used to tag output files or datasets
 
 # %%
 # Define category and output version.
@@ -135,7 +135,7 @@ version_num = "1.0"
 #
 # Then, we extract:
 # - A metadata table containing dataset routes, metrics, and frequencies
-# - A list of facet values required to construct valid API queries
+# - A list of facet values required to construct API queries
 
 # %% vscode={"languageId": "plaintext"}
 # Initialize metadata downloader.
@@ -199,8 +199,8 @@ catemdpeu.plot_distribution(
 # <a name='key-takeaways'></a>
 # ### Key Takeaways
 #
-# - The flattened metadata table (`df_metadata`) reveals the number of time series per dataset, each defined by a unique combination of frequency and metric.
-# - Distributions of `frequency_id` and `data_units` give insight into the granularity (e.g., monthly, annual) and measurement types (e.g., MWh, USD) used across EIA datasets.
-# - Grouping by `dataset_id` showed how some datasets expose more metric-frequency combinations than others, which is useful when prioritizing which datasets to ingest or analyze further.
+# - The flattened metadata table (`df_metadata`) reveals the number of time series per dataset, each defined by a unique combination of frequency and metric
+# - Distributions of `frequency_id` and `data_units` give insight into the granularity (e.g., monthly, annual) and measurement types (e.g., MWh, USD) used across EIA datasets
+# - Grouping by `dataset_id` showed how some datasets expose more metric-frequency combinations than others, which is useful when prioritizing which datasets to ingest or analyze further
 #
 # By analyzing just the metadata, we can assess the overall shape and availability of EIA time series without needing to fetch any actual data. This is especially useful for exploratory analysis, schema understanding, and preparing batch download logic.

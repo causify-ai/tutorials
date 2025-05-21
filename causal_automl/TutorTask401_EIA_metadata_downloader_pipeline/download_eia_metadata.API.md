@@ -21,38 +21,39 @@ actual numeric data.
 
 This allows users to:
 
-- **Discover dataset routes:** Retrieve the full category tree exposed by the
-  EIA API and identify dataset leaf paths (for example,
-  `electricity/sales/retail`) that define related time series
+- **Discover dataset routes.** Retrieve the full category tree exposed by the
+  EIA API and identify dataset leaf paths (e.g., `electricity/retail-sales`)
+  that define related time series
 
-- **Identify available metrics:** Extract the measurable variables (referred to
+- **Identify available metrics.** Extract the measurable variables (referred to
   as metrics in the EIA API) for each dataset, such as total revenue, number of
   customers, or electricity consumption
 
-- **Preview supported frequencies, units, and facets:** Understand the temporal
+- **Preview supported frequencies, units, and facets.** Understand the temporal
   resolution (e.g., monthly, annual), the measurement units (e.g., kilowatthours
   or dollars), and the filtering dimensions (facets) required by each dataset
-  (for example, `stateid=CA`, `sectorid=RES`)
+  (e.g., `stateid=CA`, `sectorid=RES`)
 
-- **Flatten nested metadata into a tabular format:** Generate a `pd.DataFrame`
-  where each row represents a possible combination of metric, frequency, and
-  facet values described by the dataset metadata
+- **Flatten nested metadata into a tabular format.** Generate a `pd.DataFrame`
+  where each row corresponds to a unique combination of dataset route,
+  frequency, and metric, along with the list of required facet types (e.g.,
+  `stateid`, `sectorid`)
 
-- **Construct time series query URLs:** Build syntactically correct EIA API URLs
+- **Construct time series query URLs.** Build syntactically correct EIA API URLs
   to retrieve specific time series, without checking whether those URLs actually
   return data
 
 ### Understanding facets
 
-Each dataset defines one or more **facets**, which are categorical filters used
-to construct valid time series API queries. A facet includes:
+Each dataset defines one or more facets, which are categorical filters used to
+construct time series API queries. A facet includes:
 
-- A **facet type**, such as `stateid` or `sectorid`
-- A list of **allowed values**, like `CA`, `TX`, or `OTH`
-- Optional **descriptive labels** (aliases) for UI display
+- A facet type, such as `stateid` or `sectorid`
+- A list of allowed values, like `CA`, `TX`, or `OTH`
+- Aliases (user-friendly labels for display)
 
-To retrieve data for a given dataset, you must supply **exactly one value for
-each required facet**. The required facet types vary across datasets.
+To retrieve data for a given dataset, you must supply exactly one value for each
+required facet. The required facet types vary across datasets.
 
 Note: The EIA API does not indicate which combinations of facet values will
 return data. While you can construct syntactically correct URLs using this
@@ -99,8 +100,8 @@ To construct a time series query, users must:
   dataset
 - Parse the list of required facets and retrieve their allowed values from the
   metadata
-- Provide one value per required facet to construct a syntactically valid query
-  URL (see **Overview** for facet details)
+- Provide one value per required facet to construct a syntactically query URL
+  (see `Overview` for facet details)
 
 The EIA API does not provide availability flags for facet combinations. This
 means:

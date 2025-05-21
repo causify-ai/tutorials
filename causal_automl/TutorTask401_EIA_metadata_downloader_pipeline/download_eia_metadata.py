@@ -49,9 +49,6 @@ class _EiaMetadataWriter:
         Initialize the writer for saving metadata and facet values to S3.
 
         :param bucket_path: base S3 path where files will be uploaded
-        (e.g., "
-        s3://bucket/dir/")
-        :param bucket_path: base S3 path where files will be uploaded
             (e.g., "s3://bucket/dir/")
         :param aws_profile: AWS CLI profile name used for authentication
         """
