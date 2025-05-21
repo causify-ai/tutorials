@@ -17,8 +17,8 @@ services:
       context: .
     container_name: bitcoin-fetcher
     environment:
-      DB_USER: postgres
-      DB_PASSWORD: testpass
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: timescaledb
       DB_PORT: 5432
       DB_NAME: bitcoin_db

@@ -9,14 +9,13 @@ from datetime import datetime
 def fetch_bitcoin_price():
     url = "https://api.coingecko.com/api/v3/simple/price"
     params = {"ids": "bitcoin", "vs_currencies": "usd"}
-    headers = {"x-cg-pro-api-key": os.getenv("COINGECKO_API_KEY", "")}
-    response = requests.get(url, params=params, headers=headers)
+    response = requests.get(url, params=params)
     response.raise_for_status()
     return response.json()["bitcoin"]["usd"]
 
 def save_to_db(price, db_host="localhost"):
-    db_user = os.getenv("DB_USER", "postgres")
-    db_password = os.getenv("DB_PASSWORD", "testpass")
+    db_user = os.getenv("DB_USER")
+    db_password = os.getenv("DB_PASSWORD")
     db_port = os.getenv("DB_PORT", "5432")
     db_name = os.getenv("DB_NAME", "bitcoin_db")
     

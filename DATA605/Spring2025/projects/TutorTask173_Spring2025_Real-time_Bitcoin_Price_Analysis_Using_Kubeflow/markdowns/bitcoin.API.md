@@ -12,7 +12,6 @@ optionally integrated with Kubeflow Pipelines to automate recurring runs.
 - Parameters:
   - `ids`: bitcoin
   - `vs_currencies`: usd
-- Authentication: API key passed in header (`x-cg-pro-api-key`)
 - Response: JSON with current Bitcoin price in USD
 
 ## Software Layer (Python Wrapper)
