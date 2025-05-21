@@ -12,7 +12,7 @@ DB_PORT = os.getenv("DB_PORT", "5432")
 DB_USER = os.getenv("DB_USER", "postgres")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "testpass")
 DB_NAME = os.getenv("DB_NAME", "bitcoin_db")
-COINGECKO_API_KEY = os.getenv("COINGECKO_API_KEY", "")
+
 
 MAX_RETRIES = 10
 RETRY_DELAY = 5  # seconds
@@ -21,7 +21,7 @@ RETRY_DELAY = 5  # seconds
 def fetch_bitcoin_price():
     url = "https://api.coingecko.com/api/v3/simple/price"
     params = {"ids": "bitcoin", "vs_currencies": "usd"}
-    response = requests.get(url, params=params, headers=headers)
+    response = requests.get(url, params=params)
     response.raise_for_status()
     return response.json()["bitcoin"]["usd"]
 
