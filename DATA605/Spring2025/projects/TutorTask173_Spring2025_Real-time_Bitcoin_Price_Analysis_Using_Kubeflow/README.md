@@ -1,6 +1,8 @@
 
 # Real-Time Bitcoin Price Analysis with Kubeflow and Docker
 
+**I've resolved the Gitleak Issue**
+
 **Name**: Anto Delin Xavier  
 **UID** : 121287793
 **Course**: DATA605
@@ -20,7 +22,6 @@ This project sets up an end-to-end pipeline that:
 Key components:
 - Live price fetching using the **CoinGecko API**
 - Scheduled execution through **Kubeflow Pipelines**
-- Real-time storage in **TimescaleDB**
 - Containerization with **Docker**
 - Data visualization and forecasting using **Python**
 
@@ -31,10 +32,6 @@ Key components:
 
 ```
 TutorTask173_Spring2025_Real-time_Bitcoin_Price_Analysis_Using_Kubeflow/
-│
-├── notebook/               
-│   ├── Bitcoin_TimeSeriesAnalaysis.ipynb # Timeseries analysis on real time fetched data and historical data
-│   └── bitcoin_price_log_from_db.csv # DB entries
 │   
 │
 ├── markdowns/               
@@ -45,11 +42,11 @@ TutorTask173_Spring2025_Real-time_Bitcoin_Price_Analysis_Using_Kubeflow/
 │   ├── fetch_bitcoin_price.py     # main fetch script used by container
 │   ├── bitcoin_pipeline.py        # pipeline definition for Kubeflow
 │   ├── compile_pipeline.py        # compiles to YAML pipeline
-│   ├── csv_converter.py.py        # data from db to CSV + plot
 │   ├── bitcoin_utils.py           # helper functions
 │   ├── Dockerfile                 # Docker image spec
-│   ├── docker-compose.yml         # setup for DB + fetcher
 │   ├── bitcoin_pipeline.yaml      # generated yaml file to upload to Kubeflow UI
+├   ├── Bitcoin_TimeSeriesAnalaysis.ipynb # Timeseries analysis on real time fetched data and historical data
+│   └── bitcoin_price_log_from_db.csv # Bitcoin live entries
 │   
 │── bitcoin.example.ipynb     
 │── bitcoin.API.ipynb   # documentation of API usage          
@@ -81,14 +78,9 @@ docker-compose up --build
 ```
 
 2. This will:
-   - Start TimescaleDB
    - Run the fetcher container once
 
-3. You can view saved data using:
-```bash
-python csv_converter.py
-```
-
+This will fetch the live bitcoin data and store as csv for timeseries analysis
 ---
 
 ## 4. Kubeflow Pipelines Setup
@@ -108,10 +100,9 @@ Generates `bitcoin_pipeline.yaml`.
 - Upload the compiled `bitcoin_pipeline.yaml`
 - Create a recurring run (e.g., every 1 minute)
 
-### Step 3: Deploy TimescaleDB to Kubernetes
+### Step 3: Deploy  Kubernetes
 
 ```bash
-kubectl apply -f timescaledb-deployment.yaml -n kubeflow
 kubectl get pods -n kubeflow
 ```
 
@@ -119,17 +110,15 @@ kubectl get pods -n kubeflow
 
 ## 5. Visualize and Analyze Data
 
-To fetch  data from the database and plot:
+fetch  data from the bitcoin_price_log_from_db.csv
 
-```bash
-python csv_converter.py
-```
 
  run the Jupyter notebook:
 
 ```bash
-jupyter notebook Bitcoin_TimeSeriesAnalaysis.ipynb
+jupyter notebook Bitcoin_TimeSeriesAnalaysis.ipynb 
 ```
+(make sure to have generated bitcoin_price_log_from_db.csv in the same folder)
 
 This generates:
 - Time series analysis on the fetched data
@@ -140,7 +129,7 @@ This generates:
 
 ### bitcoin_utils.py
 
-- Contains the `BitcoinPriceFetcher` class and DB connection utilities
+- Contains the `BitcoinPriceFetcher` class and connection utilities
 
 ### fetch_bitcoin_price.py
 
@@ -149,10 +138,6 @@ This generates:
 ### bitcoin_pipeline.py / compile_pipeline.py
 
 - Constructs a Kubeflow-compatible pipeline using the KFP SDK
-
-### csv_converter.py
-
-- Collects the data from db and store it in csv for analysis
 
 ### Bitcoin_TimeSeriesAnalaysis.ipynb
 
@@ -164,5 +149,4 @@ This generates:
 
 - [Kubeflow Pipelines](https://www.kubeflow.org/docs/components/pipelines/)
 - [CoinGecko API](https://www.coingecko.com/en/api)
-- [TimescaleDB](https://www.timescale.com/)
 - [Docker Compose Docs](https://docs.docker.com/compose/)
