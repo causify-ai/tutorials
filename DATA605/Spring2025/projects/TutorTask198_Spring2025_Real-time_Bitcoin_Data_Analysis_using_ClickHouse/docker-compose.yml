@@ -1,0 +1,61 @@
+services:
+    clickhouse:
+        image: clickhouse/clickhouse-server:latest
+        container_name: clickhouse
+        # Ensure ClickHouse has enough file descriptors
+        ulimits:
+            nofile:
+                soft: 262144
+                hard: 262144
+        # Expose native and HTTP ports
+        ports:
+            - "9000:9000" # Native (TCP) protocol
+            - "8123:8123" # HTTP interface
+        # Persist data and logs
+        volumes:
+            - clickhouse_data:/var/lib/clickhouse
+            - clickhouse_logs:/var/log/clickhouse-server
+        # Initialize a default DB + user automatically
+        environment:
+            CLICKHOUSE_DB: bitcoin_db
+            CLICKHOUSE_USER: default
+            CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: "1"
+            CLICKHOUSE_PASSWORD: ""
+        # healthcheck:
+        #     # disable: true
+        #     test: ["CMD", "curl", "-f", "http://127.0.0.1:8123/ping"]
+        #     interval: 30s
+        #     timeout: 60s
+        #     retries: 10
+        # healthcheck:
+        #     test:
+        #         [
+        #             "CMD-SHELL",
+        #             'clickhouse-client --query "SELECT 1" --host 127.0.0.1',
+        #         ]
+        #     interval: 10s
+        #     timeout: 5s
+        #     retries: 5
+
+    app:
+        build: .
+        container_name: bitcoin-app
+        depends_on:
+            - clickhouse
+        environment:
+            CLICKHOUSE_HOST: clickhouse
+            CLICKHOUSE_PORT: "9000"
+            CLICKHOUSE_USER: default
+            CLICKHOUSE_PASSWORD: ""
+            CLICKHOUSE_DATABASE: bitcoin_db
+        volumes:
+            - .:/app:delegated
+        ports:
+            - "8501:8501" # Streamlit
+            - "8888:8888" # Jupyter
+            - "5001:5001" # main.py (if it serves on 5000)
+        command: ["bash", "/app/start.sh"]
+
+volumes:
+    clickhouse_data:
+    clickhouse_logs:

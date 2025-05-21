@@ -1,0 +1,84 @@
+# ─── Operating Systems & Tools ───────────────────────────────────────
+# macOS
+.DS_Store
+# Windows
+Thumbs.db
+# Vagrant
+.vagrant/
+
+# ─── Editors & IDEs ─────────────────────────────────────────────────
+# Visual Studio Code
+.vscode/
+# IntelliJ, PyCharm, etc.
+.idea/
+
+# ─── Python Bytecode & Extensions ───────────────────────────────────
+# Byte‑compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+# C extensions
+*.so
+
+# ─── Distribution / Packaging ────────────────────────────────────────
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ─── Installer Logs ─────────────────────────────────────────────────
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ─── Testing, Coverage & Reports ────────────────────────────────────
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# ─── Documentation Builds ───────────────────────────────────────────
+docs/_build/
+
+# ─── Jupyter Notebooks ──────────────────────────────────────────────
+.ipynb_checkpoints
+
+# ─── Virtual Environments & Envs ────────────────────────────────────
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ─── Miscellaneous ──────────────────────────────────────────────────
+# Spyder project settings
+.spyderproject
+.spyproject
+# Rope project settings
+.ropeproject
+# MkDocs build
+/site
+# mypy cache
+.mypy_cache/
+.dmypy.json
