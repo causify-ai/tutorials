@@ -22,7 +22,6 @@ services:
       DB_HOST: timescaledb
       DB_PORT: 5432
       DB_NAME: bitcoin_db
-      COINGECKO_API_KEY: ${COINGECKO_API_KEY}
     depends_on:
       - timescaledb
     restart: on-failure  # <-- OPTIONAL: restart if error occurs
