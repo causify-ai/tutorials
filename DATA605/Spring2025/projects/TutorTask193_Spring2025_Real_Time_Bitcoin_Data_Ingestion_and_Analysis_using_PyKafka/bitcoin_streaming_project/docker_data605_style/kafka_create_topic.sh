@@ -1,17 +1,17 @@
 #!/bin/bash
 
-KAFKA_HOME=/opt/kafka
-TOPIC_NAME=bitcoin_price
-BROKER=localhost:9092
+# Wait for Kafka to fully start
+echo "Waiting for Kafka to be ready..."
+sleep 5
 
-# Create the topic if it doesn't already exist
-$KAFKA_HOME/bin/kafka-topics.sh \
-  --create \
-  --if-not-exists \
-  --topic $TOPIC_NAME \
-  --bootstrap-server $BROKER \
+# Create topic if not exists
+echo "Creating Kafka topic: btc-stream"
+kafka-topics --create \
+  --topic btc-stream \
+  --bootstrap-server kafka:9092 \
   --replication-factor 1 \
-  --partitions 1
+  --partitions 1 \
+  --if-not-exists
 
-# Confirm the topic exists
-$KAFKA_HOME/bin/kafka-topics.sh --list --bootstrap-server $BROKER
+echo "Kafka topic 'btc-stream' setup complete."
+

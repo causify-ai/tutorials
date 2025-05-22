@@ -3,3 +3,4 @@ requests         # For API calls to CoinGecko
 matplotlib       # For live price plotting
 plotly           # interactive charts
 pandas           # Time series formatting
+dash

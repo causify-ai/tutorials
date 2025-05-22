@@ -3,7 +3,7 @@ import requests
 import json
 import time
 
-KAFKA_HOST = 'localhost:9092'
+KAFKA_HOST = "kafka:9092"
 TOPIC = 'bitcoin_price'
 API_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd'
 

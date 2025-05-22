@@ -2,7 +2,7 @@ import json
 from pykafka import KafkaClient
 from pykafka.common import OffsetType
 
-KAFKA_HOST = 'localhost:9092'
+KAFKA_HOST = 'kafka:9092'
 TOPIC = 'bitcoin_price'
 GROUP = 'btc_consumer_group'
 

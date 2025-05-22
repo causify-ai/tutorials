@@ -3,7 +3,7 @@ import json
 import csv
 import os
 
-KAFKA_HOST = 'localhost:9092'
+KAFKA_HOST = "kafka:9092"
 TOPIC = 'bitcoin_price'
 
 JSON_FILE = 'output/bitcoin_data.jsonl'
