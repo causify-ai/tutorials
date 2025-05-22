@@ -13,6 +13,7 @@ data1/
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
 .DS_Store
 *.DS_Store
 # Distribution / packaging
@@ -34,19 +35,28 @@ wheels/
 *.egg
 
 # Data files
-# *.csv
-*.json
-*.db
-# data/
+**/data/*.csv
+**/data/*.json
+**/data/*.parquet
+**/data/*.db
+**/data/*.sqlite
+**/data/csv_backups/
+**/data/sentiment/
+**/data/raw/
+**/data/processed/
+**/data/interim/
+**/data/external/
 
 # Logs
-logs/
+**/logs/
 *.log
 
 # Virtual environments
 venv/
 env/
 ENV/
+env.bak/
+venv.bak/
 
 # IDE files
 .idea/
@@ -56,6 +66,7 @@ ENV/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+*/.ipynb_checkpoints/*
 
 # Streamlit
 .streamlit/secrets.toml
@@ -72,3 +83,4 @@ ENV/
 .Trashes
 ehthumbs.db
 Thumbs.db
+.Trash-0/
