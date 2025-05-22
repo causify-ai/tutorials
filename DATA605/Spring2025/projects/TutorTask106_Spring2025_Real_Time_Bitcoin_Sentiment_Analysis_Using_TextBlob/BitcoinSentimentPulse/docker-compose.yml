@@ -16,12 +16,12 @@ services:
     restart: unless-stopped
     environment:
       - PYTHONUNBUFFERED=1
-      - DATABASE_URL={DB_URL}
-      - PGUSER={PGUSER}
-      - PGPASSWORD={PGPASSWORD}
-      - PGDATABASE=bitcoin_sentiment
-      - PGHOST=db
-      - PGPORT=5432
+      - DATABASE_URL=${DATABASE_URL}
+      - PGUSER=${PGUSER}
+      - PGPASSWORD=${PGPASSWORD}
+      - PGDATABASE=${PGDATABASE}
+      - PGHOST=${PGHOST}
+      - PGPORT=${PGPORT}
       - NEWS_API_KEY=${NEWS_API_KEY}
       - UPDATE_INTERVAL_SECONDS=${UPDATE_INTERVAL_SECONDS:-60}  # Default: update every minute
     networks:
@@ -58,12 +58,12 @@ services:
     restart: unless-stopped
     environment:
       - PYTHONUNBUFFERED=1
-      - DATABASE_URL={DB_URL}
-      - PGUSER={PGUSER}
-      - PGPASSWORD={PGPASSWORD}
-      - PGDATABASE=bitcoin_sentiment
-      - PGHOST=db
-      - PGPORT=5432
+      - DATABASE_URL=${DATABASE_URL}
+      - PGUSER=${PGUSER}
+      - PGPASSWORD=${PGPASSWORD}
+      - PGDATABASE=${PGDATABASE}
+      - PGHOST=${PGHOST}
+      - PGPORT=${PGPORT}
       - NEWS_API_KEY=${NEWS_API_KEY}
       - NEWSAPI_FREE_TIER=${NEWSAPI_FREE_TIER:-true}
       - UPDATE_INTERVAL_SECONDS=${SENTIMENT_UPDATE_INTERVAL:-3600}  # Default: update every hour
@@ -93,9 +93,9 @@ services:
     container_name: bitcoin-db
     image: postgres:14
     environment:
-      POSTGRES_DB: bitcoin_sentiment
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${PGDATABASE}
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
     ports:
       - "5432:5432"
     volumes:

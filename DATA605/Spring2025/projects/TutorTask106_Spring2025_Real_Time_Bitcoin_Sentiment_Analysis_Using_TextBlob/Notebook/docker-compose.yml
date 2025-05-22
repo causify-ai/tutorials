@@ -18,7 +18,7 @@ services:
     environment:
       - PYTHONPATH=/app
       - JUPYTER_ENABLE_LAB=yes
-      - USE_CACHED_DATA=true
+      - USE_CACHED_DATA=false
       - NEWS_API_KEY=${NEWS_API_KEY}
     restart: unless-stopped
     networks:

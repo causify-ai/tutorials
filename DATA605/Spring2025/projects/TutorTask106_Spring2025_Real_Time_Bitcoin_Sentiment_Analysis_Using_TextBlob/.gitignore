@@ -1,4 +1,5 @@
 # Environment variables
+.csv
 .env
 data1/
 ../../../../.DS_Store
