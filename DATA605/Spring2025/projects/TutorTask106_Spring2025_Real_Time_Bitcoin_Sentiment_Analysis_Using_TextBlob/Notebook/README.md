@@ -159,7 +159,7 @@ The project uses a Docker-based setup with the following components:
 ## Environment Variables
 
 - `NEWS_API_KEY`: Your NewsAPI key
-- `USE_CACHED_DATA`: Set to 'true' to use cached data
+- `USE_CACHED_DATA`: Set to 'True' to use cached data. Here set to 'False' for the first time.
 - `PYTHONPATH`: Set to '/app' for proper module imports
 
 ## License
