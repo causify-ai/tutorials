@@ -24,14 +24,6 @@ This project implements a real-time data processing pipeline for Bitcoin price d
 
 ### Option 1: Local Installation
 
-<<<<<<< HEAD
-- The `tutorial_github` example has been implemented in both environments for you
-  to refer to:
-  - `tutorial_github_data605_style` uses the simpler DATA605 approach
-  - `tutorial_github_causify_style` uses the more complex Causify approach
-
-- Choose the approach that best fits your comfort level and project needs. Both
-  are valid depending on your use case.
 =======
 1. Clone the repository:
 ```bash
