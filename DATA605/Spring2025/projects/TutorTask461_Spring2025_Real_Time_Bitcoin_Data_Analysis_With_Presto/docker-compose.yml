@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  presto:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: presto
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./etc:/opt/presto/etc      # Presto config
+      - ./data:/data               # Shared data volume for both Presto and ingestor
+    command: bin/launcher run
+
