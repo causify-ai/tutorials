@@ -5,7 +5,7 @@ import causal_automl.TutorTask401_EIA_metadata_downloader_pipeline.eia_utils as 
 """
 
 import logging
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -295,27 +295,38 @@ class EiaMetadataDownloader:
 def build_full_url(
     base_url: str,
     api_key: str,
-    facet_input: Dict[str, str],
+    *,
+    facet_input: Optional[Dict[str, str]] = None,
+    start_timestamp: Optional[pd.Timestamp] = None,
+    end_timestamp: Optional[pd.Timestamp] = None,
 ) -> str:
     """
-    Build a full EIA v2 API URL by appending one facet value per facet type.
+    Build an EIA v2 API URL to data endpoint.
 
     This modifies the base metadata URL to point to the actual time series
-    data endpoint.
+    data endpoint, optionally appending facet values and date range.
 
     :param base_url: base API URL with frequency and metric, excluding
         facet values,
         e.g., "https://api.eia.gov/v2/electricity/retail-sales?api_key={API_KEY}&frequency=monthly&data[0]=revenue"
     :param api_key: EIA API key, e.g., "abcd1234xyz"
     :param facet_input: specified facet values, e.g., {"stateid": "KS", "sectorid": "COM"}
-    :return: full EIA API URL with all required facet parameters,
+    :param start_timestamp: first observation date
+    :param end_timestamp: last observation date
+    :return: full EIA API URL to data endpoint,
         e.g, "https://api.eia.gov/v2/electricity/retail-sales/data?api_key=abcd1234xyz&frequency=monthly&data[0]=price&facets[stateid][]=KS&facets[sectorid][]=OTH"
     """
     base_url = base_url.replace("?", "/data?")
     url = base_url.replace("{API_KEY}", api_key)
     query_parts = []
-    for facet_id, value in facet_input.items():
-        query_parts.append(f"&facets[{facet_id}][]={value}")
+    if start_timestamp:
+        query_parts.append(f"&start={start_timestamp}")
+    if end_timestamp:
+        query_parts.append(f"&end={end_timestamp}")
+    if facet_input:
+        # Add facet values when specified.
+        for facet_id, value in facet_input.items():
+            query_parts.append(f"&facets[{facet_id}][]={value}")
     full_url = url + "".join(query_parts)
     return full_url
 
