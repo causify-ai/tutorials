@@ -194,7 +194,7 @@ class EiaMetadataDownloader:
         [
             {
                 "url": "https://api.eia.gov/v2/electricity/retail-sales?api_key={API_KEY}&frequency=monthly&data[0]=revenue",
-                "id": "retail_sales_monthly_revenue",
+                "id": "electricity.retail_sales.monthly.revenue",
                 "dataset_id": "retail_sales",
                 "name": "Electricity Sales to Ultimate Customers",
                 "description": "...",
@@ -225,9 +225,9 @@ class EiaMetadataDownloader:
             for metric_id, metric_info in metrics.items():
                 # Clean up IDs for use in CSVs or DBs.
                 frequency_id = frequency.get("id")
-                dataset_id = data.get("id", "")
-                dataset_id_clean = dataset_id.replace("-", "_")
                 metric_id_clean = metric_id.replace("-", "_")
+                route_clean = route.replace("-", "_").replace("/", ".")
+                dataset_id_clean = route_clean.split(".")[-1]
                 # Construct a placeholder API URL.
                 url = (
                     f"{self._base_url}/{route}"
@@ -240,7 +240,7 @@ class EiaMetadataDownloader:
                 # Flattened metadata row for one frequency and metric combination.
                 metadata = {
                     "url": url,
-                    "id": f"{dataset_id_clean}_{frequency_id}_{metric_id_clean}",
+                    "id": f"{route_clean}.{frequency_id}.{metric_id_clean}",
                     "dataset_id": dataset_id_clean,
                     "name": data.get("name"),
                     "description": data.get("description"),
