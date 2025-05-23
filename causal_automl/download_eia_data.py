@@ -108,7 +108,7 @@ class EiaDataDownloader:
 
         This method retrieves the full set of time series linked to an
         EIA identifier, including all combinations of facet values
-        (e.g., state, sector). When no start and end timestamps are
+        (e.g., `stateid`, `sectorid`). When no start and end timestamps are
         passed, the entire time series is downloaded.
 
         :param id_: EIA series ID, e.g.,
