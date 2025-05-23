@@ -7,7 +7,7 @@ import causal_automl.download_eia_data as cadoeida
 import io
 import logging
 import os
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Optional, Tuple
 
 import helpers.hdbg as hdbg
 import helpers.hs3 as hs3
@@ -65,8 +65,8 @@ class EiaDataDownloader:
         :param df: EIA series data
         :param id_: EIA series ID, e.g.,
             "electricity.retail_sales.monthly.price"
-        :param facets: facet filters, e.g., {"stateid": "WI",
-            "sectorid": "ALL"}
+        :param facets: facet filters, 
+            e.g., {"stateid": "WI", "sectorid": "ALL"}
         :return: data of single time series with one facet value per
             facet type
         """
@@ -81,7 +81,7 @@ class EiaDataDownloader:
             )
             df = df[df[key] == val]
         # Detect the metric column.
-        _, _, _, data_identifier = self._parse_id(id_)
+        _, data_identifier = self._parse_id(id_)
         # Drop rows with missing value.
         df = df.dropna(subset=[data_identifier])
         if df.empty:
@@ -119,7 +119,7 @@ class EiaDataDownloader:
         :return: full time series data with all facets
         """
         # Get base url from metadata index.
-        base_url, _ = self._get_metadata_url_and_facets(id_)
+        base_url = self._get_metadata_url(id_)
         # Build URL query with api key and timestamps.
         url = catemdpeu.build_full_url(
             base_url,
@@ -127,22 +127,24 @@ class EiaDataDownloader:
             start_timestamp=start_timestamp,
             end_timestamp=end_timestamp,
         )
-        df = []
+        data_chunks = []
         offset = 0
         while True:
             # Construct the paginated URL for the current offset.
             paginated_url = f"{url}&offset={offset}&length={max_rows_per_call}"
             data = self._client.get_response(paginated_url, self._client.header)
-            df.append(data)
+            data_chunks.append(data)
             if len(data) < max_rows_per_call:
                 # Exit loop when its the final page of data.
                 break
             offset += max_rows_per_call
-        if not df:
+        if not data_chunks:
             _LOG.warning("No data returned under given id.")
-        return pd.concat(df, ignore_index=True)
+        df = pd.concat(data_chunks, ignore_index=True)
+        _LOG.debug("Downloaded %d rows for id=%s", len(df), id_)
+        return df
 
-    def _parse_id(self, id_: str) -> Tuple[str, str, str, str]:
+    def _parse_id(self, id_: str) -> Tuple[str, str]:
         """
         Parse an EIA time series ID into its components.
 
@@ -150,18 +152,13 @@ class EiaDataDownloader:
             e.g., "electricity.retail_sales.monthly.price"
         :return:
             - top-level EIA category, e.g., "electricity"
-            - sub-path in the category, e.g., "retail-sales"
-            - reporting frequency, e.g., "monthly"
             - data identifier, e.g., "price"
         """
         id_ = id_.replace("_", "-")
         parts = id_.split(".")
         category = parts[0]
-        frequency = parts[-2]
         data_identifier = parts[-1]
-        route_parts = parts[1:-2]
-        subroute = "/".join(route_parts)
-        return category, subroute, frequency, data_identifier
+        return category, data_identifier
 
     def _get_latest_metadata_s3_path(self, category: str) -> str:
         """
@@ -191,17 +188,15 @@ class EiaDataDownloader:
         s3_path = f"s3://{files[0]}"
         return s3_path
 
-    def _get_metadata_url_and_facets(self, id_: str) -> Tuple[str, List[str]]:
+    def _get_metadata_url(self, id_: str) -> str:
         """
         :param id_: EIA time series ID,
             e.g., "electricity.retail_sales.monthly.price"
         :param category: top-level EIA category, e.g., "electricity"
-        :return:
-            - base API URL with frequency and metric, excluding facet values,
-              e.g., "https://api.eia.gov/v2/electricity/retail-sales?api_key={API_KEY}&frequency=monthly&data[0]=revenue"
-            - available facet types, e.g., ["stateid", "sectorid"]
+        :return: base API URL with frequency and metric, excluding facet values,
+            e.g., "https://api.eia.gov/v2/electricity/retail-sales?api_key={API_KEY}&frequency=monthly&data[0]=revenue"
         """
-        category, _, _, _ = self._parse_id(id_)
+        category, _ = self._parse_id(id_)
         # Load latest metadata index file from s3.
         s3_path = self._get_latest_metadata_s3_path(category)
         csv_str = hs3.from_file(s3_path, aws_profile=self._aws_profile)
@@ -211,7 +206,5 @@ class EiaDataDownloader:
         if match.empty:
             raise ValueError(f"Invalid id: '{id_}'")
         row = match.iloc[0]
-        base_url = row["url"]
-        # Extract only id field from facets.
-        facets = [f["id"] for f in eval(row["facets"])]
-        return base_url, facets
+        base_url = str(row["url"])
+        return base_url
