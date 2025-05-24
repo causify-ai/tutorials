@@ -132,8 +132,8 @@ def normalize_period_to_utc(
     Convert a datetime period to UTC and ensure both dates are timezone-aware.
 
     :param period: start and end datetime
-    :return: tuple of UTC-aware start and end datetime, or (None, None)
-        if period is None
+    :return: UTC-aware start and end datetime, or (None, None) if period
+        is None
     """
     if not period:
         return None, None
