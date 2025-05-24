@@ -63,12 +63,23 @@ flowchart TD
 pip install -r requirements.txt
 ```
 
-### 🐳 Docker Setup
+### ⚙️ Running the Pipeline
+
+> **Quick start (3 commands)**
 
 ```bash
-bash docker_build.sh
-bash docker_jupyter.sh  # Access at http://localhost:8888
-```
+# 1 – Build the image (tags it as `bigdl-bitcoin:latest`)
+./docker_build.sh
+
+# 2 – Start an interactive container, mounting the project
+winpty docker run --rm -it \
+       -v "$(pwd)":/app \
+       -p 8888:8888 \
+       bigdl-bitcoin:latest \
+       bash
+
+# 3 – Inside the container, execute the pipeline
+python Bitcoin_pipeline.py
 
 ---
 
