@@ -31,12 +31,13 @@ This document is the *text‑only* reference for the backend utilities shipped w
 
 ```mermaid
 flowchart LR
-    A[Bitcoin Raw Prices (REST/CSV)] -->|Spark ETL| B[Cleaned DataFrame]
-    B -->|to RDD of Sample| C[BigDL Engine]
-    C --> D[LSTM Network]
+    A[Raw Prices
+(REST/CSV)] -->|Spark ETL| B[Clean DF]
+    B -->|to RDD&nbsp;of Sample| C[BigDL Engine]
+    C --> D[LSTM Net]
     D -->|Optimizer| E[Trained Model]
-    E --> F[Predictions RDD]
-    F -->|collect| G[Visual Dashboards]
+    E --> F[Predictions]
+    F --> G[Dashboards]
 ```
 
 * **Spark** handles ingestion and transformation.
