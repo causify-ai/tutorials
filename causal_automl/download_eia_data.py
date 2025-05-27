@@ -69,6 +69,19 @@ class EiaDataDownloader:
             e.g., {"stateid": "WI", "sectorid": "ALL"}
         :return: data of single time series with one facet value per
             facet type
+
+        Example output:
+        ```
+        period                        stateid   stateDescription   sectorid
+        2001-05-01T00:00:00+00:00     WI        Wisconsin          ALL
+        2001-01-01T00:00:00+00:00     WI        Wisconsin          ALL
+        2001-04-01T00:00:00+00:00     WI        Wisconsin          ALL
+
+        sectorName    price   price-units
+        all sectors   5.98    cents per kilowatt-hour
+        all sectors   5.9     cents per kilowatt-hour
+        all sectors   6.02    cents per kilowatt-hour
+        ```
         """
         # Filter data with given facet values.
         for key, val in facets.items():
@@ -91,6 +104,7 @@ class EiaDataDownloader:
         df = df.rename(columns={"period": "period (UTC)"})
         df = df.set_index("period (UTC)")
         df.index = df.index.tz_localize("UTC")
+        df = df.sort_index()
         return df
 
     def download_series(
@@ -115,6 +129,19 @@ class EiaDataDownloader:
         :param end_timestamp: last observation date
         :param max_rows_per_call: max data rows per api call
         :return: full time series data with all facets
+
+        Example output:
+        ```
+        period      stateid   stateDescription   sectorid   sectorName
+        2020-09     WI        Wisconsin          IND        industrial
+        2020-09     WY        Wyoming            ALL        all sectors
+        2020-09     IA        Iowa               RES        Residential
+
+        price   price-units
+        7.45    cents per kilowatt-hour
+        8.55    cents per kilowatt-hour
+        12.65   cents per kilowatt-hour
+        ```
         """
         # Get base url from metadata index.
         base_url = self._get_metadata_url(id_)
