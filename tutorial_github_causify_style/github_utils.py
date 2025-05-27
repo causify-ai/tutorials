@@ -8,6 +8,7 @@ import datetime
 import logging
 import os
 import time as time_module
+# TODO: Imports-72: Avoid using `from ... import ...` unless it is the `typing` package.
 from datetime import date, timezone
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -613,7 +614,7 @@ def get_commits_by_person(
     result = get_total_commits(
         client=client, org_name=org_name, usernames=[username], period=period
     )
-    # TODO: Functions-224: Do not put computations of the output in the `return` line. Compute the output first, assign it to a variable, and then return this variable.
+    # TODO(False): Functions-224: Do not put computations of the output in the `return` line. Compute the output first, assign it to a variable, and then return this variable.
     return {
         "user": username,
         "total_commits": result["total_commits"],
@@ -653,7 +654,7 @@ def get_prs_by_person(
         period=period,
         state=state,
     )
-    # Functions-224: Do not put computations of the output in the `return` line. Compute the output first, assign it to a variable, and then return this variable.
+    # TODO(False): Functions-224: Do not put computations of the output in the `return` line. Compute the output first, assign it to a variable, and then return this variable.
     return {
         "user": username,
         "total_prs": result["total_prs"],
@@ -686,7 +687,7 @@ def get_prs_not_merged_by_person(
     result = get_prs_not_merged(
         client=client, org_name=org_name, usernames=[username], period=period
     )
-    # Functions-224: Do not put computations of the output in the `return` line. Compute the output first, assign it to a variable, and then return this variable.
+    # TODO(False): Functions-224: Do not put computations of the output in the `return` line. Compute the output first, assign it to a variable, and then return this variable.
     return {
         "user": username,
         "prs_not_merged": result["prs_not_merged"],
@@ -711,7 +712,7 @@ def days_between(
     while current <= end_date:
         days.append(current)
         current += datetime.timedelta(days=1)
-    #  Use `_LOG.debug()` instead of `_LOG.info()` for tracing execution.
+    # TODO(False): Logging-248: Use `_LOG.debug()` instead of `_LOG.info()` for tracing execution.
     _LOG.info("Generated %d days in period.", len(days))
     return days
 
@@ -967,7 +968,7 @@ def build_daily_loc_df(
         # Add context.
         all_days["repo"] = repo
         all_days["user"] = username
-        # TODO: Logging-248: Use `_LOG.debug()` instead of `_LOG.info()` for tracing execution.
+        # TODO(False): Logging-248: Use `_LOG.debug()` instead of `_LOG.info()` for tracing execution.
         _LOG.info("Built daily LOC DataFrame rows=%d (no data).", len(all_days))
         return all_days
     # Otherwise build from stats_list.
@@ -988,7 +989,7 @@ def build_daily_loc_df(
     # Add context.
     daily["repo"] = repo
     daily["user"] = username
-    # TODO: Logging-248: Use `_LOG.debug()` instead of `_LOG.info()` for tracing execution.
+    # TODO(False): Logging-248: Use `_LOG.debug()` instead of `_LOG.info()` for tracing execution.
     _LOG.info("Built daily LOC DataFrame rows=%d.", len(daily))
     return daily
 
