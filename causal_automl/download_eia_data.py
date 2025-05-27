@@ -13,7 +13,6 @@ import helpers.hdbg as hdbg
 import helpers.hs3 as hs3
 import myeia
 import pandas as pd
-import ratelimit
 
 import causal_automl.TutorTask401_EIA_metadata_downloader_pipeline.eia_utils as catemdpeu
 
@@ -94,8 +93,6 @@ class EiaDataDownloader:
         df.index = df.index.tz_localize("UTC")
         return df
 
-    @ratelimit.sleep_and_retry
-    @ratelimit.limits(calls=60, period=60)
     def download_series(
         self,
         id_: str,
