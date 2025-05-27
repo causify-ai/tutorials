@@ -73,14 +73,14 @@ class EiaDataDownloader:
         Example output:
         ```
         period                        stateid   stateDescription   sectorid
-        2001-05-01T00:00:00+00:00     WI        Wisconsin          ALL
         2001-01-01T00:00:00+00:00     WI        Wisconsin          ALL
-        2001-04-01T00:00:00+00:00     WI        Wisconsin          ALL
+        2001-02-01T00:00:00+00:00     WI        Wisconsin          ALL
+        2001-03-01T00:00:00+00:00     WI        Wisconsin          ALL
 
         sectorName    price   price-units
-        all sectors   5.98    cents per kilowatt-hour
         all sectors   5.9     cents per kilowatt-hour
-        all sectors   6.02    cents per kilowatt-hour
+        all sectors   5.98    cents per kilowatt-hour
+        all sectors   5.93    cents per kilowatt-hour
         ```
         """
         # Filter data with given facet values.
