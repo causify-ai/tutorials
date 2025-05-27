@@ -84,6 +84,7 @@ def get_repo_names(client: github.Github, org_name: str) -> Dict[str, List[str]]
         - owner: name of the organization
         - repositories: repository names
     """
+    # TODO: Turn the try-except into an assertion. No point in trying to recover.
     try:
         # Attempt to get the organization.
         owner = client.get_organization(org_name)
@@ -135,6 +136,7 @@ def normalize_period_to_utc(
     :return: UTC-aware start and end datetime, or (None, None) if period
         is None
     """
+    # TODO: Code implementation-137: Use `if period is None` instead of `if not period` to check if `period` is `None`.
     if not period:
         return None, None
     return tuple(
@@ -216,7 +218,6 @@ def get_total_commits(
         "period": f"{since} to {until}" if since and until else "All time",
         "commits_per_repository": commits_per_repository,
     }
-
     return result
 
 
@@ -612,6 +613,7 @@ def get_commits_by_person(
     result = get_total_commits(
         client=client, org_name=org_name, usernames=[username], period=period
     )
+    # TODO: Functions-224: Do not put computations of the output in the `return` line. Compute the output first, assign it to a variable, and then return this variable.
     return {
         "user": username,
         "total_commits": result["total_commits"],
@@ -651,6 +653,7 @@ def get_prs_by_person(
         period=period,
         state=state,
     )
+    # Functions-224: Do not put computations of the output in the `return` line. Compute the output first, assign it to a variable, and then return this variable.
     return {
         "user": username,
         "total_prs": result["total_prs"],
@@ -683,6 +686,7 @@ def get_prs_not_merged_by_person(
     result = get_prs_not_merged(
         client=client, org_name=org_name, usernames=[username], period=period
     )
+    # Functions-224: Do not put computations of the output in the `return` line. Compute the output first, assign it to a variable, and then return this variable.
     return {
         "user": username,
         "prs_not_merged": result["prs_not_merged"],
@@ -707,6 +711,7 @@ def days_between(
     while current <= end_date:
         days.append(current)
         current += datetime.timedelta(days=1)
+    #  Use `_LOG.debug()` instead of `_LOG.info()` for tracing execution.
     _LOG.info("Generated %d days in period.", len(days))
     return days
 
@@ -962,6 +967,7 @@ def build_daily_loc_df(
         # Add context.
         all_days["repo"] = repo
         all_days["user"] = username
+        # TODO: Logging-248: Use `_LOG.debug()` instead of `_LOG.info()` for tracing execution.
         _LOG.info("Built daily LOC DataFrame rows=%d (no data).", len(all_days))
         return all_days
     # Otherwise build from stats_list.
@@ -982,6 +988,7 @@ def build_daily_loc_df(
     # Add context.
     daily["repo"] = repo
     daily["user"] = username
+    # TODO: Logging-248: Use `_LOG.debug()` instead of `_LOG.info()` for tracing execution.
     _LOG.info("Built daily LOC DataFrame rows=%d.", len(daily))
     return daily
 
