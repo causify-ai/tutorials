@@ -31,20 +31,21 @@ class EiaDataDownloader:
     """
 
     def __init__(
-        self, *, api_key: Optional[str] = None, aws_profile: Optional[str] = "ck"
+        self, *, aws_profile: Optional[str] = "ck"
     ) -> None:
         """
-        Initialize the EIA data downloader with the API key.
+        Initialize the EIA data downloader with the API key and AWS profile.
 
-        If no EIA API key is passed as a parameter, it is read from the
-        environment variable.
+        EIA API key is read from the environment variable.
 
-        :param api_key: EIA API key
         :param aws_profile: AWS CLI profile name used for authentication
         """
-        self._api_key = api_key or os.getenv("EIA_API_KEY")
-        if not self._api_key:
-            raise ValueError("EIA API key is required")
+        hdbg.dassert_in(
+            "EIA_API_KEY",
+            os.environ,
+            msg="EIA_API_KEY is not found in environment variables",
+        )
+        self._api_key = os.getenv("EIA_API_KEY")
         self._client = myeia.API(token=self._api_key)
         self._aws_profile = aws_profile
         self.base_url = "https://api.eia.gov/v2/"
