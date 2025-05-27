@@ -83,8 +83,9 @@ def _load_data(file_path: str) -> pd.DataFrame:
 
 def _prettify(col: str) -> str:
     """
-    Convert snake_case to Title Case (“spinning_reserves” ⇒ “Spinning
-    Reserves”).
+    Convert snake_case to Title Case.
+
+    E.g., “spinning_reserves” to “Spinning Reserves”
 
     :param col: column name to prettify
     :return: prettified column name
