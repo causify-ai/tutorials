@@ -42,8 +42,7 @@ class GridstatusDataDownloader:
             msg="GRIDSTATUS_API_KEY is not found in environment variables",
         )
         api_key = os.getenv("GRIDSTATUS_API_KEY")
-        key = api_key or os.getenv("GRIDSTATUS_API_KEY")
-        self._client = gridstatusio.GridStatusClient(api_key=key)
+        self._client = gridstatusio.GridStatusClient(api_key=api_key)
 
     @ratelimit.sleep_and_retry
     @ratelimit.limits(calls=60, period=60)
