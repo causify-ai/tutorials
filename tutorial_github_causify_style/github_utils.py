@@ -7,8 +7,7 @@ import tutorial_github_causify_style.github_utils as tgcsgiut
 import datetime
 import logging
 import os
-import time as time_module
-from datetime import date, timezone
+import time
 from typing import Any, Dict, List, Optional, Tuple
 
 import github
@@ -27,8 +26,7 @@ _LOG = logging.getLogger(__name__)
 
 class GitHubAPI:
     """
-    A class to initialize and manage authentication with the GitHub API using
-    PyGithub.
+    Initialize and manage authentication with the GitHub API using PyGithub.
     """
 
     def __init__(
@@ -693,16 +691,16 @@ def get_prs_not_merged_by_person(
 
 def days_between(
     period: Tuple[datetime.datetime, datetime.datetime],
-) -> List[date]:
+) -> List[datetime.date]:
     """
     Generate each date in time span.
 
     :param period: start and end datetime
     :return: date span
     """
-    start_date = period[0].date()
-    end_date = period[1].date()
-    days: List[date] = []
+    start_date = period[0].datetime.date()
+    end_date = period[1].datetime.date()
+    days: List[datetime.date] = []
     current = start_date
     while current <= end_date:
         days.append(current)
@@ -740,7 +738,9 @@ def get_commit_datetimes_by_repo_period_intrinsic(
             committer_login = c.committer.login if c.committer else None
             if username in (author_login, committer_login):
                 dt = c.commit.author.date
-                dt_utc = dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+                dt_utc = (
+                    dt if dt.tzinfo else dt.replace(tzinfo=datetime.timezone.utc)
+                )
                 timestamps.append(dt_utc.isoformat())
         _LOG.info(
             "Fetched %d commits for %s/%s user=%s.",
@@ -781,14 +781,14 @@ def get_pr_datetimes_by_repo_period_intrinsic(
     :return: PR created timestamps in ISO format
     """
     timestamps: List[str] = []
-    since_date = since.date().isoformat()
-    until_date = until.date().isoformat()
+    since_date = since.datetime.date().isoformat()
+    until_date = until.datetime.date().isoformat()
     query = f"repo:{org}/{repo} is:pr author:{username} created:{since_date}..{until_date}"
     try:
         results = client.search_issues(query)
         for issue in results:
             dt = issue.created_at
-            dt_utc = dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+            dt_utc = dt if dt.tzinfo else dt.replace(tzinfo=datetime.timezone.utc)
             timestamps.append(dt_utc.isoformat())
         _LOG.info(
             "Found %d PRs for %s/%s user=%s.",
@@ -839,8 +839,8 @@ def get_loc_stats_by_repo_period_intrinsic(
                 _LOG.warning("Could not fetch stats for commit %s.", c.sha)
                 continue
             dt = c.commit.author.date
-            dt_utc = dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
-            iso = dt_utc.date().isoformat()
+            dt_utc = dt if dt.tzinfo else dt.replace(tzinfo=datetime.timezone.utc)
+            iso = dt_utc.datetime.date().isoformat()
             stats_list.append(
                 {"date": iso, "additions": s.additions, "deletions": s.deletions}
             )
@@ -1044,7 +1044,7 @@ def prefetch_periodic_user_repo_data(
         raise ValueError("repos must be a list of strings")
     if not isinstance(users, list) or not all(isinstance(u, str) for u in users):
         raise ValueError("users must be a list of strings")
-    start = time_module.time()
+    start = time.time()
     count = 0
     since, until = period
     # Loop over each repo and user combination.
@@ -1067,7 +1067,7 @@ def prefetch_periodic_user_repo_data(
                 client, org, repo, user, since, until
             )
             count += 1
-    elapsed = time_module.time() - start
+    elapsed = time.time() - start
     _LOG.info(
         "Prefetched %d user-repo combos in %.2f seconds for period %s to %s.",
         count,
