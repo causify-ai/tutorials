@@ -43,8 +43,6 @@ class GridstatusDataDownloader:
         )
         api_key = os.getenv("GRIDSTATUS_API_KEY")
         key = api_key or os.getenv("GRIDSTATUS_API_KEY")
-        if not key:
-            raise ValueError("GridStatus API key is required")
         self._client = gridstatusio.GridStatusClient(api_key=key)
 
     @ratelimit.sleep_and_retry
