@@ -702,8 +702,8 @@ def days_between(
     :param period: start and end datetime
     :return: date span
     """
-    start_date = period[0].datetime.date()
-    end_date = period[1].datetime.date()
+    start_date = period[0].date()
+    end_date = period[1].date()
     days: List[datetime.date] = []
     current = start_date
     while current <= end_date:
@@ -786,8 +786,8 @@ def get_pr_datetimes_by_repo_period_intrinsic(
     :return: PR created timestamps in ISO format
     """
     timestamps: List[str] = []
-    since_date = since.datetime.date().isoformat()
-    until_date = until.datetime.date().isoformat()
+    since_date = since.date().isoformat()
+    until_date = until.date().isoformat()
     query = f"repo:{org}/{repo} is:pr author:{username} created:{since_date}..{until_date}"
     try:
         results = client.search_issues(query)
@@ -845,7 +845,7 @@ def get_loc_stats_by_repo_period_intrinsic(
                 continue
             dt = c.commit.author.date
             dt_utc = dt if dt.tzinfo else dt.replace(tzinfo=datetime.timezone.utc)
-            iso = dt_utc.datetime.date().isoformat()
+            iso = dt_utc.date().isoformat()
             stats_list.append(
                 {"date": iso, "additions": s.additions, "deletions": s.deletions}
             )
