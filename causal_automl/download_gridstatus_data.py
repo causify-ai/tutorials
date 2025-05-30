@@ -7,7 +7,7 @@ import causal_automl.download_gridstatus_data as cadogrda
 import logging
 import os
 import time
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 
 import gridstatusio
 import helpers.hdbg as hdbg
@@ -30,11 +30,6 @@ class GridstatusDataDownloader:
     def __init__(self) -> None:
         """
         Initialize the GridStatus data downloader with the API key.
-
-        If no API key is passed as a parameter, it is read from the
-        GRIDSTATUS_API_KEY environment variable.
-
-        :param api_key: GridStatus API key
         """
         hdbg.dassert_in(
             "GRIDSTATUS_API_KEY",
@@ -49,8 +44,8 @@ class GridstatusDataDownloader:
     def download_series(
         self,
         id_: str,
-        start_timestamp: Optional[pd.Timestamp] = None,
-        end_timestamp: Optional[pd.Timestamp] = None,
+        start_timestamp: Optional[Union[str, pd.Timestamp]] = None,
+        end_timestamp: Optional[Union[str, pd.Timestamp]] = None,
     ) -> Optional[pd.DataFrame]:
         """
         Download historical series data.
@@ -69,13 +64,14 @@ class GridstatusDataDownloader:
         0.5
         ```
 
-        :param id_: GridStatus dataset identifier (e.g., "caiso_as_prices.spinning_reserves")
-        :param start_timestamp: first observation timestamp (e.g., "2010-01-01 08:00:00+00:00")
+        :param id_: Gridstatus series identifier (e.g., "caiso_as_prices.spinning_reserves")
+        :param start_timestamp: first observation timestamp
+            (e.g., "2010-01-01 08:00:00+00:00" or pd.Timestamp("2023-04-01 01:00:00"))
         :param end_timestamp: last observation timestamp
-        :return: relevant GridStatus series data
+        :return: relevant Gridstatus series data
         """
         # Build request parameters.
-        id_series, name_series = id_.split(".", 1)
+        id_dataset, name_series = id_.split(".", 1)
         request_kwargs: Dict[str, str] = {}
         if start_timestamp is not None:
             request_kwargs["start"] = start_timestamp
@@ -89,7 +85,7 @@ class GridstatusDataDownloader:
             try:
                 # Download the data for the dataset.
                 df = self._client.get_dataset(
-                    dataset=id_series,
+                    dataset=id_dataset,
                     columns=[name_series],
                     **request_kwargs,
                 )
@@ -106,7 +102,7 @@ class GridstatusDataDownloader:
                 continue
             # Log success and return.
             _LOG.info(
-                "Downloaded dataset %s with %d records",
+                "Downloaded series %s with %d records",
                 id_,
                 len(df),
             )
@@ -114,3 +110,44 @@ class GridstatusDataDownloader:
         raise RuntimeError(
             f"Failed to fetch after {max_attempts} attempts. Errors per run: {err_msgs}"
         )
+
+    def filter_series(
+        self,
+        df: pd.DataFrame,
+        id_: str,
+        filters: Dict[str, str],
+    ) -> Optional[pd.DataFrame]:
+        """
+        Filter out a single time series from a Gridstatus dataset.
+
+        Apply single filters across columns (e.g., `region`, `market`),
+        drop missing rows and return end timestamp-indexed single series.
+
+        :param df: Gridstatus data series to filter
+        :param id_: Gridstatus series identifier (e.g., "caiso_as_prices.spinning_reserves")
+        :param filters: filters to apply on the dataset
+            (e.g., {"region":"AS_CAISO_EXP", "market":"DAM"})
+        :return: filtered Gridstatus series
+        """
+        # Filter data.
+        filtered_data = df.copy()
+        for k, v in filters.items():
+            hdbg.dassert_in(
+                k,
+                filtered_data.columns,
+                "%s not found in columns: %s",
+                k,
+                list(filtered_data.columns),
+            )
+            filtered_data = filtered_data[filtered_data[k] == v]
+        # Find the series name.
+        name_series = id_.split(".", 1)[1]
+        # Drop missing value rows.
+        filtered_data = filtered_data.dropna(subset=[name_series])
+        if filtered_data.empty:
+            _LOG.warning("No data remaining after applying filters")
+            return None
+        filtered_data = filtered_data[["interval_end_utc", name_series]]
+        filtered_data = filtered_data.set_index("interval_end_utc")
+        filtered_data = filtered_data.sort_index()
+        return filtered_data

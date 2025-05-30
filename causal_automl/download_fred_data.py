@@ -30,11 +30,6 @@ class FredDataDownloader:
     def __init__(self) -> None:
         """
         Initialize the FRED data downloader with the API key.
-
-        If no FRED API key is passed as a parameter, it is read from the
-        environment variable.
-
-        :param api_key: FRED API key
         """
         hdbg.dassert_in(
             "FRED_API_KEY",
