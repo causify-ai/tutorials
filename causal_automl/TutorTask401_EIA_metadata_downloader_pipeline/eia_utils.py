@@ -118,11 +118,17 @@ class EiaMetadataDownloader:
         # Build the full API request URL.
         url = f"{self._base_url}/{route}?api_key={self._api_key}"
         # Send HTTP GET request to the EIA API.
+        # TODO(alvino): Add error handling for the HTTP request to handle
+        # potential exceptions such as connection errors or timeouts.
         response = requests.get(url, timeout=20)
         # Parse JSON content.
+        # TODO(alvino): Check if the response is successful (e.g.,
+        # `response.status_code == 200`) before attempting to parse the JSON
+        # content.
         json_data = response.json()
         # Get response from parsed payload.
         data: Dict[str, Any] = {}
+        # TODO(alvino): Add error handling for JSON parsing to manage potential parsing errors.
         data = json_data.get("response", {})
         return data
 
@@ -238,6 +244,8 @@ class EiaMetadataDownloader:
                 # Determine parameter CSV path for associated facet values.
                 param_file_path = f"eia_parameters_v{self._version_num}/{dataset_id_clean}_parameters.csv"
                 # Flattened metadata row for one frequency and metric combination.
+                # TODO(gp): `.get()` will use `None` if there is a missing
+                # value in the dictionary. Is this the intended behavior?
                 metadata = {
                     "url": url,
                     "id": f"{route_clean}.{frequency_id}.{metric_id_clean}",
@@ -270,6 +278,7 @@ class EiaMetadataDownloader:
         :param route: dataset route under the EIA v2 API
         :return: data containing all facet values
         """
+        hdbg.dassert_in("facets", metadata)
         facets = metadata["facets"]
         rows = []
         for facet in facets:
@@ -340,8 +349,7 @@ def plot_distribution(df_metadata: pd.DataFrame, column: str, title: str) -> Non
         'frequency_id', 'data_units')
     :param title: title for the plot
     """
-    if column not in df_metadata.columns:
-        raise ValueError(f"Column '{column}' not found in metadata index.")
+    hdbg.dassert_in(column, df_metadata.columns)
     counts = df_metadata[column].value_counts()
     ax = counts.plot(kind="bar", figsize=(8, 4), title=title)
     ax.set_xlabel(column.replace("_", " ").title())
