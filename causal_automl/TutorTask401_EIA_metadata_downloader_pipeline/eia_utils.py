@@ -5,8 +5,10 @@ import causal_automl.TutorTask401_EIA_metadata_downloader_pipeline.eia_utils as 
 """
 
 import logging
-from typing import Any, Dict, List, Optional, Tuple
+import re
+from typing import Any, Dict, List, Optional, Tuple, cast
 
+import helpers.hdbg as hdbg
 import matplotlib.pyplot as plt
 import pandas as pd
 import requests
@@ -312,8 +314,11 @@ def build_full_url(
     """
     Build an EIA v2 API URL to data endpoint.
 
-    This modifies the base metadata URL to point to the actual time series
-    data endpoint, optionally appending facet values and date range.
+    This function modifies the base metadata URL by:
+    - Replacing the metadata endpoint with the actual data endpoint
+    - Injecting the provided API key
+    - Appending optional facet filters
+    - Appending start and end timestamps formatted to match the series frequency
 
     :param base_url: base API URL with frequency and metric, excluding
         facet values,
@@ -325,19 +330,58 @@ def build_full_url(
     :return: full EIA API URL to data endpoint,
         e.g, "https://api.eia.gov/v2/electricity/retail-sales/data?api_key=abcd1234xyz&frequency=monthly&data[0]=price&facets[stateid][]=KS&facets[sectorid][]=OTH"
     """
+    match = cast(re.Match[str], re.search(r"frequency=([a-zA-Z\-]+)", base_url))
+    frequency = match.group(1)
     base_url = base_url.replace("?", "/data?")
     url = base_url.replace("{API_KEY}", api_key)
     query_parts = []
     if start_timestamp:
-        query_parts.append(f"&start={start_timestamp}")
+        formatted_start = _format_timestamp(start_timestamp, frequency)
+        query_parts.append(f"&start={formatted_start}")
     if end_timestamp:
-        query_parts.append(f"&end={end_timestamp}")
+        formatted_end = _format_timestamp(end_timestamp, frequency)
+        query_parts.append(f"&end={formatted_end}")
     if facet_input:
         # Add facet values when specified.
         for facet_id, value in facet_input.items():
             query_parts.append(f"&facets[{facet_id}][]={value}")
     full_url = url + "".join(query_parts)
     return full_url
+
+
+def _format_timestamp(timestamp: pd.Timestamp, frequency: str) -> pd.Timestamp:
+    """
+    Format a timestamp based on the EIA time series frequency.
+
+    Supported formats:
+    - "annual": "YYYY"
+    - "quarterly": "YYYY-QN"
+    - "monthly": "YYYY-MM"
+    - "daily": "YYYY-MM-DD"
+    - "hourly": "YYYY-MM-DDTHH"
+    - "local-hourly": "YYYY-MM-DDTHH-ZZ" (fixed timezone offset, e.g., -00)
+
+    :param timestamp: the timestamp to format
+    :param frequency: the frequency type (e.g., "monthly", "local-hourly")
+    :return: formatted timestamp
+    """
+    result = ""
+    if frequency == "annual":
+        result = timestamp.strftime("%Y")
+    elif frequency == "monthly":
+        result = timestamp.strftime("%Y-%m")
+    elif frequency == "quarterly":
+        q = (timestamp.month - 1) // 3 + 1
+        result = f"{timestamp.year}-Q{q}"
+    elif frequency == "daily":
+        result = timestamp.strftime("%Y-%m-%d")
+    elif frequency == "hourly":
+        result = timestamp.strftime("%Y-%m-%dT%H")
+    elif frequency == "local-hourly":
+        result = timestamp.strftime("%Y-%m-%dT%H") + "-00"
+    else:
+        raise ValueError(f"Unsupported frequency: {frequency}")
+    return result
 
 
 def plot_distribution(df_metadata: pd.DataFrame, column: str, title: str) -> None:

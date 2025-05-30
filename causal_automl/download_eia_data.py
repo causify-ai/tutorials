@@ -29,9 +29,7 @@ class EiaDataDownloader:
     Download historical data from EIA.
     """
 
-    def __init__(
-        self, *, aws_profile: Optional[str] = "ck"
-    ) -> None:
+    def __init__(self, *, aws_profile: str = "ck") -> None:
         """
         Initialize the EIA data downloader with the API key and AWS profile.
 
@@ -47,7 +45,7 @@ class EiaDataDownloader:
         self._api_key = os.getenv("EIA_API_KEY")
         self._client = myeia.API(token=self._api_key)
         self._aws_profile = aws_profile
-        self.base_url = "https://api.eia.gov/v2/"
+        self._metadata_index_by_category: Dict[str, pd.DataFrame] = {}
 
     def filter_series(
         self,
@@ -58,29 +56,26 @@ class EiaDataDownloader:
         """
         Filter and clean a single time series from an EIA dataset.
 
-        Apply facet filters (e.g., state, sector) to select one unique
-        series, drop missing values, and convert the time column to a
-        UTC-indexed datetime format.
+        This function performs data post-processing:
+        - Filter by facet values (e.g., "stateid", "sectorid")
+        - Retain only the period and metric column
+        - Convert the period column to UTC datetime
+        - Set the period as the index and sort chronologically
 
         :param df: EIA series data
         :param id_: EIA series ID, e.g.,
             "electricity.retail_sales.monthly.price"
-        :param facets: facet filters, 
+        :param facets: facet filters,
             e.g., {"stateid": "WI", "sectorid": "ALL"}
         :return: data of single time series with one facet value per
             facet type
 
         Example output:
         ```
-        period                        stateid   stateDescription   sectorid
-        2001-01-01T00:00:00+00:00     WI        Wisconsin          ALL
-        2001-02-01T00:00:00+00:00     WI        Wisconsin          ALL
-        2001-03-01T00:00:00+00:00     WI        Wisconsin          ALL
-
-        sectorName    price   price-units
-        all sectors   5.9     cents per kilowatt-hour
-        all sectors   5.98    cents per kilowatt-hour
-        all sectors   5.93    cents per kilowatt-hour
+        period                        price
+        2001-01-01T00:00:00+00:00     5.9
+        2001-02-01T00:00:00+00:00     5.98
+        2001-03-01T00:00:00+00:00     5.93
         ```
         """
         # Filter data with given facet values.
@@ -94,16 +89,15 @@ class EiaDataDownloader:
             )
             df = df[df[key] == val]
         # Detect the metric column.
-        _, data_identifier = self._parse_id(id_)
+        _, _, _, data_identifier = self._parse_id(id_)
+        df = df[["period", data_identifier]]
         # Drop rows with missing value.
         df = df.dropna(subset=[data_identifier])
         if df.empty:
             _LOG.warning("No data remaining after applying facets.")
-        # Convert to datetime index.
-        df["period"] = pd.to_datetime(df["period"])
-        df = df.rename(columns={"period": "period (UTC)"})
-        df = df.set_index("period (UTC)")
-        df.index = df.index.tz_localize("UTC")
+        # Convert to datetime and index.
+        df["period"] = pd.to_datetime(df["period"]).dt.tz_localize("UTC")
+        df = df.set_index("period")
         df = df.sort_index()
         return df
 
@@ -118,19 +112,23 @@ class EiaDataDownloader:
         """
         Download EIA historical series data.
 
-        This method retrieves the full set of time series linked to an
-        EIA identifier, including all combinations of facet values
-        (e.g., `stateid`, `sectorid`). When no start and end timestamps are
-        passed, the entire time series is downloaded.
+                This method retrieves the full set of time series linked to an
+                EIA identifier, including all combinations of facet values
+                (e.g., `stateid`, `sectorid`). When no start and end timestamps are
+                passed, the entire time series is downloaded.
 
-        :param id_: EIA series ID, e.g.,
-            "electricity.retail_sales.monthly.price"
-        :param start_timestamp: first observation date
-        :param end_timestamp: last observation date
-        :param max_rows_per_call: max data rows per api call
-        :return: full time series data with all facets
+                Pagination is handled internally. The `max_rows_per_call` parameter
+                controls the page size for each API request, but the method will
+                continue fetching until all available data is retrieved.
 
-        Example output:
+                :param id_: EIA series ID, e.g.,
+                    "electricity.retail_sales.monthly.price"
+                :param start_timestamp: first observation date
+                :param end_timestamp: last observation date
+                :param max_rows_per_call: max data rows per API call
+                :return: full time series data with all facets
+
+                Example output:
         ```
         period      stateid   stateDescription   sectorid   sectorName
         2020-09     WI        Wisconsin          IND        industrial
@@ -145,7 +143,7 @@ class EiaDataDownloader:
         """
         # Get base url from metadata index.
         base_url = self._get_metadata_url(id_)
-        # Build URL query with api key and timestamps.
+        # Build URL query with API key and timestamps.
         url = catemdpeu.build_full_url(
             base_url,
             self._api_key,
@@ -160,7 +158,7 @@ class EiaDataDownloader:
             data = self._client.get_response(paginated_url, self._client.header)
             data_chunks.append(data)
             if len(data) < max_rows_per_call:
-                # Exit loop when its the final page of data.
+                # Exit loop when it's the final page of data.
                 break
             offset += max_rows_per_call
         if not data_chunks:
@@ -169,31 +167,40 @@ class EiaDataDownloader:
         _LOG.debug("Downloaded %d rows for id=%s", len(df), id_)
         return df
 
-    def _parse_id(self, id_: str) -> Tuple[str, str]:
+    def _parse_id(self, id_: str) -> Tuple[str, str, str, str]:
         """
         Parse an EIA time series ID into its components.
+
+        EIA time series IDs follow the format:
+            <category>.<subroute>.<frequency>.<data_identifier>
+
+        Underscores are converted to dashes to match the EIA API format.
 
         :param id_: EIA time series ID,
             e.g., "electricity.retail_sales.monthly.price"
         :return:
             - top-level EIA category, e.g., "electricity"
+            - subroute in the category, e.g., "retail-sales"
+            - reporting frequency, e.g., "monthly"
             - data identifier, e.g., "price"
         """
         id_ = id_.replace("_", "-")
         parts = id_.split(".")
         category = parts[0]
+        frequency = parts[-2]
         data_identifier = parts[-1]
-        return category, data_identifier
+        route_parts = parts[1:-2]
+        subroute = "/".join(route_parts)
+        return category, subroute, frequency, data_identifier
 
-    def _get_latest_metadata_s3_path(self, category: str) -> str:
+    def _get_latest_metadata_from_s3(self, category: str) -> pd.DataFrame:
         """
-        Get the latest versioned metadata file S3 path for a given category.
+        Get the latest versioned metadata index file from S3 for a category.
 
         :param category: top-level EIA category, e.g., "electricity"
-        :return: full S3 path to the latest version of the metadata CSV
-            e.g., "eia_electricity_metadata_original_v2.0.csv"
+        :return: latest versioned metadata index
         """
-        # Get file names from s3 bucket.
+        # Get file names from S3 bucket.
         base_dir = "s3://causify-data-collaborators/causal_automl/metadata"
         pattern = f"eia_{category}_metadata_original_v*"
         files = hs3.listdir(
@@ -211,25 +218,30 @@ class EiaDataDownloader:
         # Get latest file version.
         files.sort(reverse=True)
         s3_path = f"s3://{files[0]}"
-        return s3_path
+        # Load latest metadata index file from S3.
+        csv_str = hs3.from_file(s3_path, aws_profile=self._aws_profile)
+        df = pd.read_csv(io.StringIO(csv_str))
+        return df
 
     def _get_metadata_url(self, id_: str) -> str:
         """
+        Get base URL for given series ID from the metadata index.
+
         :param id_: EIA time series ID,
             e.g., "electricity.retail_sales.monthly.price"
-        :param category: top-level EIA category, e.g., "electricity"
         :return: base API URL with frequency and metric, excluding facet values,
             e.g., "https://api.eia.gov/v2/electricity/retail-sales?api_key={API_KEY}&frequency=monthly&data[0]=revenue"
         """
-        category, _ = self._parse_id(id_)
-        # Load latest metadata index file from s3.
-        s3_path = self._get_latest_metadata_s3_path(category)
-        csv_str = hs3.from_file(s3_path, aws_profile=self._aws_profile)
-        df = pd.read_csv(io.StringIO(csv_str))
+        category, _, _, _ = self._parse_id(id_)
+        # Load latest metadata index file from S3.
+        if category not in self._metadata_index_by_category:
+            self._metadata_index_by_category[category] = (
+                self._get_latest_metadata_from_s3(category)
+            )
+        df = self._metadata_index_by_category[category]
         # Filter for exact ID match.
         match = df[df["id"] == id_]
         if match.empty:
-            raise ValueError(f"Invalid id: '{id_}'")
-        row = match.iloc[0]
-        base_url = str(row["url"])
+            raise ValueError(f"Invalid ID: '{id_}'")
+        base_url: str = match.iloc[0]["url"]
         return base_url
