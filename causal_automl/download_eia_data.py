@@ -112,23 +112,23 @@ class EiaDataDownloader:
         """
         Download EIA historical series data.
 
-                This method retrieves the full set of time series linked to an
-                EIA identifier, including all combinations of facet values
-                (e.g., `stateid`, `sectorid`). When no start and end timestamps are
-                passed, the entire time series is downloaded.
+        This method retrieves the full set of time series linked to an
+        EIA identifier, including all combinations of facet values
+        (e.g., `stateid`, `sectorid`). When no start and end timestamps are
+        passed, the entire time series is downloaded.
 
-                Pagination is handled internally. The `max_rows_per_call` parameter
-                controls the page size for each API request, but the method will
-                continue fetching until all available data is retrieved.
+        Pagination is handled internally. The `max_rows_per_call` parameter
+        controls the page size for each API request, but the method will
+        continue fetching until all available data is retrieved.
 
-                :param id_: EIA series ID, e.g.,
-                    "electricity.retail_sales.monthly.price"
-                :param start_timestamp: first observation date
-                :param end_timestamp: last observation date
-                :param max_rows_per_call: max data rows per API call
-                :return: full time series data with all facets
+        :param id_: EIA series ID, e.g.,
+            "electricity.retail_sales.monthly.price"
+        :param start_timestamp: first observation date
+        :param end_timestamp: last observation date
+        :param max_rows_per_call: max data rows per API call
+        :return: full time series data with all facets
 
-                Example output:
+        Example output:
         ```
         period      stateid   stateDescription   sectorid   sectorName
         2020-09     WI        Wisconsin          IND        industrial
