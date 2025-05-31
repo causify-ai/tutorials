@@ -359,7 +359,7 @@ def _format_timestamp(timestamp: pd.Timestamp, frequency: str) -> pd.Timestamp:
     - "monthly": "YYYY-MM"
     - "daily": "YYYY-MM-DD"
     - "hourly": "YYYY-MM-DDTHH"
-    - "local-hourly": "YYYY-MM-DDTHH-ZZ" (fixed timezone offset, e.g., -00)
+    - "local-hourly": "YYYY-MM-DDTHH-ZZ" (fixed timezone offset, e.g., "-00")
 
     :param timestamp: the timestamp to format
     :param frequency: the frequency type (e.g., "monthly", "local-hourly")
