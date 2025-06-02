@@ -121,8 +121,8 @@ class GridstatusDataDownloader:
         Filter out a single time series from a Gridstatus dataset.
 
         - Apply single filters across columns (e.g., `region`, `market`)
-        - drop missing rows
-        - return end timestamp-indexed single series
+        - Drop NaN values
+        - Set the end timestamp as index
 
         E.g.,
 
@@ -156,13 +156,11 @@ class GridstatusDataDownloader:
         ...                                          ...
         ```
 
-
-
-        :param df: Gridstatus data series to filter
-        :param id_: Gridstatus series identifier (e.g., "caiso_as_prices.spinning_reserves")
+        :param df: data series to filter
+        :param id_: series identifier (e.g., "caiso_as_prices.spinning_reserves")
         :param filters: filters to apply on the dataset
             (e.g., {"region": "AS_CAISO_EXP", "market": "DAM"})
-        :return: filtered Gridstatus series
+        :return: filtered series
         """
         # Filter data.
         filtered_data = df.copy()
