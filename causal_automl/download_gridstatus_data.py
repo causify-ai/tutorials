@@ -116,17 +116,52 @@ class GridstatusDataDownloader:
         df: pd.DataFrame,
         id_: str,
         filters: Dict[str, str],
-    ) -> Optional[pd.DataFrame]:
+    ) -> pd.DataFrame:
         """
         Filter out a single time series from a Gridstatus dataset.
 
-        Apply single filters across columns (e.g., `region`, `market`),
-        drop missing rows and return end timestamp-indexed single series.
+        - Apply single filters across columns (e.g., `region`, `market`)
+        - drop missing rows
+        - return end timestamp-indexed single series
+
+        E.g.,
+
+        Input series (caiso_as_prices.non_spinning_reserves):
+        ```
+        interval_start_utc          interval_end_utc            region          market
+        2022-01-01 08:00:00+00:00   2022-01-01 09:00:00+00:00   AS_CAISO        DAM
+        2022-01-01 08:00:00+00:00   2022-01-01 09:00:00+00:00   AS_CAISO_EXP    DAM
+        2022-01-01 08:00:00+00:00   2022-01-01 09:00:00+00:00   AS_NP26         DAM
+        2022-01-01 08:00:00+00:00   2022-01-01 09:00:00+00:00   AS_NP26_EXP     DAM
+        2022-01-01 08:00:00+00:00   2022-01-01 09:00:00+00:00   AS_SP26         DAM
+        ...                         ...                         ...             ...
+        /
+        non_spinning_reserves
+        0.00
+        0.15
+        0.00
+        0.00
+        0.00
+        ...
+        ```
+        Output series (with filters - {"region": "AS_CAISO_EXP", "market": "DAM"})):
+        ```
+                                        non_spinning_reserves
+        interval_end_utc
+        2022-01-01 09:00:00+00:00                   0.15
+        2022-01-01 10:00:00+00:00                   0.15
+        2022-01-01 11:00:00+00:00                   0.15
+        2022-01-01 12:00:00+00:00                   0.15
+        2022-01-01 13:00:00+00:00                   0.15
+        ...                                          ...
+        ```
+
+
 
         :param df: Gridstatus data series to filter
         :param id_: Gridstatus series identifier (e.g., "caiso_as_prices.spinning_reserves")
         :param filters: filters to apply on the dataset
-            (e.g., {"region":"AS_CAISO_EXP", "market":"DAM"})
+            (e.g., {"region": "AS_CAISO_EXP", "market": "DAM"})
         :return: filtered Gridstatus series
         """
         # Filter data.
@@ -140,13 +175,14 @@ class GridstatusDataDownloader:
                 list(filtered_data.columns),
             )
             filtered_data = filtered_data[filtered_data[k] == v]
+        if filtered_data.empty:
+            _LOG.warning("No data remaining after applying filters")
         # Find the series name.
         name_series = id_.split(".", 1)[1]
         # Drop missing value rows.
         filtered_data = filtered_data.dropna(subset=[name_series])
         if filtered_data.empty:
-            _LOG.warning("No data remaining after applying filters")
-            return None
+            _LOG.warning("No data remaining after dropping NaN values")
         filtered_data = filtered_data[["interval_end_utc", name_series]]
         filtered_data = filtered_data.set_index("interval_end_utc")
         filtered_data = filtered_data.sort_index()
