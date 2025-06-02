@@ -88,7 +88,7 @@ def _load_data(file_path: str, aws_profile: str) -> pd.DataFrame:
     """
     file = hs3.from_file(file_path, aws_profile=aws_profile)
     df = pd.read_csv(io.StringIO(file))
-    _LOG.info("Data Successfully Downloaded from %s.", file_path)
+    _LOG.info("Data successfully loaded from %s.", file_path)
     return df
 
 
@@ -131,8 +131,7 @@ def _build_series_row(
 
 def _expand_dataset_row(row: pd.Series) -> List[Dict[str, Any]]:
     """
-    Expand a row representing a collection into multiple representing each
-    series.
+    Expand a row with the dataset info into rows for its series.
 
     E.g.,
     Input row:
@@ -167,16 +166,8 @@ def _expand_dataset_row(row: pd.Series) -> List[Dict[str, Any]]:
     caiso_as_prices                         CAISO AS Prices         ....
     caiso_as_prices                         CAISO AS Prices         ....
     caiso_as_prices                         CAISO AS Prices         ....
-    caiso_as_prices                         CAISO AS Prices         ....
-    caiso_as_prices                         CAISO AS Prices         ....
-    caiso_as_prices                         CAISO AS Prices         ....
-    caiso_as_prices                         CAISO AS Prices         ....
     /
     id_series                               name_series
-    caiso_as_prices.interval_start_utc      CAISO AS Prices / Interval Start Utc
-    caiso_as_prices.interval_end_utc        CAISO AS Prices / Interval End Utc
-    caiso_as_prices.region                  CAISO AS Prices / Region
-    caiso_as_prices.market                  CAISO AS Prices / Market
     caiso_as_prices.non_spinning_reserves   CAISO AS Prices / Non Spinning Reserves
     caiso_as_prices.regulation_down         CAISO AS Prices / Regulation Down
     caiso_as_prices.regulation_mileage_down CAISO AS Prices / Regulation Mileage Down
@@ -184,7 +175,6 @@ def _expand_dataset_row(row: pd.Series) -> List[Dict[str, Any]]:
     caiso_as_prices.regulation_up           CAISO AS Prices / Regulation Up
     caiso_as_prices.spinning_reserves       CAISO AS Prices / Spinning Reserves
     ```
-
 
     :param row: row to transform
     :return: the collection of expanded rows
@@ -195,6 +185,9 @@ def _expand_dataset_row(row: pd.Series) -> List[Dict[str, Any]]:
     expanded: List[Dict[str, Any]] = []
     for col_meta in ast.literal_eval(row["all_columns"]):
         col_name: str = col_meta["name"]
+        # Expand only with columns that contain numeric time series.
+        if not col_meta.get("is_numeric"):
+            continue
         expanded.append(
             _build_series_row(row, col_name, dataset_id, dataset_name)
         )
@@ -234,10 +227,6 @@ def create_series_metadata(df: pd.DataFrame) -> pd.DataFrame:
     Output dataset:
     ```
     id_series                               name_series
-    caiso_as_prices.interval_start_utc      CAISO AS Prices / Interval Start Utc
-    caiso_as_prices.interval_end_utc        CAISO AS Prices / Interval End Utc
-    caiso_as_prices.region                  CAISO AS Prices / Region
-    caiso_as_prices.market                  CAISO AS Prices / Market
     caiso_as_prices.non_spinning_reserves   CAISO AS Prices / Non Spinning Reserves
     caiso_as_prices.regulation_down         CAISO AS Prices / Regulation Down
     caiso_as_prices.regulation_mileage_down CAISO AS Prices / Regulation Mileage Down
@@ -247,10 +236,6 @@ def create_series_metadata(df: pd.DataFrame) -> pd.DataFrame:
     ...
     /
     id                                      name                    ....
-    caiso_as_prices                         CAISO AS Prices         ....
-    caiso_as_prices                         CAISO AS Prices         ....
-    caiso_as_prices                         CAISO AS Prices         ....
-    caiso_as_prices                         CAISO AS Prices         ....
     caiso_as_prices                         CAISO AS Prices         ....
     caiso_as_prices                         CAISO AS Prices         ....
     caiso_as_prices                         CAISO AS Prices         ....
