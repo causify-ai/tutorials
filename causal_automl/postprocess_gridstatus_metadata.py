@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Convert the dataset-per-row metadata of the Gridstatus metadata into a series-
+Convert the dataset-per-row schema of the Gridstatus metadata into a series-
 per-row schema and upload the result back into the same S3 bucket.
 
-> python causal_automl/postprocess_gridstatus_metadata.py \
+> causal_automl/postprocess_gridstatus_metadata.py \
     --aws_profile ck \
     --bucket_path s3://causify-data-collaborators/causal_automl/metadata/ \
     --input_version v1.0 \
@@ -28,7 +28,6 @@ import helpers.hs3 as hs3
 import pandas as pd
 
 # Configure logger.
-hdbg.init_logger(verbosity=logging.INFO)
 _LOG = logging.getLogger(__name__)
 
 
@@ -46,6 +45,7 @@ class _GridstatusMetadataWriter:
         self,
         bucket_path: str,
         aws_profile: str,
+        *,
         cache_dir: str = "tmp.download_metadata_cache/",
     ) -> None:
         """
@@ -84,11 +84,11 @@ def _load_data(file_path: str, aws_profile: str) -> pd.DataFrame:
 
     :param file_path: S3 path of the data to load from
     :param aws_profile: aws profile that accesses S3 bucket
-    :return: the queried metadata
+    :return: the loaded data
     """
     file = hs3.from_file(file_path, aws_profile=aws_profile)
     df = pd.read_csv(io.StringIO(file))
-    _LOG.info("Data Successfully Downloaded.")
+    _LOG.info("Data Successfully Downloaded from %s.", file_path)
     return df
 
 
@@ -116,30 +116,55 @@ def _build_series_row(
     Build new rows with the `id_series` and `name_series` columns.
 
     :param base_row: original row
-    :param col_name: column name to prettify
-    :param dataset_id: id of the data series
+    :param col_name: name of the column representing the series
+    :param dataset_id: id of the collection of series
     :param dataset_name: name of the collection of series
-    :return: modified row
+    :return: modified row with the new columns added
     """
     # Start with the original row.
-    new_row: Dict[str, object] = base_row.to_dict()
+    new_row: Dict[str, Any] = base_row.to_dict()
     # Add the two series identifiers.
     new_row["id_series"] = f"{dataset_id}.{col_name}"
     new_row["name_series"] = f"{dataset_name} / {_prettify(col_name)}"
     return new_row
 
 
-def _explode_dataset_row(row: pd.Series) -> List[Dict[str, Any]]:
+def _expand_dataset_row(row: pd.Series) -> List[Dict[str, Any]]:
     """
-    Transform a single row into the row-per-series view.
+    Expand a row representing a collection into multiple representing each
+    series.
 
     E.g.,
     Input row:
+    ```
     id                                      name                    ....
     caiso_as_prices                         CAISO AS Prices         ....
-
-    Output row:
+    /
+    all_columns
+    [{'name': 'interval_start_utc', 'type': 'TIMESTAMP', 'is_numeric': False, 'is_datetime': True},\
+    {'name': 'interval_end_utc', 'type': 'TIMESTAMP', 'is_numeric': False, 'is_datetime': True}, \
+    {'name': 'region', 'type': 'VARCHAR', 'is_numeric': False, 'is_datetime': False}, \
+    {'name': 'market', 'type': 'VARCHAR', 'is_numeric': False, 'is_datetime': False}, \
+    {'name': 'non_spinning_reserves', 'type': 'DOUBLE PRECISION', 'is_numeric': True, \
+        'is_datetime': False}, \
+    {'name': 'regulation_down', 'type': 'DOUBLE PRECISION', 'is_numeric': True, \
+        'is_datetime': False}, \
+    {'name': 'regulation_mileage_down', 'type': 'DOUBLE PRECISION', 'is_numeric': True, \
+        'is_datetime': False}, \
+    {'name': 'regulation_mileage_up', 'type': 'DOUBLE PRECISION', 'is_numeric': True, \
+        'is_datetime': False}, \
+    {'name': 'regulation_up', 'type': 'DOUBLE PRECISION', 'is_numeric': True, \
+        'is_datetime': False}, \
+    {'name': 'spinning_reserves', 'type': 'DOUBLE PRECISION', 'is_numeric': True, \
+        'is_datetime': False}]
+    ```
+    Output rows:
+    ```
     id                                      name                    ....
+    caiso_as_prices                         CAISO AS Prices         ....
+    caiso_as_prices                         CAISO AS Prices         ....
+    caiso_as_prices                         CAISO AS Prices         ....
+    caiso_as_prices                         CAISO AS Prices         ....
     caiso_as_prices                         CAISO AS Prices         ....
     caiso_as_prices                         CAISO AS Prices         ....
     caiso_as_prices                         CAISO AS Prices         ....
@@ -148,31 +173,32 @@ def _explode_dataset_row(row: pd.Series) -> List[Dict[str, Any]]:
     caiso_as_prices                         CAISO AS Prices         ....
     /
     id_series                               name_series
+    caiso_as_prices.interval_start_utc      CAISO AS Prices / Interval Start Utc
+    caiso_as_prices.interval_end_utc        CAISO AS Prices / Interval End Utc
+    caiso_as_prices.region                  CAISO AS Prices / Region
+    caiso_as_prices.market                  CAISO AS Prices / Market
     caiso_as_prices.non_spinning_reserves   CAISO AS Prices / Non Spinning Reserves
     caiso_as_prices.regulation_down         CAISO AS Prices / Regulation Down
     caiso_as_prices.regulation_mileage_down CAISO AS Prices / Regulation Mileage Down
     caiso_as_prices.regulation_mileage_up   CAISO AS Prices / Regulation Mileage Up
     caiso_as_prices.regulation_up           CAISO AS Prices / Regulation Up
     caiso_as_prices.spinning_reserves       CAISO AS Prices / Spinning Reserves
+    ```
 
 
     :param row: row to transform
-    :return: the exploded row
+    :return: the collection of expanded rows
     """
     dataset_id: str = row["id"]
     dataset_name: str = row["name"]
-    # Ignore primary key columns.
-    ignore_cols = set(ast.literal_eval(row["primary_key_columns"]))
     # Iterate through all columns and generate the row-per-series view.
-    exploded: List[Dict[str, Any]] = []
+    expanded: List[Dict[str, Any]] = []
     for col_meta in ast.literal_eval(row["all_columns"]):
         col_name: str = col_meta["name"]
-        if col_meta.get("is_datetime") or col_name in ignore_cols:
-            continue
-        exploded.append(
+        expanded.append(
             _build_series_row(row, col_name, dataset_id, dataset_name)
         )
-    return exploded
+    return expanded
 
 
 def create_series_metadata(df: pd.DataFrame) -> pd.DataFrame:
@@ -181,12 +207,37 @@ def create_series_metadata(df: pd.DataFrame) -> pd.DataFrame:
 
     E.g.,
     Input dataset:
+    ```
     id                                      name                    ....
     caiso_as_prices                         CAISO AS Prices         ....
     ...
-
+    /
+    all_columns
+    [{'name': 'interval_start_utc', 'type': 'TIMESTAMP', 'is_numeric': False, 'is_datetime': True},\
+    {'name': 'interval_end_utc', 'type': 'TIMESTAMP', 'is_numeric': False, 'is_datetime': True}, \
+    {'name': 'region', 'type': 'VARCHAR', 'is_numeric': False, 'is_datetime': False}, \
+    {'name': 'market', 'type': 'VARCHAR', 'is_numeric': False, 'is_datetime': False}, \
+    {'name': 'non_spinning_reserves', 'type': 'DOUBLE PRECISION', 'is_numeric': True, \
+        'is_datetime': False}, \
+    {'name': 'regulation_down', 'type': 'DOUBLE PRECISION', 'is_numeric': True, \
+        'is_datetime': False}, \
+    {'name': 'regulation_mileage_down', 'type': 'DOUBLE PRECISION', 'is_numeric': True, \
+        'is_datetime': False}, \
+    {'name': 'regulation_mileage_up', 'type': 'DOUBLE PRECISION', 'is_numeric': True, \
+        'is_datetime': False}, \
+    {'name': 'regulation_up', 'type': 'DOUBLE PRECISION', 'is_numeric': True, \
+        'is_datetime': False}, \
+    {'name': 'spinning_reserves', 'type': 'DOUBLE PRECISION', 'is_numeric': True, \
+        'is_datetime': False}]
+    ...
+    ```
     Output dataset:
+    ```
     id_series                               name_series
+    caiso_as_prices.interval_start_utc      CAISO AS Prices / Interval Start Utc
+    caiso_as_prices.interval_end_utc        CAISO AS Prices / Interval End Utc
+    caiso_as_prices.region                  CAISO AS Prices / Region
+    caiso_as_prices.market                  CAISO AS Prices / Market
     caiso_as_prices.non_spinning_reserves   CAISO AS Prices / Non Spinning Reserves
     caiso_as_prices.regulation_down         CAISO AS Prices / Regulation Down
     caiso_as_prices.regulation_mileage_down CAISO AS Prices / Regulation Mileage Down
@@ -202,16 +253,21 @@ def create_series_metadata(df: pd.DataFrame) -> pd.DataFrame:
     caiso_as_prices                         CAISO AS Prices         ....
     caiso_as_prices                         CAISO AS Prices         ....
     caiso_as_prices                         CAISO AS Prices         ....
+    caiso_as_prices                         CAISO AS Prices         ....
+    caiso_as_prices                         CAISO AS Prices         ....
+    caiso_as_prices                         CAISO AS Prices         ....
+    caiso_as_prices                         CAISO AS Prices         ....
     ...
+    ```
 
     :param df: data to transform
     :return: transformed data
     """
-    exploded_rows: List[Dict[str, Any]] = []
+    expanded_rows: List[Dict[str, Any]] = []
     for _, dataset_row in df.iterrows():
-        exploded_rows.extend(_explode_dataset_row(dataset_row))
-    result = pd.DataFrame(exploded_rows)
-    # Arrange according to desired ordering.
+        expanded_rows.extend(_expand_dataset_row(dataset_row))
+    result = pd.DataFrame(expanded_rows)
+    # Move the series-defining columns to the beginning.
     leading = ["id_series", "name_series"]
     remaining = [c for c in result.columns if c not in leading]
     transformed_df = result[leading + remaining]
@@ -233,16 +289,19 @@ def _parse() -> argparse.Namespace:
     )
     parser.add_argument(
         "--input_version",
-        default="v1.0",
         help="Version of the source metadata file",
     )
     parser.add_argument(
-        "--output_version", default="v2.0", help="Version tag for the result file"
+        "--output_version", help="Version tag for the result file"
+    )
+    parser.add_argument(
+        "--log_level", type=int, default=logging.INFO, help="Logging level"
     )
     return parser.parse_args()
 
 
 def _main(args: argparse.Namespace) -> None:
+    hdbg.init_logger(verbosity=args.log_level, use_exec_path=True)
     # Load data.
     src_file = (
         f"{args.bucket_path.rstrip('/')}/gridstatus_metadata_original_"
