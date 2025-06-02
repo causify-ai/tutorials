@@ -88,13 +88,15 @@ class EiaDataDownloader:
                 list(df.columns),
             )
             df = df[df[key] == val]
+        if df.empty:
+            _LOG.warning("No data remaining after applying facets.")
         # Detect the metric column.
         _, _, _, data_identifier = self._parse_id(id_)
         df = df[["period", data_identifier]]
         # Drop rows with missing value.
         df = df.dropna(subset=[data_identifier])
         if df.empty:
-            _LOG.warning("No data remaining after applying facets.")
+            _LOG.warning("No data remaining after dropping NaN values.")
         # Convert to datetime and index.
         df["period"] = pd.to_datetime(df["period"]).dt.tz_localize("UTC")
         df = df.set_index("period")
