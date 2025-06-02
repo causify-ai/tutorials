@@ -246,25 +246,23 @@ class EiaMetadataDownloader:
                 # Determine parameter CSV path for associated facet values.
                 param_file_path = f"eia_parameters_v{self._version_num}/{dataset_id_clean}_parameters.csv"
                 # Flattened metadata row for one frequency and metric combination.
-                # TODO(gp): `.get()` will use `None` if there is a missing
-                # value in the dictionary. Is this the intended behavior?
                 metadata = {
                     "url": url,
                     "id": f"{route_clean}.{frequency_id}.{metric_id_clean}",
                     "dataset_id": dataset_id_clean,
-                    "name": data.get("name"),
-                    "description": data.get("description"),
-                    "frequency_id": frequency.get("id"),
+                    "name": data["name"],
+                    "description": data["description"],
+                    "frequency_id": frequency["id"],
                     "frequency_alias": frequency.get("alias"),
-                    "frequency_description": frequency.get("description"),
-                    "frequency_query": frequency.get("query"),
-                    "frequency_format": frequency.get("format"),
-                    "facets": data.get("facets"),
+                    "frequency_description": frequency["description"],
+                    "frequency_query": frequency["query"],
+                    "frequency_format": frequency["format"],
+                    "facets": data["facets"],
                     "data": metric_id,
                     "data_alias": metric_info.get("alias"),
                     "data_units": metric_info.get("units"),
-                    "start_period": data.get("startPeriod"),
-                    "end_period": data.get("endPeriod"),
+                    "start_period": data["startPeriod"],
+                    "end_period": data["endPeriod"],
                     "parameter_values_file": param_file_path,
                 }
                 flattened_metadata.append(metadata)
