@@ -131,7 +131,7 @@ class EiaMetadataDownloader:
         # Get response from parsed payload.
         data: Dict[str, Any] = {}
         # TODO(alvino): Add error handling for JSON parsing to manage potential parsing errors.
-        data = json_data.get("response", {})
+        data = json_data["response"]
         return data
 
     def _get_leaf_route_data(self) -> Dict[str, Dict[str, Any]]:
@@ -280,7 +280,11 @@ class EiaMetadataDownloader:
         :param route: dataset route under the EIA v2 API
         :return: data containing all facet values
         """
-        hdbg.dassert_in("facets", metadata)
+        hdbg.dassert_in(
+            "facets", 
+            metadata,
+            msg="Column 'facets' not found in metadata index."
+        )
         facets = metadata["facets"]
         rows = []
         for facet in facets:
@@ -393,7 +397,11 @@ def plot_distribution(df_metadata: pd.DataFrame, column: str, title: str) -> Non
         'frequency_id', 'data_units')
     :param title: title for the plot
     """
-    hdbg.dassert_in(column, df_metadata.columns)
+    hdbg.dassert_in(
+        column,
+        df_metadata.columns,
+        msg=f"Column '{column}' not found in metadata index."
+    )
     counts = df_metadata[column].value_counts()
     ax = counts.plot(kind="bar", figsize=(8, 4), title=title)
     ax.set_xlabel(column.replace("_", " ").title())
