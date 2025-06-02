@@ -83,9 +83,9 @@ class EiaDataDownloader:
             hdbg.dassert_in(
                 key,
                 df.columns,
-                "Facet '%s' not found in data columns=%s",
-                key,
-                list(df.columns),
+                msg=(
+                    f"Facet '{key}' not found in data columns={list(df.columns)}"
+                ),
             )
             df = df[df[key] == val]
         if df.empty:
