@@ -8,6 +8,7 @@ import logging
 import re
 from typing import Any, Dict, List, Optional, Tuple, cast
 
+import backoff
 import helpers.hdbg as hdbg
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -78,6 +79,14 @@ class EiaMetadataDownloader:
             _LOG.warning("No leaf datasets found under the given root.")
         return df_metadata, param_entries
 
+    @backoff.on_exception(
+        backoff.expo,
+        requests.exceptions.HTTPError,
+        max_tries=5,
+        raise_on_giveup=True,
+        jitter=backoff.full_jitter,
+        giveup=lambda e: hasattr(e, "response") and e.response.status_code == 403,
+    )
     def _get_api_request(self, route: str) -> Dict[str, Any]:
         """
         Retrieve JSON data from a given EIA v2 API route.
@@ -120,18 +129,28 @@ class EiaMetadataDownloader:
         # Build the full API request URL.
         url = f"{self._base_url}/{route}?api_key={self._api_key}"
         # Send HTTP GET request to the EIA API.
-        # TODO(alvino): Add error handling for the HTTP request to handle
-        # potential exceptions such as connection errors or timeouts.
-        response = requests.get(url, timeout=20)
+        response = requests.get(url, timeout=60)
         # Parse JSON content.
-        # TODO(alvino): Check if the response is successful (e.g.,
-        # `response.status_code == 200`) before attempting to parse the JSON
-        # content.
-        json_data = response.json()
+        if response.status_code == 403:
+            _LOG.error(
+                "403 Forbidden: API key might be invalid, not set or the request limit has been reached."
+            )
+        response.raise_for_status()
+        try:
+            json_data = response.json()
+        except ValueError as err:
+            _LOG.error(
+                "Invalid JSON from %s: %s\nRaw content: %s.",
+                url,
+                err,
+                response.text,
+            )
+            raise
         # Get response from parsed payload.
-        data: Dict[str, Any] = {}
-        # TODO(alvino): Add error handling for JSON parsing to manage potential parsing errors.
-        data = json_data["response"]
+        if "response" not in json_data:
+            _LOG.error("Missing 'response' key in JSON: %s", json_data)
+            raise KeyError("Missing 'response' in EIA API response.")
+        data: Dict[str, Any] = json_data["response"]
         return data
 
     def _get_leaf_route_data(self) -> Dict[str, Dict[str, Any]]:
