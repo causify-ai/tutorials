@@ -3,7 +3,7 @@
 Download metadata from the EIA v2 API and upload it to S3.
 
 Usage:
-> python download_eia_metadata.py --category <CATEGORY> --api_key <API_KEY> --version_num <VERSION_NUM>
+> download_eia_metadata.py --category <CATEGORY> --version_num <VERSION_NUM>
 
 This script traverses the EIA v2 API under a specified category, collects all time series
 metadata, and writes the metadata and associated parameter values to an S3 bucket in versioned
@@ -15,7 +15,6 @@ Outputs:
 
 Arguments:
     --category       Root category path under the EIA v2 API.
-    --api_key        EIA API key used to authenticate requests.
     --version_num    Metadata version used in filenames and output paths (e.g., '1.0').
 """
 
@@ -25,8 +24,8 @@ import os
 
 import helpers.hdbg as hdbg
 import helpers.hio as hio
-import helpers.hs3 as hs3
 import helpers.hparser as hparser
+import helpers.hs3 as hs3
 import pandas as pd
 
 import causal_automl.TutorTask401_EIA_metadata_downloader_pipeline.eia_utils as catemdpeu
@@ -116,7 +115,6 @@ def _parse() -> argparse.ArgumentParser:
         required=True,
         help="Root category path (e.g. electricity, petroleum)",
     )
-    parser.add_argument("--api_key", required=True, help="EIA API Key")
     parser.add_argument(
         "--version_num",
         required=True,
@@ -135,9 +133,15 @@ def _parse() -> argparse.ArgumentParser:
 def _main(parser: argparse.ArgumentParser) -> None:
     args = parser.parse_args()
     hdbg.init_logger(verbosity=args.log_level, use_exec_path=True)
+    hdbg.dassert_in(
+        "EIA_API_KEY",
+        os.environ,
+        msg="EIA_API_KEY is not found in environment variables",
+    )
+    api_key = os.getenv("EIA_API_KEY")
     _extract_and_upload_metadata(
         args.category,
-        args.api_key,
+        api_key,
         args.version_num,
         args.bucket_path,
         args.aws_profile,

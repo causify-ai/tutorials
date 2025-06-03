@@ -220,7 +220,7 @@ class EiaMetadataDownloader:
                 "data_units": "million dollars",
                 "start_period": "2001-01",
                 "end_period": "2025-01",
-                "parameter_values_file": "eia_parameters_v1.0/retail_sales_parameters.csv"
+                "parameter_values_file": "eia_electricity_parameters_v1.0/retail_sales_parameters.csv"
             },
             ...
         ]
@@ -244,7 +244,7 @@ class EiaMetadataDownloader:
                     f"&data[0]={metric_id}"
                 )
                 # Determine parameter CSV path for associated facet values.
-                param_file_path = f"eia_parameters_v{self._version_num}/{dataset_id_clean}_parameters.csv"
+                param_file_path = f"eia_{self._category}_parameters_v{self._version_num}/{dataset_id_clean}_parameters.csv"
                 # Flattened metadata row for one frequency and metric combination.
                 metadata = {
                     "url": url,
@@ -279,9 +279,7 @@ class EiaMetadataDownloader:
         :return: data containing all facet values
         """
         hdbg.dassert_in(
-            "facets", 
-            metadata,
-            msg="Column 'facets' not found in metadata index."
+            "facets", metadata, msg="Column 'facets' not found in metadata index."
         )
         facets = metadata["facets"]
         rows = []
@@ -398,7 +396,7 @@ def plot_distribution(df_metadata: pd.DataFrame, column: str, title: str) -> Non
     hdbg.dassert_in(
         column,
         df_metadata.columns,
-        msg=f"Column '{column}' not found in metadata index."
+        msg=f"Column '{column}' not found in metadata index.",
     )
     counts = df_metadata[column].value_counts()
     ax = counts.plot(kind="bar", figsize=(8, 4), title=title)
