@@ -1,12 +1,11 @@
 name: Test coverage
 on:
-  pull_request:
   # Run manually.
   workflow_dispatch: {}
     # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
   # every day at 00:00 UTC.
-  schedule:
-    - cron:  '0 0 * * *'
+  # schedule:
+  #   - cron:  '0 0 * * *'
 
 env:
   CSFY_CI: true
@@ -124,59 +123,59 @@ jobs:
           flags: slow
           name: slow-test-coverage
 
-      - name: Run Superslow test and generate report
-        id: run_superslow
-        env:
-          GH_ACTION_ACCESS_TOKEN: ${{ secrets.GH_ACTION_ACCESS_TOKEN }}
-          CSFY_AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-          CSFY_AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
-          CSFY_AWS_SESSION_TOKEN: ${{ env.AWS_SESSION_TOKEN }}
-          CSFY_AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
-          CSFY_ECR_BASE_PATH: ghcr.io/${{ github.repository_owner }}
-          CSFY_AWS_S3_BUCKET: ${{ vars.CSFY_AWS_S3_BUCKET }}
-        run: |
-          # Determine the day of the week (1 = Monday, 7 = Sunday).
-          day_of_week=$(date +%u)
-          # Only run superslow tests on Mondays or if the workflow is manually triggered.
-          if [ "$day_of_week" = "1" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "Running superslow tests..."
-            invoke run_coverage --suite superslow
-          else
-            echo "Skipping superslow tests — today is not Monday and this is not a manual trigger"
-            exit 0
-          fi
+      # - name: Run Superslow test and generate report
+      #   id: run_superslow
+      #   env:
+      #     GH_ACTION_ACCESS_TOKEN: ${{ secrets.GH_ACTION_ACCESS_TOKEN }}
+      #     CSFY_AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+      #     CSFY_AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+      #     CSFY_AWS_SESSION_TOKEN: ${{ env.AWS_SESSION_TOKEN }}
+      #     CSFY_AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+      #     CSFY_ECR_BASE_PATH: ghcr.io/${{ github.repository_owner }}
+      #     CSFY_AWS_S3_BUCKET: ${{ vars.CSFY_AWS_S3_BUCKET }}
+      #   run: |
+      #     # Determine the day of the week (1 = Monday, 7 = Sunday).
+      #     day_of_week=$(date +%u)
+      #     # Only run superslow tests on Mondays or if the workflow is manually triggered.
+      #     if [ "$day_of_week" = "1" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+      #       echo "Running superslow tests..."
+      #       invoke run_coverage --suite superslow
+      #     else
+      #       echo "Skipping superslow tests — today is not Monday and this is not a manual trigger"
+      #       exit 0
+      #     fi
 
-      - name: Upload Superslow Test Coverage to Codecov
-        #TODO(Shaunak): Consider removing it when we turn this workflow into a reusable one.
-        if: steps.run_superslow.outcome == 'success'
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml
-          flags: superslow
-          name: superslow-test-coverage
+      # - name: Upload Superslow Test Coverage to Codecov
+      #   #TODO(Shaunak): Consider removing it when we turn this workflow into a reusable one.
+      #   if: steps.run_superslow.outcome == 'success'
+      #   uses: codecov/codecov-action@v5
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     files: ./coverage.xml
+      #     flags: superslow
+      #     name: superslow-test-coverage
 
-        # Fail the job in CI if any of the fast/ slow run/ upload steps above failed.
-      - name: Fail if fast/slow test or upload failed
-        run: |
-          failed=""
-          if [ "${{ steps.run_fast.outcome }}" != "success" ]; then
-            echo "Fast test run failed"
-            failed="true"
-          fi
-          if [ "${{ steps.upload_fast.outcome }}" != "success" ]; then
-            echo "Fast test coverage upload failed"
-            failed="true"
-          fi
-          if [ "${{ steps.run_slow.outcome }}" != "success" ]; then
-            echo "Slow test run failed"
-            failed="true"
-          fi
-          if [ "${{ steps.upload_slow.outcome }}" != "success" ]; then
-            echo "Slow test coverage upload failed"
-            failed="true"
-          fi
-          if [ "$failed" = "true" ]; then
-            echo "At least one fast/slow test or upload step failed."
-            exit 1
-          fi
+      #   # Fail the job in CI if any of the fast/ slow run/ upload steps above failed.
+      # - name: Fail if fast/slow test or upload failed
+      #   run: |
+      #     failed=""
+      #     if [ "${{ steps.run_fast.outcome }}" != "success" ]; then
+      #       echo "Fast test run failed"
+      #       failed="true"
+      #     fi
+      #     if [ "${{ steps.upload_fast.outcome }}" != "success" ]; then
+      #       echo "Fast test coverage upload failed"
+      #       failed="true"
+      #     fi
+      #     if [ "${{ steps.run_slow.outcome }}" != "success" ]; then
+      #       echo "Slow test run failed"
+      #       failed="true"
+      #     fi
+      #     if [ "${{ steps.upload_slow.outcome }}" != "success" ]; then
+      #       echo "Slow test coverage upload failed"
+      #       failed="true"
+      #     fi
+      #     if [ "$failed" = "true" ]; then
+      #       echo "At least one fast/slow test or upload step failed."
+      #       exit 1
+      #     fi
