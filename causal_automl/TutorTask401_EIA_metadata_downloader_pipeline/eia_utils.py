@@ -133,7 +133,7 @@ class EiaMetadataDownloader:
         # Parse JSON content.
         if response.status_code == 403:
             _LOG.error(
-                "403 Forbidden: API key might be invalid, not set or the request limit has been reached."
+                "403 Forbidden: Invalid or missing API key, or request limit reached."
             )
         response.raise_for_status()
         try:
@@ -148,8 +148,7 @@ class EiaMetadataDownloader:
             raise
         # Get response from parsed payload.
         if "response" not in json_data:
-            _LOG.error("Missing 'response' key in JSON: %s", json_data)
-            raise KeyError("Missing 'response' in EIA API response.")
+            raise KeyError(f"Missing 'response' in EIA API response: {json_data}")
         data: Dict[str, Any] = json_data["response"]
         return data
 
