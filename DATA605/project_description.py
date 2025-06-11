@@ -4,7 +4,7 @@ Generate project descriptions from a Google Sheet and save them to a Markdown
 file.
 
 > project_description.py \
-    --sheet_url "https://docs.google.com/spreadsheets/d/1abc.../edit#gid=0" \
+    --sheet_url "https://docs.google.com/spreadsheets/d/1abc...gid=0" \
     --markdown_path ./projects/MSML610_Projects.md \
     --max_projects 3 \
     -v INFO
