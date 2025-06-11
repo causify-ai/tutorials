@@ -97,6 +97,9 @@ def send_invitations(
     repo = gh.get_repo(f"{org_name}/{repo_name}")
     # Send invitations.
     for username in usernames:
+        if repo.has_in_collaborators(username):
+            _LOG.info("User %s is already a collaborator", username)
+            continue
         try:
             _invite(repo, username)
         except github.GithubException as exc:
@@ -107,7 +110,7 @@ def send_invitations(
 
 def _parse() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Invite GitHub collaborators from a Google Sheet, respecting the 50‑per‑day limit.",  # noqa: E501
+        description="Invite GitHub collaborators from a Google Sheet, respecting the 50‑per‑day limit.", 
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
