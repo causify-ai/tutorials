@@ -114,7 +114,7 @@
   https://github.com/causify-ai/tutorials
 
 - Set up your working environment by following the instructions in the
-  [document](/helpers_root/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
+  [document](https://github.com/causify-ai/helpers/blob/master/docs/onboarding/intern.set_up_development_on_laptop.how_to_guide.md)
 
 - Each step of the project is delivered by committing code to the dir
   corresponding to your project and doing a GitHub Pull Request (PR)
@@ -163,6 +163,7 @@
   - Copy the template files to the project directory:
     ```bash
     > cp -r ~/src/tutorials1/DATA605/tutorial_template/ ~/src/tutorials1/DATA605/Spring2025/projects/{branch_name}
+    > cd ~/src/tutorials1/DATA605/Spring2025/projects/{branch_name}
     ```
   - Start working on the files
 
