@@ -1,13 +1,15 @@
+# How To Guide: `project_description.py`
+
 <!-- toc -->
 
-  * [What It Does](#what-it-does)
-  * [Assumptions / Requirements](#assumptions--requirements)
-  * [Instructions](#instructions)
-    + [Step 1: Fetch Input](#step-1-fetch-input)
-- [Edit GOOGLE_SHEET_URL inside the script or pass a new one to read_google_sheet()](#edit-google_sheet_url-inside-the-script-or-pass-a-new-one-to-read_google_sheet)
-  * [Step 2: Describe Action](#step-2-describe-action)
-    + [Step 3: Review Output](#step-3-review-output)
-  * [Troubleshooting](#troubleshooting)
+- [What It Does](#what-it-does)
+- [Assumptions / Requirements](#assumptions--requirements)
+- [Instructions](#instructions)
+  * [Step 1: Fetch Input](#step-1-fetch-input)
+  * [Edit Google Sheet URL inside the script or pass a new one through CLI](#edit-google-sheet-url-inside-the-script-or-pass-a-new-one-through-cli)
+- [Step 2: Script Execution](#step-2-script-execution)
+  * [Step 3: Review Output](#step-3-review-output)
+- [Troubleshooting](#troubleshooting)
 
 <!-- tocstop -->
 
@@ -36,7 +38,7 @@ Ensure the Google Sheet is publicly accessible or shared with the configured
 service account.
 
 For instructions on how to configure google sheets API, follow this link:
-https://github.com/causify-ai/helpers/blob/c50fddfdffccdccb1b2d963b729ab9674d8fda8f/docs/tools/notebooks/all.gsheet_into_pandas.how_to_guide.md
+[https://github.com/causify-ai/helpers/blob/c50fddfdffccdccb1b2d963b729ab9674d8fda8f/docs/tools/notebooks/all.gsheet_into_pandas.how_to_guide.md](https://github.com/causify-ai/helpers/blob/c50fddfdffccdccb1b2d963b729ab9674d8fda8f/docs/tools/notebooks/all.gsheet_into_pandas.how_to_guide.md)
 
 The Google Sheet should contain:
 
@@ -48,7 +50,7 @@ The Google Sheet should contain:
 
 URL="https://docs.google.com/spreadsheets/d/<sheet_id>/edit"
 
-## Step 2: Describe Action
+## Step 2: Script Execution
 
 - Run the script directly using Python
 - This will:
@@ -62,7 +64,7 @@ URL="https://docs.google.com/spreadsheets/d/<sheet_id>/edit"
 
 ### Step 3: Review Output
 
-- Output markdown stored at DATA605/projects/MSML610_Projects.md.
+- Markdown stored at DATA605/projects/MSML610_Projects.md.
 
 ## Troubleshooting
 
