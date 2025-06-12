@@ -1,0 +1,8 @@
+pandas
+numpy
+loguru==0.7.3
+gensim==4.3.3
+scikit-learn
+seaborn==0.13.2
+matplotlib
+networkx

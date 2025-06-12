@@ -1,0 +1,32 @@
+
+syntax = "proto3";
+
+message BitcoinFullData {
+  int64 timestamp = 1;
+  string id = 2;
+  string symbol = 3;
+  string name = 4;
+  string image = 5;
+  double current_price = 6;
+  double market_cap = 7;
+  int32 market_cap_rank = 8;
+  double fully_diluted_valuation = 9;
+  double total_volume = 10;
+  double high_24h = 11;
+  double low_24h = 12;
+  double price_change_24h = 13;
+  double price_change_percentage_24h = 14;
+  double market_cap_change_24h = 15;
+  double market_cap_change_percentage_24h = 16;
+  double circulating_supply = 17;
+  double total_supply = 18;
+  double max_supply = 19;
+  double ath = 20;
+  double ath_change_percentage = 21;
+  string ath_date = 22;
+  double atl = 23;
+  double atl_change_percentage = 24;
+  string atl_date = 25;
+  string last_updated = 26;
+  string source = 27;
+}
