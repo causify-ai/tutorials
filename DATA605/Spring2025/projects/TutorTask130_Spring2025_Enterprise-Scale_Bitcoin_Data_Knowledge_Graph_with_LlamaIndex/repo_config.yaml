@@ -1,0 +1,14 @@
+repo_info:
+  repo_name: tutorials
+  github_repo_account: causify-ai
+  github_host_name: github.com
+  invalid_words:
+  issue_prefix: TutorTask
+
+docker_info:
+  docker_image_name: tutorial_llamaindex
+
+runnable_dir_info:
+  use_helpers_as_nested_module: 1
+  venv_tag: helpers
+  dir_suffix: tutorial_llamaindex
