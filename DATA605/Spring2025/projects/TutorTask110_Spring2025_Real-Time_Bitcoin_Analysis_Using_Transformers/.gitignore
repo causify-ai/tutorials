@@ -1,0 +1,51 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# === Virtual Environments ===
+.env
+.venv/
+env/
+venv/
+
+# === Jupyter Notebooks Checkpoints ===
+.ipynb_checkpoints
+
+# === Data Files ===
+*.csv
+*.tsv
+*.log
+*.dat
+*.h5
+*.db
+*.sqlite
+*.npy
+*.npz
+
+# === System Files ===
+.DS_Store
+Thumbs.db
+
+# === Editors ===
+.vscode/
+.idea/
+*.swp
+
+# === Build Artifacts ===
+dist/
+*.egg-info/
+tmp.build/
+
+# === Docker ===
+*.pid
+docker_data/
+*.tar
+
+# === Git LFS tracked files (optional) ===
+*.lfs
+
+# === Streamlit Cache ===
+.streamlit/
