@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+altair
+pandas
+numpy
+websockets
+yfinance
