@@ -1,0 +1,40 @@
+# Ignore Python cache and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Ignore environment and secret files
+.env
+
+# Ignore version control
+.git/
+.gitignore
+
+# Ignore logs and output
+*.log
+*.out
+*.err
+
+# Ignore virtual environments
+.venv/
+env/
+venv/
+
+# Ignore Docker build leftovers
+*.tar
+*.gz
+*.zip
+docker_build.log
+docker_build.version.log
+
+# Ignore local-only data
+*.html
+bitcoin_metrics_final.csv
+bitcoin_snapshot_*.csv
+
+# macOS metadata
+.DS_Store
