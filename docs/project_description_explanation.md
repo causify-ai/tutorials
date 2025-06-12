@@ -13,11 +13,10 @@
 ## Introduction and motivation
 
 - This tool automates the generation of academic project descriptions by
-  integrating Google Sheets input with OpenAI's GPT API.
+  integrating Google Sheets input with OpenAI API.
 - It addresses the need for scalable, consistent, and high-quality project
   documentation based on dynamic student or faculty input.
-- It is intended for course instructors, academic administrators, or data
-  science curriculum designers who wish to streamline project generation and
+- It is intended to streamline and automate project generation and
   documentation.
 
 ## Core Concepts
@@ -37,7 +36,7 @@
 
   ```markdown
   [Google Sheet URL] → read_google_sheet() → [DataFrame of projects] → loop →
-  generate_project_description() → [GPT-generated text] → create_markdown_file()
+  Create prompt and feed into GPT → [GPT-generated text] → create_markdown_file()
   → [Markdown output]
   ```
 
