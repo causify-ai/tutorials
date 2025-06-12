@@ -1,0 +1,1537 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.40kB done
+#1 DONE 0.0s
+
+#2 [auth] library/ubuntu:pull token for registry-1.docker.io
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/ubuntu:20.04
+#3 DONE 0.5s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [ 1/15] FROM docker.io/library/ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214
+#5 DONE 0.0s
+
+#6 [ 2/15] RUN apt-get -y update
+#6 CACHED
+
+#7 [ 3/15] RUN apt-get -y upgrade
+#7 CACHED
+
+#8 [ 5/15] RUN apt install -y --no-install-recommends     python3     python3-pip     python3-dev
+#8 CACHED
+
+#9 [ 4/15] RUN apt install -y --no-install-recommends     sudo     curl     systemctl     gnupg     git     vim
+#9 CACHED
+
+#10 [ 6/15] RUN python3 -m pip install --upgrade pip
+#10 CACHED
+
+#11 [internal] load build context
+#11 transferring context: 2.42kB done
+#11 DONE 0.0s
+
+#12 [ 7/15] RUN pip3 install     ipython     tornado==6.1     jupyter-client==7.3.2     jupyter-contrib-core     jupyter-contrib-nbextensions     psycopg2-binary     yapf     requests     pandas     matplotlib     cloudpickle     ipywidgets     scikit-learn     pycaret
+#12 2.278 Collecting ipython
+#12 2.471   Downloading ipython-8.12.3-py3-none-any.whl.metadata (5.7 kB)
+#12 2.639 Collecting tornado==6.1
+#12 2.651   Downloading tornado-6.1-cp38-cp38-manylinux2010_x86_64.whl.metadata (2.4 kB)
+#12 2.703 Collecting jupyter-client==7.3.2
+#12 2.718   Downloading jupyter_client-7.3.2-py3-none-any.whl.metadata (8.5 kB)
+#12 2.753 Collecting jupyter-contrib-core
+#12 2.774   Downloading jupyter_contrib_core-0.4.2.tar.gz (17 kB)
+#12 2.802   Preparing metadata (setup.py): started
+#12 3.295   Preparing metadata (setup.py): finished with status 'done'
+#12 3.335 Collecting jupyter-contrib-nbextensions
+#12 3.361   Downloading jupyter_contrib_nbextensions-0.7.0.tar.gz (23.5 MB)
+#12 9.791      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 23.5/23.5 MB 3.6 MB/s eta 0:00:00
+#12 10.33   Preparing metadata (setup.py): started
+#12 10.69   Preparing metadata (setup.py): finished with status 'done'
+#12 10.86 Collecting psycopg2-binary
+#12 10.88   Downloading psycopg2_binary-2.9.10-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+#12 10.92 Collecting yapf
+#12 10.94   Downloading yapf-0.43.0-py3-none-any.whl.metadata (46 kB)
+#12 11.01 Collecting requests
+#12 11.03   Downloading requests-2.32.3-py3-none-any.whl.metadata (4.6 kB)
+#12 11.30 Collecting pandas
+#12 11.32   Downloading pandas-2.0.3-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (18 kB)
+#12 11.55 Collecting matplotlib
+#12 11.57   Downloading matplotlib-3.7.5-cp38-cp38-manylinux_2_12_x86_64.manylinux2010_x86_64.whl.metadata (5.7 kB)
+#12 11.62 Collecting cloudpickle
+#12 11.63   Downloading cloudpickle-3.1.1-py3-none-any.whl.metadata (7.1 kB)
+#12 11.69 Collecting ipywidgets
+#12 11.71   Downloading ipywidgets-8.1.6-py3-none-any.whl.metadata (2.4 kB)
+#12 11.88 Collecting scikit-learn
+#12 11.89   Downloading scikit_learn-1.3.2-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (11 kB)
+#12 11.98 Collecting pycaret
+#12 12.01   Downloading pycaret-3.2.0-py3-none-any.whl.metadata (17 kB)
+#12 12.07 Collecting entrypoints (from jupyter-client==7.3.2)
+#12 12.09   Downloading entrypoints-0.4-py3-none-any.whl.metadata (2.6 kB)
+#12 12.15 Collecting jupyter-core>=4.9.2 (from jupyter-client==7.3.2)
+#12 12.18   Downloading jupyter_core-5.7.2-py3-none-any.whl.metadata (3.4 kB)
+#12 12.23 Collecting nest-asyncio>=1.5.4 (from jupyter-client==7.3.2)
+#12 12.26   Downloading nest_asyncio-1.6.0-py3-none-any.whl.metadata (2.8 kB)
+#12 12.36 Collecting python-dateutil>=2.8.2 (from jupyter-client==7.3.2)
+#12 12.39   Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+#12 12.99 Collecting pyzmq>=23.0 (from jupyter-client==7.3.2)
+#12 13.01   Downloading pyzmq-26.4.0-cp38-cp38-manylinux_2_12_x86_64.manylinux2010_x86_64.whl.metadata (6.0 kB)
+#12 13.09 Collecting traitlets (from jupyter-client==7.3.2)
+#12 13.15   Downloading traitlets-5.14.3-py3-none-any.whl.metadata (10 kB)
+#12 13.22 Collecting backcall (from ipython)
+#12 13.25   Downloading backcall-0.2.0-py2.py3-none-any.whl.metadata (2.0 kB)
+#12 13.31 Collecting decorator (from ipython)
+#12 13.33   Downloading decorator-5.2.1-py3-none-any.whl.metadata (3.9 kB)
+#12 13.37 Collecting jedi>=0.16 (from ipython)
+#12 13.39   Downloading jedi-0.19.2-py2.py3-none-any.whl.metadata (22 kB)
+#12 13.43 Collecting matplotlib-inline (from ipython)
+#12 13.47   Downloading matplotlib_inline-0.1.7-py3-none-any.whl.metadata (3.9 kB)
+#12 13.50 Collecting pickleshare (from ipython)
+#12 13.52   Downloading pickleshare-0.7.5-py2.py3-none-any.whl.metadata (1.5 kB)
+#12 13.63 Collecting prompt-toolkit!=3.0.37,<3.1.0,>=3.0.30 (from ipython)
+#12 13.65   Downloading prompt_toolkit-3.0.51-py3-none-any.whl.metadata (6.4 kB)
+#12 13.72 Collecting pygments>=2.4.0 (from ipython)
+#12 13.73   Downloading pygments-2.19.1-py3-none-any.whl.metadata (2.5 kB)
+#12 13.76 Collecting stack-data (from ipython)
+#12 13.78   Downloading stack_data-0.6.3-py3-none-any.whl.metadata (18 kB)
+#12 13.84 Collecting typing-extensions (from ipython)
+#12 13.86   Downloading typing_extensions-4.13.2-py3-none-any.whl.metadata (3.0 kB)
+#12 13.89 Collecting pexpect>4.3 (from ipython)
+#12 13.92   Downloading pexpect-4.9.0-py2.py3-none-any.whl.metadata (2.5 kB)
+#12 14.10 Collecting notebook>=4.0 (from jupyter-contrib-core)
+#12 14.13   Downloading notebook-7.4.1-py3-none-any.whl.metadata (10 kB)
+#12 14.14 Requirement already satisfied: setuptools in /usr/lib/python3/dist-packages (from jupyter-contrib-core) (45.2.0)
+#12 14.20 Collecting ipython_genutils (from jupyter-contrib-nbextensions)
+#12 14.22   Downloading ipython_genutils-0.2.0-py2.py3-none-any.whl.metadata (755 bytes)
+#12 14.26 Collecting jupyter_highlight_selected_word>=0.1.1 (from jupyter-contrib-nbextensions)
+#12 14.31   Downloading jupyter_highlight_selected_word-0.2.0-py2.py3-none-any.whl.metadata (730 bytes)
+#12 14.39 Collecting jupyter_nbextensions_configurator>=0.4.0 (from jupyter-contrib-nbextensions)
+#12 14.42   Downloading jupyter_nbextensions_configurator-0.6.4-py2.py3-none-any.whl.metadata (1.8 kB)
+#12 14.74 Collecting lxml (from jupyter-contrib-nbextensions)
+#12 14.78   Downloading lxml-5.4.0-cp38-cp38-manylinux_2_28_x86_64.whl.metadata (3.2 kB)
+#12 14.92 Collecting nbconvert>=6.0 (from jupyter-contrib-nbextensions)
+#12 14.96   Downloading nbconvert-7.16.6-py3-none-any.whl.metadata (8.5 kB)
+#12 15.11 Collecting platformdirs>=3.5.1 (from yapf)
+#12 15.13   Downloading platformdirs-4.3.6-py3-none-any.whl.metadata (11 kB)
+#12 15.19 Collecting tomli>=2.0.1 (from yapf)
+#12 15.21   Downloading tomli-2.2.1-py3-none-any.whl.metadata (10 kB)
+#12 15.40 Collecting charset-normalizer<4,>=2 (from requests)
+#12 15.43   Downloading charset_normalizer-3.4.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (35 kB)
+#12 15.47 Collecting idna<4,>=2.5 (from requests)
+#12 15.49   Downloading idna-3.10-py3-none-any.whl.metadata (10 kB)
+#12 15.56 Collecting urllib3<3,>=1.21.1 (from requests)
+#12 15.58   Downloading urllib3-2.2.3-py3-none-any.whl.metadata (6.5 kB)
+#12 15.68 Collecting certifi>=2017.4.17 (from requests)
+#12 15.71   Downloading certifi-2025.4.26-py3-none-any.whl.metadata (2.5 kB)
+#12 15.88 Collecting pytz>=2020.1 (from pandas)
+#12 15.90   Downloading pytz-2025.2-py2.py3-none-any.whl.metadata (22 kB)
+#12 15.95 Collecting tzdata>=2022.1 (from pandas)
+#12 15.98   Downloading tzdata-2025.2-py2.py3-none-any.whl.metadata (1.4 kB)
+#12 16.22 Collecting numpy>=1.20.3 (from pandas)
+#12 16.25   Downloading numpy-1.24.4-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.6 kB)
+#12 16.48 Collecting contourpy>=1.0.1 (from matplotlib)
+#12 16.53   Downloading contourpy-1.1.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.9 kB)
+#12 16.57 Collecting cycler>=0.10 (from matplotlib)
+#12 16.63   Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+#12 16.86 Collecting fonttools>=4.22.0 (from matplotlib)
+#12 16.89   Downloading fonttools-4.57.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (102 kB)
+#12 17.01 Collecting kiwisolver>=1.0.1 (from matplotlib)
+#12 17.05   Downloading kiwisolver-1.4.7-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.whl.metadata (6.3 kB)
+#12 17.20 Collecting packaging>=20.0 (from matplotlib)
+#12 17.24   Downloading packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+#12 17.52 Collecting pillow>=6.2.0 (from matplotlib)
+#12 17.57   Downloading pillow-10.4.0-cp38-cp38-manylinux_2_28_x86_64.whl.metadata (9.2 kB)
+#12 17.66 Collecting pyparsing>=2.3.1 (from matplotlib)
+#12 17.68   Downloading pyparsing-3.1.4-py3-none-any.whl.metadata (5.1 kB)
+#12 17.74 Collecting importlib-resources>=3.2.0 (from matplotlib)
+#12 17.76   Downloading importlib_resources-6.4.5-py3-none-any.whl.metadata (4.0 kB)
+#12 17.81 Collecting comm>=0.1.3 (from ipywidgets)
+#12 17.83   Downloading comm-0.2.2-py3-none-any.whl.metadata (3.7 kB)
+#12 17.92 Collecting widgetsnbextension~=4.0.14 (from ipywidgets)
+#12 17.93   Downloading widgetsnbextension-4.0.14-py3-none-any.whl.metadata (1.6 kB)
+#12 18.02 Collecting jupyterlab_widgets~=3.0.14 (from ipywidgets)
+#12 18.04   Downloading jupyterlab_widgets-3.0.14-py3-none-any.whl.metadata (4.1 kB)
+#12 18.21 Collecting scipy>=1.5.0 (from scikit-learn)
+#12 18.25   Downloading scipy-1.10.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (58 kB)
+#12 18.32 Collecting joblib>=1.1.1 (from scikit-learn)
+#12 18.34   Downloading joblib-1.4.2-py3-none-any.whl.metadata (5.4 kB)
+#12 18.37 Collecting threadpoolctl>=2.0.0 (from scikit-learn)
+#12 18.39   Downloading threadpoolctl-3.5.0-py3-none-any.whl.metadata (13 kB)
+#12 18.44 Collecting category-encoders>=2.4.0 (from pycaret)
+#12 18.46   Downloading category_encoders-2.6.4-py2.py3-none-any.whl.metadata (8.0 kB)
+#12 18.50 Collecting deprecation>=2.1.0 (from pycaret)
+#12 18.51   Downloading deprecation-2.1.0-py2.py3-none-any.whl.metadata (4.6 kB)
+#12 18.54 Collecting imbalanced-learn>=0.8.1 (from pycaret)
+#12 18.56   Downloading imbalanced_learn-0.12.4-py3-none-any.whl.metadata (8.3 kB)
+#12 18.62 Collecting importlib-metadata>=4.12.0 (from pycaret)
+#12 18.63   Downloading importlib_metadata-8.5.0-py3-none-any.whl.metadata (4.8 kB)
+#12 18.69 Collecting jinja2>=1.2 (from pycaret)
+#12 18.71   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#12 18.76 Collecting kaleido>=0.2.1 (from pycaret)
+#12 18.81   Downloading kaleido-0.2.1-py2.py3-none-manylinux1_x86_64.whl.metadata (15 kB)
+#12 18.92 Collecting lightgbm>=3.0.0 (from pycaret)
+#12 18.94   Downloading lightgbm-4.6.0-py3-none-manylinux_2_28_x86_64.whl.metadata (17 kB)
+#12 19.09 Collecting markupsafe>=2.0.1 (from pycaret)
+#12 19.14   Downloading MarkupSafe-2.1.5-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.0 kB)
+#12 19.16 Collecting matplotlib
+#12 19.18   Downloading matplotlib-3.6.0-cp38-cp38-manylinux_2_12_x86_64.manylinux2010_x86_64.whl.metadata (6.8 kB)
+#12 19.26 Collecting nbformat>=4.2.0 (from pycaret)
+#12 19.32   Downloading nbformat-5.10.4-py3-none-any.whl.metadata (3.6 kB)
+#12 19.55 Collecting numba>=0.55.0 (from pycaret)
+#12 19.58   Downloading numba-0.58.1-cp38-cp38-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.7 kB)
+#12 19.61 Collecting pandas
+#12 19.64   Downloading pandas-1.5.3-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (11 kB)
+#12 19.68 Collecting plotly-resampler>=0.8.3.1 (from pycaret)
+#12 19.71   Downloading plotly_resampler-0.10.0-py3-none-any.whl.metadata (13 kB)
+#12 19.83 Collecting plotly>=5.0.0 (from pycaret)
+#12 19.86   Downloading plotly-6.0.1-py3-none-any.whl.metadata (6.7 kB)
+#12 20.01 Collecting pmdarima!=1.8.1,<3.0.0,>=1.8.0 (from pycaret)
+#12 20.03   Downloading pmdarima-2.0.4-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_28_x86_64.whl.metadata (7.8 kB)
+#12 20.25 Collecting psutil>=5.9.0 (from pycaret)
+#12 20.27   Downloading psutil-7.0.0-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (22 kB)
+#12 20.33 Collecting pyod>=1.0.8 (from pycaret)
+#12 20.38   Downloading pyod-2.0.5-py3-none-any.whl.metadata (46 kB)
+#12 20.46 Collecting schemdraw==0.15 (from pycaret)
+#12 20.51   Downloading schemdraw-0.15-py3-none-any.whl.metadata (2.2 kB)
+#12 20.55 Collecting scikit-learn
+#12 20.65   Downloading scikit_learn-1.2.2-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (11 kB)
+#12 20.71 Collecting scikit-plot>=0.3.7 (from pycaret)
+#12 20.72   Downloading scikit_plot-0.3.7-py3-none-any.whl.metadata (7.1 kB)
+#12 20.80 Collecting sktime!=0.17.1,!=0.17.2,!=0.18.0,<0.22.0,>=0.16.1 (from pycaret)
+#12 20.82   Downloading sktime-0.21.1-py3-none-any.whl.metadata (25 kB)
+#12 20.94 Collecting statsmodels>=0.12.1 (from pycaret)
+#12 20.96   Downloading statsmodels-0.14.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (9.5 kB)
+#12 21.00 Collecting tbats>=1.1.3 (from pycaret)
+#12 21.02   Downloading tbats-1.1.3-py3-none-any.whl.metadata (3.8 kB)
+#12 21.10 Collecting tqdm>=4.62.0 (from pycaret)
+#12 21.14   Downloading tqdm-4.67.1-py3-none-any.whl.metadata (57 kB)
+#12 21.34 Collecting xxhash (from pycaret)
+#12 21.37   Downloading xxhash-3.5.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (12 kB)
+#12 21.40 Collecting yellowbrick>=1.4 (from pycaret)
+#12 21.43   Downloading yellowbrick-1.5-py3-none-any.whl.metadata (7.7 kB)
+#12 21.46 Collecting wurlitzer (from pycaret)
+#12 21.48   Downloading wurlitzer-3.1.1-py3-none-any.whl.metadata (2.5 kB)
+#12 21.60 Collecting patsy>=0.5.1 (from category-encoders>=2.4.0->pycaret)
+#12 21.61   Downloading patsy-1.0.1-py2.py3-none-any.whl.metadata (3.3 kB)
+#12 21.70 Collecting zipp>=3.20 (from importlib-metadata>=4.12.0->pycaret)
+#12 21.72   Downloading zipp-3.20.2-py3-none-any.whl.metadata (3.7 kB)
+#12 21.77 Collecting parso<0.9.0,>=0.8.4 (from jedi>=0.16->ipython)
+#12 21.79   Downloading parso-0.8.4-py2.py3-none-any.whl.metadata (7.7 kB)
+#12 21.88 Collecting jupyter-server (from jupyter_nbextensions_configurator>=0.4.0->jupyter-contrib-nbextensions)
+#12 21.90   Downloading jupyter_server-2.14.2-py3-none-any.whl.metadata (8.4 kB)
+#12 21.97 Collecting pyyaml (from jupyter_nbextensions_configurator>=0.4.0->jupyter-contrib-nbextensions)
+#12 21.99   Downloading PyYAML-6.0.2-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.1 kB)
+#12 22.06 Collecting beautifulsoup4 (from nbconvert>=6.0->jupyter-contrib-nbextensions)
+#12 22.07   Downloading beautifulsoup4-4.13.4-py3-none-any.whl.metadata (3.8 kB)
+#12 22.12 Collecting bleach!=5.0.0 (from bleach[css]!=5.0.0->nbconvert>=6.0->jupyter-contrib-nbextensions)
+#12 22.15   Downloading bleach-6.1.0-py3-none-any.whl.metadata (30 kB)
+#12 22.20 Collecting defusedxml (from nbconvert>=6.0->jupyter-contrib-nbextensions)
+#12 22.22   Downloading defusedxml-0.7.1-py2.py3-none-any.whl.metadata (32 kB)
+#12 22.28 Collecting jupyterlab-pygments (from nbconvert>=6.0->jupyter-contrib-nbextensions)
+#12 22.33   Downloading jupyterlab_pygments-0.3.0-py3-none-any.whl.metadata (4.4 kB)
+#12 22.40 Collecting mistune<4,>=2.0.3 (from nbconvert>=6.0->jupyter-contrib-nbextensions)
+#12 22.42   Downloading mistune-3.1.3-py3-none-any.whl.metadata (1.8 kB)
+#12 22.46 Collecting nbclient>=0.5.0 (from nbconvert>=6.0->jupyter-contrib-nbextensions)
+#12 22.48   Downloading nbclient-0.10.1-py3-none-any.whl.metadata (8.2 kB)
+#12 22.53 Collecting pandocfilters>=1.4.1 (from nbconvert>=6.0->jupyter-contrib-nbextensions)
+#12 22.55   Downloading pandocfilters-1.5.1-py2.py3-none-any.whl.metadata (9.0 kB)
+#12 22.63 Collecting fastjsonschema>=2.15 (from nbformat>=4.2.0->pycaret)
+#12 22.65   Downloading fastjsonschema-2.21.1-py3-none-any.whl.metadata (2.2 kB)
+#12 22.71 Collecting jsonschema>=2.6 (from nbformat>=4.2.0->pycaret)
+#12 22.72   Downloading jsonschema-4.23.0-py3-none-any.whl.metadata (7.9 kB)
+#12 22.84 Collecting jupyterlab-server<3,>=2.27.1 (from notebook>=4.0->jupyter-contrib-core)
+#12 22.86   Downloading jupyterlab_server-2.27.3-py3-none-any.whl.metadata (5.9 kB)
+#12 23.17 INFO: pip is looking at multiple versions of notebook to determine which version is compatible with other requirements. This could take a while.
+#12 23.17 Collecting notebook>=4.0 (from jupyter-contrib-core)
+#12 23.19   Downloading notebook-7.4.0-py3-none-any.whl.metadata (10 kB)
+#12 23.22   Downloading notebook-7.3.3-py3-none-any.whl.metadata (10 kB)
+#12 23.26 Collecting jupyterlab<4.4,>=4.3.6 (from notebook>=4.0->jupyter-contrib-core)
+#12 23.28   Downloading jupyterlab-4.3.7-py3-none-any.whl.metadata (16 kB)
+#12 23.32 Collecting notebook-shim<0.3,>=0.2 (from notebook>=4.0->jupyter-contrib-core)
+#12 23.34   Downloading notebook_shim-0.2.4-py3-none-any.whl.metadata (4.0 kB)
+#12 23.35 Collecting notebook>=4.0 (from jupyter-contrib-core)
+#12 23.36   Downloading notebook-7.3.2-py3-none-any.whl.metadata (10 kB)
+#12 23.44   Downloading notebook-7.3.1-py3-none-any.whl.metadata (10 kB)
+#12 23.51   Downloading notebook-7.3.0-py3-none-any.whl.metadata (10 kB)
+#12 23.55   Downloading notebook-7.2.3-py3-none-any.whl.metadata (10 kB)
+#12 23.61 Collecting jupyterlab<4.3,>=4.2.0 (from notebook>=4.0->jupyter-contrib-core)
+#12 23.63   Downloading jupyterlab-4.2.7-py3-none-any.whl.metadata (16 kB)
+#12 23.65 Collecting notebook>=4.0 (from jupyter-contrib-core)
+#12 23.66   Downloading notebook-7.2.2-py3-none-any.whl.metadata (10 kB)
+#12 23.68 INFO: pip is still looking at multiple versions of notebook to determine which version is compatible with other requirements. This could take a while.
+#12 23.69   Downloading notebook-7.2.1-py3-none-any.whl.metadata (10 kB)
+#12 23.74   Downloading notebook-7.2.0-py3-none-any.whl.metadata (10 kB)
+#12 23.77   Downloading notebook-7.1.3-py3-none-any.whl.metadata (10 kB)
+#12 23.82 Collecting jupyterlab<4.2,>=4.1.1 (from notebook>=4.0->jupyter-contrib-core)
+#12 23.84   Downloading jupyterlab-4.1.8-py3-none-any.whl.metadata (16 kB)
+#12 23.87 Collecting notebook>=4.0 (from jupyter-contrib-core)
+#12 23.88   Downloading notebook-7.1.2-py3-none-any.whl.metadata (10 kB)
+#12 23.93   Downloading notebook-7.1.1-py3-none-any.whl.metadata (10 kB)
+#12 23.94 INFO: This is taking longer than usual. You might need to provide the dependency resolver with stricter constraints to reduce runtime. See https://pip.pypa.io/warnings/backtracking for guidance. If you want to abort this run, press Ctrl + C.
+#12 23.95   Downloading notebook-7.1.0-py3-none-any.whl.metadata (10 kB)
+#12 23.99   Downloading notebook-7.0.8-py3-none-any.whl.metadata (10 kB)
+#12 24.04 Collecting jupyterlab<4.1,>=4.0.2 (from notebook>=4.0->jupyter-contrib-core)
+#12 24.05   Downloading jupyterlab-4.0.13-py3-none-any.whl.metadata (15 kB)
+#12 24.07 Collecting notebook>=4.0 (from jupyter-contrib-core)
+#12 24.08   Downloading notebook-7.0.7-py3-none-any.whl.metadata (10 kB)
+#12 24.14   Downloading notebook-7.0.6-py3-none-any.whl.metadata (10 kB)
+#12 24.17   Downloading notebook-7.0.5-py3-none-any.whl.metadata (10 kB)
+#12 24.21   Downloading notebook-7.0.4-py3-none-any.whl.metadata (10 kB)
+#12 24.24   Downloading notebook-7.0.3-py3-none-any.whl.metadata (10 kB)
+#12 24.28   Downloading notebook-7.0.2-py3-none-any.whl.metadata (10 kB)
+#12 24.32   Downloading notebook-7.0.1-py3-none-any.whl.metadata (10 kB)
+#12 24.36   Downloading notebook-7.0.0-py3-none-any.whl.metadata (10 kB)
+#12 24.39   Downloading notebook-6.5.7-py3-none-any.whl.metadata (2.5 kB)
+#12 24.49 Collecting argon2-cffi (from notebook>=4.0->jupyter-contrib-core)
+#12 24.52   Downloading argon2_cffi-23.1.0-py3-none-any.whl.metadata (5.2 kB)
+#12 24.67 Collecting ipykernel (from notebook>=4.0->jupyter-contrib-core)
+#12 24.68   Downloading ipykernel-6.29.5-py3-none-any.whl.metadata (6.3 kB)
+#12 24.74 Collecting Send2Trash>=1.8.0 (from notebook>=4.0->jupyter-contrib-core)
+#12 24.75   Downloading Send2Trash-1.8.3-py3-none-any.whl.metadata (4.0 kB)
+#12 24.81 Collecting terminado>=0.8.3 (from notebook>=4.0->jupyter-contrib-core)
+#12 24.85   Downloading terminado-0.18.1-py3-none-any.whl.metadata (5.8 kB)
+#12 24.89 Collecting prometheus-client (from notebook>=4.0->jupyter-contrib-core)
+#12 24.91   Downloading prometheus_client-0.21.1-py3-none-any.whl.metadata (1.8 kB)
+#12 24.99 Collecting nbclassic>=0.4.7 (from notebook>=4.0->jupyter-contrib-core)
+#12 25.08   Downloading nbclassic-1.2.0-py3-none-any.whl.metadata (3.6 kB)
+#12 25.43 Collecting llvmlite<0.42,>=0.41.0dev0 (from numba>=0.55.0->pycaret)
+#12 25.45   Downloading llvmlite-0.41.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.8 kB)
+#12 25.53 Collecting ptyprocess>=0.5 (from pexpect>4.3->ipython)
+#12 25.56   Downloading ptyprocess-0.7.0-py2.py3-none-any.whl.metadata (1.3 kB)
+#12 25.68 Collecting narwhals>=1.15.1 (from plotly>=5.0.0->pycaret)
+#12 25.71   Downloading narwhals-1.37.1-py3-none-any.whl.metadata (9.3 kB)
+#12 25.78 Collecting dash>=2.9.0 (from plotly-resampler>=0.8.3.1->pycaret)
+#12 25.80   Downloading dash-3.0.4-py3-none-any.whl.metadata (10 kB)
+#12 26.50 Collecting orjson<4.0.0,>=3.8.0 (from plotly-resampler>=0.8.3.1->pycaret)
+#12 26.54   Downloading orjson-3.10.15-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (41 kB)
+#12 26.59 Collecting plotly>=5.0.0 (from pycaret)
+#12 26.61   Downloading plotly-5.24.1-py3-none-any.whl.metadata (7.3 kB)
+#12 26.73 Collecting tsdownsample>=0.1.3 (from plotly-resampler>=0.8.3.1->pycaret)
+#12 26.75   Downloading tsdownsample-0.1.4.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (8.0 kB)
+#12 26.81 Collecting tenacity>=6.2.0 (from plotly>=5.0.0->pycaret)
+#12 26.83   Downloading tenacity-9.0.0-py3-none-any.whl.metadata (1.2 kB)
+#12 27.20 Collecting Cython!=0.29.18,!=0.29.31,>=0.29 (from pmdarima!=1.8.1,<3.0.0,>=1.8.0->pycaret)
+#12 27.22   Downloading Cython-3.0.12-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.3 kB)
+#12 27.30 Collecting wcwidth (from prompt-toolkit!=3.0.37,<3.1.0,>=3.0.30->ipython)
+#12 27.31   Downloading wcwidth-0.2.13-py2.py3-none-any.whl.metadata (14 kB)
+#12 27.37 Collecting six>=1.5 (from python-dateutil>=2.8.2->jupyter-client==7.3.2)
+#12 27.39   Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+#12 27.48 Collecting deprecated>=1.2.13 (from sktime!=0.17.1,!=0.17.2,!=0.18.0,<0.22.0,>=0.16.1->pycaret)
+#12 27.52   Downloading Deprecated-1.2.18-py2.py3-none-any.whl.metadata (5.7 kB)
+#12 27.59 Collecting scikit-base<0.6.0 (from sktime!=0.17.1,!=0.17.2,!=0.18.0,<0.22.0,>=0.16.1->pycaret)
+#12 27.61   Downloading scikit_base-0.5.2-py3-none-any.whl.metadata (8.6 kB)
+#12 27.77 Collecting executing>=1.2.0 (from stack-data->ipython)
+#12 27.78   Downloading executing-2.2.0-py2.py3-none-any.whl.metadata (8.9 kB)
+#12 27.82 Collecting asttokens>=2.1.0 (from stack-data->ipython)
+#12 27.84   Downloading asttokens-3.0.0-py3-none-any.whl.metadata (4.7 kB)
+#12 27.88 Collecting pure-eval (from stack-data->ipython)
+#12 27.89   Downloading pure_eval-0.2.3-py3-none-any.whl.metadata (6.3 kB)
+#12 27.95 Collecting webencodings (from bleach!=5.0.0->bleach[css]!=5.0.0->nbconvert>=6.0->jupyter-contrib-nbextensions)
+#12 27.97   Downloading webencodings-0.5.1-py2.py3-none-any.whl.metadata (2.1 kB)
+#12 28.02 Collecting tinycss2<1.3,>=1.1.0 (from bleach[css]!=5.0.0->nbconvert>=6.0->jupyter-contrib-nbextensions)
+#12 28.04   Downloading tinycss2-1.2.1-py3-none-any.whl.metadata (3.0 kB)
+#12 28.10 Collecting Flask<3.1,>=1.0.4 (from dash>=2.9.0->plotly-resampler>=0.8.3.1->pycaret)
+#12 28.12   Downloading flask-3.0.3-py3-none-any.whl.metadata (3.2 kB)
+#12 28.18 Collecting Werkzeug<3.1 (from dash>=2.9.0->plotly-resampler>=0.8.3.1->pycaret)
+#12 28.21   Downloading werkzeug-3.0.6-py3-none-any.whl.metadata (3.7 kB)
+#12 28.24 Collecting retrying (from dash>=2.9.0->plotly-resampler>=0.8.3.1->pycaret)
+#12 28.25   Downloading retrying-1.3.4-py3-none-any.whl.metadata (6.9 kB)
+#12 28.42 Collecting wrapt<2,>=1.10 (from deprecated>=1.2.13->sktime!=0.17.1,!=0.17.2,!=0.18.0,<0.22.0,>=0.16.1->pycaret)
+#12 28.44   Downloading wrapt-1.17.2-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.4 kB)
+#12 28.50 Collecting attrs>=22.2.0 (from jsonschema>=2.6->nbformat>=4.2.0->pycaret)
+#12 28.52   Downloading attrs-25.3.0-py3-none-any.whl.metadata (10 kB)
+#12 28.59 Collecting jsonschema-specifications>=2023.03.6 (from jsonschema>=2.6->nbformat>=4.2.0->pycaret)
+#12 28.62   Downloading jsonschema_specifications-2023.12.1-py3-none-any.whl.metadata (3.0 kB)
+#12 28.66 Collecting pkgutil-resolve-name>=1.3.10 (from jsonschema>=2.6->nbformat>=4.2.0->pycaret)
+#12 28.67   Downloading pkgutil_resolve_name-1.3.10-py3-none-any.whl.metadata (624 bytes)
+#12 28.73 Collecting referencing>=0.28.4 (from jsonschema>=2.6->nbformat>=4.2.0->pycaret)
+#12 28.74   Downloading referencing-0.35.1-py3-none-any.whl.metadata (2.8 kB)
+#12 29.41 Collecting rpds-py>=0.7.1 (from jsonschema>=2.6->nbformat>=4.2.0->pycaret)
+#12 29.43   Downloading rpds_py-0.20.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.2 kB)
+#12 29.61 Collecting argon2-cffi-bindings (from argon2-cffi->notebook>=4.0->jupyter-contrib-core)
+#12 29.63   Downloading argon2_cffi_bindings-21.2.0-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.7 kB)
+#12 29.69 Collecting soupsieve>1.2 (from beautifulsoup4->nbconvert>=6.0->jupyter-contrib-nbextensions)
+#12 29.71   Downloading soupsieve-2.7-py3-none-any.whl.metadata (4.6 kB)
+#12 29.91 Collecting debugpy>=1.6.5 (from ipykernel->notebook>=4.0->jupyter-contrib-core)
+#12 29.93   Downloading debugpy-1.8.14-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (1.1 kB)
+#12 30.02 Collecting anyio>=3.1.0 (from jupyter-server->jupyter_nbextensions_configurator>=0.4.0->jupyter-contrib-nbextensions)
+#12 30.04   Downloading anyio-4.5.2-py3-none-any.whl.metadata (4.7 kB)
+#12 30.07 INFO: pip is looking at multiple versions of jupyter-server to determine which version is compatible with other requirements. This could take a while.
+#12 30.07 Collecting jupyter-server (from jupyter_nbextensions_configurator>=0.4.0->jupyter-contrib-nbextensions)
+#12 30.09   Downloading jupyter_server-2.14.1-py3-none-any.whl.metadata (8.4 kB)
+#12 30.12   Downloading jupyter_server-2.14.0-py3-none-any.whl.metadata (8.4 kB)
+#12 30.14   Downloading jupyter_server-2.13.0-py3-none-any.whl.metadata (8.4 kB)
+#12 30.18   Downloading jupyter_server-2.12.5-py3-none-any.whl.metadata (8.4 kB)
+#12 30.22   Downloading jupyter_server-2.12.4-py3-none-any.whl.metadata (8.4 kB)
+#12 30.26   Downloading jupyter_server-2.12.3-py3-none-any.whl.metadata (8.4 kB)
+#12 30.29   Downloading jupyter_server-2.12.2-py3-none-any.whl.metadata (8.4 kB)
+#12 30.30 INFO: pip is still looking at multiple versions of jupyter-server to determine which version is compatible with other requirements. This could take a while.
+#12 30.32   Downloading jupyter_server-2.12.1-py3-none-any.whl.metadata (8.4 kB)
+#12 30.36   Downloading jupyter_server-2.12.0-py3-none-any.whl.metadata (8.4 kB)
+#12 30.40   Downloading jupyter_server-2.11.2-py3-none-any.whl.metadata (8.4 kB)
+#12 30.43   Downloading jupyter_server-2.11.1-py3-none-any.whl.metadata (8.4 kB)
+#12 30.46   Downloading jupyter_server-2.10.1-py3-none-any.whl.metadata (8.4 kB)
+#12 30.48 INFO: This is taking longer than usual. You might need to provide the dependency resolver with stricter constraints to reduce runtime. See https://pip.pypa.io/warnings/backtracking for guidance. If you want to abort this run, press Ctrl + C.
+#12 30.49   Downloading jupyter_server-2.10.0-py3-none-any.whl.metadata (8.4 kB)
+#12 30.53   Downloading jupyter_server-2.9.1-py3-none-any.whl.metadata (8.6 kB)
+#12 30.56   Downloading jupyter_server-2.9.0-py3-none-any.whl.metadata (8.6 kB)
+#12 30.60   Downloading jupyter_server-2.8.0-py3-none-any.whl.metadata (8.6 kB)
+#12 30.63   Downloading jupyter_server-2.7.3-py3-none-any.whl.metadata (8.6 kB)
+#12 30.66   Downloading jupyter_server-2.7.2-py3-none-any.whl.metadata (8.6 kB)
+#12 30.69   Downloading jupyter_server-2.7.1-py3-none-any.whl.metadata (8.6 kB)
+#12 30.73   Downloading jupyter_server-2.7.0-py3-none-any.whl.metadata (8.6 kB)
+#12 30.76   Downloading jupyter_server-2.6.0-py3-none-any.whl.metadata (8.5 kB)
+#12 30.80   Downloading jupyter_server-2.5.0-py3-none-any.whl.metadata (8.7 kB)
+#12 30.86   Downloading jupyter_server-2.4.0-py3-none-any.whl.metadata (8.7 kB)
+#12 30.91   Downloading jupyter_server-2.3.0-py3-none-any.whl.metadata (9.1 kB)
+#12 30.95   Downloading jupyter_server-2.2.1-py3-none-any.whl.metadata (9.1 kB)
+#12 30.98   Downloading jupyter_server-2.2.0-py3-none-any.whl.metadata (9.1 kB)
+#12 31.01 Collecting anyio<4,>=3.1.0 (from jupyter-server->jupyter_nbextensions_configurator>=0.4.0->jupyter-contrib-nbextensions)
+#12 31.04   Downloading anyio-3.7.1-py3-none-any.whl.metadata (4.7 kB)
+#12 31.05 Collecting jupyter-server (from jupyter_nbextensions_configurator>=0.4.0->jupyter-contrib-nbextensions)
+#12 31.07   Downloading jupyter_server-2.1.0-py3-none-any.whl.metadata (9.1 kB)
+#12 31.10   Downloading jupyter_server-2.0.6-py3-none-any.whl.metadata (9.0 kB)
+#12 31.15   Downloading jupyter_server-2.0.5-py3-none-any.whl.metadata (9.0 kB)
+#12 31.18   Downloading jupyter_server-2.0.4-py3-none-any.whl.metadata (9.0 kB)
+#12 31.22   Downloading jupyter_server-2.0.3-py3-none-any.whl.metadata (9.0 kB)
+#12 31.26   Downloading jupyter_server-2.0.2-py3-none-any.whl.metadata (9.0 kB)
+#12 31.30   Downloading jupyter_server-2.0.1-py3-none-any.whl.metadata (9.2 kB)
+#12 31.34   Downloading jupyter_server-1.24.0-py3-none-any.whl.metadata (4.4 kB)
+#12 31.44 Collecting websocket-client (from jupyter-server->jupyter_nbextensions_configurator>=0.4.0->jupyter-contrib-nbextensions)
+#12 31.46   Downloading websocket_client-1.8.0-py3-none-any.whl.metadata (8.0 kB)
+#12 31.55 Collecting sniffio>=1.1 (from anyio<4,>=3.1.0->jupyter-server->jupyter_nbextensions_configurator>=0.4.0->jupyter-contrib-nbextensions)
+#12 31.59   Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
+#12 31.63 Collecting exceptiongroup (from anyio<4,>=3.1.0->jupyter-server->jupyter_nbextensions_configurator>=0.4.0->jupyter-contrib-nbextensions)
+#12 31.66   Downloading exceptiongroup-1.2.2-py3-none-any.whl.metadata (6.6 kB)
+#12 31.75 Collecting itsdangerous>=2.1.2 (from Flask<3.1,>=1.0.4->dash>=2.9.0->plotly-resampler>=0.8.3.1->pycaret)
+#12 31.76   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+#12 31.80 Collecting click>=8.1.3 (from Flask<3.1,>=1.0.4->dash>=2.9.0->plotly-resampler>=0.8.3.1->pycaret)
+#12 31.82   Downloading click-8.1.8-py3-none-any.whl.metadata (2.3 kB)
+#12 31.87 Collecting blinker>=1.6.2 (from Flask<3.1,>=1.0.4->dash>=2.9.0->plotly-resampler>=0.8.3.1->pycaret)
+#12 31.89   Downloading blinker-1.8.2-py3-none-any.whl.metadata (1.6 kB)
+#12 32.20 Collecting cffi>=1.0.1 (from argon2-cffi-bindings->argon2-cffi->notebook>=4.0->jupyter-contrib-core)
+#12 32.22   Downloading cffi-1.17.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (1.5 kB)
+#12 32.27 Collecting pycparser (from cffi>=1.0.1->argon2-cffi-bindings->argon2-cffi->notebook>=4.0->jupyter-contrib-core)
+#12 32.28   Downloading pycparser-2.22-py3-none-any.whl.metadata (943 bytes)
+#12 32.36 Downloading tornado-6.1-cp38-cp38-manylinux2010_x86_64.whl (427 kB)
+#12 32.54 Downloading jupyter_client-7.3.2-py3-none-any.whl (131 kB)
+#12 32.61 Downloading ipython-8.12.3-py3-none-any.whl (798 kB)
+#12 32.79    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 798.3/798.3 kB 4.6 MB/s eta 0:00:00
+#12 32.82 Downloading psycopg2_binary-2.9.10-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+#12 33.57    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 3.9 MB/s eta 0:00:00
+#12 33.59 Downloading yapf-0.43.0-py3-none-any.whl (256 kB)
+#12 33.67 Downloading requests-2.32.3-py3-none-any.whl (64 kB)
+#12 33.72 Downloading cloudpickle-3.1.1-py3-none-any.whl (20 kB)
+#12 33.75 Downloading ipywidgets-8.1.6-py3-none-any.whl (139 kB)
+#12 33.83 Downloading pycaret-3.2.0-py3-none-any.whl (484 kB)
+#12 33.97 Downloading schemdraw-0.15-py3-none-any.whl (106 kB)
+#12 34.05 Downloading pandas-1.5.3-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (12.2 MB)
+#12 37.75    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.2/12.2 MB 3.3 MB/s eta 0:00:00
+#12 37.78 Downloading matplotlib-3.6.0-cp38-cp38-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (9.4 MB)
+#12 40.23    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.4/9.4 MB 3.8 MB/s eta 0:00:00
+#12 40.27 Downloading scikit_learn-1.2.2-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (9.8 MB)
+#12 42.73    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.8/9.8 MB 4.0 MB/s eta 0:00:00
+#12 42.75 Downloading category_encoders-2.6.4-py2.py3-none-any.whl (82 kB)
+#12 42.80 Downloading certifi-2025.4.26-py3-none-any.whl (159 kB)
+#12 42.93 Downloading charset_normalizer-3.4.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (144 kB)
+#12 43.01 Downloading comm-0.2.2-py3-none-any.whl (7.2 kB)
+#12 43.05 Downloading contourpy-1.1.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (301 kB)
+#12 43.17 Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+#12 43.20 Downloading deprecation-2.1.0-py2.py3-none-any.whl (11 kB)
+#12 43.25 Downloading fonttools-4.57.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (4.7 MB)
+#12 44.72    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 3.2 MB/s eta 0:00:00
+#12 44.74 Downloading idna-3.10-py3-none-any.whl (70 kB)
+#12 44.76 Downloading imbalanced_learn-0.12.4-py3-none-any.whl (258 kB)
+#12 44.83 Downloading importlib_metadata-8.5.0-py3-none-any.whl (26 kB)
+#12 44.86 Downloading jedi-0.19.2-py2.py3-none-any.whl (1.6 MB)
+#12 45.25    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 4.1 MB/s eta 0:00:00
+#12 45.27 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#12 45.33 Downloading joblib-1.4.2-py3-none-any.whl (301 kB)
+#12 45.42 Downloading jupyter_core-5.7.2-py3-none-any.whl (28 kB)
+#12 45.47 Downloading jupyter_highlight_selected_word-0.2.0-py2.py3-none-any.whl (11 kB)
+#12 45.50 Downloading jupyter_nbextensions_configurator-0.6.4-py2.py3-none-any.whl (466 kB)
+#12 45.64 Downloading jupyterlab_widgets-3.0.14-py3-none-any.whl (213 kB)
+#12 45.72 Downloading kaleido-0.2.1-py2.py3-none-manylinux1_x86_64.whl (79.9 MB)
+#12 63.60    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 79.9/79.9 MB 4.5 MB/s eta 0:00:00
+#12 63.62 Downloading kiwisolver-1.4.7-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.whl (1.2 MB)
+#12 63.88    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 4.8 MB/s eta 0:00:00
+#12 63.92 Downloading lightgbm-4.6.0-py3-none-manylinux_2_28_x86_64.whl (3.6 MB)
+#12 64.70    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.6/3.6 MB 4.4 MB/s eta 0:00:00
+#12 64.72 Downloading MarkupSafe-2.1.5-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (26 kB)
+#12 64.75 Downloading nbconvert-7.16.6-py3-none-any.whl (258 kB)
+#12 64.81 Downloading nbformat-5.10.4-py3-none-any.whl (78 kB)
+#12 64.84 Downloading nest_asyncio-1.6.0-py3-none-any.whl (5.2 kB)
+#12 64.89 Downloading notebook-6.5.7-py3-none-any.whl (529 kB)
+#12 65.07    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 529.8/529.8 kB 3.0 MB/s eta 0:00:00
+#12 65.10 Downloading numba-0.58.1-cp38-cp38-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (3.7 MB)
+#12 65.88    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.7/3.7 MB 4.7 MB/s eta 0:00:00
+#12 65.91 Downloading numpy-1.24.4-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (17.3 MB)
+#12 69.47    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 17.3/17.3 MB 4.8 MB/s eta 0:00:00
+#12 69.50 Downloading packaging-25.0-py3-none-any.whl (66 kB)
+#12 69.53 Downloading pexpect-4.9.0-py2.py3-none-any.whl (63 kB)
+#12 69.57 Downloading pillow-10.4.0-cp38-cp38-manylinux_2_28_x86_64.whl (4.5 MB)
+#12 70.73    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 3.9 MB/s eta 0:00:00
+#12 70.75 Downloading platformdirs-4.3.6-py3-none-any.whl (18 kB)
+#12 70.78 Downloading plotly_resampler-0.10.0-py3-none-any.whl (80 kB)
+#12 70.82 Downloading plotly-5.24.1-py3-none-any.whl (19.1 MB)
+#12 75.08    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 19.1/19.1 MB 4.5 MB/s eta 0:00:00
+#12 75.13 Downloading pmdarima-2.0.4-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_28_x86_64.whl (2.2 MB)
+#12 75.55    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 5.4 MB/s eta 0:00:00
+#12 75.58 Downloading prompt_toolkit-3.0.51-py3-none-any.whl (387 kB)
+#12 75.68 Downloading psutil-7.0.0-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (277 kB)
+#12 75.78 Downloading pygments-2.19.1-py3-none-any.whl (1.2 MB)
+#12 75.97    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 6.2 MB/s eta 0:00:00
+#12 76.00 Downloading pyod-2.0.5-py3-none-any.whl (200 kB)
+#12 76.04 Downloading pyparsing-3.1.4-py3-none-any.whl (104 kB)
+#12 76.07 Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+#12 76.14 Downloading pytz-2025.2-py2.py3-none-any.whl (509 kB)
+#12 76.25 Downloading pyzmq-26.4.0-cp38-cp38-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (863 kB)
+#12 76.65    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 863.4/863.4 kB 1.8 MB/s eta 0:00:00
+#12 76.69 Downloading scikit_plot-0.3.7-py3-none-any.whl (33 kB)
+#12 76.74 Downloading scipy-1.10.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (34.5 MB)
+#12 84.62    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 34.5/34.5 MB 4.4 MB/s eta 0:00:00
+#12 84.64 Downloading sktime-0.21.1-py3-none-any.whl (17.1 MB)
+#12 88.85    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 17.1/17.1 MB 4.1 MB/s eta 0:00:00
+#12 88.88 Downloading statsmodels-0.14.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (10.9 MB)
+#12 92.03    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.9/10.9 MB 3.5 MB/s eta 0:00:00
+#12 92.09 Downloading tbats-1.1.3-py3-none-any.whl (44 kB)
+#12 92.14 Downloading threadpoolctl-3.5.0-py3-none-any.whl (18 kB)
+#12 92.19 Downloading tomli-2.2.1-py3-none-any.whl (14 kB)
+#12 92.29 Downloading tqdm-4.67.1-py3-none-any.whl (78 kB)
+#12 92.37 Downloading traitlets-5.14.3-py3-none-any.whl (85 kB)
+#12 92.50 Downloading urllib3-2.2.3-py3-none-any.whl (126 kB)
+#12 92.60 Downloading widgetsnbextension-4.0.14-py3-none-any.whl (2.2 MB)
+#12 93.17    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 3.8 MB/s eta 0:00:00
+#12 93.19 Downloading yellowbrick-1.5-py3-none-any.whl (282 kB)
+#12 93.26 Downloading backcall-0.2.0-py2.py3-none-any.whl (11 kB)
+#12 93.29 Downloading decorator-5.2.1-py3-none-any.whl (9.2 kB)
+#12 93.31 Downloading entrypoints-0.4-py3-none-any.whl (5.3 kB)
+#12 93.33 Downloading ipython_genutils-0.2.0-py2.py3-none-any.whl (26 kB)
+#12 93.37 Downloading lxml-5.4.0-cp38-cp38-manylinux_2_28_x86_64.whl (5.0 MB)
+#12 94.72    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.0/5.0 MB 3.7 MB/s eta 0:00:00
+#12 94.75 Downloading matplotlib_inline-0.1.7-py3-none-any.whl (9.9 kB)
+#12 94.78 Downloading pickleshare-0.7.5-py2.py3-none-any.whl (6.9 kB)
+#12 94.82 Downloading stack_data-0.6.3-py3-none-any.whl (24 kB)
+#12 94.90 Downloading typing_extensions-4.13.2-py3-none-any.whl (45 kB)
+#12 94.94 Downloading wurlitzer-3.1.1-py3-none-any.whl (8.6 kB)
+#12 94.99 Downloading xxhash-3.5.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (194 kB)
+#12 95.11 Downloading asttokens-3.0.0-py3-none-any.whl (26 kB)
+#12 95.15 Downloading bleach-6.1.0-py3-none-any.whl (162 kB)
+#12 95.23 Downloading Cython-3.0.12-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.6 MB)
+#12 96.42    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.6/3.6 MB 3.0 MB/s eta 0:00:00
+#12 96.44 Downloading dash-3.0.4-py3-none-any.whl (7.9 MB)
+#12 98.75    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.9/7.9 MB 3.5 MB/s eta 0:00:00
+#12 98.82 Downloading Deprecated-1.2.18-py2.py3-none-any.whl (10.0 kB)
+#12 98.90 Downloading executing-2.2.0-py2.py3-none-any.whl (26 kB)
+#12 98.99 Downloading fastjsonschema-2.21.1-py3-none-any.whl (23 kB)
+#12 99.16 Downloading jsonschema-4.23.0-py3-none-any.whl (88 kB)
+#12 99.26 Downloading importlib_resources-6.4.5-py3-none-any.whl (36 kB)
+#12 99.33 Downloading llvmlite-0.41.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (43.6 MB)
+#12 110.4    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 43.6/43.6 MB 4.0 MB/s eta 0:00:00
+#12 110.4 Downloading mistune-3.1.3-py3-none-any.whl (53 kB)
+#12 110.4 Downloading nbclassic-1.2.0-py3-none-any.whl (10.0 MB)
+#12 112.8    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.0/10.0 MB 4.1 MB/s eta 0:00:00
+#12 112.9 Downloading nbclient-0.10.1-py3-none-any.whl (25 kB)
+#12 112.9 Downloading orjson-3.10.15-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (130 kB)
+#12 113.0 Downloading pandocfilters-1.5.1-py2.py3-none-any.whl (8.7 kB)
+#12 113.0 Downloading parso-0.8.4-py2.py3-none-any.whl (103 kB)
+#12 113.1 Downloading patsy-1.0.1-py2.py3-none-any.whl (232 kB)
+#12 113.1 Downloading ptyprocess-0.7.0-py2.py3-none-any.whl (13 kB)
+#12 113.2 Downloading scikit_base-0.5.2-py3-none-any.whl (118 kB)
+#12 113.2 Downloading Send2Trash-1.8.3-py3-none-any.whl (18 kB)
+#12 113.2 Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+#12 113.3 Downloading tenacity-9.0.0-py3-none-any.whl (28 kB)
+#12 113.3 Downloading terminado-0.18.1-py3-none-any.whl (14 kB)
+#12 113.3 Downloading tsdownsample-0.1.4.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.3 MB)
+#12 113.5    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 5.8 MB/s eta 0:00:00
+#12 113.5 Downloading zipp-3.20.2-py3-none-any.whl (9.2 kB)
+#12 113.6 Downloading argon2_cffi-23.1.0-py3-none-any.whl (15 kB)
+#12 113.6 Downloading beautifulsoup4-4.13.4-py3-none-any.whl (187 kB)
+#12 113.7 Downloading defusedxml-0.7.1-py2.py3-none-any.whl (25 kB)
+#12 113.7 Downloading ipykernel-6.29.5-py3-none-any.whl (117 kB)
+#12 113.7 Downloading jupyter_server-1.24.0-py3-none-any.whl (347 kB)
+#12 113.8 Downloading jupyterlab_pygments-0.3.0-py3-none-any.whl (15 kB)
+#12 113.9 Downloading prometheus_client-0.21.1-py3-none-any.whl (54 kB)
+#12 113.9 Downloading pure_eval-0.2.3-py3-none-any.whl (11 kB)
+#12 113.9 Downloading PyYAML-6.0.2-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (746 kB)
+#12 114.1    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 746.5/746.5 kB 4.1 MB/s eta 0:00:00
+#12 114.1 Downloading wcwidth-0.2.13-py2.py3-none-any.whl (34 kB)
+#12 114.2 Downloading anyio-3.7.1-py3-none-any.whl (80 kB)
+#12 114.2 Downloading attrs-25.3.0-py3-none-any.whl (63 kB)
+#12 114.2 Downloading debugpy-1.8.14-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.6 MB)
+#12 115.0    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.6/3.6 MB 4.4 MB/s eta 0:00:00
+#12 115.1 Downloading flask-3.0.3-py3-none-any.whl (101 kB)
+#12 115.1 Downloading jsonschema_specifications-2023.12.1-py3-none-any.whl (18 kB)
+#12 115.1 Downloading notebook_shim-0.2.4-py3-none-any.whl (13 kB)
+#12 115.1 Downloading pkgutil_resolve_name-1.3.10-py3-none-any.whl (4.7 kB)
+#12 115.2 Downloading referencing-0.35.1-py3-none-any.whl (26 kB)
+#12 115.2 Downloading rpds_py-0.20.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (360 kB)
+#12 115.3 Downloading soupsieve-2.7-py3-none-any.whl (36 kB)
+#12 115.3 Downloading tinycss2-1.2.1-py3-none-any.whl (21 kB)
+#12 115.4 Downloading webencodings-0.5.1-py2.py3-none-any.whl (11 kB)
+#12 115.4 Downloading werkzeug-3.0.6-py3-none-any.whl (227 kB)
+#12 115.5 Downloading wrapt-1.17.2-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (85 kB)
+#12 115.6 Downloading argon2_cffi_bindings-21.2.0-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (86 kB)
+#12 115.6 Downloading retrying-1.3.4-py3-none-any.whl (11 kB)
+#12 115.6 Downloading websocket_client-1.8.0-py3-none-any.whl (58 kB)
+#12 115.6 Downloading blinker-1.8.2-py3-none-any.whl (9.5 kB)
+#12 115.7 Downloading cffi-1.17.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (446 kB)
+#12 115.8 Downloading click-8.1.8-py3-none-any.whl (98 kB)
+#12 115.9 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+#12 115.9 Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+#12 116.0 Downloading exceptiongroup-1.2.2-py3-none-any.whl (16 kB)
+#12 116.0 Downloading pycparser-2.22-py3-none-any.whl (117 kB)
+#12 117.3 Building wheels for collected packages: jupyter-contrib-core, jupyter-contrib-nbextensions
+#12 117.3   Building wheel for jupyter-contrib-core (setup.py): started
+#12 117.7   Building wheel for jupyter-contrib-core (setup.py): finished with status 'done'
+#12 117.7   Created wheel for jupyter-contrib-core: filename=jupyter_contrib_core-0.4.2-py2.py3-none-any.whl size=17473 sha256=da33656b7503f288e00ad68fed8e381a9732c83f1844cc961f675815cdfb3cba
+#12 117.7   Stored in directory: /root/.cache/pip/wheels/c5/75/d2/b881eea79157be355b125d974ec85f88d6e6742acd14387872
+#12 117.7   Building wheel for jupyter-contrib-nbextensions (setup.py): started
+#12 119.4   Building wheel for jupyter-contrib-nbextensions (setup.py): finished with status 'done'
+#12 119.4   Created wheel for jupyter-contrib-nbextensions: filename=jupyter_contrib_nbextensions-0.7.0-py2.py3-none-any.whl size=23428787 sha256=70fb6467bffad6606b201fb5425bc7913da48c72826186058f794d2e5512df15
+#12 119.4   Stored in directory: /root/.cache/pip/wheels/1a/60/9f/043697d3cd00df43b23bbf4e722366a2abfa68700b6d8411f4
+#12 119.5 Successfully built jupyter-contrib-core jupyter-contrib-nbextensions
+#12 120.0 Installing collected packages: webencodings, wcwidth, pytz, pure-eval, ptyprocess, pickleshare, kaleido, jupyter_highlight_selected_word, ipython_genutils, fastjsonschema, backcall, zipp, xxhash, wurlitzer, wrapt, widgetsnbextension, websocket-client, urllib3, typing-extensions, traitlets, tqdm, tornado, tomli, tinycss2, threadpoolctl, tenacity, soupsieve, sniffio, six, Send2Trash, scikit-base, schemdraw, rpds-py, pyzmq, pyyaml, pyparsing, pygments, pycparser, psycopg2-binary, psutil, prompt-toolkit, prometheus-client, platformdirs, pkgutil-resolve-name, pillow, pexpect, parso, pandocfilters, packaging, orjson, numpy, nest-asyncio, markupsafe, lxml, llvmlite, kiwisolver, jupyterlab_widgets, jupyterlab-pygments, joblib, itsdangerous, idna, fonttools, executing, exceptiongroup, entrypoints, defusedxml, decorator, debugpy, Cython, cycler, cloudpickle, click, charset-normalizer, certifi, blinker, attrs, asttokens, yapf, Werkzeug, tsdownsample, terminado, stack-data, scipy, retrying, requests, referencing, python-dateutil, plotly, patsy, mistune, matplotlib-inline, jupyter-core, jinja2, jedi, importlib-resources, importlib-metadata, deprecation, deprecated, contourpy, comm, cffi, bleach, beautifulsoup4, anyio, scikit-learn, pandas, numba, matplotlib, lightgbm, jupyter-client, jsonschema-specifications, ipython, Flask, argon2-cffi-bindings, yellowbrick, statsmodels, sktime, scikit-plot, pyod, jsonschema, ipywidgets, ipykernel, imbalanced-learn, dash, argon2-cffi, pmdarima, plotly-resampler, nbformat, category-encoders, tbats, nbclient, pycaret, nbconvert, jupyter-server, notebook-shim, nbclassic, notebook, jupyter-contrib-core, jupyter_nbextensions_configurator, jupyter-contrib-nbextensions
+#12 159.0 Successfully installed Cython-3.0.12 Flask-3.0.3 Send2Trash-1.8.3 Werkzeug-3.0.6 anyio-3.7.1 argon2-cffi-23.1.0 argon2-cffi-bindings-21.2.0 asttokens-3.0.0 attrs-25.3.0 backcall-0.2.0 beautifulsoup4-4.13.4 bleach-6.1.0 blinker-1.8.2 category-encoders-2.6.4 certifi-2025.4.26 cffi-1.17.1 charset-normalizer-3.4.1 click-8.1.8 cloudpickle-3.1.1 comm-0.2.2 contourpy-1.1.1 cycler-0.12.1 dash-3.0.4 debugpy-1.8.14 decorator-5.2.1 defusedxml-0.7.1 deprecated-1.2.18 deprecation-2.1.0 entrypoints-0.4 exceptiongroup-1.2.2 executing-2.2.0 fastjsonschema-2.21.1 fonttools-4.57.0 idna-3.10 imbalanced-learn-0.12.4 importlib-metadata-8.5.0 importlib-resources-6.4.5 ipykernel-6.29.5 ipython-8.12.3 ipython_genutils-0.2.0 ipywidgets-8.1.6 itsdangerous-2.2.0 jedi-0.19.2 jinja2-3.1.6 joblib-1.4.2 jsonschema-4.23.0 jsonschema-specifications-2023.12.1 jupyter-client-7.3.2 jupyter-contrib-core-0.4.2 jupyter-contrib-nbextensions-0.7.0 jupyter-core-5.7.2 jupyter-server-1.24.0 jupyter_highlight_selected_word-0.2.0 jupyter_nbextensions_configurator-0.6.4 jupyterlab-pygments-0.3.0 jupyterlab_widgets-3.0.14 kaleido-0.2.1 kiwisolver-1.4.7 lightgbm-4.6.0 llvmlite-0.41.1 lxml-5.4.0 markupsafe-2.1.5 matplotlib-3.6.0 matplotlib-inline-0.1.7 mistune-3.1.3 nbclassic-1.2.0 nbclient-0.10.1 nbconvert-7.16.6 nbformat-5.10.4 nest-asyncio-1.6.0 notebook-6.5.7 notebook-shim-0.2.4 numba-0.58.1 numpy-1.24.4 orjson-3.10.15 packaging-25.0 pandas-1.5.3 pandocfilters-1.5.1 parso-0.8.4 patsy-1.0.1 pexpect-4.9.0 pickleshare-0.7.5 pillow-10.4.0 pkgutil-resolve-name-1.3.10 platformdirs-4.3.6 plotly-5.24.1 plotly-resampler-0.10.0 pmdarima-2.0.4 prometheus-client-0.21.1 prompt-toolkit-3.0.51 psutil-7.0.0 psycopg2-binary-2.9.10 ptyprocess-0.7.0 pure-eval-0.2.3 pycaret-3.2.0 pycparser-2.22 pygments-2.19.1 pyod-2.0.5 pyparsing-3.1.4 python-dateutil-2.9.0.post0 pytz-2025.2 pyyaml-6.0.2 pyzmq-26.4.0 referencing-0.35.1 requests-2.32.3 retrying-1.3.4 rpds-py-0.20.1 schemdraw-0.15 scikit-base-0.5.2 scikit-learn-1.2.2 scikit-plot-0.3.7 scipy-1.10.1 six-1.17.0 sktime-0.21.1 sniffio-1.3.1 soupsieve-2.7 stack-data-0.6.3 statsmodels-0.14.1 tbats-1.1.3 tenacity-9.0.0 terminado-0.18.1 threadpoolctl-3.5.0 tinycss2-1.2.1 tomli-2.2.1 tornado-6.1 tqdm-4.67.1 traitlets-5.14.3 tsdownsample-0.1.4.1 typing-extensions-4.13.2 urllib3-2.2.3 wcwidth-0.2.13 webencodings-0.5.1 websocket-client-1.8.0 widgetsnbextension-4.0.14 wrapt-1.17.2 wurlitzer-3.1.1 xxhash-3.5.0 yapf-0.43.0 yellowbrick-1.5 zipp-3.20.2
+#12 159.0 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#12 DONE 160.3s
+
+#13 [ 8/15] RUN mkdir /install
+#13 DONE 0.3s
+
+#14 [ 9/15] ADD install_jupyter_extensions.sh /install
+#14 DONE 0.1s
+
+#15 [10/15] RUN /install/install_jupyter_extensions.sh
+#15 0.741 # Install Jupyter extensions
+#15 0.746 + echo '# Install Jupyter extensions'
+#15 0.746 ++ jupyter --data-dir
+#15 0.905 + DIR_NAME=/root/.local/share/jupyter
+#15 0.906 Jupyter data dir: /root/.local/share/jupyter
+#15 0.906 + echo 'Jupyter data dir: /root/.local/share/jupyter'
+#15 0.906 + [[ ! -d /root/.local/share/jupyter ]]
+#15 0.906 + mkdir -p /root/.local/share/jupyter
+#15 0.910 + sudo jupyter contrib nbextension install
+#15 2.406 [I 00:11:20 InstallContribNbextensionsApp] jupyter contrib nbextension install 
+#15 2.406 [I 00:11:20 InstallContribNbextensionsApp] Installing jupyter_contrib_nbextensions nbextension files to jupyter data directory
+#15 2.432 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/go_to_current_running_cell -> go_to_current_running_cell
+#15 2.433 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/go_to_current_running_cell/
+#15 2.437 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/go_to_current_running_cell/eye.png -> /usr/local/share/jupyter/nbextensions/go_to_current_running_cell/eye.png
+#15 2.437 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/go_to_current_running_cell/jump_to_cell.gif -> /usr/local/share/jupyter/nbextensions/go_to_current_running_cell/jump_to_cell.gif
+#15 2.438 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/go_to_current_running_cell/auto_focus.gif -> /usr/local/share/jupyter/nbextensions/go_to_current_running_cell/auto_focus.gif
+#15 2.439 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/go_to_current_running_cell/anchor.png -> /usr/local/share/jupyter/nbextensions/go_to_current_running_cell/anchor.png
+#15 2.440 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/go_to_current_running_cell/main.js -> /usr/local/share/jupyter/nbextensions/go_to_current_running_cell/main.js
+#15 2.440 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/go_to_current_running_cell/README.md -> /usr/local/share/jupyter/nbextensions/go_to_current_running_cell/README.md
+#15 2.440 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/go_to_current_running_cell/go_to_current_running_cell.yaml -> /usr/local/share/jupyter/nbextensions/go_to_current_running_cell/go_to_current_running_cell.yaml
+#15 2.440 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.440 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_font_size -> code_font_size
+#15 2.441 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/code_font_size/
+#15 2.441 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_font_size/code_font_size.js -> /usr/local/share/jupyter/nbextensions/code_font_size/code_font_size.js
+#15 2.441 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_font_size/code_font_size.yaml -> /usr/local/share/jupyter/nbextensions/code_font_size/code_font_size.yaml
+#15 2.441 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_font_size/README.md -> /usr/local/share/jupyter/nbextensions/code_font_size/README.md
+#15 2.441 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.442 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/exercise2 -> exercise2
+#15 2.442 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/exercise2/
+#15 2.442 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/exercise2/exercise2.yaml -> /usr/local/share/jupyter/nbextensions/exercise2/exercise2.yaml
+#15 2.442 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/exercise2/image.gif -> /usr/local/share/jupyter/nbextensions/exercise2/image.gif
+#15 2.443 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/exercise2/main.css -> /usr/local/share/jupyter/nbextensions/exercise2/main.css
+#15 2.443 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/exercise2/readme.md -> /usr/local/share/jupyter/nbextensions/exercise2/readme.md
+#15 2.443 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/exercise2/main.js -> /usr/local/share/jupyter/nbextensions/exercise2/main.js
+#15 2.443 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/exercise2/icon.png -> /usr/local/share/jupyter/nbextensions/exercise2/icon.png
+#15 2.444 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.444 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/skill -> skill
+#15 2.444 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/skill/
+#15 2.444 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/skill/skill.yaml -> /usr/local/share/jupyter/nbextensions/skill/skill.yaml
+#15 2.444 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/skill/skill.js -> /usr/local/share/jupyter/nbextensions/skill/skill.js
+#15 2.445 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/skill/main.js -> /usr/local/share/jupyter/nbextensions/skill/main.js
+#15 2.445 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/skill/README.md -> /usr/local/share/jupyter/nbextensions/skill/README.md
+#15 2.445 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.445 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/table_beautifier -> table_beautifier
+#15 2.445 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/table_beautifier/
+#15 2.446 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/table_beautifier/main.css -> /usr/local/share/jupyter/nbextensions/table_beautifier/main.css
+#15 2.446 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/table_beautifier/main.js -> /usr/local/share/jupyter/nbextensions/table_beautifier/main.js
+#15 2.446 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/table_beautifier/README.md -> /usr/local/share/jupyter/nbextensions/table_beautifier/README.md
+#15 2.446 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/table_beautifier/table_beautifier.yaml -> /usr/local/share/jupyter/nbextensions/table_beautifier/table_beautifier.yaml
+#15 2.447 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.447 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/skip-traceback -> skip-traceback
+#15 2.447 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/skip-traceback/
+#15 2.447 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/skip-traceback/readme.md -> /usr/local/share/jupyter/nbextensions/skip-traceback/readme.md
+#15 2.447 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/skip-traceback/main.js -> /usr/local/share/jupyter/nbextensions/skip-traceback/main.js
+#15 2.448 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/skip-traceback/skip-traceback.yaml -> /usr/local/share/jupyter/nbextensions/skip-traceback/skip-traceback.yaml
+#15 2.448 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/skip-traceback/skip-traceback.png -> /usr/local/share/jupyter/nbextensions/skip-traceback/skip-traceback.png
+#15 2.448 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/skip-traceback/traceback.png -> /usr/local/share/jupyter/nbextensions/skip-traceback/traceback.png
+#15 2.448 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/skip-traceback/icon.png -> /usr/local/share/jupyter/nbextensions/skip-traceback/icon.png
+#15 2.449 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.449 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/help_panel -> help_panel
+#15 2.449 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/help_panel/
+#15 2.450 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/help_panel/help_panel.js -> /usr/local/share/jupyter/nbextensions/help_panel/help_panel.js
+#15 2.450 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/help_panel/help_panel.css -> /usr/local/share/jupyter/nbextensions/help_panel/help_panel.css
+#15 2.450 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/help_panel/help_panel_ext_fullscreen.png -> /usr/local/share/jupyter/nbextensions/help_panel/help_panel_ext_fullscreen.png
+#15 2.451 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/help_panel/readme.md -> /usr/local/share/jupyter/nbextensions/help_panel/readme.md
+#15 2.451 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/help_panel/help_panel_ext.png -> /usr/local/share/jupyter/nbextensions/help_panel/help_panel_ext.png
+#15 2.451 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/help_panel/help_panel.yaml -> /usr/local/share/jupyter/nbextensions/help_panel/help_panel.yaml
+#15 2.452 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/help_panel/icon.png -> /usr/local/share/jupyter/nbextensions/help_panel/icon.png
+#15 2.452 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/help_panel/img
+#15 2.452 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/help_panel/img/handle-v.png -> /usr/local/share/jupyter/nbextensions/help_panel/img/handle-v.png
+#15 2.452 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.452 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/tree-filter -> tree-filter
+#15 2.452 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/tree-filter/
+#15 2.452 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/tree-filter/tree-filter.yaml -> /usr/local/share/jupyter/nbextensions/tree-filter/tree-filter.yaml
+#15 2.453 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/tree-filter/readme.md -> /usr/local/share/jupyter/nbextensions/tree-filter/readme.md
+#15 2.453 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/tree-filter/demo.gif -> /usr/local/share/jupyter/nbextensions/tree-filter/demo.gif
+#15 2.453 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/tree-filter/index.js -> /usr/local/share/jupyter/nbextensions/tree-filter/index.js
+#15 2.453 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.453 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/scroll_down -> scroll_down
+#15 2.454 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/scroll_down/
+#15 2.454 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/scroll_down/readme.md -> /usr/local/share/jupyter/nbextensions/scroll_down/readme.md
+#15 2.454 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/scroll_down/main.js -> /usr/local/share/jupyter/nbextensions/scroll_down/main.js
+#15 2.454 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/scroll_down/config.yaml -> /usr/local/share/jupyter/nbextensions/scroll_down/config.yaml
+#15 2.454 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/scroll_down/icon.png -> /usr/local/share/jupyter/nbextensions/scroll_down/icon.png
+#15 2.454 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.455 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/spellchecker -> spellchecker
+#15 2.455 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/spellchecker/
+#15 2.455 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/spellchecker/screenshot.png -> /usr/local/share/jupyter/nbextensions/spellchecker/screenshot.png
+#15 2.455 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/spellchecker/download_new_dict.py -> /usr/local/share/jupyter/nbextensions/spellchecker/download_new_dict.py
+#15 2.455 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/spellchecker/main.css -> /usr/local/share/jupyter/nbextensions/spellchecker/main.css
+#15 2.456 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/spellchecker/main.js -> /usr/local/share/jupyter/nbextensions/spellchecker/main.js
+#15 2.456 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/spellchecker/README.md -> /usr/local/share/jupyter/nbextensions/spellchecker/README.md
+#15 2.456 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/spellchecker/config.yaml -> /usr/local/share/jupyter/nbextensions/spellchecker/config.yaml
+#15 2.456 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/spellchecker/__pycache__
+#15 2.456 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/spellchecker/__pycache__/download_new_dict.cpython-38.pyc -> /usr/local/share/jupyter/nbextensions/spellchecker/__pycache__/download_new_dict.cpython-38.pyc
+#15 2.457 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/spellchecker/typo
+#15 2.457 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/spellchecker/typo/LICENSE.txt -> /usr/local/share/jupyter/nbextensions/spellchecker/typo/LICENSE.txt
+#15 2.457 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/spellchecker/typo/typo.js -> /usr/local/share/jupyter/nbextensions/spellchecker/typo/typo.js
+#15 2.457 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.457 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/nbTranslate -> nbTranslate
+#15 2.457 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/nbTranslate/
+#15 2.458 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/nbTranslate/mutils.js -> /usr/local/share/jupyter/nbextensions/nbTranslate/mutils.js
+#15 2.458 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/nbTranslate/languages.js -> /usr/local/share/jupyter/nbextensions/nbTranslate/languages.js
+#15 2.458 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/nbTranslate/nbTranslate.yaml -> /usr/local/share/jupyter/nbextensions/nbTranslate/nbTranslate.yaml
+#15 2.458 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/nbTranslate/demo1.gif -> /usr/local/share/jupyter/nbextensions/nbTranslate/demo1.gif
+#15 2.459 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/nbTranslate/main.js -> /usr/local/share/jupyter/nbextensions/nbTranslate/main.js
+#15 2.460 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/nbTranslate/README.md -> /usr/local/share/jupyter/nbextensions/nbTranslate/README.md
+#15 2.460 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/nbTranslate/demo2.gif -> /usr/local/share/jupyter/nbextensions/nbTranslate/demo2.gif
+#15 2.462 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/nbTranslate/nbTranslate.js -> /usr/local/share/jupyter/nbextensions/nbTranslate/nbTranslate.js
+#15 2.462 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.462 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/load_tex_macros -> load_tex_macros
+#15 2.462 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/load_tex_macros/
+#15 2.462 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/load_tex_macros/load_tex_macros.yaml -> /usr/local/share/jupyter/nbextensions/load_tex_macros/load_tex_macros.yaml
+#15 2.463 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/load_tex_macros/readme.md -> /usr/local/share/jupyter/nbextensions/load_tex_macros/readme.md
+#15 2.463 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/load_tex_macros/main.js -> /usr/local/share/jupyter/nbextensions/load_tex_macros/main.js
+#15 2.463 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/load_tex_macros/icon.png -> /usr/local/share/jupyter/nbextensions/load_tex_macros/icon.png
+#15 2.463 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.463 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/contrib_nbextensions_help_item -> contrib_nbextensions_help_item
+#15 2.463 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/contrib_nbextensions_help_item/
+#15 2.464 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/contrib_nbextensions_help_item/main.js -> /usr/local/share/jupyter/nbextensions/contrib_nbextensions_help_item/main.js
+#15 2.464 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/contrib_nbextensions_help_item/README.md -> /usr/local/share/jupyter/nbextensions/contrib_nbextensions_help_item/README.md
+#15 2.464 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/contrib_nbextensions_help_item/contrib_nbextensions_help_item.yaml -> /usr/local/share/jupyter/nbextensions/contrib_nbextensions_help_item/contrib_nbextensions_help_item.yaml
+#15 2.464 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.464 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/printview -> printview
+#15 2.464 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/printview/
+#15 2.465 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/printview/printview-button.png -> /usr/local/share/jupyter/nbextensions/printview/printview-button.png
+#15 2.465 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/printview/printview.yaml -> /usr/local/share/jupyter/nbextensions/printview/printview.yaml
+#15 2.465 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/printview/readme.md -> /usr/local/share/jupyter/nbextensions/printview/readme.md
+#15 2.465 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/printview/main.js -> /usr/local/share/jupyter/nbextensions/printview/main.js
+#15 2.465 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/printview/icon.png -> /usr/local/share/jupyter/nbextensions/printview/icon.png
+#15 2.466 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.466 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/export_embedded -> export_embedded
+#15 2.466 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/export_embedded/
+#15 2.466 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/export_embedded/export_embedded.yaml -> /usr/local/share/jupyter/nbextensions/export_embedded/export_embedded.yaml
+#15 2.466 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/export_embedded/readme.md -> /usr/local/share/jupyter/nbextensions/export_embedded/readme.md
+#15 2.466 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/export_embedded/main.js -> /usr/local/share/jupyter/nbextensions/export_embedded/main.js
+#15 2.467 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/export_embedded/icon.png -> /usr/local/share/jupyter/nbextensions/export_embedded/icon.png
+#15 2.467 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.467 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets -> snippets
+#15 2.467 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/snippets/
+#15 2.467 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets/snippets.yaml -> /usr/local/share/jupyter/nbextensions/snippets/snippets.yaml
+#15 2.467 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets/snippets-demo.gif -> /usr/local/share/jupyter/nbextensions/snippets/snippets-demo.gif
+#15 2.468 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets/main.js -> /usr/local/share/jupyter/nbextensions/snippets/main.js
+#15 2.468 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets/README.md -> /usr/local/share/jupyter/nbextensions/snippets/README.md
+#15 2.468 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets/snippets.json -> /usr/local/share/jupyter/nbextensions/snippets/snippets.json
+#15 2.468 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.468 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/toc2 -> toc2
+#15 2.469 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/toc2/
+#15 2.469 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/toc2/toc2.js -> /usr/local/share/jupyter/nbextensions/toc2/toc2.js
+#15 2.469 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/toc2/demo3.gif -> /usr/local/share/jupyter/nbextensions/toc2/demo3.gif
+#15 2.469 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/toc2/main.css -> /usr/local/share/jupyter/nbextensions/toc2/main.css
+#15 2.470 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/toc2/main.js -> /usr/local/share/jupyter/nbextensions/toc2/main.js
+#15 2.470 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/toc2/toc2.yaml -> /usr/local/share/jupyter/nbextensions/toc2/toc2.yaml
+#15 2.470 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/toc2/README.md -> /usr/local/share/jupyter/nbextensions/toc2/README.md
+#15 2.470 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/toc2/image.png -> /usr/local/share/jupyter/nbextensions/toc2/image.png
+#15 2.470 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/toc2/demo2.gif -> /usr/local/share/jupyter/nbextensions/toc2/demo2.gif
+#15 2.471 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/toc2/demo_dark.png -> /usr/local/share/jupyter/nbextensions/toc2/demo_dark.png
+#15 2.471 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/toc2/demo.gif -> /usr/local/share/jupyter/nbextensions/toc2/demo.gif
+#15 2.473 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/toc2/icon.png -> /usr/local/share/jupyter/nbextensions/toc2/icon.png
+#15 2.473 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.473 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/livemdpreview -> livemdpreview
+#15 2.473 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/livemdpreview/
+#15 2.473 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/livemdpreview/livemdpreview.js -> /usr/local/share/jupyter/nbextensions/livemdpreview/livemdpreview.js
+#15 2.474 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/livemdpreview/livemdpreview.yml -> /usr/local/share/jupyter/nbextensions/livemdpreview/livemdpreview.yml
+#15 2.474 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.474 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown -> python-markdown
+#15 2.474 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/python-markdown/
+#15 2.474 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown/trusted.png -> /usr/local/share/jupyter/nbextensions/python-markdown/trusted.png
+#15 2.474 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown/main.css -> /usr/local/share/jupyter/nbextensions/python-markdown/main.css
+#15 2.475 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown/readme.md -> /usr/local/share/jupyter/nbextensions/python-markdown/readme.md
+#15 2.475 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown/untrusted.png -> /usr/local/share/jupyter/nbextensions/python-markdown/untrusted.png
+#15 2.475 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown/python-markdown.yaml -> /usr/local/share/jupyter/nbextensions/python-markdown/python-markdown.yaml
+#15 2.475 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown/main.js -> /usr/local/share/jupyter/nbextensions/python-markdown/main.js
+#15 2.476 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown/python-markdown.png -> /usr/local/share/jupyter/nbextensions/python-markdown/python-markdown.png
+#15 2.476 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown/python-markdown-post.png -> /usr/local/share/jupyter/nbextensions/python-markdown/python-markdown-post.png
+#15 2.476 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/python-markdown/python-markdown-pre.png -> /usr/local/share/jupyter/nbextensions/python-markdown/python-markdown-pre.png
+#15 2.476 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.476 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/execution_dependencies -> execution_dependencies
+#15 2.477 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/execution_dependencies/
+#15 2.477 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/execution_dependencies/execution_dependencies.js -> /usr/local/share/jupyter/nbextensions/execution_dependencies/execution_dependencies.js
+#15 2.477 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/execution_dependencies/README.md -> /usr/local/share/jupyter/nbextensions/execution_dependencies/README.md
+#15 2.477 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/execution_dependencies/execution_dependencies.yml -> /usr/local/share/jupyter/nbextensions/execution_dependencies/execution_dependencies.yml
+#15 2.477 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.477 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding -> codefolding
+#15 2.477 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/codefolding/
+#15 2.478 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/foldgutter.css -> /usr/local/share/jupyter/nbextensions/codefolding/foldgutter.css
+#15 2.478 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/codefolding_firstline_folded.png -> /usr/local/share/jupyter/nbextensions/codefolding/codefolding_firstline_folded.png
+#15 2.478 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/codefolding.yaml -> /usr/local/share/jupyter/nbextensions/codefolding/codefolding.yaml
+#15 2.478 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/codefolding_indent_folded_2.png -> /usr/local/share/jupyter/nbextensions/codefolding/codefolding_indent_folded_2.png
+#15 2.478 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/firstline-fold.js -> /usr/local/share/jupyter/nbextensions/codefolding/firstline-fold.js
+#15 2.479 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/magic-folded.png -> /usr/local/share/jupyter/nbextensions/codefolding/magic-folded.png
+#15 2.479 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/codefolding_indent_unfolded.png -> /usr/local/share/jupyter/nbextensions/codefolding/codefolding_indent_unfolded.png
+#15 2.479 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/readme.md -> /usr/local/share/jupyter/nbextensions/codefolding/readme.md
+#15 2.479 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/codefolding_editor.png -> /usr/local/share/jupyter/nbextensions/codefolding/codefolding_editor.png
+#15 2.480 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/edit.js -> /usr/local/share/jupyter/nbextensions/codefolding/edit.js
+#15 2.480 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/codefolding_editor.yaml -> /usr/local/share/jupyter/nbextensions/codefolding/codefolding_editor.yaml
+#15 2.480 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/magic-fold.js -> /usr/local/share/jupyter/nbextensions/codefolding/magic-fold.js
+#15 2.480 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/main.js -> /usr/local/share/jupyter/nbextensions/codefolding/main.js
+#15 2.480 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/codefolding_indent_folded_1.png -> /usr/local/share/jupyter/nbextensions/codefolding/codefolding_indent_folded_1.png
+#15 2.481 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/codefolding_firstline_unfolded.png -> /usr/local/share/jupyter/nbextensions/codefolding/codefolding_firstline_unfolded.png
+#15 2.481 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/blockcomment-fold.js -> /usr/local/share/jupyter/nbextensions/codefolding/blockcomment-fold.js
+#15 2.481 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/icon.png -> /usr/local/share/jupyter/nbextensions/codefolding/icon.png
+#15 2.481 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding/magic-unfolded.png -> /usr/local/share/jupyter/nbextensions/codefolding/magic-unfolded.png
+#15 2.481 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.481 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codefolding -> codefolding
+#15 2.482 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/codefolding/foldgutter.css
+#15 2.482 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/codefolding/codefolding_firstline_folded.png
+#15 2.482 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/codefolding/codefolding.yaml
+#15 2.482 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/codefolding/codefolding_indent_folded_2.png
+#15 2.482 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/codefolding/firstline-fold.js
+#15 2.482 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/codefolding/magic-folded.png
+#15 2.482 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/codefolding/codefolding_indent_unfolded.png
+#15 2.482 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/codefolding/readme.md
+#15 2.482 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/codefolding/codefolding_editor.png
+#15 2.482 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/codefolding/edit.js
+#15 2.482 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/codefolding/codefolding_editor.yaml
+#15 2.482 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/codefolding/magic-fold.js
+#15 2.482 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/codefolding/main.js
+#15 2.482 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/codefolding/codefolding_indent_folded_1.png
+#15 2.482 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/codefolding/codefolding_firstline_unfolded.png
+#15 2.482 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/codefolding/blockcomment-fold.js
+#15 2.482 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/codefolding/icon.png
+#15 2.483 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/codefolding/magic-unfolded.png
+#15 2.483 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.483 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/highlighter -> highlighter
+#15 2.483 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/highlighter/
+#15 2.483 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/export_highlights.tex -> /usr/local/share/jupyter/nbextensions/highlighter/export_highlights.tex
+#15 2.483 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/image.gif -> /usr/local/share/jupyter/nbextensions/highlighter/image.gif
+#15 2.483 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/export_highlights.pdf -> /usr/local/share/jupyter/nbextensions/highlighter/export_highlights.pdf
+#15 2.484 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/demo_highlighter.ipynb -> /usr/local/share/jupyter/nbextensions/highlighter/demo_highlighter.ipynb
+#15 2.484 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/readme.md -> /usr/local/share/jupyter/nbextensions/highlighter/readme.md
+#15 2.484 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/export_highlights.html -> /usr/local/share/jupyter/nbextensions/highlighter/export_highlights.html
+#15 2.485 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/demo_highlighter.html -> /usr/local/share/jupyter/nbextensions/highlighter/demo_highlighter.html
+#15 2.485 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/tst_highlights.tex -> /usr/local/share/jupyter/nbextensions/highlighter/tst_highlights.tex
+#15 2.485 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/tst_highlights.html -> /usr/local/share/jupyter/nbextensions/highlighter/tst_highlights.html
+#15 2.486 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/highlighter.yaml -> /usr/local/share/jupyter/nbextensions/highlighter/highlighter.yaml
+#15 2.486 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/export_highlights.ipynb -> /usr/local/share/jupyter/nbextensions/highlighter/export_highlights.ipynb
+#15 2.486 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/tst_highlights.pdf -> /usr/local/share/jupyter/nbextensions/highlighter/tst_highlights.pdf
+#15 2.486 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/highlighter.css -> /usr/local/share/jupyter/nbextensions/highlighter/highlighter.css
+#15 2.486 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/highlighter.js -> /usr/local/share/jupyter/nbextensions/highlighter/highlighter.js
+#15 2.487 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/tst_highlights.ipynb -> /usr/local/share/jupyter/nbextensions/highlighter/tst_highlights.ipynb
+#15 2.487 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/highlighter/icon.png -> /usr/local/share/jupyter/nbextensions/highlighter/icon.png
+#15 2.487 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.487 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/qtconsole -> qtconsole
+#15 2.487 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/qtconsole/
+#15 2.487 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/qtconsole/qtconsole.yaml -> /usr/local/share/jupyter/nbextensions/qtconsole/qtconsole.yaml
+#15 2.488 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/qtconsole/README.md -> /usr/local/share/jupyter/nbextensions/qtconsole/README.md
+#15 2.488 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/qtconsole/qtconsole.js -> /usr/local/share/jupyter/nbextensions/qtconsole/qtconsole.js
+#15 2.488 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.488 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu -> snippets_menu
+#15 2.488 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/snippets_menu/
+#15 2.489 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/screenshot3.png -> /usr/local/share/jupyter/nbextensions/snippets_menu/screenshot3.png
+#15 2.489 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/screenshot2.png -> /usr/local/share/jupyter/nbextensions/snippets_menu/screenshot2.png
+#15 2.490 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_menu.css -> /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_menu.css
+#15 2.490 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenu_python.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_submenu_python.js
+#15 2.490 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/readme.md -> /usr/local/share/jupyter/nbextensions/snippets_menu/readme.md
+#15 2.490 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/main.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/main.js
+#15 2.490 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenu_markdown.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_submenu_markdown.js
+#15 2.491 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/config.yaml -> /usr/local/share/jupyter/nbextensions/snippets_menu/config.yaml
+#15 2.491 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/thumbnail.png -> /usr/local/share/jupyter/nbextensions/snippets_menu/thumbnail.png
+#15 2.491 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/screenshot1.png -> /usr/local/share/jupyter/nbextensions/snippets_menu/screenshot1.png
+#15 2.492 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/examples_for_custom.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/examples_for_custom.js
+#15 2.492 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python
+#15 2.492 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/scipy.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/scipy.js
+#15 2.492 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/h5py.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/h5py.js
+#15 2.492 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/sympy_functions.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/sympy_functions.js
+#15 2.493 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/sympy.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/sympy.js
+#15 2.493 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/matplotlib.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/matplotlib.js
+#15 2.493 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/astropy.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/astropy.js
+#15 2.493 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/python.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/python.js
+#15 2.494 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/pandas.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/pandas.js
+#15 2.494 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/scipy_special.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/scipy_special.js
+#15 2.494 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/numpy_polynomial.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/numpy_polynomial.js
+#15 2.494 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/numpy.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/numpy.js
+#15 2.494 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/numpy_ufuncs.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/numpy_ufuncs.js
+#15 2.495 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/python_regex.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/python_regex.js
+#15 2.495 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/numba.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/numba.js
+#15 2.495 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/scipy_constants.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/scipy_constants.js
+#15 2.495 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/snippets_menu/snippets_submenus_python/sympy_assumptions.js -> /usr/local/share/jupyter/nbextensions/snippets_menu/snippets_submenus_python/sympy_assumptions.js
+#15 2.495 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.495 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/init_cell -> init_cell
+#15 2.496 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/init_cell/
+#15 2.496 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/init_cell/main.js -> /usr/local/share/jupyter/nbextensions/init_cell/main.js
+#15 2.496 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/init_cell/README.md -> /usr/local/share/jupyter/nbextensions/init_cell/README.md
+#15 2.496 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/init_cell/cell_toolbar_menu.png -> /usr/local/share/jupyter/nbextensions/init_cell/cell_toolbar_menu.png
+#15 2.497 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/init_cell/init_cell.yaml -> /usr/local/share/jupyter/nbextensions/init_cell/init_cell.yaml
+#15 2.497 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/init_cell/icon.png -> /usr/local/share/jupyter/nbextensions/init_cell/icon.png
+#15 2.497 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.497 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/notify -> notify
+#15 2.497 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/notify/
+#15 2.497 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/notify/notify.mp3 -> /usr/local/share/jupyter/nbextensions/notify/notify.mp3
+#15 2.498 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/notify/readme.md -> /usr/local/share/jupyter/nbextensions/notify/readme.md
+#15 2.498 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/notify/notify.js -> /usr/local/share/jupyter/nbextensions/notify/notify.js
+#15 2.498 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/notify/notify.yaml -> /usr/local/share/jupyter/nbextensions/notify/notify.yaml
+#15 2.498 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/notify/notification.png -> /usr/local/share/jupyter/nbextensions/notify/notification.png
+#15 2.498 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.498 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor -> keyboard_shortcut_editor
+#15 2.499 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/keyboard_shortcut_editor/
+#15 2.499 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_menu_item.png -> /usr/local/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_menu_item.png
+#15 2.499 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/keyboard_shortcut_editor.yaml -> /usr/local/share/jupyter/nbextensions/keyboard_shortcut_editor/keyboard_shortcut_editor.yaml
+#15 2.499 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_dropdown.png -> /usr/local/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_dropdown.png
+#15 2.499 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_add_new_select_action.png -> /usr/local/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_add_new_select_action.png
+#15 2.500 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/main.css -> /usr/local/share/jupyter/nbextensions/keyboard_shortcut_editor/main.css
+#15 2.500 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_reset_disabled.png -> /usr/local/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_reset_disabled.png
+#15 2.500 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/main.js -> /usr/local/share/jupyter/nbextensions/keyboard_shortcut_editor/main.js
+#15 2.500 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_add_new_link.png -> /usr/local/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_add_new_link.png
+#15 2.501 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/README.md -> /usr/local/share/jupyter/nbextensions/keyboard_shortcut_editor/README.md
+#15 2.501 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/kse_components.js -> /usr/local/share/jupyter/nbextensions/keyboard_shortcut_editor/kse_components.js
+#15 2.501 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_shortcut_editor_blank.png -> /usr/local/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_shortcut_editor_blank.png
+#15 2.501 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_conflict.png -> /usr/local/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_conflict.png
+#15 2.502 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_shortcut_editor_success.png -> /usr/local/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_shortcut_editor_success.png
+#15 2.502 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_comma.png -> /usr/local/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_comma.png
+#15 2.502 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/quickhelp_shim.js -> /usr/local/share/jupyter/nbextensions/keyboard_shortcut_editor/quickhelp_shim.js
+#15 2.502 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/readme_undefined_key.png -> /usr/local/share/jupyter/nbextensions/keyboard_shortcut_editor/readme_undefined_key.png
+#15 2.503 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/keyboard_shortcut_editor/icon.png -> /usr/local/share/jupyter/nbextensions/keyboard_shortcut_editor/icon.png
+#15 2.503 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.503 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/exercise -> exercise
+#15 2.503 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/exercise/
+#15 2.503 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/exercise/exercise.yaml -> /usr/local/share/jupyter/nbextensions/exercise/exercise.yaml
+#15 2.503 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/exercise/image.gif -> /usr/local/share/jupyter/nbextensions/exercise/image.gif
+#15 2.504 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/exercise/main.css -> /usr/local/share/jupyter/nbextensions/exercise/main.css
+#15 2.504 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/exercise/history.md -> /usr/local/share/jupyter/nbextensions/exercise/history.md
+#15 2.504 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/exercise/readme.md -> /usr/local/share/jupyter/nbextensions/exercise/readme.md
+#15 2.504 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/exercise/main.js -> /usr/local/share/jupyter/nbextensions/exercise/main.js
+#15 2.505 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/exercise/icon.png -> /usr/local/share/jupyter/nbextensions/exercise/icon.png
+#15 2.505 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.505 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/move_selected_cells -> move_selected_cells
+#15 2.505 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/move_selected_cells/
+#15 2.505 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/move_selected_cells/move_selected_cells.yaml -> /usr/local/share/jupyter/nbextensions/move_selected_cells/move_selected_cells.yaml
+#15 2.505 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/move_selected_cells/main.js -> /usr/local/share/jupyter/nbextensions/move_selected_cells/main.js
+#15 2.506 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/move_selected_cells/README.md -> /usr/local/share/jupyter/nbextensions/move_selected_cells/README.md
+#15 2.506 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.506 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hinterland -> hinterland
+#15 2.507 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/hinterland/
+#15 2.507 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hinterland/hinterland.js -> /usr/local/share/jupyter/nbextensions/hinterland/hinterland.js
+#15 2.507 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hinterland/README.md -> /usr/local/share/jupyter/nbextensions/hinterland/README.md
+#15 2.507 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hinterland/hinterland.yaml -> /usr/local/share/jupyter/nbextensions/hinterland/hinterland.yaml
+#15 2.507 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.507 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/navigation-hotkeys -> navigation-hotkeys
+#15 2.507 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/navigation-hotkeys/
+#15 2.508 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/navigation-hotkeys/readme.md -> /usr/local/share/jupyter/nbextensions/navigation-hotkeys/readme.md
+#15 2.508 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/navigation-hotkeys/main.js -> /usr/local/share/jupyter/nbextensions/navigation-hotkeys/main.js
+#15 2.508 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/navigation-hotkeys/icon.png -> /usr/local/share/jupyter/nbextensions/navigation-hotkeys/icon.png
+#15 2.508 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/navigation-hotkeys/hotkeys.yaml -> /usr/local/share/jupyter/nbextensions/navigation-hotkeys/hotkeys.yaml
+#15 2.509 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.509 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/ruler -> ruler
+#15 2.509 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/ruler/
+#15 2.509 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/ruler/ruler.yaml -> /usr/local/share/jupyter/nbextensions/ruler/ruler.yaml
+#15 2.509 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/ruler/readme.md -> /usr/local/share/jupyter/nbextensions/ruler/readme.md
+#15 2.509 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/ruler/ruler_editor.yaml -> /usr/local/share/jupyter/nbextensions/ruler/ruler_editor.yaml
+#15 2.509 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/ruler/edit.js -> /usr/local/share/jupyter/nbextensions/ruler/edit.js
+#15 2.509 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/ruler/main.js -> /usr/local/share/jupyter/nbextensions/ruler/main.js
+#15 2.510 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/ruler/icon.png -> /usr/local/share/jupyter/nbextensions/ruler/icon.png
+#15 2.510 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.510 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/ruler -> ruler
+#15 2.511 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/ruler/ruler.yaml
+#15 2.511 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/ruler/readme.md
+#15 2.511 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/ruler/ruler_editor.yaml
+#15 2.511 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/ruler/edit.js
+#15 2.511 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/ruler/main.js
+#15 2.511 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/ruler/icon.png
+#15 2.511 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.511 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/comment-uncomment -> comment-uncomment
+#15 2.511 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/comment-uncomment/
+#15 2.511 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/comment-uncomment/comment-uncomment.yaml -> /usr/local/share/jupyter/nbextensions/comment-uncomment/comment-uncomment.yaml
+#15 2.511 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/comment-uncomment/readme.md -> /usr/local/share/jupyter/nbextensions/comment-uncomment/readme.md
+#15 2.511 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/comment-uncomment/main.js -> /usr/local/share/jupyter/nbextensions/comment-uncomment/main.js
+#15 2.511 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/comment-uncomment/icon.png -> /usr/local/share/jupyter/nbextensions/comment-uncomment/icon.png
+#15 2.513 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.513 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/datestamper -> datestamper
+#15 2.513 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/datestamper/
+#15 2.513 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/datestamper/main.yaml -> /usr/local/share/jupyter/nbextensions/datestamper/main.yaml
+#15 2.513 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/datestamper/readme.md -> /usr/local/share/jupyter/nbextensions/datestamper/readme.md
+#15 2.513 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/datestamper/main.js -> /usr/local/share/jupyter/nbextensions/datestamper/main.js
+#15 2.513 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/datestamper/icon.png -> /usr/local/share/jupyter/nbextensions/datestamper/icon.png
+#15 2.513 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.513 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hide_input -> hide_input
+#15 2.513 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/hide_input/
+#15 2.513 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hide_input/readme.md -> /usr/local/share/jupyter/nbextensions/hide_input/readme.md
+#15 2.513 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hide_input/hide-input.yaml -> /usr/local/share/jupyter/nbextensions/hide_input/hide-input.yaml
+#15 2.513 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hide_input/main.js -> /usr/local/share/jupyter/nbextensions/hide_input/main.js
+#15 2.514 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hide_input/icon.png -> /usr/local/share/jupyter/nbextensions/hide_input/icon.png
+#15 2.514 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.514 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/varInspector -> varInspector
+#15 2.514 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/varInspector/
+#15 2.514 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/tablesorter_LICENSE.txt -> /usr/local/share/jupyter/nbextensions/varInspector/tablesorter_LICENSE.txt
+#15 2.515 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/var_list.r -> /usr/local/share/jupyter/nbextensions/varInspector/var_list.r
+#15 2.515 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/main.css -> /usr/local/share/jupyter/nbextensions/varInspector/main.css
+#15 2.515 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/main.js -> /usr/local/share/jupyter/nbextensions/varInspector/main.js
+#15 2.515 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/README.md -> /usr/local/share/jupyter/nbextensions/varInspector/README.md
+#15 2.515 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/var_list.py -> /usr/local/share/jupyter/nbextensions/varInspector/var_list.py
+#15 2.515 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/demo.gif -> /usr/local/share/jupyter/nbextensions/varInspector/demo.gif
+#15 2.516 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/jquery.tablesorter.min.js -> /usr/local/share/jupyter/nbextensions/varInspector/jquery.tablesorter.min.js
+#15 2.517 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/icon.png -> /usr/local/share/jupyter/nbextensions/varInspector/icon.png
+#15 2.517 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/varInspector.yaml -> /usr/local/share/jupyter/nbextensions/varInspector/varInspector.yaml
+#15 2.517 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/varInspector/__pycache__
+#15 2.517 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/varInspector/__pycache__/var_list.cpython-38.pyc -> /usr/local/share/jupyter/nbextensions/varInspector/__pycache__/var_list.cpython-38.pyc
+#15 2.517 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.517 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codemirror_mode_extensions -> codemirror_mode_extensions
+#15 2.517 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/codemirror_mode_extensions/
+#15 2.518 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codemirror_mode_extensions/main.js -> /usr/local/share/jupyter/nbextensions/codemirror_mode_extensions/main.js
+#15 2.518 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/codemirror_mode_extensions/codemirror_mode_extensions.yaml -> /usr/local/share/jupyter/nbextensions/codemirror_mode_extensions/codemirror_mode_extensions.yaml
+#15 2.518 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.518 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/execute_time -> execute_time
+#15 2.518 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/execute_time/
+#15 2.518 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/execute_time/readme.md -> /usr/local/share/jupyter/nbextensions/execute_time/readme.md
+#15 2.519 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/execute_time/ExecuteTime.yaml -> /usr/local/share/jupyter/nbextensions/execute_time/ExecuteTime.yaml
+#15 2.519 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/execute_time/ExecuteTime.css -> /usr/local/share/jupyter/nbextensions/execute_time/ExecuteTime.css
+#15 2.519 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/execute_time/execution-timings-box.png -> /usr/local/share/jupyter/nbextensions/execute_time/execution-timings-box.png
+#15 2.519 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/execute_time/execution-timings-menu.png -> /usr/local/share/jupyter/nbextensions/execute_time/execution-timings-menu.png
+#15 2.520 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/execute_time/ExecuteTime.js -> /usr/local/share/jupyter/nbextensions/execute_time/ExecuteTime.js
+#15 2.520 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/execute_time/icon.png -> /usr/local/share/jupyter/nbextensions/execute_time/icon.png
+#15 2.520 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.520 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/select_keymap -> select_keymap
+#15 2.520 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/select_keymap/
+#15 2.520 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/select_keymap/select_keymap.png -> /usr/local/share/jupyter/nbextensions/select_keymap/select_keymap.png
+#15 2.521 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/select_keymap/main.js -> /usr/local/share/jupyter/nbextensions/select_keymap/main.js
+#15 2.521 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/select_keymap/select_keymap.yaml -> /usr/local/share/jupyter/nbextensions/select_keymap/select_keymap.yaml
+#15 2.521 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/select_keymap/README.md -> /usr/local/share/jupyter/nbextensions/select_keymap/README.md
+#15 2.522 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.522 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/collapsible_headings -> collapsible_headings
+#15 2.522 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/collapsible_headings/
+#15 2.523 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/collapsible_headings/screenshot.png -> /usr/local/share/jupyter/nbextensions/collapsible_headings/screenshot.png
+#15 2.523 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/collapsible_headings/main.css -> /usr/local/share/jupyter/nbextensions/collapsible_headings/main.css
+#15 2.523 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/collapsible_headings/readme.md -> /usr/local/share/jupyter/nbextensions/collapsible_headings/readme.md
+#15 2.523 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/collapsible_headings/collapsible_headings.yaml -> /usr/local/share/jupyter/nbextensions/collapsible_headings/collapsible_headings.yaml
+#15 2.524 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/collapsible_headings/main.js -> /usr/local/share/jupyter/nbextensions/collapsible_headings/main.js
+#15 2.524 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/collapsible_headings/icon.png -> /usr/local/share/jupyter/nbextensions/collapsible_headings/icon.png
+#15 2.524 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.524 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/autoscroll -> autoscroll
+#15 2.525 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/autoscroll/
+#15 2.525 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/autoscroll/autoscroll.yaml -> /usr/local/share/jupyter/nbextensions/autoscroll/autoscroll.yaml
+#15 2.525 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/autoscroll/main.js -> /usr/local/share/jupyter/nbextensions/autoscroll/main.js
+#15 2.525 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/autoscroll/README.md -> /usr/local/share/jupyter/nbextensions/autoscroll/README.md
+#15 2.525 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/autoscroll/icon.png -> /usr/local/share/jupyter/nbextensions/autoscroll/icon.png
+#15 2.525 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.525 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hide_input_all -> hide_input_all
+#15 2.526 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/hide_input_all/
+#15 2.526 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hide_input_all/readme.md -> /usr/local/share/jupyter/nbextensions/hide_input_all/readme.md
+#15 2.526 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hide_input_all/hide_input_all_show.png -> /usr/local/share/jupyter/nbextensions/hide_input_all/hide_input_all_show.png
+#15 2.527 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hide_input_all/main.js -> /usr/local/share/jupyter/nbextensions/hide_input_all/main.js
+#15 2.527 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hide_input_all/hide_input_all.yaml -> /usr/local/share/jupyter/nbextensions/hide_input_all/hide_input_all.yaml
+#15 2.527 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hide_input_all/icon.png -> /usr/local/share/jupyter/nbextensions/hide_input_all/icon.png
+#15 2.527 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hide_input_all/hide_input_all_hide.png -> /usr/local/share/jupyter/nbextensions/hide_input_all/hide_input_all_hide.png
+#15 2.527 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.527 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/runtools -> runtools
+#15 2.527 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/runtools/
+#15 2.527 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/runtools/runtools_lock.png -> /usr/local/share/jupyter/nbextensions/runtools/runtools_lock.png
+#15 2.529 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/runtools/runtools.yaml -> /usr/local/share/jupyter/nbextensions/runtools/runtools.yaml
+#15 2.530 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/runtools/cellstate.js -> /usr/local/share/jupyter/nbextensions/runtools/cellstate.js
+#15 2.530 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/runtools/main.css -> /usr/local/share/jupyter/nbextensions/runtools/main.css
+#15 2.531 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/runtools/gutter.css -> /usr/local/share/jupyter/nbextensions/runtools/gutter.css
+#15 2.531 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/runtools/readme.md -> /usr/local/share/jupyter/nbextensions/runtools/readme.md
+#15 2.531 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/runtools/annotations.odg -> /usr/local/share/jupyter/nbextensions/runtools/annotations.odg
+#15 2.532 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/runtools/runtools_show_hide.png -> /usr/local/share/jupyter/nbextensions/runtools/runtools_show_hide.png
+#15 2.532 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/runtools/runtools_marker.png -> /usr/local/share/jupyter/nbextensions/runtools/runtools_marker.png
+#15 2.532 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/runtools/main.js -> /usr/local/share/jupyter/nbextensions/runtools/main.js
+#15 2.532 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/runtools/runtools_execute.png -> /usr/local/share/jupyter/nbextensions/runtools/runtools_execute.png
+#15 2.533 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/runtools/demo.gif -> /usr/local/share/jupyter/nbextensions/runtools/demo.gif
+#15 2.534 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/runtools/icon.png -> /usr/local/share/jupyter/nbextensions/runtools/icon.png
+#15 2.534 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/runtools/runtools_nb.png -> /usr/local/share/jupyter/nbextensions/runtools/runtools_nb.png
+#15 2.535 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.535 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/toggle_all_line_numbers -> toggle_all_line_numbers
+#15 2.535 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/toggle_all_line_numbers/
+#15 2.535 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/toggle_all_line_numbers/main.yaml -> /usr/local/share/jupyter/nbextensions/toggle_all_line_numbers/main.yaml
+#15 2.535 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/toggle_all_line_numbers/readme.md -> /usr/local/share/jupyter/nbextensions/toggle_all_line_numbers/readme.md
+#15 2.536 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/toggle_all_line_numbers/main.js -> /usr/local/share/jupyter/nbextensions/toggle_all_line_numbers/main.js
+#15 2.536 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/toggle_all_line_numbers/icon.png -> /usr/local/share/jupyter/nbextensions/toggle_all_line_numbers/icon.png
+#15 2.537 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.537 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/freeze -> freeze
+#15 2.537 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/freeze/
+#15 2.538 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/freeze/readme.md -> /usr/local/share/jupyter/nbextensions/freeze/readme.md
+#15 2.538 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/freeze/main.js -> /usr/local/share/jupyter/nbextensions/freeze/main.js
+#15 2.538 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/freeze/config.yaml -> /usr/local/share/jupyter/nbextensions/freeze/config.yaml
+#15 2.538 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/freeze/icon.png -> /usr/local/share/jupyter/nbextensions/freeze/icon.png
+#15 2.539 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.539 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/gist_it -> gist_it
+#15 2.540 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/gist_it/
+#15 2.540 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/gist_it/readme.md -> /usr/local/share/jupyter/nbextensions/gist_it/readme.md
+#15 2.540 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/gist_it/main.js -> /usr/local/share/jupyter/nbextensions/gist_it/main.js
+#15 2.540 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/gist_it/gist_it.yaml -> /usr/local/share/jupyter/nbextensions/gist_it/gist_it.yaml
+#15 2.540 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/gist_it/icon.png -> /usr/local/share/jupyter/nbextensions/gist_it/icon.png
+#15 2.541 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.541 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/cell_filter -> cell_filter
+#15 2.541 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/cell_filter/
+#15 2.541 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/cell_filter/cell_filter.js -> /usr/local/share/jupyter/nbextensions/cell_filter/cell_filter.js
+#15 2.541 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/cell_filter/cell_filter.yml -> /usr/local/share/jupyter/nbextensions/cell_filter/cell_filter.yml
+#15 2.542 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/cell_filter/README.md -> /usr/local/share/jupyter/nbextensions/cell_filter/README.md
+#15 2.542 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.542 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/zenmode -> zenmode
+#15 2.542 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/zenmode/
+#15 2.542 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/main.css -> /usr/local/share/jupyter/nbextensions/zenmode/main.css
+#15 2.543 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/zenmode.yaml -> /usr/local/share/jupyter/nbextensions/zenmode/zenmode.yaml
+#15 2.543 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/main.js -> /usr/local/share/jupyter/nbextensions/zenmode/main.js
+#15 2.543 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/README.md -> /usr/local/share/jupyter/nbextensions/zenmode/README.md
+#15 2.543 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/zenmode/images
+#15 2.543 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/images/back3.jpg -> /usr/local/share/jupyter/nbextensions/zenmode/images/back3.jpg
+#15 2.544 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/images/back21.jpg -> /usr/local/share/jupyter/nbextensions/zenmode/images/back21.jpg
+#15 2.544 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/images/back12.jpg -> /usr/local/share/jupyter/nbextensions/zenmode/images/back12.jpg
+#15 2.545 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/images/ipynblogo1.png -> /usr/local/share/jupyter/nbextensions/zenmode/images/ipynblogo1.png
+#15 2.546 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/images/back22.jpg -> /usr/local/share/jupyter/nbextensions/zenmode/images/back22.jpg
+#15 2.546 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/images/back2.jpg -> /usr/local/share/jupyter/nbextensions/zenmode/images/back2.jpg
+#15 2.546 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/images/ipynblogo0.png -> /usr/local/share/jupyter/nbextensions/zenmode/images/ipynblogo0.png
+#15 2.547 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/images/back11.jpg -> /usr/local/share/jupyter/nbextensions/zenmode/images/back11.jpg
+#15 2.547 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/zenmode/images/back1.jpg -> /usr/local/share/jupyter/nbextensions/zenmode/images/back1.jpg
+#15 2.548 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.548 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/splitcell -> splitcell
+#15 2.548 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/splitcell/
+#15 2.548 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/splitcell/splitcell.js -> /usr/local/share/jupyter/nbextensions/splitcell/splitcell.js
+#15 2.548 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/splitcell/readme.md -> /usr/local/share/jupyter/nbextensions/splitcell/readme.md
+#15 2.548 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/splitcell/splitcell.yaml -> /usr/local/share/jupyter/nbextensions/splitcell/splitcell.yaml
+#15 2.549 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/splitcell/icon.png -> /usr/local/share/jupyter/nbextensions/splitcell/icon.png
+#15 2.549 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.549 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/rubberband -> rubberband
+#15 2.549 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/rubberband/
+#15 2.550 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/rubberband/rubberband.yaml -> /usr/local/share/jupyter/nbextensions/rubberband/rubberband.yaml
+#15 2.550 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/rubberband/main.css -> /usr/local/share/jupyter/nbextensions/rubberband/main.css
+#15 2.550 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/rubberband/readme.md -> /usr/local/share/jupyter/nbextensions/rubberband/readme.md
+#15 2.551 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/rubberband/main.js -> /usr/local/share/jupyter/nbextensions/rubberband/main.js
+#15 2.551 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/rubberband/icon.png -> /usr/local/share/jupyter/nbextensions/rubberband/icon.png
+#15 2.551 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.551 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/scratchpad -> scratchpad
+#15 2.553 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/scratchpad/
+#15 2.553 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/scratchpad/main.js -> /usr/local/share/jupyter/nbextensions/scratchpad/main.js
+#15 2.553 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/scratchpad/README.md -> /usr/local/share/jupyter/nbextensions/scratchpad/README.md
+#15 2.553 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/scratchpad/scratchpad.css -> /usr/local/share/jupyter/nbextensions/scratchpad/scratchpad.css
+#15 2.553 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/scratchpad/demo.gif -> /usr/local/share/jupyter/nbextensions/scratchpad/demo.gif
+#15 2.554 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/scratchpad/LICENSE -> /usr/local/share/jupyter/nbextensions/scratchpad/LICENSE
+#15 2.554 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/scratchpad/scratchpad.yaml -> /usr/local/share/jupyter/nbextensions/scratchpad/scratchpad.yaml
+#15 2.554 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.555 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/autosavetime -> autosavetime
+#15 2.557 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/autosavetime/
+#15 2.557 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/autosavetime/autosavetime.yaml -> /usr/local/share/jupyter/nbextensions/autosavetime/autosavetime.yaml
+#15 2.557 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/autosavetime/main.js -> /usr/local/share/jupyter/nbextensions/autosavetime/main.js
+#15 2.557 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/autosavetime/README.md -> /usr/local/share/jupyter/nbextensions/autosavetime/README.md
+#15 2.557 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/autosavetime/icon.png -> /usr/local/share/jupyter/nbextensions/autosavetime/icon.png
+#15 2.557 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.557 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/limit_output -> limit_output
+#15 2.557 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/limit_output/
+#15 2.557 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/limit_output/readme.md -> /usr/local/share/jupyter/nbextensions/limit_output/readme.md
+#15 2.557 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/limit_output/limit-output.yaml -> /usr/local/share/jupyter/nbextensions/limit_output/limit-output.yaml
+#15 2.557 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/limit_output/main.js -> /usr/local/share/jupyter/nbextensions/limit_output/main.js
+#15 2.557 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/limit_output/icon.png -> /usr/local/share/jupyter/nbextensions/limit_output/icon.png
+#15 2.558 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.558 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/addbefore -> addbefore
+#15 2.558 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/addbefore/
+#15 2.558 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/addbefore/addbefore.yaml -> /usr/local/share/jupyter/nbextensions/addbefore/addbefore.yaml
+#15 2.558 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/addbefore/readme.md -> /usr/local/share/jupyter/nbextensions/addbefore/readme.md
+#15 2.559 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/addbefore/main.js -> /usr/local/share/jupyter/nbextensions/addbefore/main.js
+#15 2.559 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/addbefore/icon.png -> /usr/local/share/jupyter/nbextensions/addbefore/icon.png
+#15 2.559 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.559 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/equation-numbering -> equation-numbering
+#15 2.559 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/equation-numbering/
+#15 2.560 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/equation-numbering/info.yaml -> /usr/local/share/jupyter/nbextensions/equation-numbering/info.yaml
+#15 2.560 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/equation-numbering/button.png -> /usr/local/share/jupyter/nbextensions/equation-numbering/button.png
+#15 2.560 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/equation-numbering/readme.md -> /usr/local/share/jupyter/nbextensions/equation-numbering/readme.md
+#15 2.561 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/equation-numbering/main.js -> /usr/local/share/jupyter/nbextensions/equation-numbering/main.js
+#15 2.561 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/equation-numbering/icon.png -> /usr/local/share/jupyter/nbextensions/equation-numbering/icon.png
+#15 2.561 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.561 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hide_header -> hide_header
+#15 2.562 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/hide_header/
+#15 2.562 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hide_header/hide_header.yaml -> /usr/local/share/jupyter/nbextensions/hide_header/hide_header.yaml
+#15 2.562 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hide_header/main.js -> /usr/local/share/jupyter/nbextensions/hide_header/main.js
+#15 2.562 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/hide_header/README.md -> /usr/local/share/jupyter/nbextensions/hide_header/README.md
+#15 2.562 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.562 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify -> code_prettify
+#15 2.563 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/code_prettify/
+#15 2.563 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/autopep8.yaml -> /usr/local/share/jupyter/nbextensions/code_prettify/autopep8.yaml
+#15 2.563 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/README_code_prettify.md -> /usr/local/share/jupyter/nbextensions/code_prettify/README_code_prettify.md
+#15 2.563 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/isort.yaml -> /usr/local/share/jupyter/nbextensions/code_prettify/isort.yaml
+#15 2.564 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/autopep8.js -> /usr/local/share/jupyter/nbextensions/code_prettify/autopep8.js
+#15 2.564 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/2to3.yaml -> /usr/local/share/jupyter/nbextensions/code_prettify/2to3.yaml
+#15 2.564 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/demo-R.gif -> /usr/local/share/jupyter/nbextensions/code_prettify/demo-R.gif
+#15 2.565 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/demo-jv.gif -> /usr/local/share/jupyter/nbextensions/code_prettify/demo-jv.gif
+#15 2.566 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/README_2to3.md -> /usr/local/share/jupyter/nbextensions/code_prettify/README_2to3.md
+#15 2.566 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/demo_2to3.gif -> /usr/local/share/jupyter/nbextensions/code_prettify/demo_2to3.gif
+#15 2.566 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/kernel_exec_on_cell.js -> /usr/local/share/jupyter/nbextensions/code_prettify/kernel_exec_on_cell.js
+#15 2.566 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/README_isort.md -> /usr/local/share/jupyter/nbextensions/code_prettify/README_isort.md
+#15 2.566 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/README.md -> /usr/local/share/jupyter/nbextensions/code_prettify/README.md
+#15 2.567 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/code_prettify.yaml -> /usr/local/share/jupyter/nbextensions/code_prettify/code_prettify.yaml
+#15 2.567 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/2to3.js -> /usr/local/share/jupyter/nbextensions/code_prettify/2to3.js
+#15 2.567 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/README_autopep8.md -> /usr/local/share/jupyter/nbextensions/code_prettify/README_autopep8.md
+#15 2.567 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/demo-py.gif -> /usr/local/share/jupyter/nbextensions/code_prettify/demo-py.gif
+#15 2.567 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/isort.js -> /usr/local/share/jupyter/nbextensions/code_prettify/isort.js
+#15 2.568 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify/code_prettify.js -> /usr/local/share/jupyter/nbextensions/code_prettify/code_prettify.js
+#15 2.568 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.568 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify -> code_prettify
+#15 2.568 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/autopep8.yaml
+#15 2.568 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/README_code_prettify.md
+#15 2.568 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/isort.yaml
+#15 2.568 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/autopep8.js
+#15 2.568 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/2to3.yaml
+#15 2.568 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/demo-R.gif
+#15 2.569 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/demo-jv.gif
+#15 2.569 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/README_2to3.md
+#15 2.569 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/demo_2to3.gif
+#15 2.569 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/kernel_exec_on_cell.js
+#15 2.569 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/README_isort.md
+#15 2.569 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/README.md
+#15 2.569 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/code_prettify.yaml
+#15 2.569 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/2to3.js
+#15 2.569 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/README_autopep8.md
+#15 2.569 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/demo-py.gif
+#15 2.569 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/isort.js
+#15 2.569 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/code_prettify.js
+#15 2.569 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.569 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify -> code_prettify
+#15 2.570 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/autopep8.yaml
+#15 2.570 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/README_code_prettify.md
+#15 2.570 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/isort.yaml
+#15 2.570 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/autopep8.js
+#15 2.570 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/2to3.yaml
+#15 2.570 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/demo-R.gif
+#15 2.570 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/demo-jv.gif
+#15 2.570 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/README_2to3.md
+#15 2.570 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/demo_2to3.gif
+#15 2.570 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/kernel_exec_on_cell.js
+#15 2.570 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/README_isort.md
+#15 2.570 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/README.md
+#15 2.570 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/code_prettify.yaml
+#15 2.570 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/2to3.js
+#15 2.570 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/README_autopep8.md
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/demo-py.gif
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/isort.js
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/code_prettify.js
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_contrib_nbextensions/nbextensions/code_prettify -> code_prettify
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/autopep8.yaml
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/README_code_prettify.md
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/isort.yaml
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/autopep8.js
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/2to3.yaml
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/demo-R.gif
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/demo-jv.gif
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/README_2to3.md
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/demo_2to3.gif
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/kernel_exec_on_cell.js
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/README_isort.md
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/README.md
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/code_prettify.yaml
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/2to3.js
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/README_autopep8.md
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/demo-py.gif
+#15 2.571 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/isort.js
+#15 2.572 [I 00:11:20 InstallContribNbextensionsApp] Up to date: /usr/local/share/jupyter/nbextensions/code_prettify/code_prettify.js
+#15 2.572 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.572 [I 00:11:20 InstallContribNbextensionsApp] Installing /usr/local/lib/python3.8/dist-packages/jupyter_highlight_selected_word/static/highlight_selected_word -> highlight_selected_word
+#15 2.572 [I 00:11:20 InstallContribNbextensionsApp] Making directory: /usr/local/share/jupyter/nbextensions/highlight_selected_word/
+#15 2.572 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_highlight_selected_word/static/highlight_selected_word/configurator.yaml -> /usr/local/share/jupyter/nbextensions/highlight_selected_word/configurator.yaml
+#15 2.573 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_highlight_selected_word/static/highlight_selected_word/main.js -> /usr/local/share/jupyter/nbextensions/highlight_selected_word/main.js
+#15 2.573 [I 00:11:20 InstallContribNbextensionsApp] Copying: /usr/local/lib/python3.8/dist-packages/jupyter_highlight_selected_word/static/highlight_selected_word/README.md -> /usr/local/share/jupyter/nbextensions/highlight_selected_word/README.md
+#15 2.574 [I 00:11:20 InstallContribNbextensionsApp] - Validating: [32mOK[0m
+#15 2.574 [I 00:11:20 InstallContribNbextensionsApp] Installing jupyter_contrib_nbextensions items to config in /usr/local/etc/jupyter
+#15 2.575 Enabling: jupyter_nbextensions_configurator
+#15 2.575 - Writing config: /usr/local/etc/jupyter
+#15 2.578     - Validating...
+#15 2.578       jupyter_nbextensions_configurator 0.6.4 [32mOK[0m
+#15 2.578 Enabling notebook nbextension nbextensions_configurator/config_menu/main...
+#15 2.581 Enabling tree nbextension nbextensions_configurator/tree_tab/main...
+#15 2.582 [I 00:11:20 InstallContribNbextensionsApp] Enabling notebook extension contrib_nbextensions_help_item/main...
+#15 2.583 [I 00:11:20 InstallContribNbextensionsApp]       - Validating: [32mOK[0m
+#15 2.583 [I 00:11:20 InstallContribNbextensionsApp] - Editing config: /usr/local/etc/jupyter/jupyter_nbconvert_config.json
+#15 2.583 [I 00:11:20 InstallContribNbextensionsApp] --  Configuring nbconvert template path
+#15 2.583 [I 00:11:20 InstallContribNbextensionsApp] --  Configuring nbconvert preprocessors
+#15 2.584 [I 00:11:20 InstallContribNbextensionsApp] - Writing config: /usr/local/etc/jupyter/jupyter_nbconvert_config.json
+#15 2.584 [I 00:11:20 InstallContribNbextensionsApp] --  Writing updated config file /usr/local/etc/jupyter/jupyter_nbconvert_config.json
+#15 2.681 + extensions='
+#15 2.681 autosavetime/main
+#15 2.681 code_prettify/code_prettify
+#15 2.681 collapsible_headings/main
+#15 2.681 comment-uncomment/main
+#15 2.681 contrib_nbextensions_help_item/main
+#15 2.681 execute_time/ExecuteTime
+#15 2.681 highlighter/highlighter
+#15 2.681 jupyter-js-widgets/extension
+#15 2.681 notify/notify
+#15 2.681 runtools/main
+#15 2.681 toc2/main
+#15 2.681 spellchecker/main'
+#15 2.681 + for v in $extensions
+#15 2.681 + jupyter nbextension enable autosavetime/main
+#15 2.876 Enabling notebook extension autosavetime/main...
+#15 2.878       - Validating: [32mOK[0m
+#15 2.893 + for v in $extensions
+#15 2.893 + jupyter nbextension enable code_prettify/code_prettify
+#15 3.071 Enabling notebook extension code_prettify/code_prettify...
+#15 3.073       - Validating: [32mOK[0m
+#15 3.088 + for v in $extensions
+#15 3.088 + jupyter nbextension enable collapsible_headings/main
+#15 3.297 Enabling notebook extension collapsible_headings/main...
+#15 3.298       - Validating: [32mOK[0m
+#15 3.317 + for v in $extensions
+#15 3.317 + jupyter nbextension enable comment-uncomment/main
+#15 3.498 Enabling notebook extension comment-uncomment/main...
+#15 3.499       - Validating: [32mOK[0m
+#15 3.515 + for v in $extensions
+#15 3.515 + jupyter nbextension enable contrib_nbextensions_help_item/main
+#15 3.704 Enabling notebook extension contrib_nbextensions_help_item/main...
+#15 3.706       - Validating: [32mOK[0m
+#15 3.722 + for v in $extensions
+#15 3.722 + jupyter nbextension enable execute_time/ExecuteTime
+#15 3.911 Enabling notebook extension execute_time/ExecuteTime...
+#15 3.912       - Validating: [32mOK[0m
+#15 3.928 + for v in $extensions
+#15 3.928 + jupyter nbextension enable highlighter/highlighter
+#15 4.111 Enabling notebook extension highlighter/highlighter...
+#15 4.112       - Validating: [32mOK[0m
+#15 4.126 + for v in $extensions
+#15 4.126 + jupyter nbextension enable jupyter-js-widgets/extension
+#15 4.308 Enabling notebook extension jupyter-js-widgets/extension...
+#15 4.309       - Validating: [32mOK[0m
+#15 4.331 + for v in $extensions
+#15 4.331 + jupyter nbextension enable notify/notify
+#15 4.524 Enabling notebook extension notify/notify...
+#15 4.526       - Validating: [32mOK[0m
+#15 4.544 + for v in $extensions
+#15 4.544 + jupyter nbextension enable runtools/main
+#15 4.728 Enabling notebook extension runtools/main...
+#15 4.729       - Validating: [32mOK[0m
+#15 4.746 + for v in $extensions
+#15 4.746 + jupyter nbextension enable toc2/main
+#15 4.951 Enabling notebook extension toc2/main...
+#15 4.952       - Validating: [32mOK[0m
+#15 4.971 + for v in $extensions
+#15 4.971 + jupyter nbextension enable spellchecker/main
+#15 5.163 Enabling notebook extension spellchecker/main...
+#15 5.164       - Validating: [32mOK[0m
+#15 5.183 + echo '{"nbext_hide_incompat": false}'
+#15 5.184 ++ jupyter --data-dir
+#15 5.260 + DIR=/root/.local/share/jupyter/nbextensions
+#15 5.260 + [[ ! -e /root/.local/share/jupyter/nbextensions ]]
+#15 5.260 + mkdir /root/.local/share/jupyter/nbextensions
+#15 5.263 + cd /root/.local/share/jupyter/nbextensions
+#15 5.263 + [[ -e vim_binding ]]
+#15 5.263 + git clone https://github.com/lambdalisue/jupyter-vim-binding vim_binding
+#15 5.287 Cloning into 'vim_binding'...
+#15 6.349 + jupyter notebook --generate-config -y
+#15 6.752 Writing default config to: /root/.jupyter/jupyter_notebook_config.py
+#15 DONE 6.9s
+
+#16 [11/15] ADD etc_sudoers /install/
+#16 DONE 0.1s
+
+#17 [12/15] COPY etc_sudoers /etc/sudoers
+#17 DONE 0.0s
+
+#18 [13/15] COPY bashrc /root/.bashrc
+#18 DONE 0.0s
+
+#19 [14/15] ADD version.sh /install/
+#19 DONE 0.0s
+
+#20 [15/15] RUN /install/version.sh 2>&1 | tee version.log
+#20 0.234 # Pytho3
+#20 0.234 Python 3.8.10
+#20 0.234 # pip3
+#20 0.534 pip 25.0.1 from /usr/local/lib/python3.8/dist-packages/pip (python 3.8)
+#20 0.583 # jupyter
+#20 1.391 Selected Jupyter core packages...
+#20 1.391 IPython          : 8.12.3
+#20 1.391 ipykernel        : 6.29.5
+#20 1.391 ipywidgets       : 8.1.6
+#20 1.391 jupyter_client   : 7.3.2
+#20 1.391 jupyter_core     : 5.7.2
+#20 1.391 jupyter_server   : 1.24.0
+#20 1.391 jupyterlab       : not installed
+#20 1.391 nbclient         : 0.10.1
+#20 1.391 nbconvert        : 7.16.6
+#20 1.391 nbformat         : 5.10.4
+#20 1.391 notebook         : 6.5.7
+#20 1.391 qtconsole        : not installed
+#20 1.391 traitlets        : 5.14.3
+#20 1.484 # Python packages
+#20 1.814 Package                           Version
+#20 1.815 --------------------------------- -----------
+#20 1.815 anyio                             3.7.1
+#20 1.816 argon2-cffi                       23.1.0
+#20 1.817 argon2-cffi-bindings              21.2.0
+#20 1.817 asttokens                         3.0.0
+#20 1.817 attrs                             25.3.0
+#20 1.818 backcall                          0.2.0
+#20 1.818 beautifulsoup4                    4.13.4
+#20 1.819 bleach                            6.1.0
+#20 1.819 blinker                           1.8.2
+#20 1.819 category-encoders                 2.6.4
+#20 1.820 certifi                           2025.4.26
+#20 1.820 cffi                              1.17.1
+#20 1.820 charset-normalizer                3.4.1
+#20 1.820 click                             8.1.8
+#20 1.821 cloudpickle                       3.1.1
+#20 1.822 comm                              0.2.2
+#20 1.822 contourpy                         1.1.1
+#20 1.822 cycler                            0.12.1
+#20 1.823 Cython                            3.0.12
+#20 1.823 dash                              3.0.4
+#20 1.824 debugpy                           1.8.14
+#20 1.825 decorator                         5.2.1
+#20 1.825 defusedxml                        0.7.1
+#20 1.825 Deprecated                        1.2.18
+#20 1.825 deprecation                       2.1.0
+#20 1.826 entrypoints                       0.4
+#20 1.826 exceptiongroup                    1.2.2
+#20 1.829 executing                         2.2.0
+#20 1.829 fastjsonschema                    2.21.1
+#20 1.829 Flask                             3.0.3
+#20 1.829 fonttools                         4.57.0
+#20 1.829 idna                              3.10
+#20 1.829 imbalanced-learn                  0.12.4
+#20 1.829 importlib_metadata                8.5.0
+#20 1.829 importlib_resources               6.4.5
+#20 1.829 ipykernel                         6.29.5
+#20 1.829 ipython                           8.12.3
+#20 1.829 ipython-genutils                  0.2.0
+#20 1.829 ipywidgets                        8.1.6
+#20 1.830 itsdangerous                      2.2.0
+#20 1.830 jedi                              0.19.2
+#20 1.830 Jinja2                            3.1.6
+#20 1.830 joblib                            1.4.2
+#20 1.830 jsonschema                        4.23.0
+#20 1.831 jsonschema-specifications         2023.12.1
+#20 1.831 jupyter-client                    7.3.2
+#20 1.832 jupyter-contrib-core              0.4.2
+#20 1.833 jupyter-contrib-nbextensions      0.7.0
+#20 1.833 jupyter_core                      5.7.2
+#20 1.834 jupyter-highlight-selected-word   0.2.0
+#20 1.834 jupyter_nbextensions_configurator 0.6.4
+#20 1.836 jupyter-server                    1.24.0
+#20 1.838 jupyterlab_pygments               0.3.0
+#20 1.838 jupyterlab_widgets                3.0.14
+#20 1.838 kaleido                           0.2.1
+#20 1.838 kiwisolver                        1.4.7
+#20 1.838 lightgbm                          4.6.0
+#20 1.838 llvmlite                          0.41.1
+#20 1.838 lxml                              5.4.0
+#20 1.838 MarkupSafe                        2.1.5
+#20 1.838 matplotlib                        3.6.0
+#20 1.839 matplotlib-inline                 0.1.7
+#20 1.839 mistune                           3.1.3
+#20 1.840 nbclassic                         1.2.0
+#20 1.840 nbclient                          0.10.1
+#20 1.841 nbconvert                         7.16.6
+#20 1.841 nbformat                          5.10.4
+#20 1.842 nest-asyncio                      1.6.0
+#20 1.842 notebook                          6.5.7
+#20 1.844 notebook_shim                     0.2.4
+#20 1.844 numba                             0.58.1
+#20 1.844 numpy                             1.24.4
+#20 1.844 orjson                            3.10.15
+#20 1.844 packaging                         25.0
+#20 1.844 pandas                            1.5.3
+#20 1.845 pandocfilters                     1.5.1
+#20 1.846 parso                             0.8.4
+#20 1.847 patsy                             1.0.1
+#20 1.847 pexpect                           4.9.0
+#20 1.847 pickleshare                       0.7.5
+#20 1.847 pillow                            10.4.0
+#20 1.847 pip                               25.0.1
+#20 1.849 pkgutil_resolve_name              1.3.10
+#20 1.849 platformdirs                      4.3.6
+#20 1.851 plotly                            5.24.1
+#20 1.851 plotly-resampler                  0.10.0
+#20 1.851 pmdarima                          2.0.4
+#20 1.851 prometheus_client                 0.21.1
+#20 1.851 prompt_toolkit                    3.0.51
+#20 1.851 psutil                            7.0.0
+#20 1.851 psycopg2-binary                   2.9.10
+#20 1.852 ptyprocess                        0.7.0
+#20 1.852 pure_eval                         0.2.3
+#20 1.853 pycaret                           3.2.0
+#20 1.853 pycparser                         2.22
+#20 1.853 Pygments                          2.19.1
+#20 1.855 pyod                              2.0.5
+#20 1.855 pyparsing                         3.1.4
+#20 1.855 python-dateutil                   2.9.0.post0
+#20 1.855 pytz                              2025.2
+#20 1.855 PyYAML                            6.0.2
+#20 1.855 pyzmq                             26.4.0
+#20 1.856 referencing                       0.35.1
+#20 1.856 requests                          2.32.3
+#20 1.856 retrying                          1.3.4
+#20 1.857 rpds-py                           0.20.1
+#20 1.857 schemdraw                         0.15
+#20 1.857 scikit-base                       0.5.2
+#20 1.858 scikit-learn                      1.2.2
+#20 1.858 scikit-plot                       0.3.7
+#20 1.858 scipy                             1.10.1
+#20 1.859 Send2Trash                        1.8.3
+#20 1.859 setuptools                        45.2.0
+#20 1.859 six                               1.17.0
+#20 1.859 sktime                            0.21.1
+#20 1.860 sniffio                           1.3.1
+#20 1.860 soupsieve                         2.7
+#20 1.860 stack-data                        0.6.3
+#20 1.860 statsmodels                       0.14.1
+#20 1.860 tbats                             1.1.3
+#20 1.861 tenacity                          9.0.0
+#20 1.861 terminado                         0.18.1
+#20 1.861 threadpoolctl                     3.5.0
+#20 1.861 tinycss2                          1.2.1
+#20 1.862 tomli                             2.2.1
+#20 1.862 tornado                           6.1
+#20 1.862 tqdm                              4.67.1
+#20 1.863 traitlets                         5.14.3
+#20 1.863 tsdownsample                      0.1.4.1
+#20 1.863 typing_extensions                 4.13.2
+#20 1.864 urllib3                           2.2.3
+#20 1.864 wcwidth                           0.2.13
+#20 1.864 webencodings                      0.5.1
+#20 1.865 websocket-client                  1.8.0
+#20 1.865 Werkzeug                          3.0.6
+#20 1.865 wheel                             0.34.2
+#20 1.866 widgetsnbextension                4.0.14
+#20 1.866 wrapt                             1.17.2
+#20 1.866 wurlitzer                         3.1.1
+#20 1.866 xxhash                            3.5.0
+#20 1.867 yapf                              0.43.0
+#20 1.867 yellowbrick                       1.5
+#20 1.867 zipp                              3.20.2
+#20 1.894 # mongo
+#20 1.895 /install/version.sh: line 11: mongod: command not found
+#20 DONE 1.9s
+
+#21 exporting to image
+#21 exporting layers
+#21 exporting layers 26.3s done
+#21 writing image sha256:078fb82d8f588b0b28876e68995b2e5033ec49e94947b7468fca8a9b6969ecae done
+#21 naming to docker.io/umd_data605/umd_data605_template done
+#21 DONE 26.3s

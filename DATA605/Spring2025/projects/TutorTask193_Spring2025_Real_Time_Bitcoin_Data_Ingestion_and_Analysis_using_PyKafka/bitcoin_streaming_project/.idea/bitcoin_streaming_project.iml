@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PYTHON_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/.venv" />
+    </content>
+    <orderEntry type="jdk" jdkName="Python 3.11 virtualenv at C:\tutorials\DATA605\Spring2025\projects\TutorTask193_Spring2025_Real_Time_Bitcoin_Data_Ingestion_and_Analysis_using_PyKafka\bitcoin_streaming_project\.venv" jdkType="Python SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
