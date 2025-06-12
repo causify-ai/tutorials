@@ -1,0 +1,8 @@
+petl>=1.7.5
+requests>=2.28
+pandas>=2.0
+matplotlib>=3.8
+statsmodels>=0.14
+seaborn>=0.12
+jupyterlab>=4.0
+ipykernel
