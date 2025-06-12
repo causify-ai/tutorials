@@ -41,7 +41,9 @@ RUN pip3 install \
     cloudpickle \
     ipywidgets \
     scikit-learn \
-    pycaret
+    pycaret \
+    jupyterlab \
+    notebook
 
 RUN mkdir /install
 
