@@ -1,0 +1,8 @@
+scipy
+statsmodels
+pandas
+requests
+datasette
+schedule
+matplotlib
+jupyter
