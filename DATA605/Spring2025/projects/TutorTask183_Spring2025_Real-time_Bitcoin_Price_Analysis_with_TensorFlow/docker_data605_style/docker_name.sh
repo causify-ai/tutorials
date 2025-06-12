@@ -1,0 +1,3 @@
+REPO_NAME=umd_data605
+IMAGE_NAME=umd_data605_real_time_bitcoin_price_analysis_with_tensorflow
+FULL_IMAGE_NAME=$REPO_NAME/$IMAGE_NAME

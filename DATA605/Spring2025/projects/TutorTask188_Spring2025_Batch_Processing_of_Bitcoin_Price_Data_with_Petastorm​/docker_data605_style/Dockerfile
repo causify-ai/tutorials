@@ -1,58 +1,59 @@
 FROM ubuntu:20.04
+
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get -y update
-RUN apt-get -y upgrade
+# Update and upgrade
+RUN apt-get -y update && apt-get -y upgrade
 
-# Install system utilities.
-RUN apt install -y --no-install-recommends \
+RUN apt-get install -y --no-install-recommends \
     sudo \
     curl \
-    systemctl \
-    gnupg \
     git \
-    vim
-
-# Install Python.
-RUN apt install -y --no-install-recommends \
+    vim \
     python3 \
     python3-pip \
-    python3-dev
+    python3-dev \
+    build-essential
 
+# Upgrade pip
 RUN python3 -m pip install --upgrade pip
-    
-# Install Python packages.
-# There is a bug:
-#   File "/opt/homebrew/lib/python3.10/site-packages/tornado/iostream.py", line 182, in advance
-#   assert 0 < size <= self._size
-# for tornado==6.2 and jupyter-client==8.0.2.
-# https://discourse.jupyter.org/t/jupyter-notebook-zmq-message-arrived-on-closed-channel-error/17869/10
-RUN pip3 install \
+
+RUN mkdir /install
+
+# Copy and install Python packages from requirements.txt
+RUN pip3 install notebook \
     pandas \
     matplotlib \
     requests \
     petastorm \
-    pyarrow \
+    pyarrow==0.17.1 \
     requests \
     torch \
     torchvision \
-    torchaudio \
+    tensorflow-cpu \
+    scikit-learn \
+    fastparquet
 
+# Create install directory (for optional files/scripts)
+#RUN mkdir install
 
-RUN mkdir /install
+# Install Jupyter extensions if script is present
+COPY install_jupyter_extensions.sh /install/
+RUN chmod +x /install/install_jupyter_extensions.sh && /install/install_jupyter_extensions.sh || true
 
-# Install Jupyter extensions.
-# ADD install_jupyter_extensions.sh /install
-# RUN /install/install_jupyter_extensions.sh
+# Optional config files
+COPY etc_sudoers /etc/sudoers
+COPY bashrc /root/.bashrc
 
-# Config.
-# ADD etc_sudoers /install/
-# COPY etc_sudoers /etc/sudoers
-# COPY bashrc /root/.bashrc
+# Track versions
+COPY version.sh /install/
+RUN chmod +x /install/version.sh && /install/version.sh 2>&1 | tee /install/version.log
 
-# Report package versions.
-# ADD version.sh /install/
-# RUN /install/version.sh 2>&1 | tee version.log
+# Set default working directory
+WORKDIR /data
 
-# Jupyter.
-# EXPOSE 8888
+# Expose Jupyter port
+EXPOSE 8888
+
+# Default command to launch Jupyter
+CMD ["jupyter-notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
