@@ -64,7 +64,7 @@ Python libraries: boto3, PySpark
 DEFAULT_MARKDOWN_PATH = "./projects/MSML610_Projects.md"
 # The maximum number of projects.
 # Set the value to None to disable the limit.
-DEFAULT_MAX_PROJECTS = 5
+DEFAULT_MAX_PROJECTS = None
 
 
 def read_google_sheet(url: str, secret_path: str) -> pd.DataFrame:
@@ -75,6 +75,8 @@ def read_google_sheet(url: str, secret_path: str) -> pd.DataFrame:
     :param secret_path: path to google_secret.json
     :return: the data
     """
+    _LOG.info(f"Reading Google Sheet: {url}")
+    _LOG.info(f"Using credentials from: {secret_path}")
     credentials = hgofiapi.get_credentials(service_key_path=secret_path)
     df = hgofiapi.read_google_file(url, credentials=credentials)
     return df
@@ -158,6 +160,12 @@ def _parse() -> argparse.ArgumentParser:
         default=DEFAULT_MAX_PROJECTS,
         help="Limit rows processed (None = all).",
     )
+    parser.add_argument(
+    "--openai_key",
+    type=str,
+    default=None,
+    help="OpenAI API key (will override env var)",
+)
     hparser.add_verbosity_arg(parser)  # adds -v / --log_level
     return parser
 
