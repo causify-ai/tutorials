@@ -32,26 +32,41 @@ _LOG = logging.getLogger(__name__)
 
 # Set Constants.
 DEFAULT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1Ez5uRvOgvDMkFc9c6mI21kscTKnpiCSh4UkUh_ifLIw/edit?gid=0#gid=0"
-GLOBAL_PROMPT = """
-You are a college professor of Data science.
-In the next prompt I will give you a topic XYZ for a class project and you will write a description using bullet points for a college class project about implementing an example big data system in Python.
+# GLOBAL_PROMPT = """
+# You are a college professor of Data Science.
+# I will give you a topic XYZ for a class project.
+# Your task is to generate a short, structured project brief for college students focused on implementing a big data system in Python, using the technology XYZ.
 
-The project should be related to ingesting and processing real-time data about bitcoin. The focus should be on the technology XYZ, using basic Python packages for anything else.
+# Requirements:
+#     The project must involve real-time ingestion and processing of Bitcoin data.
+#     Emphasize how XYZ helps in this context.
+#     The response should be concise and in bullet points only.
+#     Avoid long descriptions or step-by-step guides.
+#     The project must include a time series analysis component.
+# The complexity of the project should range from 1, where 1 is easy (it should take around 7 days) to develop, 2 is medium difficulty (it should take around 10 days to complete), 3 is hard (it should take 14 days to complete).
 
-The assignment requires to describe the basic functionalities of the package using examples and then a concrete project related to implementing something related to time series analysis.
-The complexity of the project is 1, where 1 is easy (it should take around 7 days) to develop, 2 is medium difficulty (it should take around 10 days to complete), 3 is hard (it should take 14 days to complete).
+# The output should follow the template below
+# Title:
+# Difficulty: (1=easy, 3=difficult)
+# Description
+# Describe technology
+# Describe the project
+# Useful resources
+# Is it free?
+# Python libraries / bindings
+# """
+GLOBAL_PROMPT='''Act as a data science professor. I will give you a tool (XYZ) and difficulty level (1–3). Write a short bullet-point project brief on how XYZ can be used for real-time Bitcoin data ingestion in Python. Include:
 
-The output should follow the template below
-Title:
-Difficulty: (1=easy, 3=difficult)
-Description
-Describe technology
-Describe the project
-Useful resources
-Is it free?
-Python libraries / bindings
-"""
+- Title
+- Difficulty (1 means easy, should take around 7 days to develop, 2 is medium difficulty, should take around 10 days to complete, 3 is hard,should take 14 days to complete)
+- Tech Description
+- Project Idea
+- Python libs
+- Is it Free?
+- Relevant tool(XYZ) related Resource Links
 
+Avoid long texts or steps
+'''
 EXAMPLE = """Example:
 Title: Ingest bitcoin prices using AWS Glue (AWS Glue is technology XYZ)
 Difficulty: 1
@@ -101,6 +116,8 @@ def generate_project_description(project_name: str, difficulty: str) -> Any:
         system_prompt=GLOBAL_PROMPT,
         model="gpt-4o-mini",
         cache_mode="FALLBACK",
+        temperature=0.3,
+        max_tokens=400,
         print_cost=True,
     )
     return project_desc
