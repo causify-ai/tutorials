@@ -1,0 +1,17 @@
+pandas
+numpy
+scikit-learn
+seaborn
+matplotlib
+anthropic
+pyspark
+dash
+prophet
+slack-sdk
+imbalanced-learn
+plotly
+requests
+tqdm
+python-dotenv
+boto3
+pyarrow
