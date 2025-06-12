@@ -6,7 +6,6 @@
 - [Assumptions / Requirements](#assumptions--requirements)
 - [Instructions](#instructions)
   * [Step 1: Fetch Input](#step-1-fetch-input)
-  * [Edit Google Sheet URL inside the script or pass a new one through CLI](#edit-google-sheet-url-inside-the-script-or-pass-a-new-one-through-cli)
 - [Step 2: Script Execution](#step-2-script-execution)
   * [Step 3: Review Output](#step-3-review-output)
 - [Troubleshooting](#troubleshooting)
@@ -46,10 +45,6 @@ The Google Sheet should contain:
 
 - Difficulty
 
-### Edit Google Sheet URL inside the script or pass a new one through CLI
-
-URL="https://docs.google.com/spreadsheets/d/<sheet_id>/edit"
-
 ## Step 2: Script Execution
 
 - Run the script directly using Python
@@ -61,6 +56,14 @@ URL="https://docs.google.com/spreadsheets/d/<sheet_id>/edit"
 
   Save the top N (or all if MAX_PROJECTS=None) projects in a file called
   `./projects/DATA605_Projects.md`
+
+Code to run script:
+
+```bash
+python <file_path>/project_description.py   --sheet_url <file_path>   --secret_path <file_path>  --openai_key key   --markdown_path <file_path>  -v INFO
+```
+
+Edit Google Sheet URL inside the script or pass a new one through CLI
 
 ### Step 3: Review Output
 
