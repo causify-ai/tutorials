@@ -6,7 +6,7 @@
 - [Assumptions / Requirements](#assumptions--requirements)
 - [Instructions](#instructions)
   * [Step 1: Fetch Input](#step-1-fetch-input)
-- [Step 2: Script Execution](#step-2-script-execution)
+  * [Step 2: Script Execution](#step-2-script-execution)
   * [Step 3: Review Output](#step-3-review-output)
 - [Troubleshooting](#troubleshooting)
 
