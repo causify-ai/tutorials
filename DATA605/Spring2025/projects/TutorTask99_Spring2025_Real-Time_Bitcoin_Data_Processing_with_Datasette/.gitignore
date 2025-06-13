@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+.vscode/
+
+__init__.py
+# Notebooks checkpoints
+.ipynb_checkpoints/
+
+# Virtual environments
+venv/
+ENV/
+.env/
+.venv/
+*.env
+# Build logs
+*.log
+
+# Temporary folders
+tmp.build/
+# Ignore all virtual environments in tmp.build
+DATA605/Spring2025/projects/tmp.build/venv/
