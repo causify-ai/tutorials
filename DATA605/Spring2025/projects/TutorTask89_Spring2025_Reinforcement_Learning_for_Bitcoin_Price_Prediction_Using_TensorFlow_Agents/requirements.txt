@@ -1,0 +1,17 @@
+ipython
+tornado==6.1
+jupyter-client==7.3.2
+jupyter-contrib-core
+jupyter-contrib-nbextensions
+psycopg2-binary
+yapf
+tensorflow
+tf-agents
+numpy
+pandas
+matplotlib
+yfinance
+python-dotenv
+absl-py
+scikit-learn
+pytest
