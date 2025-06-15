@@ -1,0 +1,8 @@
+#!/bin/bash
+docker run -it --rm \
+    -p 8889:8888 \
+    -v "/Users/pravija/Documents/tutorials:/workspace" \
+    --name bitcoin_analysis \
+    bitcoin \
+    jupyter lab --ip=0.0.0.0:8889 --allow-root --notebook-dir=/workspace   
+    

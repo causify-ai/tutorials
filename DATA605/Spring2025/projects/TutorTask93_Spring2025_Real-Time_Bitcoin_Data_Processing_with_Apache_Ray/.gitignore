@@ -1,0 +1,43 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Jupyter runtime files (if any)
+*.nbconvert.ipynb
+*.nbconvert/
+*.nbviewer/
+
+# System and hidden files
+.DS_Store
+Thumbs.db
+
+# Environment and virtualenv (if created locally)
+env/
+venv/
+*.env
+*.venv
+*.egg-info/
+.eggs/
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
+# IDE/editor configs
+.vscode/
+.idea/
+
+# Docker artifacts (if temporary)
+*.bak
+
+# Ignore docker build log
+docker_build.log
+
+# Ignore temporary build folder
+tmp.build/
+
