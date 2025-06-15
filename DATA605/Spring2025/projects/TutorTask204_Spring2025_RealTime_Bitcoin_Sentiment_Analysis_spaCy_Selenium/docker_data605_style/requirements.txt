@@ -1,0 +1,20 @@
+numpy==1.23.5
+cython==0.29.37
+blis==0.7.9
+murmurhash==1.0.9
+cymem==2.0.7
+preshed==3.0.6
+thinc==8.1.7
+spacy==3.5.4
+notebook
+spacy==3.7.2
+selenium==4.11.2
+pandas==2.0.3
+matplotlib==3.7.2
+requests==2.31.0
+vaderSentiment==3.3.2
+jupyter==1.0.0
+numpy
+seaborn==0.13.2
+scipy==1.10.1
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
