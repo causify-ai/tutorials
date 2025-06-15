@@ -55,5 +55,11 @@ RUN /install/version.sh 2>&1 | tee version.log
 COPY run_jupyter.sh /usr/local/bin/run_jupyter.sh
 RUN chmod +x /usr/local/bin/run_jupyter.sh
 
+# Create and set working directory
+WORKDIR /app
+
+# Copy project files
+COPY ../MCP_utils.py /app/  
+
 # Expose Jupyter port
 EXPOSE 8888

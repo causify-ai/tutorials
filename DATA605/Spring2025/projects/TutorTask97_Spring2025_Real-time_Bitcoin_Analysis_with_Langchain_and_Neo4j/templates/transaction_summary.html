@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Analysis Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>High-Value Bitcoin Transaction Analysis</h1>
+        
+        <div class="summary">
+            <pre>{{ summary }}</pre>
+        </div>
+        
+        <p><a href="{{ url_for('high_value_transactions') }}">Run Another Analysis</a></p>
+        <p><a href="{{ url_for('index') }}">Back to Home</a></p>
+    </div>
+</body>
+</html>

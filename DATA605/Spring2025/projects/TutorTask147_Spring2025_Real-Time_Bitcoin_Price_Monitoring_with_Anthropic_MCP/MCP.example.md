@@ -1,63 +1,128 @@
-# Bitcoin Monitor
+# Bitcoin Price Monitor with FastMCP
 
-A Python script that monitors Bitcoin prices and provides analysis tools using the Managed Context Protocol (MCP) framework.
+## Table of Contents
+- [Introduction](#introduction)
+- [Architecture Overview](#architecture-overview)
+- [Key Components](#key-components)
+  - [1. FastMCP](#1-fastmcp)
+  - [2. MCP_utils Helper Library](#2-mcp_utils-helper-library)
+  - [3. Real-Time Price Resource](#3-real-time-price-resource)
+  - [4. Trend Analysis Endpoint](#4-trend-analysis-endpoint)
+  - [5. Threshold Alert Workflow](#5-threshold-alert-workflow)
+  - [6. Price Visualization Tool](#6-price-visualization-tool)
+- [Summary](#summary)
 
-## Overview
+## Introduction
 
-This script creates an MCP server that offers several tools for monitoring and analyzing Bitcoin prices:
-- Fetching current price data
-- Retrieving historical OHLC data
-- Getting historical market snapshots
-- Price change alerts based on configurable thresholds
-- Trend detection using time series analysis (ARIMA)
-- Price visualization with Plotly
+MCP.example.ipynb is a fully-worked example that shows how to build a real-time Bitcoin price monitor on top of FastMCP—a super-light API layer that turns ordinary Python functions into HTTP endpoints with a single decorator.
 
-## Requirements
+The notebook demonstrates how to:
+- Fetch live data from the CoinGecko public API
+- Wrap the data-fetching, analysis, and visualization logic behind easy-to-consume read-only resources
+- Push price updates, trend summaries, and HTML plots to any client that can speak HTTP or WebSocket
+- Run everything locally or inside Docker, with zero extra web-framework boilerplate
 
-- Python 3.10+
-- Dependencies:
-  - requests
-  - pandas
-  - statsmodels
-  - plotly
-  - mcp (Managed Context Protocol)
+## Architecture Overview
 
-## Usage
-
-Run the script directly:
-
-```bash
-python MCP.exapmle.py
+```
+┌──────────────────────┐        HTTP/WebSocket         ┌──────────────────┐
+│  Jupyter Notebook    │  ◀────────────────────────── ▶│   Any Client     │
+│  (Business Logic)    │                               │  (browser, curl) │
+└──────┬───────────────┘                               └──────────────────┘
+       │  FastMCP registers decorated callables
+┌──────▼───────────────┐
+│      FastMCP         │  Exposes JSON + streaming APIs for every resource
+└──────────────────────┘
 ```
 
-This will start the MCP server in stdio transport mode. The server exposes various tools and resources that can be accessed via MCP clients.
+## Key Components
 
-### Available Tools
+### 1. FastMCP
 
-| Tool | Description |
-|------|-------------|
-| `get_price()` | Returns the latest BTC price in USD |
-| `get_ohlc(days=7)` | Returns OHLC data for the specified number of days |
-| `get_history(date)` | Returns a BTC market snapshot for a specific date |
-| `check_price_change(threshold=500.0)` | Monitors price changes and alerts if they exceed the threshold |
-| `detect_trend(days=30)` | Fits an ARIMA model to predict price trends |
-| `plot_price(days=7)` | Creates an interactive Plotly chart of BTC prices |
+A micro-framework that scans for `@mcp.resource` decorators and spins up a hyper-fast ASGI server.
+- Zero Config – no routing tables or Flask apps to write
+- Async-First – native async def support lets you await network I/O directly
+- Auto Docs – every endpoint is served with an OpenAPI spec at /docs
 
-## Configuration
+```python
+from mcp.server.fastmcp import FastMCP
+mcp = FastMCP("bitcoin_monitor")
+```
 
-- `BASE_URL`: The CoinGecko API base URL
-- `THRESHOLD`: The default USD price-change threshold for alerts (default: $500)
+### 2. MCP_utils Helper Library
 
-## API Documentation
+A thin wrapper around the CoinGecko REST endpoints. Keeps the notebook tidy and testable.
 
-For detailed documentation on the MCP framework and how to interact with this server, refer to the MCP documentation.
+```python
+async def get_price() -> float:
+    url = f"{BASE_URL}/simple/price?ids=bitcoin&vs_currencies=usd"
+    return (await httpx.get(url)).json()["bitcoin"]["usd"]
+```
 
-## Development
+### 3. Real-Time Price Resource
+
+Returns the most recent BTC price in USD.
+
+```python
+@mcp.resource("/price")
+async def price() -> float:
+    return await get_price()
+```
+
+### 4. Trend Analysis Endpoint
+
+Aggregates the last 7 days of hourly candles and returns direction (up, down, flat) plus the percentage change.
+
+```python
+@mcp.resource("/trend")
+async def trend() -> dict[str, Any]:
+    df = await get_ohlc(days=7)
+    pct = (df.close.iloc[-1] / df.close.iloc[0] - 1) * 100
+    direction = "up" if pct > 1 else "down" if pct < -1 else "flat"
+    return {"pct_change": pct, "direction": direction}
+```
+
+### 5. Threshold Alert Workflow
+
+If the price swings more than $THRESHOLD USD in either direction, a server-sent event (SSE) is emitted so UI dashboards or bots can react instantly.
+
+```python
+@mcp.event("/alerts")
+async def alerts(stream):
+    last = await get_price()
+    while True:
+        await asyncio.sleep(10)
+        current = await get_price()
+        if abs(current - last) > THRESHOLD:
+            await stream.send({"price": current, "delta": current - last})
+            last = current
+```
+
+### 6. Price Visualization Tool
+
+Generates a self-contained bitcoin_price.html file using Plotly so clients can embed an interactive chart without needing Python.
+
+```python
+@mcp.resource("/chart")
+async def chart() -> bytes:
+    html_path = await plot_price()
+    return Path(html_path).read_bytes()
+```
+
+## Summary
+
+This example demonstrates how to build a comprehensive Bitcoin price monitoring system using FastMCP. The implementation showcases several key capabilities:
+
+1. **Real-time Data Access**: Fetching current Bitcoin prices from external APIs
+2. **Data Analysis**: Processing price data to detect trends and significant changes
+3. **Event-based Notifications**: Alerting clients when prices cross predefined thresholds
+4. **Visualization**: Generating interactive charts for data exploration
+
+The FastMCP framework makes it easy to expose these capabilities as HTTP endpoints with minimal boilerplate code. By decorating regular Python functions, we create a fully functional API that can be consumed by any client capable of making HTTP requests.
+
+This architecture is highly extensible - you can add new endpoints for additional cryptocurrencies, implement more sophisticated analysis algorithms, or integrate with other data sources by simply adding new decorated functions.
+
+For production deployments, the entire system can be containerized using Docker, ensuring consistent behavior across different environments while maintaining the simplicity of the core implementation.
 
 
-## Data Source
-
-This script uses the CoinGecko API to fetch Bitcoin price data. No API key is required for the basic functionality used in this script.
-
-## License
 

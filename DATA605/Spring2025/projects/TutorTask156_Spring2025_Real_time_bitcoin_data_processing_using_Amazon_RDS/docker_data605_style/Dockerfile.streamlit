@@ -1,0 +1,73 @@
+FROM ubuntu:20.04
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get -y update
+RUN apt-get -y upgrade
+
+# Install system utilities.
+RUN apt install -y --no-install-recommends \
+    sudo \
+    curl \
+    systemctl \
+    gnupg \
+    git \
+    vim
+
+# Install Python.
+RUN apt install -y --no-install-recommends \
+    python3 \
+    python3-pip \
+    python3-dev
+
+RUN python3 -m pip install --upgrade pip
+    
+# Install all Python packages for Bitcoin RDS project with Streamlit
+RUN pip install \
+    ipython \
+    tornado==6.1 \
+    jupyter-client==7.3.2 \
+    jupyter-contrib-core \
+    jupyter-contrib-nbextensions \
+    psycopg2-binary \
+    yapf \
+    pandas \
+    numpy \
+    matplotlib \
+    seaborn \
+    requests \
+    scikit-learn \
+    python-dotenv \
+    plotly \
+    streamlit
+
+# Install additional Python packages for data science
+RUN pip install \
+    pandas \
+    numpy \
+    matplotlib \
+    seaborn \
+    scikit-learn \
+    psycopg2-binary \
+    python-dotenv \
+    requests \
+    plotly \
+    streamlit
+
+RUN mkdir /install
+
+# Config.
+COPY etc_sudoers_copy /etc/sudoers
+COPY bashrc_copy /root/.bashrc
+
+# Set up working directory for project
+WORKDIR /project
+
+# Expose ports for Jupyter and Streamlit
+EXPOSE 8888 8501
+
+# Create a script to run streamlit
+RUN echo '#!/bin/bash\ncd /project\nstreamlit run bitcoin_dashboard.py "$@"' > /usr/local/bin/run_streamlit.sh
+RUN chmod +x /usr/local/bin/run_streamlit.sh
+
+# Default command
+CMD ["/bin/bash"] 

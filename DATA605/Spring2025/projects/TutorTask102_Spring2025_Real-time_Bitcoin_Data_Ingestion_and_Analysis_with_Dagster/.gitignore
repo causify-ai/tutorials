@@ -1,0 +1,34 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+*.pyo
+
+# Virtual environment
+venv/
+env/
+dagster_env/
+.DS_Store
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+
+# Output files
+*.csv
+*.db
+*.log
+
+# Dagster storage
+.dagster_home/
+
+# VSCode settings
+.vscode/
+
+# System files
+Thumbs.db
+ehthumbs.db
+*.bak
+*.swp

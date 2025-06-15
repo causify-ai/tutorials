@@ -1,0 +1,2 @@
+# Default environment variables for Docker
+PORT=8888
