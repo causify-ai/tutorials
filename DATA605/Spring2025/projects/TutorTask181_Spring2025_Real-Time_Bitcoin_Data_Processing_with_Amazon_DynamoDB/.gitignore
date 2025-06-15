@@ -1,0 +1,14 @@
+# Ignore Mac system files
+.DS_Store
+
+# MacOS system files
+.DS_Store
+
+# Ignore Docker logs and builds
+docker_build.log
+docker_data605_style/tmp.build/
+docker_data605_style/docker_build.log
+
+# Ignore temporary files
+cp
+
