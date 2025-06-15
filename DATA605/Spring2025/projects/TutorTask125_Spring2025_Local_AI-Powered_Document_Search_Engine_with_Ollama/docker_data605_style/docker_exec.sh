@@ -1,9 +1,11 @@
-#!/bin/bash -e
+#!/bin/bash -xe
 
-GIT_ROOT=$(git rev-parse --show-toplevel)
-source $GIT_ROOT/tutorial_github_simple/docker_common/utils.sh
+CONTAINER_NAME=ollama-notebook
 
-REPO_NAME=umd_data605
-IMAGE_NAME=umd_data605_template
-
-exec_container
+# Check if container is running
+if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
+    docker exec -it $CONTAINER_NAME /bin/bash
+else
+    echo "Container $CONTAINER_NAME is not running"
+    docker ps
+fi
