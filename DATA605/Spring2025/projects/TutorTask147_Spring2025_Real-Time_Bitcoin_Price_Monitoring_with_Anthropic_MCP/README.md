@@ -1,69 +1,61 @@
 # Real‑Time Bitcoin Price Monitoring with Anthropic MCP
 
-A Dockerized MCP server and client toolkit that fetches live and historical Bitcoin data via the CoinGecko API, exposes it as MCP resources and tools, runs automated threshold alerts and time‑series trend analysis, and generates interactive visualizations.
+A comprehensive Bitcoin monitoring system that combines real-time data analysis, automated alerts, and interactive visualizations through the Anthropic MCP framework. This project is containerized for easy deployment and includes both server and client components.
 
----
+## Project Structure
 
-## Features
+The project consists of several key components, each with its own detailed documentation:
 
-- **MCP Resources & Tools**  
-  - `crypto://price` – current BTC price in USD  
-  - `get_ohlc(days)` – OHLC data for the past N days  
-  - `get_history(date)` – historical snapshot for a given date  
-  - `alert://price_change` – automatic threshold alerts  
-  - `detect_trend(days)` – ARIMA‑based trend forecast  
-  - `plot_price(days)` – saves a Plotly HTML chart  
+- **Bitcoin Monitor** (`bitcoin_monitor/README.md`): Core monitoring system with real-time price tracking and analysis tools
+- **MCP Server** (`MCP_server/README.md`): Server implementation for handling data processing and API interactions
+- **Example Implementation** (`MCP.example.md`): Sample code and usage patterns
+- **API Client** (`Coingecko.API.md`): Lightweight client for CoinGecko API integration
 
-- **Data Processing**  
-  - Real‑time ingestion via CoinGecko’s REST API :contentReference[oaicite:0]{index=0}  
-  - Time‑series analysis with Pandas & Statsmodels  
-  - Interactive plotting with Plotly  
+## Key Features
 
-- **Containerized Deployment**  
-  - Dockerfile for reproducible environments  
-  - STDIO and TCP transports supported  
+- **Real-time Monitoring**
+  - Live Bitcoin price tracking via CoinGecko API
+  - Automated price change alerts
+  - Historical data analysis
+  - Interactive price visualizations
 
-- **CLI Demonstration**  
-  - Self‑contained Python script to exercise all endpoints  
+- **Analysis Tools**
+  - ARIMA-based trend forecasting
+  - OHLC data analysis
+  - Market summaries and insights
+  - Customizable alert thresholds
 
----
+- **Technical Features**
+  - Dockerized deployment
+  - MCP server and client architecture
+  - Natural language interface through Claude AI
+  - Comprehensive error handling and logging
 
-## Prerequisites
+## Getting Started
 
-- **Docker** (version 20.10+)  
-- **Python** 3.10+ (for local dev)  
-- Internet access to `api.coingecko.com`  
+1. **Prerequisites**
+   - Docker (version 20.10+)
+   - Python 3.10+ (for local development)
+   - Internet access to `api.coingecko.com`
 
----
-   
-2.	**Configure environment variables**
-Create a .env file with the following:
-```bash
-FETCH_INTERVAL=60
-PRICE_ALERT_THRESHOLD=500
-```
+2. **Setup and Running**
+   For detailed setup instructions, please refer to:
+   - `bitcoin_monitor/README.md` for the main monitoring system
+   - `MCP_server/README.md` for server configuration
+   - `MCP.example.md` for implementation examples
 
-3.	**Build and run the Docker container**
+## Documentation
 
-4.	**Open your browser**
-Navigate to http://localhost:8888 to explore the notebook.
+Each component has its own detailed README file with specific instructions:
 
----
+- **Bitcoin Monitor**: Core system setup and usage
+- **MCP Server**: Server configuration and deployment
+- **Example Implementation**: Code examples and patterns
+- **API Client**: CoinGecko API integration details
 
-📊 **Example Use Cases**
-- Track short-term price surges or drops in Bitcoin.
-- Visualize hourly or daily fluctuations.
-- Automate insights via Anthropic MCP for downstream alerts or recommendations.
 
- ---
+## References
 
-📚 **References**
 - [CoinGecko API Documentation](https://www.coingecko.com/en/api)
-- Anthropic MCP
-- Statsmodels Time Series API
+- [Anthropic MCP Documentation](https://modelcontextprotocol.io/introduction)
 
- ---
-
-📄 **License**
-
-This project is for educational purposes. Please ensure compliance with CoinGecko and Anthropic API terms of service for commercial or large-scale usage.
