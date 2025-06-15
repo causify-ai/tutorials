@@ -1,0 +1,9 @@
+__pycache__/
+.venv/
+llama-2-7b-chat.Q4_K_M.gguf
+.DS_Store
+.ipynb_checkpoints
+tmp.build
+docker_build.log
+*.pyc
+*.log
