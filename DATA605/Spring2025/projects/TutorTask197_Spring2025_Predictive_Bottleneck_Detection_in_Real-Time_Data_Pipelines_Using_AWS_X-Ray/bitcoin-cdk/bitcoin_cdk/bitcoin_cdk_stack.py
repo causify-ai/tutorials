@@ -6,6 +6,8 @@ from aws_cdk import (
     aws_lambda as _lambda,
     aws_dynamodb as dynamodb,
     aws_lambda_event_sources as sources,
+    aws_sns as sns,
+    aws_sns_subscriptions as subscriptions,
     RemovalPolicy,
     Duration,
 )
@@ -59,6 +61,7 @@ class BitcoinCdkStack(Stack):
                 "BUCKET_NAME": bucket.bucket_name,
                 "TABLE_NAME": table.table_name
             },
+            tracing=_lambda.Tracing.ACTIVE,
             timeout=Duration.seconds(30),
         )
 

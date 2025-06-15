@@ -1,10 +1,10 @@
 boto3
 requests
-json
-time
-sys
-os
-base64
 uuid
-datetime
-Decimal 
+datetime 
+dash
+prophet
+pandas
+numpy
+plotly
+aws-xray-sdk

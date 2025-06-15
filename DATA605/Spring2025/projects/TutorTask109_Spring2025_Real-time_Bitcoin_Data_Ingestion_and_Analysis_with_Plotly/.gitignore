@@ -1,0 +1,44 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Environment files
+.env
+
+# Logs and output
+*.log
+*.out
+*.err
+
+# VSCode/IDE settings
+.vscode/
+.idea/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Python virtual environments
+.venv/
+env/
+venv/
+
+# Docker artifacts
+*.pid
+*.tar
+*.gz
+*.zip
+docker_build.log
+docker_build.version.log
+
+# HTML outputs
+*.html
+
+# Project-specific ignored files
+bitcoin_metrics_final.csv
+bitcoin_snapshot_*.csv
