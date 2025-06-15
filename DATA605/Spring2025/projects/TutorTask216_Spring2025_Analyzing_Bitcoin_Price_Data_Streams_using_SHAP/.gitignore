@@ -1,0 +1,41 @@
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# macOS metadata
+.DS_Store
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# VS Code settings
+.vscode/
+
+# Environment and package folders
+.env
+.venv
+env/
+venv/
+*.egg-info/
+
+# Jupyter Notebook runtime
+*.nbconvert.ipynb
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+
+# Coverage and test outputs
+.coverage
+htmlcov/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+
+# Byte-compiled files
+*.so
+
+tmp.build

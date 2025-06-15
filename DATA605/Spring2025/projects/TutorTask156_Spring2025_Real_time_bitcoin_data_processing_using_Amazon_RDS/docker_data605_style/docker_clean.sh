@@ -1,9 +1,18 @@
-#!/bin/bash -e
+#!/bin/bash
+#
+# Clean up Docker images for Bitcoin RDS project
+#
 
-GIT_ROOT=$(git rev-parse --show-toplevel)
-source $GIT_ROOT/tutorial_github_simple/docker_common/utils.sh
+# Directory where this script is located
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+cd $DIR
 
-REPO_NAME=umd_data605
-IMAGE_NAME=umd_data605_template
+# Source the docker name configuration
+source ./docker_name.sh
 
-remove_container_image
+echo "Removing Docker image: $FULL_IMAGE_NAME"
+
+# Remove the Docker image
+docker rmi $FULL_IMAGE_NAME
+
+echo "Clean complete."

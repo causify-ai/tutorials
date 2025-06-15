@@ -1,0 +1,48 @@
+services:
+  crypto_assistant:
+    build: .
+    ports:
+      - "8501:8501"  # Streamlit port
+    depends_on:
+      - ollama
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    volumes:
+      - ./:/app
+      - ./models:/app/models  # Added the models volume here
+      - ./cache:/app/cache
+      - ./faiss_index:/app/faiss_index
+      - ./date_price_lookup.pkl:/app/date_price_lookup.pkl
+    command: [
+      "sh",
+      "-c",
+      "find /usr/local/lib/python3.10/site-packages/langchain -type f -name '*.py' -exec sed -i 's|http://localhost:11434|http://ollama:11434|g' {} \\; &&
+      find /app -type f -name '*.py' -exec sed -i 's|http://localhost:11434|http://ollama:11434|g' {} \\; &&
+      echo 'Waiting for Ollama to initialize...' &&
+      sleep 30 &&
+      python -c \"import requests; requests.post('http://ollama:11434/api/pull', json={'name': 'nomic-embed-text'})\" &&
+      python -c \"import requests; requests.post('http://ollama:11434/api/pull', json={'name': 'mistral'})\" &&
+      streamlit run streamlit_app.py --server.port=8501 --server.address=0.0.0.0"
+    ]
+    networks:
+      - crypto_network
+
+  ollama:
+    image: ollama/ollama
+    volumes:
+      - ollama_models:/root/.ollama
+    ports:
+      - "11434:11434"
+    command: serve
+    networks:
+      - crypto_network
+
+networks:
+  crypto_network:
+    driver: bridge
+
+volumes:
+  ollama_models:
+
+
+ 
