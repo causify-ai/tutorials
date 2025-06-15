@@ -7,28 +7,33 @@ services:
     environment:
       - NEO4J_AUTH=neo4j/test12345
     ports:
-      - "7474:7474"
-      - "7687:7687"
+      - "7474:7474"   # Neo4j browser
+      - "7687:7687"   # Bolt port (used by py2neo)
     networks:
       - neo4j-net
 
   jupyter:
-    image: umd_data605_template
+    build: .
     container_name: jupyter_data605
+    ports:
+      - "8888:8888"     # Jupyter Notebook
+      - "8501:8501"     # Streamlit
+    volumes:
+      - ../:/workspace
+    working_dir: /workspace
     environment:
       - NEO4J_URI=bolt://my_neo4j:7687
       - NEO4J_USER=neo4j
       - NEO4J_PASS=test12345
-    ports:
-      - "8888:8888"
-    volumes:
-      - ../:/workspace
-    working_dir: /workspace
-    command: jupyter notebook --ip=0.0.0.0 --no-browser --allow-root --notebook-dir=/workspace
     depends_on:
       - neo4j
     networks:
       - neo4j-net
+    command: >
+      bash -c "
+        jupyter notebook --ip=0.0.0.0 --no-browser --allow-root --notebook-dir=/workspace &
+        streamlit run /workspace/coingecko_dashboard.py --server.port=8501 --server.enableCORS=false
+      "
 
 networks:
   neo4j-net:

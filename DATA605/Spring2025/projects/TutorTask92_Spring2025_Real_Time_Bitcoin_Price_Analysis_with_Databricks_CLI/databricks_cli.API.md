@@ -1,5 +1,29 @@
 # Databricks CLI API Documentation
 
+## Workflow Overview
+
+![Databricks UI: new cluster RUNNING](images/api_flowchart.png)
+
+
+## Table of Contents
+
+- [Workflow Overview](#workflow-overview)
+- [Project Files](#project-files)
+- [1. Introduction](#1-introduction)
+- [2. Prerequisites & Setup](#2-prerequisites--setup)
+  - [2.1 Install the Databricks CLI](#21-install-the-databricks-cli)
+  - [2.2 Authenticate](#22-authenticate)
+- [3. Cluster Configuration](#3-cluster-configuration)
+- [Create a Databricks Job via the UI](#create-a-databricks-job-via-the-ui)
+- [4. Core Databricks CLI Commands](#4-core-databricks-cli-commands)
+  - [4.1 Clusters](#41-clusters)
+  - [4.2 File System (DBFS)](#42-file-system-dbfs)
+  - [4.3 Jobs & Runs](#43-jobs--runs)
+- [5. Python Wrappers (`databricks_cli_utils.py`)](#5-python-wrappers-databricks_cli_utilspy)
+- [6. Demo Script: `databricks_cli.API.py`](#6-demo-script-databricks_cliapipy)
+- [7. References](#7-references)
+
+
 ## Project Files
 
 - **`databricks_cli_utils.py`**  
@@ -85,8 +109,22 @@ Example:
   }
 }
 ```
-
+![Databricks UI: new cluster RUNNING](images/api_cluster_image.png)
 ---
+
+## Create a Databricks Job via the UI
+
+1. **Log in** to your Databricks workspace.  
+2. In the left sidebar, click **Jobs** → **Job Runs**.  
+3. Click **Create Job**.  
+4. Configure your new job:  
+   - **Job name**: Enter a descriptive name (e.g. `API Test Job`)  
+   - **Task name**: Enter a name for this task (e.g. `Run Test Notebook`)  
+   - **Type**: Select **Notebook**  
+   - **Notebook path**: Browse and choose `/Workspace/api_test_job_notebook`  
+   - **Cluster**: Select **Existing all-purpose** and pick the cluster defined by `config/cluster_config.json`  
+5. Click **Create**.  
+6. **Copy the Job ID** shown under the job details (you’ll use this for CLI/API triggers). 
 
 ## 4. Core Databricks CLI Commands
 
@@ -108,6 +146,7 @@ databricks fs ls <dbfs:/path>
 databricks fs mkdirs <dbfs:/path>
 databricks fs rm <dbfs:/path>
 ```
+![Databricks UI: new cluster RUNNING](images/api_dbfs_image.png)
 
 ### 4.3 Jobs & Runs
 
@@ -117,7 +156,16 @@ databricks jobs run-now      --job-id <job_id>
 databricks runs submit       --json '{...}' 
 databricks runs get          --run-id <run_id>
 ```
+**Test job run**
+![Databricks UI: new cluster RUNNING](images/api_job_running.png)
 
+**Test Notebook run**
+`API Test (./notebooks/api_test_job_notebook.ipynb)` notebook in databricks run compilation
+   
+![Databricks UI: new cluster RUNNING](images/api_test_notebook_job_run.png)
+
+**Test cluster termination**
+![Databricks UI: new cluster RUNNING](images/api_cluster_termination.png)
 ---
 
 ## 5. Python Wrappers (`databricks_cli_utils.py`)

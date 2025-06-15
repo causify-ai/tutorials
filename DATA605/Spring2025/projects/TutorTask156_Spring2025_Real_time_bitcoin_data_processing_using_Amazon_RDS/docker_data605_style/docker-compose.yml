@@ -1,0 +1,25 @@
+version: '3'
+services:
+  jupyter:
+    image: umd_data605/bitcoin_rds_project
+    ports:
+      - "8888:8888"
+    volumes:
+      - ..:/project
+    command: >
+      jupyter notebook
+      --ip=0.0.0.0
+      --port=8888
+      --no-browser
+      --allow-root
+      --NotebookApp.notebook_dir=/project
+      --NotebookApp.token=''
+      --NotebookApp.password=''
+
+  streamlit:
+    image: umd_data605/bitcoin_rds_project_streamlit
+    ports:
+      - "8080:8501"
+    volumes:
+      - ..:/project
+    command: /usr/local/bin/run_streamlit.sh 

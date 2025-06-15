@@ -3,4 +3,15 @@ aws/*
 
 # But don't ignore the folder itself
 !aws/.gitkeep
+# Ignore environment variables file with credentials
+# .env
+
+.ipynb_checkpoints/
+__pycache__/
+
+helpers_root/**/__pycache__/
+helpers_root/**/*.pyc
+
+*.pyc
+logs.log
 

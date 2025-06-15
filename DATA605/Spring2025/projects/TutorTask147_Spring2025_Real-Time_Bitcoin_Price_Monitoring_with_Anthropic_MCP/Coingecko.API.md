@@ -39,5 +39,3 @@ chart = get_market_chart(days=60)
 
 ## Citations & References
 - (CoinGecko API Documentation v3)[https://www.coingecko.com/api/documentations/v3]
-
-- (Causify‑AI Coding Style Guide)[https://github.com/causify-ai/helpers/blob/master/docs/coding/all.coding_style.how_to_guide.md]
