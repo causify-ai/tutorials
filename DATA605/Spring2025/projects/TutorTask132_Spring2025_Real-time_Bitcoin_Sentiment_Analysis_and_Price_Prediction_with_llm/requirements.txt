@@ -1,0 +1,10 @@
+streamlit
+pandas
+plotly
+scikit-learn
+keras
+tensorflow
+matplotlib
+python-dotenv
+openai
+prophet

@@ -1,0 +1,79 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.29kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:20.04
+#2 ...
+
+#3 [auth] library/ubuntu:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:20.04
+#2 DONE 1.2s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [ 1/15] FROM docker.io/library/ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214
+#5 resolve docker.io/library/ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 2.42kB done
+#6 DONE 0.0s
+
+#7 [ 2/15] RUN apt-get -y update
+#7 CACHED
+
+#8 [ 4/15] RUN apt install -y --no-install-recommends     sudo     curl     systemctl     gnupg     git     vim
+#8 CACHED
+
+#9 [ 7/15] RUN pip3 install     ipython     tornado==6.1     jupyter-client==7.3.2     jupyter-contrib-core     jupyter-contrib-nbextensions     psycopg2-binary     yapf
+#9 CACHED
+
+#10 [ 9/15] ADD install_jupyter_extensions.sh /install
+#10 CACHED
+
+#11 [10/15] RUN /install/install_jupyter_extensions.sh
+#11 CACHED
+
+#12 [11/15] ADD etc_sudoers /install/
+#12 CACHED
+
+#13 [ 8/15] RUN mkdir /install
+#13 CACHED
+
+#14 [ 3/15] RUN apt-get -y upgrade
+#14 CACHED
+
+#15 [12/15] COPY etc_sudoers /etc/sudoers
+#15 CACHED
+
+#16 [ 5/15] RUN apt install -y --no-install-recommends     python3     python3-pip     python3-dev
+#16 CACHED
+
+#17 [13/15] COPY bashrc /root/.bashrc
+#17 CACHED
+
+#18 [14/15] ADD version.sh /install/
+#18 CACHED
+
+#19 [ 6/15] RUN python3 -m pip install --upgrade pip
+#19 CACHED
+
+#20 [15/15] RUN /install/version.sh 2>&1 | tee version.log
+#20 CACHED
+
+#21 exporting to image
+#21 exporting layers done
+#21 exporting manifest sha256:90a8c1e90538594dbd388412d0f116ce28f38ff00369166882bc2868e0ad2828 done
+#21 exporting config sha256:03b80b4ad191d868e9be5a47eb21fc9386f51e35749a1ebc1d60a032f50c25ce done
+#21 exporting attestation manifest sha256:3b19a59e157f246c15ddb47464f577d066d563d7bd8d1fe0dd630fba5b28cb78
+#21 exporting attestation manifest sha256:3b19a59e157f246c15ddb47464f577d066d563d7bd8d1fe0dd630fba5b28cb78 0.0s done
+#21 exporting manifest list sha256:794e44918dfe28fc47dff36bcc25de55e6cdad28abd824a06ccda1ef1cd2ab8d 0.0s done
+#21 naming to docker.io/umd_data605/umd_data605_template:latest done
+#21 unpacking to docker.io/umd_data605/umd_data605_template:latest 0.0s done
+#21 DONE 0.1s
