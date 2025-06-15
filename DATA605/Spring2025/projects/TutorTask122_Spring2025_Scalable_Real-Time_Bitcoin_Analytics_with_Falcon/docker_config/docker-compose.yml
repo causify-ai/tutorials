@@ -1,0 +1,109 @@
+# Obsolete, silenced.
+# version: '3.8'
+
+  services:
+
+    redis:
+      image: redis/redis-stack-server:latest
+      working_dir: /app
+      container_name: redis_broker
+      ports:
+        - "6379:6379"
+      networks:
+        appnet:
+          ipv4_address: 172.28.0.2
+
+    falcon_api:
+      container_name: falcon_api
+      build: .
+      image: umd_data605/umd_data605_template
+      working_dir: /app
+      volumes:
+        - ../app:/app
+      command: /app/start_services.sh
+      ports:
+        - "8888:8888" # Falcon API
+        - "8889:8889" # Jupyter 
+      environment:
+        - CELERY_BROKER_URL=redis://redis:6379/0
+      depends_on:
+        - redis
+      networks:
+        appnet:
+          ipv4_address: 172.28.0.3
+
+    falcon_worker:
+      container_name: falcon_worker
+      build: .
+      image: umd_data605/umd_data605_template
+      working_dir: /app
+      volumes:
+        - ../app:/app
+      command: celery -A Falcon_Celery_Tasks worker --loglevel=info
+      environment:
+        - CELERY_BROKER_URL=redis://redis:6379/0
+      depends_on:
+        - redis
+      networks:
+        appnet:
+          ipv4_address: 172.28.0.4
+
+    falcon_lstm_worker:
+      container_name: falcon_lstm_worker
+      build: .
+      image: umd_data605/umd_data605_template
+      working_dir: /app
+      volumes:
+        - ../app:/app
+      command: celery -A Falcon_Celery_Tasks_lstm worker --loglevel=info -Q lstm
+      environment:
+        - CELERY_BROKER_URL=redis://redis:6379/0
+      depends_on:
+        - redis
+      networks:
+        appnet:
+          ipv4_address: 172.28.0.5
+
+    falcon_ingest_client:
+      container_name: falcon_ingest_client
+      build: .
+      image: umd_data605/umd_data605_template
+      working_dir: /app
+      volumes:
+        - ../app:/app
+      command: python3 Falcon_ingest_client2.py
+      environment:
+        - API_URL=http://falcon_api:8888
+      depends_on:
+        - falcon_api
+        - redis
+      networks:
+        appnet:
+          ipv4_address: 172.28.0.6
+
+    falcon_flower:
+      container_name: falcon_flower
+      build: .
+      image: umd_data605/umd_data605_template
+      working_dir: /app
+      volumes:
+        - ../app:/app
+      command: >
+        celery -A Falcon_Celery_Tasks flower
+        --broker=redis://redis:6379/0
+        --address=0.0.0.0 --port=5555
+        --basic_auth=admin:secret
+      ports:
+        - "5555:5555"
+      depends_on:
+        - redis
+      networks:
+        appnet:
+          ipv4_address: 172.28.0.7
+
+  networks:
+    appnet:
+      driver: bridge
+      ipam:
+        config:
+          - subnet: 172.28.0.0/16

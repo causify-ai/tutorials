@@ -1,0 +1,21 @@
+FROM jupyter/datascience-notebook:latest
+
+USER root
+
+# Install Java + OpenRefine (verified path)
+RUN apt-get update && \
+    apt-get install -y openjdk-17-jre-headless wget && \
+    wget https://github.com/OpenRefine/OpenRefine/releases/download/3.7.6/openrefine-linux-3.7.6.tar.gz && \
+    tar -xzf openrefine-linux-3.7.6.tar.gz -C /opt && \
+    mv /opt/openrefine-* /opt/openrefine && \
+    chmod +x /opt/openrefine/refine && \
+    rm openrefine-linux-3.7.6.tar.gz
+
+# Install Python client
+RUN pip install requests pandas matplotlib git+https://github.com/PaulMakepeace/refine-client-py.git
+
+FROM jupyter/scipy-notebook
+RUN pip install prophet pandas matplotlib requests
+
+RUN pip install plotly>=5.18.0 ipywidgets>=8.0.0
+RUN jupyter nbextension enable --py widgetsnbextension

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High-Value Transaction Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>High-Value Transaction Analysis</h1>
+        <p>Click the button below to analyze high-value Bitcoin transactions in the database:</p>
+        
+        <form action="{{ url_for('high_value_transactions') }}" method="post">
+            <button type="submit" class="analyze-button">Generate Analysis</button>
+        </form>
+        
+        <p><a href="{{ url_for('index') }}">Back to Home</a></p>
+    </div>
+</body>
+</html>
