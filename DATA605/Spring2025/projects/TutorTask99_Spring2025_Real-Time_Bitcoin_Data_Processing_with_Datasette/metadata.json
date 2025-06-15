@@ -1,0 +1,132 @@
+{
+  "title": "Real-Time Bitcoin Data Explorer",
+  "description_html": "<img src='/static/logo.png' alt='Bitcoin Data Logo' style='height:50px; margin-bottom: 10px;'> <h2 style='margin: 0; color: #FF8000;'>Real-Time Bitcoin Data Explorer</h2><p style='font-size: 1rem; margin: 5px 0 15px 0;'>Explore real-time Bitcoin price data with interactive visualizations and time series analysis.</p><a href='/-/dashboards/bitcoin-dashboard' style='display:inline-block; margin-top:10px; padding:10px 16px; background-color:#FF9900; color:white; border:none; border-radius:5px; text-decoration:none; font-weight:bold;'>View Bitcoin Dashboard</a>",
+  "license": "MIT License",
+  "license_url": "https://opensource.org/licenses/MIT",
+  "source": "CoinGecko API",
+  "source_url": "https://www.coingecko.com/",
+  "extra_css_urls": [
+    "/static/custom.css"
+  ],
+  "plugins": {
+    "datasette-dashboards": {
+      "bitcoin-kpis": {
+        "title": "Bitcoin KPI Overview",
+        "description": "Key metrics for Bitcoin pricing data.",
+          "layout": [
+          [
+            "kpi-max",
+            "kpi-min",
+            "kpi-avg"
+          ]
+        ],
+        "charts": {
+          "kpi-max": {
+            "title": "Max Price",
+            "db": "bitcoin_data",
+            "query": "SELECT MAX(price) AS value FROM bitcoin_prices",
+            "library": "metric",
+            "display": {
+              "suffix": " USD",
+              "color": "green"
+            }
+          },
+          "kpi-min": {
+            "title": "Min Price",
+            "db": "bitcoin_data",
+            "query": "SELECT MIN(price) AS value FROM bitcoin_prices",
+            "library": "metric",
+            "display": {
+              "suffix": " USD",
+              "color": "red"
+            }
+          },
+          "kpi-avg": {
+            "title": "Avg Price",
+            "db": "bitcoin_data",
+            "query": "SELECT ROUND(AVG(price), 2) AS value FROM bitcoin_prices",
+            "library": "metric",
+            "display": {
+              "suffix": " USD",
+              "color": "blue"
+            }
+          }
+        }
+      },
+      "bitcoin-visuals": {
+        "title": "Bitcoin Visual Analytics",
+        "description": "Interactive charts showing Bitcoin price trends.",
+        "layout": [
+          [
+            "price-chart"
+          ],
+          [
+            "daily-average-chart"
+          ],
+          [
+            "zscore-chart"
+          ]
+        ],
+        "charts": {
+          "price-chart": {
+            "title": "Bitcoin Price Over Time",
+            "db": "bitcoin_data",
+            "query": "SELECT timestamp, price FROM bitcoin_prices ORDER BY timestamp",
+            "library": "vega-lite",
+            "display": {
+              "mark": "line",
+              "encoding": {
+                "x": {
+                  "field": "timestamp",
+                  "type": "temporal"
+                },
+                "y": {
+                  "field": "price",
+                  "type": "quantitative"
+                }
+              }
+            }
+          },
+          "daily-average-chart": {
+            "title": "Daily Average Price",
+            "db": "bitcoin_data",
+            "query": "SELECT DATE(timestamp) as date, AVG(price) as average_price FROM bitcoin_prices GROUP BY date ORDER BY date",
+            "library": "vega-lite",
+            "display": {
+              "mark": "bar",
+              "encoding": {
+                "x": {
+                  "field": "date",
+                  "type": "temporal"
+                },
+                "y": {
+                  "field": "average_price",
+                  "type": "quantitative"
+                }
+              }
+            }
+          },
+          "zscore-chart": {
+            "title": "Z-Score of Bitcoin Price",
+            "db": "bitcoin_data",
+            "query": "\n              WITH stats AS (\n                SELECT\n                  COUNT(*) AS n,\n                  AVG(price) AS mean,\n                  SUM((price - (SELECT AVG(price) FROM bitcoin_prices)) * (price - (SELECT AVG(price) FROM bitcoin_prices))) AS sum_squared_diff\n                FROM bitcoin_prices\n              )\n              SELECT\n                timestamp,\n                (price - (SELECT mean FROM stats)) / \n                (CASE WHEN (SELECT sum_squared_diff FROM stats) = 0 THEN 1 \n                      ELSE ((SELECT sum_squared_diff FROM stats) / (SELECT n FROM stats)) END) AS z_score\n              FROM bitcoin_prices\n              ORDER BY timestamp\n            ",
+            "library": "vega-lite",
+            "display": {
+              "mark": "line",
+              "encoding": {
+                "x": {
+                  "field": "timestamp",
+                  "type": "temporal"
+                },
+                "y": {
+                  "field": "z_score",
+                  "type": "quantitative"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

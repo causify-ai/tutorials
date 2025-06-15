@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Black">
+    <option name="sdkName" value="Python 3.11 (bitcoin_streaming_project)" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 virtualenv at C:\tutorials\DATA605\Spring2025\projects\TutorTask193_Spring2025_Real_Time_Bitcoin_Data_Ingestion_and_Analysis_using_PyKafka\bitcoin_streaming_project\.venv" project-jdk-type="Python SDK" />
+</project>
