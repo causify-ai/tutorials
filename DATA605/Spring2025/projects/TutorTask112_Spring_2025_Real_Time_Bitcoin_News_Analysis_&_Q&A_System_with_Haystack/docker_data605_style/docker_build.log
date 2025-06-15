@@ -1,0 +1,3 @@
+# This file will be auto-generated when you run docker_build.sh using redirection or tee.
+# Example: ./docker_build.sh | tee docker_build.log
+
