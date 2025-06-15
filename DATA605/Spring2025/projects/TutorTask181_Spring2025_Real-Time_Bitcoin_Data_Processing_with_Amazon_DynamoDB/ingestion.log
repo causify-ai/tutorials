@@ -1,0 +1,9 @@
+INFO:template_utils:Fetched Bitcoin price: $83485.0
+INFO:botocore.credentials:Found credentials in shared credentials file: ~/.aws/credentials
+INFO:template_utils:Inserted BTC price $83485.0 at timestamp 1744582128
+INFO:template_utils:Fetched Bitcoin price: $83452.0
+INFO:template_utils:Inserted BTC price $83452.0 at timestamp 1744582188
+INFO:template_utils:Fetched Bitcoin price: $83451.0
+INFO:template_utils:Inserted BTC price $83451.0 at timestamp 1744582248
+INFO:template_utils:Fetched Bitcoin price: $83474.0
+INFO:template_utils:Inserted BTC price $83474.0 at timestamp 1744582309

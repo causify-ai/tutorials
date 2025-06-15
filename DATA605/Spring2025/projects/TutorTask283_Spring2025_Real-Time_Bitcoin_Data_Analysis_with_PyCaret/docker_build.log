@@ -1,0 +1,86 @@
+#1 [internal] load build definition from Dockerfile
+#1 sha256:943a90c246a742f3e515a8bdb46ac1318f091611e068afbfc104ab2c79787b97
+#1 transferring dockerfile: 587B done
+#1 DONE 0.0s
+
+#2 [internal] load .dockerignore
+#2 sha256:8f1746ddb8d3a6a336bcdda34c8eed7ba1e13dfc5de171e1d641e5249ed8d087
+#2 transferring context: 2B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/arm64v8/python:3.10-slim
+#3 sha256:c2d62b0e352710d10aa0625399893a81320bf968e8a1e386bf515b21e21a765c
+#3 DONE 0.3s
+
+#4 [1/5] FROM docker.io/arm64v8/python:3.10-slim@sha256:6626d36dc417c220051c49e05a12db8955b0832b911609c5b0a696feeb0aca9e
+#4 sha256:b95a085c6bcd9fbe1491ae51faeead8f6de3719beab039e0a23e66225d3f0120
+#4 DONE 0.0s
+
+#5 [2/5] RUN apt-get update && apt-get install -y     curl     git     libgomp1
+#5 sha256:8a4795b403bce75f272abe53dd93559ca0b0c946742e755e9ec265ef3a5b61bc
+#5 CACHED
+
+#6 [3/5] RUN pip install --no-binary lightgbm lightgbm
+#6 sha256:5e46702be0c412970fd5dc97d1e97012489a8fc40110f3f9278ae0a5a9a4d293
+#6 1.456 DEPRECATION: --no-binary currently disables reading from the cache of locally built wheels. In the future --no-binary will not influence the wheel cache. pip 23.1 will enforce this behaviour change. A possible replacement is to use the --no-cache-dir option. You can use the flag --use-feature=no-binary-enable-wheel-cache to test the upcoming behaviour. Discussion can be found at https://github.com/pypa/pip/issues/11453
+#6 1.562 Collecting lightgbm
+#6 1.632   Downloading lightgbm-4.6.0.tar.gz (1.7 MB)
+#6 1.868      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 7.3 MB/s eta 0:00:00
+#6 2.060   Installing build dependencies: started
+#6 3.142   Installing build dependencies: finished with status 'done'
+#6 3.143   Getting requirements to build wheel: started
+#6 3.278   Getting requirements to build wheel: finished with status 'done'
+#6 3.282   Installing backend dependencies: started
+#6 7.290   Installing backend dependencies: finished with status 'done'
+#6 7.292   Preparing metadata (pyproject.toml): started
+#6 7.539   Preparing metadata (pyproject.toml): finished with status 'done'
+#6 7.805 Collecting scipy
+#6 7.817   Downloading scipy-1.15.3-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (35.5 MB)
+#6 10.55      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 35.5/35.5 MB 11.0 MB/s eta 0:00:00
+#6 10.92 Collecting numpy>=1.17.0
+#6 10.93   Downloading numpy-2.2.5-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (14.4 MB)
+#6 12.12      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 14.4/14.4 MB 12.3 MB/s eta 0:00:00
+#6 12.18 Building wheels for collected packages: lightgbm
+#6 12.18   Building wheel for lightgbm (pyproject.toml): started
+#6 12.40   Building wheel for lightgbm (pyproject.toml): finished with status 'error'
+#6 12.41   error: subprocess-exited-with-error
+#6 12.41   
+#6 12.41   × Building wheel for lightgbm (pyproject.toml) did not run successfully.
+#6 12.41   │ exit code: 1
+#6 12.41   ╰─> [22 lines of output]
+#6 12.41       2025-05-10 06:14:15,153 - scikit_build_core - INFO - RUN: /tmp/pip-build-env-pc0u6pqr/normal/lib/python3.10/site-packages/cmake/data/bin/cmake -E capabilities
+#6 12.41       2025-05-10 06:14:15,157 - scikit_build_core - INFO - CMake version: 4.0.2
+#6 12.41       *** scikit-build-core 0.11.2 using CMake 4.0.2 (wheel)
+#6 12.41       2025-05-10 06:14:15,160 - scikit_build_core - INFO - Build directory: /tmp/tmp1vww93iw/build
+#6 12.41       *** Configuring CMake...
+#6 12.41       2025-05-10 06:14:15,168 - scikit_build_core - INFO - RUN: ninja --version
+#6 12.41       2025-05-10 06:14:15,171 - scikit_build_core - INFO - Ninja version: 1.11.1
+#6 12.41       2025-05-10 06:14:15,171 - scikit_build_core - INFO - RUN: /tmp/pip-build-env-pc0u6pqr/normal/lib/python3.10/site-packages/cmake/data/bin/cmake -S. -B/tmp/tmp1vww93iw/build -DCMAKE_BUILD_TYPE:STRING=Release -C/tmp/tmp1vww93iw/build/CMakeInit.txt -DCMAKE_INSTALL_PREFIX=/tmp/tmp1vww93iw/wheel/platlib -DCMAKE_MAKE_PROGRAM=ninja -D__BUILD_FOR_PYTHON:BOOL=ON
+#6 12.41       loading initial cache file /tmp/tmp1vww93iw/build/CMakeInit.txt
+#6 12.41       CMake Error at /tmp/pip-build-env-pc0u6pqr/normal/lib/python3.10/site-packages/cmake/data/share/cmake-4.0/Modules/CMakeDetermineCCompiler.cmake:49 (message):
+#6 12.41         Could not find compiler set in environment variable CC:
+#6 12.41       
+#6 12.41         gcc.
+#6 12.41       Call Stack (most recent call first):
+#6 12.41         CMakeLists.txt:36 (project)
+#6 12.41       
+#6 12.41       
+#6 12.41       CMake Error: CMAKE_C_COMPILER not set, after EnableLanguage
+#6 12.41       CMake Error: CMAKE_CXX_COMPILER not set, after EnableLanguage
+#6 12.41       -- Configuring incomplete, errors occurred!
+#6 12.41       
+#6 12.41       *** CMake configuration failed
+#6 12.41       [end of output]
+#6 12.41   
+#6 12.41   note: This error originates from a subprocess, and is likely not a problem with pip.
+#6 12.41   ERROR: Failed building wheel for lightgbm
+#6 12.41 Failed to build lightgbm
+#6 12.41 ERROR: Could not build wheels for lightgbm, which is required to install pyproject.toml-based projects
+#6 12.41 
+#6 12.41 [notice] A new release of pip is available: 23.0.1 -> 25.1.1
+#6 12.41 [notice] To update, run: pip install --upgrade pip
+#6 ERROR: executor failed running [/bin/sh -c pip install --no-binary lightgbm lightgbm]: exit code: 1
+------
+ > [3/5] RUN pip install --no-binary lightgbm lightgbm:
+------
+executor failed running [/bin/sh -c pip install --no-binary lightgbm lightgbm]: exit code: 1

@@ -1,0 +1,25 @@
+2025-04-30 15:56:06,665:WARNING:/home/yunlong/src/tutorials1/DATA605/Spring2025/projects/TutorTask156_Spring2025_Real_time_bitcoin_data_processing_using_Amazon_RDS/bitcoin_rds_utils.py:289: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params=(days,))
+
+2025-04-30 16:36:20,496:WARNING:<string>:13: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+
+2025-05-01 00:33:15,411:WARNING:/tmp/ipykernel_65826/3888707929.py:14: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df_hourly = pd.read_sql_query(hourly_query, conn)
+
+2025-05-01 00:38:02,116:WARNING:/tmp/ipykernel_65826/2538986459.py:14: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df_hourly = pd.read_sql_query(hourly_query, conn)
+
+2025-05-01 00:39:14,302:WARNING:/tmp/ipykernel_65826/2538986459.py:14: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df_hourly = pd.read_sql_query(hourly_query, conn)
+
+2025-05-01 00:40:37,239:WARNING:/tmp/ipykernel_65826/1596153051.py:14: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df_hourly = pd.read_sql_query(hourly_query, conn)
+
+2025-05-01 00:42:29,833:WARNING:/tmp/ipykernel_65826/2519717897.py:15: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df_hourly = pd.read_sql_query(hourly_query, conn)
+
+2025-05-01 01:14:55,689:WARNING:<string>:13: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+
+2025-05-01 01:14:56,465:WARNING:/tmp/ipykernel_65826/2885578866.py:14: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df_hourly = pd.read_sql_query(hourly_query, conn)
+

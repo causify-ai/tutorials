@@ -1,0 +1,36 @@
+flag_management:
+  individual_flags:
+    - name: fast
+      carryforward: true
+    - name: slow
+      carryforward: true
+    - name: superslow
+      carryforward: true
+
+comment:
+  layout: "reach, diff, files"
+  behavior: default
+  require_changes: false
+  show_critical_paths: false
+
+github_checks:
+  annotations: false
+
+coverage:
+  status:
+    project:
+      default:
+        # compare against the PR’s base commit coverage
+        target: auto
+        # fail if overall coverage drops by ≥1%
+        threshold: 1%
+        # only include these flags in the project-level check
+        flags:
+          - fast
+          - slow
+          - superslow
+        # only run this check when targeting master
+        branches:
+          - master
+    # turn on the patch-level coverage check
+    patch: true
