@@ -1,0 +1,54 @@
+# ~/.bashrc: executed by bash(1) for non-login shells.
+
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
+# don't put duplicate lines in the history
+HISTCONTROL=ignoredups:ignorespace
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# for setting history length
+HISTSIZE=1000
+HISTFILESIZE=2000
+
+# check the window size after each command
+shopt -s checkwinsize
+
+# make less more friendly for non-text input files
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# set a fancy prompt
+PS1='\[\033[01;32m\]\u@docker\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+
+# enable color support of ls
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+# some more ls aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+
+# Add RDS-specific aliases
+alias sql-connect='psql -h $RDS_HOST -U $RDS_USER -d $RDS_DATABASE'
+alias bitcoin-update='python -c "import bitcoin_rds_utils as brds; brds.fetch_and_store_bitcoin_data()"'
+
+# Set default Python path
+export PYTHONPATH=$PYTHONPATH:/project
+
+# Load environment variables from .env if it exists
+if [ -f /project/.env ]; then
+    set -a
+    source /project/.env
+    set +a
+    echo "Loaded environment variables from .env"
+fi
+
+echo "Bitcoin RDS Docker environment ready!"

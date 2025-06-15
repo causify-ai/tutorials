@@ -21,31 +21,38 @@ RUN apt install -y --no-install-recommends \
 
 RUN python3 -m pip install --upgrade pip
     
-# Install Python packages.
-# There is a bug:
-#   File "/opt/homebrew/lib/python3.10/site-packages/tornado/iostream.py", line 182, in advance
-#   assert 0 < size <= self._size
-# for tornado==6.2 and jupyter-client==8.0.2.
-# https://discourse.jupyter.org/t/jupyter-notebook-zmq-message-arrived-on-closed-channel-error/17869/10
-RUN pip3 install \
+# Install all Python packages for Bitcoin RDS project
+RUN pip install \
     ipython \
     tornado==6.1 \
     jupyter-client==7.3.2 \
     jupyter-contrib-core \
     jupyter-contrib-nbextensions \
     psycopg2-binary \
-    yapf
+    yapf \
+    pandas \
+    numpy \
+    matplotlib \
+    seaborn \
+    requests \
+    scikit-learn \
+    python-dotenv \
+    notebook \
+    jupyterlab \
+    plotly \
+    streamlit
 
 RUN mkdir /install
 
 # Install Jupyter extensions.
-ADD install_jupyter_extensions.sh /install
+ADD install_jupyter_extensions_copy.sh /install/install_jupyter_extensions.sh
 RUN /install/install_jupyter_extensions.sh
 
 # Config.
-ADD etc_sudoers /install/
-COPY etc_sudoers /etc/sudoers
-COPY bashrc /root/.bashrc
+ADD etc_sudoers_copy /install/etc_sudoers
+COPY etc_sudoers_copy /etc/sudoers
+COPY bashrc_copy /root/.bashrc
+
 
 # Report package versions.
 ADD version.sh /install/
@@ -53,3 +60,11 @@ RUN /install/version.sh 2>&1 | tee version.log
 
 # Jupyter.
 EXPOSE 8888
+
+# Set up working directory for project
+WORKDIR /project
+
+# Add a command to start Jupyter when container runs
+COPY run_jupyter.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/run_jupyter.sh
+CMD ["/usr/local/bin/run_jupyter.sh"]
