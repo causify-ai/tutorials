@@ -1,7 +1,4 @@
-#!/bin/bash -xe
+#!/bin/bash
 
-jupyter-notebook \
-    --port=8888 \
-    --no-browser --ip=0.0.0.0 \
-    --allow-root \
-    --NotebookApp.token='' --NotebookApp.password=''
+cd /project
+jupyter notebook --config=/project/jupyter_no_auth.py

@@ -1,0 +1,80 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.29kB done
+#1 DONE 0.0s
+
+#2 [auth] library/ubuntu:pull token for registry-1.docker.io
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/ubuntu:20.04
+#3 DONE 0.5s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 216B done
+#5 DONE 0.0s
+
+#6 [10/15] RUN /install/install_jupyter_extensions.sh
+#6 CACHED
+
+#7 [ 3/15] RUN apt-get -y upgrade
+#7 CACHED
+
+#8 [ 7/15] RUN pip3 install     ipython     tornado==6.1     jupyter-client==7.3.2     jupyter-contrib-core     jupyter-contrib-nbextensions     psycopg2-binary     yapf
+#8 CACHED
+
+#9 [ 8/15] RUN mkdir /install
+#9 CACHED
+
+#10 [ 6/15] RUN python3 -m pip install --upgrade pip
+#10 CACHED
+
+#11 [ 5/15] RUN apt install -y --no-install-recommends     python3     python3-pip     python3-dev
+#11 CACHED
+
+#12 [ 4/15] RUN apt install -y --no-install-recommends     sudo     curl     systemctl     gnupg     git     vim
+#12 CACHED
+
+#13 [ 9/15] ADD install_jupyter_extensions.sh /install
+#13 ERROR: failed to calculate checksum of ref yims94dopm8vj9efrvauphx95::3xbh0jj2yjnbrby7xl3nmcyz5: "/install_jupyter_extensions.sh": not found
+
+#14 [13/15] COPY bashrc /root/.bashrc
+#14 ERROR: failed to calculate checksum of ref yims94dopm8vj9efrvauphx95::3xbh0jj2yjnbrby7xl3nmcyz5: "/bashrc": not found
+
+#15 [12/15] COPY etc_sudoers /etc/sudoers
+#15 ERROR: failed to calculate checksum of ref yims94dopm8vj9efrvauphx95::3xbh0jj2yjnbrby7xl3nmcyz5: "/etc_sudoers": not found
+
+#16 [11/15] ADD etc_sudoers /install/
+#16 ERROR: failed to calculate checksum of ref yims94dopm8vj9efrvauphx95::3xbh0jj2yjnbrby7xl3nmcyz5: "/etc_sudoers": not found
+
+#17 [ 1/15] FROM docker.io/library/ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214
+#17 resolve docker.io/library/ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214 done
+#17 DONE 0.0s
+
+#18 [ 2/15] RUN apt-get -y update
+#18 CANCELED
+------
+ > [13/15] COPY bashrc /root/.bashrc:
+------
+------
+ > [12/15] COPY etc_sudoers /etc/sudoers:
+------
+------
+ > [11/15] ADD etc_sudoers /install/:
+------
+------
+ > [ 9/15] ADD install_jupyter_extensions.sh /install:
+------
+Dockerfile:48
+--------------------
+  46 |     ADD etc_sudoers /install/
+  47 |     COPY etc_sudoers /etc/sudoers
+  48 | >>> COPY bashrc /root/.bashrc
+  49 |     
+  50 |     # Report package versions.
+--------------------
+ERROR: failed to solve: failed to compute cache key: failed to calculate checksum of ref yims94dopm8vj9efrvauphx95::3xbh0jj2yjnbrby7xl3nmcyz5: "/bashrc": not found

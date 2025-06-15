@@ -1,61 +1,45 @@
 #!/bin/bash
 #
-# Execute run_jupyter.sh in the container.
-# 
-# Usage:
-# > docker_jupyter.sh -d /Users/saggese/src/git_gp1/code/book.2018.Martin.Bayesian_Analysis_with_Python.2e -v -u -p 8889
+# Run Jupyter for Bitcoin RDS project
 #
 
-set -e
-#set -x
+# Directory where this script is located
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+cd $DIR
 
-# Parse params.
-export JUPYTER_HOST_PORT=8888
-export JUPYTER_USE_VIM=0
-export TARGET_DIR=""
-export VERBOSE=0
+# Source the docker name configuration
+source ./docker_name.sh
 
-OLD_CMD_OPTS=$@
-while getopts p:d:uv flag
+# Default settings
+JUPYTER_HOST_PORT=8888
+
+# Calculate project directory (parent directory of the docker_data605_style folder)
+PROJECT_DIR="$(cd .. && pwd)"
+
+# Parse command line arguments for port
+while getopts p: flag
 do
     case "${flag}" in
         p) JUPYTER_HOST_PORT=${OPTARG};;
-        u) JUPYTER_USE_VIM=1;;
-        d) TARGET_DIR=${OPTARG};;
-        # /Users/saggese/src/git_gp1/code/
-        v) VERBOSE=1;;
     esac
 done
 
-if [[ $VERBOSE == 1 ]]; then
-    set -x
-fi;
+echo "Starting Jupyter notebook for Bitcoin RDS project..."
+echo "Port: $JUPYTER_HOST_PORT"
+echo "Project directory: $PROJECT_DIR"
 
-# Import the utility functions.
-GIT_ROOT=$(git rev-parse --show-toplevel)
-source $GIT_ROOT/docker_common/utils.sh
-
-# Execute the script setting the vars for this tutorial.
-get_docker_vars_script ${BASH_SOURCE[0]}
-source $DOCKER_NAME
-print_docker_vars
-
-# Run the script.
-DOCKER_RUN_OPTS="-p $JUPYTER_HOST_PORT:$JUPYTER_HOST_PORT"
-if [[ $TARGET_DIR != "" ]]; then
-    DOCKER_RUN_OPTS="$DOCKER_RUN_OPTS -v $TARGET_DIR:/data"
-fi;
-CMD="/curr_dir/run_jupyter.sh $OLD_CMD_OPTS"
-
-# From docker_cmd.sh passing DOCKER_OPTS.
-run "docker image ls $FULL_IMAGE_NAME"
-(docker manifest inspect $FULL_IMAGE_NAME | grep arch) || true
-
-CONTAINER_NAME=$IMAGE_NAME
-run "docker run \
-    --rm -ti \
-    --name $CONTAINER_NAME \
-    $DOCKER_RUN_OPTS \
-    -v $(pwd):/curr_dir \
+# Run the Docker container
+docker run \
+    --rm -it \
+    --name $IMAGE_NAME-jupyter \
+    -p $JUPYTER_HOST_PORT:8888 \
+    -v $PROJECT_DIR:/project \
     $FULL_IMAGE_NAME \
-    $CMD"
+    jupyter notebook \
+    --ip=0.0.0.0 \
+    --port=8888 \
+    --no-browser \
+    --allow-root \
+    --NotebookApp.notebook_dir=/project \
+    --NotebookApp.token='' \
+    --NotebookApp.password=''

@@ -27,19 +27,17 @@ class FredDataDownloader:
     Download historical data from FRED.
     """
 
-    def __init__(self, api_key: Optional[str] = None) -> None:
+    def __init__(self) -> None:
         """
         Initialize the FRED data downloader with the API key.
-
-        If no FRED API key is passed as a parameter, it is read from the
-        environment variable.
-
-        :param api_key: FRED API key
         """
-        key = api_key or os.getenv("FRED_API_KEY")
-        if not key:
-            raise ValueError("FRED API key is required")
-        self._client = fredapi.Fred(api_key=key)
+        hdbg.dassert_in(
+            "FRED_API_KEY",
+            os.environ,
+            msg="FRED_API_KEY is not found in environment variables",
+        )
+        api_key = os.getenv("FRED_API_KEY")
+        self._client = fredapi.Fred(api_key=api_key)
 
     @ratelimit.sleep_and_retry
     @ratelimit.limits(calls=60, period=60)

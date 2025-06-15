@@ -1,0 +1,13 @@
+{
+  "base_url": "/",
+  "hostname": "0.0.0.0",
+  "password": false,
+  "pid": 1,
+  "port": 8888,
+  "root_dir": "/app",
+  "secure": false,
+  "sock": "",
+  "token": "",
+  "url": "http://2bda7c54eb7c:8888/",
+  "version": "2.16.0"
+}
