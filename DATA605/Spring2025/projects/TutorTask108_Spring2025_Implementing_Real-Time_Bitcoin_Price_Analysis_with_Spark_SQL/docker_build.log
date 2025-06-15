@@ -1,0 +1,87 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.04kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:20.04
+#2 DONE 0.4s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/20] FROM docker.io/library/ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214
+#4 resolve docker.io/library/ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214 done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 2.52kB done
+#5 DONE 0.0s
+
+#6 [ 6/20] RUN python3 -m pip install --upgrade pip
+#6 CACHED
+
+#7 [ 9/20] ADD requirements.txt /install
+#7 CACHED
+
+#8 [ 7/20] RUN pip3 install     ipython     tornado==6.1     jupyter-client==7.3.2     jupyter-contrib-core     jupyter-contrib-nbextensions     psycopg2-binary     yapf
+#8 CACHED
+
+#9 [10/20] RUN pip3 install -r /install/requirements.txt
+#9 CACHED
+
+#10 [14/20] ADD install_jupyter_extensions.sh /install
+#10 CACHED
+
+#11 [ 3/20] RUN apt-get -y upgrade
+#11 CACHED
+
+#12 [16/20] ADD etc_sudoers /install/
+#12 CACHED
+
+#13 [15/20] RUN /install/install_jupyter_extensions.sh
+#13 CACHED
+
+#14 [ 2/20] RUN apt-get -y update
+#14 CACHED
+
+#15 [ 8/20] RUN mkdir /install
+#15 CACHED
+
+#16 [13/20] RUN bash -c "    curl -fSL https://archive.apache.org/dist/spark/spark-3.2.0/spark-3.2.0-bin-hadoop3.2.tgz -o spark.tgz &&     tar -xzf spark.tgz &&     mv spark-3.2.0-bin-hadoop3.2 /opt/spark &&     rm spark.tgz "
+#16 CACHED
+
+#17 [17/20] COPY etc_sudoers /etc/sudoers
+#17 CACHED
+
+#18 [19/20] ADD version.sh /install/
+#18 CACHED
+
+#19 [ 4/20] RUN apt install -y --no-install-recommends     sudo     curl     systemctl     gnupg     git     vim
+#19 CACHED
+
+#20 [ 5/20] RUN apt install -y --no-install-recommends     python3     python3-pip     python3-dev
+#20 CACHED
+
+#21 [12/20] RUN apt-get install -y --no-install-recommends curl
+#21 CACHED
+
+#22 [18/20] COPY bashrc /root/.bashrc
+#22 CACHED
+
+#23 [11/20] RUN apt install -y --no-install-recommends openjdk-11-jdk
+#23 CACHED
+
+#24 [20/20] RUN /install/version.sh 2>&1 | tee version.log
+#24 CACHED
+
+#25 exporting to image
+#25 exporting layers done
+#25 exporting manifest sha256:a79d06ea0c1dd5dc15eaaa992fe7075eb6f7e5cccddf188becea1074d0b66acc done
+#25 exporting config sha256:fa67521e66132086e3efba6dbc108a8bab193a74aac7945ef827111c6ce50d01 done
+#25 exporting attestation manifest sha256:648d6e69ac5464ad1be423ead400906ec8e37709adb5329a4ba35bf6b77c5b95 done
+#25 exporting manifest list sha256:05ad4d194996557aa5d7fb18d37b344bda1acc1d9d5455e0324ffae370a5840a done
+#25 naming to docker.io/umd_data605/umd_data605_template:latest done
+#25 unpacking to docker.io/umd_data605/umd_data605_template:latest done
+#25 DONE 0.1s
