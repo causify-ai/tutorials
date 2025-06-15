@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  neo4j:
+    image: neo4j:5.15
+    container_name: neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      NEO4J_AUTH: ${NEO4J_USERNAME}/${NEO4J_PASSWORD}
+      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_dbms_security_procedures_unrestricted: 'apoc.meta.*'
+      NEO4J_dbms_security_procedures_allowlist: 'apoc.meta.*'
+    volumes:
+      - neo4j_data:/data
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "${NEO4J_USERNAME}", "-p", "${NEO4J_PASSWORD}", "RETURN 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  loader:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    volumes:
+      - ./bitcoin_transactions_backup.json:/app/bitcoin_transactions_backup.json
+    command: python load_backup_to_db.py
+
+  streamlit-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"
+    depends_on:
+      neo4j:
+        condition: service_healthy
+      loader:
+        condition: service_completed_successfully
+    volumes:
+      - ./:/app
+    command: streamlit run app.py --server.address=0.0.0.0
+
+volumes:
+  neo4j_data:

@@ -1,0 +1,16 @@
+# System/Trash files
+.Trash-0/
+.DS_Store
+
+# Jupyter checkpoints
+**/.ipynb_checkpoints/
+
+# Python cache
+__pycache__/
+
+# Ignore specific file extensions (optional)
+*.trashinfo
+
+# Tutorial folders (if not needed)
+tutorial_github_causify_style/
+

@@ -1,0 +1,10 @@
+pymc>=5.0
+pytensor>=2.16
+pandas>=1.5
+numpy>=1.21
+matplotlib>=3.5
+seaborn>=0.11
+tqdm>=4.60
+arviz>=0.13
+requests>=2.26
+notebook>=6.5

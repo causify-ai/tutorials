@@ -1,0 +1,33 @@
+# Core ML
+tensorflow==2.18.0
+tensorflow-probability[tf]==0.25.0
+
+# Data handling
+pandas==2.2.1
+numpy==1.26.4
+scikit-learn
+
+# Visualization
+matplotlib==3.8.3
+seaborn==0.13.2
+plotly==5.19.0
+streamlit==1.32.2
+
+# HTTP client
+requests==2.31.0
+websockets==12.0
+
+# Config & utilities
+PyYAML==6.0.1
+
+# bitcoin data
+yfinance==0.2.36
+
+# Streaming
+kafka-python==2.0.2
+
+# Additional dependencies
+python-dotenv==1.0.1
+
+# for web app - backend
+uvicorn==0.15.0
