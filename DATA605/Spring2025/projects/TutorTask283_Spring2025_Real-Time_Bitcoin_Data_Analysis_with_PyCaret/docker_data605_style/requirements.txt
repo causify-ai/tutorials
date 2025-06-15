@@ -1,0 +1,1 @@
+pycaret[time_series]==3.0.0 \
