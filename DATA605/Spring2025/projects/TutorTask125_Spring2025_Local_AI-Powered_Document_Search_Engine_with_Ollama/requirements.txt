@@ -4,3 +4,6 @@ numpy
 PyMuPDF
 python-docx
 faiss-cpu
+requests
+pandas
+matplotlib
