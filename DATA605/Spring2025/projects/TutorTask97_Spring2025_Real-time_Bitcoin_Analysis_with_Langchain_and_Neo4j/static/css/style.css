@@ -1,0 +1,101 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+.menu {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.button, .analyze-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.button:hover, .analyze-button:hover {
+    background-color: #45a049;
+}
+
+.summary {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 5px solid #4CAF50;
+    margin: 15px 0;
+    white-space: pre-wrap;
+}
+
+pre {
+    white-space: pre-wrap;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    background-color: #ffebee;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 5px solid #f44336;
+    margin: 15px 0;
+}
+.link {
+    stroke-opacity: 0.6;
+}
+
+.link-label {
+    font-family: Arial, sans-serif;
+    pointer-events: none;
+}
+
+.node text {
+    font-family: Arial, sans-serif;
+    pointer-events: none;
+}
+
+/* Tooltip styling */
+.tooltip {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    pointer-events: none;
+    font-size: 12px;
+    z-index: 10;
+}
+
