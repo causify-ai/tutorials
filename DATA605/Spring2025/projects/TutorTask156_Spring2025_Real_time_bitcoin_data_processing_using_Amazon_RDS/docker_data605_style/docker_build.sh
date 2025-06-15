@@ -1,12 +1,21 @@
-#!/bin/bash -e
+#!/bin/bash
+#
+# Build Docker image for Bitcoin RDS project
+#
 
-GIT_ROOT=$(git rev-parse --show-toplevel)
-source $GIT_ROOT/docker_common/utils.sh
+# Directory where this script is located
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+cd $DIR
 
-REPO_NAME=umd_data605
-IMAGE_NAME=umd_data605_template
+# Source the docker name configuration
+source ./docker_name.sh
 
-# Build container.
-export DOCKER_BUILDKIT=1
-#export DOCKER_BUILDKIT=0
-build_container_image
+echo "Building Bitcoin RDS Docker image: $FULL_IMAGE_NAME"
+
+# Build Docker image with no cache
+docker build -t $FULL_IMAGE_NAME .
+
+echo "Build complete. You can now run:"
+echo "  ./docker_jupyter.sh   # For Jupyter Notebook"
+echo "  ./docker_bash.sh      # For bash shell"
+

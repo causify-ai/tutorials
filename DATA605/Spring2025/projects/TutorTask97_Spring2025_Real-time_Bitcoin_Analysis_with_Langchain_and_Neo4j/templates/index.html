@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Transaction Analysis</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .btn {
+            padding: 12px 24px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #3367d6;
+        }
+        .results {
+            display: none;
+            margin-top: 30px;
+        }
+        .summary {
+            background-color: #f0f8ff;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #4285f4;
+            margin-bottom: 20px;
+            white-space: pre-line;
+        }
+        .view-graph-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 18px;
+            background-color: #34a853;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .view-graph-btn:hover {
+            background-color: #2e8b47;
+        }
+        .graph-container {
+            height: 600px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bitcoin Transaction Analysis Dashboard</h1>
+        <p style="text-align: center;">
+            Select an analysis type to generate insights from the Bitcoin blockchain data.
+        </p>
+        
+        <div class="buttons">
+            <button id="high-value-btn" class="btn">Transaction Analysis Summary</button>
+            <button id="smurfing-btn" class="btn">Analyze Smurfing Patterns</button>
+        </div>
+        
+        <div id="results" class="results">
+            <div class="title" id="analysis-title"></div>
+            <div id="summary" class="summary">
+                <div class="loading">Generating analysis...</div>
+            </div>
+            
+            <button id="view-graph-btn" class="view-graph-btn">View Transaction Graph</button>
+            
+            <div id="graph-container" class="graph-container">
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #4285f4;"></div>
+                        <span>Transaction</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #ea4335;"></div>
+                        <span>Block</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #34a853;"></div>
+                        <span>Wallet</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Current analysis type
+        let currentAnalysisType = '';
+        
+        // High-value transaction analysis button
+        document.getElementById('high-value-btn').addEventListener('click', function() {
+            currentAnalysisType = 'high-value';
+            document.getElementById('analysis-title').textContent = 'High-Value Bitcoin Transaction Analysis';
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('summary').innerHTML = '<div class="loading">Generating analysis...</div>';
+            document.getElementById('graph-container').style.display = 'none';
+            
+            // Make API request to generate analysis
+            fetch('/api/high-value-analysis', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('summary').textContent = data.summary;
+                } else {
+                    document.getElementById('summary').textContent = 'Error: ' + data.error;
+                }
+            })
+            .catch(error => {
+                document.getElementById('summary').textContent = 'Error: ' + error.message;
+            });
+        });
+        
+        // Smurfing pattern analysis button
+        document.getElementById('smurfing-btn').addEventListener('click', function() {
+            currentAnalysisType = 'smurfing';
+            document.getElementById('analysis-title').textContent = 'Bitcoin Smurfing Pattern Analysis';
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('summary').innerHTML = '<div class="loading">Generating analysis...</div>';
+            document.getElementById('graph-container').style.display = 'none';
+            
+            // Make API request to generate analysis
+            fetch('/api/smurfing-analysis', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('summary').textContent = data.summary;
+                } else {
+                    document.getElementById('summary').textContent = 'Error: ' + data.error;
+                }
+            })
+            .catch(error => {
+                document.getElementById('summary').textContent = 'Error: ' + error.message;
+            });
+        });
+        
+        // View graph button
+        document.getElementById('view-graph-btn').addEventListener('click', function() {
+            const graphContainer = document.getElementById('graph-container');
+            
+            if (graphContainer.style.display === 'none') {
+                graphContainer.style.display = 'block';
+                graphContainer.innerHTML = '<div class="loading">Loading graph visualization...</div>';
+                
+                // Fetch graph data and visualize
+                fetch(`/api/graph-data?type=${currentAnalysisType}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        renderGraph(data.nodes, data.links);
+                    })
+                    .catch(error => {
+                        graphContainer.innerHTML = `<div class="loading">Error loading graph: ${error.message}</div>`;
+                    });
+            } else {
+                graphContainer.style.display = 'none';
+            }
+        });
+        
+        // Static graph visualization function
+        function renderGraph(nodes, links) {
+            const container = document.getElementById('graph-container');
+            container.innerHTML = '';
+            
+            // If no nodes, show message
+            if (!nodes || nodes.length === 0) {
+                container.innerHTML = '<div class="loading">No graph data available to display</div>';
+                return;
+            }
+            
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            
+            // Create SVG with zoom functionality
+            const svg = d3.select(container)
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .call(d3.zoom().on("zoom", function(event) {
+                    g.attr("transform", event.transform);
+                }))
+                .append("g");
+            
+            const g = svg.append("g");
+            
+            // Create defs for arrow markers
+            const defs = g.append("defs");
+            
+            // Add arrow marker for SENT relationship
+            defs.append("marker")
+                .attr("id", "sent-arrow")
+                .attr("viewBox", "0 -5 10 10")
+                .attr("refX", 20)
+                .attr("refY", 0)
+                .attr("markerWidth", 6)
+                .attr("markerHeight", 6)
+                .attr("orient", "auto")
+                .append("path")
+                .attr("d", "M0,-5L10,0L0,5")
+                .attr("fill", "#555");
+            
+            // Add arrow marker for RECEIVED relationship
+            defs.append("marker")
+                .attr("id", "received-arrow")
+                .attr("viewBox", "0 -5 10 10")
+                .attr("refX", 20)
+                .attr("refY", 0)
+                .attr("markerWidth", 6)
+                .attr("markerHeight", 6)
+                .attr("orient", "auto")
+                .append("path")
+                .attr("d", "M0,-5L10,0L0,5")
+                .attr("fill", "#555");
+            
+            // Group nodes by type to position them in layers
+            const wallets = nodes.filter(n => n.type === "wallet");
+            const transactions = nodes.filter(n => n.type === "transaction");
+            const blocks = nodes.filter(n => n.type === "block");
+            
+            // Create node mapping
+            const nodeById = {};
+            nodes.forEach(node => {
+                nodeById[node.id] = node;
+            });
+            
+            // Process links
+            const processedLinks = [];
+            for (const link of links) {
+                const sourceNode = typeof link.source === 'number' ? nodes[link.source] : nodeById[link.source];
+                const targetNode = typeof link.target === 'number' ? nodes[link.target] : nodeById[link.target];
+                
+                if (sourceNode && targetNode) {
+                    processedLinks.push({
+                        source: sourceNode,
+                        target: targetNode,
+                        type: link.type
+                    });
+                }
+            }
+            
+            // Assign initial positions in a layered layout
+            const margin = { top: 40, right: 50, bottom: 40, left: 50 };
+            const innerWidth = width - margin.left - margin.right;
+            const innerHeight = height - margin.top - margin.bottom;
+            
+            // Position sender wallets on left, transactions in middle, receivers on right, blocks at bottom
+            const senderWallets = wallets.filter(w => 
+                processedLinks.some(l => l.source.id === w.id && l.type === "SENT")
+            );
+            
+            const receiverWallets = wallets.filter(w => 
+                processedLinks.some(l => l.target.id === w.id && l.type === "RECEIVED")
+            );
+            
+            // Assign x positions based on node type
+            senderWallets.forEach((node, i) => {
+                node.x = margin.left + innerWidth * 0.15;
+                node.y = margin.top + (innerHeight * 0.8 / Math.max(senderWallets.length, 1)) * (i + 0.5);
+            });
+            
+            transactions.forEach((node, i) => {
+                node.x = margin.left + innerWidth * 0.5;
+                node.y = margin.top + (innerHeight * 0.8 / Math.max(transactions.length, 1)) * (i + 0.5);
+            });
+            
+            receiverWallets.forEach((node, i) => {
+                node.x = margin.left + innerWidth * 0.85;
+                node.y = margin.top + (innerHeight * 0.8 / Math.max(receiverWallets.length, 1)) * (i + 0.5);
+            });
+            
+            blocks.forEach((node, i) => {
+                node.x = margin.left + (innerWidth / Math.max(blocks.length, 1)) * (i + 0.5);
+                node.y = margin.top + innerHeight * 0.9;
+            });
+            
+            // Create links with path for better visualization
+            const link = g.append("g")
+                .selectAll(".link")
+                .data(processedLinks)
+                .enter()
+                .append("path")
+                .attr("class", "link")
+                .attr("d", d => {
+                    // Create curved paths
+                    const sourceX = d.source.x;
+                    const sourceY = d.source.y;
+                    const targetX = d.target.x;
+                    const targetY = d.target.y;
+                    
+                    // Calculate control point
+                    const controlX = (sourceX + targetX) / 2;
+                    const controlY = (sourceY + targetY) / 2 - 20;
+                    
+                    return `M${sourceX},${sourceY} Q${controlX},${controlY} ${targetX},${targetY}`;
+                })
+                .attr("fill", "none")
+                .attr("stroke", d => d.type === "SENT" ? "#ff7f0e" : d.type === "RECEIVED" ? "#2ca02c" : "#999")
+                .attr("stroke-width", 1.5)
+                .attr("marker-end", d => {
+                    if (d.type === "SENT") return "url(#sent-arrow)";
+                    if (d.type === "RECEIVED") return "url(#received-arrow)";
+                    return "";
+                });
+            
+            // Add link labels
+            g.selectAll(".link-label")
+                .data(processedLinks)
+                .enter()
+                .append("text")
+                .attr("class", "link-label")
+                .attr("dy", -5)
+                .append("textPath")
+                .attr("href", (d, i) => `#link-path-${i}`)
+                .attr("startOffset", "50%")
+                .attr("text-anchor", "middle")
+                .text(d => d.type)
+                .attr("font-size", "10px")
+                .attr("fill", "#555");
+            
+            // Add invisible paths for link labels
+            g.selectAll("#link-path")
+                .data(processedLinks)
+                .enter()
+                .append("path")
+                .attr("id", (d, i) => `link-path-${i}`)
+                .attr("d", d => {
+                    const sourceX = d.source.x;
+                    const sourceY = d.source.y;
+                    const targetX = d.target.x;
+                    const targetY = d.target.y;
+                    const controlX = (sourceX + targetX) / 2;
+                    const controlY = (sourceY + targetY) / 2 - 20;
+                    return `M${sourceX},${sourceY} Q${controlX},${controlY} ${targetX},${targetY}`;
+                })
+                .attr("fill", "none")
+                .attr("stroke", "none");
+            
+            // Create nodes
+            const node = g.append("g")
+                .selectAll(".node")
+                .data(nodes)
+                .enter()
+                .append("g")
+                .attr("class", "node")
+                .attr("transform", d => `translate(${d.x}, ${d.y})`);
+            
+            // Add circles for nodes
+            node.append("circle")
+                .attr("r", d => {
+                    if (d.type === "transaction") return 7;
+                    if (d.type === "block") return 10;
+                    return 8;
+                })
+                .attr("fill", d => {
+                    if (d.type === "transaction") return "#4285f4";
+                    if (d.type === "block") return "#ea4335";
+                    return "#34a853";
+                })
+                .attr("stroke", "#fff")
+                .attr("stroke-width", 1.5);
+            
+            // Add node labels
+            node.append("text")
+                .text(d => d.label)
+                .attr("font-size", "10px")
+                .attr("text-anchor", "middle")
+                .attr("dy", 20);
+            
+            // Node tooltips
+            node.append("title")
+                .text(d => {
+                    if (d.type === "transaction") {
+                        return `Transaction: ${d.id}` + (d.value ? `\nValue: ${d.value} satoshis` : '');
+                    } else if (d.type === "block") {
+                        return `Block: ${d.label}`;
+                    } else {
+                        return `Wallet: ${d.id}` + 
+                            (d.transactions ? `\nTransactions: ${d.transactions}` : '') +
+                            (d.value ? `\nTotal Value: ${d.value} satoshis` : '');
+                    }
+                });
+            
+            // Add section labels
+            g.append("text")
+                .attr("x", margin.left + innerWidth * 0.15)
+                .attr("y", margin.top - 20)
+                .attr("text-anchor", "middle")
+                .text("Sender Wallets")
+                .attr("font-weight", "bold");
+            
+            g.append("text")
+                .attr("x", margin.left + innerWidth * 0.5)
+                .attr("y", margin.top - 20)
+                .attr("text-anchor", "middle")
+                .text("Transactions")
+                .attr("font-weight", "bold");
+            
+            g.append("text")
+                .attr("x", margin.left + innerWidth * 0.85)
+                .attr("y", margin.top - 20)
+                .attr("text-anchor", "middle")
+                .text("Receiver Wallets")
+                .attr("font-weight", "bold");
+            
+            g.append("text")
+                .attr("x", width/2)
+                .attr("y", margin.top + innerHeight * 0.85 - 20)
+                .attr("text-anchor", "middle")
+                .text("Blocks")
+                .attr("font-weight", "bold");
+            
+            // Add instructions for zooming/panning
+            g.append("text")
+                .attr("x", 10)
+                .attr("y", 20)
+                .text("Scroll to zoom, drag to pan")
+                .attr("font-size", "12px")
+                .attr("fill", "#666");
+        }
+
+    </script>
+</body>
+</html>
