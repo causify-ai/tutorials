@@ -1,0 +1,10 @@
+boto3
+requests
+uuid
+datetime 
+dash
+prophet
+pandas
+numpy
+plotly
+aws-xray-sdk
