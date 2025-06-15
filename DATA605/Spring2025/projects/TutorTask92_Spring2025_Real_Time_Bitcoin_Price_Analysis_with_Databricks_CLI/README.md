@@ -1,8 +1,25 @@
 # Real-Time Bitcoin Price Analysis using Databricks CLI
 
 **Author**: Ritik Pratap Singh  
-**Date**: 2025-04-30  
+**Date**: 2025-05-16  
 **Course**: DATA605 — Spring 2025
+
+---
+
+## Table of Contents
+
+- [1. Project Overview](#1-project-overview)
+- [2. Project Files](#2-project-files)
+- [3. Prerequisites & Setup](#3-prerequisites--setup)
+- [4. Build & Run Docker (data605_style)](#4-build--run-docker-data605_style)
+- [5. Prepare Databricks Workspace](#5-prepare-databricks-workspace)
+- [6. Usage](#6-usage)
+  - [6.1 Run the API demo script](#61-run-the-api-demo-script)
+  - [6.2 Run the full pipeline script](#62-run-the-full-pipeline-script)
+  - [6.3 Interactive Notebooks](#63-interactive-notebooks)
+- [7. Batch Execution](#7-batch-execution)
+- [8. Troubleshooting](#8-troubleshooting)
+- [9. References](#9-references)
 
 ---
 
@@ -40,27 +57,49 @@ databricks_cli.example.md       # markdown docs for example.py
 bitcoin_analysis.ipynb          # analysis notebook to upload into Databricks workspace
 
 config/
-  ├─ cluster_config.json        # cluster creation spec
-  └─ cluster_id.txt             # saved cluster ID after create
+  ├─ cluster_config.json     # JSON spec for creating a new cluster
+  ├─ job_config.json         # JSON spec for submitting the notebook job
+  ├─ cluster_id.txt          # Populated after cluster creation (ID only)
+  ├─ settings.py             # Python constants (workspace URL, CoinGecko URL, etc.)
+  └─ settings.sh             # Shell‐exportable equivalents of settings.py
+
 
 data/
-  ├─ bitcoin_price.json         # appended price records
-  └─ forecast_output.csv        # downloaded forecast results
+  ├─ bitcoin_price.json         # line‐delimited JSON of fetched bitcoin prices
+  ├─ forecast_output.csv        # downloaded forecast results (predictions + CI)
+  └─ metrics.json               # evaluation metrics (MAE, RMSE, MAPE)
+
 
 output_plots/
   ├─ historical.png             # local historical plot
   └─ forecast.png               # local forecast plot
 
+
+docker_data605_style/            # Docker image spec & helper scripts
+  ├─ Dockerfile                  # Ubuntu + Python + Jupyter base image
+  ├─ bashrc                      # Custom shell config for container
+  ├─ docker_bash.sh              # Launch an interactive bash shell
+  ├─ docker_build.sh             # Build the Docker image
+  ├─ docker_clean.sh             # Remove dangling images/containers
+  ├─ docker_exec.sh              # Run arbitrary commands in the image
+  ├─ docker_jupyter.sh           # Start JupyterLab inside container
+  ├─ docker_name.sh              # Helper to tag the image
+  ├─ docker_push.sh              # Push image to remote registry
+  ├─ etc_sudoers                 # Sudoers config for the container
+  ├─ install_jupyter_extensions.sh  # Post-install Jupyter setup
+  ├─ install_project_packages.sh    # Install extra pip/apt packages
+  ├─ run_jupyter.sh              # Entrypoint script for Jupyter
+  └─ version.sh                  # Logs package versions for reproducibility
+
 scripts/                        # auxiliary shell scripts
 requirements.txt                # Python dependencies
-Dockerfile                      # image spec (DATA605 style)
-docker_build.sh                 # build image
-docker_bash.sh                  # start bash shell
-docker_jupyter.sh               # launch JupyterLab
-docker_name.sh                  # tagging helper
 ```
 
 ---
+
+### Methodology Overview
+
+![Databricks UI: new cluster RUNNING](images/project_Methodology.png)
 
 ## 3. Prerequisites & Setup
 
@@ -77,22 +116,82 @@ docker_name.sh                  # tagging helper
 
 ## 4. Build & Run Docker (data605_style)
 
-**Note**: I have copied the `install_jupyter_extensions.sh` & `bashrc` from  `docker_common` into my local project folder. Also I have slightly modified docker- bash,build and Dockfile.
+**Note**: I copied `install_jupyter_extensions.sh` and `.bashrc` from the `docker_common` directory into my local project folder. I also made slight modifications to the Docker-related scripts (`docker_bash.sh`, `docker_build.sh`, `docker_jupyter.sh`) and the `Dockerfile`.
 
-1. **Build the image**  
+1. **Configure & Authenticate Databricks CLI**
+
    ```bash
-   chmod +x docker_*.sh
-   ./docker_build.sh
+   pip install --upgrade databricks-cli
+   databricks --version
+   databricks configure --token
+   # When prompted, enter:
+   #   Databricks Host: https://<your-workspace>.cloud.databricks.com
+   #   Token:           <your-PAT>
    ```
-2. **Start an interactive shell** (mounts your CLI config for persistence)  
+
+   **Note:** This writes your host and token to `~/.databrickscfg` (e.g. `C:\Users\<you>\.databrickscfg` on Windows).
+
+   To verify:
+
    ```bash
-   ./docker_bash.sh --mount-config
+   test -f ~/.databrickscfg \
+     && echo "Databricks CLI config found" \
+     || (echo "No config found—run 'databricks configure --token'" && exit 1)
    ```
-3. **Launch JupyterLab**  
+  After you’ve verified your `~/.databrickscfg`, import your local notebooks into the workspace. In **PowerShell** (so that paths resolve correctly), run:
+
+  ```powershell
+  # Import your analysis notebook
+  databricks workspace import `
+    --format SOURCE `
+    --language PYTHON `
+    .\notebooks\bitcoin_analysis_test.ipynb `
+    /Workspace/bitcoin_analysis.ipynb
+
+  # Import your job‐test notebook
+  databricks workspace import `
+    --format SOURCE `
+    --language PYTHON `
+    .\notebooks\bitcoin_analysis_test.ipynb `
+    /Workspace/api_test_job_notebook.ipynb
+  ```
+
+2. **Build the Docker image**
+
    ```bash
-   ./docker_jupyter.sh --mount-config
+   chmod +x docker_data605_style/docker_*.sh
+   ./docker_data605_style/docker_build.sh
    ```
-   - Visit `http://localhost:8888/lab?token=...`
+
+3. **Option A: Interactive Bash Shell**
+
+   * **Step 1:** Start the container and mount your CLI config.
+
+     ```bash
+     ./docker_data605_style/docker_bash.sh
+     ```
+   * **Step 2:** Inside the container at `root@…:/data#`, install deps and launch:
+    **Note**" if not in `/data` do `cd data` 
+     ```bash
+     pip install -r requirements.txt
+     jupyter notebook --no-browser --ip=0.0.0.0 --port=8888 --allow-root
+     # or run any Python script:
+     python your_script.py
+     ```
+
+4. **Option B: Direct JupyterLab**
+
+   * **Step 1:** Launch Jupyter in one go:
+
+     ```bash
+     ./docker_data605_style/docker_jupyter.sh
+     ```
+   * **Step 2:** In a second terminal (or the same session), install deps:
+
+     ```bash
+     pip install -r /data/requirements.txt
+     ```
+   * Visit `http://localhost:8888/lab?token=…` in your browser.
 
 > **Tip:** If you’d rather pass your host credentials as env-vars instead of mounting:
 > ```bash

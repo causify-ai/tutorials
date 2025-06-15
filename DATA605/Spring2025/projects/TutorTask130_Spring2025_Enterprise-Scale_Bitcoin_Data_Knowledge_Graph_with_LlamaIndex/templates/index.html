@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Knowledge Graph</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #1a1a1a;
+            color: #f9b234;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h1 {
+            margin: 0;
+        }
+        .subtitle {
+            color: #ddd;
+            font-weight: normal;
+        }
+        .query-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .query-input {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        #query-text {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+        }
+        #submit-query {
+            background-color: #f9b234;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        #submit-query:hover {
+            background-color: #e6a012;
+        }
+        .result-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            min-height: 200px;
+            display: none;
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #f9b234;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .examples {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        .examples h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .example-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        .example-item {
+            background-color: #f9f9f9;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .example-item:hover {
+            background-color: #f0f0f0;
+        }
+        .status-bar {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Enterprise-Scale Bitcoin Data Knowledge Graph</h1>
+            <p class="subtitle">Powered by LlamaIndex & Neo4j</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="query-section">
+            <h2>Ask a Question</h2>
+            <div class="query-input">
+                <input type="text" id="query-text" placeholder="Ask anything about Bitcoin blocks, transactions, economic indicators, or on-chain metrics...">
+                <button id="submit-query">Submit</button>
+            </div>
+            <div class="spinner" id="loading-spinner"></div>
+        </div>
+        
+        <div class="result-section" id="result-container">
+            <h2>Results</h2>
+            <div id="query-result"></div>
+        </div>
+        
+        <div class="examples">
+            <h3>Example Queries</h3>
+            <div class="example-list">
+                <div class="example-item">When was block 894214 created?</div>
+                <div class="example-item">Show me high-value transactions in the last week</div>
+                <div class="example-item">What was the S&P 500 value on April 24, 2025?</div>
+                <div class="example-item">What was the Bitcoin hash rate last week?</div>
+                <div class="example-item">How did economic indicators correlate with Bitcoin price?</div>
+                <div class="example-item">Show me high transaction volume periods and related economic data</div>
+            </div>
+        </div>
+        
+        <div class="status-bar" id="status-info">
+            Last updated: <span id="last-update">Loading...</span>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const queryInput = document.getElementById('query-text');
+            const submitButton = document.getElementById('submit-query');
+            const spinner = document.getElementById('loading-spinner');
+            const resultContainer = document.getElementById('result-container');
+            const queryResult = document.getElementById('query-result');
+            const exampleItems = document.querySelectorAll('.example-item');
+            const lastUpdateSpan = document.getElementById('last-update');
+            
+            // Load system status
+            async function fetchStatus() {
+                try {
+                    const response = await fetch('/api/status');
+                    const data = await response.json();
+                    
+                    if (data.last_update) {
+                        const updateTime = new Date(data.last_update);
+                        lastUpdateSpan.textContent = updateTime.toLocaleString();
+                    } else {
+                        lastUpdateSpan.textContent = 'Not yet updated';
+                    }
+                    
+                    if (data.is_updating) {
+                        lastUpdateSpan.textContent += ' (Updating now...)';
+                    }
+                } catch (error) {
+                    lastUpdateSpan.textContent = 'Status unavailable';
+                    console.error('Error fetching status:', error);
+                }
+            }
+            
+            // Initial status fetch
+            fetchStatus();
+            // Update status every minute
+            setInterval(fetchStatus, 60000);
+            
+            // Function to submit a query
+            async function submitQuery(query) {
+                spinner.style.display = 'block';
+                resultContainer.style.display = 'none';
+                
+                try {
+                    const response = await fetch('/api/query', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ query }),
+                    });
+                    
+                    const data = await response.json();
+                    
+                    // Display the result
+                    if (data.error) {
+                        queryResult.innerHTML = `<p class="error">${data.error}</p>`;
+                    } else {
+                        queryResult.innerHTML = `<p>${data.result.replace(/\n/g, '<br>')}</p>`;
+                    }
+                    
+                    resultContainer.style.display = 'block';
+                } catch (error) {
+                    queryResult.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+                    resultContainer.style.display = 'block';
+                } finally {
+                    spinner.style.display = 'none';
+                }
+            }
+            
+            // Submit button click event
+            submitButton.addEventListener('click', () => {
+                const query = queryInput.value.trim();
+                if (query) {
+                    submitQuery(query);
+                }
+            });
+            
+            // Enter key press event
+            queryInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const query = queryInput.value.trim();
+                    if (query) {
+                        submitQuery(query);
+                    }
+                }
+            });
+            
+            // Example item click events
+            exampleItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const exampleQuery = item.textContent;
+                    queryInput.value = exampleQuery;
+                    submitQuery(exampleQuery);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

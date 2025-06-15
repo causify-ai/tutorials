@@ -1,0 +1,6 @@
+pyspark==3.2.0
+requests
+pandas
+matplotlib
+plotly
+notebook

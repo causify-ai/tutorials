@@ -1,0 +1,5 @@
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+docker_data605_style/tmp.build/
+tmp.build/

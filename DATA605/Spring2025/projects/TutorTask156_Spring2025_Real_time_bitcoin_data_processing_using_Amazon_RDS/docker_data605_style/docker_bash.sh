@@ -1,15 +1,25 @@
-#!/bin/bash -xe
+#!/bin/bash
+#
+# Run bash shell in the Bitcoin RDS project container
+#
 
-REPO_NAME=umd_data605
-IMAGE_NAME=umd_data605_template
-FULL_IMAGE_NAME=$REPO_NAME/$IMAGE_NAME
+# Directory where this script is located
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+cd $DIR
 
-docker image ls $FULL_IMAGE_NAME
+# Source the docker name configuration
+source ./docker_name.sh
 
-CONTAINER_NAME=$IMAGE_NAME
-docker run --rm -ti \
-    --name $CONTAINER_NAME \
-    --entrypoint /data \    
-    -p 8888:8888 \
-    -v $(pwd):/data \
-    $FULL_IMAGE_NAME
+# Set the project directory
+PROJECT_DIR=/home/yunlong/src/tutorials1/DATA605/Spring2025/projects/TutorTask156_Spring2025_Real_time_bitcoin_data_processing_using_Amazon_RDS
+
+echo "Starting bash shell for Bitcoin RDS project..."
+echo "Using image: $FULL_IMAGE_NAME"
+
+# Run Docker container with bash shell
+docker run --rm -it \
+    --name $IMAGE_NAME-bash \
+    -v $PROJECT_DIR:/project \
+    $FULL_IMAGE_NAME \
+    /bin/bash
+
