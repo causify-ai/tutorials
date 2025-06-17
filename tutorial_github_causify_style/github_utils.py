@@ -33,12 +33,12 @@ class GitHubAPI:
     """
 
     def __init__(
-        self, access_token: Optional[str] = None, base_url: Optional[str] = None
+        self, *, access_token: Optional[str] = None, base_url: Optional[str] = None
     ):
         """
         Initialize the GitHub API client.
 
-        :param access_token: github personal access token; if not provided, it
+        :param access_token: GitHub personal access token; if not provided, it
             is fetched from the environment variable `GITHUB_ACCESS_TOKEN`
         :param base_url: optional custom GitHub Enterprise base URL
         """

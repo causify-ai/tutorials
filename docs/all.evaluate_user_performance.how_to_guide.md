@@ -22,16 +22,16 @@
 
 # Developer Performance Evaluation Toolkit
 
-This toolkit collects, caches, and analyzes GitHub activity (commits, PRs, LOC,
-issues) for a set of users and repositories over a chosen time window. The
-github utils code is located at
-[`/tutorial_github_causify_style/github_utils.py`](/tutorial_github_causify_style/github_utils.py)
+- This toolkit collects and analyzes GitHub activity (commits, PRs, LOC, issues)
+  for a set of users and repositories over a chosen time window
+- The GitHub utils code is located at
+  [`/tutorial_github_causify_style/github_utils.py`](/tutorial_github_causify_style/github_utils.py)
 
 ## Architectural Overview
 
 - One-time data download
   - We fetch all activity for the full analysis window and cache it on disk
-    (JSON)
+    (as JSON file)
   - Subsequent analyses reuse that cached data, so we never re-hit the GitHub
     API unless you extend the time window or explicitly clear the cache
   - This avoids rate limits and long network waits
@@ -53,31 +53,33 @@ github utils code is located at
 
 ### Define a UTC period
 
-We convert two ISO date strings to timezone-aware datetime objects:
-
-```bash
-period = github_utils.utc_period("2025-01-01", "2025-05-24")
-```
+- We convert two ISO date strings to timezone-aware datetime objects:
+  ```bash
+  period = github_utils.utc_period("2025-01-01", "2025-05-24")
+  ```
 
 ### Prefetch and cache all activity
 
-- This call iterates over every (user, repo) pair, fetches commits, PRs, LOC,
-  and issues once, and writes them to JSON cache files. The console shows a tqdm
-  progress bar:
+- The following call:
+  - Iterates over every (user, repo) pair
+  - Fetches commits, PRs, LOC, and issues once
+  - Writes them to JSON cache files
 
-```bash
-github_utils.prefetch_periodic_user_repo_data(
-    client,
-    org="causify-ai",
-    repos=["helpers", "tutorials", "cmamp"],
-    users=["Shaunak01", "tkpratardan", "Prahar08modi"],
-    period=period,
-)
-```
+  ```bash
+  github_utils.prefetch_periodic_user_repo_data(
+      client,
+      org="causify-ai",
+      repos=["helpers", "tutorials", "cmamp"],
+      users=["Shaunak01", "tkpratardan", "Prahar08modi"],
+      period=period,
+  )
+  ```
 
-- The decorator `@simple_cache` keys each API result by function name +
-  arguments and writes through to disk (cache.\*.json). Future calls with the
-  same arguments are instantaneous cache hits.
+- Progress is tracked with a `tqdm` progress bar
+
+- The decorator `@simple_cache` keys each API result by function name and
+  arguments and writes through to disk `cache.\*.json`
+  - Future calls with the same arguments are instantaneous cache hits.
 
 ## Collecting Metrics
 
@@ -127,7 +129,7 @@ github_utils.plot_metrics_by_user(
 
 ### Multi-metric comparison across users
 
-```bash
+```python
 github_utils.plot_multi_metrics_totals_by_user(
     combined,
     metrics=["commits", "prs", "additions", "issues_closed"],
@@ -146,21 +148,21 @@ github_utils.plot_multi_metrics_totals_by_user(
 
 ### Z-scores (standard deviations from group mean)
 
-Before computing benchmarks, use summarize_users_across_repos() to aggregate
-total metrics per user across selected repos.
+- Before computing benchmarks, use `summarize_users_across_repos()` to aggregate
+  total metrics per user across selected repos
 
-```bash
-summary = github_utils.summarize_users_across_repos(
-    combined,
-    users=["Shaunak01", "tkpratardan", "Prahar08modi"],
-    repos=["helpers", "tutorials", "cmamp"],
-)
+  ```python
+  summary = github_utils.summarize_users_across_repos(
+      combined,
+      users=["Shaunak01", "tkpratardan", "Prahar08modi"],
+      repos=["helpers", "tutorials", "cmamp"],
+  )
 
-z_df = github_utils.compute_z_scores(
-    summary,
-    metrics=["commits", "prs", "additions"],
-)
-```
+  z_df = github_utils.compute_z_scores(
+      summary,
+      metrics=["commits", "prs", "additions"],
+  )
+  ```
 
 ### Percentile ranks (0–1 scale)
 
