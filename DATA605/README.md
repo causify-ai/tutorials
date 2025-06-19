@@ -138,20 +138,15 @@
       **`Spring2025_Redis_cache_to_fetch_user_profiles`**
 
 - **Create a GitHub Issue**
-  - Create a **GitHub issue** with your **project tag** as the title.
+  - [ ] Create a **GitHub issue** with your **project tag** as the title.
     - Example: `Spring2025_Redis_cache_to_fetch_user_profiles`
-  - Copy/paste the project description and add a link to the Google Doc with the
-    details.
-  - Assign the issue to yourself.
-  - We will use this issue for project-related discussions.
-  - Update the
-    [signup sheet](https://docs.google.com/spreadsheets/d/1Ez5uRvOgvDMkFc9c6mI21kscTKnpiCSh4UkUh_ifLIw/edit?gid=0#gid=0)
-    with the git hub issue link.
+  - [ ] Copy/paste the project description and add a link to the Google Doc with the details.
+  - [ ] Assign the issue to yourself. This issue will be used for project-related discussions.
+  - [ ] Update the [signup sheet](https://docs.google.com/spreadsheets/d/1Ez5uRvOgvDMkFc9c6mI21kscTKnpiCSh4UkUh_ifLIw/edit?gid=0#gid=0) with the GitHub issue link.
 
 - **Create a Git Branch Named After the Issue**
-  - Name your Git branch as follows: `TutorTask{issue_number}_{project_tag}`
-    - Example: If your issue number is **#645**, your branch name should be:
-      **`TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles`**
+  - [ ] Name your Git branch as follows: `TutorTask{issue_number}_{project_tag}`
+    - Example: If your issue number is **#645**, your branch name should be: **`TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles`**
 
 - **Steps to create the branch:**
 
@@ -176,14 +171,11 @@
   - Start working on the files
 
 - **Create a Pull Request (PR)**:
-  - Always create a **Pull Request (PR)** from your branch.
-  - The name of the PR should be the same as the name of your project branch,
-    and must reference the issue number your branch is based on.
-  - Add your TAs (e.g., `@tkpratardan`, `@Prahar08modi`) and `@gpsaggese` as
-    reviewers.
-  - Assign the PR to yourself.
-  - You cannot push directly to the `master` branch. Only push commits to **your
-    project branch.**
+  - [ ] Always create a **Pull Request (PR)** from your branch.
+  - [ ] Name the PR the same as your project branch, and reference the issue number your branch is based on.
+  - [ ] Add your TAs (e.g., `@tkpratardan`, `@Prahar08modi`) and `@gpsaggese` as reviewers.
+  - [ ] Assign the PR to yourself.
+  - [ ] Do **not** push directly to the `master` branch. Only push commits to **your project branch**.
 
 - **Naming for Consecutive Updates**
   - When making progress, use incremental branch names by appending `_1`, `_2`
