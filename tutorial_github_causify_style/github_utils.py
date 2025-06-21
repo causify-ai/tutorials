@@ -84,7 +84,7 @@ def get_repo_names(client: github.Github, org_name: str) -> Dict[str, List[str]]
         - owner: name of the organization
         - repositories: repository names
     """
-    # TODO: Turn the try-except into an assertion. No point in trying to recover.
+    # TODO(*): Turn the try-except into an assertion. No point in trying to recover.
     try:
         # Attempt to get the organization.
         owner = client.get_organization(org_name)
@@ -98,7 +98,6 @@ def get_repo_names(client: github.Github, org_name: str) -> Dict[str, List[str]]
     return result
 
 
-# TODO(prahar08modi): Test the function using pytest
 def get_github_contributors(
     client: github.Github, repo_names: List[str]
 ) -> Dict[str, List[str]]:
@@ -157,6 +156,7 @@ def normalize_period_to_utc(
 def get_total_commits(
     client: github.Github,
     org_name: str,
+    *,
     usernames: Optional[List[str]] = None,
     period: Optional[Tuple[datetime.datetime, datetime.datetime]] = None,
 ) -> Dict[str, Any]:
@@ -590,6 +590,7 @@ def get_issues_without_assignee(
 # #############################################################################
 
 
+# TODO(*): -> ...by_user
 def get_commits_by_person(
     client: github.Github,
     username: str,
@@ -613,7 +614,7 @@ def get_commits_by_person(
     result = get_total_commits(
         client=client, org_name=org_name, usernames=[username], period=period
     )
-    # TODO(False): Functions-224: Do not put computations of the output in the `return` line. Compute the output first, assign it to a variable, and then return this variable.
+    # TODO(*): Functions-224: Do not put computations of the output in the `return` line. Compute the output first, assign it to a variable, and then return this variable.
     return {
         "user": username,
         "total_commits": result["total_commits"],
@@ -653,7 +654,7 @@ def get_prs_by_person(
         period=period,
         state=state,
     )
-    # TODO(False): Functions-224: Do not put computations of the output in the `return` line. Compute the output first, assign it to a variable, and then return this variable.
+    # TODO(*): Functions-224: Do not put computations of the output in the `return` line. Compute the output first, assign it to a variable, and then return this variable.
     return {
         "user": username,
         "total_prs": result["total_prs"],
@@ -686,7 +687,7 @@ def get_prs_not_merged_by_person(
     result = get_prs_not_merged(
         client=client, org_name=org_name, usernames=[username], period=period
     )
-    # TODO(False): Functions-224: Do not put computations of the output in the `return` line. Compute the output first, assign it to a variable, and then return this variable.
+    # TODO(*): Functions-224: Do not put computations of the output in the `return` line. Compute the output first, assign it to a variable, and then return this variable.
     return {
         "user": username,
         "prs_not_merged": result["prs_not_merged"],
@@ -1047,7 +1048,7 @@ def build_daily_loc_df(
         # Add context.
         all_days["repo"] = repo
         all_days["user"] = username
-        # TODO(False): Logging-248: Use `_LOG.debug()` instead of `_LOG.info()` for tracing execution.
+        # TODO(*): Logging-248: Use `_LOG.debug()` instead of `_LOG.info()` for tracing execution.
         _LOG.debug("Built daily LOC DataFrame rows=%d (no data).", len(all_days))
         return all_days
     # Otherwise build from stats_list.
