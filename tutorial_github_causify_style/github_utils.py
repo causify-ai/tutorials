@@ -74,7 +74,6 @@ class GitHubAPI:
 # #############################################################################
 
 
-# TODO(prahar08modi): Test the function using pytest
 def get_repo_names(client: github.Github, org_name: str) -> Dict[str, List[str]]:
     """
     Retrieve a list of repositories under a specific organization.
