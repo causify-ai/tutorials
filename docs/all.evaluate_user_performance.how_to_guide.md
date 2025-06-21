@@ -53,7 +53,7 @@
 
 ### Define a UTC period
 
-- We convert two ISO date strings to timezone-aware datetime objects:
+- Convert two ISO date strings to timezone-aware datetime objects:
   ```bash
   period = github_utils.utc_period("2025-01-01", "2025-05-24")
   ```
@@ -79,7 +79,14 @@
 
 - The decorator `@simple_cache` keys each API result by function name and
   arguments and writes through to disk `cache.\*.json`
-  - Future calls with the same arguments are instantaneous cache hits.
+  - Future calls with the same arguments are cache hits
+
+- The stats are collected only for the upstream repo, so they only include
+  commits and PRs on `master`
+  - They do not pick up any work you did in a fork (or the individual commits
+    squashed into a single merge)
+  - For this reason they undercount what GitHub Insights shows for your overall
+    contributions
 
 ## Collecting Metrics
 

@@ -1215,7 +1215,7 @@ def collect_all_metrics(
     return combined
 
 
-# Separate summary functions for user-repo and repo-user metrics for clarity.
+# TODO(*): Separate summary functions for user-repo and repo-user metrics for clarity.
 def summarize_user_metrics_for_repo(
     combined: pd.DataFrame, repo: str
 ) -> pd.DataFrame:
@@ -1370,6 +1370,7 @@ def _plot_grouped_bars(
     ]
     to_plot = metrics if metrics else default_metrics
     for m in to_plot:
+        # TODO(*): Use dassert_in
         if m not in default_metrics:
             raise ValueError(f"Unsupported metric '{m}'")
     # Compute layout parameters.
