@@ -33,7 +33,10 @@ class GitHubAPI:
     """
 
     def __init__(
-        self, *, access_token: Optional[str] = None, base_url: Optional[str] = None
+        self,
+        *,
+        access_token: Optional[str] = None,
+        base_url: Optional[str] = None,
     ):
         """
         Initialize the GitHub API client.
@@ -737,16 +740,37 @@ def get_commit_datetimes_by_repo_period_intrinsic(
     :return: commit timestamps in ISO format
     """
     timestamps: List[str] = []
-    repo_obj = client.get_repo(f"{org}/{repo}")
-    # Grab all commits in range, then filter by author or committer.
-    for c in repo_obj.get_commits(since=since, until=until):
+    try:
+        repo_obj = client.get_repo(f"{org}/{repo}")
+        commits = repo_obj.get_commits(since=since, until=until)
+    except github.GithubException as e:
+        _LOG.warning(
+            "Skipping commit fetch for %s/%s user=%s — repo/user invalid or inaccessible: %s",
+            org,
+            repo,
+            username,
+            e,
+        )
+        return []
+    for c in commits:
+        if not c.commit or not c.commit.author or not c.commit.author.date:
+            continue
         author_login = c.author.login if c.author else None
         committer_login = c.committer.login if c.committer else None
         if username in (author_login, committer_login):
             dt = c.commit.author.date
             dt_utc = dt if dt.tzinfo else dt.replace(tzinfo=datetime.timezone.utc)
             timestamps.append(dt_utc.isoformat())
-    _LOG.debug(
+    if not timestamps:
+        _LOG.info(
+            "No commits found for %s/%s user=%s in %s to %s — possibly outdated or inactive.",
+            org,
+            repo,
+            username,
+            since.date(),
+            until.date(),
+        )
+    _LOG.info(
         "Fetched %d commits for %s/%s user=%s.",
         len(timestamps),
         org,
@@ -780,12 +804,32 @@ def get_pr_datetimes_by_repo_period_intrinsic(
     since_date = since.date().isoformat()
     until_date = until.date().isoformat()
     query = f"repo:{org}/{repo} is:pr author:{username} created:{since_date}..{until_date}"
-    results = client.search_issues(query)
-    for issue in results:
-        dt = issue.created_at
-        dt_utc = dt if dt.tzinfo else dt.replace(tzinfo=datetime.timezone.utc)
-        timestamps.append(dt_utc.isoformat())
-    _LOG.debug(
+    try:
+        results = client.search_issues(query)
+        for issue in results:
+            dt = issue.created_at
+            dt_utc = dt if dt.tzinfo else dt.replace(tzinfo=datetime.timezone.utc)
+            timestamps.append(dt_utc.isoformat())
+    except github.GithubException as e:
+        _LOG.info(
+            "Skipping PR fetch for %s/%s user=%s — invalid, inaccessible, or query failed: %s",
+            org,
+            repo,
+            username,
+            e,
+        )
+        timestamps = []
+        return timestamps
+    if not timestamps:
+        _LOG.debug(
+            "No PRs found for %s/%s user=%s in %s to %s — possibly inactive or outdated.",
+            org,
+            repo,
+            username,
+            since_date,
+            until_date,
+        )
+    _LOG.info(
         "Found %d PRs for %s/%s user=%s.",
         len(timestamps),
         org,
@@ -820,7 +864,19 @@ def get_issue_datetimes_by_repo_intrinsic(
         f"repo:{org}/{repo} type:issue assignee:{username} "
         f"created:{since_date}..{until_date}"
     )
-    issues = client.search_issues(query)
+    result_dict = {}
+    try:
+        issues = client.search_issues(query)
+    except github.GithubException as e:
+        _LOG.warning(
+            "Skipping issue fetch for %s/%s user=%s — invalid, inaccessible, or query failed: %s",
+            org,
+            repo,
+            username,
+            e,
+        )
+        result_dict = {"assigned": [], "closed": []}
+        return result_dict
     assigned: List[str] = []
     closed: List[str] = []
     for issue in issues:
@@ -836,7 +892,7 @@ def get_issue_datetimes_by_repo_intrinsic(
             )
             if period[0] <= dt_utc <= period[1]:
                 closed.append(dt_utc.isoformat())
-    _LOG.debug(
+    _LOG.info(
         "Found %d opened and %d closed issues for %s/%s user=%s",
         len(assigned),
         len(closed),
@@ -844,8 +900,8 @@ def get_issue_datetimes_by_repo_intrinsic(
         repo,
         username,
     )
-    issue_data = {"assigned": assigned, "closed": closed}
-    return issue_data
+    result_dict = {"assigned": assigned, "closed": closed}
+    return result_dict
 
 
 @hcacsimp.simple_cache(cache_type="json", write_through=True)
@@ -869,9 +925,20 @@ def get_loc_stats_by_repo_period_intrinsic(
     :return: additions, deletions in code
     """
     stats_list: List[Dict[str, int]] = []
-    repo_obj = client.get_repo(f"{org}/{repo}")
-    # Grab all commits in range, then filter by author/committer.
-    for c in repo_obj.get_commits(since=since, until=until):
+    try:
+        repo_obj = client.get_repo(f"{org}/{repo}")
+        commits = repo_obj.get_commits(since=since, until=until)
+    except github.GithubException as e:
+        _LOG.warning(
+            "Skipping LOC fetch for %s/%s user=%s — repo/user invalid or inaccessible: %s",
+            org,
+            repo,
+            username,
+            e,
+        )
+        stats_list = []
+        return stats_list
+    for c in commits:
         author_login = c.author.login if c.author else None
         committer_login = c.committer.login if c.committer else None
         if username not in (author_login, committer_login):
@@ -886,6 +953,15 @@ def get_loc_stats_by_repo_period_intrinsic(
         iso = dt_utc.date().isoformat()
         stats_list.append(
             {"date": iso, "additions": s.additions, "deletions": s.deletions}
+        )
+    if not stats_list:
+        _LOG.info(
+            "No LOC stats found for %s/%s user=%s in %s to %s — possibly inactive or outdated.",
+            org,
+            repo,
+            username,
+            since.date(),
+            until.date(),
         )
     _LOG.info(
         "Fetched LOC stats for %s/%s user=%s entries=%d.",
@@ -1505,7 +1581,8 @@ def plot_multi_metrics_totals_by_user(
     users_sorted = summary["user"].tolist()
     x = range(len(users_sorted))
     width = 0.8 / len(metrics) if metrics else 0.8
-    fig, ax = plt.subplots(figsize=(10, 5))
+    fig_width = max(10, len(users_sorted) * 0.7)
+    fig, ax = plt.subplots(figsize=(fig_width, 5))
     # Draw bars for each metric across users
     for i, metric in enumerate(metrics):
         offsets = [pos + i * width for pos in x]
