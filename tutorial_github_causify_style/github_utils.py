@@ -127,7 +127,7 @@ def normalize_period_to_utc(
     """
     Convert a datetime period to UTC and ensure both dates are timezone-aware.
 
-    :param period: Tuple of (start, end) datetime
+    :param period: start and end datetime
     :return: UTC-aware start and end datetime, or (None, None) if period
         is None
     """
@@ -214,7 +214,6 @@ def get_total_commits(
             repo_commit_count = commits.totalCount
         commits_per_repository[repo_name] = repo_commit_count
         total_commits += repo_commit_count
-
     result = {
         "total_commits": total_commits,
         "period": f"{since} to {until}" if since and until else "All time",
@@ -266,7 +265,6 @@ def get_total_prs(
         )
         repo_pr_count = 0
         pulls = repo.get_pulls(state=state)
-
         for pr in pulls:
             hdbg.dassert_is_not(
                 pr, None, f"PR could not be fetched in {repo_name}"
@@ -301,6 +299,16 @@ def get_prs_not_merged(
     """
     Fetch the count of closed but unmerged pull requests in the specified
     repositories and by the specified GitHub users within a given period.
+
+    :param client: authenticated instance of the PyGithub client
+    :param org_name: name of the GitHub organization
+    :param usernames: GitHub usernames to filter pull requests; if None, fetches for all users
+    :param period: start and end datetime for filtering pull requests
+    :return: a dictionary containing:
+        - prs_not_merged (int): total number of closed but unmerged pull requests
+        - period (str): the time range considered
+        - prs_per_repository (Dict[str, int]): repository names as keys and
+            unmerged pull request counts as values
     """
     # Fetch all repositories in the org.
     repos_info = get_repo_names(client, org_name)
