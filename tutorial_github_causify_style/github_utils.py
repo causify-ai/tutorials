@@ -133,13 +133,16 @@ def normalize_period_to_utc(
     """
 
     def to_utc(dt: Optional[datetime.datetime]) -> Optional[datetime.datetime]:
+        res = None
         if dt is None:
-            return None
-        return (
-            dt.replace(tzinfo=datetime.timezone.utc)
-            if dt.tzinfo is None
-            else dt.astimezone(datetime.timezone.utc)
-        )
+            return res
+        else:
+            res = (
+                dt.replace(tzinfo=datetime.timezone.utc)
+                if dt.tzinfo is None
+                else dt.astimezone(datetime.timezone.utc)
+            )
+        return res
 
     norm = (
         tuple(to_utc(dt) for dt in period) if period is not None else (None, None)
