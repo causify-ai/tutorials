@@ -360,16 +360,15 @@ external data‑provider API. Please keep the focus on the tool itself.
 ### Folder Structure
 ```
 DATA605/
-└──Term20xx/
+└── Term20xx/
     └── projects/
         └── TutorTaskXX_Name_of_issue/
-            ├── XYZ_utils/
-            │   ├── data_io.py
-            │   └── post_processing.py
-            ├── XYZ.API.ipynb
-            ├── XYZ.API.md
-            ├── XYZ.example.ipynb
-            ├── XYZ.example.md
+            ├── utils_data_io.py
+            ├── utils_post_processing.py
+            ├── API.ipynb
+            ├── API.md
+            ├── example.ipynb
+            ├── example.md
             ├── Dockerfile
             └── README.md
 ```
