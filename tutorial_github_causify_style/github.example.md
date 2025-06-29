@@ -34,7 +34,7 @@ This document outlines the core endpoints and utility functions provided in the
 `github_utils.py` module. The purpose of this wrapper is to simplify GitHub
 analytics for developer performance tracking and team productivity insights.
 
-## GitHub Endpoints Used in the Wrapper
+## GitHub Endpoints
 
 ### 1. Commits API
 
