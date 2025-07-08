@@ -1,43 +1,42 @@
-FROM ubuntu:22.04
+FROM ubuntu:20.04
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Install build tools and dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
+RUN apt-get -y update
+RUN apt-get -y upgrade
+
+# Install system utilities
+RUN apt install -y --no-install-recommends \
+    sudo \
+    curl \
     wget \
+    gnupg \
+    git \
+    vim \
+    build-essential \
     libssl-dev \
     zlib1g-dev \
     libbz2-dev \
     libreadline-dev \
     libsqlite3-dev \
     libffi-dev \
-    curl \
-    git \
-    vim \
     ca-certificates \
-    gnupg \
     lsb-release
 
-# Install Python 3.13.1 from source
-RUN wget https://www.python.org/ftp/python/3.13.1/Python-3.13.1.tgz && \
-    tar xvf Python-3.13.1.tgz && \
-    cd Python-3.13.1 && \
-    ./configure --enable-optimizations && \
-    make -j$(nproc) && \
-    make altinstall
+# Install Python
+RUN apt install -y --no-install-recommends \
+    python3 \
+    python3-pip \
+    python3-dev
 
-# Set python3.13 as default
-RUN ln -s /usr/local/bin/python3.13 /usr/bin/python && \
-    ln -s /usr/local/bin/pip3.13 /usr/bin/pip
-
-# Install Ollama
-RUN curl -fsSL https://ollama.com/install.sh | sh
-
-# Setup app
-WORKDIR /app
-COPY . /app
-
-# Install Python dependencies
-RUN pip install --no-cache-dir \
+RUN python3 -m pip install --upgrade pip
+    
+# Install Python packages with fixed versions for compatibility
+RUN pip3 install \
+    ipython \
+    tornado==6.1 \
+    jupyter-client==7.3.2 \
+    notebook \
+    jupyter \
     faiss-cpu \
     sentence-transformers \
     streamlit \
@@ -46,10 +45,18 @@ RUN pip install --no-cache-dir \
     requests \
     ollama \
     langchain \
-    langchain-community
+    langchain-community \
+    matplotlib
 
-# Expose ports for Streamlit and Ollama
-EXPOSE 8501 11434
+# Install Ollama
+RUN curl -fsSL https://ollama.com/install.sh | sh
 
-# Start Ollama service and run the Streamlit app
-CMD ["bash", "-c", "ollama serve & streamlit run app.py --server.port=8501 --server.address=0.0.0.0"]
+# Setup app
+WORKDIR /app
+COPY . /app
+
+# Jupyter, Streamlit, and Ollama ports
+EXPOSE 8888 8501 11434
+
+# Start Ollama service alongside Jupyter
+CMD ["bash", "-c", "ollama serve & jupyter notebook --ip 0.0.0.0 --port 8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''"]

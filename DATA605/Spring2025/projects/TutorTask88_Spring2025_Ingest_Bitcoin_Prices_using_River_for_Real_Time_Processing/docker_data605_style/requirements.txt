@@ -1,0 +1,7 @@
+streamlit==1.32.0
+river==0.16.0
+pandas==1.5.3
+matplotlib==3.7.1
+requests==2.31.0
+scikit-learn==1.2.2
+notebook

@@ -1,0 +1,7 @@
+bonobo==0.6.4
+requests
+pandas
+matplotlib
+seaborn
+numpy<2.0
+tenacity
