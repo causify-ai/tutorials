@@ -165,7 +165,7 @@
       `~/src/tutorials1/COURSECODE/Term20xx/projects/TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles`
   - Copy the template files to the project directory:
     ```bash
-    > cp -r ~/src/tutorials1/COURSECODE/tutorial_template/ ~/src/tutorials1/COURSECODE/Term20xx/projects/{branch_name}
+    > cp -r ~/src/tutorials1/class_project_instructions/tutorial_template/ ~/src/tutorials1/COURSECODE/Term20xx/projects/{branch_name}
     > cd ~/src/tutorials1/COURSECODE/Term20xx/projects/{branch_name}
     ```
   - Start working on the files
@@ -233,7 +233,7 @@ development.
 If you're unsure which setup is best or want to explore both, refer to the full
 breakdown in the tutorial template:
 
-- [Tutorial Template: Two Docker Approaches](/DATA605/tutorial_template/README.md)
+- [Tutorial Template: Two Docker Approaches](/class_project_instructions/tutorial_template/README.md)
 
 ## Working on the project
 
@@ -252,7 +252,7 @@ breakdown in the tutorial template:
 
 ### Understanding the deliverables
 
-- Use the project template files in `//tutorials/DATA605/tutorial_template` to
+- Use the project template files in `//tutorials/class_project_instructions/tutorial_template` to
   understand the deliverables and the coding style. They consist of:
 
 - **Utils Module**:
