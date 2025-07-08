@@ -9,6 +9,9 @@ re-use of the downloaded version.
     --output_csv_path " " \
     --secret_path " "
 
+Import as:
+
+import tutorial_class_project_instructions.download_gsheet as tcpidogs
 """
 
 import argparse
@@ -32,6 +35,7 @@ def _extract_sheet(
     df.to_csv(csv_path, index=False)
     print(f"Sheet downloaded and saved to {csv_path}")
 
+
 def _parse() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -50,13 +54,12 @@ def _parse() -> argparse.ArgumentParser:
         required=False,
         help="Path to service account key (optional)",
     )
-
     hparser.add_verbosity_arg(parser)
     return parser
 
+
 def _main(parser: argparse.ArgumentParser) -> None:
     args = parser.parse_args()
-
     _extract_sheet(
         args.sheet_url, args.tab_name, args.output_csv_path, args.secret_path
     )
