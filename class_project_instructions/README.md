@@ -160,9 +160,9 @@
 
 - **Add Files Only in Your Project Directory**
   - Add your project files under the following directory:
-    `{GIT_ROOT}/COURSECODE/Term20xx/projects/{branch_name}`
-    - Example: If you cloned the repo on your laptop, your directory should be:
-      `~/src/tutorials1/COURSECODE/Term20xx/projects/TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles`
+    `{GIT_ROOT}/{COURSE_CODE}/{TERM}{YEAR}/projects/{branch_name}`
+    - Example: If you cloned the repo on your laptop for DATA605, your directory should be:
+      `~/src/tutorials1/DATA605/Spring2025/projects/TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles`
   - Copy the template files to the project directory:
     ```bash
     > cp -r ~/src/tutorials1/class_project_instructions/tutorial_template/ ~/src/tutorials1/COURSECODE/Term20xx/projects/{branch_name}
@@ -190,7 +190,7 @@ Before starting implementation, you need to choose **one** of the two supported
 Docker-based workflows. Finalize your setup choice before proceeding with
 development.
 
-### 1. Simple Docker Setup (`coursecode_style`) — Recommended for Students
+### 1. Simple Docker Setup (`simple`) — Recommended for Students
 
 - A minimal and straightforward setup, modeled after what we use in class
   tutorials.
@@ -206,7 +206,7 @@ development.
 - You may still customize the Dockerfile, expose other ports, or add
   project-specific dependencies as needed.
 
-### 2. Causify-style Thin Docker Environment (`causify_style`)
+### 2. Causify-style Thin Docker Environment (`causify_dev_system`)
 
 - A production-style Docker setup used in internships, RA/TA work, at Causify
   AI.
@@ -216,8 +216,8 @@ development.
 - **Why choose this?**
   - Encouraged for students familiar with Docker or looking to grow into
     advanced workflows
-  - Recommended for contributing to Causify, and long-term
-    class projects
+  - Recommended for contributing to Causify, MSML610, and DATA605 long-term
+    projects
 
 - Setup Guide:
   - To configure your system for this approach, follow this detailed guide:
@@ -359,7 +359,7 @@ external data‑provider API. Please keep the focus on the tool itself.
 
 ### Folder Structure
 ```
-COURSECODE/
+COURSE_CODE/
 └── Term20xx/
     └── projects/
         └── TutorTaskXX_Name_of_issue/
