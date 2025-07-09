@@ -1,0 +1,5 @@
+hash,campaign_name,merge_status
+abc123,Campaign_1,Sent
+ghi789,Campaign_1,Opened
+abc123,Campaign_2,Clicked
+xyz000,Campaign_3,Bounced

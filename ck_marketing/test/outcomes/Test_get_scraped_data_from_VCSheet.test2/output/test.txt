@@ -1,0 +1,2 @@
+Name,First name,Title,Email,Connect,LinkedIn,Website,last_name,company_name
+Ann Miura-Ko,Ann,Co-Founding Partner@Floodgate,ann@floodgate.com,Connect20240530,https://www.linkedin.com/in/amiura/,https://www.vcsheet.com/who/ann-miura-ko,Miura-Ko,Floodgate
