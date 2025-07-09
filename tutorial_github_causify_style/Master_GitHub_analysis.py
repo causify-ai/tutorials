@@ -19,7 +19,7 @@
 # - [Authenticate GitHub Client](#authenticate-github-client)
 # - [Define Time Period](#define-time-period)
 # - [Specify Users and Repos to Fetch and Cache Data](#specify-users-and-repos-to-fetch-and-cache-data)
-#   - [Pre-feth all the data you need in cache](#pre-feth-all-the-data-you-need-in-cache)
+#   - [Pre-fetch all the data you need in cache](#pre-fetch-all-the-data-you-need-in-cache)
 # - [Collect Daily Metrics](#collect-daily-metrics)
 # - [Summarize Contributions and Visualize for Entire period that was cached](#summarize-contributions-and-visualize-for-entire-period-that-was-cached)
 #   - [a. Compare users Total performance across selected repos](#a.-compare-users-total-performance-across-selected-repos)
@@ -51,7 +51,6 @@ logging.basicConfig(level=logging.INFO)
 _LOG = logging.getLogger(__name__)
 
 # %%
-# importlib.reload(github_utils)
 # %load_ext autoreload
 # %autoreload 2
 
@@ -60,7 +59,7 @@ _LOG = logging.getLogger(__name__)
 # # Authenticate GitHub Client
 
 # %%
-# Set your GitHub access token here.
+# Set your GitHub access token.
 os.environ["GITHUB_ACCESS_TOKEN"] = ""
 
 # %%
@@ -82,7 +81,7 @@ print(users)
 # # Define Time Period
 
 # %%
-# Use a long window for caching and a narrow slice for final analysis
+# Use a long window for caching and a narrow slice for final analysis.
 period_full = github_utils.utc_period("2024-01-01", "2025-06-01")
 period_slice = github_utils.utc_period("2025-04-01", "2025-05-31")
 
@@ -91,7 +90,7 @@ period_slice = github_utils.utc_period("2025-04-01", "2025-05-31")
 # # Specify Users and Repos to Fetch and Cache Data
 
 # %%
-# Choose your users and repositories
+# Choose your users and repositories.
 users = [
     "Shaunak01",
     "tkpratardan",
@@ -106,17 +105,18 @@ repos = ["helpers", "tutorials", "cmamp"]
 org = "causify-ai"
 
 # %% [markdown]
+# <a name='pre-fetch-all-the-data-you-need-in-cache'></a>
 # <a name='pre-feth-all-the-data-you-need-in-cache'></a>
-# ## Pre-feth all the data you need in cache
+# ## Pre-fetch all the data you need in cache
 
 # %% [markdown]
-# Query extraction takes time, so prefetch all data in cache for all the users, repos and time frames you need. once in cache there are several utility functions to help understand the user contribution. Following is the data we will fetch for users in multiple repos for the given period
+# Query extraction takes time, so prefetch all data in cache for all the users, repos and time frames you need. once in cache there are several utility functions to help understand the user contribution. Following is the data we will fetch for users in multiple repos for the given period.
 # - Prs opened in the repo
 # - Commits done
 # - LOC [additions and deletions]
 
 # %%
-# This will call the GitHub API and write results to disk
+# This will call the GitHub API and write results to disk.
 github_utils.prefetch_periodic_user_repo_data(
     client, org, repos, users, period_full
 )
@@ -127,8 +127,7 @@ github_utils.prefetch_periodic_user_repo_data(
 # # Collect Daily Metrics
 
 # %%
-# Merge commits, PRs, issues, and LOCs into one DataFrame
-# This DataFrame has one row per (user, repo, date) with metrics: commits, PRs, issues, LOC changes
+# This data has one row per (user, repo, date) with metrics: commits, PRs, issues, LOC changes.
 combined_df = github_utils.collect_all_metrics(
     client, org, repos, users, period_full
 )
