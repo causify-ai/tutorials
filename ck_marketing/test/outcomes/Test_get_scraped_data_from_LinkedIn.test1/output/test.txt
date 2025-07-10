@@ -1,0 +1,2 @@
+hash,origin,timestamp,first_name,last_name,email,email_verification,linkedin_url,job_title,job_title_description,company_name,company_domain,city,stages,restrictions,industry,category,notes
+,Search4.FinTech_VC_in_US,2023-11-09T20:34:20.691Z,Adam,Alfi,aalfi@iconiqcapital.com,,https://www.linkedin.com/in/adam-alfi-52891823/,Partner,Partner at ICONIQ / Growth Stage Technology Investing / Venture Capital / Private Equity,ICONIQ Capital,,,,,,,
