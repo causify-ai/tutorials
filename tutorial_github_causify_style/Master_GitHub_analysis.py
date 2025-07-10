@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.16.7
+#       jupytext_version: 1.17.1
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -19,7 +19,7 @@
 # - [Authenticate GitHub Client](#authenticate-github-client)
 # - [Define Time Period](#define-time-period)
 # - [Specify Users and Repos to Fetch and Cache Data](#specify-users-and-repos-to-fetch-and-cache-data)
-#   - [Pre-feth all the data you need in cache](#pre-feth-all-the-data-you-need-in-cache)
+#   - [Pre-fetch all the data you need in cache](#pre-fetch-all-the-data-you-need-in-cache)
 # - [Collect Daily Metrics](#collect-daily-metrics)
 # - [Summarize Contributions and Visualize for Entire period that was cached](#summarize-contributions-and-visualize-for-entire-period-that-was-cached)
 #   - [a. Compare users Total performance across selected repos](#a.-compare-users-total-performance-across-selected-repos)
@@ -40,22 +40,17 @@
 # !jupyter labextension enable
 
 # %%
+import datetime
 import logging
 import os
-import datetime
-import time
-import importlib 
 
 import github_utils
-import helpers.hcache_simple as hcacsimp
-from github import Github
 
 # Enable logging.
 logging.basicConfig(level=logging.INFO)
 _LOG = logging.getLogger(__name__)
 
 # %%
-#importlib.reload(github_utils)
 # %load_ext autoreload
 # %autoreload 2
 
@@ -64,7 +59,7 @@ _LOG = logging.getLogger(__name__)
 # # Authenticate GitHub Client
 
 # %%
-# Set your GitHub access token here.
+# Set your GitHub access token.
 os.environ["GITHUB_ACCESS_TOKEN"] = ""
 
 # %%
@@ -76,7 +71,9 @@ if not access_token:
 client = github_utils.GitHubAPI(access_token=access_token).get_client()
 
 # %%
-users = github_utils.get_contributors_for_repo(client, "causify-ai", "tutorials", top_n=30)
+users = github_utils.get_contributors_for_repo(
+    client, "causify-ai", "tutorials", top_n=30
+)
 print(users)
 
 # %% [markdown]
@@ -84,35 +81,45 @@ print(users)
 # # Define Time Period
 
 # %%
-# Use a long window for caching and a narrow slice for final analysis
-period_full  = github_utils.utc_period("2024-01-01", "2025-06-01")
-period_slice = github_utils.utc_period("2025-04-01", "2025-05-31")  
+# Use a long window for caching and a narrow slice for final analysis.
+period_full = github_utils.utc_period("2024-01-01", "2025-06-01")
+period_slice = github_utils.utc_period("2025-04-01", "2025-05-31")
 
 # %% [markdown]
 # <a name='specify-users-and-repos-to-fetch-and-cache-data'></a>
 # # Specify Users and Repos to Fetch and Cache Data
 
 # %%
-# Choose your users and repositories
+# Choose your users and repositories.
 users = [
-    "Shaunak01", "tkpratardan", "Prahar08modi","sandeepthalapanane","indrayudd","Swapnika29","mongolianjesus","cma0416"
+    "Shaunak01",
+    "tkpratardan",
+    "Prahar08modi",
+    "sandeepthalapanane",
+    "indrayudd",
+    "Swapnika29",
+    "mongolianjesus",
+    "cma0416",
 ]
 repos = ["helpers", "tutorials", "cmamp"]
 org = "causify-ai"
 
 # %% [markdown]
+# <a name='pre-fetch-all-the-data-you-need-in-cache'></a>
 # <a name='pre-feth-all-the-data-you-need-in-cache'></a>
-# ## Pre-feth all the data you need in cache 
+# ## Pre-fetch all the data you need in cache
 
 # %% [markdown]
-# Query extraction takes time, so prefetch all data in cache for all the users, repos and time frames you need. once in cache there are several utility functions to help understand the user contribution. Following is the data we will fetch for users in multiple repos for the given period 
+# Query extraction takes time, so prefetch all data in cache for all the users, repos and time frames you need. once in cache there are several utility functions to help understand the user contribution. Following is the data we will fetch for users in multiple repos for the given period.
 # - Prs opened in the repo
 # - Commits done
 # - LOC [additions and deletions]
 
 # %%
-# This will call the GitHub API and write results to disk
-github_utils.prefetch_periodic_user_repo_data(client, org, repos, users, period_full)
+# This will call the GitHub API and write results to disk.
+github_utils.prefetch_periodic_user_repo_data(
+    client, org, repos, users, period_full
+)
 
 
 # %% [markdown]
@@ -120,9 +127,14 @@ github_utils.prefetch_periodic_user_repo_data(client, org, repos, users, period_
 # # Collect Daily Metrics
 
 # %%
-# Merge commits, PRs, issues, and LOCs into one DataFrame
-# This DataFrame has one row per (user, repo, date) with metrics: commits, PRs, issues, LOC changes
-combined_df = github_utils.collect_all_metrics(client, org, repos, users, period_full)
+# This data has one row per (user, repo, date) with metrics: commits, PRs, issues, LOC changes.
+combined_df = github_utils.collect_all_metrics(
+    client, org, repos, users, period_full
+)
+
+# %%
+print(len(combined_df))
+combined_df[904:].head()
 
 # %% [markdown]
 # <a name='summarize-contributions-and-visualize-for-entire-period-that-was-cached'></a>
@@ -139,7 +151,8 @@ github_utils.plot_multi_metrics_totals_by_user(
     users=["Shaunak01", "tkpratardan", "Prahar08modi", "sandeepthalapanane"],
     repos=repos,
     start=datetime.datetime(2025, 3, 1),
-    end=datetime.datetime(2025, 5, 15),)
+    end=datetime.datetime(2025, 5, 15),
+)
 
 # %% [markdown]
 # <a name='b.-compare-a-users-performance-individually-across-repos'></a>
@@ -180,10 +193,12 @@ repos = ["cmamp", "helpers"]
 metrics = ["commits", "prs", "issues_closed"]
 
 # Step 1: Summarize total metrics across users/repos
-summary_users = github_utils.summarize_users_across_repos(combined_df, users=users, repos=repos)
+summary_users = github_utils.summarize_users_across_repos(
+    combined_df, users=users, repos=repos
+)
 
 # Step 2: Add z-scores and percentiles
-z_df  = github_utils.compute_z_scores(summary_users, metrics)
+z_df = github_utils.compute_z_scores(summary_users, metrics)
 stats = github_utils.compute_percentile_ranks(z_df, metrics)
 
 # Step 3: Visualize — will automatically pick up all *_z or *_pctile columns
