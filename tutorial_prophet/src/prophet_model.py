@@ -20,6 +20,9 @@ _LOG = logging.getLogger(__name__)
 
 
 class ProphetForecastModel:
+    """
+    Facebook Prophet wrapper.
+    """
 
     def __init__(
         self, config: Dict, *, holidays: Optional[pd.DataFrame] = None
