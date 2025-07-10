@@ -8,7 +8,7 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.17.1
 #   kernelspec:
-#     display_name: Python 3 (ipykernel)
+#     display_name: Python 3
 #     language: python
 #     name: python3
 # ---
@@ -64,7 +64,7 @@ import prophet.utilities as prhu
 import scipy.stats as stats
 import sklearn.metrics as metrics
 
-from tutorial_prophet.src.prophet_model import ProphetForecastModel
+import tutorial_prophet.src.prophet_model as tpsrprmo
 
 # %%
 hdbg.init_logger(verbosity=logging.INFO)
@@ -229,7 +229,7 @@ holidays_df = pd.DataFrame(
 _LOG.info(hpandas.df_to_str(holidays_df, log_level=logging.INFO))
 
 # %%
-forecaster = ProphetForecastModel(config["model"], holidays_df)
+forecaster = tpsrprmo.ProphetForecastModel(config["model"], holidays_df)
 forecaster.fit(df_train)
 model = forecaster.get_model()
 
