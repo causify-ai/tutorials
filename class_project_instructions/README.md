@@ -1,6 +1,6 @@
 <!-- toc -->
 
-- [DATA605 Class Projects](#data605-class-projects)
+- [Class Project Guidelines](#class-project-guidelines)
   * [Choosing a project](#choosing-a-project)
   * [Pre-requisites](#pre-requisites)
     + [Contribution to the repo](#contribution-to-the-repo)
@@ -19,7 +19,7 @@
 
 <!-- tocstop -->
 
-# DATA605 Class Projects
+# Class Project Guidelines
 
 - The goal of the class project is to learn a cutting-edge modern big data
   technology and write a (small) example of a system using it
@@ -160,13 +160,13 @@
 
 - **Add Files Only in Your Project Directory**
   - Add your project files under the following directory:
-    `{GIT_ROOT}/DATA605/Spring2025/projects/{branch_name}`
-    - Example: If you cloned the repo on your laptop, your directory should be:
+    `{GIT_ROOT}/{COURSE_CODE}/{TERM}{YEAR}/projects/{branch_name}`
+    - Example: If you cloned the repo on your laptop for DATA605, your directory should be:
       `~/src/tutorials1/DATA605/Spring2025/projects/TutorTask645_Spring2025_Redis_cache_to_fetch_user_profiles`
   - Copy the template files to the project directory:
     ```bash
-    > cp -r ~/src/tutorials1/DATA605/tutorial_template/ ~/src/tutorials1/DATA605/Spring2025/projects/{branch_name}
-    > cd ~/src/tutorials1/DATA605/Spring2025/projects/{branch_name}
+    > cp -r ~/src/tutorials1/class_project_instructions/tutorial_template/ ~/src/tutorials1/COURSECODE/Term20xx/projects/{branch_name}
+    > cd ~/src/tutorials1/COURSECODE/Term20xx/projects/{branch_name}
     ```
   - Start working on the files
 
@@ -190,9 +190,9 @@ Before starting implementation, you need to choose **one** of the two supported
 Docker-based workflows. Finalize your setup choice before proceeding with
 development.
 
-### 1. Simple Docker Setup (`data605_style`) — Recommended for Students
+### 1. Simple Docker Setup (`simple`) — Recommended for Students
 
-- A minimal and straightforward setup, modeled after what we use in DATA605
+- A minimal and straightforward setup, modeled after what we use in class
   tutorials.
 - The environment comes with Python, Jupyter, and commonly-used packages already
   installed.
@@ -206,7 +206,7 @@ development.
 - You may still customize the Dockerfile, expose other ports, or add
   project-specific dependencies as needed.
 
-### 2. Causify-style Thin Docker Environment (`causify_style`)
+### 2. Causify-style Thin Docker Environment (`causify_dev_system`)
 
 - A production-style Docker setup used in internships, RA/TA work, at Causify
   AI.
@@ -233,7 +233,7 @@ development.
 If you're unsure which setup is best or want to explore both, refer to the full
 breakdown in the tutorial template:
 
-- [Tutorial Template: Two Docker Approaches](/DATA605/tutorial_template/README.md)
+- [Tutorial Template: Two Docker Approaches](/class_project_instructions/tutorial_template/README.md)
 
 ## Working on the project
 
@@ -252,7 +252,7 @@ breakdown in the tutorial template:
 
 ### Understanding the deliverables
 
-- Use the project template files in `//tutorials/DATA605/tutorial_template` to
+- Use the project template files in `//tutorials/class_project_instructions/tutorial_template` to
   understand the deliverables and the coding style. They consist of:
 
 - **Utils Module**:
@@ -359,7 +359,7 @@ external data‑provider API. Please keep the focus on the tool itself.
 
 ### Folder Structure
 ```
-DATA605/
+COURSE_CODE/
 └── Term20xx/
     └── projects/
         └── TutorTaskXX_Name_of_issue/
@@ -448,7 +448,7 @@ The layout of each project should follow the examples in
 - Example for
   [open_ai tutorial](https://github.com/causify-ai/tutorials/tree/master/tutorial_openai)
 - Example for
-  [github tutorial (data605_style)](https://github.com/causify-ai/tutorials/tree/master/tutorial_github_data605_style)
+  [github tutorial (class_style)](https://github.com/causify-ai/tutorials/tree/master/tutorial_github_data605_style)
 - Example for
   [github tutorial (causify_style)](https://github.com/causify-ai/tutorials/tree/master/tutorial_github_causify_style)
 

@@ -1,0 +1,144 @@
+// https://drive.google.com/file/d/1IfuM2b1gLt922PzvAgWjWifDKRl3vQ2u/view?usp=drive_link
+
+## Why?
+
+- Startups often fail for preventable reasons
+- The goal is to help you avoid the biggest mistakes:
+  - Building something nobody wants
+  - Hiring poorly
+  - Losing focus
+- The goal is to help you shift from **strikeouts** to **base hits**, and maybe
+  even **home runs**
+
+// TODO: Add 2 graphs
+
+## Build, Show, and Hope?
+
+- "Build it and they will come" is not a strategy
+- Showing your tech isn't enough
+- Hope is not a business model
+- Instead, you need to start with **evidence**, not assumptions
+
+## Your goal
+
+- Improve your odds of success
+- Learn to build what customers *actually* need
+- Discover how to test your assumptions, not just your product
+
+- Evidence comes from structured discovery
+- Discovery starts with conversations
+  - Those conversations start with the **right questions**
+
+## Desirable / Feasible / Viable
+
+- A successful business needs all three:
+  - **Desirable**: Customers want it
+  - **Feasible**: You can build it
+  - **Viable**: It can sustain itself financially
+
+## Different Customer Segments = Different Business Models
+
+- Not all customers are the same
+- Each segment may:
+  - Value different features
+  - Require different pricing
+  - Have different sales cycles
+- Discovery helps you find the best **beachhead** to land
+
+## Don't Fool Yourself
+
+- It's difficult to be objective when it's something
+  - about your business
+  - you are an expert, you have a strong priors
+  - you have dedicated and dedicate most of your day
+
+## Customers Hire Solutions to Get Jobs Done
+
+- "People don't want a quarter inch drill. They want a quarter inch hole.",
+  Theodore Levitt
+- Understand the **job** your customer is trying to accomplish
+- Focus on outcomes, not tools
+
+- You can't predict whether your customers will want a solution, unless you
+  understand their needs first
+
+*
+- What is the job that somebody would hire your solution for:
+  - "remove phosphorus from wastewater"
+- Who would perform this job with your solution?
+  - Waste water manager?
+- Where might we find these people
+  - B2C
+    - "We sell solutions to individuals for personal use"
+    - Our customers = consumer group
+  - B2B Commercial
+    - "We sell solutions to companies for use in their operations"
+    - Our customers = decision makers, direct end-users
+  - B2B Industrial
+    - "We sell components / ingredients to other companies to embed in their
+      solutions"
+    - Our customers = Decision makers, direct end users
+    - Our customers' customers = Ultimate end users
+
+- What do customers prioritize jobs for improvements?
+  - Satisfaction vs importance
+
+- What roles are involved in a use or adoption decision?
+  - End users: interact directly with product
+  - Decision makers: make financial / use decisions
+  - Influencers inside the company
+  - Beneficiaries: customers of the business
+  - Influencers outside the company
+    - Key opinion leaders
+    - Experts
+    - Industry influencers
+
+- Ecosystems
+  - Industry ecosystems
+  - Value chain ecosystems
+
+## Decision Criteria = What “Better” Means to the Customer
+
+- Customers assess value based on how well you help them do the job
+- **Features** don’t matter unless they improve:
+  - Cost
+  - Speed
+  - Accuracy
+  - Ease of use
+
+## Data is not Evidence Without Structure
+
+- Interviews are just noise unless you:
+  - Know what you want to learn
+  - Design for **hypothesis testing**
+  - Identify what would prove you wrong
+
+## Good Hypotheses Are...
+
+- Testable through real customer conversations  
+- Specific and falsifiable  
+- Relevant to your biggest risks  
+- Designed to be disproven – fast
+
+## Discovery Methods
+
+- This is not a focus group
+- It’s not a survey
+- It’s not a pitch
+- It’s a structured learning process through interviews
+
+## Interview Tips
+
+- Ask for 20 minutes
+- Don’t sell – learn
+- Let them teach you
+- Follow your interview **goals**, not a script
+
+## Why This is Hard
+
+- No one gives clear answers
+- You’ll face:
+  - Confirmation bias
+  - Social desirability bias
+  - Unstructured conversations
+- But learning to hear what matters is a superpower
