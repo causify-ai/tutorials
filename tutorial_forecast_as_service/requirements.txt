@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+pandas
+prophet
+cmdstanpy
+scikit-learn
+python-multipart
+plotly
