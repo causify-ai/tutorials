@@ -7,7 +7,9 @@ import tutorial_forecast_as_service.api.services as tfasapse
 import io
 import logging
 import os
+from typing import Any, Dict, List
 
+import fastapi
 import pandas as pd
 
 import tutorial_prophet.src.prophet_model as tpsrprmo
@@ -17,7 +19,7 @@ _LOG = logging.getLogger(__name__)
 _UPLOAD_PATH = "tmp/uploaded_df.pkl"
 
 
-def handle_upload(file) -> dict:
+def handle_upload(file: fastapi.UploadFile) -> Dict[str, str]:
     """
     Read and parse uploaded CSV file, then persist to disk.
 
@@ -25,18 +27,14 @@ def handle_upload(file) -> dict:
     :return: upload confirmation message
     """
     contents = file.file.read()
-    try:
-        df = pd.read_csv(io.BytesIO(contents))
-        _LOG.info("Data uploaded with shape: %s", df.shape)
-        os.makedirs("tmp", exist_ok=True)
-        df.to_pickle(_UPLOAD_PATH)
-        return {"message": "Upload successful"}
-    except Exception as e:
-        _LOG.exception("Failed to parse uploaded file")
-        raise RuntimeError(f"Invalid CSV format: {str(e)}")
+    df = pd.read_csv(io.BytesIO(contents))
+    _LOG.info("Data uploaded with shape: %s", df.shape)
+    os.makedirs("tmp", exist_ok=True)
+    df.to_pickle(_UPLOAD_PATH)
+    return {"message": "Upload successful"}
 
 
-def handle_forecast() -> dict:
+def handle_forecast() -> Dict[str, List[Dict[str, Any]]]:
     """
     Run Prophet forecast on the latest uploaded data.
 
