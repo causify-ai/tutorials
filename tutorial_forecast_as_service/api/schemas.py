@@ -17,14 +17,12 @@ import pydantic
 class ForecastRequest(pydantic.BaseModel):
     """
     Input schema for posting a forecasting request.
-
-    Attributes:
-      - df: the input time series data
-      - config: configurations for the forecasting model
-      - holidays: holiday records used by Prophet
     """
+    # The input time series data.
     df: List[Dict]
+    # Configurations for the forecasting model.
     config: Dict
+    # Holiday records used by Prophet.
     holidays: Optional[List[Dict]] = None
 
 
@@ -36,10 +34,8 @@ class ForecastRequest(pydantic.BaseModel):
 class ForecastResponse(pydantic.BaseModel):
     """
     Output schema for returning forecasted values.
-
-    Attributes:
-      - forecast: forecasted records
     """
+    # Forecasted records.
     forecast: List[Dict]
 
 
@@ -51,8 +47,6 @@ class ForecastResponse(pydantic.BaseModel):
 class UploadResponse(pydantic.BaseModel):
     """
     Output schema for successful file upload.
-
-    Attributes:
-      - message: confirmation message on successful upload
     """
+    # confirmation message on successful upload.
     message: str
