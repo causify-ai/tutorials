@@ -1,8 +1,8 @@
-fastapi
-uvicorn[standard]
-pandas
-prophet
 cmdstanpy
-scikit-learn
-python-multipart
+fastapi
+pandas
 plotly
+prophet
+python-multipart
+scikit-learn
+uvicorn[standard]
