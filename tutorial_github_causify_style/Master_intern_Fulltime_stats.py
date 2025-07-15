@@ -19,10 +19,10 @@
 # - [Pre-feth all the data from last 6 months in cache](#pre-feth-all-the-data-from-last-6-months-in-cache)
 # - [Intern Evaluation](#intern-evaluation)
 #   - [Compare Intern Total performance across all repos since last 3 months](#compare-intern-total-performance-across-all-repos-since-last-3-months)
-#   - [Performance Evaluation - Intern - Last 3 Months (based on Issues and PRs closed and )](#performance-evaluation---intern---last-3-months-(based-on-issues-and-prs-closed-and-))
+#   - [Performance Evaluation - Intern - Last 3 Months (based on Issues and PRs closed)](#performance-evaluation---intern---last-3-months-(based-on-issues-and-prs-closed))
 # - [Full Time Evaluation](#full-time-evaluation)
 #   - [Compare Full time contributors total performance across all repos since last 3 months](#compare-full-time-contributors-total-performance-across-all-repos-since-last-3-months)
-#   - [Performance Evaluation - FullTime - Last 3 Months (based on Issues and PRs closed and )](#performance-evaluation---fulltime---last-3-months-(based-on-issues-and-prs-closed-and-))
+#   - [Performance Evaluation - FullTime - Last 3 Months (based on Issues and PRs closed)](#performance-evaluation---fulltime---last-3-months-(based-on-issues-and-prs-closed))
 
 # %% [markdown]
 # <a name='imports'></a>
@@ -181,8 +181,9 @@ github_utils.plot_multi_metrics_totals_by_user(
 )
 
 # %% [markdown]
+# <a name='performance-evaluation---intern---last-3-months-(based-on-issues-and-prs-closed)'></a>
 # <a name='performance-evaluation---intern---last-3-months-(based-on-issues-and-prs-closed-and-)'></a>
-# ## Performance Evaluation - Intern - Last 3 Months (based on Issues and PRs closed and )
+# ## Performance Evaluation - Intern - Last 3 Months (based on Issues and PRs closed)
 
 # %%
 metrics = ["prs", "issues_closed"]
@@ -226,8 +227,9 @@ github_utils.plot_multi_metrics_totals_by_user(
 )
 
 # %% [markdown]
+# <a name='performance-evaluation---fulltime---last-3-months-(based-on-issues-and-prs-closed)'></a>
 # <a name='performance-evaluation---fulltime---last-3-months-(based-on-issues-and-prs-closed-and-)'></a>
-# ## Performance Evaluation - FullTime - Last 3 Months (based on Issues and PRs closed and )
+# ## Performance Evaluation - FullTime - Last 3 Months (based on Issues and PRs closed)
 
 # %%
 metrics = ["prs", "issues_closed"]
