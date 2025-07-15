@@ -48,5 +48,5 @@ class UploadResponse(pydantic.BaseModel):
     """
     Output schema for successful file upload.
     """
-    # confirmation message on successful upload.
+    # Confirmation message on successful upload.
     message: str
