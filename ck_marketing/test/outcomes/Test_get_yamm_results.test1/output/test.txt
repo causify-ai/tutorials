@@ -1,0 +1,2 @@
+hash,origin,campaign_name,first_name,email,merge_status
+a1f523b406e45311cbfb3e084474264f,Wave1-20241210-folkapp1,campaign0_VC_causify,Jovina,jovina@pfmlp.com,EMAIL_CLICKED
