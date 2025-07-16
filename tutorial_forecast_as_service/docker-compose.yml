@@ -3,7 +3,7 @@ version: "3.9"
 services:
   forecast_api:
     build: .
-    container_name: forecast_api
+    container_name: tutorial_forecast_as_service
     volumes:
       - .:/app/tutorial_forecast_as_service
       - ../helpers_root:/helpers_root
