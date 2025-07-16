@@ -10,13 +10,16 @@ import os
 from typing import Any, Dict, List
 
 import fastapi
+import helpers.hio as hio
+import helpers.hpickle as hpickle
 import pandas as pd
 
 import tutorial_prophet.src.prophet_model as tpsrprmo
 
 _LOG = logging.getLogger(__name__)
 
-_UPLOAD_PATH = "tmp/uploaded_df.pkl"
+_UPLOAD_DIR = "tmp.forecast_as_service.upload"
+_UPLOAD_PATH = os.path.join(_UPLOAD_DIR, "df.pkl")
 
 
 def handle_upload(file: fastapi.UploadFile) -> Dict[str, str]:
@@ -29,8 +32,8 @@ def handle_upload(file: fastapi.UploadFile) -> Dict[str, str]:
     contents = file.file.read()
     df = pd.read_csv(io.BytesIO(contents))
     _LOG.info("Data uploaded with shape: %s", df.shape)
-    os.makedirs("tmp", exist_ok=True)
-    df.to_pickle(_UPLOAD_PATH)
+    hio.create_dir(_UPLOAD_DIR, incremental=True)
+    hpickle.to_pickle(df, _UPLOAD_PATH)
     return {"message": "Upload successful"}
 
 
@@ -42,7 +45,7 @@ def handle_forecast() -> Dict[str, List[Dict[str, Any]]]:
     """
     if not os.path.exists(_UPLOAD_PATH):
         raise RuntimeError("No data uploaded. Please POST to /upload_data first.")
-    df = pd.read_pickle(_UPLOAD_PATH)
+    df = hpickle.from_pickle(_UPLOAD_PATH)
     config = {"daily_seasonality": True}
     forecaster = tpsrprmo.ProphetForecastModel(config)
     forecaster.fit(df)
