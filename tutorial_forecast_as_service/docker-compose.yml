@@ -9,6 +9,8 @@ services:
       - ../helpers_root:/helpers_root
       - ../tutorial_prophet:/app/tutorial_prophet
     environment:
+      # TODO(Alvino): To be replaced with dynamic sourcing via devops/docker_setenv.sh.
+      - CSFY_HOST_NAME=dev1
       - PYTHONPATH=/app:/helpers_root
     ports:
       - "8000:8000"
