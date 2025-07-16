@@ -148,12 +148,12 @@ In your Dify application:
 Test that everything works:
 Healthcheck:
 ```bash
-curl http://localhost:2001/health`
+> curl http://localhost:2001/health`
 ```
 
+Test the API directly
 ```bash
-# Test the API directly
-curl -X POST http://localhost:2001/retrieval \
+> curl -X POST http://localhost:2001/retrieval \
   -H "Authorization: " \
   -H "Content-Type: application/json" \
   -d '{
