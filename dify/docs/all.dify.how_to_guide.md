@@ -30,8 +30,17 @@ base for intelligent document retrieval.
 ## Prerequisites
 
 - Dify instance running (local or cloud)
-- Weaviate setup completed - see [Weaviate Setup Guide](all.weaviate.how_to_guide.md)
-- Ollama setup completed - see [Ollama Setup Guide](all.ollama.how_to_guide.md)
+- Weaviate running on `localhost:8080`
+  - Follow the official setup guide: [Weaviate Installation Documentation](https://weaviate.io/developers/weaviate/installation)
+  - Quick start with Docker: [Weaviate Docker Guide](https://weaviate.io/developers/weaviate/installation/docker-compose)
+  - Verify it's running: `curl http://localhost:8080/v1/meta`
+
+- Ollama running on `localhost:11434` with `nomic-embed-text` model
+  - Download and install: [Ollama Official Website](https://ollama.ai/)
+  - Installation guide: [Ollama GitHub Documentation](https://github.com/ollama/ollama#quickstart)
+  - Ensure you have the embedding model: `ollama pull nomic-embed-text`
+  - Verify it's running: `curl http://localhost:11434/api/tags`
+
 - Documents processed into Weaviate collection - see [Weaviate Integration Guide](all.weaviate_integration.how_to_guide.md)
 - API service running on `http://localhost:2001`
 
