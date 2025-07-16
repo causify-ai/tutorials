@@ -1,0 +1,2 @@
+hash,origin,timestamp,first_name,last_name,email,email_verification,linkedin_url,job_title,job_title_description,company_name,company_domain,city,stages,restrictions,industry,category,notes
+,GP_LIn_connections,2024-12-31T02:08:03.137Z,Graham C.,Peck,,,https://linkedin.com/in/grahamcpeck,CFO & Partner,Co-Founder @ DealSend & Attaq Vector | Partner @ FYC Labs & Virtual Auditor | Venture Partner @ Cultivation Capital | Business Futurist | Startup Strategist & Funder | Serial Entrepreneur & Operator; ;,FYC Labs,,"Chicago, Illinois, United States",,,,Design,

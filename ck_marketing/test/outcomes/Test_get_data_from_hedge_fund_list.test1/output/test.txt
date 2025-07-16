@@ -1,0 +1,2 @@
+hash,origin,timestamp,first_name,last_name,email,email_verification,linkedin_url,job_title,job_title_description,company_name,company_domain,city,stages,restrictions,industry,category,notes
+,hedge_fund_list,,Alan,Samdperil,asamdperil@aol.com,,,,,,,"Palm Desert, CA, US",,,,hedge_fund,

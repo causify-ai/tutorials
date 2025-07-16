@@ -1,0 +1,3 @@
+origin,refreshedAt,firstName,lastName,linkedinProfileUrl,linkedinJobTitle,job_title_description,companyName,location,companyIndustry
+web,2024-01-01,Alice,Smith,linkedin.com/alice,Engineer,Software Engineer,TechCorp,New York,Tech
+api,2024-01-02,Bob,Johnson,linkedin.com/bob,Manager,Senior Manager,BizInc,San Francisco,Finance

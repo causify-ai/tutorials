@@ -1,0 +1,2 @@
+hash,origin,timestamp,first_name,last_name,email,email_verification,linkedin_url,job_title,job_title_description,company_name,company_domain,city,stages,restrictions,industry,category,notes
+,VC Tier 2,,Rodriguez,Keig,rodriguez@foundersfund.com,_invalid_,,Founder,,Founders Fund,foundersfund.com,"New York, New York, United States",,,,,

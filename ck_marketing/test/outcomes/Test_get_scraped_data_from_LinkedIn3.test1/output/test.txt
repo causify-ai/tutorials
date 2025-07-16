@@ -1,0 +1,2 @@
+hash,origin,timestamp,first_name,last_name,email,email_verification,linkedin_url,job_title,job_title_description,company_name,company_domain,city,stages,restrictions,industry,category,notes
+,Search7.AI_VC_in_US,,Rob,Toews,rob@radical.vc,_valid_,https://www.linkedin.com/in/robtoews/,,,Radical Ventures,,,,,,,
