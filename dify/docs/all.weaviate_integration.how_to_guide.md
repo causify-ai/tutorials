@@ -28,46 +28,23 @@ You'll create a system where:
 
 ## Prerequisites
 
-Before starting, ensure you have:
+Before starting, ensure you have the following services running:
 
 - Weaviate running on `localhost:8080`
-  - Using this `docker-compose.yml`
-
-  ```docker-file
-  ---
-  services:
-    weaviate:
-      command:
-      - --host
-      - 0.0.0.0
-      - --port
-      - '8080'
-      - --scheme
-      - http
-      image: semitechnologies/weaviate
-      ports:
-      - 8080:8080
-      - 50051:50051
-      volumes:
-      - weaviate_data:/var/lib/weaviate
-      restart: on-failure:0
-      environment:
-        QUERY_DEFAULTS_LIMIT: 25
-        AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
-        PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
-        ENABLE_API_BASED_MODULES: 'true'
-        ENABLE_MODULES: ''
-        CLUSTER_HOSTNAME: 'node1'
-      extra_hosts:
-        - "host.docker.internal:host-gateway"
-
-  volumes:
-    weaviate_data:
-  ...
-  ```
+  - Follow the official setup guide: [Weaviate Installation Documentation](https://weaviate.io/developers/weaviate/installation)
+  - Quick start with Docker: [Weaviate Docker Guide](https://weaviate.io/developers/weaviate/installation/docker-compose)
+  - Verify it's running: `curl http://localhost:8080/v1/meta`
 
 - Ollama running on `localhost:11434` with `nomic-embed-text` model
+  - Download and install: [Ollama Official Website](https://ollama.ai/)
+  - Installation guide: [Ollama GitHub Documentation](https://github.com/ollama/ollama#quickstart)
+  - Ensure you have the embedding model: `ollama pull nomic-embed-text`
+  - Verify it's running: `curl http://localhost:11434/api/tags`
+
 - Python 3.8+ with required packages installed
+  ```bash
+  pip install weaviate-client langchain requests fastapi uvicorn
+  ```
 
 ## Step 1: Environment Setup
 
@@ -87,17 +64,30 @@ APP_PORT=2001
 
 Start Weaviate:
 
-Navigate to weaviate directory where `docker-compose.yml` is present
+If you followed the [Weaviate Docker setup](https://weaviate.io/developers/weaviate/installation/docker-compose), start with:
 
 ```bash
-> docker compose up -d
+# Navigate to your weaviate directory
+cd /path/to/weaviate
+docker compose up -d
+
+# Verify it's running
+curl http://localhost:8080/v1/meta
 ```
 
-Start Ollama and pull the embedding model:
+Start Ollama:
+
+If you installed from [ollama.ai](https://ollama.ai/), start with:
 
 ```bash
-> ollama serve
-> ollama pull nomic-embed-text
+# Start Ollama service
+ollama serve
+
+# Pull the embedding model (if not already done)
+ollama pull nomic-embed-text
+
+# Verify it's running
+curl http://localhost:11434/api/tags
 ```
 
 ## Step 3: Process Your Documents
@@ -148,7 +138,7 @@ In your Dify application:
 Test that everything works:
 Healthcheck:
 ```bash
-> curl http://localhost:2001/health`
+> curl http://localhost:2001/health
 ```
 
 Test the API directly
@@ -178,3 +168,9 @@ Connection Issues:
   ```bash
   > curl http://localhost:11434/api/tags
   ```
+  If this fails, see [Ollama GitHub Issues](https://github.com/ollama/ollama/issues) or [Ollama Documentation](https://github.com/ollama/ollama/blob/main/docs/troubleshooting.md).
+
+For detailed troubleshooting:
+- [Weaviate Documentation](https://weaviate.io/developers/weaviate)
+- [Ollama Documentation](https://github.com/ollama/ollama)
+- [Weaviate Python Client](https://weaviate.io/developers/weaviate/client-libraries/python)

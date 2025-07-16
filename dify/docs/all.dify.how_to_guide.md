@@ -30,8 +30,9 @@ base for intelligent document retrieval.
 ## Prerequisites
 
 - Dify instance running (local or cloud)
-- Weaviate + Ollama setup completed
-- Documents processed into Weaviate collection
+- Weaviate setup completed - see [Weaviate Setup Guide](all.weaviate.how_to_guide.md)
+- Ollama setup completed - see [Ollama Setup Guide](all.ollama.how_to_guide.md)
+- Documents processed into Weaviate collection - see [Weaviate Integration Guide](all.weaviate_integration.how_to_guide.md)
 - API service running on `http://localhost:2001`
 
 ## Step 1: Create Dify Application
