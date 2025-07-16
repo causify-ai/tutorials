@@ -21,8 +21,9 @@
 
 # Class Project Guidelines
 
-- The goal of the class project is to learn a cutting-edge modern big data
-  technology and write a (small) example of a system using it
+- The goal of the class project (e.g., for DATA605, MSML610) is to learn a
+  cutting-edge modern big data technology and write a (small) example of a system
+  using it
 - Each class project is similar in spirit to the tutorials for various
   technologies we have looked at and studied in classes (e.g., Git, Docker, SQL,
   Mongo, Airflow, Dask)
