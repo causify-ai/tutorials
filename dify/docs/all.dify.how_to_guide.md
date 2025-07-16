@@ -18,8 +18,7 @@
     + [Optimization Options](#optimization-options)
   * [Troubleshooting](#troubleshooting)
     + [API Connection Issues](#api-connection-issues)
-    + [Poor Response Quality](#poor-response-quality)
-    + [Performance Issues](#performance-issues)
+
 
 <!-- tocstop -->
 
@@ -150,21 +149,3 @@ key matches between Dify and `.env` file Test direct API call:
   -d '{"knowledge_id": "Documents", "query": "test", "retrieval_setting": {"top_k": 3, "score_threshold": 0.5}}'
 ```
 
-### Poor Response Quality
-
-- Lower score threshold (try 0.3)
-- Increase top_k results (try 8-10)
-- Improve system prompt specificity
-- Verify documents exist in Weaviate
-
-### Performance Issues
-
-- Reduce top_k to 3-5 documents
-- Increase score threshold to 0.6-0.7
-- Implement API caching
-- Monitor memory usage
-
----
-
-Your Dify chatflow now intelligently retrieves and uses information from your
-document collection to provide informed responses.

@@ -90,14 +90,14 @@ Start Weaviate:
 Navigate to weaviate directory where `docker-compose.yml` is present
 
 ```bash
-docker compose up -d
+> docker compose up -d
 ```
 
 Start Ollama and pull the embedding model:
 
 ```bash
-ollama serve
-ollama pull nomic-embed-text
+> ollama serve
+> ollama pull nomic-embed-text
 ```
 
 ## Step 3: Process Your Documents
@@ -125,7 +125,7 @@ print(f"Successfully processed {result['successful_files']} files")
 Run the FastAPI service that Dify will connect to:
 
 ```bash
-python -m dify.weaviate_retrieval
+> python3  dify.weaviate_retrieval
 ```
 
 The API will start on `http://localhost:2001` with these endpoints:
@@ -171,17 +171,10 @@ curl -X POST http://localhost:2001/retrieval \
 Connection Issues:
 
 - Verify Weaviate:
-  `curl [http://localhost:8080/v1/met](http://localhost:8080/v1/met)a`
+  ```bash
+   > curl http://localhost:8080/v1/meta 
+   ```
 - Verify Ollama:
-  `curl [http://localhost:11434/api/tag](http://localhost:11434/api/tag)s`
-
-No Results:
-
-- Check if documents were processed: Look for collection in Weaviate UI
-- Verify API key matches between `.env` and Dify configuration
-- Lower the `score_threshold` in your test request
-
-Performance Issues:
-
-- Reduce `chunk_size` for faster processing: Use 300 instead of 500
-- Increase `top_k` limit if you need more results
+  ```bash
+  > curl http://localhost:11434/api/tags
+  ```

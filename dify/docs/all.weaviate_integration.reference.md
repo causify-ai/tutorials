@@ -15,8 +15,6 @@
   * [Common Issues & Solutions](#common-issues--solutions)
     + [Connection Problems](#connection-problems)
     + [Poor Search Results](#poor-search-results)
-    + [Performance Issues](#performance-issues)
-  * [Version Compatibility](#version-compatibility)
 
 <!-- tocstop -->
 
@@ -124,25 +122,15 @@ Authentication: Bearer token via `Authorization` header
 
 - Weaviate down: `docker ps | grep weaviate`
 - Ollama unavailable:
-  `curl [http://localhost:11434/api/tag](http://localhost:11434/api/tag)s`
+  ```bash
+  > curl http://localhost:11434/api/tags
+  ```
 
 ### Poor Search Results
 
 - Lower `score_threshold` (try 0.3 instead of 0.5)
 - Verify same embedding model for index and search
 - Check collection exists:
-  `curl [http://localhost:8080/v1/object](http://localhost:8080/v1/object)s`
-
-### Performance Issues
-
-- Reduce `chunk_size` to 300 for faster processing
-- Increase `batch_size` to 200 for bulk operations
-- Monitor memory usage during large document processing
-
-## Version Compatibility
-
-| Component | Minimum | Tested  |
-| --------- | ------- | ------- |
-| Weaviate  | 1.20.0  | 1.25.0  |
-| Python    | 3.8     | 3.11    |
-| FastAPI   | 0.100.0 | 0.104.0 |
+    ```bash
+   > curl http://localhost:8080/v1/objects
+   ```

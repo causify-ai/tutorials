@@ -1,27 +1,55 @@
 """
 Weaviate Retrieval API Module.
 
-This module provides a FastAPI-based retrieval service for querying documents
-stored in Weaviate using Ollama embeddings and used to setup External Knowledge on Dify.
+FastAPI-based retrieval service for querying documents stored in Weaviate using
+Ollama embeddings. Designed for integration with Dify External Knowledge API.
+
+Usage:
+
+Library mode:
+    import dify.weaviate_retrieval as dwearetr
+
+    # Configure and start server
+    dwearetr.main()
+
+Command-line mode:
+    python weaviate_retrieval.py --help
+    python weaviate_retrieval.py --host 0.0.0.0 --port 2001
+
+Options:
+    --host: API server host address
+    --port: API server port number
+    -v, --verbose: Verbosity level
+
+Prerequisites:
+    - Weaviate server with document collections
+    - Ollama server with embedding model
+    - Environment variables: API_KEY, PWD
+
+API Endpoints:
+    POST /retrieval - Search documents (Dify External Knowledge compatible)
+    GET /health - Service health check
 
 Import as:
 
 import dify.weaviate_retrieval as dwearetr
 """
 
+import argparse
 import contextlib
 import logging
 import os
 from typing import Dict, List, Optional
 
 import fastapi
+import helpers.hdbg as hdbg
+import helpers.hparser as hparser
 import pydantic
 import requests
 import uvicorn
 import weaviate
 import weaviate.classes.query
 
-# Type aliases for better readability.
 closing = contextlib.closing
 FastAPI = fastapi.FastAPI
 Header = fastapi.Header
@@ -29,25 +57,19 @@ HTTPException = fastapi.HTTPException
 BaseModel = pydantic.BaseModel
 MetadataQuery = weaviate.classes.query.MetadataQuery
 
-# Configuration constants.
-API_KEY = os.getenv("API_KEY")
-OLLAMA_EMBED_URL = os.getenv(
-    "OLLAMA_EMBED_URL", "http://localhost:11434/api/embed"
-)
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "nomic-embed-text")
-APP_HOST = os.getenv("APP_HOST", "0.0.0.0")
-APP_PORT = int(os.getenv("APP_PORT", 2001))
+DEFAULT_API_KEY = os.getenv("API_KEY")
+DEFAULT_OLLAMA_EMBED_URL = "http://localhost:11434/api/embed"
+DEFAULT_OLLAMA_MODEL = "nomic-embed-text"
+DEFAULT_APP_HOST = "0.0.0.0"
+DEFAULT_APP_PORT = 2001
 
-# Configure module logger.
 _LOG = logging.getLogger(__name__)
 
-# Initialize FastAPI.
 app = FastAPI(
     title="Weaviate Retrieval API",
     description="API for retrieving documents from Weaviate using vector similarity search",
     version="1.0.0",
 )
-
 
 # #############################################################################
 # RetrievalSetting
@@ -151,11 +173,6 @@ class ErrorResponse(BaseModel):
     error_msg: str
 
 
-# #############################################################################
-# Utility Functions.
-# #############################################################################
-
-
 def embed_with_ollama(text: str) -> List[float]:
     """
     Generate text embedding using Ollama API.
@@ -167,9 +184,9 @@ def embed_with_ollama(text: str) -> List[float]:
     _LOG.debug("Generating embedding for text with length: %s", len(text))
     try:
         response = requests.post(
-            OLLAMA_EMBED_URL,
+            DEFAULT_OLLAMA_EMBED_URL,
             headers={"Content-Type": "application/json"},
-            json={"model": OLLAMA_MODEL, "input": text},
+            json={"model": DEFAULT_OLLAMA_MODEL, "input": text},
             timeout=30,
         )
         response.raise_for_status()
@@ -189,11 +206,12 @@ def embed_with_ollama(text: str) -> List[float]:
         raise RuntimeError(f"Embedding generation failed: {e}")
 
 
-def validate_authorization(authorization: Optional[str]) -> str:
+def validate_authorization(authorization: Optional[str], api_key: str) -> str:
     """
     Validate and extract API key from authorization header.
 
     :param authorization: authorization header value
+    :param api_key: expected API key for validation
     :return: extracted API key
     :raises HTTPException: if authorization is invalid
     """
@@ -207,7 +225,7 @@ def validate_authorization(authorization: Optional[str]) -> str:
             },
         )
     token = authorization.split(" ")[1]
-    if token != API_KEY:
+    if token != api_key:
         _LOG.warning("Authorization failed with invalid token")
         raise HTTPException(
             status_code=403,
@@ -314,11 +332,6 @@ def build_response_records(
     return records
 
 
-# #############################################################################
-# API Endpoints.
-# #############################################################################
-
-
 @app.post(
     "/retrieval",
     response_model=RetrievalResponse,
@@ -350,7 +363,7 @@ def retrieval(
     )
 
     # Validate authorization.
-    validate_authorization(authorization)
+    validate_authorization(authorization, DEFAULT_API_KEY)
 
     # Connect to Weaviate.
     with closing(weaviate.connect_to_local()) as client:
@@ -394,71 +407,81 @@ def health_check() -> Dict[str, str]:
     return {"status": "healthy", "service": "weaviate-retrieval"}
 
 
-# #############################################################################
-# Configuration and Startup.
-# #############################################################################
-
-
-def configure_logging(
-    *, level: int = logging.INFO, format_string: Optional[str] = None
-) -> None:
-    """
-    Configure logging for the application.
-
-    :param level: logging level
-    :param format_string: custom format string for log messages
-    """
-    if format_string is None:
-        format_string = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-
-    # Only configure if not already configured.
-    if not logging.getLogger().handlers:
-        logging.basicConfig(
-            level=level,
-            format=format_string,
-            handlers=[
-                logging.StreamHandler(),
-            ],
-        )
-
-    _LOG.setLevel(level)
-
-
 def validate_environment() -> None:
     """
     Validate required environment variables and configuration.
 
     :raises RuntimeError: if required configuration is missing
     """
-    if not API_KEY:
+    if not DEFAULT_API_KEY:
         raise RuntimeError("API_KEY environment variable is required")
     _LOG.info("Configuration validated successfully")
-    _LOG.info("Ollama URL: %s", OLLAMA_EMBED_URL)
-    _LOG.info("Ollama Model: %s", OLLAMA_MODEL)
-    _LOG.info("App Host: %s", APP_HOST)
-    _LOG.info("App Port: %s", APP_PORT)
 
 
-def main():
+def main(
+    host: str = DEFAULT_APP_HOST,
+    port: int = DEFAULT_APP_PORT,
+) -> None:
     """
     Run the FastAPI application.
+
+    :param host: server host address
+    :param port: server port number
     """
-    # Configure logging.
-    configure_logging(level=logging.INFO)
-    # Validate environment.
     validate_environment()
-    _LOG.info("Starting Weaviate Retrieval API server")
-    # Run the application.
     uvicorn.run(
-        "dify.weaviate_retrieval:app",
-        host=APP_HOST,
-        port=APP_PORT,
-        reload=True,
-        # Use our logging configuration.
+        app,
+        host=host,
+        port=port,
         log_config=None,
     )
 
 
-# Allow running as script.
+def _parse() -> argparse.ArgumentParser:
+    """
+    Parse command-line arguments.
+
+    :return: configured argument parser
+    """
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--host",
+        type=str,
+        default=DEFAULT_APP_HOST,
+        help=f"API server host address (default: {DEFAULT_APP_HOST})",
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=DEFAULT_APP_PORT,
+        help=f"API server port number (default: {DEFAULT_APP_PORT})",
+    )
+    hparser.add_verbosity_arg(parser)
+    return parser
+
+
+def _main(parser: argparse.ArgumentParser) -> None:
+    """
+    Run the retrieval server with command line arguments.
+
+    :param parser: configured argument parser
+    """
+    args = parser.parse_args()
+    hdbg.init_logger(verbosity=args.log_level, use_exec_path=True)
+    try:
+        _LOG.info("Starting Weaviate Retrieval API server")
+        main(
+            host=args.host,
+            port=args.port,
+        )
+        _LOG.info("Weaviate Retrieval API server stopped")
+    except Exception as e:
+        _LOG.error("Error starting server: %s", e)
+        raise
+
+
 if __name__ == "__main__":
-    main()
+    _main(_parse())

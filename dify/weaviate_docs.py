@@ -1,32 +1,71 @@
 """
 Weaviate Document Processing Module.
 
-This module provides functionality to process and upload markdown documents
-to a Weaviate vector database using Ollama embeddings.
+Process and upload markdown documents to a Weaviate vector database using Ollama embeddings.
+
+Usage:
+
+Library mode:
+    import dify.weaviate_docs as dweadocs
+
+    # Default settings
+    result = dweadocs.upload_markdown_docs_to_weaviate()
+
+    # Custom parameters
+    result = dweadocs.upload_markdown_docs_to_weaviate(
+        docs_dir="/path/to/docs",
+        collection_name="MyDocs",
+        chunk_size=1000
+    )
+
+Command-line mode:
+    python weaviate_docs.py --help
+    python weaviate_docs.py --docs_dir /path/to/docs --collection_name MyDocs
+
+Options:
+    --docs_dir: Source directory for markdown files
+    --collection_name: Weaviate collection name
+    --chunk_size: Text chunk size for splitting
+    --chunk_overlap: Overlap between chunks
+    --batch_size: Upload batch size
+    --ollama_model: Embedding model name
+    --ollama_url: Ollama API endpoint
+    -v, --verbose: Verbosity level
+
+Prerequisites:
+    - Weaviate server (local or remote)
+    - Ollama server with embedding model
+
+Workflow:
+    1. Start Weaviate and Ollama servers
+    2. Run script to upload documentation
+    3. Use collection for similarity search
 
 Import as:
 
 import dify.weaviate_docs as dweadocs
 """
 
+import argparse
 import logging
 import os
 from typing import Any, List, Optional
 
+import helpers.hdbg as hdbg
+import helpers.hparser as hparser
 import langchain.text_splitter as lts
 import langchain_community.document_loaders as ldl
 import requests
 import weaviate
 import weaviate.classes.config as wcc
 
-# Type aliases for better readability.
+_LOG = logging.getLogger(__name__)
+
 RecursiveCharacterTextSplitter = lts.RecursiveCharacterTextSplitter
 UnstructuredMarkdownLoader = ldl.UnstructuredMarkdownLoader
 Configure = wcc.Configure
 DataType = wcc.DataType
 Property = wcc.Property
-
-# Default configuration constants.
 DEFAULT_COLLECTION_NAME = "Documents"
 DEFAULT_ALLOWED_EXTENSIONS = [".md"]
 DEFAULT_CHUNK_SIZE = 500
@@ -35,7 +74,6 @@ DEFAULT_BATCH_SIZE = 100
 DEFAULT_OLLAMA_EMBED_URL = "http://localhost:11434/api/embed"
 DEFAULT_OLLAMA_MODEL = "nomic-embed-text"
 
-# Configure module logger.
 _LOG = logging.getLogger(__name__)
 
 
@@ -65,7 +103,6 @@ def create_weaviate_collection(
     :param collection_name: name of the collection to create/get
     :return: the collection object
     """
-    # Create collection with no internal vectorizer if it doesn't exist.
     if collection_name not in client.collections.list_all():
         _LOG.info("Creating new collection: %s", collection_name)
         client.collections.create(
@@ -124,7 +161,7 @@ def process_markdown_file(
     batch: Any,
     ollama_url: str = DEFAULT_OLLAMA_EMBED_URL,
     model: str = DEFAULT_OLLAMA_MODEL,
-) -> bool:
+) -> None:
     """
     Process a single markdown file and add it to the batch.
 
@@ -134,31 +171,26 @@ def process_markdown_file(
     :param batch: Weaviate batch object
     :param ollama_url: Ollama API endpoint URL
     :param model: model name for embeddings
-    :return: True if successful, False if failed
+    :raises RuntimeError: if file processing fails
     """
     filename = os.path.basename(filepath)
 
     try:
         _LOG.debug("Processing file: %s", filename)
 
-        # Load and split the document.
         loader = UnstructuredMarkdownLoader(filepath)
         docs = loader.load()
         chunks = splitter.split_documents(docs)
 
         chunk_count = 0
-        # Process each chunk.
         for chunk in chunks:
             text = chunk.page_content.strip()
 
-            # Skip empty chunks.
             if not text:
                 continue
 
-            # Get embedding from Ollama.
             embedding = get_ollama_embedding(text, ollama_url, model)
 
-            # Add to batch.
             batch.add_object(
                 properties={
                     "text": text,
@@ -170,11 +202,10 @@ def process_markdown_file(
             chunk_count += 1
 
         _LOG.info("Successfully processed %s (%s chunks)", filename, chunk_count)
-        return True
 
     except Exception as e:
         _LOG.error("Failed to process %s: %s", filename, e)
-        return False
+        raise RuntimeError(f"Processing failed for {filename}: {e}") from e
 
 
 def upload_markdown_docs_to_weaviate(
@@ -197,7 +228,7 @@ def upload_markdown_docs_to_weaviate(
     Weaviate collection.
 
     :param docs_dir: directory containing markdown files. Defaults to
-        PROJECT_ROOT/docs
+        PROJECT_ROOT/docs :param *:
     :param collection_name: name of the Weaviate collection
     :param allowed_extensions: list of file extensions to process
     :param chunk_size: size of text chunks for splitting
@@ -206,13 +237,11 @@ def upload_markdown_docs_to_weaviate(
     :param ollama_url: Ollama API endpoint URL
     :param ollama_model: Ollama model name for embeddings
     :param weaviate_client: optional pre-configured Weaviate client
-    :return: summary of the upload process with counts of
-        successful/failed files
+    :return: summary of the upload process with total file count
     :raises RuntimeError: if PWD environment variable is not set (when
-        docs_dir is None)
+        docs_dir is None), or if any file processing fails
     :raises FileNotFoundError: if documentation directory does not exist
     """
-    # Set default values.
     if docs_dir is None:
         project_root = get_project_root()
         docs_dir = os.path.join(project_root, "docs")
@@ -226,34 +255,25 @@ def upload_markdown_docs_to_weaviate(
     _LOG.info("Ollama model: %s", ollama_model)
     _LOG.info("Chunk size: %s, overlap: %s", chunk_size, chunk_overlap)
 
-    # Validate docs directory exists.
     if not os.path.exists(docs_dir):
         raise FileNotFoundError(f"Documentation directory not found: {docs_dir}")
 
-    # Initialize Weaviate client if not provided.
     client = weaviate_client or weaviate.connect_to_local()
     should_close_client = weaviate_client is None
 
     try:
-        # Create or get collection.
         collection = create_weaviate_collection(client, collection_name)
 
-        # Initialize text splitter.
         splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size, chunk_overlap=chunk_overlap
         )
 
-        # Track processing results.
-        successful_files = 0
-        failed_files = 0
         total_files = 0
 
-        # Process files in batches.
         _LOG.info("Starting batch processing with batch size: %s", batch_size)
         with collection.batch.fixed_size(batch_size) as batch:
             for root, _, files in os.walk(docs_dir):
                 for filename in files:
-                    # Filter by allowed extensions.
                     if not any(
                         filename.endswith(ext) for ext in allowed_extensions
                     ):
@@ -262,32 +282,24 @@ def upload_markdown_docs_to_weaviate(
                     total_files += 1
                     filepath = os.path.join(root, filename)
 
-                    # Process the file.
-                    if process_markdown_file(
+                    # Process the file (will raise exception if failed).
+                    process_markdown_file(
                         filepath,
                         docs_dir,
                         splitter,
                         batch,
                         ollama_url,
                         ollama_model,
-                    ):
-                        successful_files += 1
-                    else:
-                        failed_files += 1
+                    )
 
-        # Summary.
         result = {
             "total_files": total_files,
-            "successful_files": successful_files,
-            "failed_files": failed_files,
             "collection_name": collection_name,
             "docs_directory": docs_dir,
         }
 
-        _LOG.info("Upload process completed")
+        _LOG.info("Upload process completed successfully")
         _LOG.info("Total files processed: %s", total_files)
-        _LOG.info("Successful uploads: %s", successful_files)
-        _LOG.info("Failed uploads: %s", failed_files)
         _LOG.info("Collection: %s", collection_name)
         _LOG.info(
             "All markdown files uploaded using '%s' via Ollama", ollama_model
@@ -296,46 +308,85 @@ def upload_markdown_docs_to_weaviate(
         return result
 
     finally:
-        # Close client only if we created it.
         if should_close_client:
             client.close()
             _LOG.debug("Weaviate client connection closed")
 
 
-def configure_logging(
-    *, level: int = logging.INFO, format_string: Optional[str] = None
-) -> None:
+def _parse() -> argparse.ArgumentParser:
     """
-    Configure logging for the module.
+    Parse command line arguments for the Weaviate document upload script.
 
-    :param level: logging level (e.g., logging.INFO, logging.DEBUG)
-    :param format_string: custom format string for log messages
+    :return: configured argument parser
     """
-    if format_string is None:
-        format_string = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--docs_dir",
+        type=str,
+        help="Directory containing markdown files to upload (default: PROJECT_ROOT/docs)",
+    )
+    parser.add_argument(
+        "--collection_name",
+        type=str,
+        default=DEFAULT_COLLECTION_NAME,
+        help=f"Name of the Weaviate collection (default: {DEFAULT_COLLECTION_NAME})",
+    )
+    parser.add_argument(
+        "--chunk_size",
+        type=int,
+        default=DEFAULT_CHUNK_SIZE,
+        help=f"Size of text chunks for splitting (default: {DEFAULT_CHUNK_SIZE})",
+    )
+    parser.add_argument(
+        "--chunk_overlap",
+        type=int,
+        default=DEFAULT_CHUNK_OVERLAP,
+        help=f"Overlap between consecutive chunks (default: {DEFAULT_CHUNK_OVERLAP})",
+    )
+    parser.add_argument(
+        "--batch_size",
+        type=int,
+        default=DEFAULT_BATCH_SIZE,
+        help=f"Number of objects to batch before uploading (default: {DEFAULT_BATCH_SIZE})",
+    )
+    parser.add_argument(
+        "--ollama_model",
+        type=str,
+        default=DEFAULT_OLLAMA_MODEL,
+        help=f"Ollama model name for embeddings (default: {DEFAULT_OLLAMA_MODEL})",
+    )
+    parser.add_argument(
+        "--ollama_url",
+        type=str,
+        default=DEFAULT_OLLAMA_EMBED_URL,
+        help=f"Ollama API endpoint URL (default: {DEFAULT_OLLAMA_EMBED_URL})",
+    )
+    hparser.add_verbosity_arg(parser)
+    return parser
 
-    # Only configure if not already configured.
-    if not logging.getLogger().handlers:
-        logging.basicConfig(
-            level=level,
-            format=format_string,
-            handlers=[
-                logging.StreamHandler(),
-            ],
-        )
 
-    _LOG.setLevel(level)
-
-
-def main():
+def _main(parser: argparse.ArgumentParser) -> None:
     """
-    Run the document upload process with default settings.
+    Run the document upload process with command line arguments.
+
+    :param parser: configured argument parser
     """
-    # Configure logging for standalone execution.
-    configure_logging(level=logging.INFO)
+    args = parser.parse_args()
+    hdbg.init_logger(verbosity=args.log_level, use_exec_path=True)
     try:
         _LOG.info("Starting Weaviate document upload process")
-        result = upload_markdown_docs_to_weaviate()
+        result = upload_markdown_docs_to_weaviate(
+            docs_dir=args.docs_dir,
+            collection_name=args.collection_name,
+            chunk_size=args.chunk_size,
+            chunk_overlap=args.chunk_overlap,
+            batch_size=args.batch_size,
+            ollama_url=args.ollama_url,
+            ollama_model=args.ollama_model,
+        )
         _LOG.info("Document upload process completed successfully")
         return result
     except Exception as e:
@@ -343,6 +394,5 @@ def main():
         raise
 
 
-# Allow running as script.
 if __name__ == "__main__":
-    main()
+    _main(_parse())
