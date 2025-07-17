@@ -1,7 +1,7 @@
 """
 Import as: 
 
-import tutorial_forecast_as_service.api.data_utils as tfasadu
+import tutorial_forecast_as_service.frontend.data_utils as tfasadu
 """
 
 import io
@@ -11,7 +11,7 @@ import typing
 import pandas as pd
 import requests
 
-import tutorial_forecast_as_service.api.config as tfasaconf 
+import tutorial_forecast_as_service.frontend.config as tfasaconf 
 
 logging.basicConfig(level=logging.INFO)
 _LOG = logging.getLogger(__name__)

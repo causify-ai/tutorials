@@ -2,7 +2,7 @@
 """
 Import as: 
 
-import tutorial_forecast_as_service.api.config as tfasaconf
+import tutorial_forecast_as_service.frontend.config as tfasaconf
 """
 # FastAPI service configuration
 API_BASE_URL = "http://localhost:8000"

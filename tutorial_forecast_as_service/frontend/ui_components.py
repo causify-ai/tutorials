@@ -1,14 +1,14 @@
 """
 Import as: 
 
-import tutorial_forecast_as_service.api.ui_components as tfasauic
+import tutorial_forecast_as_service.frontend.ui_components as tfasauic
 """
 
 import dash 
 import plotly.graph_objects as go
 import pandas as pd
 
-import tutorial_forecast_as_service.api.config as tfasaconf 
+import tutorial_forecast_as_service.frontend.config as tfasaconf 
 
 def create_success_message(message: str) -> dash.html.Div:
     """

@@ -1,12 +1,12 @@
 """
 Import as: 
 
-import tutorial_forecast_as_service.api.layout as tfasapl
+import tutorial_forecast_as_service.frontend.layout as tfasapl
 """
 
 import dash 
 
-import tutorial_forecast_as_service.api.config as tfasaconf 
+import tutorial_forecast_as_service.frontend.config as tfasaconf 
 
 def create_upload_section():
     """

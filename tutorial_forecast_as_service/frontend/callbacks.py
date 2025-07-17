@@ -1,12 +1,12 @@
 """
 Import as: 
 
-import tutorial_forecast_as_service.api.callbacks as tfasacb
+import tutorial_forecast_as_service.frontend.callbacks as tfasacb
 """
 import dash
 
-import tutorial_forecast_as_service.api.data_utils as tfasadu
-import tutorial_forecast_as_service.api.ui_components as tfasauic
+import tutorial_forecast_as_service.frontend.data_utils as tfasadu
+import tutorial_forecast_as_service.frontend.ui_components as tfasauic
 
 
 def register_callbacks(app):
