@@ -1,0 +1,10 @@
+cmdstanpy
+fastapi
+pandas
+plotly
+prophet
+python-multipart
+scikit-learn
+uvicorn[standard]
+dash
+dash-bootstrap-components
