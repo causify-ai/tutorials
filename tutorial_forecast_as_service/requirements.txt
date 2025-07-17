@@ -1,4 +1,6 @@
 cmdstanpy
+dash
+dash-bootstrap-components
 fastapi
 pandas
 plotly
@@ -6,5 +8,3 @@ prophet
 python-multipart
 scikit-learn
 uvicorn[standard]
-dash
-dash-bootstrap-components

@@ -1,0 +1,3 @@
+# tutorial_forecast_as_service-1.0.0
+- 2025-15-07
+- First release
