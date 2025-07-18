@@ -45,23 +45,24 @@
 
 ### Docker container
 - The Docker container should:
-  1. Contain everything so that one is ready to run tutorials and develop with
-     that technology
+  - Contain everything so that one is ready to run tutorials and develop with
+    that technology
      - Often installing and getting a package to work (e.g., PyMC) takes a long
        time
 
 ### Jupyter notebooks
 - Each Jupyter notebook should:
-  3. Run end-to-end after a restart
+
+   - Run end-to-end after a restart
      - This is enforced by the unit test through `pytest`
      - In this way we are guaranteed that it works
      - It's super frustrating when a tutorial doesn't work because the version of
        the library is not compatible with the code anymore
-  2. Be self-contained and linear
+   - Be self-contained and linear
      - Each example is explained thoroughly without having to jump from tutorial
        to tutorial
      - Each cell and its output is commented and explained
-  4. Take less than few minutes to execute end-to-end
+  - Take less than few minutes to execute end-to-end
 
 ### Markdown
 - Markdown documents should cover information about:

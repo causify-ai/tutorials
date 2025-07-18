@@ -1,5 +1,7 @@
 // https://drive.google.com/file/d/1IfuM2b1gLt922PzvAgWjWifDKRl3vQ2u/view?usp=drive_link
 
+# I-Corps Next Day 1 Notes
+
 ## Why?
 
 - Startups often fail for preventable reasons
@@ -142,3 +144,229 @@
   - Social desirability bias
   - Unstructured conversations
 - But learning to hear what matters is a superpower
+
+// https://drive.google.com/file/d/1ibpz-okGhq4Qse0n3wrSzzWvEfH4wA6D/view?usp=drive_link
+
+# I-Corps Next Day 2 Notes
+
+## Startup Mistakes — Top 10
+- Not having the right co-founders (36% of failures)
+- Hiring poorly
+- Lack of focus
+- Building something nobody wants
+- Failure to execute sales & marketing
+- Chasing investors, not customers
+- Not making sure you have enough money
+- Spending too much money
+- Failing to ask for help
+- Ignoring social media
+
+## Evidence-Based Discovery
+- Evidence comes from discovery
+  - Primarily through **interviews**
+  - **Data is not evidence** without structure
+
+## Clinical Example: Cardiogenic Shock
+
+### Determine Etiology:
+- ECG, echocardiography
+- Arterial line BP monitoring
+- Right heart catheterization
+- Lactate & organ function markers
+
+### Pharmacological Management:
+- **Pre/Early Shock**
+  - SBP < 100mmHg
+  - HR 70–100
+  - Normal lactate
+  - Cool extremities
+- **Shock**
+  - SBP < 90mmHg
+  - HR > 100
+  - Lactate > 2
+  - Altered mental status
+- **Severe Shock**
+  - SBP < 90mmHg
+  - HR > 120
+  - Lactate > 4
+  - Obtunded
+
+### Underlying Causes:
+- Acute MI — 32% (STEMI 59%, NSTEMI 41%)
+- Cardiomyopathy — 30% (hypertrophic, dilated, autoimmune, etc.)
+- Ischemic heart disease — 19%
+- Other — 18%
+
+## Industry Ecosystems
+- Identifies key players in the industry
+- Helps target interviews
+- Shows industry-level jobs and needs
+- Maps different business model options
+
+### Examples:
+- **Value Chain — Magnet Wire for EVs**
+- **Methanol Production Ecosystem**
+
+## Customer Stakeholder Ecosystem
+- Different customer segments = different business models
+- Stakeholder roles:
+  - **End Users:** interact directly with product
+  - **Decision Makers:** make financial/use decisions
+  - **Other Influencers:** key influence on adoption
+  - **Beneficiaries:** benefit but have little influence
+  - **KOLs/Experts:** influential professionals
+
+## Workflows
+- How the job is done today
+- Identify key job steps & bottlenecks
+- Useful for “before/after” state to show improvement
+
+### Example:
+- Wastewater Treatment Workflow:
+  - Screening
+  - Grit removal
+  - Sludge separation
+  - Phosphorous removal
+  - Final treatment/discharge
+
+## Value Propositions
+- An **offer of value** to a customer
+- Not just features/specs — must address **customer needs**
+- Test value by understanding:
+  - The job your customer hires your solution to do
+  - Their **decision criteria** for adoption
+  - How much better your solution needs to be to drive switching behavior
+
+## Testing Needs & Solutions
+- Start by identifying **unmet needs**
+- Use decision criteria to test and validate value
+- Understand what improvement is needed for adoption
+
+# I-Corps Next Day 3 Notes
+
+## What Makes a Good Beachhead Market?
+- Customer has a compelling reason/need to buy
+- Target customer is accessible to your sales force/channel
+- Target customer is well-funded and able to pay
+- You can deliver a full solution or find the right partners
+- Consider if there are entrenched competitors
+- Look for related/adjacent segments for future expansion
+- Ensure the market aligns with the passion, interests, and goals of the founders
+
+## Ecosystems: Industry & Value Chain
+- Identify key industry players and interview targets
+- Understand industry-level “jobs” and process steps
+- Map evidence from customer discovery interviews
+- Reveal different business model options based on direct customer choice
+- Example players: EPCs, Catalyst Suppliers, Feedstock Suppliers, Off-takers,
+  Regulators, Industry Associations
+
+## Customer Stakeholder Map
+- Shows typical company or consumer types
+- Identifies key stakeholders and typical job titles (B2B)
+- Assesses balance of influence — who has the most say
+- Shows “customer of the customer” for component solutions
+
+## Workflows
+- Understand how the job is done today
+- Identify key steps in larger processes
+- Show “competing jobs”
+- Visualize process owners and bottlenecks
+- Useful for showing before/after states for improvements
+
+## Channels
+- How will you sell to, deliver to, and support customers?
+- Identify direct vs. indirect sales channels
+  - Direct: sell directly to end-use customer
+  - Indirect: use channel partners, distributors, resellers
+- Each intermediary in a channel expects to get paid
+- Channel partners are motivated by money and ease
+- Product complexity drives channel complexity
+
+### Three High-Level Channel Functions
+- Sales
+- Distribution
+- Support
+
+## Customer Relationships
+- Define how you will Get, Keep, and Grow customers
+- Understand Customer Acquisition Cost (CAC)
+  - Includes marketing and sales costs
+  - Should align with solution and channel complexity
+- High touch vs. low touch sales models have different CAC ranges
+
+### Customer Acquisition Cost vs. Sales Complexity (Examples)
+- Freemium/No Touch: $0–$10 CAC
+- Self-Service/Inside Sales: $50–$2,000 CAC
+- High Touch/Field Sales with SEs: $25,000–$200,000 CAC
+
+## Revenue Streams & Pricing
+- Identify how you will make money (asset sale, usage fees, subscription,
+  licensing, rental, advertising, upsell)
+- Align pricing models with customer expectations
+  - Examples: cost plus, competitive pricing, volume pricing, value-based pricing
+- Understand customer buying habits and budgeting cycles
+- Calculate Lifetime Value (LTV) to ensure it is several multiples of CAC to
+  cover costs and profit
+
+## Key Discovery Questions to Ask Customers
+- How do you typically purchase products? (asset, lease, subscription)
+- How do purchases get authorized? At what price point does it get complicated?
+- What justifications are needed for budget approval?
+- What is the cost of not having a better solution?
+- What does a typical budgeting cycle look like for a purchase like this?
+
+## Payment Flows in the Ecosystem
+- Map out how money moves between stakeholders
+- Understand decision-making roles: champions, committees, OEMs, regulators
+- Plan service contracts, one-time sales, and annual agreements
+
+## Breakouts & Next Steps
+- Map your channels: direct or indirect? Physical or digital? Who are
+  intermediaries?
+- Define your initial hypotheses for customer acquisition and revenue generation
+- Use discovery interviews to validate your assumptions on market, channels,
+  relationships, and pricing
+
+// https://drive.google.com/drive/folders/1jsP3sykxbNauttCsHD7mxoMMZb4cDKiA
+
+# I-Corps Next Day 3 Notes
+
+The presentation is structured around the Business Model Canvas (BMC) elements, focusing on:
+
+- Beachhead Market: Criteria for identifying a good beachhead market, including
+  compelling reason to buy, accessibility, competition, customer funding,
+  adjacent segments, solution delivery, and founder alignment.
+
+- Ecosystems: Explains the use of industry and value chain ecosystem maps to
+  identify key players, process steps, interview targets, and business model
+  options.
+
+- Customer Stakeholder Map: A tool to identify end-users, decision-makers, other
+  influencers, beneficiaries, and KOLS/experts, and to assess their balance of
+  influence.
+
+- Workflows: Discusses mapping current job processes to identify steps, competing
+  jobs, bottlenecks, and opportunities for improvement.
+
+- Channels: Focuses on how products/services reach customers, distinguishing
+  between direct and indirect channels. Key takeaways include that product
+  complexity drives channel complexity, intermediaries expect payment, and
+  channel partners are motivated by money. It provides sample questions for
+  customers and channel partners.
+
+- Customer Relationships: Explores how to "Get, Keep, and Grow" customers,
+  covering awareness, interest, consideration, purchase, outreach, loyalty
+  programs, referrals, cross-sell, and upsell. A significant part is dedicated to
+  Customer Acquisition Cost (CAC), its estimation based on sales complexity, and
+  an example calculation. Sample questions for customers are provided.
+
+- Revenue Streams: Addresses how the business will make money, including revenue
+  stream models (e.g., asset sale, subscription, licensing, usage fees,
+  intermediation, advertising, upsell) and pricing models/tactics (e.g., cost
+  plus, competitive, volume, portfolio, razor/razor blade, time/billing,
+  value-based pricing). It emphasizes Value-Based Pricing and the concept of
+
+- Customer Lifetime Value (LTV), stressing that LTV should be greater than CAC.
+  Sample questions for customers regarding revenue and purchasing habits are
+  included.
