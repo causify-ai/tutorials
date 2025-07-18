@@ -5,7 +5,7 @@ import tutorial_forecast_as_service.frontend.config as tfasfrco
 """
 
 # FastAPI service configuration.
-API_BASE_URL = "http://127.0.0.1:8000"
+API_BASE_URL = "http://forecast_api:8000"
 UPLOAD_ENDPOINT = f"{API_BASE_URL}/upload_data"
 FORECAST_ENDPOINT = f"{API_BASE_URL}/forecast"
 

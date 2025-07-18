@@ -29,4 +29,4 @@ if __name__ == "__main__":
     print(f"Make sure your FastAPI service is running on {tfasfrco.API_BASE_URL}")
     print(f"Open http://localhost:{tfasfrco.APP_PORT} in your browser")
     dash_app = create_app()
-    dash_app.run(debug=tfasfrco.DEBUG_MODE, port=tfasfrco.APP_PORT)
+    dash_app.run(host="0.0.0.0", debug=tfasfrco.DEBUG_MODE, port=tfasfrco.APP_PORT)
