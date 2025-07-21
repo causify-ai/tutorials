@@ -334,39 +334,179 @@
 
 The presentation is structured around the Business Model Canvas (BMC) elements, focusing on:
 
-- Beachhead Market: Criteria for identifying a good beachhead market, including
-  compelling reason to buy, accessibility, competition, customer funding,
-  adjacent segments, solution delivery, and founder alignment.
+## Beachhead Market:
+- Criteria for identifying a good beachhead market, including:
+  - compelling reason to buy
+  - accessibility
+  - competition
+  - customer funding
+  - adjacent segments
+  - solution delivery
+  - founder alignment
 
-- Ecosystems: Explains the use of industry and value chain ecosystem maps to
-  identify key players, process steps, interview targets, and business model
-  options.
+- Value proposition
+  - Does the customer have a compelling reason to buy?
 
-- Customer Stakeholder Map: A tool to identify end-users, decision-makers, other
-  influencers, beneficiaries, and KOLS/experts, and to assess their balance of
-  influence.
+## Ecosystems
+- Explains the use of industry and value chain ecosystem maps to identify
+  - key players
+  - process steps
+  - interview targets
+  - business model options
 
-- Workflows: Discusses mapping current job processes to identify steps, competing
-  jobs, bottlenecks, and opportunities for improvement.
+## Customer Stakeholder Map
+- A tool to identify
+  - end-users
+  - decision-makers
+  - other influencers
+  - beneficiaries
+  - KOLS/experts
+- Assess their balance of influence
 
-- Channels: Focuses on how products/services reach customers, distinguishing
-  between direct and indirect channels. Key takeaways include that product
-  complexity drives channel complexity, intermediaries expect payment, and
-  channel partners are motivated by money. It provides sample questions for
-  customers and channel partners.
+## Workflows
+- Discusses mapping current job processes to identify
+  - steps
+    - How is "job" done today?
+  - competing jobs
+  - bottlenecks
+  - opportunities for improvement
 
-- Customer Relationships: Explores how to "Get, Keep, and Grow" customers,
-  covering awareness, interest, consideration, purchase, outreach, loyalty
-  programs, referrals, cross-sell, and upsell. A significant part is dedicated to
-  Customer Acquisition Cost (CAC), its estimation based on sales complexity, and
-  an example calculation. Sample questions for customers are provided.
+## Channels
+- "How will you sell to, deliver to, support your customers?"
+- "How does my target customer segment want to find and buy solutions?"
 
-- Revenue Streams: Addresses how the business will make money, including revenue
-  stream models (e.g., asset sale, subscription, licensing, usage fees,
-  intermediation, advertising, upsell) and pricing models/tactics (e.g., cost
-  plus, competitive, volume, portfolio, razor/razor blade, time/billing,
-  value-based pricing). It emphasizes Value-Based Pricing and the concept of
+- What are channels for?
+  - Sales
+  - Distribution
+  - Support
 
-- Customer Lifetime Value (LTV), stressing that LTV should be greater than CAC.
+- Distinguishing between
+  - Direct: 
+  - Indirect:
+    - Amazon, Whole food, Instacart
+
+- Channel complexity vs solution complexity
+  - Web (e.g., toner)
+  - Retail (e.g., printers)
+  - VARs (e.g., PC servers)
+  - Direct sales
+  - System integrators (e.g., mainframes)
+
+- Everybody in the chain needs to get paid
+  - It can be worth it to off-load the complexity
+
+- Channel partners are motivated by money
+
+- Make sure to think
+  - What channels expect from you
+  - What you expect for channels
+
+- Sample questions
+  - Where do you purchase today?
+  - Have channels change recently, are they changing?
+  - What aspects of these channels could be improved?
+  - Do you learn about new products / services from the channel?
+  - How important is the channel for your choice of solutions:
+  - Have you constraints to choose channels?
+
+- Sample questions
+  - How are your salespeople compensated?
+  - How do you determine what products to sell?
+  - What are your typical margins?
+
+  Do you have a physical or virtual (digital) product? Or some combination?
+  Do you plan to sell directly or indirectly?
+  If indirectly, what might the channel partners / intermediaries be between you and the customer?
+  Will different parties be responsible for selling, distribution, and support?
+  Do you know what channels your customers go to today for similar products / solutions?
+
+- Key takeaways include that product complexity drives channel complexity,
+  intermediaries expect payment, and channel partners are motivated by money. It
+  provides sample questions for customers and channel partners.
+
+## Customer Relationships:
+- Explores how to "Get, Keep, and Grow" customers
+
+- "Get": the funnel is
+  - Awareness
+    - Social media
+    - Blogs
+    - Experts (Oprah)
+  - Interest
+    - Being aware doesn't mean that I'm interest or understand
+  - Consideration
+    - Weight pros and cons of your product
+  - Purchase
+    - PO
+    - Visa card
+
+- It costs money (and time) to acquire customers
+  - Travel and entertainment budget
+  - Shipping demos around
+  - Company vehicles
+
+- A significant part is dedicated to Customer Acquisition Cost (CAC), its
+  estimation based on sales complexity, and an example calculation
+
+- How to 
+  - outreach
+
+- "Keep"
+  - loyalty programs
+
+- "Grow"
+  - Referrals
+  - Cross-sell
+  - Upsell
+
+## Revenue Streams
+- Addresses how the business will make money
+
+- Revenue stream models, e.g.,
+    - asset sale, e.g.,
+      - Buy a car by paying MSRP
+    - subscription, e.g.,
+      - Netflix
+    - licensing
+      - E.g., Microsoft office
+    - usage fees, e.g.,
+      - Plane ticket
+    - rental / lease, e.g.,
+      - Renting books
+      - Leasing cars
+    - intermediation, e.g.,
+      - Airbnb
+    - advertising, e.g.,
+      - Facebook
+    - upsell, e.g.,
+      - Linkedin
+
+- Pricing models/tactics, e.g.,
+  - Cost plus
+    - Cost of making + some money on top of it
+  - Competitive
+  - Volume
+  - portfolio
+  - razor/razor blade
+  - time/billing
+  - value-based pricing
+
+- Value-based pricing
+  - Compare with next best alternative
+  - Understand how much is the differences worth
+  - Place value on differentiation
+  - Difficult for new products
+
+## Customer Lifetime Value (LTV)
+- LTV should be greater than CAC
+  - Initial revenue
+  - "Keep" revenue (recurring annual revenue)
+  - "Grow revenue" (Add-on , upselling)
+
   Sample questions for customers regarding revenue and purchasing habits are
-  included.
+  included
+  - How do you typically purchase products?
+  - How do purchase get authorized?
+    - Is there a committee?
+  - 
+
