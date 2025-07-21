@@ -138,12 +138,6 @@ Start → Knowledge Retrieval → LLM → Answer
    - "What are the setup prerequisites?"
 3. Verify responses include document information
 
-### Optimization Options
-
-- Lower score threshold (0.3) for more results
-- Increase top_k (8-10) for more context
-- Add conversation memory for context retention
-
 ## Troubleshooting
 
 ### API Connection Issues
