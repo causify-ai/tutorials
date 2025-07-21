@@ -1,0 +1,781 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../15/cracking-the-long-tail/">
+      
+      
+      
+      <link rel="icon" href="../../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>Why Causal AI is the Future of Automated Decision-Making - Causify Blog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/styles.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#the_limitations_of_traditional_ai" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Causify Blog" class="md-header__button md-logo" aria-label="Causify Blog" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Causify Blog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Why Causal AI is the Future of Automated Decision-Making
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Causify Blog" class="md-nav__button md-logo" aria-label="Causify Blog" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.png" alt="logo">
+
+    </a>
+    Causify Blog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Archive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    2025
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Categories
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Categories
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/causal_ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Causal ai
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the_limitations_of_traditional_ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Limitations of Traditional AI
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what_traditional_analytics_offers" class="md-nav__link">
+    <span class="md-ellipsis">
+      What Traditional Analytics Offers
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the_need_for_explainability" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Need for Explainability
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why_correlation_is_not_enough" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Correlation Is Not Enough
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#causal_ai_understanding_the_why" class="md-nav__link">
+    <span class="md-ellipsis">
+      Causal AI: Understanding the Why
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the_future_of_ai_is_causal" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Future of AI is Causal
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../../../.." class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+                  <span class="md-ellipsis">
+                    Back to index
+                  </span>
+                </a>
+              </div>
+            </div>
+            
+              <div class="md-post__authors md-typeset">
+                
+                  <div class="md-profile md-post__profile">
+                    <span class="md-author md-author--long">
+                      <img src="https://avatars.githubusercontent.com/u/33238329" alt="GP Saggese">
+                    </span>
+                    <span class="md-profile__description">
+                      <strong>
+                        
+                          <a href="https://github.com/gpsaggese">GP Saggese</a>
+                        
+                      </strong>
+                      <br>
+                      Chief Technology Officer
+                    </span>
+                  </div>
+                
+                  <div class="md-profile md-post__profile">
+                    <span class="md-author md-author--long">
+                      <img src="https://avatars.githubusercontent.com/u" alt="Joel Sherlock">
+                    </span>
+                    <span class="md-profile__description">
+                      <strong>
+                        
+                          Joel Sherlock
+                        
+                      </strong>
+                      <br>
+                      Chief Executive Officer
+                    </span>
+                  </div>
+                
+                  <div class="md-profile md-post__profile">
+                    <span class="md-author md-author--long">
+                      <img src="https://avatars.githubusercontent.com/u/7649219?v=4" alt="Paul Smith">
+                    </span>
+                    <span class="md-profile__description">
+                      <strong>
+                        
+                          <a href="https://github.com/gitpaulsmith">Paul Smith</a>
+                        
+                      </strong>
+                      <br>
+                      Chief Scientist
+                    </span>
+                  </div>
+                
+              </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    Metadata
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
+                        <time datetime="2025-08-18 00:00:00+00:00" class="md-ellipsis">Monday, August 18, 2025</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"/></svg>
+                          <span class="md-ellipsis">
+                            in
+                            
+                              <a href="../../../../category/causal_ai/">Causal ai</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+            
+          </nav>
+          
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
+  
+
+
+
+
+  <h1>Why Causal AI is the Future of Automated Decision-Making</h1>
+
+<p>Over the past decade, organizations have poured immense effort into building
+systems that harness the power of big data and traditional analytics. These
+systems, spanning from dashboards to predictive models, have helped analyze
+historical data, detect patterns, and forecast future events. However, there’s a
+fundamental problem with this approach: it stops at correlation. It can tell you
+<em>what</em> is likely to happen, but not <em>why</em>.</p>
+<p>That’s where <strong>Causal AI</strong> comes in.</p>
+<!-- more -->
+
+<h3 id="the_limitations_of_traditional_ai">The Limitations of Traditional AI<a class="headerlink" href="#the_limitations_of_traditional_ai" title="Permanent link">#</a></h3>
+<p>Traditional AI excels at interpreting massive datasets, unearthing patterns, and
+making predictions. However, its insights are largely confined to observed
+correlations.</p>
+<ul>
+<li>A critical drawback is that traditional AI often predicts outcomes without
+  understanding the underlying causes, only telling <em>what</em> is likely to happen,
+  not <em>why</em>.  </li>
+<li>For example, it can predict a surge in product returns but not explain if
+    it's due to a faulty component, misleading marketing, or a shift in customer
+    expectations.  </li>
+<li>Traditional AI is susceptible to spurious correlations, incorrectly identifying
+  causal links where only statistical relationships exist.  </li>
+<li>A classic example is the correlation between ice cream sales and shark
+    attacks, both influenced by warm weather, not each other.  </li>
+<li>Consequently, traditional AI fails to adequately explain why certain outcomes
+  occurred.  </li>
+<li>When sales drop or customer churn increases, traditional models can identify
+    these trends but offer little actionable insight into the root causes (e.g.,
+    price change, product quality, new competitor).  </li>
+<li>Traditional AI cannot assess the impact of hypothetical decisions or answer
+  "what-if" questions.  </li>
+<li>It struggles to predict outcomes of actions not yet taken (e.g., "What
+    happens if we lower prices by 10%?").  </li>
+<li>In scenarios where crucial business metrics shift, traditional AI can alert to
+  the anomaly but cannot pinpoint drivers.  </li>
+<li>It cannot distinguish if customers are reacting to price, product quality, or
+    a new competitor, highlighting the need for an advanced approach that
+    understands causation.</li>
+</ul>
+<p>Ultimately, organizations don’t just want to know what happened: they need to
+know <strong>what to do about it</strong>.</p>
+<h3 id="what_traditional_analytics_offers">What Traditional Analytics Offers<a class="headerlink" href="#what_traditional_analytics_offers" title="Permanent link">#</a></h3>
+<p>Data analytics has evolved into a set of increasingly sophisticated tools:</p>
+<ul>
+<li><strong>Dashboards</strong> for monitoring KPIs.  </li>
+<li><strong>Descriptive statistics</strong> to summarize past performance.  </li>
+<li><strong>Predictive models</strong> to anticipate outcomes.  </li>
+<li><strong>Reports</strong> that analyze historical data in depth.</li>
+</ul>
+<p>Each step helps answer progressively complex questions:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Business Question</th>
+<th style="text-align: left;">Methodology</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">What happened?</td>
+<td style="text-align: left;">Descriptive statistics</td>
+</tr>
+<tr>
+<td style="text-align: left;">What will happen?</td>
+<td style="text-align: left;">Predictive models</td>
+</tr>
+<tr>
+<td style="text-align: left;">What should we do?</td>
+<td style="text-align: left;">Prescriptive programs</td>
+</tr>
+<tr>
+<td style="text-align: left;">What's the best we can do?</td>
+<td style="text-align: left;">Simulation + optimization</td>
+</tr>
+</tbody>
+</table>
+<p>However, even with the best dashboards and forecasts, these tools fall short when
+the question becomes: <strong>Why did this happen?</strong> And more importantly: <strong>What would
+happen if we made a change?</strong></p>
+<h3 id="the_need_for_explainability">The Need for Explainability<a class="headerlink" href="#the_need_for_explainability" title="Permanent link">#</a></h3>
+<p>As AI systems are increasingly used in decisions that impact lives, such as
+hiring, credit approval, pricing, policy, <strong>explainability</strong> becomes crucial:</p>
+<ul>
+<li>Regulators demand transparency in AI-driven decisions.  </li>
+<li>Stakeholders and customers expect fairness and accountability.  </li>
+<li>Black-box models (like deep neural networks) fail to provide intelligible
+  justifications.  </li>
+<li>Biased decisions, driven by factors like race, gender, or age, can lead to
+  reputational damage and legal risk.</li>
+</ul>
+<p>Explainable AI (XAI) attempts to address this, but without understanding <strong>causal
+relationships</strong>, explainability remains shallow.</p>
+<h3 id="why_correlation_is_not_enough">Why Correlation Is Not Enough<a class="headerlink" href="#why_correlation_is_not_enough" title="Permanent link">#</a></h3>
+<p>Traditional AI relies on <strong>correlation</strong>, which can be misleading:</p>
+<ul>
+<li>Correlation finds patterns in past data but doesn't explain the mechanisms behind them.  </li>
+<li>Two variables may move together because of a hidden third factor.  </li>
+<li>Statistical association doesn't lead to actionable insights.</li>
+</ul>
+<p>For decision-making, <strong>causation</strong> is essential. It tells us:</p>
+<ul>
+<li>How a change in one variable will <em>cause</em> a change in another.  </li>
+<li>Which levers we can pull to influence desired outcomes.  </li>
+<li>What would happen under <em>alternative scenarios</em>—i.e., counterfactuals.</li>
+</ul>
+<p>Without causation, organizations are flying blind.</p>
+<h3 id="causal_ai_understanding_the_why">Causal AI: Understanding the Why<a class="headerlink" href="#causal_ai_understanding_the_why" title="Permanent link">#</a></h3>
+<p><strong>Causal AI</strong> bridges the gap between prediction and understanding. It enables
+machines to think more like humans—reasoning about cause and effect, not just
+pattern matching.</p>
+<ul>
+<li><strong>Understands the why</strong></li>
+<li>Goes beyond correlation to uncover cause-effect relationships.  </li>
+<li>
+<p><em>Example</em>: Did the marketing campaign really drive sales, or was it seasonal demand?</p>
+</li>
+<li>
+<p><strong>Identifies <em>interventions</em></strong></p>
+</li>
+<li>Pinpoints what actions will lead to desired outcomes.  </li>
+<li>
+<p><em>Example</em>: What health interventions reduce blood pressure?</p>
+</li>
+<li>
+<p><strong>Predicts <em>counterfactuals</em></strong></p>
+</li>
+<li>Answers "what if" questions.  </li>
+<li>
+<p><em>Example</em>: Would this student have scored higher in a different school?</p>
+</li>
+<li>
+<p><strong>Reduces <em>bias</em></strong></p>
+</li>
+<li>Accounts for confounding variables often ignored in traditional AI.  </li>
+<li>
+<p>Leads to fairer, more robust decisions.</p>
+</li>
+<li>
+<p><strong>Improves <em>decision-making</em></strong></p>
+</li>
+<li>Provides deeper insights into systems and levers of control.  </li>
+<li><em>Example</em>: Optimize supply chain by understanding how delivery routes impact
+    performance.</li>
+</ul>
+<h3 id="the_future_of_ai_is_causal"><strong>The Future of AI is Causal</strong><a class="headerlink" href="#the_future_of_ai_is_causal" title="Permanent link">#</a></h3>
+<p>As organizations mature beyond descriptive and predictive analytics, the ability
+to model interventions and simulate alternate futures becomes essential. Whether
+it's pricing, healthcare, education, or logistics: <strong>Causal AI empowers smarter,
+fairer, and more transparent decision-making.</strong></p>
+<p>In a world where knowing <em>what</em> is no longer enough, Causal AI helps us
+understand <em>why</em>, and more importantly, <em>what to do next</em>.  </p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+      
+    </article>
+  </div>
+
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.sections"], "search": "../../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -13,7 +13,7 @@ theme:
   logo: assets/logo.png
   favicon: assets/favicon.ico
   features:
-    navigation.indexes
+    - navigation.sections
 
 #extra:
 #  analytics:
@@ -21,9 +21,10 @@ theme:
 #    property: G-SZB618VNBZ
 
 # Helps render images and other assets correctly.
-use_directory_urls: false
+# use_directory_urls: false
 
 nav:
+  - index.md
   
 # The search plugin is enabled by default
 # but if we specify plugins, we need to include it
@@ -33,7 +34,7 @@ plugins:
   - search
   - blog:
       enabled: true
-      blog_dir: blog
+      blog_dir: .
       blog_toc: true
       post_date_format: full
       post_url_date_format: yyyy/MM/dd
