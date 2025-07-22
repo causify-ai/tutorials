@@ -1509,7 +1509,7 @@ def visualize_user_metric_comparison(
     stats: pd.DataFrame,
     *,
     score_type: Literal["z", "percentile"] = "z",
-    top_n: int = 10,
+    top_n: Optional[int] = None,
 ) -> None:
     """
     Visualize user performance across all available metrics using z-scores or
@@ -1537,13 +1537,20 @@ def visualize_user_metric_comparison(
     )
     # Leaderboard chart (by average score).
     stats["__score_avg__"] = stats[score_cols].mean(axis=1)
-    top_users = stats.sort_values("__score_avg__", ascending=False).head(top_n)
-    fig, ax = plt.subplots(figsize=(10, 4))
+    if top_n is None:
+        top_users = stats.sort_values("__score_avg__", ascending=False)
+        top_n_display = len(top_users)
+    else:
+        top_users = stats.sort_values("__score_avg__", ascending=False).head(
+            top_n
+        )
+        top_n_display = top_n
+    fig, ax = plt.subplots(figsize=(max(8, 0.5 * len(top_users)), 4))
     ax.bar(top_users["user"], top_users["__score_avg__"], color="skyblue")
     ax.set_ylabel(
         "Average Score" + (" (Z-score)" if score_type == "z" else " (Percentile)")
     )
-    ax.set_title(f"Top {top_n} Users by Average {score_type.title()}")
+    ax.set_title(f"Top {top_n_display} Users by Average {score_type.title()}")
     ax.axhline(0 if score_type == "z" else 0.5, color="gray", linestyle="--")
     plt.xticks(rotation=15, ha="right")
     plt.tight_layout()
