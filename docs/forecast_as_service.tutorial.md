@@ -17,7 +17,7 @@
   - Provides an interactive Dash frontend and FastAPI backend
   - Supports uploading time series data and returning Prophet-based forecasts
 
-## What You'Ll Build
+## What You'll Build
 
 - A Dockerized FastAPI backend that runs forecasting using Prophet
 - A Dash frontend where users can upload CSV files
