@@ -39,3 +39,6 @@ jobs:
           role-to-assume: ${{ vars.GH_ACTION_AWS_ROLE_ARN }}
           role-session-name: ${{ vars.GH_ACTION_AWS_SESSION_NAME }}
           aws-region: ${{ vars.CSFY_AWS_DEFAULT_REGION }}
+      - name: Publish files to S3
+        run: |
+          aws s3 sync ./blog s3://causify-blog
