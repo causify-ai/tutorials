@@ -25,4 +25,4 @@ jobs:
           python-version: 3.x
       - run: pip install mkdocs mkdocs-material
       - run: mkdocs build
-        working-directory: ./blogs
+        working-directory: ./blog
