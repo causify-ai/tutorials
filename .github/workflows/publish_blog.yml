@@ -26,3 +26,11 @@ jobs:
       - run: pip install mkdocs mkdocs-material
       - run: mkdocs build
         working-directory: ./blog
+      - run: ls -la
+      - run: ls -la ./blog
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ vars.GH_ACTION_AWS_ROLE_ARN }}
+          role-session-name: ${{ vars.GH_ACTION_AWS_SESSION_NAME }}
+          aws-region: ${{ vars.CSFY_AWS_DEFAULT_REGION }}
