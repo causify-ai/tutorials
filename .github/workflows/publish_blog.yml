@@ -12,7 +12,7 @@ permissions:
   # This is required for actions/checkout.
   contents: read
 jobs:
-  deploy:
+  publish_blog:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
