@@ -1,9 +1,11 @@
-name: Publish MkDocs
+name: Publish Causify Blog
 on:
   push:
     branches:
       - master
       - TutorTask598_Publish_causify_blog_from_tutorials_2
+    paths:
+      - blog/**
   # Run manually.
   workflow_dispatch:
   # Run once a day at 1:00 am UTC even if there are no commits.
@@ -25,14 +27,15 @@ jobs:
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: 3.x
-      - run: pip install mkdocs mkdocs-material
-      - run: mkdocs build
+      - name: Install MkDocs
+        run: pip install mkdocs mkdocs-material
+      - name: Build MkDocs
+        run: mkdocs build
         working-directory: ./blog
-      - run: ls -la
-      - run: ls -la ./blog
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
