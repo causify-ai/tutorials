@@ -13,7 +13,7 @@ theme:
   logo: assets/logo.png
   favicon: assets/favicon.ico
   features:
-    - navigation.sections
+    navigation.indexes
 
 #extra:
 #  analytics:
@@ -21,10 +21,9 @@ theme:
 #    property: G-SZB618VNBZ
 
 # Helps render images and other assets correctly.
-# use_directory_urls: false
+use_directory_urls: false
 
 nav:
-  - index.md
   
 # The search plugin is enabled by default
 # but if we specify plugins, we need to include it
