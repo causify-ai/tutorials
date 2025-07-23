@@ -69,11 +69,21 @@ jobs:
           role-to-assume: ${{ vars.GH_ACTION_AWS_ROLE_ARN }}
           role-session-name: ${{ vars.GH_ACTION_AWS_SESSION_NAME }}
           aws-region: ${{ vars.CSFY_AWS_DEFAULT_REGION }}
+
+      # Install packages that are required to run the job via GH.
       - name: Install dependencies
         if: env.HELPERS_IS_NOT_UP_TO_DATE
         run: |
           python -m pip install --upgrade pip
           pip install -r .github/gh_requirements.txt
+
+      - name: Login to GitHub Container Registry
+        if: env.HELPERS_IS_NOT_UP_TO_DATE
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Pull image from GHCR
         if: env.HELPERS_IS_NOT_UP_TO_DATE
