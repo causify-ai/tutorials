@@ -1,9 +1,6 @@
 name: Update helpers submodule
 
 on:
-  push:
-    branches:
-      - TutorTask586_Add_a_workflow_to_automatically_roll_foward_helpers_in_tutorials
   # In order to make this a reusable workflow.
   workflow_call:
   # Run manually.
