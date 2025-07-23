@@ -30,14 +30,13 @@ jobs:
       # Check out the code from GitHub so that we can run the action inside
       # the Docker container.
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: true
           # TODO(Samarth): Do we need to propagate this to other `repos/workflow`
           # make it a default behavior? For certain tests to pass, we need entire
           # commit history of the repo including sub-modules.
           fetch-depth: 0
-          token: ${{ secrets.GH_ACTION_ACCESS_TOKEN }}
 
       # To see the modules in `helpers`, PYTHONPATH needs to include `helpers`
       # in the same way we do in `setenv.sh`.
