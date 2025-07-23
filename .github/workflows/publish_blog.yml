@@ -10,7 +10,12 @@ on:
   schedule:
     - cron: "0 1 */1 * *"
 permissions:
-  contents: write
+  # This is required for requesting the OIDC JWT.
+  id-token: write
+  # This is required for actions/checkout.
+  contents: read
+  # This is required for pulling the Docker image from GHCR.
+  packages: read
 jobs:
   deploy:
     runs-on: ubuntu-latest
