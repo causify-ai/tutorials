@@ -44,4 +44,4 @@ jobs:
           aws-region: ${{ vars.CSFY_AWS_DEFAULT_REGION }}
       - name: Publish files to S3
         run: |
-          aws s3 sync ./blog s3://causify-blog
+          aws s3 sync ./blog/site s3://causify-blog
