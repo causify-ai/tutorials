@@ -3,21 +3,14 @@ on:
   push:
     branches:
       - master
-      - TutorTask598_Publish_causify_blog_from_tutorials_2
     paths:
+      # Trigger the workflow when there are changes in the blog directory.
       - blog/**
-  # Run manually.
-  workflow_dispatch:
-  # Run once a day at 1:00 am UTC even if there are no commits.
-  schedule:
-    - cron: "0 1 */1 * *"
 permissions:
   # This is required for requesting the OIDC JWT.
   id-token: write
   # This is required for actions/checkout.
   contents: read
-  # This is required for pulling the Docker image from GHCR.
-  packages: read
 jobs:
   deploy:
     runs-on: ubuntu-latest
