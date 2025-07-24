@@ -216,13 +216,17 @@ Each function should be idempotent
 
 - Make a copy, modify, and return the data
 - It's ok to keep assigning stages in sequence
-  - Contact_df = f1(contact_df)
-  - Contact_df = f2(contact_df)
+```bash
+  >  Contact_df = f1(contact_df)
+  >  Contact_df = f2(contact_df)
+ ```
 - Once in a while we want to assign to a different var to split the computation
-  - Contact_df = f1(contact_df)
-  - Contact_df2 = f1(contact_df)
-  - It's better in this case to use a meaningful name "cleaned_contact_df",
-    rather than contact_df2
+```bash
+  > Contact_df = f1(contact_df)
+  > Contact_df2 = f1(contact_df)
+```
+  - It's better in this case to use a meaningful name `cleaned_contact_df`,
+    rather than `contact_df2`
 
 The expensive / slow phases are cached, either as Gsheet or through the caching
 code
@@ -754,13 +758,25 @@ The outputs are in
 
 - Located at:
   `ck_marketing/misc/CmampTask11363_Target_companies_list.py`
-- Uses `requests` and BeautifulSoup to scrape and parse company information.
+- Uses `requests` and `BeautifulSoup` to scrape and parse company information.
 
 ## Workflow
 
 - Setup and configuration
-  - Import required modules and configure logging
-  - Define the Google Sheets target and service account key file
+
+  - Go to the [Google Cloud Console](https://console.cloud.google.com/).
+  - Create a new project or select an existing one.
+  - Navigate to `APIs & Services` > `Enabled APIs & services`.
+  - Enable the `Google Sheets API` and `Google Drive API`.
+  - Go to `APIs & Services` > `Credentials`.
+  - Click `Credentials` > `Create Credentials` > `Service Account`.
+  - Follow the steps to create the service account.
+  - Once created, click the service account email, then go to the `Keys` tab.
+  - Click `Add Key` > `Create new key` > choose `JSON`.
+  - **Download the JSON key file** when prompted — this file contains your credentials.
+      - **Important**: Keep this file secure and **do not** share it publicly.
+
+  - In your script, replace `<path_to_your_personal_keyfile_here>` with the actual path to this downloaded `.json` file.
 
 - Data scraping
   - Send a request to Datamation AI companies page
