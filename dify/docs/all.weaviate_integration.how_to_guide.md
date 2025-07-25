@@ -1,154 +1,136 @@
 <!-- toc -->
 
 - [How to Integrate Weaviate with Dify External Knowledge API](#how-to-integrate-weaviate-with-dify-external-knowledge-api)
-  * [What You'll Build](#what-youll-build)
-  * [Prerequisites](#prerequisites)
-  * [Step 1: Environment Setup](#step-1-environment-setup)
-  * [Step 2: Start Required Services](#step-2-start-required-services)
-  * [Step 3: Process Your Documents](#step-3-process-your-documents)
-  * [Step 4: Start the Retrieval API](#step-4-start-the-retrieval-api)
-  * [Step 5: Configure Dify External Knowledge](#step-5-configure-dify-external-knowledge)
-  * [Step 6: Test the Integration](#step-6-test-the-integration)
-  * [Troubleshooting Quick Fixes](#troubleshooting-quick-fixes)
+  * [Summary](#summary)
+  * [What You'Ll Build](#what-youll-build)
+  * [Automated Setup with `csk_chat_setup.py`](#automated-setup-with-csk_chat_setuppy)
+    + [Full Installation](#full-installation)
+    + [Running Individual Steps](#running-individual-steps)
+  * [Step 1: Run the Automated Setup](#step-1-run-the-automated-setup)
+  * [Step 2: Verify the Services](#step-2-verify-the-services)
+  * [Step 3: Configure Dify External Knowledge](#step-3-configure-dify-external-knowledge)
+  * [Step 4: Test the Full Integration](#step-4-test-the-full-integration)
+  * [Stopping Services and Cleanup](#stopping-services-and-cleanup)
+  * [Troubleshooting](#troubleshooting)
+  * [Resources](#resources)
+  * [Last Review](#last-review)
 
 <!-- tocstop -->
 
 # How to Integrate Weaviate with Dify External Knowledge API
 
-This tutorial walks you through setting up Weaviate as an external knowledge
-source for Dify applications.
+## Summary
 
-## What You'll Build
+- This document provides a step-by-step guide to set up Weaviate as an external
+  knowledge source for Dify applications
+- Uses an automated script (`csk_chat_setup.py`) for complete system setup
+- Covers verification, testing, and troubleshooting procedures
+
+## What You'Ll Build
 
 You'll create a system where:
 
-1. Documents are automatically processed and stored in Weaviate
-2. Dify can query this knowledge base through a REST API
-3. Search results are returned with relevant context and metadata
+1. Your documentation is automatically processed and stored in a Weaviate vector
+   database.
+2. A retrieval API service exposes this knowledge base to Dify.
+3. Dify can query your documents to provide context-aware answers in a chatbot.
 
-## Prerequisites
+## Automated Setup with `csk_chat_setup.py`
 
-Before starting, ensure you have the following services running:
+The [`/dify/csk_chat_setup.py`](/dify/csk_chat_setup.py) script automates the
+entire setup process.
 
-- Weaviate running on `localhost:8080`
-  - Follow the official setup guide: [Weaviate Installation Documentation](https://weaviate.io/developers/weaviate/installation)
-  - Quick start with Docker: [Weaviate Docker Guide](https://weaviate.io/developers/weaviate/installation/docker-compose)
-  - Verify it's running: `curl http://localhost:8080/v1/meta`
+### Full Installation
 
-- Ollama running on `localhost:11434` with `nomic-embed-text` model
-  - Download and install: [Ollama Official Website](https://ollama.ai/)
-  - Installation guide: [Ollama GitHub Documentation](https://github.com/ollama/ollama#quickstart)
-  - Ensure you have the embedding model: `ollama pull nomic-embed-text`
-  - Verify it's running: `curl http://localhost:11434/api/tags`
+For a complete, one-step setup, run the script with the `--install-all` flag.
+This is the recommended approach for a first-time setup.
 
-- Python 3.8+ with required packages installed
+```bash
+python3 dify/csk_chat_setup.py --install-all
+```
+
+This command will:
+
+- Create the required `.env` and `docker-compose.yml` configuration files.
+- Install all necessary Python dependencies.
+- Install Ollama if it's not already present on your system.
+- Start the Weaviate, Ollama, and Retrieval API services.
+- Process all documents found in the `dify/docs` directory.
+- Run integration tests to confirm everything is working.
+
+### Running Individual Steps
+
+You can also run each part of the setup process individually using specific
+flags. This is useful for restarting a single service or re-processing
+documents.
+
+- `--create-config`: Creates `.env` and `docker-compose.yml`.
+- `--install-deps`: Installs Python packages and Ollama.
+- `--start-services`: Starts Weaviate and Ollama.
+- `--process-docs`: Processes documents and uploads them to Weaviate.
+- `--test-integration`: Runs tests against all services.
+
+## Step 1: Run the Automated Setup
+
+Execute the setup script from the root of the repository:
+
+```bash
+python3 dify/csk_chat_setup.py --install-all
+```
+
+The script will provide detailed logs as it progresses through each stage.
+
+## Step 2: Verify the Services
+
+After the script completes, you can manually verify that each service is running
+correctly.
+
+- Weaviate:
+
   ```bash
-  pip install weaviate-client langchain requests fastapi uvicorn
+  curl http://localhost:8080/v1/meta
   ```
 
-## Step 1: Environment Setup
+- Ollama:
 
-Create a `.env` file with the required configuration:
+  ```bash
+  curl http://localhost:11434/api/tags
+  ```
 
-```bash
-# .env file
-PWD=/path/to/your/project
-OLLAMA_EMBED_URL=http://localhost:11434/api/embed
-OLLAMA_MODEL=nomic-embed-text
-API_KEY=your-secure-api-key-here
-APP_HOST=0.0.0.0
-APP_PORT=2001
-```
+- Retrieval API:
+  ```bash
+  curl http://localhost:2001/health
+  ```
+  You should receive a `{"status": "ok"}` response from the health check.
 
-## Step 2: Start Required Services
-
-Start Weaviate:
-
-If you followed the [Weaviate Docker setup](https://weaviate.io/developers/weaviate/installation/docker-compose), start with:
-
-```bash
-# Navigate to your weaviate directory
-cd /path/to/weaviate
-docker compose up -d
-
-# Verify it's running
-curl http://localhost:8080/v1/meta
-```
-
-Start Ollama:
-
-If you installed from [ollama.ai](https://ollama.ai/), start with:
-
-```bash
-# Start Ollama service
-ollama serve
-
-# Pull the embedding model (if not already done)
-ollama pull nomic-embed-text
-
-# Verify it's running
-curl http://localhost:11434/api/tags
-```
-
-## Step 3: Process Your Documents
-
-Use the document processing module to upload your markdown files:
-
-```python
-import logging
-import dify.weaviate_docs as dweadocs
-
-# Configure logging
-dweadocs.configure_logging(level=logging.INFO)
-
-# Process documents
-result = dweadocs.upload_markdown_docs_to_weaviate(
-    docs_dir='./your-docs-directory',
-    collection_name='Documents'
-)
-
-print(f"Successfully processed {result['successful_files']} files")
-```
-
-## Step 4: Start the Retrieval API
-
-Run the FastAPI service that Dify will connect to:
-
-```bash
-> python3  dify.weaviate_retrieval
-```
-
-The API will start on `http://localhost:2001` with these endpoints:
-
-- `POST /retrieval` - Main search endpoint for Dify
-- `GET /health` - Health check
-
-## Step 5: Configure Dify External Knowledge
+## Step 3: Configure Dify External Knowledge
 
 In your Dify application:
 
-1. Go to Knowledge → External Knowledge
-2. Add a new external knowledge source:
-   - API Endpoint: `http://localhost:2001/retrieval`
-   - API Key: The value from your `API_KEY` environment variable
-   - Knowledge ID: `Documents` (the collection name you used)
+1. Go to Knowledge → External Knowledge.
+2. Add a new external knowledge source with the following settings:
+   - Name: `Documents` (or your chosen collection name)
+   - API Endpoint: `http://172.17.0.1:2001/retrieval`
+     - Uses Docker bridge gateway IP to reach the API from Dify container
+   - API Key: Your API key from `.env` file (generated by setup script)
+   - Knowledge ID: `Documents`
 
-## Step 6: Test the Integration
+Note: The API endpoint uses Docker bridge gateway IP (172.17.0.1) for Dify to
+reach the containerized API. If your bridge IP is different, check with:
+`docker network inspect bridge | grep Gateway`
 
-Test that everything works:
-Healthcheck:
+## Step 4: Test the Full Integration
+
+You can test the retrieval API directly to ensure it's fetching results from
+Weaviate.
+
 ```bash
-> curl http://localhost:2001/health
-```
-
-Test the API directly
-```bash
-> curl -X POST http://localhost:2001/retrieval \
-  -H "Authorization: " \
+curl -X POST http://localhost:2001/retrieval \
+  -H "Authorization: Bearer " \
   -H "Content-Type: application/json" \
   -d '{
     "knowledge_id": "Documents",
-    "query": "your search query",
+    "query": "test query",
     "retrieval_setting": {
       "top_k": 5,
       "score_threshold": 0.5
@@ -156,21 +138,31 @@ Test the API directly
   }'
 ```
 
-## Troubleshooting Quick Fixes
+## Stopping Services and Cleanup
 
-Connection Issues:
+- Stop All Services: To stop the Weaviate container and the Retrieval API, you
+  can use:
 
-- Verify Weaviate:
   ```bash
-   > curl http://localhost:8080/v1/meta 
-   ```
-- Verify Ollama:
-  ```bash
-  > curl http://localhost:11434/api/tags
+  docker compose down
+  pkill -f "dify.weaviate_retrieval"
+  pkill ollama
   ```
-  If this fails, see [Ollama GitHub Issues](https://github.com/ollama/ollama/issues) or [Ollama Documentation](https://github.com/ollama/ollama/blob/main/docs/troubleshooting.md).
 
-For detailed troubleshooting:
+## Troubleshooting
+
+- Connection Issues: If any of the verification `curl` commands in Step 2 fail,
+  check the logs from the `csk_chat_setup.py` script for errors. Ensure Docker
+  is running and that no other services are using ports `8080`, `11434`, or
+  `2001`.
+- Ollama Issues: For problems with Ollama, refer to the official
+  [Ollama Documentation](https://github.com/ollama/ollama/blob/main/docs/troubleshooting.md).
+- Weaviate Issues: For Weaviate problems, consult the
+  [Weaviate Documentation](https://weaviate.io/developers/weaviate).
+
+## Resources
+
+- [Dify External Knowledge API Documentation](https://docs.dify.ai/en/guides/knowledge-base/external-knowledge-api)
 - [Weaviate Documentation](https://weaviate.io/developers/weaviate)
 - [Ollama Documentation](https://github.com/ollama/ollama)
-- [Weaviate Python Client](https://weaviate.io/developers/weaviate/client-libraries/python)
+- [Docker Compose Documentation](https://docs.docker.com/compose/)

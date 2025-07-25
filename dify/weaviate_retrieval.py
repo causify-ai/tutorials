@@ -302,12 +302,10 @@ def build_response_records(
     :return: list of record dictionaries
     """
     records = []
-
     for obj in search_results.objects:
         # Calculate score from distance.
         distance = obj.metadata.distance or 0.0
         score = max(0.0, 1.0 - distance)
-
         # Filter by score threshold.
         if score < score_threshold:
             _LOG.debug(
@@ -316,7 +314,6 @@ def build_response_records(
                 score_threshold,
             )
             continue
-
         # Build record.
         record = {
             "metadata": {"filepath": obj.properties.get("filepath", "")},
@@ -327,10 +324,8 @@ def build_response_records(
             "content": obj.properties.get("text", ""),
         }
         records.append(record)
-
     _LOG.info("Built %s records after filtering by score threshold", len(records))
     return records
-
 
 @app.post(
     "/retrieval",
@@ -361,15 +356,12 @@ def retrieval(
         request.retrieval_setting.top_k,
         request.retrieval_setting.score_threshold,
     )
-
     # Validate authorization.
     validate_authorization(authorization, DEFAULT_API_KEY)
-
     # Connect to Weaviate.
     with closing(weaviate.connect_to_local()) as client:
         # Get collection.
         collection = get_weaviate_collection(client, request.knowledge_id)
-
         # Generate query embedding.
         try:
             vector = embed_with_ollama(request.query)
@@ -379,18 +371,15 @@ def retrieval(
                 status_code=500,
                 detail={"error_code": 5000, "error_msg": f"Embedding error: {e}"},
             )
-
         # Perform vector search.
         search_results = perform_vector_search(
             collection, vector, top_k=request.retrieval_setting.top_k
         )
-
         # Build response records.
         records = build_response_records(
             search_results,
             score_threshold=request.retrieval_setting.score_threshold,
         )
-
         _LOG.info(
             "Retrieval completed successfully, returning %s records", len(records)
         )
@@ -481,7 +470,6 @@ def _main(parser: argparse.ArgumentParser) -> None:
     except Exception as e:
         _LOG.error("Error starting server: %s", e)
         raise
-
 
 if __name__ == "__main__":
     _main(_parse())

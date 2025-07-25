@@ -1,0 +1,275 @@
+app:
+  description: queries csk docs
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: csk-chat
+  use_icon_as_answer_icon: true
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/openai:0.0.29@9e17ae8073fe53c282e9dc411e76a3cc52f8e794e4cc2499d204502086871c53
+kind: app
+version: 0.3.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: knowledge-retrieval
+      id: 1750748369113-source-1750748525829-target
+      source: '1750748369113'
+      sourceHandle: source
+      target: '1750748525829'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: knowledge-retrieval
+        targetType: llm
+      id: 1750748525829-source-1751533078872-target
+      source: '1750748525829'
+      sourceHandle: source
+      target: '1751533078872'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: answer
+      id: 1751533078872-source-1751533240771-target
+      source: '1751533078872'
+      sourceHandle: source
+      target: '1751533240771'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: Start
+        type: start
+        variables: []
+      height: 47
+      id: '1750748369113'
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        dataset_ids:
+        - HUVkjdJJV+O46fIav2fn2baxDSW8hxdpQgQQaN5kwiOowVY3uBvaSSFrbOoGhQVW
+        desc: ''
+        metadata_filtering_mode: automatic
+        metadata_model_config:
+          completion_params:
+            reasoning_effort: medium
+            response_format: json_schema
+            temperature: 0.7
+          mode: chat
+          name: o4-mini-2025-04-16
+          provider: langgenius/openai/openai
+        multiple_retrieval_config:
+          reranking_enable: false
+          reranking_mode: reranking_model
+          reranking_model:
+            model: ''
+            provider: ''
+          score_threshold: null
+          top_k: 10
+        query_variable_selector:
+        - sys
+        - query
+        retrieval_mode: multiple
+        selected: false
+        title: Knowledge Retrieval
+        type: knowledge-retrieval
+      height: 83
+      id: '1750748525829'
+      position:
+        x: 380
+        y: 368
+      positionAbsolute:
+        x: 380
+        y: 368
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1750748525829'
+          - result
+        desc: ''
+        memory:
+          query_prompt_template: '
+
+            User Question: {{#sys.query#}}
+
+
+            Please provide a helpful answer using the context provided above when
+            relevant.'
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 50
+        model:
+          completion_params: {}
+          mode: chat
+          name: o4-mini-2025-04-16
+          provider: langgenius/openai/openai
+        prompt_template:
+        - edition_type: basic
+          id: ee6dd1a4-b880-438e-a322-1e3982546467
+          role: system
+          text: 'You are a knowledgeable AI assistant with access to a document knowledge
+            base.
+
+
+
+            Instructions:
+
+            1. Use the provided context from retrieved documents to answer questions
+
+            2. If the context contains relevant information, use it in your response
+
+            3. If the context doesn''t contain relevant information, say so and provide
+            a general answer
+
+            4. Always be helpful and cite when you''re using information from the
+            knowledge base
+
+            5. Keep responses clear and concise
+
+
+
+            Context from knowledge base:
+
+            main prompt: {{#sys.query#}}
+
+            context: {{#context#}}'
+        retry_config:
+          max_retries: 2
+          retry_enabled: true
+          retry_interval: 1000
+        selected: true
+        structured_output:
+          schema:
+            additionalProperties: false
+            properties:
+              Filepath:
+                description: Filepath from chunk or filename from Knowledge or Context
+                type: string
+              Output:
+                description: General output of LLM
+                type: string
+            required: []
+            type: object
+        structured_output_enabled: false
+        title: LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 106
+      id: '1751533078872'
+      position:
+        x: 683
+        y: 368
+      positionAbsolute:
+        x: 683
+        y: 368
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    - data:
+        answer: '{{#1751533078872.text#}}'
+        desc: ''
+        selected: false
+        title: Answer
+        type: answer
+        variables: []
+      height: 96
+      id: '1751533240771'
+      position:
+        x: 996
+        y: 378
+      positionAbsolute:
+        x: 996
+        y: 378
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 243
+    viewport:
+      x: -206.86567081859084
+      y: 184.19881200485793
+      zoom: 1.1172871380722198

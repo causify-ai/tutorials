@@ -141,12 +141,10 @@ def get_ollama_embedding(
         json={"model": model, "input": text},
         timeout=30,
     )
-
     if response.status_code != 200:
         raise RuntimeError(
             f"Ollama error {response.status_code}: {response.text}"
         )
-
     embedding_list = response.json().get("embeddings")
     if not embedding_list or not isinstance(embedding_list[0], list):
         raise ValueError("Embedding format unexpected or missing.")
@@ -174,7 +172,6 @@ def process_markdown_file(
     :raises RuntimeError: if file processing fails
     """
     filename = os.path.basename(filepath)
-
     try:
         _LOG.debug("Processing file: %s", filename)
 
@@ -185,12 +182,9 @@ def process_markdown_file(
         chunk_count = 0
         for chunk in chunks:
             text = chunk.page_content.strip()
-
             if not text:
                 continue
-
             embedding = get_ollama_embedding(text, ollama_url, model)
-
             batch.add_object(
                 properties={
                     "text": text,
@@ -200,9 +194,7 @@ def process_markdown_file(
                 vector=embedding,
             )
             chunk_count += 1
-
         _LOG.info("Successfully processed %s (%s chunks)", filename, chunk_count)
-
     except Exception as e:
         _LOG.error("Failed to process %s: %s", filename, e)
         raise RuntimeError(f"Processing failed for {filename}: {e}") from e
@@ -245,31 +237,24 @@ def upload_markdown_docs_to_weaviate(
     if docs_dir is None:
         project_root = get_project_root()
         docs_dir = os.path.join(project_root, "docs")
-
     if allowed_extensions is None:
         allowed_extensions = DEFAULT_ALLOWED_EXTENSIONS.copy()
-
     _LOG.info("Starting document upload process")
     _LOG.info("Documentation directory: %s", docs_dir)
     _LOG.info("Collection name: %s", collection_name)
     _LOG.info("Ollama model: %s", ollama_model)
     _LOG.info("Chunk size: %s, overlap: %s", chunk_size, chunk_overlap)
-
     if not os.path.exists(docs_dir):
         raise FileNotFoundError(f"Documentation directory not found: {docs_dir}")
-
     client = weaviate_client or weaviate.connect_to_local()
     should_close_client = weaviate_client is None
-
     try:
         collection = create_weaviate_collection(client, collection_name)
 
         splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size, chunk_overlap=chunk_overlap
         )
-
         total_files = 0
-
         _LOG.info("Starting batch processing with batch size: %s", batch_size)
         with collection.batch.fixed_size(batch_size) as batch:
             for root, _, files in os.walk(docs_dir):
@@ -278,10 +263,8 @@ def upload_markdown_docs_to_weaviate(
                         filename.endswith(ext) for ext in allowed_extensions
                     ):
                         continue
-
                     total_files += 1
                     filepath = os.path.join(root, filename)
-
                     # Process the file (will raise exception if failed).
                     process_markdown_file(
                         filepath,
@@ -291,22 +274,18 @@ def upload_markdown_docs_to_weaviate(
                         ollama_url,
                         ollama_model,
                     )
-
         result = {
             "total_files": total_files,
             "collection_name": collection_name,
             "docs_directory": docs_dir,
         }
-
         _LOG.info("Upload process completed successfully")
         _LOG.info("Total files processed: %s", total_files)
         _LOG.info("Collection: %s", collection_name)
         _LOG.info(
             "All markdown files uploaded using '%s' via Ollama", ollama_model
         )
-
         return result
-
     finally:
         if should_close_client:
             client.close()
@@ -392,7 +371,6 @@ def _main(parser: argparse.ArgumentParser) -> None:
     except Exception as e:
         _LOG.error("Error during upload: %s", e)
         raise
-
 
 if __name__ == "__main__":
     _main(_parse())

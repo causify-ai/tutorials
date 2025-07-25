@@ -1,11 +1,12 @@
 <!-- toc -->
 
 - [Weaviate Integration Reference](#weaviate-integration-reference)
+  * [Summary](#summary)
   * [Module API Reference](#module-api-reference)
-    + [dify.weaviate_docs](#difyweaviate_docs)
-    + [dify.weaviate_retrieval](#difyweaviate_retrieval)
+    + [Dify.Weaviate_Docs](#difyweaviate_docs)
+    + [Dify.Weaviate_Retrieval](#difyweaviate_retrieval)
   * [API Specifications](#api-specifications)
-    + [Request Format (POST /retrieval)](#request-format-post-retrieval)
+    + [Request Format (POST /Retrieval)](#request-format-post-retrieval)
     + [Response Format](#response-format)
     + [Error Codes](#error-codes)
   * [Environment Variables](#environment-variables)
@@ -15,17 +16,24 @@
   * [Common Issues & Solutions](#common-issues--solutions)
     + [Connection Problems](#connection-problems)
     + [Poor Search Results](#poor-search-results)
+  * [Resources](#resources)
+  * [Last Review](#last-review)
 
 <!-- tocstop -->
 
 # Weaviate Integration Reference
 
-Technical specifications for the Weaviate-Dify External Knowledge API
-integration.
+## Summary
+
+- Technical specifications for the Weaviate-Dify External Knowledge API
+  integration
+- API documentation for modules and endpoints
+- Environment variables and configuration options
+- Troubleshooting guide for common issues
 
 ## Module API Reference
 
-### dify.weaviate_docs
+### Dify.Weaviate_Docs
 
 `upload_markdown_docs_to_weaviate(docs_dir, collection_name, **kwargs)`
 
@@ -39,7 +47,7 @@ Key Parameters:
 - `batch_size`: 100 (objects)
 - `allowed_extensions`: `[".md"]`
 
-### dify.weaviate_retrieval
+### Dify.Weaviate_Retrieval
 
 FastAPI Endpoints:
 
@@ -50,7 +58,7 @@ Authentication: Bearer token via `Authorization` header
 
 ## API Specifications
 
-### Request Format (POST /retrieval)
+### Request Format (POST /Retrieval)
 
 ```json
 {
@@ -131,6 +139,13 @@ Authentication: Bearer token via `Authorization` header
 - Lower `score_threshold` (try 0.3 instead of 0.5)
 - Verify same embedding model for index and search
 - Check collection exists:
-    ```bash
-   > curl http://localhost:8080/v1/objects
-   ```
+  ```bash
+  > curl http://localhost:8080/v1/objects
+  ```
+
+## Resources
+
+- [Weaviate API Documentation](https://weaviate.io/developers/weaviate/api)
+- [FastAPI Documentation](https://fastapi.tiangolo.com/)
+- [Dify External Knowledge API Specification](https://docs.dify.ai/en/guides/knowledge-base/external-knowledge-api)
+
