@@ -33,34 +33,29 @@
 ## Using the Script
 
 - Step 1: Navigate to the project directory
-
-```bash
-> cd $GIT_ROOT/tutorial_forecast_as_service
-```
+  ```bash
+  > cd $GIT_ROOT/tutorial_forecast_as_service
+  ```
 
 - Step 2: Set up thin environment
-
-```bash
-> ./tutorial_forecast_as_service/thin_client/setenv.sh
-```
+  ```bash
+  > ./tutorial_forecast_as_service/thin_client/setenv.sh
+  ```
 
 - Step 3: Activate the virtual environment
-
-```bash
-> source dev_scripts_tutorial_forecast_as_service/thin_client/setenv.sh
-```
+  ```bash
+  > source dev_scripts_tutorial_forecast_as_service/thin_client/setenv.sh
+  ```
 
 - Step 4: Build the Docker image
-
-```bash
-> i docker_build_local_image --version 1.0.0
-```
+  ```bash
+  > i docker_build_local_image --version 1.0.0
+  ```
 
 - Step 5: Launch the forecast web service
-
-```bash
-> ./devops/docker_run/run_docker_forecast.sh 1.0.0
-```
+  ```bash
+  > ./devops/docker_run/run_docker_forecast.sh 1.0.0
+  ```
 
 - Step 5: Open the app in your browser
   - Access the forecast app UI at:

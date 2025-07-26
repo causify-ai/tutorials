@@ -18,11 +18,11 @@
 
 ## Introduction
 
-- This guide helps you understand the architecture of the Forecast-as-a-Service
-  system
-- Explains how the Dash frontend, FastAPI backend, and forecasting engine
-  interact
-- Shows how to run, extend, and customize the system effectively
+- This guide:
+  - Describes the architecture of the Forecast-as-a-Service system
+  - Explains how the Dash frontend, FastAPI backend, and forecasting engine
+    interact
+  - Shows how to run, extend, and customize the system effectively
 
 ## System Architecture
 
@@ -34,17 +34,20 @@ flowchart LR
     C --> E[Storage: Local Volume]
 ```
 
-- Two containers: a Dash app for interaction and a FastAPI server for processing
-- Orchestrated via Docker Compose
-- Backend uses Prophet to perform time series forecasting
+- There are two containers:
+  - a Dash app for interaction
+  - a FastAPI server for processing
+    - Uses Prophet to perform time series forecasting
+- The containers are Orchestrated via Docker Compose
 
 ## Component Overview
 
 ### Dash Frontend
 
 - Built using Plotly Dash
-- Handles CSV upload, sends data to the FastAPI /forecast endpoint, and displays
-  visual output
+- Handles CSV upload
+- Sends data to the FastAPI /forecast endpoint
+- Displays visual output
 
 ### Fastapi Backend
 
@@ -75,9 +78,9 @@ flowchart LR
 - Ports 8000 (backend) and 8050 (frontend) must be available
 - To run forecast UI:
 
-```bash
-> ./devops/docker_run/run_docker_forecast.sh <version>
-```
+  ```bash
+  > ./devops/docker_run/run_docker_forecast.sh <version>
+  ```
 
 ## Known Limitations
 
@@ -85,7 +88,7 @@ flowchart LR
   through `invoke`
 - The frontend and backend services are hardcoded to ports `8050` and `8000`,
   respectively. This can cause conflicts on shared environments
-- Only Prophet is currently supported
+- Only Prophet model is currently supported
 - Only single forecast per request
 
 ## Future Improvements
