@@ -33,7 +33,7 @@ plugins:
   - search
   - blog:
       enabled: true
-      blog_dir: blog
+      blog_dir: .
       blog_toc: true
       post_date_format: full
       post_url_date_format: yyyy/MM/dd

@@ -1,0 +1,36 @@
+name: Publish Causify Blog
+on:
+  push:
+    branches:
+      - master
+    paths:
+      # Trigger the workflow when there are changes in the blog directory.
+      - blog/**
+permissions:
+  # This is required for requesting the OIDC JWT.
+  id-token: write
+  # This is required for actions/checkout.
+  contents: read
+jobs:
+  publish_blog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - name: Install MkDocs
+        run: pip install mkdocs mkdocs-material
+      - name: Build MkDocs
+        run: mkdocs build
+        working-directory: ./blog
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ vars.GH_ACTION_AWS_ROLE_ARN }}
+          role-session-name: ${{ vars.GH_ACTION_AWS_SESSION_NAME }}
+          aws-region: ${{ vars.CSFY_AWS_DEFAULT_REGION }}
+      - name: Publish files to S3
+        run: |
+          aws s3 sync ./blog/site s3://causify-blog
