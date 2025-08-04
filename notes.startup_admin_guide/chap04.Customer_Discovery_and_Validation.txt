@@ -1,0 +1,52 @@
+# Customer Discovery and Validation
+
+## Lean Startup Principles
+
+## Customer Segmentation
+
+## Conducting Effective Interviews
+
+## Building a Customer Persona
+
+## Go-To-Market Fit (Messaging, Channel-Product Alignment)
+
+## User Research and Market Understanding
+
+* More on a solving a problem
+- You are in trouble if you can't articulate an answer to the 2 questions:
+  - Why will users use this product?
+  - What problem does it solve? For whom?
+- Think in terms of a target customer
+  - E.g., a customer that day trades NFTs, "Nathan lives in Virginia, has
+    disposable income, every day he checks Reddit"
+  - Make your product delightful for that user
+
+- How bad is the problem?
+  - Is this a "nice-to-have" or a "must-have"?
+  - Does it save costs or increase revenue?
+
+* Common ideation mistakes
+- Building for customers who don't exist yet
+  - Almost always a mistake
+  - Without real customers you don't get feedback (which kills startups),
+    without feedback
+- Solving yesterday's problems, rather than tomorrow's problems
+  - By the time you solve the problem it's going to be way to late
+  - E.g., "build a platform for better ICOs", but ICOs were a thing of 2020 and
+    nobody is doing ICOs in 2023
+- Building for crypto influencers
+  - People of Twitter complain about "why there isn't XYZ?"
+  - He is famous
+  - I'm going to build XYZ
+
+* Are you building the right thing?
+- Build a proof of concept
+- Show it off online or at a hackathon
+- Many crypto projects were built without funding, hacked together
+  - E.g., Uniswap, 1Inch
+
+
+### Refs
+- Talking to Humans – Giff Constable
+- The Four Steps to the Epiphany – Steve Blank
+- Lean Analytics – Alistair Croll & Benjamin Yoskovitz
