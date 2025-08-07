@@ -4,6 +4,45 @@
 
 ## Customer Segmentation
 
+// From /Users/saggese/src/notes1/notes/IN_PROGRESS.book.work.2011.Osterwalder.Business_model_generation.txt
+
+* Customer Segments
+- No company can survive without customers 
+- A company may group customers into distinct segments with common needs and
+  behaviors
+  - Justify a distinct offer
+  - Reached through different Distribution Channels
+  - Require different types of relationships
+  - Have different profitability
+- A business model is designed around a strong understanding of specific customer
+  needs
+
+* Mass market
+- A large group of customers with broadly similar needs and problems
+- E.g., in consumer electronics
+
+* Niche market
+- Specific, specialized Customer Segment
+- E.g. car part manufacturers depend on specific automobile manufacturers
+
+* Segmented
+- Customer segmented with slightly different needs and problems
+- E.g., a bank can distinguish customers worth up $100k and affluent clients
+  worth more than $1M
+- E.g., a manufacturing solutions company targeting 3 CS, i.e., watch industry,
+  medical industry, industrial automation sectors
+
+* Diversified
+- Serve unrelated Customer Segments with very different needs and problems
+- E.g., Amazon has retail business and cloud computing services (catering to Web
+  companies with a totally different Value Proposition)
+
+* Multi-sided markets
+- Serve two or more interdependent Customer Segments
+- E.g., a credit card company needs credit card holders and merchants that accept
+  credit cards
+- E.g., a company selling newspapers need reader base and advertisers
+
 ## Conducting Effective Interviews
 
 ## Building a Customer Persona

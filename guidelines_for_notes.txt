@@ -1,0 +1,133 @@
+# Principles for Note-Optimized Text
+
+## Goals and Philosophy
+
+1) Make the text easy to consume for both humans and AI
+
+2) Focus on
+  - Clarity
+  - Brevity
+  - Visual structure
+- Think of it as a hybrid between a textbook and a student’s notebook.
+
+3) 
+
+- This document is written the rules described in itself
+
+## Formatting Guidelines
+
+- Use headers and paragraphs
+  ```
+  # Header 1
+
+  ## Header 2
+
+  * Paragraph
+  - Bullet 1
+    - Sub-bullet 1.1
+    - Sub-bullet 1.2
+      - Sub-bullet 1.2.1
+    ...
+  ```
+
+- Use bullet points
+
+- Use title case for section headers
+
+- Use sentence case for bullets, except proper nouns
+
+- Avoid emojis, icons, or decorative formatting
+
+## Use Bullets
+
+- Use plain text with bullet points and sub-bullets to indicate
+  hierarchy
+  - Limit nesting to 1–2 levels
+- One concept or idea per bullet
+
+- Use `=` for definitions
+  - Example:
+    ```
+    - Latency = the delay before a transfer of data begins after an instruction
+    ```
+- Add examples
+  ```
+  - Example: TCP/IP is a protocol used in networking
+  ```
+
+- Each bullet should express one complete, atomic idea
+- Keep bullets concise but meaningful (1–3 lines)
+- Use sub-bullets for elaboration, not to extend main bullets
+
+- Use nested bullet points to show hierarchy of concepts
+- Keep each bullet to a single idea
+- Group bullets under clear headings
+
+- Start with a clear topic or concept
+- Use sub-bullets to show:
+  - Relationships (e.g., cause -> effect)
+  - Dependencies
+  - Components
+- Include under each topic:
+  - Definitions
+  - Purpose
+  - Components
+  - Pros and cons
+  - Examples
+
+- Example:
+  ```
+  Causes of X:
+  - Environmental
+    - Pollution
+    - Resource scarcity
+  - Economic
+    - Inflation
+    - Market failures
+  ```
+
+## Writing Style
+
+- Use explicit references (e.g., "TCP protocol" instead of "it")
+- Maintain consistent labels for recurring ideas
+- Prefer structured notes over narrative prose
+
+- Avoid long prose
+- Use a first-person, self-directed voice
+  - Example: "Key thing to remember: entropy increases."
+- Prefer plain language over academic jargon
+
+### Use Diagrams Over Text When Possible
+
+- Summarize systems or relationships using:
+  - Graphviz
+  - Mermaid
+  - Tikz-style charts
+- Add annotation arrows and layered explanations
+
+### Example
+
+- 
+  ```
+  * Gradient Descent: Core Idea
+
+  **Goal:** How do we iteratively minimize a function?
+
+  - We want to find a minimum of a function $ f(\theta) $
+  - Start with an initial guess: $ \theta_0 $
+  - Update rule (basic form):
+    $$\theta\_{t+1} = \theta_t - \eta \nabla f(\theta_t)$$
+
+  - $ \eta $ = learning rate (step size)
+    - Too small → slow convergence
+    - Too large → may overshoot the minimum
+
+  Key Insight: Gradient = slope, descent = going downhill
+
+  This concept reappears in:
+
+  - Neural Networks
+  - Logistic Regression
+  - Optimization in general
+  ```
+
