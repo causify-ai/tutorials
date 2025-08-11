@@ -36,7 +36,6 @@
   - One needs to make a decision when there is a deadlock
 - Also equity splits are tricky (depend on what they bring)
 
-
 ### Refs
 - The Hard Thing About Hard Things – Ben Horowitz
 - No Rules Rules – Reed Hastings & Erin Meyer

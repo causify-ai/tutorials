@@ -1,31 +1,6 @@
-// chap07.Exit_Strategies.txt
-// chap08.MVP_Development_and_Prototyping.txt
-// chap09.Design_(UX_UI).txt
-// chap10.Data_&_Analytics.txt
-// chap11.Engineering_Culture_&_DevOps.txt
-// chap12.Product_Management.txt
-// chap13.Go-To-Market_Strategy.txt
-// chap14.Scaling_and_Growth.txt
-// chap15.User_Research_&_Customer_Development.txt
-// chap16.Marketing_&_Growth.txt
-// chap17.Customer_Success_&_Support.txt
-// chap18.Fundraising_and_Startup_Finance.txt
-// chap19.Legal_and_Operational_Essentials.txt
-// chap20.Legal_&_Compliance.txt
-// chap21.Finance_&_Accounting.txt
-// chap22.Human_Resources_&_Talent.txt
-// chap23.Team_Building_and_Startup_Culture.txt
-// chap24.Metrics_KPIs_and_Lean_Analytics.txt
-// chap25.Operations.txt
-// chap26.EOS.txt
-// chap2x.Managing_teams.txt
-
-// chap00.Introduction.txt
-
 # Foundations
 
 ## Introduction to Startups
-// chap01.Introduction_to_Startups.txt
 
 - What is a Startup?
 - Myths vs. Realities
@@ -42,7 +17,7 @@
 # Business Model
 
 ## Problem Discovery and Opportunity Identification
-// chap02.Problem_Discovery_and_Opportunity_Identification.txt
+
 - How to Find Good Problems
 - Design Thinking and User-Centric Design
 - Opportunity Sizing and Market Gaps
@@ -55,7 +30,7 @@
 - Lean Customer Development – Cindy Alvarez
 
 ## Ideation and Value Proposition Design
-// chap03.Ideation_and_Value_Proposition_Design.txt
+
 - Brainstorming and Creativity Techniques
 - Value Proposition Canvas
 - Jobs-To-Be-Done (JTBD) Framework
@@ -67,7 +42,7 @@
 - The Mom Test – Rob Fitzpatrick
 
 ## Customer Discovery and Validation
-// chap04.Customer_Discovery_and_Validation.txt
+
 - Lean Startup Principles
 - Customer Segmentation
 - Conducting Effective Interviews
@@ -80,7 +55,7 @@
 - Lean Analytics – Alistair Croll & Benjamin Yoskovitz
 
 ## Business Models and Product-Market Fit
-// chap05.Business_Models_and_Product-Market_Fit.txt
+
 - Business Model Canvas
 - Different Types of Business Models (B2B, B2C, SaaS, Marketplace)
 - Minimum Viable Product (MVP)
@@ -95,7 +70,7 @@
 # Strategy
 
 ## Startup Pivots and Failures
-// chap06.Startup_Pivots_and_Failures.txt
+
 - Signs It's Time to Pivot
 - Case Studies on Famous Pivots
 - Learning from Failure

@@ -2,6 +2,43 @@
 
 # Business Model Canvas
 
+// From /Users/saggese/src/notes1/notes/IN_PROGRESS.book.work.2011.Osterwalder.Business_model_generation.txt
+
+* Business model
+- A business model describes how an organization creates, delivers, and captures
+  value
+- A business plan is a shared understanding of what a business model is
+
+* The Business Model Canvas
+- There are 9 building blocks showing how a company intends to make money
+
+1) Customer Segments (CS)
+   - An organization serves one or more Customer Segments (CS)
+
+2) Value Proposition (VP)
+   - An organization seeks to solve customer problems and satisfy customers with
+     Value Proposition (VP)
+
+3) Channels (CH)
+   - Value Propositions (VP) are delivered to customers through distribution and
+     sales Channels (CH)
+
+4) Customer Relationships (CR)
+   - Customer Relationships (CR) are maintained with each Customer Segment (CS)
+
+5) Revenue Streams (RS)
+   - Revenue Streams result from Value Propositions offered to Customer Segments
+
+6) Key Resources (KR)
+   - Key Resources are assets required to offer products and services
+
+7) Key Activities (KA)
+
+8) Key Partnerships (KP)
+   - Some activities are outsourced and others acquired outside the company
+
+9) Cost Structure (C$)
+
 // From /notes1/notes/IN_PROGRESS.book.work.2011.Osterwalder.Business_model_generation.txt
 
 * Business model

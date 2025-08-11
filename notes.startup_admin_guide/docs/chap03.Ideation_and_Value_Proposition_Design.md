@@ -4,6 +4,54 @@
 
 ## Value Proposition Canvas
 
+// From /Users/saggese/src/notes1/notes/IN_PROGRESS.book.work.2011.Osterwalder.Business_model_generation.txt
+
+* Value Proposition: Definition
+- The Value Proposition is the reason why customers turn to one company over
+  another
+- VP solves a customer problem and satisfies a customer need
+- Product / service catering to a specific Customer Segment
+
+* Newness
+- VP can satisfy a new set of needs that customers previously didn't perceive
+- E.g., technology related
+- E.g., cellphones created a new industry around mobile communication
+
+* Performance
+- Improving product and service performance is a common way to create value
+- E.g., PC sector (more powerful machines, more disk storage, better graphics)
+
+* Customization
+- Tailor products and services to specific needs of Customer Segments /
+  individual customers
+- E.g., mass customization
+
+* Getting the job done
+- E.g., airlines relying on manufacturers of jet engines, so they can focus on
+  running airlines
+
+* Design
+- A product may stand out because of superior design
+- It might be difficult to measure
+- E.g., fashion industry, consumer electronics
+
+* Brand / status
+- Customers may find value in the act of using and displaying a specific brand
+- E.g., wearing a Rolex watch signifies wealth
+- E.g., skateboarders can wear the latest brands to show that they are "in"
+
+* Price
+- Offering similar value at a lower price
+- E.g., no-frills airline (Southwest) enable low-cost air travel
+
+* Cost reduction
+- Helping customers reduce costs creates value
+
+* Risk reduction
+- Customers value reducing risks when purchasing products or services
+- E.g., one-year guarantee
+- E.g., service-level guarantee in outsourced IT services
+
 ## Jobs-To-Be-Done (JTBD) Framework
 
 ## Initial Idea Validation
