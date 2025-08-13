@@ -2,7 +2,7 @@
 name = "tutorial"
 version = "0.1.0"
 description = ""
-authors = ["Dummy Name <dummy@example.com>"]
+authors = ["Alvino Angelo <aangelo@umd.edu>"]
 package-mode = false
 
 [tool.poetry.dependencies]
