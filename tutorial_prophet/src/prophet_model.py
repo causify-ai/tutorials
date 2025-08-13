@@ -60,7 +60,8 @@ class ProphetForecastModel:
         """
         if not self.fitted:
             raise RuntimeError("Model must be fitted before prediction.")
-        return self.model.predict(df)
+        future = self.model.make_future_dataframe(periods=30)
+        return self.model.predict(future)
 
     def evaluate(self, df: pd.DataFrame) -> Dict[str, float]:
         """
