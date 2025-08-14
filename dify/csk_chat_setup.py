@@ -24,7 +24,7 @@ Prerequisites:
 Workflow:
     1. Install dependencies (Python packages, Ollama)
     2. Create configuration files (.env, docker-compose.yml)
-    3. Start services (Weaviate, Ollama)
+    3. Start services (Weaviate, Ollama) and Retrieval API if standalone.
     4. Process documentation files
     5. Start retrieval API
 
@@ -516,6 +516,7 @@ def _main(parser: argparse.ArgumentParser) -> None:
             if args.start_services:
                 setup.start_weaviate_service()
                 setup.start_ollama_service()
+                setup.start_retrieval_api()
             if args.process_docs:
                 setup.process_documents(args.docs_dir)
             if args.test_integration:
