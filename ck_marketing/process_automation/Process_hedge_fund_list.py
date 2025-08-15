@@ -6,12 +6,15 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.16.4
+#       jupytext_version: 1.16.7
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---
+
+# # Hedge Fund Contacts Data Processing & Enrichment
+# Notebook loads hedge fund contact data, cleans and enriches it using Hunter.io for email verification, and performs data quality checks. It then saves the processed and enriched dataset to Google Sheets for further use or analysis.
 
 # !sudo /bin/bash -c "(source /venv/bin/activate; pip install --quiet jupyterlab-vim)"
 # !jupyter labextension enable

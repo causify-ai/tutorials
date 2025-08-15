@@ -13,6 +13,9 @@
 #     name: python3
 # ---
 
+# # Importing and Standardizing Investor Contacts from Super Networking
+# Notebook fetches investor data from a Google Sheet (the “Super Networking” sheet), cleans and standardizes the names and emails, converts certain columns to boolean flags, splits full names into first and last names, normalizes the data according to the contact schema, and saves the processed dataset back to a Google Sheet for further use. Essentially, it prepares a clean, structured contact list from raw spreadsheet input.
+
 # !sudo /bin/bash -c "(source /venv/bin/activate; pip install --quiet jupyterlab-vim)"
 # !jupyter labextension enable
 

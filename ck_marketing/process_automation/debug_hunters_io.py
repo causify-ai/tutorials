@@ -13,6 +13,10 @@
 #     name: python3
 # ---
 
+# # Enrich Contact data (Using Hunter.io)
+# Loads contact data from Google Sheets, cleans it, and enriches missing info using the Hunter.io API.
+# Uses caching for efficiency but does not save results back in this notebook.
+
 # # Imports
 
 # +

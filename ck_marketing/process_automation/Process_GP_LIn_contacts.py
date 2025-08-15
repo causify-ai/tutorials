@@ -6,12 +6,15 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.16.4
+#       jupytext_version: 1.16.7
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---
+
+# # GP Linkedin Connections
+# Notebook fetches LinkedIn connections data, cleans and enriches it using Hunter.io, validates emails, and generates diagnostics. It also categorizes contacts based on job titles and prepares targeted datasets, saving the results to Google Sheets.
 
 # # Imports
 

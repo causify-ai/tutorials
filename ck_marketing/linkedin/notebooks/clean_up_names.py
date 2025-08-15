@@ -6,12 +6,17 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.16.4
+#       jupytext_version: 1.16.7
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---
+
+# %% [markdown]
+# # Name Cleaning and Standardization
+# - This notebook cleans and standardizes a list of first and last names from a CSV file.
+# - It applies local transformations and uses an LLM to normalize names, extract nicknames, and prepare the data for further use.
 
 # %%
 # #!sudo /venv/bin/pip install openai

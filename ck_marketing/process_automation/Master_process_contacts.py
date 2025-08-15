@@ -13,6 +13,9 @@
 #     name: python3
 # ---
 
+# # LinkedIn Contact Categorization
+# Master Notebook file, which fetches and consolidates contact data from LinkedIn, Google Sheets, and other sources. It cleans, enriches, and validates the data, merges Hunter.io enrichment, and categorizes contacts. Finally, it prepares the datasets for targeted campaigns and analysis.
+
 # # Imports
 
 # +
