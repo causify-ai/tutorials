@@ -19,44 +19,44 @@
 # %% [markdown]
 # ## Description
 #
-# This notebook shows how to build a minimal EDA-focused LLM agent with LangGraph and OpenAI. It demonstrates an agent that takes a prompt and autonomously selects and runs available EDA tools to complete the analysis.
+# This notebook shows how to build a minimal EDA-focused LLM agent with LangGraph and Claude. It demonstrates an agent that takes a prompt and autonomously selects and runs available EDA tools to complete the analysis.
 
 # %% [markdown]
 # ## Imports
 
 # %%
-import os
 import logging
+import os
 from typing import Annotated, TypedDict
 
-import pandas as pd
-import numpy as np
-
 import helpers.hdbg as hdbg
-import matplotlib.pyplot as plt
-import langchain_core.tools as lc_tools
+import langchain_anthropic as lc_anthropic
 import langchain_core.messages as lc_messages
-import langchain_openai as lc_openai
+import langchain_core.tools as lc_tools
 import langgraph.graph as lg_graph
 import langgraph.graph.message as lg_msg
 import langgraph.prebuilt as lg_prebuilt
-
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 # %% [markdown]
 # ## Config
 
 # %%
-# Avoid messages from OpenAI REST interface.
+# Avoid messages from Claude REST interface.
 hdbg.init_logger(verbosity=logging.CRITICAL)
 _LOG = logging.getLogger(__name__)
 
 # %%
-# Add OpenAPI to environment variable.
-# os.environ["OPENAI_API_KEY"] = ""
-# Initiate OpenAI model.
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-if not OPENAI_API_KEY:
-    print("WARNING: OPENAI_API_KEY is not set. Set it in your environment before running the agent.")
+# Add Claude to environment variable.
+os.environ["ANTHROPIC_API_KEY"] = ""
+# Initiate Claude model.
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+if not ANTHROPIC_API_KEY:
+    print(
+        "WARNING: ANTHROPIC_API_KEY is not set. Set it in your environment before running the agent."
+    )
 
 # %% [markdown]
 # ## Generate data
@@ -83,6 +83,7 @@ demo_df.head()
 # - `describe_columns(path)`: numeric summary
 # - `groupby_agg(path, by, metric, agg)`: quick groupby summaries
 
+
 # %%
 @lc_tools.tool
 def read_head(path: str, n: int = 5) -> str:
@@ -94,7 +95,8 @@ def read_head(path: str, n: int = 5) -> str:
     :return: table preview
     """
     df = pd.read_csv(path)
-    return df.head(n).to_markdown(index=False)
+    display(df.head(n))
+    return "Displayed preview."
 
 
 @lc_tools.tool
@@ -131,23 +133,36 @@ def groupby_agg(path: str, by: str, metric: str) -> str:
     """
     df = pd.read_csv(path)
     grouped = df.groupby(by)[metric].mean().reset_index()
-    return grouped.to_markdown(index=False)
+    display(grouped)
+    return "Displayed grouped means."
+
 
 EDA_TOOLS = [read_head, plot_histogram, groupby_agg]
 
 
 # %% [markdown]
 # ## Define agent state and nodes
+#
+#
+# #############################################################################
+# AgentState
+# #############################################################################
+
 
 # %%
 class AgentState(TypedDict):
     """
     Accumulate chat messages.
     """
+
     messages: Annotated[list[lc_messages.AnyMessage], lg_msg.add_messages]
 
+
 # Model with tools bound.
-llm = lc_openai.ChatOpenAI(model="gpt-4o-mini", temperature=0).bind_tools(EDA_TOOLS)
+llm = lc_anthropic.ChatAnthropic(
+    model="claude-3-5-sonnet-latest", temperature=0, max_tokens=1024
+).bind_tools(EDA_TOOLS)
+
 
 def assistant_node(state: AgentState) -> dict:
     """
@@ -158,7 +173,6 @@ def assistant_node(state: AgentState) -> dict:
 
 
 # %%
-
 # Tool node executes tools when the model requests them.
 tools_node = lg_prebuilt.ToolNode(EDA_TOOLS)
 # Build the graph.
@@ -182,8 +196,12 @@ sys_msg = lc_messages.SystemMessage(
     content=(
         "You have EDA tools for previewing rows, plotting histograms, and grouped aggregations. "
         "When a user asks for EDA, choose and call the most relevant tool. "
+        "Prefer calling a tool over writing code or prose whenever a tool can do the task. "
+        "After executing any tool, always append a Python code block that reproduces the exact call"
+        ", include every call made this turn."
     )
 )
+
 
 def run_turn(user_text: str):
     state = {"messages": [sys_msg, lc_messages.HumanMessage(content=user_text)]}
@@ -200,10 +218,21 @@ print(final_1.content)
 
 # %%
 # Example 2: plot histogram.
-final_2 = run_turn(f"Plot a histogram of the 'units_sold' column from {demo_csv_path} with 10 bins.")
+final_2 = run_turn(
+    f"Plot a histogram of the 'units_sold' column from {demo_csv_path}."
+)
 print(final_2.content)
 
 # %%
 # Example 3: groupby aggregation.
-final_3 = run_turn(f"What is the average of 'units_sold' by 'region' in {demo_csv_path}?")
+final_3 = run_turn(
+    f"What is the average of 'units_sold' by 'region' in {demo_csv_path}?"
+)
 print(final_3.content)
+
+# %%
+# Example 4: preview head and plot histogram.
+final_4 = run_turn(
+    f"Show the first 7 rows of {demo_csv_path}. Then, plot a histogram of the 'units_sold' column."
+)
+print(final_4.content)

@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "amp"
+name = "tutorial"
 version = "0.1.0"
 description = ""
 authors = ["Alvino Angelo <aangelo@umd.edu>"]
@@ -17,7 +17,7 @@ jupytext = "*"
 langchain = "*"
 langchain-core = "*"
 langchain-community = "*"
-langchain-openai = "*"
+langchain-anthropic = "*"
 langgraph = "*"
 matplotlib = "*"
 moto = "*"
@@ -41,6 +41,7 @@ s3fs = "*"
 scikit-learn = "*"
 seaborn = "*"
 statsmodels = "*"
+tabulate = "*"
 tqdm = "*"
 
 [tool.poetry.dev-dependencies]
