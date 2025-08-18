@@ -1,0 +1,19 @@
+version: '3'
+services:
+  forecast_api:
+    extends:
+      file: tmp.docker-compose.yml
+      service: app
+    command: >
+      uvicorn tutorial_forecast_as_service.api.main:app
+      --host 0.0.0.0 --port 8000  --reload
+    ports:
+      - "8000:8000"
+  forecast_frontend:
+    extends:
+      file: tmp.docker-compose.yml
+      service: app
+    command: >
+      python -m tutorial_forecast_as_service.frontend.app
+    ports:
+      - "8050:8050"
