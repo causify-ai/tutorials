@@ -417,81 +417,84 @@
 
 * The Accountability Chart: Example
 
-# Organizational Chart
+# Organizational Chart: Example
 
-## Visionary
-**Sally M.**
-- Big Ideas
-- Big Relationships
-- Culture
-- Industry Trends
+- An example of organizational chart is:
+  ```
+  ## Visionary
+  **Sally M.**
+  - Big Ideas
+  - Big Relationships
+  - Culture
+  - Industry Trends
 
-## Integrator
-**Robert D.**
-- LMA*
-- Achieve Budget
-- Legal
-- Special Projects
+  ## Integrator
+  **Robert D.**
+  - LMA*
+  - Achieve Budget
+  - Legal
+  - Special Projects
 
-## Finance
-**John P.**
-- Reporting
-- Accounting
-- Cash
+  ## Finance
+  **John P.**
+  - Reporting
+  - Accounting
+  - Cash
 
-### HR
-**Chrissi L.**
-- HR Process
-- Finding Candidates
-- Benefits
-- Review Process
+  ### HR
+  **Chrissi L.**
+  - HR Process
+  - Finding Candidates
+  - Benefits
+  - Review Process
 
-### IT
-**Dana G.**
-- Systems
-- Computers
-- Internet
-- Phones
+  ### IT
+  **Dana G.**
+  - Systems
+  - Computers
+  - Internet
+  - Phones
 
-### Accounting
-**John L.**
-- AP
-- AR
-- Expenses
+  ### Accounting
+  **John L.**
+  - AP
+  - AR
+  - Expenses
 
-## Operations
-**James Z.**
-- LMA*
-- Client Satisfaction
-- Manage Resources
-- Ops Process
+  ## Operations
+  **James Z.**
+  - LMA*
+  - Client Satisfaction
+  - Manage Resources
+  - Ops Process
 
-### Field Tech
-**7 People**
-- Product Delivery
-- Solve Client Problems
-- Customer Service
+  ### Field Tech
+  **7 People**
+  - Product Delivery
+  - Solve Client Problems
+  - Customer Service
 
-### Sales Rep
-**2 People**
-- New Biz Dev
-- Hit Goals
-- Pipeline
+  ### Sales Rep
+  **2 People**
+  - New Biz Dev
+  - Hit Goals
+  - Pipeline
 
-## Sales
-**Mary S.**
-- LMA*
-- Revenue
-- Sales Process / Selling
-- Manage Clients
+  ## Sales
+  **Mary S.**
+  - LMA*
+  - Revenue
+  - Sales Process / Selling
+  - Manage Clients
 
-## Marketing
-**David S.**
-- Branding
-- Generate Leads
-- Website
+  ## Marketing
+  **David S.**
+  - Branding
+  - Generate Leads
+  - Website
 
-- LMA = Leadership, Management, Accountability
+  - LMA = Leadership, Management, Accountability
+  ```
 
 * Scalability and Evolution
 - The same seat can be filled by multiple people performing the same function
@@ -759,7 +762,7 @@
   - Tells what is working and what is not
   - Solves issues before they become major disasters
   - Eliminate assumptions and egos
-  - Creates transparency, accountabl
+  - Creates transparency, accountability
 
 * Effect of the Scorecard
 - Everybody knows exactly where they are
