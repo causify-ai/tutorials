@@ -25,9 +25,9 @@
   - Executes the tool and returns results (tables, plots, summaries)
 
 - **What problem does it solve?**
-- Automates repetitive EDA tasks (preview, describe, aggregate, visualize)
-- Provides transparent tool execution with reproducible Python snippets
-- Simplifies building AI agents that are safe (restricted to predefined tools)
+  - Automates repetitive EDA tasks (preview, describe, aggregate, visualize)
+  - Provides transparent tool execution with reproducible Python snippets
+  - Simplifies building AI agents that are safe (restricted to predefined tools)
 
 ### Alternatives
 
