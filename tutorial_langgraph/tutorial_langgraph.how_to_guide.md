@@ -172,67 +172,67 @@ def run_turn(user_text: str):
 
 - Example 1: Preview rows
 
-```python
-response = run_turn("Show the first 3 rows of demo_sales.csv.")
-print(response.content)
-```
+  ```python
+  response = run_turn("Show the first 3 rows of demo_sales.csv.")
+  print(response.content)
+  ```
 
   - Output:
 
-  ````bash
-  Here's the Python code to reproduce this preview:
+    ````bash
+    Here's the Python code to reproduce this preview:
 
-  ```python
-  read_head(path="demo_sales.csv", n=3)
-  ```
-  ````
+    ```python
+    read_head(path="demo_sales.csv", n=3)
+    ```
+    ````
 
 - Example 2: Plot histogram
 
-```python
-final_2 = run_turn(
-  f"Plot a histogram of the 'units_sold' column from {demo_csv_path}."
-)
-print(final_2.content)
-```
+  ```python
+  final_2 = run_turn(
+    f"Plot a histogram of the 'units_sold' column from {demo_csv_path}."
+  )
+  print(final_2.content)
+  ```
 
   - Output:
 
-  ````bash
-  Here's the Python code to reproduce this visualization:
+    ````bash
+    Here's the Python code to reproduce this visualization:
 
-  ```python
-  plot_histogram(path="demo_sales.csv", column="units_sold")
-  ```
-  ````
+    ```python
+    plot_histogram(path="demo_sales.csv", column="units_sold")
+    ```
+    ````
 
 - Example 3: Groupby aggregation
 
-```python
-final_3 = run_turn(
-  f"What is the average of 'units_sold' by 'region' in {demo_csv_path}?"
-)
-print(final_3.content)
-```
+  ```python
+  final_3 = run_turn(
+    f"What is the average of 'units_sold' by 'region' in {demo_csv_path}?"
+  )
+  print(final_3.content)
+  ```
 
   - Output:
 
-  ````bash
-  Here's the Python code to reproduce this analysis:
+    ````bash
+    Here's the Python code to reproduce this analysis:
+
+    ```python
+    groupby_agg(path="demo_sales.csv", by="region", metric="units_sold")
+    ```
+    ````
+
+- Example 4: Preview head and plot histogram
 
   ```python
-  groupby_agg(path="demo_sales.csv", by="region", metric="units_sold")
+  final_4 = run_turn(
+    f"Show the first 7 rows of {demo_csv_path}. Then, plot a histogram of the 'units_sold' column."
+  )
+  print(final_4.content)
   ```
-  ````
-
-- Example 2: Preview head and plot histogram
-
-```python
-final_4 = run_turn(
-  f"Show the first 7 rows of {demo_csv_path}. Then, plot a histogram of the 'units_sold' column."
-)
-print(final_4.content)
-```
 
   - Output:
 
