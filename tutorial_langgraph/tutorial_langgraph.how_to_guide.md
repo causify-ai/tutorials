@@ -177,7 +177,7 @@ response = run_turn("Show the first 3 rows of demo_sales.csv.")
 print(response.content)
 ```
 
-- Output:
+  - Output:
 
   ````bash
   Here's the Python code to reproduce this preview:
@@ -196,7 +196,7 @@ final_2 = run_turn(
 print(final_2.content)
 ```
 
-- Output:
+  - Output:
 
   ````bash
   Here's the Python code to reproduce this visualization:
@@ -215,7 +215,7 @@ final_3 = run_turn(
 print(final_3.content)
 ```
 
-- Output:
+  - Output:
 
   ````bash
   Here's the Python code to reproduce this analysis:
@@ -234,16 +234,16 @@ final_4 = run_turn(
 print(final_4.content)
 ```
 
-- Output:
+  - Output:
 
-  ````bash
-  Here's the Python code to reproduce these operations:
+    ````bash
+    Here's the Python code to reproduce these operations:
 
-  ```python
-  read_head(path="demo_sales.csv", n=7)
-  plot_histogram(path="demo_sales.csv", column="units_sold")
-  ```
-  ````
+    ```python
+    read_head(path="demo_sales.csv", n=7)
+    plot_histogram(path="demo_sales.csv", column="units_sold")
+    ```
+    ````
 
 ## Current Limitations
 
