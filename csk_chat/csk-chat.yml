@@ -9,7 +9,7 @@ dependencies:
 - current_identifier: null
   type: marketplace
   value:
-    marketplace_plugin_unique_identifier: langgenius/openai:0.0.29@9e17ae8073fe53c282e9dc411e76a3cc52f8e794e4cc2499d204502086871c53
+    marketplace_plugin_unique_identifier: langgenius/anthropic:0.2.0@a776815b091c81662b2b54295ef4b8a54b5533c2ec1c66c7c8f2feea724f3248
 kind: app
 version: 0.3.0
 workflow:
@@ -103,7 +103,7 @@ workflow:
         title: Start
         type: start
         variables: []
-      height: 47
+      height: 52
       id: '1750748369113'
       position:
         x: 80
@@ -115,7 +115,7 @@ workflow:
       sourcePosition: right
       targetPosition: left
       type: custom
-      width: 243
+      width: 242
     - data:
         dataset_ids:
         - HUVkjdJJV+O46fIav2fn2baxDSW8hxdpQgQQaN5kwiOowVY3uBvaSSFrbOoGhQVW
@@ -144,7 +144,7 @@ workflow:
         selected: false
         title: Knowledge Retrieval
         type: knowledge-retrieval
-      height: 83
+      height: 90
       id: '1750748525829'
       position:
         x: 380
@@ -156,7 +156,7 @@ workflow:
       sourcePosition: right
       targetPosition: left
       type: custom
-      width: 243
+      width: 242
     - data:
         context:
           enabled: true
@@ -181,8 +181,8 @@ workflow:
         model:
           completion_params: {}
           mode: chat
-          name: o4-mini-2025-04-16
-          provider: langgenius/openai/openai
+          name: claude-3-5-sonnet-20240620
+          provider: langgenius/anthropic/anthropic
         prompt_template:
         - edition_type: basic
           id: ee6dd1a4-b880-438e-a322-1e3982546467
@@ -217,7 +217,7 @@ workflow:
           max_retries: 2
           retry_enabled: true
           retry_interval: 1000
-        selected: true
+        selected: false
         structured_output:
           schema:
             additionalProperties: false
@@ -236,19 +236,19 @@ workflow:
         variables: []
         vision:
           enabled: false
-      height: 106
+      height: 119
       id: '1751533078872'
       position:
-        x: 683
-        y: 368
+        x: 650
+        y: 333.5
       positionAbsolute:
-        x: 683
-        y: 368
+        x: 650
+        y: 333.5
       selected: true
       sourcePosition: right
       targetPosition: left
       type: custom
-      width: 243
+      width: 242
     - data:
         answer: '{{#1751533078872.text#}}'
         desc: ''
@@ -256,7 +256,7 @@ workflow:
         title: Answer
         type: answer
         variables: []
-      height: 96
+      height: 104
       id: '1751533240771'
       position:
         x: 996
@@ -268,8 +268,8 @@ workflow:
       sourcePosition: right
       targetPosition: left
       type: custom
-      width: 243
+      width: 242
     viewport:
-      x: -206.86567081859084
-      y: 184.19881200485793
-      zoom: 1.1172871380722198
+      x: 19.566319353616564
+      y: 122.45435749512546
+      zoom: 1.084989866290406
