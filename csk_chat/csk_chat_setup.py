@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-Comprehensive Setup Script for Documentation Chatbot with Weaviate
-Integration.
+Comprehensive Setup Script for Documentation Chatbot with Weaviate Integration.
 
 This script automates the entire setup process by combining shell commands and
 Docker Compose orchestration to set up:
@@ -43,7 +42,7 @@ from typing import List, Optional, Union
 
 import requests  # type: ignore
 
-import csk_chat.weaviate_docs as cweadocs
+import csk_chat.weaviate_docs as cchwedoc
 import helpers.hdbg as hdbg
 import helpers.hparser as hparser
 
@@ -271,11 +270,13 @@ class DocumentationChatbotSetup:
     def process_documents(self, docs_dir: Optional[str] = None) -> None:
         """
         Process markdown documents and upload to Weaviate.
-        
+
         Note: This will delete any existing collection before uploading
         to ensure a clean state.
         """
-        _LOG.info("Processing and uploading documents to Weaviate (deleting existing collection first)")
+        _LOG.info(
+            "Processing and uploading documents to Weaviate (deleting existing collection first)"
+        )
         docs_path = pathlib.Path(docs_dir) if docs_dir else self.docs_dir
         if not docs_path.exists():
             raise FileNotFoundError(
@@ -284,10 +285,10 @@ class DocumentationChatbotSetup:
         # Import and use the document processing module.
         try:
             # Process documents.
-            result = cweadocs.upload_markdown_docs_to_weaviate(
-                docs_dir=str(docs_path), 
+            result = cchwedoc.upload_markdown_docs_to_weaviate(
+                docs_dir=str(docs_path),
                 collection_name=DEFAULT_COLLECTION_NAME,
-                delete_existing=True  # Always delete existing collection before upload
+                delete_existing=True,  # Always delete existing collection before upload
             )
             _LOG.info(
                 "Successfully processed %s files", result.get("total_files", 0)
@@ -526,11 +527,7 @@ def _main(parser: argparse.ArgumentParser) -> None:
                 setup.process_documents(args.docs_dir)
             if args.test_integration:
                 setup.test_system_integration()
-        if not any(
-            [
-              setup.run_full_setup
-            ]
-        ):
+        if not any([setup.run_full_setup]):
             parser.print_help()
     except (ImportError, FileNotFoundError) as e:
         _LOG.error("Setup failed: %s", e)
