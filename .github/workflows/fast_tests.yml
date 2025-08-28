@@ -1,0 +1,23 @@
+name: Fast tests
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches:
+      - master
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 */1 * *'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  run_fast_tests:
+    uses: causify-ai/helpers/.github/workflows/common_run_tests.yml@master
+    with:
+      test-name: run_fast_tests
+    secrets: inherit
