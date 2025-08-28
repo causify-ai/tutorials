@@ -2,11 +2,9 @@ name: Fast tests
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-    branches:
-      - master
+    branches: [master]
   push:
-    branches:
-      - master
+    branches: [master]
   workflow_dispatch:
   schedule:
     - cron: '0 0 */1 * *'
@@ -15,9 +13,32 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  id-token: write
+  contents: read
+  packages: read
+
 jobs:
   run_fast_tests:
-    uses: causify-ai/helpers/.github/workflows/common_run_tests.yml@master
-    with:
-      test-name: run_fast_tests
-    secrets: inherit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to GHCR
+        run: docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GH_ACTION_ACCESS_TOKEN }}
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+          token: ${{ secrets.GH_ACTION_ACCESS_TOKEN }}
+
+      - name: Update PYTHONPATH
+        run: echo "PYTHONPATH=.:helpers_root" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r .github/gh_requirements.txt
+
+      - name: Run fast tests
+        run: invoke run_fast_tests
