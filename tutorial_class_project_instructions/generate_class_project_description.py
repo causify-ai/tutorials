@@ -33,24 +33,29 @@ _LOG = logging.getLogger(__name__)
 # Set Constants.
 if True:
     DEFAULT_SHEET_URL = (
+        # "https://docs.google.com/"
+        # "spreadsheets/d/"
+        # "1Ez5uRvOgvDMkFc9c6mI21kscTKnpiCSh4UkUh_ifLIw/"
+        # "edit?gid=0#gid=0"
         "https://docs.google.com/"
         "spreadsheets/d/"
         "1Ez5uRvOgvDMkFc9c6mI21kscTKnpiCSh4UkUh_ifLIw/"
-        "edit?gid=0#gid=0"
+        "edit?pli=1&gid=934932850#gid=934932850"
     )
+    
     # Set to True to use the actual spreadsheet link
 else:
     # Set to False for testing purposes
     fake_url = "https://docs.google.com/fake-sheet-url"
     DEFAULT_SHEET_URL = fake_url
 GLOBAL_PROMPT = """Act as a data science professor.
-I will give you a tool (XYZ) and difficulty level (1–3).
+I will give you a tool (XYZ).
 Write a short bullet-point project brief on how XYZ can be
 used for real-time Bitcoin data ingestion in Python.
 Include:
 
 - Title
-- Difficulty (1 means easy, should take around 7 days to develop, 2 is medium difficulty, should take around 10 days to complete, 3 is hard,should take 14 days to complete)
+- Difficulty - 1/2/3 (1 means easy, should take around 7 days to develop, 2 is medium difficulty, should take around 10 days to complete, 3 is hard,should take 14 days to complete)
 - Tech Description
 - Project Idea
 - Python libs
@@ -68,10 +73,10 @@ Useful resources: AWS Glue Docs
 Is it free?: Free tier available with limits
 Python libraries: boto3, PySpark
 """
-DEFAULT_MARKDOWN_PATH = "./projects/MSML610_Projects.md"
+DEFAULT_MARKDOWN_PATH = "./class_project_instructions/Projects"
 # The maximum number of projects.
 # Set the value to None to disable the limit.
-DEFAULT_MAX_PROJECTS = None
+DEFAULT_MAX_PROJECTS = 5
 
 
 def _read_google_sheet(url: str, secret_path: str) -> pd.DataFrame:
@@ -89,7 +94,7 @@ def _read_google_sheet(url: str, secret_path: str) -> pd.DataFrame:
     return df
 
 
-def _generate_project_description(project_name: str, difficulty: str) -> Any:
+def _generate_project_description(project_name: str) -> Any:
     """
     Generate a project description.
 
@@ -117,7 +122,7 @@ def _generate_project_description(project_name: str, difficulty: str) -> Any:
     else:
         # v2: Added by Aayush as an improvement to optimize tokens
         # while conveying the same information.
-        prompt = f"Technology: {project_name}\nDifficulty: {difficulty}"
+        prompt = f"Technology: {project_name}"
         # Short, to the point and concise. Saves the most tokens while achieving similar results.
     project_desc = hopenai.get_completion(
         prompt,
@@ -133,7 +138,7 @@ def _generate_project_description(project_name: str, difficulty: str) -> Any:
 
 def create_markdown_file(
     df: pd.DataFrame,
-    markdown_path: str,
+    markdown_folder_path: str,
     max_projects: Optional[int],
     *,
     sleep_sec: float = 1.5,
@@ -146,21 +151,42 @@ def create_markdown_file(
     :param max_projects: limit to the rows processed
     :param sleep_sec: amount of time to sleep between rows
     """
-    content = "# MSML610 Projects\n\n"
     # Generate the project descriptions.
     # Limit the number of projects.
     rows = df.head(max_projects) if max_projects is not None else df
+    pathlib.Path(markdown_folder_path).mkdir(parents=True, exist_ok=True)
     for _, row in rows.iterrows():
+        content = ""
         project_name = row["Tool"]
-        difficulty = row["Difficulty"]
-        description = _generate_project_description(project_name, difficulty)
+        # difficulty = row["Difficulty"]
+        description = _generate_project_description(project_name)
         # Add the project description to the markdown file.
-        content += f"## {project_name}\n"
+        difficulty = "Failed"  # Default difficulty level if extraction fails
+        if "difficulty" in description.lower():
+            # Extract the difficulty level from the response (assuming it follows 'difficulty: X')
+            try:
+                difficulty = next(
+                    word.split(":")[1].strip() 
+                    for word in description.splitlines() 
+                    if "difficulty" in word.lower()
+                )
+            except IndexError:
+                _LOG.warning(f"Difficulty level extraction failed for {project_name}, defaulting to 1.")
+        # content += f"## {project_name}\n"
+        # content += f"{description}\n\n"
+        # content = f"# {project_name} Project Description\n\n"
+        # content += f"## Difficulty Level: {difficulty}\n\n"
+        # content += f"## Project Description\n"
         content += f"{description}\n\n"
+        file_name = f"{project_name}_Project_Description.md"
+        markdown_path = pathlib.Path(markdown_folder_path) / file_name
+        if markdown_path.exists():
+            _LOG.info("File already exists, skipping: %s", markdown_path)
+            continue
+        _LOG.info("Generating Markdown → %s", markdown_path)
+        hio.to_file(str(markdown_path), content)
         # Letting it wait for a while before triggering another request
         time.sleep(sleep_sec)
-    # Write the markdown file.
-    hio.to_file(markdown_path, content)
 
 
 def _parse() -> argparse.ArgumentParser:
@@ -176,9 +202,9 @@ def _parse() -> argparse.ArgumentParser:
         help="Path to Google service‑account JSON.",
     )
     parser.add_argument(
-        "--markdown_path",
+        "--markdown_folder_path",
         default=DEFAULT_MARKDOWN_PATH,
-        help="Output Markdown file",
+        help="Output Projects folder",
     )
     parser.add_argument(
         "--max_projects",
@@ -192,6 +218,7 @@ def _parse() -> argparse.ArgumentParser:
         default=None,
         help="OpenAI API key (will override env var)",
     )
+    
     hparser.add_verbosity_arg(parser)
     return parser
 
@@ -201,16 +228,15 @@ def _main(parser: argparse.ArgumentParser) -> None:
     hdbg.init_logger(verbosity=args.log_level, use_exec_path=True)
     # Expand user/relative paths to absolute ones early to avoid surprises.
     secret_path = str(pathlib.Path(args.secret_path).expanduser().resolve())
-    markdown_path = str(pathlib.Path(args.markdown_path).expanduser().resolve())
+    markdown_folder_path = str(pathlib.Path(args.markdown_folder_path).expanduser().resolve())
     _LOG.info("Reading sheet %s", args.sheet_url)
     sheet_df = _read_google_sheet(args.sheet_url, secret_path)
-    _LOG.info("Generating Markdown → %s", markdown_path)
     create_markdown_file(
         sheet_df,
-        markdown_path,
+        markdown_folder_path,
         args.max_projects,
     )
-    _LOG.info("Done: %s", markdown_path)
+    _LOG.info("Done: %s", markdown_folder_path)
 
 
 if __name__ == "__main__":
