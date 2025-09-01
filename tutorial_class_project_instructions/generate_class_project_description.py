@@ -3,10 +3,8 @@
 Generate project descriptions from a Google Sheet and save them to a Markdown
 file.
 
-> project_description.py \
-    --sheet_url "https://docs.google.com/spreadsheets/d/1abc...gid=0" \
-    --markdown_path ./projects/MSML610_Projects.md \
-    --max_projects 3 \
+>   python tutorial_class_project_instructions/generate_class_project_description.py  
+    --OPENAI_API_KEY ""  
     -v INFO
 
 Import as:
@@ -76,10 +74,10 @@ Python libraries: boto3, PySpark
 DEFAULT_MARKDOWN_PATH = "./class_project_instructions/Projects"
 # The maximum number of projects.
 # Set the value to None to disable the limit.
-DEFAULT_MAX_PROJECTS = 5
+DEFAULT_MAX_PROJECTS = None
 
 
-def _read_google_sheet(url: str, secret_path: str) -> pd.DataFrame:
+def _read_google_sheet(url: str,tab_name: str, secret_path: str) -> pd.DataFrame:
     """
     Read the Google Sheet and return the data as a pandas DataFrame.
 
@@ -90,7 +88,7 @@ def _read_google_sheet(url: str, secret_path: str) -> pd.DataFrame:
     _LOG.info("Reading Google Sheet %s: ", url)
     _LOG.info("Using credentials from: %s", secret_path)
     credentials = hgofiapi.get_credentials(service_key_path=secret_path)
-    df = hgofiapi.read_google_file(url, credentials=credentials)
+    df = hgofiapi.read_google_file(url,tab_name, credentials=credentials)
     return df
 
 
@@ -197,8 +195,12 @@ def _parse() -> argparse.ArgumentParser:
         "--sheet_url", default=DEFAULT_SHEET_URL, help="Google Sheet URL"
     )
     parser.add_argument(
+        "--tab_name", type=str, default='MSML610 - Fall 2025', help="Tab to read data from within Google Sheet"
+    )
+    parser.add_argument(
         "--secret_path",
-        default="/app/DATA605/google_secret.json",
+        # default="/app/DATA605/google_secret.json",
+        default='~/.config/gspread_pandas/google_secret.json',
         help="Path to Google service‑account JSON.",
     )
     parser.add_argument(
@@ -213,7 +215,7 @@ def _parse() -> argparse.ArgumentParser:
         help="Limit rows processed (None = all).",
     )
     parser.add_argument(
-        "--openai_key",
+        "--OPENAI_API_KEY",
         type=str,
         default=None,
         help="OpenAI API key (will override env var)",
@@ -230,7 +232,8 @@ def _main(parser: argparse.ArgumentParser) -> None:
     secret_path = str(pathlib.Path(args.secret_path).expanduser().resolve())
     markdown_folder_path = str(pathlib.Path(args.markdown_folder_path).expanduser().resolve())
     _LOG.info("Reading sheet %s", args.sheet_url)
-    sheet_df = _read_google_sheet(args.sheet_url, secret_path)
+    _LOG.info("TAB NAME IS %s", args.tab_name)
+    sheet_df = _read_google_sheet(args.sheet_url, args.tab_name,secret_path)
     create_markdown_file(
         sheet_df,
         markdown_folder_path,
