@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 """
 Generate project descriptions from a Google Sheet and save them to a Markdown
-file.
+file. This script also creates Github links for the project files and adds them
+back to the Google Sheet.
 
->   python tutorial_class_project_instructions/generate_class_project_description.py  
-    --OPENAI_API_KEY ""  
+>   python tutorial_class_project_instructions/generate_class_project_description.py
+    --OPENAI_API_KEY ""
+    --tab_name ""
     -v INFO
 
 Import as:
@@ -16,6 +18,8 @@ import argparse
 import logging
 import pathlib
 import time
+import re
+from collections import defaultdict
 from typing import Any, Optional
 
 import pandas as pd
@@ -40,20 +44,26 @@ if True:
         "1Ez5uRvOgvDMkFc9c6mI21kscTKnpiCSh4UkUh_ifLIw/"
         "edit?pli=1&gid=934932850#gid=934932850"
     )
-    
+
     # Set to True to use the actual spreadsheet link
 else:
     # Set to False for testing purposes
     fake_url = "https://docs.google.com/fake-sheet-url"
     DEFAULT_SHEET_URL = fake_url
-GLOBAL_PROMPT = """Act as a data science professor.
+DEFAULT_FILE_GITHUB_LINK = (
+    "https://github.com/causify-ai/tutorials/"
+    "blob/TutorTask640_Generating_Markdowns_for_MSML610_Projects/"
+    "class_project_instructions/Projects/"
+)
+tool_description_cache = defaultdict(list)
+GLOBAL_PROMPT = """Act as a graduate data science professor.
 I will give you a tool (XYZ).
 Write a short bullet-point project brief on how XYZ can be
 used for real-time Bitcoin data ingestion in Python.
 Include:
 
 - Title
-- Difficulty - 1/2/3 (1 means easy, should take around 7 days to develop, 2 is medium difficulty, should take around 10 days to complete, 3 is hard,should take 14 days to complete)
+- Difficulty: 1/2/3 (1 means easy, 2 is medium difficulty, 3 is hard)
 - Tech Description
 - Project Idea
 - Python libs
@@ -77,7 +87,7 @@ DEFAULT_MARKDOWN_PATH = "./class_project_instructions/Projects"
 DEFAULT_MAX_PROJECTS = None
 
 
-def _read_google_sheet(url: str,tab_name: str, secret_path: str) -> pd.DataFrame:
+def _read_google_sheet(url: str, tab_name: str, secret_path: str) -> pd.DataFrame:
     """
     Read the Google Sheet and return the data as a pandas DataFrame.
 
@@ -88,46 +98,112 @@ def _read_google_sheet(url: str,tab_name: str, secret_path: str) -> pd.DataFrame
     _LOG.info("Reading Google Sheet %s: ", url)
     _LOG.info("Using credentials from: %s", secret_path)
     credentials = hgofiapi.get_credentials(service_key_path=secret_path)
-    df = hgofiapi.read_google_file(url,tab_name, credentials=credentials)
+    df = hgofiapi.read_google_file(url, tab_name, credentials=credentials)
     return df
 
 
-def _generate_project_description(project_name: str) -> Any:
+def _write_google_sheet(
+    df, url: str, tab_name: str, secret_path: str
+) -> pd.DataFrame:
     """
-    Generate a project description.
+    Write the paths to project description files back to Google Sheet.
+
+    :param url: the URL of the Google Sheet to read
+    :param secret_path: path to google_secret.json
+    :return: the data
+    """
+    _LOG.info("Writing to Google Sheet %s: ", url)
+    _LOG.info("Using credentials from: %s", secret_path)
+    credentials = hgofiapi.get_credentials(service_key_path=secret_path)
+    try:
+        hgofiapi.write_to_google_sheet(
+            df, url, tab_name, append=True, credentials=credentials
+        )
+        print('helo')
+    except ValueError as e:
+        _LOG.info("ERROR while writing to Google Sheet %s", str(e))
+    return df
+
+
+def _build_prompt(project_name: str, previous_descriptions: list[str]) -> str:
+    if False:
+        # Potential (v3) prompt if needed to use.
+        # Change False to True to use it.
+        if not previous_descriptions:
+            return (
+                f"Write a professional and detailed project description"
+                f"for a data project titled '{project_name}'. "
+                f"Indicate the difficulty level: '1/2/3, and include objectives, "
+                f"technologies used, and expected outcomes."
+                f"Make sure it is different from the following:\n{previous_descriptions}\n"
+                f"Only focus on the new idea."
+            )
+        else:
+            previous_descriptions = "\n- " + "\n- ".join(previous_descriptions)
+            return (
+                f"Write a professional and detailed project description"
+                f"for a data project titled '{project_name}'. "
+                f"Indicate the difficulty level: '1/2/3, and include objectives, "
+                f"technologies used, and expected outcomes."
+                f"Make sure it is different from the following:\n{previous_descriptions}\n"
+                f"Only focus on the new idea."
+            )
+        # Will use more tokens, but might help produce a better result.
+    elif False:
+        # v1 (Original) prompt.
+        # Change False to True to use it.
+        if not previous_descriptions:
+            return f"Generate a project description for '{project_name}',"
+            f"with difficulty level: 1/2/3."
+        else:
+            previous_descriptions = "\n- " + "\n- ".join(previous_descriptions)
+            return (
+                f"Generate a project description for '{project_name}',"
+                f"with difficulty level: 1/2/3."
+                f"Make sure it is completely different from the following:\n{previous_descriptions}\n"
+                f"Only focus on the new idea."
+            )
+    else:
+        # v2: Added by Aayush as an improvement to optimize tokens
+        # while conveying the same information.
+        # Short, to the point and concise. Saves the most tokens while achieving similar results.
+        if not previous_descriptions:
+            return f"Technology: {project_name}."
+        else:
+            previous_descriptions = "\n- " + "\n- ".join(previous_descriptions)
+            return (
+                f"Technology: {project_name}."
+                f"Make sure it is different and one level of difficulty higher in execution and"
+                f"overall complextiy than the level mentioned"
+                f"in the following idea :"
+                f"\nPrevious idea:{previous_descriptions}\n"
+                f"Only focus on the new idea."
+                f"Make it distinct and complex in:"
+                f"1. the domain or application (e.g., use a different target problem),"
+                f"2. OR the data source (e.g., scrape news instead of using APIs),"
+                f"3. OR the ML task (e.g., classification, forecasting, anomaly detection, etc.)."
+            )
+
+
+def _generate_project_description(
+    project_name: str, previous_descriptions: list[str],temp:int
+) -> Any:
+    """
+    Generate a project description. Depending on the value in No of Projects
+    columns, this will generate N number of projects for each tool, each
+    different from the other.
 
     :param project_name: the name of the project
     :param difficulty: the difficulty level of the project
     :return: the project description
     """
-    if False:
-        # Potential (v3) prompt if needed to use.
-        # Change False to True to use it.
-        prompt = (
-            f"Write a professional and detailed project description"
-            f"for a data project titled '{project_name}'. "
-            f"Indicate the difficulty level as '{difficulty}', and include objectives, "
-            f"technologies used, and expected outcomes."
-        )
-        # Will use more tokens, but might help produce a better result.
-    elif False:
-        # v1 (Original) prompt.
-        # Change False to True to use it.
-        prompt = (
-            f"Generate a project description for '{project_name}',"
-            f"with difficulty level '{difficulty}'."
-        )
-    else:
-        # v2: Added by Aayush as an improvement to optimize tokens
-        # while conveying the same information.
-        prompt = f"Technology: {project_name}"
-        # Short, to the point and concise. Saves the most tokens while achieving similar results.
+    prompt = _build_prompt(project_name, previous_descriptions)
     project_desc = hopenai.get_completion(
         prompt,
         system_prompt=GLOBAL_PROMPT,
         model="gpt-4o-mini",
-        cache_mode="FALLBACK",
-        temperature=0.3,
+        cache_mode="DISABLED",
+        temperature=temp,
         max_tokens=400,
         print_cost=True,
     )
@@ -140,7 +216,7 @@ def create_markdown_file(
     max_projects: Optional[int],
     *,
     sleep_sec: float = 1.5,
-) -> None:
+) -> pd.DataFrame:
     """
     Create a markdown file with the project descriptions using helpers.hio.
 
@@ -151,40 +227,56 @@ def create_markdown_file(
     """
     # Generate the project descriptions.
     # Limit the number of projects.
+    file_githublinks_df = pd.DataFrame(columns=["Tool","Project Number","URL"])
     rows = df.head(max_projects) if max_projects is not None else df
+    temps = [0.3,0.45,0.6]
     pathlib.Path(markdown_folder_path).mkdir(parents=True, exist_ok=True)
     for _, row in rows.iterrows():
         content = ""
         project_name = row["Tool"]
         # difficulty = row["Difficulty"]
-        description = _generate_project_description(project_name)
-        # Add the project description to the markdown file.
-        difficulty = "Failed"  # Default difficulty level if extraction fails
-        if "difficulty" in description.lower():
-            # Extract the difficulty level from the response (assuming it follows 'difficulty: X')
-            try:
-                difficulty = next(
-                    word.split(":")[1].strip() 
-                    for word in description.splitlines() 
-                    if "difficulty" in word.lower()
-                )
-            except IndexError:
-                _LOG.warning(f"Difficulty level extraction failed for {project_name}, defaulting to 1.")
-        # content += f"## {project_name}\n"
-        # content += f"{description}\n\n"
-        # content = f"# {project_name} Project Description\n\n"
-        # content += f"## Difficulty Level: {difficulty}\n\n"
-        # content += f"## Project Description\n"
-        content += f"{description}\n\n"
-        file_name = f"{project_name}_Project_Description.md"
-        markdown_path = pathlib.Path(markdown_folder_path) / file_name
-        if markdown_path.exists():
-            _LOG.info("File already exists, skipping: %s", markdown_path)
-            continue
-        _LOG.info("Generating Markdown → %s", markdown_path)
-        hio.to_file(str(markdown_path), content)
-        # Letting it wait for a while before triggering another request
-        time.sleep(sleep_sec)
+        n_projects = int(row.get("No of Projects", 1))
+        for i in range(n_projects):
+            description = _generate_project_description(
+                project_name, tool_description_cache,temps[i]
+            )
+            tool_description_cache[project_name].append(description)
+            with open("error.txt", "w") as f:
+                f.write(description)
+            # Add the project description to the markdown file.
+            # difficulty_match = re.search(r"[Dd]ifficulty\s*[:\-–=]\s*(\d)", description)
+            # if not difficulty_match:
+            #     # Try to find "### Difficulty" followed by a number on the next line
+            #     match_lines = re.findall(r"#+\s*Difficulty\s*\n\s*(\d)", description)
+            #     if match_lines:
+            #         difficulty = match_lines[0]
+            #     else:
+            #         difficulty = "N/A"
+            #         _LOG.warning("Could not extract difficulty from description for tool:\n%s", project_name)
+            # else:
+            #     difficulty = difficulty_match.group(1)
+    
+        
+            # content += f"## {project_name}\n"
+            # content += f"{description}\n\n"
+            # content = f"# {project_name} Project Description\n\n"
+            # content += f"## Difficulty Level: {difficulty}\n\n"
+            # content += f"## Project Description\n"
+            content = f"{description}\n\n"
+            file_name = f"{project_name}_Project_Description_{i+1}.md"
+            markdown_path = pathlib.Path(markdown_folder_path) / file_name
+            # if markdown_path.exists():
+            #     _LOG.info(
+            #         "File already exists, skipping generation: %s", markdown_path
+            #     )
+                
+            # else:
+            hio.to_file(str(markdown_path), content)
+            github_url = f"{DEFAULT_FILE_GITHUB_LINK}{file_name}"
+            file_githublinks_df.loc[len(file_githublinks_df)] = [project_name,i+1,github_url]
+            # Letting it wait for a while before triggering another request
+            time.sleep(sleep_sec)
+    return file_githublinks_df
 
 
 def _parse() -> argparse.ArgumentParser:
@@ -195,12 +287,15 @@ def _parse() -> argparse.ArgumentParser:
         "--sheet_url", default=DEFAULT_SHEET_URL, help="Google Sheet URL"
     )
     parser.add_argument(
-        "--tab_name", type=str, default='MSML610 - Fall 2025', help="Tab to read data from within Google Sheet"
+        "--tab_name",
+        type=str,
+        default="MSML610 - Fall 2025",
+        help="Tab to read data from within Google Sheet",
     )
     parser.add_argument(
         "--secret_path",
         # default="/app/DATA605/google_secret.json",
-        default='~/.config/gspread_pandas/google_secret.json',
+        default="~/.config/gspread_pandas/google_secret.json",
         help="Path to Google service‑account JSON.",
     )
     parser.add_argument(
@@ -220,7 +315,6 @@ def _parse() -> argparse.ArgumentParser:
         default=None,
         help="OpenAI API key (will override env var)",
     )
-    
     hparser.add_verbosity_arg(parser)
     return parser
 
@@ -230,16 +324,22 @@ def _main(parser: argparse.ArgumentParser) -> None:
     hdbg.init_logger(verbosity=args.log_level, use_exec_path=True)
     # Expand user/relative paths to absolute ones early to avoid surprises.
     secret_path = str(pathlib.Path(args.secret_path).expanduser().resolve())
-    markdown_folder_path = str(pathlib.Path(args.markdown_folder_path).expanduser().resolve())
+    markdown_folder_path = str(
+        pathlib.Path(args.markdown_folder_path).expanduser().resolve()
+    )
     _LOG.info("Reading sheet %s", args.sheet_url)
-    _LOG.info("TAB NAME IS %s", args.tab_name)
-    sheet_df = _read_google_sheet(args.sheet_url, args.tab_name,secret_path)
-    create_markdown_file(
+    sheet_df = _read_google_sheet(args.sheet_url, args.tab_name, secret_path)
+    file_githublinks_df = create_markdown_file(
         sheet_df,
         markdown_folder_path,
         args.max_projects,
     )
     _LOG.info("Done: %s", markdown_folder_path)
+    _LOG.info("Adding GitHub links to Project files to Google sheet")
+    print('SHAPE OF DF BEFORE WRITING TO GOOGLE SHEET IS',file_githublinks_df.shape)
+    _write_google_sheet(
+        file_githublinks_df, args.sheet_url, 'MSML610 Project Github Links', secret_path
+    )
 
 
 if __name__ == "__main__":
