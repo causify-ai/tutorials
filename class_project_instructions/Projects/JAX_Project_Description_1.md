@@ -1,21 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Prediction using JAX
+- **Title**: Predicting Air Quality Index (AQI) Using JAX
 
-- **Title**: Real-Time Bitcoin Price Prediction with JAX
-- **Difficulty**: 3
-- **Tech Description**: JAX is a high-performance numerical computing library that enables automatic differentiation and GPU/TPU acceleration. It is particularly well-suited for machine learning tasks that require complex mathematical operations and optimization.
-- **Project Idea**: Build a real-time Bitcoin price prediction model using JAX to forecast future prices based on historical price data and external factors (e.g., social media sentiment, trading volume). The model will leverage JAX's capabilities for efficient computation and optimization.
-- **Python libs**: 
-  - JAX
-  - NumPy
-  - Pandas
-  - Matplotlib (for visualization)
-  - Requests (for API calls)
-  - Scikit-learn (for preprocessing)
-  - TensorFlow Probability (for probabilistic modeling)
-- **Is it Free?**: Yes, JAX is an open-source library and free to use.
+- **Difficulty**: 2
+
+- **Tech Description**: JAX is utilized in this project for efficient numerical computing and automatic differentiation, enabling rapid experimentation with machine learning models for predicting air quality.
+
+- **Project Idea**: The goal of this project is to predict the Air Quality Index (AQI) based on historical weather data and pollution levels. By leveraging the OpenWeatherMap API, we will collect historical weather data (temperature, humidity, wind speed) alongside pollution data (PM2.5, PM10 levels) to train a regression model. The project will involve preprocessing the data, feature engineering, and using JAX to build a neural network model that predicts AQI levels. The model's performance will be evaluated using metrics such as Mean Absolute Error (MAE) and R-squared.
+
+- **Python libs**: JAX, NumPy, Pandas, Matplotlib, Scikit-learn, Requests
+
+- **Is it Free?**: Yes, both JAX and the OpenWeatherMap API (with limited access) are free to use.
+
 - **Relevant tool (JAX) related Resource Links**:
   - [JAX Documentation](https://jax.readthedocs.io/en/latest/)
-  - [JAX GitHub Repository](https://github.com/google/jax)
-  - [Real-Time Data Ingestion with JAX](https://towardsdatascience.com/real-time-data-ingestion-with-jax-5e4c8e2e3e1e)
-  - [JAX for Machine Learning](https://www.tensorflow.org/jax)
+  - [OpenWeatherMap API](https://openweathermap.org/api)
+  - [JAX Examples](https://github.com/google/jax/tree/main/examples)
 

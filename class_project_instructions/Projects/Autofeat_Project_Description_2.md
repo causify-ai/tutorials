@@ -1,29 +1,17 @@
-### Title
-Real-Time Bitcoin Anomaly Detection Using Autofeat
+**Title**: Predicting Housing Prices using Feature Engineering with Autofeat
 
-### Difficulty
-3
+**Difficulty**: 3
 
-### Tech Description
-Utilize Autofeat for feature engineering in a real-time Bitcoin transaction anomaly detection system, leveraging streaming data from multiple sources.
+**Tech Description**: Autofeat is utilized to automate the feature engineering process, generating new features from the existing dataset to enhance model performance for predicting housing prices.
 
-### Project Idea
-Develop a system that ingests real-time Bitcoin transaction data from various cryptocurrency exchanges and social media sentiment feeds. Use Autofeat to automatically engineer features that can help in identifying anomalies in transaction patterns, indicating potential fraud or market manipulation.
+**Project Idea**: This project aims to predict housing prices using a dataset sourced from the Kaggle Housing Prices competition. By leveraging Autofeat, we will automate the creation of new features from the raw dataset, including transformations and interactions between existing features. The goal is to build a robust regression model that not only predicts prices accurately but also demonstrates the effectiveness of automated feature engineering in improving predictive performance. The project will involve data cleaning, feature generation with Autofeat, and model training using popular regression algorithms.
 
-### Python libs
-- Autofeat
-- Pandas
-- NumPy
-- Scikit-learn
-- Streamlit (for real-time dashboard)
-- Requests (for API calls)
-- Tweepy (for Twitter data)
+**Python libs**: pandas, numpy, scikit-learn, Autofeat, matplotlib, seaborn
 
-### Is it Free?
-Yes, all listed Python libraries are open-source and free to use.
+**Is it Free?**: Yes
 
-### Relevant tool (Autofeat) related Resource Links
-- [Autofeat GitHub Repository](https://github.com/AutoFeat/AutoFeat)
+**Relevant tool (Autofeat) related Resource Links**:
+- [Autofeat GitHub Repository](https://github.com/supertux88/autofeat)
 - [Autofeat Documentation](https://autofeat.readthedocs.io/en/latest/)
-- [Feature Engineering with Autofeat](https://towardsdatascience.com/feature-engineering-with-autofeat-9c5c7a1b6e5d)
+- [Kaggle Housing Prices Dataset](https://www.kaggle.com/c/house-prices-advanced-regression-techniques)
 

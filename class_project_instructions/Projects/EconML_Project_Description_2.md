@@ -1,20 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Prediction using EconML
+**Title**: Evaluating the Impact of Online Reviews on Restaurant Success
 
-- **Title**: Real-Time Bitcoin Price Prediction with Causal Inference
-- **Difficulty**: 3
-- **Tech Description**: Utilize EconML to model the causal relationships affecting Bitcoin prices in real-time, incorporating external factors such as social media sentiment, trading volume, and macroeconomic indicators.
-- **Project Idea**: Develop a system that ingests real-time Bitcoin price data and external variables, applies causal inference techniques to identify key drivers of price changes, and predicts future price movements using machine learning models.
-- **Python libs**: 
-  - EconML
-  - pandas
-  - numpy
-  - scikit-learn
-  - requests (for data ingestion)
-  - matplotlib (for visualization)
-  - statsmodels (for statistical analysis)
-- **Is it Free?**: Yes, all mentioned libraries are open-source and free to use.
-- **Relevant tool (EconML) related Resource Links**: 
-  - [EconML Documentation](https://econml.azurewebsites.net/)
-  - [EconML GitHub Repository](https://github.com/microsoft/EconML)
-  - [EconML Tutorials](https://econml.azurewebsites.net/tutorials.html)
+**Difficulty**: 3
+
+**Tech Description**: EconML will be used to estimate the causal impact of online reviews on restaurant sales by leveraging observational data collected from review platforms and sales data.
+
+**Project Idea**: This project aims to analyze how online customer reviews influence the sales performance of restaurants. By scraping data from popular review websites like Yelp, we will gather information on restaurant ratings, review counts, and other relevant features. We will then use EconML to perform causal inference, estimating the effect of review ratings on sales using a machine learning approach. The goal is to provide actionable insights for restaurant owners on how to manage their online reputation effectively.
+
+**Python libs**: EconML, BeautifulSoup, Pandas, Scikit-learn, Matplotlib, Statsmodels
+
+**Is it Free?**: Yes, all libraries and data sources used in this project are free.
+
+**Relevant tool (EconML) related Resource Links**:
+- [EconML Documentation](https://econml.azurewebsites.net/)
+- [EconML GitHub Repository](https://github.com/microsoft/EconML)
+- [Causal Inference with Python](https://towardsdatascience.com/causal-inference-with-python-9b7e6f6d6f7e)
 

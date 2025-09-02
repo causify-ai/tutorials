@@ -1,28 +1,18 @@
-### Project Brief: Real-Time Bitcoin Anomaly Detection Using PySpark
+**Title**: Analyzing Global Air Quality Trends Using PySpark
 
-- **Difficulty:** 3 (Hard)
-  
-- **Tech Description:** 
-  Utilize PySpark for distributed data processing and real-time anomaly detection in Bitcoin transaction data. This project leverages streaming data sources to identify unusual patterns that may indicate fraud or market manipulation.
+**Difficulty**: 3
 
-- **Project Idea:** 
-  Build a real-time pipeline that ingests Bitcoin transaction data from various sources (e.g., public APIs, web scraping of cryptocurrency exchanges) and applies machine learning algorithms to detect anomalies in transaction amounts, frequency, and user behavior.
+**Tech Description**: PySpark will be utilized for distributed data processing and analysis of large-scale air quality datasets sourced from public APIs.
 
-- **Python libs:**
-  - PySpark
-  - Pandas
-  - Scikit-learn
-  - NumPy
-  - Matplotlib/Seaborn (for visualization)
-  - Requests (for API calls)
-  - Beautiful Soup (for web scraping)
+**Project Idea**: This project aims to analyze and visualize global air quality trends over the past decade by leveraging data from the OpenWeatherMap Air Pollution API. The unique goal is to identify patterns and anomalies in air pollution levels across different countries and cities, focusing on the correlation between air quality and public health indicators. By employing clustering techniques, we will categorize cities based on their air quality levels and analyze the temporal trends using time-series analysis. The results will provide insights into the effectiveness of environmental policies and public health initiatives.
 
-- **Is it Free?** 
-  Yes, PySpark and the associated libraries are open-source and free to use.
+**Python libs**: PySpark, requests, pandas, matplotlib, seaborn, scikit-learn
 
-- **Relevant tool (XYZ) related Resource Links:**
-  - [PySpark Documentation](https://spark.apache.org/docs/latest/api/python/)
-  - [Real-Time Data Processing with PySpark](https://towardsdatascience.com/real-time-data-processing-with-pyspark-9f8d4e1e8a5e)
-  - [Anomaly Detection Techniques in Python](https://towardsdatascience.com/anomaly-detection-techniques-in-python-1b3c9b6e8b5f)
-  - [Web Scraping with Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
+**Is it Free?**: Yes, the OpenWeatherMap API offers a free tier for accessing air quality data.
+
+**Relevant tool (XYZ) related Resource Links**:
+- [PySpark Documentation](https://spark.apache.org/docs/latest/api/python/index.html)
+- [OpenWeatherMap Air Pollution API](https://openweathermap.org/api/air-pollution)
+- [PySpark Clustering Techniques](https://spark.apache.org/docs/latest/ml-clustering.html)
+- [Time Series Analysis with PySpark](https://spark.apache.org/docs/latest/ml-time-series.html)
 

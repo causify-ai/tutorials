@@ -1,19 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Prediction with AutoGluon
+**Title**: Predicting Movie Ratings Using AutoGluon
 
-- **Title**: Real-Time Bitcoin Price Prediction using AutoGluon
-- **Difficulty**: 3
-- **Tech Description**: Utilize AutoGluon for automated machine learning to predict Bitcoin prices based on real-time market data and sentiment analysis from social media platforms.
-- **Project Idea**: Build a real-time data ingestion pipeline that collects Bitcoin price data from various exchanges and sentiment data from Twitter. Use AutoGluon to automatically train and optimize models for price prediction, integrating both numerical and textual data features.
-- **Python libs**: 
-  - `AutoGluon`
-  - `pandas`
-  - `numpy`
-  - `tweepy` (for Twitter API)
-  - `requests` (for fetching price data)
-  - `matplotlib` (for visualization)
-- **Is it Free?**: Yes, all mentioned libraries are open-source and free to use.
-- **Relevant tool (AutoGluon) related Resource Links**:
-  - [AutoGluon Documentation](https://auto.gluon.ai/stable/index.html)
-  - [AutoGluon GitHub Repository](https://github.com/awslabs/autogluon)
-  - [AutoGluon Examples](https://auto.gluon.ai/stable/tutorials/index.html)
+**Difficulty**: 2
+
+**Tech Description**: AutoGluon simplifies the process of building machine learning models by automating the selection and tuning of algorithms, making it ideal for predicting movie ratings from user reviews.
+
+**Project Idea**: This project aims to predict user ratings for movies based on their textual reviews using AutoGluon. By leveraging the IMDb dataset, which contains user reviews and corresponding ratings, we will preprocess the text data, extract features, and utilize AutoGluon to automatically train and evaluate various models. The goal is to achieve high accuracy in predicting ratings while demonstrating the effectiveness of AutoGluon in handling natural language processing tasks.
+
+**Python libs**: AutoGluon, pandas, numpy, scikit-learn, nltk
+
+**Is it Free?**: Yes
+
+**Relevant tool (XYZ) related Resource Links**: 
+- [AutoGluon Documentation](https://auto.gluon.ai/stable/index.html)
+- [IMDb Dataset on Kaggle](https://www.kaggle.com/datasets/ashishpatel26/imdb-dataset-of-50k-movie-reviews)
+- [Natural Language Toolkit (nltk) Documentation](https://www.nltk.org/)
 

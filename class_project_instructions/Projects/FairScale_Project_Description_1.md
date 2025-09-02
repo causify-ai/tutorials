@@ -1,23 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Prediction with FairScale
+**Title**: Enhancing Text Summarization with FairScale
 
-- **Title**: Scalable Real-Time Bitcoin Price Prediction using FairScale
-- **Difficulty**: 3
-- **Tech Description**: FairScale is a PyTorch extension library that provides tools for large-scale distributed training and model parallelism, enabling efficient training of deep learning models on large datasets.
-- **Project Idea**: Build a real-time Bitcoin price prediction model using deep learning techniques. Utilize FairScale for distributed training of a transformer-based model that ingests streaming data from multiple cryptocurrency exchanges via WebSocket APIs. The model will predict future price movements based on historical price data and market sentiment from social media.
-- **Python libs**: 
-  - `fairscale`
-  - `torch`
-  - `pandas`
-  - `numpy`
-  - `websocket-client`
-  - `transformers`
-  - `requests`
-  - `matplotlib`
-- **Is it Free?**: Yes, FairScale and the associated libraries are open-source and free to use.
-- **Relevant tool (FairScale) related Resource Links**:
-  - [FairScale GitHub Repository](https://github.com/facebookresearch/fairscale)
-  - [FairScale Documentation](https://fairscale.readthedocs.io/en/latest/)
-  - [WebSocket API for Cryptocurrency Data](https://docs.binance.com/en/api-reference/dex-api/)
+**Difficulty**: 3
 
-This project will challenge students to handle real-time data ingestion, distributed training, and the complexities of financial forecasting using advanced deep learning techniques.
+**Tech Description**: FairScale is utilized in this project to efficiently manage and scale the training of transformer-based models for text summarization, enabling the handling of larger datasets and more complex architectures.
+
+**Project Idea**: The goal of this project is to develop a scalable text summarization model that can process news articles from the News API and generate concise summaries. By leveraging FairScale, we will implement model parallelism and gradient accumulation to train a transformer model on a large corpus of news articles. The project will involve data collection through the News API, preprocessing the text data, and fine-tuning a pre-trained transformer model. The final output will be evaluated based on ROUGE scores to assess the quality of the generated summaries.
+
+**Python libs**: FairScale, Transformers, Requests, Pandas, NLTK, Scikit-learn
+
+**Is it Free?**: Yes, all libraries and the News API (with limited requests) are free to use.
+
+**Relevant tool (FairScale) related Resource Links**:
+- [FairScale GitHub Repository](https://github.com/facebookresearch/fairscale)
+- [FairScale Documentation](https://fairscale.readthedocs.io/en/latest/)
+- [News API Documentation](https://newsapi.org/docs/get-started)
 

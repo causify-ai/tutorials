@@ -1,19 +1,17 @@
-### Project Brief: Real-Time Anomaly Detection in Bitcoin Transactions Using tsfresh
+- **Title**: Predicting User Engagement on Social Media Posts
 
-- **Title**: Real-Time Anomaly Detection in Bitcoin Transactions
-- **Difficulty**: 3
-- **Tech Description**: Use tsfresh for feature extraction from time series data of Bitcoin transactions to identify anomalies in real-time.
-- **Project Idea**: Develop a system that ingests real-time Bitcoin transaction data, extracts relevant features using tsfresh, and applies machine learning models to detect fraudulent transactions or unusual patterns.
-- **Python libs**: 
-  - `tsfresh` for feature extraction
-  - `pandas` for data manipulation
-  - `numpy` for numerical operations
-  - `scikit-learn` for machine learning models
-  - `websocket-client` for real-time data ingestion
-- **Is it Free?**: Yes, all mentioned libraries are open-source and free to use.
-- **Relevant tool (XYZ) related Resource Links**:
+- **Difficulty**: 2
+
+- **Tech Description**: tsfresh is utilized to extract relevant features from time series data, specifically to analyze user engagement metrics over time.
+
+- **Project Idea**: This project aims to predict user engagement on social media posts (likes, shares, comments) using historical engagement data. By leveraging the Twitter API, we will gather time series data of user interactions with posts over a specified period. The extracted features from tsfresh will help in identifying patterns and trends that influence user engagement. The model will employ regression techniques to predict engagement metrics based on the features derived from the time series data, providing insights into effective social media strategies.
+
+- **Python libs**: tsfresh, pandas, numpy, scikit-learn, requests
+
+- **Is it Free?**: Yes, the Twitter API offers a free tier for data access, and all mentioned Python libraries are open-source.
+
+- **Relevant tool(tsfresh) related Resource Links**:
   - [tsfresh Documentation](https://tsfresh.readthedocs.io/en/latest/)
   - [tsfresh GitHub Repository](https://github.com/blue-yonder/tsfresh)
-  - [Real-Time Data Processing in Python](https://realpython.com/python-sockets/)
-  - [Anomaly Detection with tsfresh](https://towardsdatascience.com/anomaly-detection-in-time-series-with-tsfresh-8b7a2f6b5c1b)
+  - [Twitter API Documentation](https://developer.twitter.com/en/docs/twitter-api)
 

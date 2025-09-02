@@ -1,18 +1,17 @@
-### Project Brief: Real-Time Bitcoin Data Ingestion with OpenRefine
+**Title:** Enhancing Customer Segmentation with OpenRefine and Social Media Data
 
-- **Title**: Real-Time Bitcoin Transaction Data Cleaning and Analysis with OpenRefine
-- **Difficulty**: 3
-- **Tech Description**: OpenRefine is a powerful tool for working with messy data, allowing users to clean, transform, and analyze large datasets. It can be integrated with Python for enhanced data manipulation and real-time processing.
-- **Project Idea**: Ingest real-time Bitcoin transaction data from multiple sources (e.g., blockchain explorers, cryptocurrency exchanges) and use OpenRefine to clean and standardize the data. Analyze the cleaned data for trends, anomalies, or patterns in transaction volumes and values.
-- **Python libs**: 
-  - `requests` (for API calls)
-  - `pandas` (for data manipulation)
-  - `json` (for handling JSON data)
-  - `openrefine-py` (for interfacing with OpenRefine)
-- **Is it Free?**: Yes, OpenRefine is an open-source tool and is free to use.
-- **Relevant tool (OpenRefine) related Resource Links**:
-  - [OpenRefine Official Website](https://openrefine.org/)
-  - [OpenRefine GitHub Repository](https://github.com/OpenRefine/OpenRefine)
-  - [OpenRefine Documentation](https://docs.openrefine.org/)
-  - [OpenRefine Python Client](https://pypi.org/project/openrefine-py/)
+**Difficulty:** 2
+
+**Tech Description:** OpenRefine is utilized for data cleaning and transformation, allowing the integration of social media data into a structured format suitable for analysis.
+
+**Project Idea:** The goal of this project is to improve customer segmentation for a retail business by analyzing customer sentiment from social media platforms. Using OpenRefine, we will clean and preprocess tweets related to the brand, extracting relevant features such as sentiment scores, hashtags, and user engagement metrics. The cleaned data will then be used to perform clustering analysis, identifying distinct customer segments based on their sentiments and interactions. This will help the business tailor marketing strategies to different customer groups, enhancing customer engagement and satisfaction.
+
+**Python libs:** pandas, numpy, scikit-learn, tweepy, matplotlib, seaborn
+
+**Is it Free?** Yes, OpenRefine is free and open-source, and Twitter API access is available for free with limitations.
+
+**Relevant tool (OpenRefine) related Resource Links:**
+- [OpenRefine Official Documentation](https://openrefine.org/docs/)
+- [OpenRefine GitHub Repository](https://github.com/OpenRefine/OpenRefine)
+- [OpenRefine Tutorial on Data Cleaning](https://www.datacamp.com/community/tutorials/openrefine-tutorial)
 

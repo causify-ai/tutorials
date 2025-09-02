@@ -1,20 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Anomaly Detection Using DoWhy
+- **Title**: Causal Analysis of COVID-19 Vaccination Impact on Infection Rates
 
-- **Title**: Real-Time Anomaly Detection in Bitcoin Prices with Causal Inference
 - **Difficulty**: 3
-- **Tech Description**: Utilize DoWhy for causal inference to identify anomalies in real-time Bitcoin price data, integrating causal graphs to understand the relationships between price fluctuations and external factors (e.g., news sentiment, trading volume).
-- **Project Idea**: Develop a system that ingests real-time Bitcoin price data and external news sentiment, applies causal inference to detect anomalies, and visualizes the results. The project will focus on understanding how external factors influence Bitcoin price movements and identifying outliers.
-- **Python libs**: 
-  - `DoWhy` for causal inference
-  - `pandas` for data manipulation
-  - `numpy` for numerical operations
-  - `requests` for API calls
-  - `matplotlib`/`seaborn` for visualization
-  - `scikit-learn` for anomaly detection algorithms
-  - `nltk` or `TextBlob` for sentiment analysis
-- **Is it Free?**: Yes, all mentioned libraries are open-source and free to use.
-- **Relevant tool (DoWhy) related Resource Links**: 
+
+- **Tech Description**: DoWhy is utilized to establish causal relationships between COVID-19 vaccination rates and infection rates by leveraging observational data and causal inference techniques.
+
+- **Project Idea**: The goal of this project is to analyze the causal impact of COVID-19 vaccination rates on the subsequent infection rates across different regions. By using publicly available vaccination and infection data from health departments and the CDC, we will employ DoWhy to construct a causal graph and identify potential confounders. The analysis will involve performing sensitivity analysis to assess the robustness of the causal estimates. This project aims to provide insights into the effectiveness of vaccination campaigns and inform public health strategies.
+
+- **Python libs**: DoWhy, Pandas, NumPy, Matplotlib, Statsmodels, Requests
+
+- **Is it Free?**: Yes
+
+- **Relevant tool (DoWhy) related Resource Links**:
   - [DoWhy Documentation](https://microsoft.github.io/dowhy/)
+  - [Causal Inference with DoWhy - Medium Article](https://towardsdatascience.com/causal-inference-with-dowhy-9e6c5d9e5c2d)
   - [DoWhy GitHub Repository](https://github.com/microsoft/dowhy)
-  - [Causal Inference with DoWhy Tutorial](https://towardsdatascience.com/causal-inference-in-python-with-dowhy-5e3b8a2f0c3f)
 

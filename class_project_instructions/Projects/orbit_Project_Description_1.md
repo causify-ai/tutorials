@@ -1,29 +1,17 @@
-### Title
-Real-Time Bitcoin Price Anomaly Detection with Orbit
+- **Title**: Predicting Urban Air Quality Using Machine Learning
 
-### Difficulty
-3
+- **Difficulty**: 3
 
-### Tech Description
-Orbit is a probabilistic forecasting library designed for time series data, which can be effectively utilized for detecting anomalies in Bitcoin price movements through Bayesian modeling.
+- **Tech Description**: Orbit is utilized in this project to model time series data for predicting air quality metrics based on historical trends and external factors.
 
-### Project Idea
-Develop a real-time anomaly detection system that ingests Bitcoin price data from multiple sources (e.g., exchanges, news APIs) and uses Orbit to forecast expected price trends. The system will flag any significant deviations from the forecasted values as anomalies, providing insights into potential market manipulations or sudden shifts in investor sentiment.
+- **Project Idea**: The goal of this project is to predict urban air quality levels in real-time by analyzing historical air quality data combined with meteorological data. We will leverage the OpenWeatherMap API to gather weather data and the Air Quality Open Data Platform to obtain historical air quality metrics. Using Orbit, we will create a time series model that incorporates seasonality and trends to forecast future air quality levels. The project will also explore the impact of weather conditions on air quality, providing insights for urban planning and public health initiatives.
 
-### Python libs
-- Orbit
-- Pandas
-- NumPy
-- Matplotlib/Seaborn (for visualization)
-- Requests (for API calls)
-- Streamlit (for real-time dashboard)
+- **Python libs**: pandas, requests, Orbit, matplotlib, scikit-learn
 
-### Is it Free?
-Yes, Orbit is open-source and free to use.
+- **Is it Free?**: Yes, both the OpenWeatherMap API and the Air Quality Open Data Platform offer free access to their data.
 
-### Relevant tool (Orbit) related Resource Links
-- [Orbit Documentation](https://orbit.readthedocs.io/en/latest/)
-- [Orbit GitHub Repository](https://github.com/cambridge-ml/Orbit)
-- [Orbit Examples](https://orbit.readthedocs.io/en/latest/examples/index.html)
-- [Orbit for Time Series Forecasting](https://towardsdatascience.com/real-time-time-series-forecasting-with-orbit-5c8c1f8f5e7e)
+- **Relevant tool (Orbit) related Resource Links**: 
+  - [Orbit Documentation](https://orbit.readthedocs.io/en/latest/)
+  - [Orbit GitHub Repository](https://github.com/uber/orbit)
+  - [Orbit Examples](https://github.com/uber/orbit/tree/main/examples)
 

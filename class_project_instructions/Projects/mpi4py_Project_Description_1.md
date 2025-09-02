@@ -1,13 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Prediction Using mpi4py
+- **Title**: Distributed Anomaly Detection in Network Traffic Using mpi4py
 
-- **Title**: Distributed Real-Time Bitcoin Price Prediction with mpi4py
 - **Difficulty**: 3
-- **Tech Description**: Utilize mpi4py for parallel processing to ingest and analyze real-time Bitcoin price data from multiple sources, enhancing computational efficiency.
-- **Project Idea**: Build a distributed system that collects Bitcoin price data from various cryptocurrency exchanges in real-time, processes the data using parallel computing, and employs machine learning models to predict future price movements.
-- **Python libs**: mpi4py, pandas, NumPy, scikit-learn, requests, matplotlib
-- **Is it Free?**: Yes, mpi4py and the other libraries are open-source and free to use.
+
+- **Tech Description**: mpi4py is utilized to parallelize the anomaly detection process across multiple nodes, allowing for efficient processing of large volumes of network traffic data.
+
+- **Project Idea**: This project aims to develop a distributed anomaly detection system for identifying unusual patterns in network traffic data. By leveraging mpi4py, we will split the dataset across multiple processes to enhance the speed and efficiency of the analysis. The project will involve scraping real-time network traffic data from a public API, applying clustering algorithms to detect anomalies, and visualizing the results. The unique aspect of this project is the combination of distributed computing with real-time data processing, which can significantly improve the detection of potential security threats in network systems.
+
+- **Python libs**: mpi4py, scikit-learn, pandas, matplotlib, requests
+
+- **Is it Free?**: Yes
+
 - **Relevant tool (mpi4py) related Resource Links**:
   - [mpi4py Documentation](https://mpi4py.readthedocs.io/en/stable/)
   - [mpi4py GitHub Repository](https://github.com/mpi4py/mpi4py)
-  - [Real-Time Data Processing with mpi4py](https://towardsdatascience.com/real-time-data-processing-with-mpi4py-5c4e1c1e8e9c)
+  - [Distributed Computing with mpi4py Tutorial](https://towardsdatascience.com/distributed-computing-with-mpi4py-7a1d2f0e3f2c)
 

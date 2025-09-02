@@ -1,29 +1,17 @@
-### Title
-Real-Time Cryptocurrency Sentiment Analysis with Apache Arrow
+**Title**: Real-Time Sports Analytics Dashboard Using Apache Arrow
 
-### Difficulty
-3
+**Difficulty**: 3
 
-### Tech Description
-Utilize Apache Arrow (PyArrow) for efficient data handling and processing of real-time sentiment analysis data from social media platforms related to cryptocurrencies. 
+**Tech Description**: Apache Arrow (PyArrow) is utilized for efficient in-memory data processing and serialization, enabling real-time analytics on streaming sports data.
 
-### Project Idea
-Develop a system that ingests real-time tweets about Bitcoin, processes the sentiment using NLP techniques, and stores the results in a columnar format using Apache Arrow for efficient querying and analysis. This can help in predicting Bitcoin price movements based on public sentiment.
+**Project Idea**: This project aims to create a real-time sports analytics dashboard that leverages live data from a sports API (e.g., The Sports DB) to analyze player performance metrics during ongoing games. The goal is to implement a clustering algorithm that groups similar player performance profiles based on various statistics such as goals, assists, and minutes played. By employing Apache Arrow for handling high-velocity data streams, the dashboard will provide insights into player performance trends and help coaches make data-driven decisions during matches.
 
-### Python libs
-- PyArrow
-- Tweepy (for Twitter API)
-- NLTK or SpaCy (for NLP)
-- Pandas (for data manipulation)
-- FastAPI (for real-time API endpoints)
+**Python libs**: PyArrow, Pandas, NumPy, Scikit-learn, Matplotlib, Flask
 
-### Is it Free?
-Yes, all mentioned libraries and tools are open-source or free to use.
+**Is it Free?**: Yes, the libraries mentioned are free, and The Sports DB API offers free access to certain data.
 
-### Relevant tool (XYZ) related Resource Links
+**Relevant tool (XYZ) related Resource Links**:
 - [Apache Arrow Documentation](https://arrow.apache.org/docs/)
-- [PyArrow GitHub Repository](https://github.com/apache/arrow/tree/master/python/pyarrow)
-- [Tweepy Documentation](http://docs.tweepy.org/en/stable/)
-- [NLTK Documentation](https://www.nltk.org/)
-- [SpaCy Documentation](https://spacy.io/)
+- [The Sports DB API](https://www.thesportsdb.com/api.php)
+- [PyArrow GitHub Repository](https://github.com/apache/arrow)
 

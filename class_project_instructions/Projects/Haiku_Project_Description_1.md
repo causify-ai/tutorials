@@ -1,19 +1,17 @@
-### Project Brief: Real-Time Bitcoin Sentiment Analysis using Haiku
+- **Title**: Predicting Movie Success Using Social Media Sentiment Analysis
 
-- **Difficulty:** 3
-- **Tech Description:** Haiku is a flexible and powerful library for building neural networks in JAX, which allows for efficient training and inference of models. It is particularly well-suited for tasks involving complex data and real-time processing.
-- **Project Idea:** Develop a real-time sentiment analysis tool that ingests live Bitcoin-related tweets and performs sentiment classification using a neural network built with Haiku. The tool will visualize sentiment trends over time and correlate them with Bitcoin price movements.
-- **Python libs:** 
-  - Haiku
-  - JAX
-  - Tweepy (for Twitter API)
-  - Matplotlib/Plotly (for visualization)
-  - Pandas (for data manipulation)
-  - NLTK or Hugging Face Transformers (for text processing)
-- **Is it Free?** Yes, all mentioned libraries are open-source and free to use.
-- **Relevant tool (Haiku) related Resource Links:**
+- **Difficulty**: 3
+
+- **Tech Description**: Haiku is used to automate the model selection and hyperparameter tuning process for predicting movie success based on social media sentiment data.
+
+- **Project Idea**: This project aims to predict the box office success of movies by analyzing sentiment from social media platforms like Twitter. The unique goal is to correlate sentiment scores derived from tweets mentioning upcoming movies with their actual box office performance. By utilizing Haiku, we will streamline the process of selecting the best machine learning model and optimizing its parameters. The project will involve scraping Twitter data using Tweepy, performing sentiment analysis using the VADER sentiment analysis tool, and then applying regression techniques to predict box office revenues.
+
+- **Python libs**: Haiku, Tweepy, pandas, numpy, scikit-learn, VADER (nltk)
+
+- **Is it Free?**: Yes, all tools and libraries mentioned are free to use.
+
+- **Relevant tool (Haiku) related Resource Links**: 
   - [Haiku Documentation](https://haiku.readthedocs.io/en/latest/)
-  - [JAX Documentation](https://jax.readthedocs.io/en/latest/)
   - [Tweepy Documentation](https://docs.tweepy.org/en/stable/)
-  - [Hugging Face Transformers](https://huggingface.co/docs/transformers/index)
+  - [VADER Sentiment Analysis](https://github.com/cjhutto/vaderSentiment)
 

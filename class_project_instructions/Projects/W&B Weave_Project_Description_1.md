@@ -1,32 +1,17 @@
-### Title
-Real-Time Bitcoin Price Prediction Using W&B Weave
+**Title**: Anomaly Detection in E-commerce Transactions Using W&B Weave
 
-### Difficulty
-3
+**Difficulty**: 3
 
-### Tech Description
-Utilize W&B Weave for real-time data visualization and tracking of Bitcoin price predictions based on streaming data from various cryptocurrency exchanges. This project will involve building a predictive model that ingests live data, processes it, and visualizes the results dynamically.
+**Tech Description**: W&B Weave is utilized for visualizing and tracking the performance of machine learning models, specifically for anomaly detection in transaction data.
 
-### Project Idea
-- Ingest real-time Bitcoin price data from multiple cryptocurrency exchanges using WebSocket APIs.
-- Implement a time-series forecasting model to predict future Bitcoin prices.
-- Use W&B Weave to visualize the incoming data streams, model predictions, and performance metrics in real-time.
+**Project Idea**: This project aims to detect fraudulent transactions in e-commerce data by applying unsupervised anomaly detection techniques. We will leverage a publicly available dataset from the UCI Machine Learning Repository that contains transaction records. The goal is to identify unusual patterns that may indicate fraud. We will preprocess the data, apply clustering algorithms such as DBSCAN, and visualize the results using W&B Weave to track model performance and anomalies effectively. By analyzing the clusters, we can gain insights into transaction behaviors and improve fraud detection mechanisms.
 
-### Python libs
-- `websocket-client` (for real-time data ingestion)
-- `pandas` (data manipulation)
-- `numpy` (numerical operations)
-- `scikit-learn` (modeling)
-- `statsmodels` (time-series analysis)
-- `wandb` (for Weave integration)
-- `matplotlib` or `plotly` (for additional visualizations)
+**Python libs**: pandas, numpy, scikit-learn, matplotlib, seaborn, wandb
 
-### Is it Free?
-Yes, W&B Weave offers a free tier with basic functionalities.
+**Is it Free?**: Yes, W&B Weave offers a free tier for individual users.
 
-### Relevant tool (W&B Weave) related Resource Links
-- [Weights & Biases Documentation](https://docs.wandb.ai/)
-- [W&B Weave Overview](https://wandb.ai/site/weave)
-- [WebSocket API Documentation for Cryptocurrency Exchanges](https://docs.binance.com/en/api.html#websocket-market-streams)
-- [Time Series Forecasting with Python](https://towardsdatascience.com/time-series-forecasting-with-python-6a2d3f4f6f9a)
+**Relevant tool (W&B Weave) related Resource Links**:
+- [W&B Weave Documentation](https://docs.wandb.ai/guides/weave)
+- [W&B Weave GitHub Repository](https://github.com/wandb/weave)
+- [W&B Weave Tutorials](https://wandb.ai/learn/weave)
 

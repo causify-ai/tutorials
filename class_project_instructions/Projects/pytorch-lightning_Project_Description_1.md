@@ -1,13 +1,17 @@
-### Title: Real-Time Anomaly Detection in Cryptocurrency Transactions Using PyTorch Lightning
+**Title**: Predicting Air Quality Index Using PyTorch Lightning
 
-- **Difficulty:** 3
-- **Tech Description:** Utilize PyTorch Lightning to build and train a deep learning model for detecting anomalies in real-time cryptocurrency transaction data.
-- **Project Idea:** Develop a system that ingests real-time transaction data from multiple cryptocurrency exchanges, preprocesses it, and applies a recurrent neural network (RNN) to identify suspicious activities or anomalies in transaction patterns.
-- **Python libs:** PyTorch Lightning, Pandas, NumPy, Scikit-learn, Matplotlib, Requests, SQLAlchemy
-- **Is it Free?** Yes, all mentioned libraries are open-source and free to use.
-- **Relevant tool (XYZ) related Resource Links:**
-  - [PyTorch Lightning Documentation](https://pytorch-lightning.readthedocs.io/en/stable/)
-  - [PyTorch Lightning GitHub Repository](https://github.com/PyTorchLightning/pytorch-lightning)
-  - [Anomaly Detection with PyTorch](https://towardsdatascience.com/anomaly-detection-with-pytorch-5c8e1d9f3c9d)
-  - [Real-time Data Processing with Python](https://realpython.com/python-data-processing/)
+**Difficulty**: 2
+
+**Tech Description**: PyTorch Lightning is utilized to streamline the training of deep learning models for predicting the Air Quality Index (AQI) based on historical weather and pollution data.
+
+**Project Idea**: The goal of this project is to develop a regression model that predicts the Air Quality Index (AQI) for various cities based on historical weather data and pollution levels. We will use a dataset from the OpenWeatherMap API, which provides real-time weather data, and combine it with pollution data from the World Air Quality Index API. The model will be built using PyTorch Lightning to facilitate efficient training and validation processes. The final model will be evaluated on its ability to forecast AQI levels for the next week, providing valuable insights for urban planning and public health.
+
+**Python libs**: PyTorch Lightning, Pandas, NumPy, Scikit-learn, Requests, Matplotlib
+
+**Is it Free?**: Yes, both the OpenWeatherMap API and the World Air Quality Index API offer free tiers for accessing their data.
+
+**Relevant tool (XYZ) related Resource Links**:
+- [PyTorch Lightning Documentation](https://pytorch-lightning.readthedocs.io/en/stable/)
+- [OpenWeatherMap API](https://openweathermap.org/api)
+- [World Air Quality Index API](https://aqicn.org/json-api/doc/)
 

@@ -1,20 +1,17 @@
-### Title: Real-Time Bitcoin Price Prediction using Caffe
+**Title**: Image Classification of Urban Wildlife Using Caffe
 
-- **Difficulty:** 3
-- **Tech Description:** Caffe is a deep learning framework that excels in image classification and can be adapted for time series forecasting tasks such as predicting Bitcoin prices based on historical data and market sentiment.
-- **Project Idea:** Develop a convolutional neural network (CNN) model using Caffe to predict Bitcoin prices in real-time by ingesting data from multiple sources, including historical price data, social media sentiment, and news articles.
-- **Python libs:** 
-  - Caffe (with Python bindings)
-  - NumPy
-  - Pandas
-  - Requests (for data scraping)
-  - BeautifulSoup (for web scraping)
-  - Matplotlib (for visualization)
-  - Scikit-learn (for preprocessing)
-- **Is it Free?** Yes, Caffe is open-source and free to use.
-- **Relevant tool (Caffe) related Resource Links:**
-  - [Caffe GitHub Repository](https://github.com/BVLC/caffe)
-  - [Caffe Documentation](http://caffe.berkeleyvision.org/)
-  - [Caffe Python Tutorial](http://caffe.berkeleyvision.org/gathered/examples/python.html)
-  - [Caffe Model Zoo](http://caffe.berkeleyvision.org/model_zoo.html)
+**Difficulty**: 2
+
+**Tech Description**: Caffe is a deep learning framework that allows for efficient training and deployment of convolutional neural networks (CNNs) for image classification tasks.
+
+**Project Idea**: The goal of this project is to classify images of urban wildlife captured in various city parks using a pre-trained CNN model in Caffe. The dataset will be sourced from a public urban wildlife image repository, which includes various species such as birds, squirrels, and raccoons. The project will involve fine-tuning the pre-trained model on the specific urban wildlife dataset to improve classification accuracy. Additionally, the model will be evaluated using metrics such as accuracy and F1-score to assess its performance in distinguishing between different species.
+
+**Python libs**: Caffe, NumPy, OpenCV, Matplotlib, Scikit-learn
+
+**Is it Free?**: Yes, Caffe is an open-source framework and can be used freely.
+
+**Relevant tool (Caffe) related Resource Links**:
+- [Caffe GitHub Repository](https://github.com/BVLC/caffe)
+- [Caffe Documentation](http://caffe.berkeleyvision.org/)
+- [Urban Wildlife Image Dataset](https://www.urbanwildlife.org/dataset)
 

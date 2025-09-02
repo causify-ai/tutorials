@@ -1,30 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Prediction Using LiNGAM
+**Title**: Causal Discovery in Social Media Sentiment Analysis Using LiNGAM
 
-- **Title**: Causal Inference for Bitcoin Price Prediction with LiNGAM
+**Difficulty**: 3
 
-- **Difficulty**: 3
+**Tech Description**: LiNGAM (Linear Non-Gaussian Acyclic Model) is employed to uncover causal relationships between variables in social media sentiment data, allowing for the identification of factors influencing public opinion.
 
-- **Tech Description**: LiNGAM (Linear Non-Gaussian Acyclic Model) is a method for causal inference that allows for the identification of causal relationships in data, particularly useful in time series analysis. This project will leverage LiNGAM to predict Bitcoin prices based on various economic indicators and social media sentiment.
+**Project Idea**: This project aims to analyze sentiment from Twitter data regarding climate change and discover causal relationships between various factors such as media coverage, public events, and sentiment shifts. By utilizing the LiNGAM algorithm, we will model the causal structure of sentiment over time, identifying which external events significantly influence public perception. The project will involve data collection via the Twitter API, sentiment analysis using natural language processing, and causal inference to derive insights on how different factors affect public sentiment on climate change.
 
-- **Project Idea**: 
-  - Collect real-time Bitcoin price data and relevant economic indicators (e.g., interest rates, stock market indices) along with social media sentiment (e.g., Twitter data).
-  - Use LiNGAM to establish causal relationships between these variables and Bitcoin prices.
-  - Implement a forecasting model that predicts future Bitcoin prices based on identified causal factors.
+**Python libs**: pandas, numpy, tweepy, nltk, LiNGAM, matplotlib, seaborn
 
-- **Python libs**: 
-  - `lingam` (for causal inference)
-  - `pandas` (data manipulation)
-  - `numpy` (numerical operations)
-  - `scikit-learn` (machine learning)
-  - `tweepy` (Twitter API for sentiment analysis)
-  - `statsmodels` (statistical modeling)
-  - `matplotlib`/`seaborn` (visualization)
+**Is it Free?**: Yes, the Twitter API has a free tier, and all mentioned Python libraries are open-source.
 
-- **Is it Free?**: Yes, all mentioned libraries are open-source and free to use.
-
-- **Relevant tool (LiNGAM) related Resource Links**: 
-  - [LiNGAM GitHub Repository](https://github.com/py-causal/lingam)
-  - [LiNGAM Paper](https://www.jmlr.org/papers/volume13/shimizu12a/shimizu12a.pdf)
-  - [LiNGAM Documentation](https://lingam.readthedocs.io/en/latest/)
-  - [Causal Inference with LiNGAM](https://towardsdatascience
+**Relevant tool (LiNGAM) related Resource Links**:
+- [LiNGAM GitHub Repository](https://github.com/py-causal/lingam)
+- [LiNGAM Documentation](https://github.com/py-causal/lingam/blob/master/README.md)
+- [Research Paper on LiNGAM](https://www.jmlr.org/papers/volume12/shimizu11a/shimizu11a.pdf)
 

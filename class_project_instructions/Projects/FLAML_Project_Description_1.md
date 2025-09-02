@@ -1,30 +1,17 @@
-### Title
-Real-Time Anomaly Detection in Bitcoin Transactions using FLAML
+**Title**: Automated Hyperparameter Tuning for Customer Churn Prediction
 
-### Difficulty
-3
+**Difficulty**: 2
 
-### Tech Description
-FLAML (Fast and Lightweight AutoML) is an open-source library designed for automating machine learning tasks efficiently, focusing on low-cost model selection and hyperparameter tuning.
+**Tech Description**: FLAML (Fast Lightweight AutoML) is utilized in this project to automate the hyperparameter tuning process for a machine learning model aimed at predicting customer churn.
 
-### Project Idea
-Develop a real-time system that ingests Bitcoin transaction data from a blockchain explorer API, applies anomaly detection techniques to identify suspicious transactions, and utilizes FLAML for automated model selection and hyperparameter tuning.
+**Project Idea**: The goal of this project is to build a predictive model that identifies customers likely to churn based on their usage patterns and demographic information. We will use the publicly available Telco Customer Churn dataset from Kaggle, which includes features such as contract type, payment method, and service usage. FLAML will be employed to optimize the hyperparameters of a classification model, such as Random Forest or Gradient Boosting, to achieve the best performance in predicting churn. The project will also include an evaluation of model performance using metrics like accuracy, precision, and recall.
 
-### Python libs
-- FLAML
-- Pandas
-- NumPy
-- Requests
-- Scikit-learn
-- Matplotlib (for visualization)
-- Streamlit (for dashboard)
+**Python libs**: FLAML, pandas, scikit-learn, matplotlib, seaborn
 
-### Is it Free?
-Yes, FLAML and the associated libraries are open-source and free to use.
+**Is it Free?**: Yes
 
-### Relevant tool (XYZ) related Resource Links
+**Relevant tool (FLAML) related Resource Links**: 
 - [FLAML GitHub Repository](https://github.com/microsoft/FLAML)
 - [FLAML Documentation](https://flaml.readthedocs.io/en/latest/)
-- [Anomaly Detection Techniques](https://towardsdatascience.com/anomaly-detection-techniques-in-python-using-scikit-learn-1c0b7b5f6c9d)
-- [Bitcoin Transaction Data API](https://blockchain.info/api/blockchain_api)
+- [Kaggle Telco Customer Churn Dataset](https://www.kaggle.com/datasets/bertram25/telco-customer-churn)
 

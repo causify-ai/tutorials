@@ -1,31 +1,17 @@
-### Title
-Real-Time Bitcoin Price Prediction Using RLlib
+**Title:** Reinforcement Learning for Dynamic Pricing in E-commerce
 
-### Difficulty
-3
+**Difficulty:** 3
 
-### Tech Description
-Utilize RLlib, a scalable reinforcement learning library, to develop an agent that predicts Bitcoin prices in real-time based on market trends and historical data. The agent will learn optimal trading strategies through continuous interaction with the market environment.
+**Tech Description:** RLlib is utilized to implement reinforcement learning algorithms that optimize pricing strategies in real-time based on market demand and competitor pricing.
 
-### Project Idea
-- Build a reinforcement learning model to predict Bitcoin price movements and optimize trading strategies.
-- Use a custom environment that simulates real-time trading based on live market data.
-- Implement reward functions that incentivize profitable trades while minimizing risks.
+**Project Idea:** The goal of this project is to develop a dynamic pricing model for an e-commerce platform using reinforcement learning. By leveraging historical sales data and competitor pricing information obtained through web scraping, the model will learn to adjust prices in real-time to maximize revenue while maintaining customer satisfaction. The RL agent will explore various pricing strategies and receive feedback based on sales performance, allowing it to adapt and improve over time. This project will involve defining the state and action spaces, designing a reward function, and implementing the training loop using RLlib.
 
-### Python libs
-- RLlib (Ray)
-- NumPy
-- Pandas
-- Matplotlib
-- Requests (for API calls)
-- TensorFlow or PyTorch (for deep learning components)
+**Python libs:** RLlib, BeautifulSoup, Pandas, NumPy, Matplotlib
 
-### Is it Free?
-Yes, RLlib and the associated libraries are open-source and free to use.
+**Is it Free?** Yes, all the libraries mentioned are open-source and free to use.
 
-### Relevant tool (XYZ) related Resource Links
+**Relevant tool (RLlib) related Resource Links:**
 - [RLlib Documentation](https://docs.ray.io/en/latest/rllib/index.html)
-- [Ray GitHub Repository](https://github.com/ray-project/ray)
 - [Reinforcement Learning with RLlib](https://docs.ray.io/en/latest/rllib/rllib-tutorial.html)
-- [Bitcoin Historical Data API](https://www.coindesk.com/coindesk-api)
+- [Dynamic Pricing Strategies](https://towardsdatascience.com/dynamic-pricing-in-e-commerce-using-reinforcement-learning-5f3e8a8c4b5c)
 

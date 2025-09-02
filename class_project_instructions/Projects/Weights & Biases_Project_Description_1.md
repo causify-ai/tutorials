@@ -1,22 +1,18 @@
-### Project Brief: Real-time Bitcoin Price Prediction with Weights & Biases
+**Title:** Predicting Movie Success Using Social Media Sentiment Analysis
 
-- **Title**: Real-time Bitcoin Price Prediction using Weights & Biases
-- **Difficulty**: 3
-- **Tech Description**: Utilize Weights & Biases for tracking experiments and visualizing model performance while ingesting real-time Bitcoin price data from multiple sources.
-- **Project Idea**: Build a predictive model that forecasts Bitcoin prices based on real-time data ingestion from various cryptocurrency exchanges and news sentiment analysis. Use Weights & Biases to monitor and optimize hyperparameters, visualize results, and compare multiple model architectures.
-- **Python libs**: 
-  - `requests` (for API calls)
-  - `pandas` (data manipulation)
-  - `numpy` (numerical operations)
-  - `scikit-learn` (machine learning)
-  - `tensorflow` or `pytorch` (deep learning)
-  - `wandb` (Weights & Biases integration)
-  - `nltk` or `transformers` (for sentiment analysis)
-- **Is it Free?**: Weights & Biases offers a free tier with limited features; additional features require a paid plan.
-- **Relevant tool (Weights & Biases) related Resource Links**:
-  - [Weights & Biases Documentation](https://docs.wandb.ai/)
-  - [Weights & Biases GitHub Repository](https://github.com/wandb/wandb)
-  - [Weights & Biases for Machine Learning](https://wandb.ai/)
+**Difficulty:** 2
 
-This project combines real-time data ingestion, predictive modeling, and experiment tracking, making it a complex and comprehensive application of data science principles.
+**Tech Description:** Weights & Biases will be utilized for tracking experiments and visualizing model performance while analyzing the impact of social media sentiment on movie success.
+
+**Project Idea:** The goal of this project is to predict the box office success of upcoming movies based on sentiment analysis of social media posts (e.g., Twitter) related to the movies. By collecting tweets using the Twitter API, we will perform sentiment analysis using Natural Language Processing (NLP) techniques to classify tweets as positive, negative, or neutral. We will then correlate these sentiments with box office performance data from a public dataset. The project will involve building a regression model to predict box office earnings based on the sentiment scores, release date, and genre of the movies, while using Weights & Biases for experiment tracking and hyperparameter tuning.
+
+**Python libs:** Tweepy, TextBlob, pandas, scikit-learn, matplotlib, Weights & Biases
+
+**Is it Free?** Yes, both the Twitter API (with limitations) and Weights & Biases (free tier available) can be used without cost.
+
+**Relevant tool (XYZ) related Resource Links:**
+- [Weights & Biases Documentation](https://docs.wandb.ai/)
+- [Twitter API Documentation](https://developer.twitter.com/en/docs/twitter-api)
+- [TextBlob Documentation](https://textblob.readthedocs.io/en/dev/)
+- [Sentiment Analysis with TextBlob](https://realpython.com/python-nltk-nlp/)
 

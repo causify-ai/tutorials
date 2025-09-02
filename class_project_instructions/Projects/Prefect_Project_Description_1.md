@@ -1,31 +1,18 @@
-### Title
-Real-Time Bitcoin Price Anomaly Detection with Prefect
+**Title**: Predicting Restaurant Success Using Customer Reviews
 
-### Difficulty
-3
+**Difficulty**: 2
 
-### Tech Description
-Utilize Prefect for orchestrating real-time data ingestion and processing workflows to detect anomalies in Bitcoin price movements using streaming data sources.
+**Tech Description**: Prefect is used to orchestrate data workflows, allowing for the seamless extraction, transformation, and loading (ETL) of customer review data from a web API into a machine learning model for analysis.
 
-### Project Idea
-- Ingest real-time Bitcoin price data from multiple cryptocurrency exchanges using WebSocket APIs.
-- Implement anomaly detection algorithms to identify unusual price spikes or drops.
-- Visualize detected anomalies in a dashboard for monitoring and alerts.
+**Project Idea**: This project aims to predict the success of restaurants based on customer reviews and ratings. By utilizing the Yelp API, we will gather customer reviews and ratings for various restaurants. The project will involve preprocessing the text data, performing sentiment analysis to quantify customer satisfaction, and then using these insights to build a classification model that predicts whether a restaurant will be successful based on its reviews. The workflow will be managed with Prefect to ensure that data extraction and model training are efficiently executed.
 
-### Python libs
-- Prefect
-- WebSocket-client
-- Pandas
-- NumPy
-- Scikit-learn (for anomaly detection)
-- Matplotlib/Plotly (for visualization)
+**Python libs**: Prefect, requests, pandas, scikit-learn, nltk, TextBlob
 
-### Is it Free?
-Yes, Prefect offers a free tier for orchestration, and the other libraries are open-source.
+**Is it Free?**: Yes, the Yelp API has a free tier for accessing data.
 
-### Relevant tool (Prefect) related Resource Links
+**Relevant tool (XYZ) related Resource Links**:
 - [Prefect Documentation](https://docs.prefect.io/)
-- [Prefect GitHub Repository](https://github.com/PrefectHQ/prefect)
-- [Prefect Blog](https://www.prefect.io/blog/)
-- [Real-time Data Ingestion with Prefect](https://docs.prefect.io/core/concepts/flows/)
+- [Yelp API Documentation](https://www.yelp.com/developers/documentation/v3/getting_started)
+- [TextBlob Documentation](https://textblob.readthedocs.io/en/dev/)
+- [NLTK Documentation](https://www.nltk.org/)
 

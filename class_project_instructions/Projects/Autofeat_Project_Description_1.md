@@ -1,19 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Prediction using Autofeat
+**Title**: Automated Feature Engineering for Predicting Housing Prices
 
-- **Title**: Real-Time Bitcoin Price Prediction with Autofeat
-- **Difficulty**: 3
-- **Tech Description**: Autofeat is an automated feature engineering tool that simplifies the process of generating new features from existing datasets, enhancing model performance without extensive manual intervention.
-- **Project Idea**: Build a real-time Bitcoin price prediction system that ingests live market data and news sentiment analysis, leveraging Autofeat to create predictive features from both structured and unstructured data sources.
-- **Python libs**: 
-  - `pandas` for data manipulation
-  - `requests` for API calls
-  - `Autofeat` for feature engineering
-  - `scikit-learn` for model training
-  - `nltk` or `spaCy` for natural language processing
-  - `matplotlib` or `plotly` for visualization
-- **Is it Free?**: Yes, Autofeat is open-source and free to use.
-- **Relevant tool (Autofeat) related Resource Links**:
-  - [Autofeat GitHub Repository](https://github.com/AutoFeat/AutoFeat)
-  - [Autofeat Documentation](https://autofeat.readthedocs.io/en/latest/)
-  - [Feature Engineering with Autofeat Tutorial](https://towardsdatascience.com/feature-engineering-with-autofeat-9c6e1e8c7c7d)
+**Difficulty**: 2
+
+**Tech Description**: Autofeat is utilized in this project to automatically generate new features from the existing dataset, enhancing the predictive power of machine learning models for housing price prediction.
+
+**Project Idea**: The goal of this project is to predict housing prices using a dataset from the Kaggle Housing Prices competition. By leveraging Autofeat, we will automate the feature engineering process, creating new features from the existing ones, such as interactions and polynomial features. The method will involve data preprocessing, applying Autofeat to generate features, and then training a regression model to predict house prices. The project will also include model evaluation using metrics like RMSE and R² to assess the effectiveness of the generated features.
+
+**Python libs**: pandas, numpy, scikit-learn, Autofeat, matplotlib, seaborn
+
+**Is it Free?**: Yes
+
+**Relevant tool (Autofeat) related Resource Links**:
+- [Autofeat GitHub Repository](https://github.com/AutoFeat/AutoFeat)
+- [Kaggle Housing Prices Dataset](https://www.kaggle.com/c/house-prices-advanced-regression-techniques/data)
+- [Autofeat Documentation](https://autofeat.readthedocs.io/en/latest/)
 

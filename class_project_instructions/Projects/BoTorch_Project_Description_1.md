@@ -1,31 +1,17 @@
-### Title
-Real-Time Bitcoin Price Optimization using BoTorch
+**Title**: Optimizing Marketing Campaigns with Bayesian Optimization
 
-### Difficulty
-3
+**Difficulty**: 3
 
-### Tech Description
-BoTorch is a library built on PyTorch for Bayesian optimization, allowing users to optimize expensive-to-evaluate functions efficiently. It is particularly useful for hyperparameter tuning and optimizing complex systems.
+**Tech Description**: BoTorch is utilized for Bayesian optimization, allowing us to efficiently tune hyperparameters for marketing campaign strategies based on historical performance data.
 
-### Project Idea
-Develop a real-time Bitcoin price prediction and optimization system that utilizes BoTorch to optimize trading strategies based on historical price data and market indicators. The system will ingest live Bitcoin price data and use Bayesian optimization to fine-tune parameters of a trading model, maximizing returns while minimizing risks.
+**Project Idea**: The goal of this project is to optimize marketing campaign parameters (such as budget allocation, target demographics, and channel selection) to maximize customer engagement and conversion rates. We will collect historical campaign performance data from a public API, such as the Facebook Marketing API, to analyze the effectiveness of various strategies. Using BoTorch, we will implement a Bayesian optimization framework to explore and identify the best combination of parameters that lead to improved campaign outcomes. This approach not only enhances decision-making but also minimizes the costs associated with trial-and-error methods.
 
-### Python libs
-- BoTorch
-- PyTorch
-- Pandas
-- NumPy
-- Requests
-- Matplotlib (for visualization)
-- Scikit-learn (for preprocessing)
+**Python libs**: BoTorch, PyTorch, Pandas, NumPy, Matplotlib, Requests
 
-### Is it Free?
-Yes, BoTorch and the associated libraries are open-source and free to use.
+**Is it Free?**: Yes, BoTorch and the required libraries are open-source and free to use. Access to the Facebook Marketing API is also free within certain usage limits.
 
-### Relevant tool (XYZ) related Resource Links
+**Relevant tool (BoTorch) related Resource Links**:
 - [BoTorch Documentation](https://botorch.org/)
-- [BoTorch GitHub Repository](https://github.com/pytorch/botorch)
-- [Bayesian Optimization with BoTorch](https://botorch.org/tutorials/intro.html)
-- [PyTorch Official Site](https://pytorch.org/)
-- [Real-Time Bitcoin Data APIs](https://www.coingecko.com/en/api)
+- [Facebook Marketing API Documentation](https://developers.facebook.com/docs/marketing-apis/)
+- [Bayesian Optimization with BoTorch Tutorial](https://botorch.org/tutorials/bayesian_optimization.html)
 

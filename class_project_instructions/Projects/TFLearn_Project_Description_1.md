@@ -1,33 +1,17 @@
-### Title
-Real-Time Bitcoin Price Prediction using TFLearn
+**Title**: Predicting Air Quality Index (AQI) Using TFLearn
 
-### Difficulty
-3
+**Difficulty**: 2
 
-### Tech Description
-Utilize TFLearn, a high-level library built on TensorFlow, to create a deep learning model for predicting Bitcoin prices based on real-time data ingestion and historical trends.
+**Tech Description**: TFLearn is used to build and train deep learning models for predicting air quality based on historical pollution data and meteorological factors.
 
-### Project Idea
-- Ingest real-time Bitcoin price data from multiple sources (e.g., exchanges, news sentiment) using WebSocket APIs.
-- Preprocess the data to create time-series features.
-- Build a recurrent neural network (RNN) model with TFLearn to predict future Bitcoin prices.
-- Implement a feedback loop to continuously update the model with new data.
+**Project Idea**: The goal of this project is to predict the Air Quality Index (AQI) for various cities using a deep learning model built with TFLearn. The dataset will be sourced from the OpenWeatherMap API, which provides historical weather data and pollution levels. By preprocessing the data to extract relevant features such as temperature, humidity, and pollutant concentrations, we will train a neural network to forecast future AQI values. This project will also include a visualization component to display the predicted AQI trends over time, helping to raise awareness about air quality issues.
 
-### Python libs
-- TFLearn
-- NumPy
-- Pandas
-- WebSocket-client
-- Matplotlib (for visualization)
-- Scikit-learn (for preprocessing)
+**Python libs**: TFLearn, Pandas, NumPy, Matplotlib, Requests, Scikit-learn
 
-### Is it Free?
-Yes, TFLearn and the other mentioned libraries are open-source and free to use.
+**Is it Free?**: Yes, OpenWeatherMap offers a free tier for accessing their API.
 
-### Relevant tool (XYZ) related Resource Links
+**Relevant tool (TFLearn) related Resource Links**:
 - [TFLearn Documentation](http://tflearn.org/)
-- [WebSocket-client Documentation](https://pypi.org/project/websocket-client/)
-- [NumPy Documentation](https://numpy.org/doc/)
-- [Pandas Documentation](https://pandas.pydata.org/docs/)
-- [Real-time Data Ingestion with WebSockets](https://realpython.com/python-sockets/)
+- [OpenWeatherMap API Documentation](https://openweathermap.org/api)
+- [TFLearn GitHub Repository](https://github.com/tflearn/tflearn)
 

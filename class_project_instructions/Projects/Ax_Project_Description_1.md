@@ -1,26 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Prediction with Ax
-
-- **Title**: Real-Time Bitcoin Price Prediction using Ax for Hyperparameter Optimization
+- **Title**: Predicting Restaurant Success Using Customer Reviews
 
 - **Difficulty**: 3
 
-- **Tech Description**: Ax is a platform for adaptive experimentation that allows for efficient hyperparameter tuning and optimization of machine learning models. It integrates seamlessly with various data sources and can facilitate real-time decision-making processes.
+- **Tech Description**: Ax is utilized to optimize hyperparameters for a machine learning model that predicts restaurant success based on customer review sentiments and ratings.
 
-- **Project Idea**: Build a real-time Bitcoin price prediction model that ingests live market data and uses Ax for hyperparameter optimization to enhance the model's predictive accuracy. The project will involve scraping data from multiple cryptocurrency exchanges, implementing a forecasting model, and optimizing its parameters dynamically.
+- **Project Idea**: This project aims to predict the success of restaurants by analyzing customer reviews from the Yelp API. The unique goal is to identify key features that contribute to a restaurant's popularity and profitability. By employing natural language processing (NLP) techniques, we will extract sentiment scores from the reviews and combine them with metadata such as location and cuisine type. The model will be optimized using Ax to determine the best hyperparameters for a classification algorithm that predicts whether a restaurant will thrive or fail based on its reviews.
 
-- **Python libs**: 
-  - Ax (for optimization)
-  - Requests (for data scraping)
-  - Pandas (for data manipulation)
-  - Scikit-learn (for modeling)
-  - Matplotlib/Seaborn (for visualization)
-  - Flask (for creating a web interface)
+- **Python libs**: pandas, numpy, requests, nltk, scikit-learn, Ax
 
-- **Is it Free?**: Yes, Ax is open-source and free to use.
+- **Is it Free?**: Yes, the Yelp API has a free tier for accessing data.
 
-- **Relevant tool (Ax) related Resource Links**:
+- **Relevant tool (Ax) related Resource Links**: 
   - [Ax Documentation](https://ax.dev/docs/)
-  - [Ax GitHub Repository](https://github.com/facebook/Ax)
-  - [Ax Examples](https://ax.dev/docs/examples)
-  - [Real-time Data Scraping with Python](https://realpython.com/python-web-scraping-practical-introduction/)
+  - [Yelp API Documentation](https://www.yelp.com/developers/documentation/v3/getting_started)
+  - [NLP with NLTK](https://www.nltk.org/)
 

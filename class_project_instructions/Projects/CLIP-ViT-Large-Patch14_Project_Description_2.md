@@ -1,27 +1,18 @@
-### Project Brief: Real-Time Cryptocurrency Sentiment Analysis
+- **Title**: Visual Sentiment Analysis of Restaurant Reviews
 
-- **Title:** Real-Time Sentiment Analysis for Cryptocurrency Market Prediction
+- **Difficulty**: 3
 
-- **Difficulty:** 3
+- **Tech Description**: CLIP-ViT-Large-Patch14 is utilized to extract visual features from images associated with restaurant reviews, which are then combined with text features for sentiment classification.
 
-- **Tech Description:** Utilize a combination of web scraping, natural language processing (NLP), and machine learning for real-time sentiment analysis of cryptocurrency-related news articles and social media posts to predict price movements.
+- **Project Idea**: This project aims to analyze the sentiment of restaurant reviews by leveraging both textual data and images posted by customers. The unique approach involves using the CLIP-ViT-Large-Patch14 model to extract visual embeddings from images of food and restaurant environments. These embeddings will be combined with textual embeddings derived from the reviews themselves. A multi-modal classification model will be trained to predict the overall sentiment (positive, negative, neutral) based on this combined feature set. The goal is to uncover how visual elements influence customer sentiment and enhance the understanding of customer experiences.
 
-- **Project Idea:** Develop a system that scrapes news articles and social media feeds (e.g., Twitter) for sentiment analysis related to various cryptocurrencies. Use CLIP-ViT-Large-Patch14 for image and text embeddings to analyze the sentiment and correlate it with real-time price changes of cryptocurrencies like Bitcoin and Ethereum.
+- **Python libs**: PyTorch, Hugging Face Transformers, scikit-learn, NumPy, Pandas, Matplotlib
 
-- **Python libs:**
-  - `BeautifulSoup` / `Scrapy` (for web scraping)
-  - `Tweepy` (for Twitter API integration)
-  - `transformers` (for CLIP model)
-  - `pandas` (for data manipulation)
-  - `scikit-learn` (for modeling)
-  - `matplotlib` / `seaborn` (for visualization)
+- **Is it Free?**: Yes, all tools and libraries mentioned are open-source and free to use.
 
-- **Is it Free?** Yes, the libraries mentioned are open-source and free to use, though API access may have limitations.
-
-- **Relevant tool (XYZ) related Resource Links:**
-  - [CLIP Documentation](https://huggingface.co/docs/transformers/model_doc/clip)
-  - [Twitter API Documentation](https://developer.twitter.com/en/docs/twitter-api)
-  - [BeautifulSoup Documentation](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
-  - [Scrapy Documentation](https://docs.scrapy.org/en/latest/)
+- **Relevant tool (CLIP-ViT-Large-Patch14) related Resource Links**:
+  - [CLIP on GitHub](https://github.com/openai/CLIP)
+  - [Hugging Face CLIP Documentation](https://huggingface.co/docs/transformers/model_doc/clip)
+  - [PyTorch Documentation](https://pytorch.org/docs/stable/index.html)
   - [Scikit-learn Documentation](https://scikit-learn.org/stable/documentation.html)
 

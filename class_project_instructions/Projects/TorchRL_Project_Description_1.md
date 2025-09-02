@@ -1,31 +1,17 @@
-### Title
-Real-Time Bitcoin Price Prediction with Reinforcement Learning using TorchRL
+**Title**: Reinforcement Learning for Personalized News Recommendation
 
-### Difficulty
-3
+**Difficulty**: 3
 
-### Tech Description
-Utilize TorchRL, a reinforcement learning library, to develop an agent that predicts Bitcoin price movements based on real-time market data and historical trends.
+**Tech Description**: TorchRL will be utilized to implement reinforcement learning algorithms that dynamically adapt to user preferences for news articles based on their interactions.
 
-### Project Idea
-- Create a reinforcement learning agent that interacts with a simulated trading environment.
-- The agent will learn to make buy/sell/hold decisions based on real-time Bitcoin price data and technical indicators.
-- Implement reward mechanisms based on profit/loss to optimize the agent's trading strategy.
+**Project Idea**: The goal of this project is to develop a personalized news recommendation system using reinforcement learning techniques. By leveraging user interaction data from a news API, the system will learn to recommend articles that align with individual user interests. The project will involve creating an environment where users can interact with news articles, and the RL agent will optimize recommendations based on feedback (e.g., clicks, reading time). The system will be evaluated on its ability to improve user engagement over time, using metrics such as click-through rates and user satisfaction scores.
 
-### Python libs
-- TorchRL
-- Pandas
-- NumPy
-- Matplotlib
-- Requests (for data ingestion)
-- Gym (for creating the trading environment)
+**Python libs**: TorchRL, requests, pandas, NumPy, Matplotlib, scikit-learn
 
-### Is it Free?
-Yes, TorchRL and the associated libraries are open-source and free to use.
+**Is it Free?**: Yes, all libraries and the news API used are free.
 
-### Relevant tool (XYZ) related Resource Links
+**Relevant tool (TorchRL) related Resource Links**:
 - [TorchRL Documentation](https://pytorch.org/rl/)
+- [TorchRL GitHub Repository](https://github.com/pytorch/rl)
 - [Reinforcement Learning with PyTorch](https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html)
-- [Bitcoin Historical Data API](https://www.coindesk.com/coindesk-api/)
-- [Creating Custom Environments with OpenAI Gym](https://gym.openai.com/docs/)
 

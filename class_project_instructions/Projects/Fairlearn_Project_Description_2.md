@@ -1,19 +1,17 @@
-### Project Brief: Real-Time Cryptocurrency Sentiment Analysis Using Fairlearn
+**Title**: Fairness in Credit Scoring Models
 
-- **Title**: Real-Time Cryptocurrency Sentiment Analysis with Fairlearn
-- **Difficulty**: 3
-- **Tech Description**: This project leverages Fairlearn to ensure fairness in a machine learning model that predicts cryptocurrency price movements based on real-time sentiment analysis from social media platforms like Twitter.
-- **Project Idea**: Build a pipeline that ingests real-time tweets related to Bitcoin, processes the text data for sentiment analysis, and predicts whether the price will rise or fall. Use Fairlearn to mitigate bias in predictions across different demographic groups of Twitter users.
-- **Python libs**: 
-  - `tweepy` (for Twitter API access)
-  - `nltk` or `spaCy` (for natural language processing)
-  - `scikit-learn` (for machine learning models)
-  - `fairlearn` (for fairness in ML)
-  - `pandas` (for data manipulation)
-  - `matplotlib` or `seaborn` (for visualization)
-- **Is it Free?**: Yes, all mentioned libraries are open-source, but Twitter API access may have limitations based on usage tiers.
-- **Relevant tool (Fairlearn) related Resource Links**:
-  - [Fairlearn Documentation](https://fairlearn.org/)
-  - [Fairlearn GitHub Repository](https://github.com/fairlearn/fairlearn)
-  - [Fairness in Machine Learning: A Tutorial](https://fairlearn.org/overview.html)
+**Difficulty**: 2
+
+**Tech Description**: Fairlearn will be utilized to assess and mitigate bias in credit scoring models, ensuring equitable treatment across different demographic groups.
+
+**Project Idea**: The goal of this project is to develop a credit scoring model using a publicly available dataset while ensuring fairness in predictions. We will leverage the UCI Credit Card Default dataset to train a classification model predicting the likelihood of default. By applying Fairlearn, we will analyze potential biases in the model's predictions based on sensitive attributes such as gender and income. The project will involve implementing techniques like re-weighting and post-processing to mitigate any identified biases, ultimately leading to a fairer credit scoring system.
+
+**Python libs**: Fairlearn, scikit-learn, pandas, NumPy, matplotlib
+
+**Is it Free?**: Yes
+
+**Relevant tool (Fairlearn) related Resource Links**:
+- [Fairlearn Documentation](https://fairlearn.org/)
+- [Fairness in Machine Learning: A Survey](https://arxiv.org/abs/1908.09635)
+- [UCI Credit Card Default Dataset](https://archive.ics.uci.edu/ml/datasets/default+of+credit+card+clients)
 

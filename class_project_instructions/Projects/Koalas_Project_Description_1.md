@@ -1,20 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Prediction with Koalas
+**Title**: Analyzing Global Air Quality Trends Using Koalas
 
-- **Title**: Real-Time Bitcoin Price Prediction using Koalas
-- **Difficulty**: 3
-- **Tech Description**: Utilize Koalas to leverage the power of Apache Spark for scalable data processing while integrating real-time Bitcoin price data from multiple sources for predictive modeling.
-- **Project Idea**: Build a real-time Bitcoin price prediction system that ingests streaming data from cryptocurrency exchanges and social media sentiment analysis. Use Koalas to handle large datasets efficiently and implement machine learning models for forecasting price movements.
-- **Python libs**: 
-  - Koalas
-  - PySpark
-  - Requests (for API calls)
-  - Pandas (for data manipulation)
-  - Scikit-learn (for modeling)
-  - NLTK or TextBlob (for sentiment analysis)
-- **Is it Free?**: Yes, Koalas and the associated libraries are open-source and free to use.
-- **Relevant tool (Koalas) related Resource Links**:
-  - [Koalas Documentation](https://koalas.readthedocs.io/en/latest/)
-  - [Koalas GitHub Repository](https://github.com/databricks/koalas)
-  - [Apache Spark Documentation](https://spark.apache.org/docs/latest/)
-  - [Real-Time Data Processing with PySpark](https://spark.apache.org/docs/latest/streaming-programming-guide.html)
+**Difficulty**: 2
+
+**Tech Description**: Koalas is used to provide a pandas-like API on top of Apache Spark, enabling efficient handling of large-scale air quality datasets for analysis and visualization.
+
+**Project Idea**: The goal of this project is to analyze and visualize global air quality trends over the past decade using publicly available air quality data from the OpenAQ API. We will retrieve data on various pollutants such as PM2.5, PM10, and NO2 from different cities worldwide. The project will involve cleaning and preprocessing the data with Koalas, followed by clustering cities based on their air quality patterns using K-means clustering. Finally, we will visualize the results to identify regions with the most significant air quality issues and trends over time.
+
+**Python libs**: Koalas, Pandas, Matplotlib, Scikit-learn, Requests
+
+**Is it Free?**: Yes
+
+**Relevant tool (Koalas) related Resource Links**:
+- [Koalas Documentation](https://koalas.readthedocs.io/en/latest/)
+- [OpenAQ API Documentation](https://docs.openaq.org/)
+- [K-means Clustering in Scikit-learn](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html)
 

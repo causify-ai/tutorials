@@ -1,19 +1,17 @@
-### Project Brief: Real-Time Bitcoin Sentiment Analysis and Prediction Using DoWhy
+**Title**: Causal Impact Analysis of Climate Change on Crop Yields
 
-- **Title**: Real-Time Bitcoin Sentiment Analysis with Causal Inference
-- **Difficulty**: 3
-- **Tech Description**: Utilize DoWhy for causal inference to analyze the impact of social media sentiment on Bitcoin price movements. This involves scraping real-time tweets, analyzing sentiment, and determining causal relationships.
-- **Project Idea**: Develop a system that ingests real-time Twitter data related to Bitcoin, performs sentiment analysis, and uses DoWhy to identify causal relationships between sentiment and Bitcoin price changes. The objective is to predict future price movements based on sentiment shifts.
-- **Python libs**: 
-  - `tweepy` (for Twitter API access)
-  - `textblob` or `vaderSentiment` (for sentiment analysis)
-  - `pandas` (for data manipulation)
-  - `numpy` (for numerical calculations)
-  - `DoWhy` (for causal inference)
-  - `matplotlib` or `seaborn` (for visualization)
-- **Is it Free?**: Yes, all mentioned libraries are open-source and free to use.
-- **Relevant tool (DoWhy) related Resource Links**:
-  - [DoWhy Documentation](https://microsoft.github.io/dowhy/)
-  - [DoWhy GitHub Repository](https://github.com/microsoft/dowhy)
-  - [Causal Inference with DoWhy Tutorial](https://microsoft.github.io/dowhy/_notebooks/DoWhy_Tutorial.html)
+**Difficulty**: 3
+
+**Tech Description**: DoWhy is utilized in this project to identify and estimate causal relationships between climate variables and agricultural outputs, allowing for robust causal inference.
+
+**Project Idea**: This project aims to analyze the causal impact of climate change factors, such as temperature and precipitation, on crop yields using historical agricultural data. By leveraging the DoWhy library, we will construct a causal graph to identify key variables and their relationships, then apply causal inference methods to estimate the effect of climate variables on crop yields. The project will involve data collection from publicly available climate and agriculture datasets, followed by rigorous statistical analysis to derive actionable insights for policymakers and farmers.
+
+**Python libs**: DoWhy, pandas, statsmodels, matplotlib, seaborn
+
+**Is it Free?**: Yes
+
+**Relevant tool (DoWhy) related Resource Links**:
+- [DoWhy Documentation](https://microsoft.github.io/dowhy/)
+- [Causal Inference with DoWhy Tutorial](https://towardsdatascience.com/causal-inference-with-dowhy-6c8c0e6d5d0d)
+- [Causal Impact Analysis Case Study](https://www.microsoft.com/en-us/research/publication/causal-impact-analysis-using-dowhy/)
 

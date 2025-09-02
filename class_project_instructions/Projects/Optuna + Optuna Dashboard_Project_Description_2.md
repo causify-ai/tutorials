@@ -1,21 +1,17 @@
-### Project Brief: Real-Time Cryptocurrency Price Prediction using Optuna and Optuna Dashboard
+**Title**: Hyperparameter Optimization for Time Series Forecasting of Energy Consumption
 
-- **Title**: Real-Time Cryptocurrency Price Prediction with Hyperparameter Optimization
-- **Difficulty**: 3
-- **Tech Description**: Utilize Optuna for hyperparameter tuning of machine learning models that predict real-time cryptocurrency prices based on historical and social media sentiment data. Use Optuna Dashboard for visualization and analysis of optimization results.
-- **Project Idea**: Develop a predictive model that ingests real-time cryptocurrency market data and social media sentiment (e.g., tweets) to forecast price movements. Implement Optuna for optimizing model hyperparameters and visualize the tuning process with the Optuna Dashboard.
-- **Python libs**: 
-  - `Optuna` (for hyperparameter optimization)
-  - `pandas` (for data manipulation)
-  - `numpy` (for numerical computations)
-  - `scikit-learn` (for machine learning models)
-  - `tweepy` (for Twitter API integration)
-  - `matplotlib` or `plotly` (for data visualization)
-  - `requests` (for real-time market data API calls)
-- **Is it Free?**: Yes, all listed libraries and tools are open-source or free to use.
-- **Relevant tool (XYZ) related Resource Links**:
-  - [Optuna Documentation](https://optuna.readthedocs.io/en/stable/)
-  - [Optuna Dashboard Guide](https://optuna.readthedocs.io/en/stable/tutorial/10_key_features/002_dashboard.html)
-  - [Tweepy Documentation](https://docs.tweepy.org/en/stable/)
-  - [Scikit-learn Documentation](https://scikit-learn.org/stable/documentation.html)
+**Difficulty**: 3
+
+**Tech Description**: Optuna is utilized for efficient hyperparameter optimization of machine learning models, while the Optuna Dashboard provides real-time visualization of the optimization process.
+
+**Project Idea**: The goal of this project is to optimize the hyperparameters of a recurrent neural network (RNN) model for forecasting energy consumption based on historical data. Using the UCI Machine Learning Repository's "Individual household electric power consumption" dataset, we will preprocess the time series data and define an RNN architecture. Optuna will be employed to tune hyperparameters such as learning rate, number of layers, and hidden units. The Optuna Dashboard will visualize the optimization process, allowing us to analyze the impact of different hyperparameter configurations on the model's performance.
+
+**Python libs**: Optuna, TensorFlow/Keras, Pandas, NumPy, Matplotlib
+
+**Is it Free?**: Yes
+
+**Relevant tool (Optuna) related Resource Links**:
+- [Optuna Documentation](https://optuna.readthedocs.io/en/stable/)
+- [Optuna GitHub Repository](https://github.com/optuna/optuna)
+- [Optuna Dashboard Documentation](https://optuna.readthedocs.io/en/stable/tutorial/tutorial.html#visualization)
 

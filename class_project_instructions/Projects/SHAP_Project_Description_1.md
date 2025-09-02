@@ -1,19 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Prediction with SHAP
+**Title**: Enhancing Customer Segmentation with SHAP for E-commerce Insights
 
-- **Title**: Enhancing Bitcoin Price Predictions with SHAP for Feature Importance Analysis
-- **Difficulty**: 3
-- **Tech Description**: Utilize SHAP (SHapley Additive exPlanations) to interpret the predictions of a complex machine learning model (e.g., LSTM or XGBoost) trained on real-time Bitcoin price data. This project emphasizes understanding feature contributions to model predictions.
-- **Project Idea**: Build a real-time Bitcoin price prediction model that ingests data from multiple sources (e.g., cryptocurrency exchanges, social media sentiment, and economic indicators) and uses SHAP to explain the model's predictions. The goal is to analyze how different features influence price movements.
-- **Python libs**: 
-  - `pandas` (data manipulation)
-  - `numpy` (numerical operations)
-  - `requests` (API calls for real-time data)
-  - `xgboost` or `tensorflow` (modeling)
-  - `shap` (model interpretation)
-  - `matplotlib` or `seaborn` (visualization)
-- **Is it Free?**: Yes, all mentioned libraries are open-source and free to use.
-- **Relevant tool (SHAP) related Resource Links**:
-  - [SHAP Documentation](https://shap.readthedocs.io/en/latest/)
-  - [SHAP GitHub Repository](https://github.com/slundberg/shap)
-  - [Understanding SHAP Values](https://towardsdatascience.com/understanding-shap-values-using-python-1e7b6d2c4f8c)
+**Difficulty**: 2
+
+**Tech Description**: SHAP (SHapley Additive exPlanations) is utilized in this project to interpret the output of a clustering model, providing insights into the features that drive customer segments in an e-commerce dataset.
+
+**Project Idea**: The goal of this project is to enhance customer segmentation in the e-commerce domain by applying clustering techniques and interpreting the results using SHAP values. We will use the publicly available "Online Retail" dataset from the UCI Machine Learning Repository, which contains transactional data for a UK-based online retailer. After preprocessing the data, we will implement a clustering algorithm (e.g., K-Means) to identify distinct customer segments. Subsequently, SHAP will be employed to analyze the impact of various features (such as purchase frequency, average order value, and product categories) on the clustering results, allowing for actionable insights into customer behavior and preferences.
+
+**Python libs**: pandas, numpy, scikit-learn, shap, matplotlib, seaborn
+
+**Is it Free?**: Yes
+
+**Relevant tool (SHAP) related Resource Links**: 
+- [SHAP Documentation](https://shap.readthedocs.io/en/latest/)
+- [SHAP GitHub Repository](https://github.com/slundberg/shap)
+- [UCI Machine Learning Repository - Online Retail Dataset](https://archive.ics.uci.edu/ml/datasets/Online+Retail)
 

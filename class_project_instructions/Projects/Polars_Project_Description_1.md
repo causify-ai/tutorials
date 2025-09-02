@@ -1,28 +1,17 @@
-### Title
-Real-Time Bitcoin Price Anomaly Detection with Polars
+**Title**: Anomaly Detection in E-commerce Transactions Using Polars
 
-### Difficulty
-3
+**Difficulty**: 2
 
-### Tech Description
-Polars is a fast DataFrame library designed for high-performance data manipulation and analysis, particularly suited for large datasets. It allows for efficient data processing and is optimized for parallel execution.
+**Tech Description**: Polars is utilized for efficient data manipulation and analysis, enabling fast processing of large datasets to identify anomalies in transaction records.
 
-### Project Idea
-Develop a real-time Bitcoin price anomaly detection system that ingests live price data from multiple cryptocurrency exchanges. Use Polars to efficiently process and analyze the data, identifying significant price deviations that may indicate market manipulation or other anomalies.
+**Project Idea**: This project aims to detect fraudulent transactions in an e-commerce dataset by applying anomaly detection techniques. The dataset will be sourced from the publicly available "E-commerce Transactions" dataset on Kaggle, which contains transaction records with various features such as transaction amount, time, and user details. Using Polars, we will preprocess the data for speed and efficiency, then apply Isolation Forest or Local Outlier Factor algorithms to identify outliers indicative of fraudulent activity. The goal is to create a robust model that can flag suspicious transactions in real-time, enhancing security measures for online retailers.
 
-### Python libs
-- Polars
-- Requests (for API calls)
-- NumPy (for numerical operations)
-- Matplotlib/Seaborn (for visualization)
-- Scikit-learn (for anomaly detection algorithms)
+**Python libs**: Polars, Scikit-learn, Matplotlib, Seaborn
 
-### Is it Free?
-Yes, Polars and the mentioned libraries are open-source and free to use.
+**Is it Free?**: Yes
 
-### Relevant tool (XYZ) related Resource Links
+**Relevant tool (XYZ) related Resource Links**:
 - [Polars Documentation](https://pola.rs/)
-- [Polars GitHub Repository](https://github.com/pola-rs/polars)
-- [Polars Examples](https://pola.rs/py-polars/html/user-guide/index.html)
-- [Real-time Data Ingestion with Python](https://realpython.com/python-web-scraping-practical-introduction/)
+- [Kaggle E-commerce Transactions Dataset](https://www.kaggle.com/datasets/carrie1/ecommerce-data)
+- [Scikit-learn Anomaly Detection](https://scikit-learn.org/stable/modules/outlier_detection.html)
 

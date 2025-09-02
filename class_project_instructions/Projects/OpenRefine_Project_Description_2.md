@@ -1,14 +1,17 @@
-### Project Brief: Real-Time Bitcoin Sentiment Analysis using OpenRefine
+**Title**: Data Quality Improvement for E-commerce Product Listings Using OpenRefine
 
-- **Title**: Real-Time Bitcoin Sentiment Analysis from Social Media using OpenRefine  
-- **Difficulty**: 3  
-- **Tech Description**: OpenRefine is a powerful tool for data cleaning and transformation, which can be leveraged to preprocess and analyze large datasets from social media platforms in real-time.  
-- **Project Idea**: Ingest real-time tweets about Bitcoin, clean and transform the data using OpenRefine, and perform sentiment analysis to gauge public sentiment towards Bitcoin.  
-- **Python libs**: Tweepy (for Twitter API), Pandas (for data manipulation), TextBlob or VADER (for sentiment analysis), OpenRefine-Py (to interact with OpenRefine from Python).  
-- **Is it Free?**: Yes, OpenRefine is free and open-source; however, Twitter API access may have limitations based on usage.  
-- **Relevant tool (OpenRefine) related Resource Links**:  
-  - [OpenRefine Official Documentation](https://docs.openrefine.org/)  
-  - [OpenRefine GitHub Repository](https://github.com/OpenRefine/OpenRefine)  
-  - [OpenRefine Tutorials](https://openrefine.org/docs/tutorials.html)  
-  - [Using OpenRefine with Python](https://medium.com/@james.wang/openrefine-and-python-a-perfect-match-4f0b4f4c5e2e)  
+**Difficulty**: 2
+
+**Tech Description**: OpenRefine is utilized to clean, transform, and enrich e-commerce product data, ensuring consistency and accuracy across various attributes.
+
+**Project Idea**: The goal of this project is to enhance the quality of e-commerce product listings by identifying and rectifying inconsistencies in product attributes such as names, prices, and categories. The project will involve scraping product data from a popular e-commerce website using BeautifulSoup and then using OpenRefine to clean and standardize this data. Key tasks will include deduplication, correcting misspellings, and normalizing category names. The cleaned dataset will be analyzed to generate insights on product trends and pricing strategies.
+
+**Python libs**: BeautifulSoup, pandas, requests
+
+**Is it Free?**: Yes, all tools and libraries used in this project are free.
+
+**Relevant tool (OpenRefine) related Resource Links**:
+- [OpenRefine Official Documentation](https://docs.openrefine.org/)
+- [OpenRefine GitHub Repository](https://github.com/OpenRefine/OpenRefine)
+- [OpenRefine Tutorial Videos](https://www.youtube.com/playlist?list=PLh9b1F7b2e9W7gkD7a1zW9g4t5k4g6H7n)
 

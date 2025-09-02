@@ -1,30 +1,17 @@
-### Title
-Real-Time Anomaly Detection in Bitcoin Transactions using tsfresh
+**Title**: Predicting Energy Consumption Patterns Using Time Series Feature Extraction
 
-### Difficulty
-3
+**Difficulty**: 2
 
-### Tech Description
-Utilize tsfresh for extracting relevant features from time-series data of Bitcoin transactions to detect anomalies in real-time.
+**Tech Description**: tsfresh is utilized to automatically extract relevant features from time series data, which are then used to build predictive models for energy consumption forecasting.
 
-### Project Idea
-- Ingest real-time Bitcoin transaction data from a streaming source (e.g., WebSocket API).
-- Use tsfresh to extract time-series features from the transaction data.
-- Implement an anomaly detection model to identify suspicious transactions based on the extracted features.
+**Project Idea**: This project aims to predict energy consumption patterns in residential buildings by analyzing historical energy usage data. We will collect time series data from the Open Power System Data API, which provides free access to energy consumption statistics. Using tsfresh, we will extract a variety of features from the time series data, such as trends, seasonality, and autocorrelations. These features will then be used to train a regression model to forecast future energy consumption, helping homeowners and energy providers optimize energy usage and reduce costs.
 
-### Python libs
-- `tsfresh` for feature extraction
-- `pandas` for data manipulation
-- `numpy` for numerical operations
-- `scikit-learn` for machine learning models
-- `websocket-client` for real-time data ingestion
-- `matplotlib` for visualization
+**Python libs**: tsfresh, pandas, scikit-learn, requests, matplotlib
 
-### Is it Free?
-Yes, all mentioned libraries are open-source and free to use.
+**Is it Free?**: Yes
 
-### Relevant tool (XYZ) related Resource Links
+**Relevant tool(tsfresh) related Resource Links**:
 - [tsfresh Documentation](https://tsfresh.readthedocs.io/en/latest/)
-- [tsfresh GitHub Repository](https://github.com/blue-yonder/tsfresh)
-- [Anomaly Detection with tsfresh](https://tsfresh.readthedocs.io/en/latest/text/usage.html#anomaly-detection)
+- [Open Power System Data API](https://open-power-system-data.org/) 
+- [Feature Extraction with tsfresh](https://towardsdatascience.com/feature-extraction-with-tsfresh-9b9c2b6c2e4f)
 

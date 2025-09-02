@@ -1,19 +1,17 @@
-### Project Brief: Real-Time Anomaly Detection in Bitcoin Transactions Using Opacus
+**Title**: Privacy-Preserving Sentiment Analysis on Social Media Data
 
-- **Title**: Privacy-Preserving Anomaly Detection in Bitcoin Transactions
-- **Difficulty**: 3
-- **Tech Description**: Opacus is a library for training PyTorch models with differential privacy. It allows for the implementation of privacy-preserving machine learning models, ensuring that sensitive data remains confidential while still enabling effective learning.
-- **Project Idea**: Develop a system to detect anomalous transactions in real-time from Bitcoin transaction data while preserving user privacy. Utilize Opacus to train a neural network model that identifies unusual transaction patterns indicative of fraud or money laundering.
-- **Python libs**:
-  - Opacus
-  - PyTorch
-  - Pandas
-  - NumPy
-  - Matplotlib (for visualization)
-  - Requests (for data ingestion)
-- **Is it Free?**: Yes, Opacus and the associated libraries are open-source and free to use.
-- **Relevant tool (Opacus) related Resource Links**:
-  - [Opacus Documentation](https://opacus.ai/)
-  - [Opacus GitHub Repository](https://github.com/pytorch/opacus)
-  - [Differential Privacy in Machine Learning](https://pytorch.org/tutorials/advanced/dp_tutorial.html)
+**Difficulty**: 3
+
+**Tech Description**: Opacus is utilized to implement differential privacy in a sentiment analysis model, ensuring that individual user data remains confidential while still allowing for meaningful insights from aggregated data.
+
+**Project Idea**: The goal of this project is to perform sentiment analysis on tweets related to a specific topic (e.g., climate change) while ensuring the privacy of the users' data. By leveraging the Twitter API, we will collect real-time tweets and preprocess the text data. Using Opacus, we will train a deep learning model (like a LSTM or transformer) with differential privacy techniques to protect user information. The project will evaluate the model's performance in terms of sentiment classification accuracy and privacy guarantees, demonstrating the balance between data utility and user privacy.
+
+**Python libs**: Opacus, Tweepy, PyTorch, Pandas, NLTK, Scikit-learn
+
+**Is it Free?**: Yes, all tools and libraries mentioned are free to use.
+
+**Relevant tool (Opacus) related Resource Links**:
+- [Opacus Documentation](https://opacus.ai/)
+- [Differential Privacy in Machine Learning](https://pytorch.org/tutorials/advanced/dp_tutorial.html)
+- [Tweepy Documentation](https://docs.tweepy.org/en/stable/)
 

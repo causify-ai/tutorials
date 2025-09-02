@@ -1,19 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Prediction using PEFT
+**Title**: Enhancing Customer Segmentation with PEFT and E-commerce Data
 
-- **Title**: Real-Time Bitcoin Price Prediction with PEFT
-- **Difficulty**: 3
-- **Tech Description**: PEFT (Parameter-Efficient Fine-Tuning) is a technique that allows for efficient model training on limited data by fine-tuning only a subset of parameters in pre-trained models. This project will leverage PEFT to enhance a transformer model for predicting Bitcoin prices based on real-time data.
-- **Project Idea**: Develop a real-time Bitcoin price prediction system that ingests streaming data from multiple cryptocurrency exchanges, processes it, and predicts future prices using a fine-tuned transformer model. The system will utilize PEFT to adapt the model efficiently to the specific nuances of Bitcoin price movements.
-- **Python libs**: 
-  - `transformers` (for model handling)
-  - `pandas` (for data manipulation)
-  - `numpy` (for numerical operations)
-  - `requests` (for API calls)
-  - `streamlit` (for real-time dashboard)
-  - `PEFT` (for parameter-efficient fine-tuning)
-- **Is it Free?**: Yes, all mentioned libraries are open-source and free to use.
-- **Relevant tool (PEFT) related Resource Links**:
-  - [PEFT GitHub Repository](https://github.com/huggingface/peft)
-  - [Transformers Documentation](https://huggingface.co/docs/transformers/index)
-  - [Streamlit Documentation](https://docs.streamlit.io/library)
+**Difficulty**: 2
+
+**Tech Description**: PEFT (Parameter-Efficient Fine-Tuning) is utilized to adapt pre-trained transformer models to specific customer segmentation tasks, allowing for efficient model training with limited data.
+
+**Project Idea**: This project aims to enhance customer segmentation in the e-commerce domain by leveraging user behavior data from a public e-commerce API. The goal is to classify customers into distinct segments based on their purchasing patterns and browsing history. By employing PEFT, we can fine-tune a pre-trained transformer model to capture nuanced patterns in customer behavior, leading to more accurate segmentation. The project will involve data collection via the API, preprocessing, and applying the fine-tuned model to identify segments, ultimately providing insights for targeted marketing strategies.
+
+**Python libs**: requests, pandas, scikit-learn, torch, transformers, matplotlib
+
+**Is it Free?**: Yes, the e-commerce API and the libraries mentioned are free to use.
+
+**Relevant tool (PEFT) related Resource Links**:
+- [PEFT GitHub Repository](https://github.com/huggingface/peft)
+- [Hugging Face Transformers Documentation](https://huggingface.co/docs/transformers/index)
+- [E-commerce API Documentation](https://developer.ecommerceapi.com/docs) (example API)
 

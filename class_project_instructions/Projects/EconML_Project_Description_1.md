@@ -1,20 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Impact Analysis Using EconML
+- **Title**: Evaluating the Impact of Remote Work on Employee Productivity Using Causal Inference
 
-- **Title**: Causal Impact Analysis of News Sentiment on Bitcoin Prices
 - **Difficulty**: 3
-- **Tech Description**: Utilize EconML to estimate the causal effect of news sentiment on Bitcoin price fluctuations by integrating real-time news data and Bitcoin price feeds.
-- **Project Idea**: Develop a system that ingests real-time news articles related to Bitcoin, analyzes the sentiment using NLP techniques, and applies causal inference methods to determine how these sentiments impact Bitcoin prices over time.
-- **Python libs**: 
-  - `EconML` for causal inference
-  - `newspaper3k` for news scraping
-  - `nltk` or `transformers` for sentiment analysis
-  - `pandas` for data manipulation
-  - `matplotlib` or `seaborn` for visualization
-  - `requests` for API calls
-- **Is it Free?**: Yes, all mentioned libraries are open-source and free to use.
+
+- **Tech Description**: EconML is utilized to estimate the causal effects of remote work on employee productivity by leveraging observational data and advanced econometric techniques.
+
+- **Project Idea**: This project aims to analyze how the shift to remote work during the COVID-19 pandemic has affected employee productivity across various industries. By using data from the American Time Use Survey (ATUS) and integrating it with company performance metrics, we will apply causal inference methods to estimate the impact of remote work on productivity levels. The project will involve data preprocessing, feature engineering, and the application of EconML's causal estimators to derive insights that can inform future workplace policies.
+
+- **Python libs**: EconML, pandas, NumPy, statsmodels, matplotlib, seaborn
+
+- **Is it Free?**: Yes
+
 - **Relevant tool (EconML) related Resource Links**:
   - [EconML Documentation](https://econml.azurewebsites.net/)
   - [EconML GitHub Repository](https://github.com/microsoft/EconML)
-  - [Causal Inference with EconML](https://towardsdatascience.com/causal-inference-with-econml-8e9c4e9c5b3f)
-  - [Sentiment Analysis with NLP](https://realpython.com/natural-language-processing-spacy-python/)
+  - [American Time Use Survey (ATUS) Data](https://www.bls.gov/tus/)
 

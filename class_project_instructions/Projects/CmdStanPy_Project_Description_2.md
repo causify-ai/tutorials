@@ -1,32 +1,17 @@
-### Title
-Real-Time Anomaly Detection in Bitcoin Transactions Using CmdStanPy
+**Title**: Bayesian Inference for Predicting Movie Ratings
 
-### Difficulty
-3
+**Difficulty**: 3
 
-### Tech Description
-Utilize CmdStanPy for Bayesian modeling to detect anomalies in Bitcoin transaction data in real-time. This involves building a probabilistic model to identify unusual patterns that may indicate fraudulent activities or market anomalies.
+**Tech Description**: CmdStanPy is utilized for performing Bayesian inference using Stan, allowing for the estimation of complex models and uncertainty quantification in predictions.
 
-### Project Idea
-- Ingest real-time Bitcoin transaction data from multiple sources (e.g., blockchain APIs, web scraping from crypto exchanges).
-- Use CmdStanPy to build and fit a Bayesian model that can identify anomalies based on transaction volume, frequency, and value.
-- Implement a monitoring system that alerts users when anomalies are detected, providing insights into potential fraud or market shifts.
+**Project Idea**: The goal of this project is to predict movie ratings based on user reviews and metadata using a Bayesian hierarchical model. By scraping data from the MovieLens dataset, which includes user ratings, movie genres, and user demographics, we will apply Bayesian inference to model the uncertainty in ratings. The project will involve preprocessing the data, defining a hierarchical model in Stan, and using CmdStanPy to fit the model and generate predictions. The final output will include posterior distributions of the predicted ratings, providing insights into the uncertainty of the predictions.
 
-### Python libs
-- CmdStanPy
-- Pandas
-- NumPy
-- Requests (for API calls)
-- BeautifulSoup (for web scraping)
-- Matplotlib/Seaborn (for visualization)
-- Flask (for creating a web interface for alerts)
+**Python libs**: CmdStanPy, Pandas, NumPy, Matplotlib, Scikit-learn, BeautifulSoup
 
-### Is it Free?
-Yes, CmdStanPy and the associated libraries are open-source and free to use.
+**Is it Free?**: Yes
 
-### Relevant tool (CmdStanPy) related Resource Links
-- [CmdStanPy Documentation](https://cmdstanpy.readthedocs.io/en/stable/)
-- [Stan User's Guide](https://mc-stan.org/users/documentation/)
-- [Real-Time Data Processing with Python](https://realpython.com/python-data-processing/)
-- [Anomaly Detection with Bayesian Methods](https://towardsdatascience.com/anomaly-detection-with-bayesian-methods-in-python-9c8c1c5e5b5c)
+**Relevant tool (CmdStanPy) related Resource Links**:
+- [CmdStanPy Documentation](https://cmdstanpy.readthedocs.io/en/latest/)
+- [MovieLens Dataset](https://grouplens.org/datasets/movielens/)
+- [Bayesian Data Analysis with CmdStanPy](https://mc-stan.org/users/documentation/cmdstanpy)
 

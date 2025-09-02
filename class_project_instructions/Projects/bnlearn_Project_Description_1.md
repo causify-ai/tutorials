@@ -1,32 +1,17 @@
-### Title
-Real-Time Bitcoin Price Prediction Using Bayesian Networks
+**Title**: Predicting Customer Churn in Subscription Services Using Bayesian Networks
 
-### Difficulty
-3
+**Difficulty**: 3
 
-### Tech Description
-Utilize the `bnlearn` library to create a Bayesian Network model for predicting Bitcoin prices based on real-time market data and sentiment analysis from social media.
+**Tech Description**: bnlearn is utilized to construct and analyze Bayesian networks for understanding the dependencies between customer features and their likelihood of churn.
 
-### Project Idea
-- Ingest real-time Bitcoin price data from multiple cryptocurrency exchanges.
-- Scrape social media platforms (e.g., Twitter) for sentiment analysis related to Bitcoin.
-- Construct a Bayesian Network using `bnlearn` to model the relationships between market indicators and sentiment.
-- Predict future Bitcoin prices and assess the impact of sentiment on price fluctuations.
+**Project Idea**: This project aims to predict customer churn in subscription-based services by leveraging a Bayesian network model. The dataset will be sourced from a publicly available customer churn dataset, which includes features such as customer demographics, subscription details, and usage patterns. By applying bnlearn, we will create a probabilistic model that captures the relationships between these features and churn probability. The goal is to identify key factors that influence customer retention and provide actionable insights for improving customer engagement strategies.
 
-### Python libs
-- `bnlearn`
-- `pandas`
-- `requests` (for API calls)
-- `BeautifulSoup` (for web scraping)
-- `nltk` (for sentiment analysis)
-- `matplotlib` (for visualization)
+**Python libs**: bnlearn, pandas, numpy, scikit-learn, matplotlib, seaborn
 
-### Is it Free?
-Yes, all mentioned libraries are open-source and free to use.
+**Is it Free?**: Yes
 
-### Relevant tool (XYZ) related Resource Links
+**Relevant tool (bnlearn) related Resource Links**:
 - [bnlearn Documentation](https://pgmpy.org/)
-- [Bayesian Networks in Python](https://towardsdatascience.com/bayesian-networks-in-python-using-bnlearn-5f3e1f1e3b8f)
-- [Real-time Data Ingestion with Python](https://realpython.com/python-web-scraping-practical-introduction/)
-- [Sentiment Analysis with NLTK](https://www.nltk.org/howto/sentiment.html)
+- [Bayesian Networks in Python with bnlearn](https://towardsdatascience.com/bayesian-networks-in-python-with-bnlearn-4c1e8e9c6d1e)
+- [Customer Churn Dataset on Kaggle](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)
 

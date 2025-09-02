@@ -1,28 +1,17 @@
-### Title
-Real-Time Anomaly Detection in Bitcoin Transactions Using LIME
+**Title**: Explainable Credit Scoring with LIME
 
-### Difficulty
-3
+**Difficulty**: 2
 
-### Tech Description
-Utilize LIME (Local Interpretable Model-agnostic Explanations) to provide interpretability for an anomaly detection model applied to real-time Bitcoin transaction data.
+**Tech Description**: LIME (Local Interpretable Model-agnostic Explanations) is used to interpret the predictions of a credit scoring model, providing insights into the factors influencing creditworthiness.
 
-### Project Idea
-Develop a system that ingests real-time Bitcoin transaction data from multiple sources (e.g., blockchain explorers, transaction APIs) and applies an anomaly detection algorithm (e.g., Isolation Forest) to identify suspicious transactions. Use LIME to explain the model's predictions and enhance transparency in identifying potential fraud.
+**Project Idea**: The goal of this project is to build a credit scoring model using a publicly available dataset, such as the LendingClub dataset, and apply LIME to explain the model's predictions. By training a classification model to predict loan default, we can utilize LIME to generate local explanations for individual predictions. This will help stakeholders understand the key features affecting credit decisions, such as income, credit history, and loan amount. The project will also explore how different features impact the model's decisions, providing transparency and trust in automated credit assessments.
 
-### Python libs
-- `pandas` (data manipulation)
-- `numpy` (numerical operations)
-- `scikit-learn` (anomaly detection)
-- `lime` (model interpretability)
-- `requests` (API calls)
-- `matplotlib` (visualization)
+**Python libs**: pandas, scikit-learn, LIME, matplotlib, seaborn
 
-### Is it Free?
-Yes, all mentioned libraries are open-source and free to use.
+**Is it Free?**: Yes
 
-### Relevant tool (LIME) related Resource Links
+**Relevant tool (LIME) related Resource Links**:
 - [LIME GitHub Repository](https://github.com/marcotcr/lime)
 - [LIME Documentation](https://lime.readthedocs.io/en/latest/)
-- [LIME for Anomaly Detection](https://towardsdatascience.com/interpretable-anomaly-detection-with-lime-1a2f6c3f7b9e)
+- [LIME Tutorial on Credit Scoring](https://towardsdatascience.com/explainable-ai-with-lime-using-creditscoring-data-8f6c1c8f1f0d)
 

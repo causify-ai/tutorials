@@ -1,31 +1,17 @@
-### Project Brief: Real-Time Cryptocurrency Market Sentiment Analysis using GraphQL
+- **Title**: Analyzing Social Media Sentiment for Brand Management using GraphQL
 
-- **Title**: Real-Time Cryptocurrency Market Sentiment Analysis with GraphQL and News Scraping
+- **Difficulty**: 2
 
-- **Difficulty**: 3
+- **Tech Description**: This project utilizes GraphQL to efficiently query social media data from a public API, allowing for tailored data retrieval and analysis.
 
-- **Tech Description**: 
-  - Utilize GraphQL to fetch structured data from multiple cryptocurrency news sources.
-  - Implement natural language processing (NLP) for sentiment analysis on the scraped news articles to gauge market sentiment.
+- **Project Idea**: The goal of this project is to analyze sentiment towards a specific brand on social media platforms, using a GraphQL API to fetch relevant posts and comments. By extracting data such as user comments, likes, and shares, we will perform sentiment analysis using Natural Language Processing (NLP) techniques. The project will involve preprocessing the text data, applying a sentiment classifier, and visualizing trends in sentiment over time. This analysis can help businesses understand public perception and adjust their marketing strategies accordingly.
 
-- **Project Idea**: 
-  - Build a real-time dashboard that aggregates news articles related to various cryptocurrencies and analyzes their sentiment to predict market trends and price movements. The dashboard will leverage GraphQL for efficient data fetching and display sentiment scores alongside price charts.
+- **Python libs**: requests, gql, pandas, numpy, nltk, matplotlib, seaborn
 
-- **Python libs**:
-  - `requests` (for HTTP requests)
-  - `BeautifulSoup` (for web scraping)
-  - `graphqlclient` (for interacting with GraphQL APIs)
-  - `nltk` or `TextBlob` (for sentiment analysis)
-  - `matplotlib` or `Plotly` (for data visualization)
+- **Is it Free?**: Yes, the data source is a publicly accessible social media API that supports GraphQL queries.
 
-- **Is it Free?**: 
-  - Yes, the libraries mentioned are free, but some news sources may have usage limits or require API keys.
-
-- **Relevant tool (GraphQL) related Resource Links**:
+- **Relevant tool (GraphQL) related Resource Links**: 
   - [GraphQL Official Documentation](https://graphql.org/learn/)
-  - [GraphQL Python Client](https://github.com/graphql-python/graphql-client)
-  - [Beautiful Soup Documentation](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
-  - [Natural Language Toolkit (NLTK)](https://www.nltk.org/)
-  - [TextBlob Documentation](https://textblob.readthedocs.io/en/dev/)
-  - [Matplotlib Documentation](https://matplotlib.org/stable/contents.html)
+  - [Python GraphQL Client Library (gql)](https://gql.readthedocs.io/en/latest/)
+  - [Sentiment Analysis with NLTK](https://www.nltk.org/howto/sentiment.html)
 

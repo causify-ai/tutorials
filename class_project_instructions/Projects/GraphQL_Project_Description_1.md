@@ -1,24 +1,17 @@
-### Project Brief: Real-Time Cryptocurrency Sentiment Analysis Using GraphQL
+- **Title**: Predicting Movie Ratings Using GraphQL APIs
 
-- **Title**: Real-Time Cryptocurrency Sentiment Analysis with GraphQL and Social Media Data
+- **Difficulty**: 2
 
-- **Difficulty**: 3
+- **Tech Description**: GraphQL will be used to query a movie database API to retrieve relevant features for building a predictive model for movie ratings.
 
-- **Tech Description**: Utilize GraphQL to query real-time social media sentiment data regarding various cryptocurrencies. This project will involve scraping social media platforms for sentiment analysis and integrating it with cryptocurrency price data.
+- **Project Idea**: The goal of this project is to predict movie ratings based on various features such as genre, cast, director, and user reviews. By utilizing a GraphQL API from a movie database, we can efficiently fetch only the necessary data for our analysis. The project will involve data preprocessing, feature engineering, and building a regression model to predict ratings. The model's performance will be evaluated using metrics like RMSE and R², and we will explore the impact of different features on the predicted ratings.
 
-- **Project Idea**: Develop a system that ingests real-time tweets and Reddit posts about cryptocurrencies, analyzes sentiment, and correlates it with live price movements of those cryptocurrencies using GraphQL for efficient data retrieval.
+- **Python libs**: requests, pandas, scikit-learn, numpy, matplotlib, seaborn
 
-- **Python libs**:
-  - `requests` for API calls
-  - `BeautifulSoup` or `Scrapy` for web scraping
-  - `TextBlob` or `VADER` for sentiment analysis
-  - `pandas` for data manipulation
-  - `graphqlclient` for interacting with GraphQL APIs
+- **Is it Free?**: Yes, the GraphQL movie database API is free to use.
 
-- **Is it Free?**: Yes, but scraping may require adherence to the terms of service of the social media platforms.
-
-- **Relevant tool (GraphQL) related Resource Links**:
+- **Relevant tool (GraphQL) related Resource Links**: 
   - [GraphQL Official Documentation](https://graphql.org/learn/)
-  - [GraphQL Python Client](https://github.com/graphql-python/graphql-client)
-  - [Sentiment Analysis with Python](https://realpython.com/sentiment-analysis-python/)
+  - [How to Use GraphQL with Python](https://www.graphql-python.org/)
+  - [Movie Database GraphQL API](https://themoviedb.org/documentation/api)
 

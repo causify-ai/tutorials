@@ -1,28 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Prediction with Causal Inference 360
+**Title**: Evaluating the Impact of Social Media Campaigns on Brand Awareness Using Causal Inference
 
-- **Title**: Real-Time Bitcoin Price Prediction Using Causal Inference 360
+**Difficulty**: 3
 
-- **Difficulty**: 3
+**Tech Description**: IBM Causal Inference 360 will be utilized to assess the causal impact of social media marketing campaigns on brand awareness metrics by analyzing observational data.
 
-- **Tech Description**: Utilize IBM Causal Inference 360 to analyze the causal relationships between various economic indicators and Bitcoin price fluctuations, enabling real-time predictions.
+**Project Idea**: This project aims to evaluate the effectiveness of various social media marketing campaigns on increasing brand awareness for a specific product. By leveraging data from social media platforms (e.g., Twitter API for engagement metrics) and brand awareness surveys, we will apply causal inference techniques to determine whether the campaigns led to a significant increase in brand recognition. The analysis will involve constructing a causal graph, identifying confounding variables, and applying methods such as propensity score matching to estimate treatment effects. The results will provide actionable insights for optimizing future marketing strategies.
 
-- **Project Idea**: 
-  - Scrape real-time economic news and social media sentiment data related to Bitcoin.
-  - Use Causal Inference 360 to model the causal impact of these external factors on Bitcoin prices.
-  - Implement a real-time dashboard to visualize predictions and causal relationships.
+**Python libs**: pandas, numpy, statsmodels, matplotlib, seaborn, IBM Causal Inference 360
 
-- **Python libs**: 
-  - `ibm-causal-inference`
-  - `pandas`
-  - `numpy`
-  - `requests` (for web scraping)
-  - `matplotlib` or `plotly` (for visualization)
-  - `Flask` or `Dash` (for dashboard creation)
+**Is it Free?**: Yes, the IBM Causal Inference 360 library is open-source and free to use.
 
-- **Is it Free?**: IBM Causal Inference 360 is open-source and free to use.
-
-- **Relevant tool (XYZ) related Resource Links**: 
-  - [IBM Causal Inference 360 GitHub Repository](https://github.com/IBM/causal-inference-360)
-  - [IBM Causal Inference 360 Documentation](https://causal-inference-360.readthedocs.io/en/latest/)
-  - [Causal Inference in Python: A Practical Guide](https://towardsdatascience.com/causal-inference-in-python-a-practical-guide-5f6e8e2e3c7e)
+**Relevant tool (XYZ) related Resource Links**:
+- [IBM Causal Inference 360 Documentation](https://github.com/IBM/causal-inference-360)
+- [IBM Causal Inference 360 GitHub Repository](https://github.com/IBM/causal-inference-360)
+- [Causal Inference 360 Tutorials](https://github.com/IBM/causal-inference-360/tree/main/tutorials)
 

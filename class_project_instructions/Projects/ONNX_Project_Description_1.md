@@ -1,32 +1,17 @@
-### Title
-Real-Time Bitcoin Price Prediction Using ONNX Models
+- **Title**: Predicting Air Quality Index Using ONNX Models
 
-### Difficulty
-3
+- **Difficulty**: 2
 
-### Tech Description
-Utilize ONNX (Open Neural Network Exchange) to optimize and deploy machine learning models for real-time Bitcoin price prediction. The project will involve converting pre-trained models into ONNX format for efficient inference.
+- **Tech Description**: This project utilizes ONNX to optimize and deploy machine learning models for predicting air quality indices based on real-time environmental data.
 
-### Project Idea
-- Develop a real-time Bitcoin price prediction system that ingests live market data from multiple cryptocurrency exchanges.
-- Use ONNX to deploy a deep learning model that predicts future Bitcoin prices based on historical data and real-time market indicators.
-- Implement a feedback loop to continuously improve the model based on prediction accuracy.
+- **Project Idea**: The goal of this project is to predict the Air Quality Index (AQI) using a combination of historical air quality data and real-time weather information. We will gather data from the OpenWeatherMap API, which provides current weather conditions and forecasts. The project will involve preprocessing the data, training a regression model using a dataset of historical AQI values, and converting the trained model to ONNX format for efficient inference. The final model will be deployed to predict AQI in real time, allowing users to receive timely alerts about air quality.
 
-### Python libs
-- `onnx`
-- `onnxruntime`
-- `pandas`
-- `numpy`
-- `requests`
-- `websocket-client`
-- `matplotlib` (for visualization)
+- **Python libs**: ONNX, ONNX Runtime, pandas, scikit-learn, requests, matplotlib
 
-### Is it Free?
-Yes, ONNX and its associated libraries are open-source and free to use.
+- **Is it Free?**: Yes, both the OpenWeatherMap API (with limited access) and the libraries mentioned are free to use.
 
-### Relevant tool (ONNX) related Resource Links
-- [ONNX Official Documentation](https://onnx.ai/)
-- [ONNX Runtime GitHub Repository](https://github.com/microsoft/onnxruntime)
-- [Real-time Data Ingestion with WebSockets](https://realpython.com/python-sockets/)
-- [Bitcoin Price Prediction with Machine Learning](https://towardsdatascience.com/bitcoin-price-prediction-using-machine-learning-8e0d7d3c8f1a)
+- **Relevant tool (ONNX) related Resource Links**:
+  - [ONNX Official Documentation](https://onnx.ai/)
+  - [ONNX Runtime GitHub Repository](https://github.com/microsoft/onnxruntime)
+  - [OpenWeatherMap API Documentation](https://openweathermap.org/api)
 

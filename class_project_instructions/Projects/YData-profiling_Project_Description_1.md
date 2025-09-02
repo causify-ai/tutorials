@@ -1,30 +1,17 @@
-### Title
-Real-Time Bitcoin Anomaly Detection with YData Profiling
+**Title**: Customer Segmentation for E-commerce Using YData-Profiling
 
-### Difficulty
-3
+**Difficulty**: 2
 
-### Tech Description
-Utilize YData Profiling to analyze and visualize real-time Bitcoin transaction data for anomaly detection, enhancing data quality and identifying outliers that may indicate fraudulent activities.
+**Tech Description**: YData-Profiling is used to generate comprehensive data profiles, allowing for better understanding and exploration of customer behavior and characteristics in the dataset.
 
-### Project Idea
-- Ingest real-time Bitcoin transaction data from multiple sources (e.g., blockchain APIs, web scraping).
-- Use YData Profiling to create comprehensive data profiles that highlight anomalies and data quality issues.
-- Implement machine learning models to detect anomalies based on the profiling insights.
-- Visualize the results and provide alerts for suspicious activities.
+**Project Idea**: The goal of this project is to perform customer segmentation for an e-commerce platform by analyzing user behavior data. We will utilize the YData-Profiling tool to create detailed profiles of customer data from an online retail dataset. By examining various attributes such as purchase history, browsing behavior, and demographic information, we will apply clustering algorithms (e.g., K-Means) to identify distinct customer segments. This segmentation will help the e-commerce business tailor marketing strategies and improve customer experience.
 
-### Python libs
-- ydata-profiling
-- pandas
-- requests (for API calls)
-- scikit-learn (for anomaly detection)
-- matplotlib/seaborn (for visualization)
+**Python libs**: YData-Profiling, pandas, scikit-learn, matplotlib, seaborn
 
-### Is it Free?
-Yes, YData Profiling is open-source and free to use.
+**Is it Free?**: Yes, YData-Profiling is an open-source library.
 
-### Relevant tool (YData Profiling) related Resource Links
-- [YData Profiling GitHub Repository](https://github.com/ydataai/ydata-profiling)
-- [YData Profiling Documentation](https://ydata-profiling.ydata.ai/)
-- [YData Profiling Examples](https://ydata-profiling.ydata.ai/examples/index.html)
+**Relevant tool (YData-Profiling) related Resource Links**:
+- YData-Profiling Documentation: https://ydata-profiling.ydata.ai/
+- GitHub Repository: https://github.com/ydataai/ydata-profiling
+- Example Use Cases: https://ydata-profiling.ydata.ai/docs/usage/
 

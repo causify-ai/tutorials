@@ -1,30 +1,17 @@
-### Title
-Real-Time Bitcoin Anomaly Detection with Luigi
+- **Title**: Predicting Movie Ratings Using User Reviews
 
-### Difficulty
-3
+- **Difficulty**: 2
 
-### Tech Description
-Luigi is a Python package that helps build complex data pipelines by managing dependencies and workflows. It is particularly useful for batch processing and can be adapted for real-time data ingestion and processing.
+- **Tech Description**: Luigi will be utilized to create a robust data pipeline for collecting, processing, and analyzing user reviews from the MovieLens API, ultimately predicting movie ratings through a regression model.
 
-### Project Idea
-Develop a real-time anomaly detection system for Bitcoin transaction data. The system will ingest data from multiple sources (e.g., blockchain APIs, transaction logs) and use machine learning techniques to identify unusual transaction patterns that may indicate fraud or market manipulation.
+- **Project Idea**: This project aims to predict movie ratings based on user-generated reviews. By leveraging the MovieLens API, we will collect a dataset of user reviews and ratings. The data pipeline built with Luigi will automate the extraction, transformation, and loading (ETL) processes. We will preprocess the text data using natural language processing techniques, such as tokenization and sentiment analysis, and then apply regression algorithms to predict the ratings. The goal is to evaluate the effectiveness of user sentiment in predicting movie ratings, providing insights into audience preferences.
 
-### Python libs
-- Luigi
-- Pandas
-- Scikit-learn
-- NumPy
-- Matplotlib (for visualization)
-- Requests (for API calls)
-- PyTorch or TensorFlow (for advanced ML models)
+- **Python libs**: Luigi, pandas, numpy, scikit-learn, nltk, requests
 
-### Is it Free?
-Yes, Luigi and the mentioned Python libraries are open-source and free to use.
+- **Is it Free?**: Yes
 
-### Relevant tool (Luigi) related Resource Links
-- [Luigi Documentation](https://luigi.readthedocs.io/en/stable/)
-- [Luigi GitHub Repository](https://github.com/spotify/luigi)
-- [Real-Time Data Processing with Luigi](https://towardsdatascience.com/real-time-data-processing-with-luigi-5f1b3b9e4e7a)
-- [Anomaly Detection Techniques](https://towardsdatascience.com/anomaly-detection-techniques-in-a-data-science-project-5f5c6b4e4c1f)
+- **Relevant tool (Luigi) related Resource Links**:
+  - [Luigi Documentation](https://luigi.readthedocs.io/en/stable/)
+  - [MovieLens API](https://grouplens.org/datasets/movielens/)
+  - [NLTK Documentation](https://www.nltk.org/)
 

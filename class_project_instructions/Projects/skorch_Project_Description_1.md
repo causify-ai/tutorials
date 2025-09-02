@@ -1,33 +1,17 @@
-### Title
-Real-Time Bitcoin Price Prediction using Skorch and LSTM
+**Title**: Predicting Customer Churn in Subscription Services Using Skorch
 
-### Difficulty
-3
+**Difficulty**: 3
 
-### Tech Description
-Skorch is a high-level library that wraps PyTorch, allowing for easy integration of neural networks with scikit-learn-like interfaces. This project will leverage Skorch to build an LSTM (Long Short-Term Memory) model for predicting Bitcoin prices in real-time.
+**Tech Description**: Skorch is a high-level library that wraps PyTorch, allowing for easy integration of neural networks into the scikit-learn ecosystem. It simplifies the training and evaluation of deep learning models while maintaining compatibility with scikit-learn's API.
 
-### Project Idea
-- Ingest real-time Bitcoin price data from a WebSocket API.
-- Preprocess the data for LSTM input.
-- Use Skorch to train an LSTM model on historical price data.
-- Continuously predict future prices based on incoming data and visualize the results.
+**Project Idea**: This project aims to predict customer churn in subscription-based services using a deep learning model built with Skorch. The dataset will be sourced from the publicly available "Telco Customer Churn" dataset on Kaggle, which contains customer demographics, account information, and service usage metrics. The goal is to classify customers into "churn" and "no churn" categories using a feedforward neural network. The model will be trained using a combination of categorical and numerical features, and hyperparameter tuning will be performed to optimize performance. The final model will be evaluated based on accuracy, precision, recall, and F1 score.
 
-### Python libs
-- Skorch
-- PyTorch
-- Pandas
-- NumPy
-- Matplotlib
-- WebSocket-client
-- Scikit-learn
+**Python libs**: skorch, PyTorch, pandas, scikit-learn, numpy, matplotlib, seaborn
 
-### Is it Free?
-Yes, all mentioned libraries are open-source and free to use.
+**Is it Free?**: Yes
 
-### Relevant tool (XYZ) related Resource Links
+**Relevant tool (Skorch) related Resource Links**:
 - [Skorch Documentation](https://skorch.readthedocs.io/en/stable/)
-- [PyTorch Documentation](https://pytorch.org/docs/stable/index.html)
-- [WebSocket-client GitHub](https://github.com/liris/websocket-client)
-- [LSTM for Time Series Forecasting](https://machinelearningmastery.com/time-series-forecasting-long-short-term-memory-network-python-keras/)
+- [Skorch GitHub Repository](https://github.com/davidtvs/skorch)
+- [Kaggle Telco Customer Churn Dataset](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)
 

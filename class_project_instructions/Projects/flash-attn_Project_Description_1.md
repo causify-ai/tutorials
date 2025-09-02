@@ -1,20 +1,18 @@
-### Project Brief: Real-Time Bitcoin Price Prediction using Flash Attention
+**Title**: Real-Time Sentiment Analysis of Financial News Using Flash-Attn
 
-- **Title**: Real-Time Bitcoin Price Prediction with Flash Attention
-- **Difficulty**: 3
-- **Tech Description**: Flash Attention is a highly efficient attention mechanism that optimizes memory usage and computation speed, making it suitable for processing large sequences in real-time applications.
-- **Project Idea**: Develop a real-time Bitcoin price prediction system that ingests streaming data from multiple cryptocurrency exchanges, processes it using Flash Attention for feature extraction, and predicts future prices using a deep learning model.
-- **Python libs**: 
-  - `flash-attn`
-  - `pandas`
-  - `numpy`
-  - `tensorflow` or `pytorch`
-  - `ccxt` (for exchange data)
-  - `streamlit` (for dashboard)
-- **Is it Free?**: Yes, Flash Attention is open-source, and the other libraries mentioned are also free to use.
-- **Relevant tool (Flash Attention) related Resource Links**:
-  - [Flash Attention GitHub Repository](https://github.com/Dao-AILab/flash-attention)
-  - [Flash Attention Paper](https://arxiv.org/abs/2006.04558)
-  - [ccxt Documentation](https://docs.ccxt.com/en/latest/)
-  - [Streamlit Documentation](https://docs.streamlit.io/library)
+**Difficulty**: 3
+
+**Tech Description**: Flash-attn is utilized to accelerate the attention mechanism in transformer models, enabling efficient processing of large volumes of text data in real-time.
+
+**Project Idea**: The goal of this project is to develop a real-time sentiment analysis system that processes financial news articles and tweets to gauge market sentiment. By leveraging the Flash-attn mechanism, we can efficiently analyze the sentiment of incoming news streams and correlate them with stock price movements. The project will involve scraping financial news from popular APIs, preprocessing the text data, and training a transformer-based model to classify the sentiment as positive, negative, or neutral. The output will provide insights into how sentiment shifts can influence stock market trends.
+
+**Python libs**: Flash-attn, Hugging Face Transformers, BeautifulSoup, Pandas, NumPy, Matplotlib, Scikit-learn
+
+**Is it Free?**: Yes, all mentioned libraries are free to use.
+
+**Relevant tool (Flash-attn) related Resource Links**:
+- [Flash-attn GitHub Repository](https://github.com/switchablenorms/flash-attn)
+- [Hugging Face Transformers Documentation](https://huggingface.co/docs/transformers/index)
+- [BeautifulSoup Documentation](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
+- [Real-Time Sentiment Analysis with Transformers](https://towardsdatascience.com/real-time-sentiment-analysis-with-transformers-using-python-3f8b3e7c8e4e)
 

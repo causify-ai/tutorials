@@ -1,28 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Anomaly Detection using CausalInference
+**Title**: Evaluating the Impact of Remote Work on Employee Productivity Using Causal Inference
 
-- **Title**: Anomaly Detection in Bitcoin Prices using Causal Inference Techniques
+**Difficulty**: 3
 
-- **Difficulty**: 3
+**Tech Description**: CausalInference will be used to assess the causal relationship between remote work policies and employee productivity metrics using observational data from surveys and online performance tracking tools.
 
-- **Tech Description**: Utilize causal inference methods to identify anomalies in real-time Bitcoin price data. This project will involve causal modeling to understand the underlying factors affecting Bitcoin price fluctuations and detect outliers that deviate from expected price behavior.
+**Project Idea**: This project aims to evaluate how the shift to remote work during the COVID-19 pandemic has affected employee productivity across various sectors. By utilizing survey data collected from employees regarding their work habits and performance metrics from productivity tracking tools, we will apply causal inference techniques to determine whether remote work has a positive, negative, or neutral impact on productivity. The analysis will involve controlling for confounding variables such as industry, job role, and individual work preferences, allowing for a robust understanding of the causal effects of remote work.
 
-- **Project Idea**: 
-  - Scrape real-time Bitcoin price data from multiple cryptocurrency exchanges.
-  - Use causal inference to model the relationships between Bitcoin prices and external factors (e.g., market sentiment, news events).
-  - Implement anomaly detection algorithms to flag unusual price movements that could indicate market manipulation or significant events.
+**Python libs**: CausalInference, pandas, statsmodels, seaborn, matplotlib, scikit-learn
 
-- **Python libs**: 
-  - `CausalInference`
-  - `requests` (for web scraping)
-  - `pandas` (data manipulation)
-  - `numpy` (numerical operations)
-  - `scikit-learn` (anomaly detection)
-  - `matplotlib`/`seaborn` (visualization)
+**Is it Free?**: Yes
 
-- **Is it Free?**: Yes, all mentioned libraries are open-source and free to use.
-
-- **Relevant tool (CausalInference) related Resource Links**:
-  - [CausalInference Documentation](https://causalinference.gitlab.io/)
-  - [Causal Inference in Python: A Tutorial](https://towardsdatascience.com/causal-inference-in-python-a-tutorial-6a4f1c4c0c9a)
-  - [Anomaly Detection Techniques in Python](https://towardsdatascience.com/anomaly-detection-techniques-in-python-4f5d5a5b3c3b)
+**Relevant tool (CausalInference) related Resource Links**:
+- [CausalInference Documentation](https://causalinference.net/)
+- [Causal Inference with Python - A Practical Guide](https://towardsdatascience.com/causal-inference-with-python-a-practical-guide-9a5c5e75a0f5)
+- [Understanding Causal Inference](https://www.stat.berkeley.edu/~breiman/Book/Book.html)
 

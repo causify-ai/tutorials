@@ -1,18 +1,17 @@
-### Title: Real-Time Bitcoin Price Anomaly Detection using CausalPy
+- **Title**: Causal Inference in Public Health: Assessing the Impact of Air Quality on Respiratory Diseases
 
-- **Difficulty:** 3
-- **Tech Description:** Utilize CausalPy for causal inference to detect anomalies in real-time Bitcoin price data, integrating external factors like market sentiment from news articles.
-- **Project Idea:** Build a system that ingests real-time Bitcoin price data and correlates it with sentiment analysis from news articles to identify potential price anomalies. Use CausalPy to understand the causal relationships between sentiment and price fluctuations.
-- **Python libs:**
-  - `requests` (for API calls)
-  - `pandas` (for data manipulation)
-  - `numpy` (for numerical operations)
-  - `CausalPy` (for causal inference)
-  - `nltk` or `spaCy` (for natural language processing)
-  - `matplotlib` or `seaborn` (for visualization)
-- **Is it Free?** Yes, CausalPy is open-source and free to use.
-- **Relevant tool (CausalPy) related Resource Links:**
+- **Difficulty**: 3
+
+- **Tech Description**: CausalPy will be utilized to model and infer causal relationships between air quality metrics and the incidence of respiratory diseases using observational data.
+
+- **Project Idea**: The goal of this project is to determine the causal impact of air quality on the incidence of respiratory diseases, such as asthma and chronic obstructive pulmonary disease (COPD). By leveraging publicly available air quality data from the Environmental Protection Agency (EPA) and health data from the Centers for Disease Control and Prevention (CDC), we will construct a causal graph to identify and quantify these relationships. The project will involve data preprocessing, causal graph construction, and the application of causal inference techniques to draw conclusions about the impact of air pollution on public health outcomes.
+
+- **Python libs**: CausalPy, pandas, statsmodels, matplotlib, seaborn
+
+- **Is it Free?**: Yes, both CausalPy and the data sources are free to access.
+
+- **Relevant tool (CausalPy) related Resource Links**:
   - [CausalPy Documentation](https://causalpy.readthedocs.io/en/latest/)
-  - [Causal Inference in Python](https://towardsdatascience.com/causal-inference-in-python-using-causalpy-1f2e0d8c0a8f)
-  - [GitHub Repository for CausalPy](https://github.com/yourusername/CausalPy) (replace with actual link if available)
+  - [EPA Air Quality Data](https://www.epa.gov/airdata)
+  - [CDC Respiratory Disease Statistics](https://www.cdc.gov/respiratory-disease/index.html)
 

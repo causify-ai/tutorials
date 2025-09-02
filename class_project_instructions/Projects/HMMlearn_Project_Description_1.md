@@ -1,29 +1,17 @@
-### Title
-Real-Time Anomaly Detection in Bitcoin Transactions Using HMMlearn
+- **Title**: Predicting Stock Market Trends Using Hidden Markov Models
 
-### Difficulty
-3
+- **Difficulty**: 3
 
-### Tech Description
-Utilize Hidden Markov Models (HMM) for detecting anomalies in real-time Bitcoin transaction data. HMMlearn provides a framework for modeling time series data, allowing for the identification of unusual patterns in transaction volumes or values.
+- **Tech Description**: HMMlearn is utilized to model the hidden states of stock market trends based on observed price movements, enabling the prediction of future stock prices.
 
-### Project Idea
-Develop a Python application that ingests real-time Bitcoin transaction data from a blockchain API, applies HMM to model the normal behavior of transactions, and flags anomalies for further investigation. This can help in identifying potential fraud or unusual market activities.
+- **Project Idea**: The goal of this project is to predict stock market trends by modeling the underlying hidden states that influence stock prices. By using historical stock price data from the Alpha Vantage API, we will implement a Hidden Markov Model (HMM) to identify patterns and transitions in stock price movements. The model will be trained on daily closing prices and will be used to forecast future price trends, helping investors make informed decisions. The project will also include performance evaluation metrics to assess the accuracy of the predictions.
 
-### Python libs
-- HMMlearn
-- Requests (for API calls)
-- Pandas (for data manipulation)
-- NumPy (for numerical operations)
-- Matplotlib (for visualization)
-- Flask (for creating a web interface)
+- **Python libs**: HMMlearn, NumPy, Pandas, Matplotlib, Requests, Scikit-learn
 
-### Is it Free?
-Yes, HMMlearn and the other mentioned libraries are open-source and free to use.
+- **Is it Free?**: Yes, both HMMlearn and the Alpha Vantage API offer free tiers for usage.
 
-### Relevant tool (HMMlearn) related Resource Links
-- [HMMlearn Documentation](https://hmmlearn.readthedocs.io/en/latest/)
-- [GitHub Repository](https://github.com/hmmlearn/hmmlearn)
-- [Real-Time Bitcoin Data API (CoinGecko)](https://www.coingecko.com/en/api)
-- [Anomaly Detection with HMM](https://towardsdatascience.com/anomaly-detection-in-time-series-data-using-hidden-markov-models-3c5c4a2f6c6e)
+- **Relevant tool (XYZ) related Resource Links**: 
+  - HMMlearn Documentation: https://hmmlearn.readthedocs.io/en/latest/
+  - Alpha Vantage API Documentation: https://www.alphavantage.co/documentation/
+  - Hidden Markov Models in Python Tutorial: https://towardsdatascience.com/hidden-markov-models-in-python-3c5b2a3a2b6b
 

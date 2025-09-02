@@ -1,21 +1,16 @@
-### Project Brief: Real-Time Bitcoin Sentiment Analysis Using trl
+**Title:** Predicting Air Quality Index Using TRL
 
-- **Title**: Real-Time Bitcoin Sentiment Analysis with Reinforcement Learning
-- **Difficulty**: 3
-- **Tech Description**: Utilize trl (transformer reinforcement learning) to analyze real-time Bitcoin sentiment from social media and news articles, adapting the model based on feedback from sentiment predictions.
-- **Project Idea**: Build a system that ingests real-time Bitcoin-related tweets and news articles, processes the text for sentiment analysis, and uses reinforcement learning to improve sentiment prediction accuracy over time.
-- **Python libs**: 
-  - `trl`
-  - `tweepy` (for Twitter API)
-  - `transformers` (for NLP models)
-  - `pandas` (for data manipulation)
-  - `numpy` (for numerical operations)
-  - `matplotlib` (for visualization)
-- **Is it Free?**: Yes, trl and the libraries mentioned are open-source and free to use.
-- **Relevant tool (trl) related Resource Links**:
-  - [trl GitHub Repository](https://github.com/lvwerra/trl)
-  - [Transformers Documentation](https://huggingface.co/docs/transformers/index)
-  - [Tweepy Documentation](https://docs.tweepy.org/en/stable/)
-  - [Pandas Documentation](https://pandas.pydata.org/pandas-docs/stable/)
-  - [Numpy Documentation](https://numpy.org/doc/stable/)
+**Difficulty:** 3
+
+**Tech Description:** TRL (Time-Related Learning) is utilized in this project to model and predict the Air Quality Index (AQI) based on temporal patterns and environmental data.
+
+**Project Idea:** This project aims to forecast the Air Quality Index (AQI) for urban areas using TRL to analyze time-series data from various environmental factors. The dataset will be sourced from the OpenWeatherMap API, which provides real-time weather data, including temperature, humidity, and wind speed. By employing TRL, we will develop a model that captures the temporal dependencies in the data, allowing us to predict AQI levels for the next week. The model will also be evaluated for its accuracy and robustness against historical AQI data to ensure its reliability for public health advisories.
+
+**Python libs:** requests, pandas, numpy, scikit-learn, matplotlib, TRL
+
+**Is it Free?** Yes, OpenWeatherMap offers a free tier for accessing their API.
+
+**Relevant tool (TRL) related Resource Links:**
+- [TRL Documentation](https://github.com/your-username/trl)
+- [OpenWeatherMap API](https://openweathermap.org/api)
 

@@ -1,29 +1,28 @@
 ### Title
-Real-Time Anomaly Detection in Bitcoin Transactions using Pomegranate
+Predicting Customer Churn in Subscription Services Using Hidden Markov Models
 
 ### Difficulty
-3
+2
 
 ### Tech Description
-Pomegranate is a probabilistic modeling library that allows for the creation of complex models such as Hidden Markov Models and Bayesian Networks, ideal for detecting anomalies in streaming data.
+Pomegranate is utilized to build and train Hidden Markov Models (HMMs) for predicting customer churn based on sequential behavior data.
 
 ### Project Idea
-Develop a real-time anomaly detection system that monitors Bitcoin transaction patterns to identify fraudulent activities. The system will leverage Pomegranate's probabilistic models to analyze transaction data ingested from various sources and flag unusual patterns.
+The goal of this project is to predict customer churn in subscription-based services by analyzing user behavior patterns over time. By leveraging a dataset containing user activity logs, we will construct a Hidden Markov Model to identify states of user engagement and transitions that lead to churn. The model will be trained on historical data to recognize patterns that precede customer cancellations, allowing businesses to proactively address issues and improve retention strategies. The project will also involve visualizing the state transitions and churn probabilities to provide actionable insights.
 
 ### Python libs
 - Pomegranate
 - Pandas
 - NumPy
-- Requests (for data ingestion)
-- Matplotlib (for visualization)
-- Flask (for creating a web interface)
+- Matplotlib
+- Seaborn
+- Scikit-learn
 
 ### Is it Free?
-Yes, Pomegranate is open-source and free to use.
+Yes
 
 ### Relevant tool (Pomegranate) related Resource Links
 - [Pomegranate Documentation](https://pomegranate.readthedocs.io/en/latest/)
 - [Pomegranate GitHub Repository](https://github.com/jmschrei/pomegranate)
-- [Anomaly Detection with Pomegranate](https://towardsdatascience.com/anomaly-detection-with-pomegranate-8b8f7c4d4e4b)
-- [Real-Time Data Processing with Flask](https://flask.palletsprojects.com/en/2.0.x/)
+- [Hidden Markov Models in Python](https://towardsdatascience.com/hidden-markov-models-in-python-using-pomegranate-2c6e3e1f5f8e)
 

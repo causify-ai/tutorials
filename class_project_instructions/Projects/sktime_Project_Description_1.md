@@ -1,28 +1,17 @@
-### Title
-Real-Time Anomaly Detection in Bitcoin Transactions Using sktime
+**Title**: Time Series Anomaly Detection in E-commerce Sales Data
 
-### Difficulty
-3
+**Difficulty**: 2
 
-### Tech Description
-Utilize sktime for time series analysis and anomaly detection in real-time Bitcoin transaction data. The project will leverage sktime's capabilities to process and analyze streaming data, identifying unusual patterns indicative of fraudulent activities.
+**Tech Description**: sktime will be utilized for time series analysis and anomaly detection, leveraging its capabilities to handle and model temporal data effectively.
 
-### Project Idea
-Develop a real-time system to ingest Bitcoin transaction data from a public blockchain API, analyze it using sktime for time series forecasting, and detect anomalies that may suggest fraud or irregular trading behavior. The system will visualize detected anomalies on a dashboard for monitoring.
+**Project Idea**: The goal of this project is to identify anomalies in e-commerce sales data to help businesses detect unusual patterns that could indicate issues such as fraud or inventory problems. We will use the publicly available e-commerce sales dataset from Kaggle, which includes daily sales data across various product categories. By applying sktime's anomaly detection methods, we will preprocess the data, extract relevant features, and train models to classify normal and anomalous sales patterns. The project will culminate in a visualization dashboard that highlights detected anomalies over time, providing actionable insights for business stakeholders.
 
-### Python libs
-- sktime
-- pandas
-- requests
-- matplotlib
-- Flask (for dashboard)
+**Python libs**: sktime, pandas, matplotlib, seaborn, scikit-learn
 
-### Is it Free?
-Yes, sktime and the other mentioned libraries are open-source and free to use.
+**Is it Free?**: Yes
 
-### Relevant tool (XYZ) related Resource Links
+**Relevant tool (XYZ) related Resource Links**:
 - [sktime Documentation](https://www.sktime.org/en/stable/)
-- [sktime GitHub Repository](https://github.com/alan-turing-institute/sktime)
-- [Time Series Anomaly Detection with sktime](https://www.sktime.org/en/stable/examples/forecasting/plot_anomaly_detection.html)
-- [Bitcoin API Documentation](https://www.blockchain.com/api/blockchain_api)
+- [Kaggle E-commerce Sales Dataset](https://www.kaggle.com/datasets/sdolezel/ecommerce-sales-data) 
+- [Anomaly Detection in Time Series](https://www.sktime.org/en/stable/user_guide/usage.html#anomaly-detection)
 

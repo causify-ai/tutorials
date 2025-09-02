@@ -1,31 +1,17 @@
-### Title
-Real-time Anomaly Detection in Bitcoin Transactions Using LIME
+- **Title**: Explainable AI for Customer Churn Prediction in E-commerce
 
-### Difficulty
-3
+- **Difficulty**: 2
 
-### Tech Description
-Utilize LIME (Local Interpretable Model-agnostic Explanations) to interpret and explain anomalies in real-time Bitcoin transaction data, focusing on detecting fraudulent activities.
+- **Tech Description**: LIME (Local Interpretable Model-agnostic Explanations) will be used to interpret the predictions of a machine learning model that forecasts customer churn in an e-commerce setting.
 
-### Project Idea
-- Develop a system that ingests real-time Bitcoin transaction data from multiple blockchain nodes.
-- Implement an anomaly detection model (e.g., Isolation Forest or Autoencoder) to identify suspicious transactions.
-- Use LIME to provide explanations for detected anomalies, helping to understand the features contributing to these anomalies.
+- **Project Idea**: In this project, we will develop a predictive model to identify customers likely to churn from an e-commerce platform using transaction and demographic data sourced from the Open Payments API. The goal is to not only predict churn but also provide interpretable insights into the factors influencing these predictions using LIME. By employing classification algorithms such as Random Forest or Gradient Boosting, we will analyze feature importance and visualize the reasons behind individual predictions, allowing businesses to take targeted actions to retain customers.
 
-### Python libs
-- `pandas` (for data manipulation)
-- `numpy` (for numerical operations)
-- `scikit-learn` (for anomaly detection algorithms)
-- `lime` (for model interpretation)
-- `web3.py` (to interact with Ethereum blockchain for transaction data)
-- `requests` (to make API calls for real-time data)
+- **Python libs**: pandas, scikit-learn, LIME, matplotlib, seaborn
 
-### Is it Free?
-Yes, all the mentioned libraries are open-source and free to use.
+- **Is it Free?**: Yes, the tools and libraries mentioned are free to use.
 
-### Relevant tool (LIME) related Resource Links
-- [LIME GitHub Repository](https://github.com/marcotcr/lime)
-- [LIME Documentation](https://lime.readthedocs.io/en/latest/)
-- [Understanding LIME - Towards Data Science](https://towardsdatascience.com/understanding-lime-7d7e6b39b3f8)
-- [Anomaly Detection with LIME](https://towardsdatascience.com/anomaly-detection-with-lime-using-python-6f3f9c5a7c1e)
+- **Relevant tool (LIME) related Resource Links**:
+  - [LIME GitHub Repository](https://github.com/marcotcr/lime)
+  - [LIME Documentation](https://lime.readthedocs.io/en/latest/)
+  - [Understanding LIME: A Tutorial](https://towardsdatascience.com/understanding-lime-local-interpretable-model-agnostic-explanations-9e7f5c1b7e1e)
 

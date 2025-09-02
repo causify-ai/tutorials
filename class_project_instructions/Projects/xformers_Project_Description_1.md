@@ -1,26 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Prediction with xformers
+**Title**: Enhancing Movie Recommendation Systems Using Xformers for Contextual Embeddings
 
-- **Title**: Real-Time Bitcoin Price Prediction Using xformers for Time Series Forecasting
+**Difficulty**: 3
 
-- **Difficulty**: 3
+**Tech Description**: Xformers will be utilized to create efficient transformer-based models for generating contextual embeddings from user and movie metadata, enhancing the recommendation process.
 
-- **Tech Description**: Utilize xformers, a library for efficient transformer models, to analyze and predict Bitcoin price movements in real-time based on streaming data.
+**Project Idea**: The goal of this project is to build a movie recommendation system that adapts to user preferences based on contextual information such as time of day, mood, and viewing history. By leveraging the Xformers library, we will create a transformer model that processes user and movie metadata to generate contextual embeddings. These embeddings will then be used to improve the accuracy of recommendations through collaborative filtering techniques. The project will involve data collection from the MovieLens dataset and user interaction logs, followed by model training and evaluation to assess the effectiveness of the contextual embeddings in enhancing user satisfaction.
 
-- **Project Idea**: Develop a real-time system that ingests Bitcoin price data from multiple sources (e.g., exchanges, news articles) and uses xformers to forecast future price trends. The model will leverage attention mechanisms to capture temporal dependencies and market sentiment.
+**Python libs**: xformers, pandas, numpy, scikit-learn, lightfm
 
-- **Python libs**:
-  - xformers
-  - pandas
-  - numpy
-  - requests (for data ingestion)
-  - Streamlit (for visualization)
-  - matplotlib (for plotting)
+**Is it Free?**: Yes
 
-- **Is it Free?**: Yes, xformers and the other mentioned libraries are open-source and free to use.
-
-- **Relevant tool (xformers) related Resource Links**:
-  - [xformers GitHub Repository](https://github.com/facebookresearch/xformers)
-  - [xformers Documentation](https://xformers.readthedocs.io/en/latest/)
-  - [Real-Time Data Ingestion with Python](https://realpython.com/python-data-ingestion/)
-  - [Time Series Forecasting with Transformers](https://towardsdatascience.com/time-series-forecasting-with-transformers-1d8e4c3e5f7c)
+**Relevant tool (Xformers) related Resource Links**:
+- [Xformers GitHub Repository](https://github.com/facebookresearch/xformers)
+- [Xformers Documentation](https://xformers.readthedocs.io/en/latest/)
+- [MovieLens Dataset](https://grouplens.org/datasets/movielens/)
 

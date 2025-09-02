@@ -1,12 +1,17 @@
-### Title: Real-Time Sentiment Analysis of Bitcoin News using fastai
+- **Title**: Predicting Movie Success with Sentiment Analysis
 
-- **Difficulty:** 3
-- **Tech Description:** Utilize fastai for building a deep learning model that performs sentiment analysis on real-time news articles related to Bitcoin, leveraging natural language processing (NLP) techniques.
-- **Project Idea:** Ingest live news articles about Bitcoin from various online sources, preprocess the text data, and train a sentiment analysis model using fastai. The model will classify the sentiment as positive, negative, or neutral, providing insights into market trends based on public sentiment.
-- **Python libs:** fastai, requests, BeautifulSoup, pandas, matplotlib, nltk, torch
-- **Is it Free?** Yes, fastai and the other libraries mentioned are open-source and free to use.
-- **Relevant tool (fastai) related Resource Links:**
-  - [fastai Documentation](https://docs.fast.ai/)
-  - [fastai Course](https://course.fast.ai/)
-  - [fastai GitHub Repository](https://github.com/fastai/fastai)
+- **Difficulty**: 2
+
+- **Tech Description**: Fastai will be used to build a deep learning model that predicts movie box office success based on sentiment analysis of social media reviews.
+
+- **Project Idea**: The goal of this project is to predict the box office performance of upcoming movies by analyzing sentiment from Twitter data. We will collect tweets mentioning the movies using the Twitter API, preprocess the text data, and then use fastai to train a sentiment analysis model. The sentiment scores will be correlated with box office revenue data from a public dataset to evaluate the predictive power of social media sentiment on financial success. This project will provide insights into how audience sentiment can influence movie performance.
+
+- **Python libs**: fastai, tweepy, pandas, numpy, matplotlib, scikit-learn
+
+- **Is it Free?**: Yes, both the Twitter API and the datasets used are free to access.
+
+- **Relevant tool (fastai) related Resource Links**:
+  - [Fastai Documentation](https://docs.fast.ai/)
+  - [Twitter API Documentation](https://developer.twitter.com/en/docs/twitter-api)
+  - [Kaggle Movie Revenue Dataset](https://www.kaggle.com/datasets/ashishpatel26/movie-revenue-dataset)
 

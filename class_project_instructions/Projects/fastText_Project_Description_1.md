@@ -1,30 +1,17 @@
-### Title
-Real-Time Sentiment Analysis of Bitcoin News using fastText
+- **Title**: Sentiment Analysis of Movie Reviews Using fastText
 
-### Difficulty
-3
+- **Difficulty**: 2
 
-### Tech Description
-Utilize fastText for real-time sentiment analysis on news articles related to Bitcoin, enabling traders to gauge market sentiment based on news trends.
+- **Tech Description**: fastText is utilized for efficient text classification, allowing us to train a model on labeled movie reviews to predict sentiment (positive, negative, neutral).
 
-### Project Idea
-- Scrape news articles from multiple online sources related to Bitcoin.
-- Preprocess the text data and use fastText to classify the sentiment (positive, negative, neutral).
-- Visualize sentiment trends over time and correlate with Bitcoin price movements.
+- **Project Idea**: The goal of this project is to analyze the sentiment of movie reviews collected from the IMDB API. By leveraging fastText, we will preprocess the text data, train a sentiment classification model, and evaluate its performance. The project will also include visualizing the distribution of sentiments across different genres and identifying trends over time. This will provide insights into how public opinion on films changes with new releases and critical reception.
 
-### Python libs
-- fastText
-- BeautifulSoup (for web scraping)
-- requests (for HTTP requests)
-- pandas (for data manipulation)
-- matplotlib/seaborn (for visualization)
-- Flask or FastAPI (for real-time API)
+- **Python libs**: fastText, requests, pandas, matplotlib, scikit-learn
 
-### Is it Free?
-Yes, fastText and the libraries mentioned are open-source and free to use.
+- **Is it Free?**: Yes
 
-### Relevant tool (fastText) related Resource Links
-- [fastText GitHub Repository](https://github.com/facebookresearch/fastText)
-- [fastText Documentation](https://fasttext.cc/docs/en/crawl.html)
-- [fastText for Text Classification](https://fasttext.cc/docs/en/supervised-tutorial.html)
+- **Relevant tool (fastText) related Resource Links**:
+  - [fastText GitHub Repository](https://github.com/facebookresearch/fastText)
+  - [fastText Documentation](https://fasttext.cc/docs/en/crawl.html)
+  - [IMDB API Documentation](https://imdb-api.com/API)
 

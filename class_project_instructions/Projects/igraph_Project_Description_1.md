@@ -1,29 +1,17 @@
-### Title
-Real-Time Bitcoin Transaction Network Analysis using igraph
+**Title**: Social Network Analysis of Online Movie Reviews
 
-### Difficulty
-3
+**Difficulty**: 2
 
-### Tech Description
-Utilize igraph for advanced graph-based analysis of real-time Bitcoin transaction data to identify patterns, clusters, and anomalies in transaction flows.
+**Tech Description**: igraph is utilized to create and analyze the relationships between users and their movie reviews, allowing for the visualization of social dynamics and sentiment trends.
 
-### Project Idea
-- Ingest real-time Bitcoin transaction data from a blockchain API.
-- Construct a directed graph where nodes represent Bitcoin addresses and edges represent transactions.
-- Analyze the graph to detect clusters of addresses, identify high-traffic nodes, and uncover potential fraudulent activities through anomaly detection.
+**Project Idea**: The goal of this project is to analyze the social network formed by users on a popular movie review platform (e.g., IMDb or Rotten Tomatoes). By scraping user reviews and their interactions (likes, replies), we will construct a graph where nodes represent users and edges represent interactions. The project will employ community detection algorithms to identify clusters of users with similar tastes and sentiments towards specific movies. Additionally, sentiment analysis will be performed on the reviews to understand how sentiment correlates with user interactions and community formation.
 
-### Python libs
-- `igraph` for graph creation and analysis
-- `requests` for API calls
-- `pandas` for data manipulation
-- `numpy` for numerical operations
-- `matplotlib` or `plotly` for visualization
+**Python libs**: igraph, BeautifulSoup, requests, pandas, nltk, matplotlib
 
-### Is it Free?
-Yes, igraph and the required libraries are open-source and free to use.
+**Is it Free?**: Yes
 
-### Relevant tool (igraph) related Resource Links
+**Relevant tool (igraph) related Resource Links**:
 - [igraph Documentation](https://igraph.org/python/)
-- [igraph GitHub Repository](https://github.com/igraph/python-igraph)
-- [Bitcoin Blockchain API](https://blockchain.info/api/blockchain_api)
+- [Social Network Analysis with igraph](https://igraph.org/python/doc/tutorial/tutorial.html)
+- [BeautifulSoup Documentation](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
 

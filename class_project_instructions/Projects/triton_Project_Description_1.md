@@ -1,18 +1,18 @@
-### Project Brief: Real-Time Bitcoin Price Prediction with Triton
+**Title**: Real-Time Sentiment Analysis on Streaming Twitter Data
 
-- **Difficulty**: 3
-- **Tech Description**: Triton is a high-performance inference server that can optimize and serve machine learning models, enabling real-time predictions with low latency.
-- **Project Idea**: Build a real-time Bitcoin price prediction system that ingests live market data from multiple cryptocurrency exchanges using Triton for model inference. The system will utilize a recurrent neural network (RNN) model to forecast short-term price movements based on historical price data and trading volume.
-- **Python libs**: 
-  - `tritonclient` for interacting with Triton Inference Server
-  - `pandas` for data manipulation
-  - `numpy` for numerical operations
-  - `tensorflow` or `pytorch` for building the RNN model
-  - `requests` for API calls to cryptocurrency exchanges
-  - `asyncio` for handling asynchronous data ingestion
-- **Is it Free?**: Triton is open-source and free to use, but hosting may incur costs depending on the infrastructure.
-- **Relevant tool (Triton) related Resource Links**:
-  - [NVIDIA Triton Inference Server Documentation](https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/index.html)
-  - [Triton GitHub Repository](https://github.com/triton-inference-server/server)
-  - [NVIDIA Developer Blog on Triton](https://developer.nvidia.com/blog/nvidia-triton-inference-server/)
+**Difficulty**: 3
+
+**Tech Description**: Triton is utilized to optimize the performance of the sentiment analysis model, allowing for faster inference on large volumes of streaming data from Twitter.
+
+**Project Idea**: The goal of this project is to build a real-time sentiment analysis system that processes live tweets related to trending topics. By leveraging the Twitter API, we will collect tweets in real-time and apply natural language processing (NLP) techniques to classify the sentiment of each tweet as positive, negative, or neutral. Triton will be employed to accelerate the inference process of the sentiment analysis model, enabling the system to handle high throughput and low latency requirements. The project will also visualize sentiment trends over time, providing insights into public opinion on various topics.
+
+**Python libs**: Triton, Tweepy, NLTK, Pandas, Matplotlib, Scikit-learn
+
+**Is it Free?**: Yes, both the Twitter API (with rate limits) and the Python libraries mentioned are free to use.
+
+**Relevant tool (XYZ) related Resource Links**:
+- [Triton GitHub Repository](https://github.com/openai/triton)
+- [Tweepy Documentation](https://docs.tweepy.org/en/stable/)
+- [NLTK Documentation](https://www.nltk.org/)
+- [Scikit-learn Documentation](https://scikit-learn.org/stable/documentation.html)
 

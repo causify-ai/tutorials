@@ -1,32 +1,18 @@
-### Title
-Real-Time Anomaly Detection in Bitcoin Transactions Using CausalML
+- **Title**: Analyzing the Impact of Social Media Campaigns on E-commerce Sales Using CausalML
 
-### Difficulty
-3
+- **Difficulty**: 3
 
-### Tech Description
-Utilize CausalML to identify causal relationships in Bitcoin transaction data, focusing on detecting anomalies that could indicate fraudulent activities or unusual patterns.
+- **Tech Description**: CausalML is utilized to estimate the causal impact of social media marketing campaigns on e-commerce sales by analyzing observational data.
 
-### Project Idea
-- Ingest real-time Bitcoin transaction data from multiple sources (e.g., blockchain explorers, APIs).
-- Apply causal inference techniques to model the relationships between transaction features (e.g., amount, sender, receiver).
-- Use the identified causal structures to detect anomalies in transactions and alert for potential fraud.
+- **Project Idea**: This project aims to evaluate how different social media marketing strategies influence online sales for an e-commerce platform. By leveraging publicly available data from social media APIs (e.g., Twitter, Facebook) and sales data from e-commerce platforms, we will employ causal inference techniques to estimate the treatment effect of various campaigns. The analysis will involve pre-processing the data to create treatment and control groups, followed by the application of CausalML methods to identify significant causal relationships. Finally, we will visualize the results to provide actionable insights for marketing strategies.
 
-### Python libs
-- CausalML
-- Pandas
-- NumPy
-- Scikit-learn
-- Matplotlib/Seaborn (for visualization)
-- Requests (for API calls)
-- PyTorch/TensorFlow (if deep learning is involved)
+- **Python libs**: CausalML, Pandas, NumPy, Matplotlib, Seaborn, Statsmodels
 
-### Is it Free?
-Yes, CausalML and the associated libraries are open-source and free to use.
+- **Is it Free?**: Yes, the libraries and data sources used are free to access.
 
-### Relevant tool (CausalML) related Resource Links
-- [CausalML GitHub Repository](https://github.com/uber/causalml)
-- [CausalML Documentation](https://causalml.readthedocs.io/en/latest/)
-- [Causal Inference with Python](https://towardsdatascience.com/causal-inference-in-python-5f3f9a1b6e7d)
-- [Anomaly Detection Techniques](https://towardsdatascience.com/anomaly-detection-techniques-in-python-6c6c3b9b5a1b)
+- **Relevant tool (CausalML) related Resource Links**:
+  - [CausalML GitHub Repository](https://github.com/sofia-zhang/causalml)
+  - [Causal Inference in Python - CausalML Documentation](https://causalml.readthedocs.io/en/latest/)
+  - [Social Media API Documentation (Twitter API)](https://developer.twitter.com/en/docs/twitter-api)
+  - [Facebook Graph API Documentation](https://developers.facebook.com/docs/graph-api)
 

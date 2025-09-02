@@ -1,21 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Prediction with Luigi
+**Title**: Predicting Restaurant Success Using Yelp Reviews
 
-- **Title**: Real-Time Bitcoin Price Prediction Pipeline using Luigi
-- **Difficulty**: 3
-- **Tech Description**: Luigi is a Python package that helps build complex data pipelines by defining tasks and dependencies. It excels in managing workflows, especially for batch processing and orchestration of tasks.
-- **Project Idea**: Create a real-time data ingestion and prediction pipeline that collects Bitcoin price data from multiple cryptocurrency exchanges via web scraping, processes the data, and applies machine learning models to predict future prices. The pipeline will also include a monitoring system to track prediction accuracy and model performance over time.
-- **Python libs**: 
-  - `Luigi` for pipeline orchestration
-  - `BeautifulSoup` or `Scrapy` for web scraping
-  - `pandas` for data manipulation
-  - `scikit-learn` or `TensorFlow` for machine learning
-  - `matplotlib` for visualization
-  - `requests` for API calls (if needed)
-- **Is it Free?**: Yes, Luigi and the associated libraries are open-source and free to use.
-- **Relevant tool (Luigi) related Resource Links**:
-  - [Luigi Documentation](https://luigi.readthedocs.io/en/stable/)
-  - [Luigi GitHub Repository](https://github.com/spotify/luigi)
-  - [Web Scraping with BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
-  - [Machine Learning with Scikit-Learn](https://scikit-learn.org/stable/)
-  - [Real-Time Data Processing with Python](https://realpython.com/python-data-processing/)
+**Difficulty**: 2
+
+**Tech Description**: Luigi is used to create a data pipeline that collects, processes, and analyzes Yelp review data to predict restaurant success based on customer sentiment and review metrics.
+
+**Project Idea**: This project aims to predict the success of restaurants based on the analysis of Yelp reviews. By leveraging the Yelp API, we will gather data on various restaurants, including their reviews, ratings, and metadata. The data will be processed using Luigi to streamline the extraction, transformation, and loading (ETL) processes. We will perform sentiment analysis on the reviews to derive sentiment scores, which will then be used in a regression model to predict restaurant success, defined as the number of new customers or increased ratings over time.
+
+**Python libs**: requests, pandas, numpy, scikit-learn, nltk, luigi, matplotlib, seaborn
+
+**Is it Free?**: Yes, both the Yelp API and the Python libraries are free to use.
+
+**Relevant tool (Luigi) related Resource Links**:
+- [Luigi Documentation](https://luigi.readthedocs.io/en/stable/)
+- [Yelp API Documentation](https://www.yelp.com/developers/documentation/v3/getting_started)
+- [Sentiment Analysis with NLTK](https://www.nltk.org/howto/sentiment.html)
 

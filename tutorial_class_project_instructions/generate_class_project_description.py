@@ -76,6 +76,9 @@ Include:
 - DO NOT reuse the same Bitcoin price API data or ML algorithm.
 - Keep each project unique and useful.
 - Use realistic, popular Python packages—no toy examples.
+- Do not propose projects that require physical sensors or IoT devices; 
+  restrict all data sources to publicly available free online APIs, free web streams,
+  or datasets accessible via Python.
 Avoid long texts or steps. Do not use the same dataset for all projects. 
 
 Examples of variation:
@@ -96,7 +99,7 @@ Python libraries: boto3, PySpark
 DEFAULT_MARKDOWN_PATH = "./class_project_instructions/Projects"
 # The maximum number of projects.
 # Set the value to None to disable the limit.
-DEFAULT_MAX_PROJECTS = 5
+DEFAULT_MAX_PROJECTS = None
 
 
 def _read_google_sheet(url: str, tab_name: str, secret_path: str) -> pd.DataFrame:
@@ -213,9 +216,9 @@ def _generate_project_description(
         prompt,
         system_prompt=GLOBAL_PROMPT,
         model="gpt-4o-mini",
-        cache_mode="DISABLED",
+        cache_mode="CAPTURE",
         temperature=temp,
-        max_tokens=400,
+        max_tokens=1500,
         print_cost=True,
     )
     return project_desc

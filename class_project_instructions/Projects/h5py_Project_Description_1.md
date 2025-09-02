@@ -1,28 +1,18 @@
-### Title
-Real-Time Bitcoin Price Anomaly Detection Using h5py
+- **Title**: Anomaly Detection in Financial Transactions Using HDF5
 
-### Difficulty
-2 (Medium)
+- **Difficulty**: 3
 
-### Tech Description
-Utilize h5py to store and manage large volumes of real-time Bitcoin price data in HDF5 format, enabling efficient data retrieval and manipulation for anomaly detection.
+- **Tech Description**: The h5py library is utilized to store and manage large datasets in HDF5 format, enabling efficient reading and writing of financial transaction data for anomaly detection.
 
-### Project Idea
-Develop a system that ingests real-time Bitcoin price data from various cryptocurrency exchanges, stores it in an HDF5 file using h5py, and implements an anomaly detection algorithm to identify unusual price movements.
+- **Project Idea**: The goal of this project is to identify fraudulent transactions in a financial dataset by employing anomaly detection techniques. The dataset will be sourced from the publicly available "Credit Card Fraud Detection" dataset on Kaggle, which contains transactions made by credit cards in September 2013 by European cardholders. Using h5py, we will store the dataset in HDF5 format for efficient access and manipulation. The project will implement Isolation Forest and One-Class SVM algorithms to detect anomalies, with a focus on optimizing model performance through hyperparameter tuning. The results will be evaluated using precision, recall, and F1-score metrics.
 
-### Python libs
-- h5py
-- pandas
-- NumPy
-- scikit-learn
-- requests (for API calls)
-- matplotlib (for visualization)
+- **Python libs**: h5py, pandas, scikit-learn, numpy, matplotlib, seaborn
 
-### Is it Free?
-Yes, all mentioned libraries are open-source and free to use.
+- **Is it Free?**: Yes
 
-### Relevant tool (h5py) related Resource Links
-- [h5py Documentation](https://docs.h5py.org/en/stable/)
-- [HDF5 File Format](https://www.hdfgroup.org/solutions/hdf5/)
-- [Anomaly Detection with Python](https://towardsdatascience.com/anomaly-detection-in-python-using-scikit-learn-1a6e2a7e0e5d)
+- **Relevant tool (h5py) related Resource Links**: 
+  - [h5py Documentation](https://docs.h5py.org/en/stable/)
+  - [Kaggle Credit Card Fraud Detection Dataset](https://www.kaggle.com/datasets/dalpozz/creditcard-fraud) 
+  - [Anomaly Detection with Isolation Forest](https://scikit-learn.org/stable/auto_examples/ensemble/plot_isolation_forest.html) 
+  - [Anomaly Detection with One-Class SVM](https://scikit-learn.org/stable/auto_examples/svm/plot_oneclass.html)
 

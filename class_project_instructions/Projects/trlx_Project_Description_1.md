@@ -1,21 +1,17 @@
-### Project Brief: Real-Time Bitcoin Sentiment Analysis with trlx
+**Title**: Enhancing Customer Support with Sentiment Analysis using trlx
 
-- **Title**: Real-Time Bitcoin Sentiment Analysis Using trlx
-- **Difficulty**: 3
-- **Tech Description**: Utilize trlx for reinforcement learning-based fine-tuning of language models to analyze and predict Bitcoin market sentiment from real-time social media data.
-- **Project Idea**: Ingest live tweets and Reddit posts about Bitcoin, preprocess the text data, and apply trlx to fine-tune a language model for sentiment classification. Use the sentiment scores to inform trading strategies or market predictions.
-- **Python libs**: 
-  - `trlx` (for reinforcement learning fine-tuning)
-  - `tweepy` (for Twitter API interaction)
-  - `praw` (for Reddit API interaction)
-  - `pandas` (data manipulation)
-  - `numpy` (numerical operations)
-  - `matplotlib` (visualization)
-  - `scikit-learn` (for model evaluation)
-- **Is it Free?**: Yes, trlx and the mentioned libraries are open-source and free to use, though API access may have limitations based on usage.
-- **Relevant tool (trlx) related Resource Links**:
-  - [trlx GitHub Repository](https://github.com/Lightning-AI/trlx)
-  - [trlx Documentation](https://trlx.readthedocs.io/en/latest/)
-  - [Tweepy Documentation](https://docs.tweepy.org/en/stable/)
-  - [PRAW Documentation](https://praw.readthedocs.io/en/latest/)
+**Difficulty**: 2
+
+**Tech Description**: trlx is utilized to fine-tune language models for sentiment analysis, enabling the classification of customer feedback into positive, negative, or neutral sentiments.
+
+**Project Idea**: The goal of this project is to analyze customer support interactions from a public API to gauge customer sentiment towards a product or service. By collecting customer feedback data from the Twitter API, we will preprocess the text data, fine-tune a language model using trlx, and then classify the sentiments expressed in the tweets. This analysis will help businesses understand customer satisfaction levels and identify areas for improvement. The project will also visualize sentiment trends over time to provide actionable insights.
+
+**Python libs**: trlx, tweepy, pandas, matplotlib, scikit-learn, nltk
+
+**Is it Free?**: Yes, the libraries and the Twitter API (with limitations) are free to use.
+
+**Relevant tool (trlx) related Resource Links**:
+- [trlx GitHub Repository](https://github.com/TRLX/trlx)
+- [Twitter API Documentation](https://developer.twitter.com/en/docs/twitter-api)
+- [Sentiment Analysis with trlx Tutorial](https://huggingface.co/docs/trlx)
 

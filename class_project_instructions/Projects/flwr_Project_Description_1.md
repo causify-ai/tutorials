@@ -1,20 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Prediction Using Federated Learning
+**Title**: Federated Learning for Personalized Health Recommendations
 
-- **Title**: Real-Time Bitcoin Price Prediction with Federated Learning
-- **Difficulty**: 3
-- **Tech Description**: Utilize the `flwr` library for federated learning to collaboratively train machine learning models across multiple devices while keeping data decentralized. This approach allows for real-time prediction of Bitcoin prices based on user-specific data without compromising privacy.
-- **Project Idea**: Implement a federated learning system where multiple clients (e.g., individual users or institutions) contribute to a shared model for predicting Bitcoin prices. Each client can use their local historical Bitcoin transaction data to improve the model while keeping their data private. The model will be updated in real-time as new price data comes in.
-- **Python libs**: 
-  - `flwr` (for federated learning)
-  - `pandas` (for data manipulation)
-  - `numpy` (for numerical operations)
-  - `scikit-learn` (for model building)
-  - `matplotlib` (for visualization)
-  - `requests` (for real-time Bitcoin price data API)
-- **Is it Free?**: Yes, all mentioned libraries are open-source and free to use.
-- **Relevant tool (XYZ) related Resource Links**:
-  - [Flower Documentation](https://flower.dev/docs/)
-  - [Federated Learning with Flower](https://flower.dev/docs/tutorials/federated-learning.html)
-  - [Bitcoin Price API](https://www.coindesk.com/coindesk-api/)
-  - [Scikit-learn Documentation](https://scikit-learn.org/stable/documentation.html)
+**Difficulty**: 2
+
+**Tech Description**: Flwr (Flower) is utilized to implement federated learning, allowing multiple clients to collaboratively train a machine learning model without sharing their raw data, ensuring privacy and security.
+
+**Project Idea**: The goal of this project is to develop a personalized health recommendation system using federated learning. Participants will use their own health data (e.g., exercise, diet, sleep patterns) collected from a public health dataset like the National Health and Nutrition Examination Survey (NHANES). By leveraging federated learning with Flwr, the model will learn from decentralized data across multiple clients, improving recommendations while maintaining data privacy. The project will involve preprocessing the health data, setting up a federated learning environment, and evaluating the model's performance in providing tailored health advice.
+
+**Python libs**: flwr, pandas, scikit-learn, numpy, matplotlib
+
+**Is it Free?**: Yes, all tools and datasets mentioned are free to use.
+
+**Relevant tool (Flwr) related Resource Links**:
+- [Flower Official Documentation](https://flower.dev/docs/)
+- [Federated Learning with Flower Tutorial](https://flower.dev/docs/tutorials/)
+- [NHANES Dataset](https://www.cdc.gov/nchs/nhanes/index.htm)
 

@@ -1,24 +1,28 @@
-### Project Brief: Real-Time Bitcoin Price Prediction using SNAP
+### Title
+Predicting Movie Success Using Social Media Sentiment Analysis
 
-- **Title**: Real-Time Bitcoin Price Prediction with SNAP
-- **Difficulty**: 3
-- **Tech Description**: SNAP (Stanford Network Analysis Platform) is a general-purpose, high-performance network analysis and graph mining library. It is designed for large-scale network analysis and can handle dynamic graphs, making it suitable for real-time data ingestion and processing.
-  
-- **Project Idea**: Use SNAP to build a real-time Bitcoin price prediction model by ingesting data from various social media platforms (e.g., Twitter) and cryptocurrency news websites. The project will analyze sentiment and trends in social media to predict future Bitcoin prices, leveraging graph-based techniques to understand relationships between different data points.
+### Difficulty: 
+2
 
-- **Python libs**: 
-  - SNAP (for network analysis)
-  - Tweepy (for Twitter API)
-  - BeautifulSoup (for web scraping)
-  - Pandas (for data manipulation)
-  - Scikit-learn (for machine learning)
-  - Matplotlib/Seaborn (for visualization)
+### Tech Description: 
+SNAP (Stanford Network Analysis Project) will be utilized to analyze social media networks and sentiment around upcoming movie releases, helping to predict their box office success.
 
-- **Is it Free?**: Yes, SNAP and the mentioned Python libraries are open-source and free to use.
+### Project Idea: 
+The goal of this project is to predict the box office performance of movies based on sentiment analysis of social media data, specifically Twitter. We will collect tweets related to upcoming movie releases using the Twitter API, and then use SNAP to analyze the social network of these tweets, focusing on sentiment and engagement metrics. By applying regression techniques, we will correlate sentiment scores with box office performance, providing insights into how social media buzz influences movie success.
 
-- **Relevant tool (SNAP) related Resource Links**:
-  - [SNAP GitHub Repository](https://github.com/snap-stanford/snap)
-  - [SNAP Documentation](http://snap.stanford.edu/snappy/index.html)
-  - [SNAP Tutorials](http://snap.stanford.edu/snappy/doc/index.html)
-  - [SNAP for Python](http://snap.stanford.edu/snappy/doc/Python.html)
+### Python libs
+- tweepy (for Twitter API)
+- pandas (for data manipulation)
+- numpy (for numerical operations)
+- SNAP (for network analysis)
+- scikit-learn (for regression modeling)
+- matplotlib (for visualization)
+
+### Is it Free?
+Yes, the Twitter API has a free tier, and SNAP is open-source.
+
+### Relevant tool (SNAP) related Resource Links
+- [SNAP Documentation](http://snap.stanford.edu/snappy/index.html)
+- [Twitter API Documentation](https://developer.twitter.com/en/docs/twitter-api)
+- [Sentiment Analysis with Python](https://realpython.com/python-nltk-sentiment-analysis/)
 

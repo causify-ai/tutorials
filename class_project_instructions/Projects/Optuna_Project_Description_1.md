@@ -1,31 +1,17 @@
-### Title
-Real-Time Bitcoin Price Anomaly Detection Using Optuna for Hyperparameter Optimization
+- **Title**: Hyperparameter Optimization for Time Series Forecasting of Retail Sales
 
-### Difficulty
-3
+- **Difficulty**: 2
 
-### Tech Description
-Utilize Optuna for hyperparameter tuning in a machine learning model designed to detect anomalies in real-time Bitcoin price data. The project will involve scraping live price data and applying time-series anomaly detection techniques.
+- **Tech Description**: Optuna is utilized in this project to automate the hyperparameter tuning process for a time series forecasting model, optimizing its performance based on validation metrics.
 
-### Project Idea
-- Scrape real-time Bitcoin price data from multiple cryptocurrency exchanges.
-- Implement a time-series anomaly detection model (e.g., LSTM or ARIMA).
-- Use Optuna to optimize hyperparameters for the chosen model.
-- Visualize detected anomalies and model performance metrics.
+- **Project Idea**: In this project, we aim to forecast retail sales using historical sales data from a publicly available dataset. The unique goal is to apply Optuna for hyperparameter optimization of a Long Short-Term Memory (LSTM) model, enhancing its predictive accuracy. We will preprocess the data, create a time series forecasting model, and use Optuna to systematically explore different hyperparameter configurations, such as learning rate, batch size, and number of LSTM units. The best-performing model will be evaluated on a holdout dataset to assess its forecasting capabilities.
 
-### Python libs
-- `requests` (for web scraping)
-- `pandas` (for data manipulation)
-- `numpy` (for numerical operations)
-- `Optuna` (for hyperparameter optimization)
-- `statsmodels` or `tensorflow` (for time-series modeling)
-- `matplotlib` or `seaborn` (for visualization)
+- **Python libs**: Optuna, TensorFlow/Keras, Pandas, NumPy, Matplotlib, Scikit-learn
 
-### Is it Free?
-Yes, all mentioned libraries are open-source and free to use.
+- **Is it Free?**: Yes, all tools and libraries mentioned are free to use.
 
-### Relevant tool (Optuna) related Resource Links
-- [Optuna Documentation](https://optuna.readthedocs.io/en/stable/)
-- [Optuna GitHub Repository](https://github.com/optuna/optuna)
-- [Optuna Examples](https://optuna.readthedocs.io/en/stable/tutorial/index.html)
+- **Relevant tool (Optuna) related Resource Links**:
+  - [Optuna Documentation](https://optuna.readthedocs.io/en/stable/)
+  - [Optuna GitHub Repository](https://github.com/optuna/optuna)
+  - [Optuna Examples](https://optuna.readthedocs.io/en/stable/tutorial/index.html)
 

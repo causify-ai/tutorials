@@ -1,18 +1,17 @@
-### Title: Real-Time Anomaly Detection in Bitcoin Transactions Using Lightning-Fabric
+**Title:** Real-Time Sentiment Analysis of Social Media Posts Using Lightning Fabric
 
-- **Difficulty:** 3
-- **Tech Description:** Lightning-Fabric is a framework designed for building scalable and efficient data pipelines that can handle real-time data ingestion and processing. It supports event-driven architectures and can integrate with various data sources and sinks seamlessly.
-- **Project Idea:** Develop a real-time anomaly detection system for Bitcoin transactions using Lightning-Fabric to ingest transaction data from multiple sources (e.g., blockchain APIs, transaction feeds). The system will identify suspicious patterns or anomalies in transaction behavior, which could indicate fraud or unusual market activity.
-- **Python libs:** 
-  - `lightning-fabric`
-  - `pandas`
-  - `scikit-learn`
-  - `numpy`
-  - `matplotlib` (for visualization)
-  - `statsmodels` (for time series analysis)
-- **Is it Free?** Yes, Lightning-Fabric is open-source and free to use.
-- **Relevant tool (Lightning-Fabric) related Resource Links:**
-  - [Lightning-Fabric Documentation](https://lightning-fabric.readthedocs.io/en/latest/)
-  - [GitHub Repository](https://github.com/lightning-fabric/lightning-fabric)
-  - [Real-Time Data Processing with Lightning-Fabric](https://lightning-fabric.readthedocs.io/en/latest/tutorials/real_time_data_processing.html)
+**Difficulty:** 3
+
+**Tech Description:** Lightning Fabric is utilized to streamline the training and deployment of a sentiment analysis model that processes real-time social media data, allowing for efficient scaling and orchestration of machine learning workflows.
+
+**Project Idea:** This project aims to develop a real-time sentiment analysis system that evaluates public sentiment towards specific topics on Twitter. By leveraging the Twitter API, we will gather tweets in real-time based on trending hashtags. The collected data will be pre-processed and fed into a transformer-based model for sentiment classification (positive, negative, neutral). The results will be visualized on a dashboard, providing insights into public sentiment trends over time. The use of Lightning Fabric will enhance the model's training efficiency and deployment, allowing for seamless updates as new data comes in.
+
+**Python libs:** Tweepy, Transformers, Pandas, Matplotlib, Lightning Fabric
+
+**Is it Free?** Yes, the Twitter API has a free tier, and all mentioned Python libraries are open-source.
+
+**Relevant tool (Lightning Fabric) related Resource Links:**
+- [Lightning Fabric Documentation](https://pytorch-lightning.readthedocs.io/en/stable/)
+- [Lightning Fabric GitHub Repository](https://github.com/Lightning-AI/lightning-fabric)
+- [Twitter API Documentation](https://developer.twitter.com/en/docs/twitter-api)
 

@@ -1,31 +1,18 @@
-### Title
-Real-Time Bitcoin Network Analysis Using NetworkX
+- **Title**: Analyzing Social Media Influence through Network Analysis
 
-### Difficulty
-3
+- **Difficulty**: 2
 
-### Tech Description
-Utilize NetworkX to model and analyze the relationships and transactions within the Bitcoin network in real-time, focusing on detecting anomalies and visualizing transaction flows.
+- **Tech Description**: NetworkX will be utilized to create and analyze social networks derived from Twitter data, focusing on user interactions and influence patterns.
 
-### Project Idea
-- Ingest real-time Bitcoin transaction data from a blockchain API (e.g., BlockCypher or Blockchain.info).
-- Construct a directed graph where nodes represent Bitcoin addresses and edges represent transactions.
-- Implement anomaly detection algorithms to identify suspicious activities or patterns in transaction flows.
-- Visualize the transaction network dynamically to observe changes and trends over time.
+- **Project Idea**: This project aims to explore the influence of Twitter users on specific topics by analyzing retweet and mention networks. By scraping real-time Twitter data using the Tweepy library, we will construct a directed graph where nodes represent users and edges represent interactions (retweets and mentions). We will then apply centrality measures (like degree and betweenness centrality) to identify key influencers in the network. The goal is to visualize the network and derive insights on how information spreads across users, helping brands understand social media dynamics.
 
-### Python libs
-- NetworkX
-- Requests
-- Matplotlib (for visualization)
-- NumPy (for data manipulation)
-- Pandas (for data handling)
+- **Python libs**: NetworkX, Tweepy, Matplotlib, Pandas, NumPy
 
-### Is it Free?
-Yes, all mentioned libraries and APIs have free tiers or are open-source.
+- **Is it Free?**: Yes, both the libraries and the Twitter API (with rate limits) are free to use.
 
-### Relevant tool (XYZ) related Resource Links
-- [NetworkX Documentation](https://networkx.org/documentation/stable/)
-- [Real-Time Bitcoin Data API - BlockCypher](https://www.blockcypher.com/)
-- [Anomaly Detection in Graphs](https://towardsdatascience.com/anomaly-detection-in-graphs-using-networkx-7f1f9e4b3b1e)
-- [Visualizing Graphs with Matplotlib](https://towardsdatascience.com/visualizing-graphs-with-matplotlib-4f3a5e8f8c5d)
+- **Relevant tool (XYZ) related Resource Links**:
+  - [NetworkX Documentation](https://networkx.org/documentation/stable/)
+  - [Tweepy Documentation](https://docs.tweepy.org/en/stable/)
+  - [Matplotlib Documentation](https://matplotlib.org/stable/contents.html)
+  - [Pandas Documentation](https://pandas.pydata.org/docs/)
 

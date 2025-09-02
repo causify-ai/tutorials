@@ -1,19 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Prediction Using Distributed Deep Learning
+**Title**: Distributed Image Classification with PyTorch
 
-- **Title**: Real-Time Bitcoin Price Prediction with torch.distributed
-- **Difficulty**: 3
-- **Tech Description**: Utilize `torch.distributed` to implement a distributed deep learning model for predicting Bitcoin prices in real-time using multiple GPUs across different nodes.
-- **Project Idea**: Build a scalable architecture that ingests real-time Bitcoin price data from multiple cryptocurrency exchanges, preprocesses the data, and trains a neural network model to predict future prices. The model will leverage distributed training to improve efficiency and performance.
-- **Python libs**: 
-  - `torch` (for deep learning)
-  - `torch.distributed` (for distributed training)
-  - `pandas` (for data manipulation)
-  - `requests` (for API calls)
-  - `numpy` (for numerical operations)
-  - `matplotlib` (for visualization)
-- **Is it Free?**: Yes, all libraries mentioned are open-source and free to use.
-- **Relevant tool (torch.distributed) related Resource Links**:
-  - [PyTorch Distributed Documentation](https://pytorch.org/docs/stable/distributed.html)
-  - [Distributed Training with PyTorch](https://pytorch.org/tutorials/intermediate/dist_tuto.html)
-  - [Real-Time Data Ingestion with Python](https://realpython.com/python-requests/)
+**Difficulty**: 3
+
+**Tech Description**: This project utilizes `torch.distributed` to implement a distributed training strategy for image classification using a large dataset, enabling efficient model training across multiple GPUs.
+
+**Project Idea**: The goal of this project is to build a robust image classification model that can effectively classify images from the CIFAR-10 dataset using distributed training. By leveraging `torch.distributed`, we will split the dataset across multiple GPUs to accelerate the training process. The model will be built using a convolutional neural network (CNN) architecture, and we will implement data parallelism to ensure that the training is efficient and scalable. This project will also explore techniques for optimizing communication between nodes to minimize training time while maintaining model accuracy.
+
+**Python libs**: PyTorch, torchvision, numpy, matplotlib
+
+**Is it Free?**: Yes
+
+**Relevant tool (XYZ) related Resource Links**:
+- [PyTorch Distributed Documentation](https://pytorch.org/docs/stable/distributed.html)
+- [CIFAR-10 Dataset](https://www.cs.toronto.edu/~kriz/cifar.html)
+- [Distributed Training with PyTorch](https://pytorch.org/tutorials/beginner/dist_overview.html)
 

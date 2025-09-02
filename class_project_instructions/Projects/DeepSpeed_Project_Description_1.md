@@ -1,31 +1,17 @@
-### Title
-Real-Time Anomaly Detection in Bitcoin Transactions Using DeepSpeed
+**Title**: Real-Time Sentiment Analysis on Twitter Data Using DeepSpeed
 
-### Difficulty
-3
+**Difficulty**: 3
 
-### Tech Description
-DeepSpeed is a deep learning optimization library that enables efficient training of large models. It enhances performance through techniques like model parallelism, mixed precision training, and memory optimization, making it suitable for handling large-scale data in real-time applications.
+**Tech Description**: DeepSpeed is utilized to efficiently train large-scale transformer models for real-time sentiment analysis on streaming Twitter data, enabling faster inference and reduced memory usage.
 
-### Project Idea
-Develop a real-time anomaly detection system for Bitcoin transactions. The system will ingest transaction data from multiple sources (e.g., blockchain data, transaction APIs, and web scraping of news articles related to Bitcoin) and identify unusual patterns or transactions that could indicate fraud or other anomalies.
+**Project Idea**: The goal of this project is to build a real-time sentiment analysis system that classifies tweets about current events as positive, negative, or neutral. We will leverage the Twitter API to stream live tweets related to trending topics. Using a transformer-based model, we will employ DeepSpeed to optimize the training process, allowing us to handle large datasets and achieve high accuracy. The model will be continuously updated with new data, ensuring that it remains relevant and effective in capturing public sentiment.
 
-### Python libs
-- DeepSpeed
-- PyTorch
-- Pandas
-- NumPy
-- Requests (for API calls)
-- BeautifulSoup (for web scraping)
-- Scikit-learn (for anomaly detection algorithms)
-- Matplotlib/Seaborn (for visualization)
+**Python libs**: Tweepy, Hugging Face Transformers, DeepSpeed, Pandas, NumPy, Matplotlib
 
-### Is it Free?
-Yes, DeepSpeed and the associated Python libraries mentioned are open-source and free to use.
+**Is it Free?**: Yes, the Twitter API has a free tier, and all mentioned Python libraries are open-source.
 
-### Relevant tool (DeepSpeed) related Resource Links
+**Relevant tool (DeepSpeed) related Resource Links**:
+- [DeepSpeed Documentation](https://www.deepspeed.ai/)
 - [DeepSpeed GitHub Repository](https://github.com/microsoft/DeepSpeed)
-- [DeepSpeed Documentation](https://www.deepspeed.ai/docs/)
-- [DeepSpeed Examples](https://github.com/microsoft/DeepSpeedExamples)
-- [DeepSpeed Performance Tuning Guide](https://www.deepspeed.ai/tutorials/)
+- [Hugging Face Transformers Documentation](https://huggingface.co/docs/transformers/index)
 

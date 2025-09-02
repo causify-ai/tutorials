@@ -1,18 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Prediction using MLlib
+- **Title**: Predicting Air Quality Index (AQI) Using MLlib
 
-- **Difficulty:** 3
-- **Tech Description:** Utilize Apache Spark's MLlib for scalable machine learning to analyze and predict Bitcoin price movements in real-time based on streaming data.
-- **Project Idea:** Build a real-time Bitcoin price prediction model that ingests live market data from multiple cryptocurrency exchanges, applies feature engineering, and uses MLlib for regression analysis to forecast future prices.
-- **Python libs:** 
-  - PySpark
-  - Pandas
-  - NumPy
-  - Matplotlib (for visualization)
-  - Requests (for API calls)
-- **Is it Free?** Yes, Apache Spark and its MLlib are open-source and free to use.
-- **Relevant tool (XYZ) related Resource Links:**
-  - [Apache Spark MLlib Documentation](https://spark.apache.org/docs/latest/ml-guide.html)
-  - [PySpark Documentation](https://spark.apache.org/docs/latest/api/python/)
-  - [Real-time Data Processing with Spark Streaming](https://spark.apache.org/docs/latest/streaming-programming-guide.html)
-  - [Bitcoin Price Data APIs](https://www.coingecko.com/en/api)
+- **Difficulty**: 2
+
+- **Tech Description**: MLlib is used for scalable machine learning algorithms, allowing us to build and train models on large datasets efficiently.
+
+- **Project Idea**: The goal of this project is to predict the Air Quality Index (AQI) for various cities using historical weather data and pollution levels. We will gather data from the OpenWeatherMap API, which provides real-time weather data, and combine it with historical AQI data from the World Air Quality Index API. The project will involve data preprocessing, feature engineering, and the application of regression algorithms in MLlib to forecast AQI levels. The model's performance will be evaluated using metrics such as RMSE and R².
+
+- **Python libs**: PySpark, requests, pandas, numpy, scikit-learn
+
+- **Is it Free?**: Yes, both OpenWeatherMap and World Air Quality Index APIs offer free tiers.
+
+- **Relevant tool (MLlib) related Resource Links**:
+  - [MLlib Documentation](https://spark.apache.org/docs/latest/ml-guide.html)
+  - [OpenWeatherMap API](https://openweathermap.org/api)
+  - [World Air Quality Index API](https://aqicn.org/json-api/doc/)
 

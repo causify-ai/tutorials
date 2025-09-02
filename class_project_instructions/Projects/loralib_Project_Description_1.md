@@ -1,28 +1,29 @@
 ### Title
-Real-Time Bitcoin Price Anomaly Detection using Loralib
+Predicting Air Quality Index (AQI) Using Loralib
 
 ### Difficulty
-3
+2
 
 ### Tech Description
-Loralib is a library designed for real-time data processing and anomaly detection using advanced algorithms. It can efficiently handle streaming data and apply machine learning techniques to identify unusual patterns.
+Loralib is utilized for developing and optimizing machine learning models specifically for time-series forecasting tasks, allowing for efficient hyperparameter tuning and model selection.
 
 ### Project Idea
-Develop a real-time system that ingests Bitcoin price data from multiple sources (e.g., exchanges, news feeds) and uses Loralib to detect anomalies in price movements. The system will alert users when significant deviations from expected price behavior occur, potentially indicating market manipulation or other significant events.
+The goal of this project is to predict the Air Quality Index (AQI) for various cities using historical air quality data obtained from the OpenWeatherMap API. By leveraging Loralib, we will explore different forecasting models to identify the most accurate approach for predicting future AQI levels. The project will involve data collection, preprocessing, and model evaluation, focusing on the impact of various environmental factors such as temperature, humidity, and wind speed on air quality. The final model will provide insights into potential air quality issues, aiding in public health awareness.
 
 ### Python libs
 - loralib
 - pandas
 - numpy
 - requests
-- matplotlib (for visualization)
-- scikit-learn (for additional ML tasks)
+- scikit-learn
+- matplotlib
+- seaborn
 
 ### Is it Free?
-Yes, Loralib is an open-source library.
+Yes, the OpenWeatherMap API offers a free tier for accessing air quality data.
 
 ### Relevant tool (Loralib) related Resource Links
-- [Loralib GitHub Repository](https://github.com/loralib/loralib)
 - [Loralib Documentation](https://loralib.readthedocs.io/en/latest/)
-- [Real-Time Data Processing with Loralib](https://loralib.readthedocs.io/en/latest/tutorials/real_time_processing.html)
+- [OpenWeatherMap API](https://openweathermap.org/api/air-pollution) 
+- [Loralib GitHub Repository](https://github.com/loralib/loralib)
 

@@ -1,25 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Prediction with CausalPy
-
-- **Title**: Real-Time Bitcoin Price Prediction Using Causal Inference Techniques
+- **Title**: Analyzing the Impact of Social Media Campaigns on E-commerce Sales
 
 - **Difficulty**: 3
 
-- **Tech Description**: CausalPy is a Python library designed for causal inference, enabling users to analyze the effect of interventions on outcomes. It can be leveraged to model and predict Bitcoin price movements based on various economic indicators and social media sentiment.
+- **Tech Description**: CausalPy will be used to establish causal relationships between social media marketing efforts and e-commerce sales, allowing for the identification of effective strategies.
 
-- **Project Idea**: Develop a real-time Bitcoin price prediction system that utilizes causal inference methods to assess the impact of external factors (e.g., news sentiment, trading volume, and macroeconomic indicators) on Bitcoin prices. The system will continuously ingest data from various sources, analyze causal relationships, and provide predictions.
+- **Project Idea**: This project aims to analyze the causal impact of various social media marketing campaigns on e-commerce sales using data from Twitter and Shopify APIs. By collecting tweets related to specific campaigns and corresponding sales data, we will employ CausalPy to model and infer the causal relationships. The goal is to identify which types of social media posts (e.g., promotional, engagement-focused) lead to significant increases in sales, providing actionable insights for marketing strategies.
 
-- **Python libs**: 
-  - CausalPy
-  - Pandas
-  - NumPy
-  - Requests (for data ingestion)
-  - Matplotlib/Seaborn (for visualization)
-  - Scikit-learn (for machine learning models)
+- **Python libs**: CausalPy, pandas, requests, statsmodels, matplotlib, seaborn
 
-- **Is it Free?**: Yes, CausalPy is an open-source library available for free.
+- **Is it Free?**: Yes, both the Twitter and Shopify APIs offer free tiers for data access.
 
-- **Relevant tool (CausalPy) related Resource Links**: 
+- **Relevant tool (CausalPy) related Resource Links**:
   - [CausalPy Documentation](https://causalpy.readthedocs.io/en/latest/)
-  - [Causal Inference with CausalPy - GitHub Repository](https://github.com/yourusername/causalpy-examples)
-  - [Real-Time Data Ingestion with Python - Medium Article](https://medium.com/@yourusername/real-time-data-ingestion-in-python)
+  - [Causal Inference with CausalPy](https://towardsdatascience.com/causal-inference-with-causalpy-5e1b5c7e1c8d)
+  - [Understanding Causal Relationships](https://www.analyticsvidhya.com/blog/2021/06/understanding-causal-inference-in-data-science/)
 

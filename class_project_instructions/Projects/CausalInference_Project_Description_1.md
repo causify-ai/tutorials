@@ -1,19 +1,17 @@
-### Project Brief: Real-Time Bitcoin Price Anomaly Detection Using Causal Inference
+**Title**: Evaluating the Impact of Remote Work on Employee Productivity Using Causal Inference
 
-- **Title**: Real-Time Anomaly Detection in Bitcoin Price Using Causal Inference
-- **Difficulty**: 3
-- **Tech Description**: Utilize causal inference techniques to identify and analyze anomalies in Bitcoin price movements by integrating real-time data streams and historical price data to establish causal relationships.
-- **Project Idea**: Develop a system that ingests real-time Bitcoin price data from multiple sources (e.g., exchanges, news sentiment) and applies causal inference to detect anomalies that may indicate market manipulation or significant events. The system should visualize detected anomalies and provide insights into potential causal factors.
-- **Python libs**: 
-  - `causalinference` for causal analysis
-  - `pandas` for data manipulation
-  - `numpy` for numerical operations
-  - `matplotlib` or `seaborn` for visualization
-  - `requests` for API calls
-  - `scikit-learn` for additional ML tasks
-- **Is it Free?**: Yes, all mentioned libraries are open-source and free to use.
-- **Relevant tool (CausalInference) related Resource Links**:
-  - [Causal Inference Documentation](https://causalinferencebook.com/)
-  - [Causal Inference in Python](https://www.causalinference.org/)
-  - [Causal Analysis with Python](https://towardsdatascience.com/causal-inference-in-python-using-do-calculus-8c3c5b3c5e1a)
+**Difficulty**: 2
+
+**Tech Description**: CausalInference is utilized to estimate the causal effect of remote work on employee productivity by analyzing observational data and controlling for confounding variables.
+
+**Project Idea**: This project aims to investigate how the shift to remote work during the pandemic has influenced employee productivity across various industries. By leveraging data from online employee surveys and productivity metrics, we will apply causal inference techniques to determine whether remote work has a positive, negative, or neutral impact on productivity levels. The analysis will involve controlling for factors such as job type, work environment, and individual characteristics to isolate the effect of remote work. The findings could provide valuable insights for organizations considering hybrid work models.
+
+**Python libs**: pandas, numpy, statsmodels, CausalInference, seaborn, matplotlib
+
+**Is it Free?**: Yes
+
+**Relevant tool (CausalInference) related Resource Links**: 
+- [CausalInference Documentation](https://causalinference.gitlab.io/)
+- [Causal Inference in Python: A Practical Guide](https://towardsdatascience.com/causal-inference-in-python-a-practical-guide-7c1b0f9b5e8d)
+- [Introduction to Causal Inference](https://www.stat.berkeley.edu/~breiman/Book/Book.html)
 

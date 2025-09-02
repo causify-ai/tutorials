@@ -1,28 +1,28 @@
-### Title: Real-Time Bitcoin Sentiment Analysis Using YData Profiling
+### Title
+Customer Segmentation Analysis Using YData Profiling
 
-- **Difficulty**: 3
+### Difficulty
+2
 
-- **Tech Description**: Utilize YData Profiling to analyze and visualize the quality of real-time sentiment data derived from social media platforms regarding Bitcoin. This will help in understanding the correlation between public sentiment and Bitcoin price movements.
+### Tech Description
+YData Profiling is employed to generate comprehensive data reports that help in understanding customer behavior and segmentation through exploratory data analysis.
 
-- **Project Idea**: 
-  - Ingest real-time tweets about Bitcoin using Twitter API.
-  - Perform sentiment analysis on the tweets to classify them as positive, negative, or neutral.
-  - Use YData Profiling to generate a comprehensive report on the sentiment data, highlighting data quality, distribution, and potential biases.
-  - Correlate sentiment trends with Bitcoin price changes to identify potential predictive indicators.
+### Project Idea
+The goal of this project is to perform customer segmentation for an e-commerce platform using transaction data. By leveraging YData Profiling, we will generate insights into customer demographics, purchase behavior, and product preferences. The project will involve cleaning and preprocessing the dataset, followed by applying clustering algorithms (like K-Means) to group customers based on their purchasing patterns. The insights gained will help in targeted marketing strategies and improving customer retention.
 
-- **Python libs**: 
-  - Tweepy (for Twitter API)
-  - TextBlob or VADER (for sentiment analysis)
-  - YData Profiling (for data profiling)
-  - Pandas (for data manipulation)
-  - Matplotlib/Seaborn (for visualization)
+### Python libs
+- YData Profiling
+- pandas
+- numpy
+- scikit-learn
+- matplotlib
+- seaborn
 
-- **Is it Free?**: Yes, all libraries mentioned are free to use.
+### Is it Free?
+Yes, YData Profiling is an open-source tool and can be used for free.
 
-- **Relevant tool (YData Profiling) related Resource Links**:
-  - [YData Profiling Documentation](https://ydata.ai/pydata-profiling/)
-  - [YData Profiling GitHub Repository](https://github.com/ydataai/ydata-profiling)
-  - [Twitter API Documentation](https://developer.twitter.com/en/docs/twitter-api)
-  - [TextBlob Documentation](https://textblob.readthedocs.io/en/dev/)
-  - [VADER Sentiment Analysis](https://github.com/cjhutto/vaderSentiment)
+### Relevant tool (YData Profiling) related Resource Links
+- [YData Profiling Documentation](https://ydata.ai/Profiling/)
+- [YData Profiling GitHub Repository](https://github.com/ydataai/ydata-profiling)
+- [YData Profiling Examples](https://ydata.ai/Profiling/examples.html)
 
