@@ -56,26 +56,38 @@ DEFAULT_FILE_GITHUB_LINK = (
     "class_project_instructions/Projects/"
 )
 tool_description_cache = defaultdict(list)
+# Write a short bullet-point project brief on how XYZ can be
+# used for real-time Bitcoin data ingestion in Python.
 GLOBAL_PROMPT = """Act as a graduate data science professor.
-I will give you a tool (XYZ).
-Write a short bullet-point project brief on how XYZ can be
-used for real-time Bitcoin data ingestion in Python.
-Include:
+I will give you a tool (XYZ). 
+Write a practical data science project brief utilising tool XYZ.
 
+Include:
 - Title
 - Difficulty: 1/2/3 (1 means easy, 2 is medium difficulty, 3 is hard)
-- Tech Description
-- Project Idea
+- Tech Description: 1–2 lines about how the tool is used in this project
+- Project Idea: 6-8 lines explaining the unique goal and method
 - Python libs
 - Is it Free?
 - Relevant tool(XYZ) related Resource Links
 
-Avoid long texts or steps
+**Constraints**:
+- Use a **new data source**, **problem domain**, or **ML task** if a similar tool/project was used before.
+- DO NOT reuse the same Bitcoin price API data or ML algorithm.
+- Keep each project unique and useful.
+- Use realistic, popular Python packages—no toy examples.
+Avoid long texts or steps. Do not use the same dataset for all projects. 
+
+Examples of variation:
+- Different data sources: GraphQL, WebSockets, news APIs, order books
+- Different ML tasks: Forecasting, anomaly detection, clustering
+- Different environments: cloud services, edge computing, streaming pipelines
+Look at the example to get an idea of how it needs to look. 
 """
 EXAMPLE = """Example:
 Title: Ingest bitcoin prices using AWS Glue (AWS Glue is technology XYZ)
 Difficulty: 1
-Description
+Description:
 AWS Glue is a fully managed extract, transform, and load (ETL) service...
 Useful resources: AWS Glue Docs
 Is it free?: Free tier available with limits
@@ -84,7 +96,7 @@ Python libraries: boto3, PySpark
 DEFAULT_MARKDOWN_PATH = "./class_project_instructions/Projects"
 # The maximum number of projects.
 # Set the value to None to disable the limit.
-DEFAULT_MAX_PROJECTS = None
+DEFAULT_MAX_PROJECTS = 5
 
 
 def _read_google_sheet(url: str, tab_name: str, secret_path: str) -> pd.DataFrame:
@@ -173,15 +185,14 @@ def _build_prompt(project_name: str, previous_descriptions: list[str]) -> str:
             previous_descriptions = "\n- " + "\n- ".join(previous_descriptions)
             return (
                 f"Technology: {project_name}."
-                f"Make sure it is different and one level of difficulty higher in execution and"
-                f"overall complextiy than the level mentioned"
-                f"in the following idea :"
-                f"\nPrevious idea:{previous_descriptions}\n"
+                f"Do NOT repeat the following idea:"
+                f"{previous_descriptions}\n"
                 f"Only focus on the new idea."
-                f"Make it distinct and complex in:"
+                f"Create a **new project** that is **one level higher in difficulty** and distinct in:\n"
                 f"1. the domain or application (e.g., use a different target problem),"
-                f"2. OR the data source (e.g., scrape news instead of using APIs),"
-                f"3. OR the ML task (e.g., classification, forecasting, anomaly detection, etc.)."
+                f"2. the data source (e.g., webscraping, APIs,ready datasets),"
+                f"3. the ML task (e.g., clustering, regression, classification, forecasting, anomaly detection, etc.)."
+                f"Match the style and format of the global prompt strictly."
             )
 
 
@@ -225,8 +236,6 @@ def create_markdown_file(
     :param max_projects: limit to the rows processed
     :param sleep_sec: amount of time to sleep between rows
     """
-    # Generate the project descriptions.
-    # Limit the number of projects.
     file_githublinks_df = pd.DataFrame(columns=["Tool","Project Number","URL"])
     rows = df.head(max_projects) if max_projects is not None else df
     temps = [0.3,0.45,0.6]
@@ -234,7 +243,6 @@ def create_markdown_file(
     for _, row in rows.iterrows():
         content = ""
         project_name = row["Tool"]
-        # difficulty = row["Difficulty"]
         n_projects = int(row.get("No of Projects", 1))
         for i in range(n_projects):
             description = _generate_project_description(
@@ -272,6 +280,7 @@ def create_markdown_file(
                 
             # else:
             hio.to_file(str(markdown_path), content)
+            _LOG.info("Generated Markdown File: %s", file_name)
             github_url = f"{DEFAULT_FILE_GITHUB_LINK}{file_name}"
             file_githublinks_df.loc[len(file_githublinks_df)] = [project_name,i+1,github_url]
             # Letting it wait for a while before triggering another request
@@ -336,10 +345,9 @@ def _main(parser: argparse.ArgumentParser) -> None:
     )
     _LOG.info("Done: %s", markdown_folder_path)
     _LOG.info("Adding GitHub links to Project files to Google sheet")
-    print('SHAPE OF DF BEFORE WRITING TO GOOGLE SHEET IS',file_githublinks_df.shape)
-    _write_google_sheet(
-        file_githublinks_df, args.sheet_url, 'MSML610 Project Github Links', secret_path
-    )
+    # _write_google_sheet(
+        # file_githublinks_df, args.sheet_url, 'MSML610 Project Github Links', secret_path
+    # )
 
 
 if __name__ == "__main__":
