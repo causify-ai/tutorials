@@ -1,0 +1,16 @@
+name: Superslow tests
+on:
+  # Run manually.
+  workflow_dispatch:
+  schedule:
+    # Run this everyday even if there are no commits.
+    - cron:  '0 0 * * *'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  run_superslow_tests:
+    uses: causify-ai/helpers/.github/workflows/common_run_tests.yml@master
+    with:
+      test-name: run_superslow_tests
+    secrets: inherit
