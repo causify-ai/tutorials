@@ -134,7 +134,6 @@ def _write_google_sheet(
         hgofiapi.write_to_google_sheet(
             df, url, tab_name, append=True, credentials=credentials
         )
-        print('helo')
     except ValueError as e:
         _LOG.info("ERROR while writing to Google Sheet %s", str(e))
     return df
@@ -216,7 +215,7 @@ def _generate_project_description(
         prompt,
         system_prompt=GLOBAL_PROMPT,
         model="gpt-4o-mini",
-        cache_mode="CAPTURE",
+        cache_mode="FALLBACK",
         temperature=temp,
         max_tokens=1500,
         print_cost=True,
@@ -239,7 +238,7 @@ def create_markdown_file(
     :param max_projects: limit to the rows processed
     :param sleep_sec: amount of time to sleep between rows
     """
-    file_githublinks_df = pd.DataFrame(columns=["Tool","Project Number","URL"])
+    file_githublinks_df = pd.DataFrame(columns=["Tool","URL"])
     rows = df.head(max_projects) if max_projects is not None else df
     temps = [0.3,0.45,0.6]
     pathlib.Path(markdown_folder_path).mkdir(parents=True, exist_ok=True)
@@ -252,8 +251,6 @@ def create_markdown_file(
                 project_name, tool_description_cache,temps[i]
             )
             tool_description_cache[project_name].append(description)
-            with open("error.txt", "w") as f:
-                f.write(description)
             # Add the project description to the markdown file.
             # difficulty_match = re.search(r"[Dd]ifficulty\s*[:\-–=]\s*(\d)", description)
             # if not difficulty_match:
@@ -273,21 +270,22 @@ def create_markdown_file(
             # content = f"# {project_name} Project Description\n\n"
             # content += f"## Difficulty Level: {difficulty}\n\n"
             # content += f"## Project Description\n"
-            content = f"{description}\n\n"
-            file_name = f"{project_name}_Project_Description_{i+1}.md"
-            markdown_path = pathlib.Path(markdown_folder_path) / file_name
+            content += f"{description}\n\n"
+            content += f"######################## END ###############################\n\n"
+        file_name = f"{project_name}_Project_Description.md"
+        markdown_path = pathlib.Path(markdown_folder_path) / file_name
             # if markdown_path.exists():
             #     _LOG.info(
             #         "File already exists, skipping generation: %s", markdown_path
             #     )
                 
             # else:
-            hio.to_file(str(markdown_path), content)
-            _LOG.info("Generated Markdown File: %s", file_name)
-            github_url = f"{DEFAULT_FILE_GITHUB_LINK}{file_name}"
-            file_githublinks_df.loc[len(file_githublinks_df)] = [project_name,i+1,github_url]
+        hio.to_file(str(markdown_path), content)
+        _LOG.info("Generated Markdown File: %s", file_name)
+        github_url = f"{DEFAULT_FILE_GITHUB_LINK}{file_name}"
+        file_githublinks_df.loc[len(file_githublinks_df)] = [project_name,github_url]
             # Letting it wait for a while before triggering another request
-            time.sleep(sleep_sec)
+        time.sleep(sleep_sec)
     return file_githublinks_df
 
 
