@@ -1,49 +1,34 @@
-**Title**: Anomaly Detection in E-commerce Transactions Using Polars
+### Project 1: Analyzing Global Temperature Trends
+- **Difficulty**: 1
+- **Tech Description**: Polars will be utilized for efficient data manipulation and analysis of large climate datasets.
+- **Project Idea**: The goal of this project is to analyze historical temperature data from the Global Historical Climatology Network (GHCN) to identify trends and anomalies in global temperature changes over the past century. Students will load the dataset into Polars, perform data cleaning, and execute exploratory data analysis (EDA) to visualize temperature trends by region. The project will culminate in a report detailing significant findings and potential implications for climate policy.
+- **Python libs**: Polars, Matplotlib, Seaborn, NumPy, Pandas
+- **Is it Free?**: Yes, the GHCN dataset is publicly available and can be accessed freely from the National Oceanic and Atmospheric Administration (NOAA).
+- **Relevant tool (Polars) related Resource Links**: 
+  - [Polars Documentation](https://pola.rs/)
+  - [Global Historical Climatology Network](https://www.ncdc.noaa.gov/ghcn-daily-description)
 
-**Difficulty**: 2
+---
 
-**Tech Description**: Polars is utilized for efficient data manipulation and analysis, enabling fast processing of large datasets to identify anomalies in transaction records.
+### Project 2: Customer Segmentation for E-commerce
+- **Difficulty**: 2
+- **Tech Description**: Polars will be employed to handle and process large customer transaction datasets for clustering analysis.
+- **Project Idea**: This project aims to perform customer segmentation for an e-commerce platform using transaction data from the UCI Machine Learning Repository's Online Retail dataset. Students will use Polars to preprocess the data, including handling missing values and aggregating transactions. They will then apply clustering algorithms such as K-Means to identify distinct customer segments based on purchasing behavior. The final deliverable will include visualizations of the segments and recommendations for targeted marketing strategies.
+- **Python libs**: Polars, Scikit-learn, Matplotlib, Seaborn, NumPy
+- **Is it Free?**: Yes, the Online Retail dataset is freely available for download from the UCI Machine Learning Repository.
+- **Relevant tool (Polars) related Resource Links**: 
+  - [Polars Documentation](https://pola.rs/)
+  - [UCI Machine Learning Repository - Online Retail](https://archive.ics.uci.edu/ml/datasets/Online+Retail)
 
-**Project Idea**: This project aims to detect fraudulent transactions in an e-commerce dataset by applying anomaly detection techniques. The dataset will be sourced from the publicly available "E-commerce Transactions" dataset on Kaggle, which contains transaction records with various features such as transaction amount, time, and user details. Using Polars, we will preprocess the data for speed and efficiency, then apply Isolation Forest or Local Outlier Factor algorithms to identify outliers indicative of fraudulent activity. The goal is to create a robust model that can flag suspicious transactions in real-time, enhancing security measures for online retailers.
+---
 
-**Python libs**: Polars, Scikit-learn, Matplotlib, Seaborn
-
-**Is it Free?**: Yes
-
-**Relevant tool (XYZ) related Resource Links**:
-- [Polars Documentation](https://pola.rs/)
-- [Kaggle E-commerce Transactions Dataset](https://www.kaggle.com/datasets/carrie1/ecommerce-data)
-- [Scikit-learn Anomaly Detection](https://scikit-learn.org/stable/modules/outlier_detection.html)
-
-######################## END ###############################
-
-### Title
-Predicting Air Quality Index Using Web Scraped Data
-
-### Difficulty
-2
-
-### Tech Description
-Polars is utilized for efficient data manipulation and analysis, enabling fast processing of large datasets scraped from the web.
-
-### Project Idea
-The goal of this project is to predict the Air Quality Index (AQI) in urban areas by scraping real-time environmental data from various public APIs and websites. The project will focus on collecting data related to pollutants such as PM2.5, PM10, and ozone levels, along with meteorological data like temperature and humidity. Using Polars, we will preprocess and analyze the data to identify trends and correlations. A regression model will be trained to forecast the AQI based on the collected features, allowing for timely alerts and insights into air quality changes.
-
-### Python libs
-- Polars
-- Requests
-- BeautifulSoup
-- Scikit-learn
-- Matplotlib
-
-### Is it Free?
-Yes, all tools and libraries mentioned are free to use.
-
-### Relevant tool (XYZ) related Resource Links
-- [Polars Documentation](https://pola.rs/)
-- [Polars GitHub Repository](https://github.com/pola-rs/polars)
-- [Web Scraping with BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
-- [Scikit-learn Documentation](https://scikit-learn.org/stable/documentation.html)
-
-######################## END ###############################
+### Project 3: Real-time Stock Price Analysis
+- **Difficulty**: 3
+- **Tech Description**: Polars will be leveraged for high-performance data processing and analysis of streaming stock price data.
+- **Project Idea**: In this advanced project, students will create a system to analyze stock price movements using historical data from the Alpha Vantage API. They will use Polars to ingest and process large volumes of stock data efficiently. The project will involve implementing anomaly detection techniques to identify unusual price movements and creating visualizations to present the findings. Additionally, students will explore the potential of integrating real-time data streaming to update the analysis dynamically.
+- **Python libs**: Polars, Alpha Vantage API, Matplotlib, NumPy, SciPy
+- **Is it Free?**: Yes, the Alpha Vantage API offers a free tier for accessing stock price data.
+- **Relevant tool (Polars) related Resource Links**: 
+  - [Polars Documentation](https://pola.rs/)
+  - [Alpha Vantage API](https://www.alphavantage.co/)
 

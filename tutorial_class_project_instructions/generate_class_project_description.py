@@ -2,10 +2,10 @@
 """
 Generate project descriptions from a Google Sheet and save them to a Markdown
 file. This script also creates Github links for the project files and adds them
-back to the Google Sheet.
+back to the Google Sheet. Set the OPENAI_API_KEY using export before running script.
 
 >   python tutorial_class_project_instructions/generate_class_project_description.py
-    --OPENAI_API_KEY ""
+    
     --tab_name ""
     -v INFO
 
@@ -58,28 +58,36 @@ DEFAULT_FILE_GITHUB_LINK = (
 tool_description_cache = defaultdict(list)
 # Write a short bullet-point project brief on how XYZ can be
 # used for real-time Bitcoin data ingestion in Python.
+
+# - Prefer solutions that can run on a **standard laptop or cloud notebooks with limited resources (e.g., Colab free tier)**.
 GLOBAL_PROMPT = """Act as a graduate data science professor.
 I will give you a tool (XYZ). 
-Write a practical data science project brief utilising tool XYZ.
-
+Write **three distinct and realistic graduate-level data science project briefs** using the given tool XYZ.
+Each project should be distinct, creative, and feasible for a graduate student to build over a semester.
 Include:
 - Title
-- Difficulty: 1/2/3 (1 means easy, 2 is medium difficulty, 3 is hard)
+- Difficulty: 1/2/3 (1 = easy, 2 = medium, 3 = hard; use each level **exactly once**)
 - Tech Description: 1–2 lines about how the tool is used in this project
-- Project Idea: 6-8 lines explaining the unique goal and method
-- Python libs
-- Is it Free?
+- Project Idea: 6-8 lines explaining the goal and approach.
+- Python libs - 4–6 packages used in the implementation
+- Is it Free? - Yes/No with explanation.
 - Relevant tool(XYZ) related Resource Links
 
 **Constraints**:
-- Use a **new data source**, **problem domain**, or **ML task** if a similar tool/project was used before.
-- DO NOT reuse the same Bitcoin price API data or ML algorithm.
+- Use **different data sources**, **problem domains**, or **ML tasks** across the 3 projects.- DO NOT reuse the same Bitcoin price API data or ML algorithm.
 - Keep each project unique and useful.
+- Do NOT repeat the same dataset or algorithm across projects.
 - Use realistic, popular Python packages—no toy examples.
-- Do not propose projects that require physical sensors or IoT devices; 
-  restrict all data sources to publicly available free online APIs, free web streams,
-  or datasets accessible via Python.
-Avoid long texts or steps. Do not use the same dataset for all projects. 
+- Do not propose projects that require physical sensors or IoT devices or non-public data.
+- Only use **freely available public data** via free APIs (no limited usage), web streams, or downloadable datasets.
+- Mention the dataset name or source clearly.
+- Do NOT mention surveys, forms, or custom user data collection.
+- Use **pre-trained models** for NLP or vision tasks — do not require training from scratch.
+- Avoid projects that require **GPUs, multi-node clusters, or expensive cloud compute**.
+- Do NOT propose large-scale deep learning training unless using transfer learning on a small dataset.
+- Avoid real-time claims unless tool supports it.
+- Do **not propose large-scale training of transformer models or deep learning systems** unless pre-trained models are used for lightweight inference or fine-tuning on small datasets.
+- Avoid long texts or steps. Use concise, clear language.
 
 Examples of variation:
 - Different data sources: GraphQL, WebSockets, news APIs, order books
@@ -87,15 +95,41 @@ Examples of variation:
 - Different environments: cloud services, edge computing, streaming pipelines
 Look at the example to get an idea of how it needs to look. 
 """
-EXAMPLE = """Example:
-Title: Ingest bitcoin prices using AWS Glue (AWS Glue is technology XYZ)
-Difficulty: 1
-Description:
-AWS Glue is a fully managed extract, transform, and load (ETL) service...
-Useful resources: AWS Glue Docs
-Is it free?: Free tier available with limits
-Python libraries: boto3, PySpark
+EXAMPLE = """Example using Streamlit (technology XYZ):
+
+### Project 1  
+**Title**: Interactive EDA Dashboard for Global Earthquake Data  
+**Difficulty**: 1  
+**Tech Description**: Use Streamlit to build an interactive web app for visualizing and filtering earthquake data.  
+**Project Idea**: Create a simple Streamlit dashboard that loads real-time global earthquake data from the USGS API. Allow users to filter earthquakes by magnitude, date, and region. Add dynamic maps using `pydeck` and graphs with `plotly`. Ideal for learning basic dashboard interactivity and data visualization.  
+**Python libs**: streamlit, pandas, plotly, requests, pydeck  
+**Is it Free?**: Yes, Streamlit is open-source and completely free  
+**Resource Links**: [Streamlit Docs](https://docs.streamlit.io), [USGS API](https://earthquake.usgs.gov/fdsnws/event/1/)
+
+---
+
+### Project 2  
+**Title**: Job Salary Estimator App Using Streamlit and NLP  
+**Difficulty**: 2  
+**Tech Description**: Use Streamlit to deploy a trained NLP model that predicts job salaries from descriptions.  
+**Project Idea**: Train an NLP model on the Kaggle “Salary Prediction” dataset that predicts salary based on job descriptions. Deploy the model as an interactive app using Streamlit, where users can input job text and see predicted salaries, confidence intervals, and key phrase highlights.  
+**Python libs**: streamlit, scikit-learn, nltk, pandas, shap  
+**Is it Free?**: Yes  
+**Resource Links**: [Streamlit Docs](https://docs.streamlit.io), [Kaggle Dataset](https://www.kaggle.com/c/job-salary-prediction)
+
+---
+
+### Project 3  
+**Title**: Real-Time Traffic Accident Alert System  
+**Difficulty**: 3  
+**Tech Description**: Use Streamlit to display live alerts and analytics using a streaming API of traffic incidents.  
+**Project Idea**: Build a real-time dashboard that pulls traffic accident data from a live API like the MapQuest Traffic Feed or Open511. Use asynchronous requests and queueing to process alerts, show severity-based maps, and send browser notifications. Add clustering of hot zones using unsupervised learning.  
+**Python libs**: streamlit, aiohttp, folium, scikit-learn, pandas, altair  
+**Is it Free?**: Streamlit is free; some APIs may require free tokens or rate limits  
+**Resource Links**: [Streamlit Docs](https://docs.streamlit.io), [Open511 API](https://open511.org/), [MapQuest](https://developer.mapquest.com)
+
 """
+
 DEFAULT_MARKDOWN_PATH = "./class_project_instructions/Projects"
 # The maximum number of projects.
 # Set the value to None to disable the limit.
@@ -139,7 +173,7 @@ def _write_google_sheet(
     return df
 
 
-def _build_prompt(project_name: str, previous_descriptions: list[str]) -> str:
+def _build_prompt(project_name: str) -> str:
     if False:
         # Potential (v3) prompt if needed to use.
         # Change False to True to use it.
@@ -181,25 +215,32 @@ def _build_prompt(project_name: str, previous_descriptions: list[str]) -> str:
         # v2: Added by Aayush as an improvement to optimize tokens
         # while conveying the same information.
         # Short, to the point and concise. Saves the most tokens while achieving similar results.
-        if not previous_descriptions:
-            return f"Technology: {project_name}."
-        else:
-            previous_descriptions = "\n- " + "\n- ".join(previous_descriptions)
-            return (
-                f"Technology: {project_name}."
-                f"Do NOT repeat the following idea:"
-                f"{previous_descriptions}\n"
-                f"Only focus on the new idea."
-                f"Create a **new project** that is **one level higher in difficulty** and distinct in:\n"
-                f"1. the domain or application (e.g., use a different target problem),"
-                f"2. the data source (e.g., webscraping, APIs,ready datasets),"
-                f"3. the ML task (e.g., clustering, regression, classification, forecasting, anomaly detection, etc.)."
-                f"Match the style and format of the global prompt strictly."
-            )
+        # if not previous_descriptions:
+        #     return f"Technology: {project_name}."
+        # else:
+        #     previous_descriptions = "\n- " + "\n- ".join(previous_descriptions)
+            # return (
+            #     f"Technology: {project_name}."
+            #     f"Do NOT repeat the following idea:"
+            #     f"{previous_descriptions}\n"
+            #     f"Only focus on the new idea."
+            #     f"Create a **completely new project** that differs clearly in all three aspects:\n"
+            #     f"1. the domain or application (e.g., use a different target problem),"
+            #     f"2. the data source (e.g., webscraping, APIs,ready datasets),"
+            #     f"3. the ML task (e.g., clustering, regression, classification, forecasting, anomaly detection, etc.)."
+            #     f"Also change the difficulty by 1 from the previous project (i.e., make it one level easier or harder).\n"
+            #     f"Match the style and format of the GLOBAL PROMPT strictly."
+                
+            # )
+        return (
+            f"Tool: {project_name}.\n"
+            f"Generate three new and distinct graduate-level data science project ideas using this tool.\n"
+            f"Each project must have a unique difficulty level (1, 2, 3)."
+        )
 
 
 def _generate_project_description(
-    project_name: str, previous_descriptions: list[str],temp:int
+    project_name: str
 ) -> Any:
     """
     Generate a project description. Depending on the value in No of Projects
@@ -210,14 +251,14 @@ def _generate_project_description(
     :param difficulty: the difficulty level of the project
     :return: the project description
     """
-    prompt = _build_prompt(project_name, previous_descriptions)
+    prompt = _build_prompt(project_name)
     project_desc = hopenai.get_completion(
         prompt,
         system_prompt=GLOBAL_PROMPT,
         model="gpt-4o-mini",
         cache_mode="FALLBACK",
-        temperature=temp,
-        max_tokens=1500,
+        temperature=0.5,
+        max_tokens=1000,
         print_cost=True,
     )
     return project_desc
@@ -240,17 +281,17 @@ def create_markdown_file(
     """
     file_githublinks_df = pd.DataFrame(columns=["Tool","URL"])
     rows = df.head(max_projects) if max_projects is not None else df
-    temps = [0.3,0.45,0.6]
+    # temps = [0.3,0.45,0.6]
     pathlib.Path(markdown_folder_path).mkdir(parents=True, exist_ok=True)
     for _, row in rows.iterrows():
         content = ""
         project_name = row["Tool"]
-        n_projects = int(row.get("No of Projects", 1))
-        for i in range(n_projects):
-            description = _generate_project_description(
-                project_name, tool_description_cache,temps[i]
-            )
-            tool_description_cache[project_name].append(description)
+        # n_projects = int(row.get("No of Projects", 1))
+        # for i in range(n_projects):
+            # prev_descs = tool_description_cache[project_name][-2:]
+        description = _generate_project_description(
+                project_name)
+        # tool_description_cache[project_name].append(description)
             # Add the project description to the markdown file.
             # difficulty_match = re.search(r"[Dd]ifficulty\s*[:\-–=]\s*(\d)", description)
             # if not difficulty_match:
@@ -270,8 +311,8 @@ def create_markdown_file(
             # content = f"# {project_name} Project Description\n\n"
             # content += f"## Difficulty Level: {difficulty}\n\n"
             # content += f"## Project Description\n"
-            content += f"{description}\n\n"
-            content += f"######################## END ###############################\n\n"
+        content = f"{description}\n\n"
+        # content += f"######################## END ###############################\n\n"
         file_name = f"{project_name}_Project_Description.md"
         markdown_path = pathlib.Path(markdown_folder_path) / file_name
             # if markdown_path.exists():

@@ -1,38 +1,28 @@
-**Title**: Automated Feature Engineering for Predicting Housing Prices
+### Project 1: **Feature Engineering for Predicting House Prices**
+- **Difficulty**: 1
+- **Tech Description**: Autofeat will be used to automatically generate and select relevant features from a raw dataset of housing attributes.
+- **Project Idea**: The goal is to predict house prices based on various features such as location, size, and amenities. By utilizing the Boston Housing dataset, students will apply Autofeat to create new features from existing ones, enhancing the predictive power of their model. The project will involve data preprocessing, feature generation, and regression modeling to evaluate the improvements in prediction accuracy.
+- **Python libs**: pandas, scikit-learn, Autofeat, matplotlib, seaborn
+- **Is it Free?**: Yes, the project uses the publicly available Boston Housing dataset and free Python libraries.
+- **Relevant tool (Autofeat) related Resource Links**: [Autofeat GitHub Repository](https://github.com/supertux88/autofeat), [Boston Housing Dataset](https://www.kaggle.com/c/boston-housing)
 
-**Difficulty**: 2
+---
 
-**Tech Description**: Autofeat is utilized in this project to automatically generate new features from the existing dataset, enhancing the predictive power of machine learning models for housing price prediction.
+### Project 2: **Customer Segmentation for E-commerce**
+- **Difficulty**: 2
+- **Tech Description**: Autofeat will be employed to enhance customer features from transactional data for clustering analysis.
+- **Project Idea**: This project aims to segment customers of an e-commerce platform based on their purchasing behavior. Using the Online Retail dataset from UCI Machine Learning Repository, students will leverage Autofeat to create new features such as total spend, frequency of purchases, and average order value. These features will then be used in clustering algorithms to identify distinct customer segments, providing insights for targeted marketing strategies.
+- **Python libs**: pandas, scikit-learn, Autofeat, seaborn, numpy
+- **Is it Free?**: Yes, the project utilizes the freely available Online Retail dataset and open-source Python libraries.
+- **Relevant tool (Autofeat) related Resource Links**: [Autofeat Documentation](https://autofeat.readthedocs.io/en/latest/), [Online Retail Dataset](https://archive.ics.uci.edu/ml/datasets/Online+Retail)
 
-**Project Idea**: The goal of this project is to predict housing prices using a dataset from the Kaggle Housing Prices competition. By leveraging Autofeat, we will automate the feature engineering process, creating new features from the existing ones, such as interactions and polynomial features. The method will involve data preprocessing, applying Autofeat to generate features, and then training a regression model to predict house prices. The project will also include model evaluation using metrics like RMSE and R² to assess the effectiveness of the generated features.
+---
 
-**Python libs**: pandas, numpy, scikit-learn, Autofeat, matplotlib, seaborn
-
-**Is it Free?**: Yes
-
-**Relevant tool (Autofeat) related Resource Links**:
-- [Autofeat GitHub Repository](https://github.com/AutoFeat/AutoFeat)
-- [Kaggle Housing Prices Dataset](https://www.kaggle.com/c/house-prices-advanced-regression-techniques/data)
-- [Autofeat Documentation](https://autofeat.readthedocs.io/en/latest/)
-
-######################## END ###############################
-
-**Title**: Predicting Housing Prices using Feature Engineering with Autofeat
-
-**Difficulty**: 3
-
-**Tech Description**: Autofeat is utilized to automate the feature engineering process, generating new features from the existing dataset to enhance model performance for predicting housing prices.
-
-**Project Idea**: This project aims to predict housing prices using a dataset sourced from the Kaggle Housing Prices competition. By leveraging Autofeat, we will automate the creation of new features from the raw dataset, including transformations and interactions between existing features. The goal is to build a robust regression model that not only predicts prices accurately but also demonstrates the effectiveness of automated feature engineering in improving predictive performance. The project will involve data cleaning, feature generation with Autofeat, and model training using popular regression algorithms.
-
-**Python libs**: pandas, numpy, scikit-learn, Autofeat, matplotlib, seaborn
-
-**Is it Free?**: Yes
-
-**Relevant tool (Autofeat) related Resource Links**:
-- [Autofeat GitHub Repository](https://github.com/supertux88/autofeat)
-- [Autofeat Documentation](https://autofeat.readthedocs.io/en/latest/)
-- [Kaggle Housing Prices Dataset](https://www.kaggle.com/c/house-prices-advanced-regression-techniques)
-
-######################## END ###############################
+### Project 3: **Predicting Student Performance in Exams**
+- **Difficulty**: 3
+- **Tech Description**: Autofeat will be utilized to generate complex features from educational data to improve model predictions.
+- **Project Idea**: The objective is to predict student performance based on various factors such as study habits, attendance, and socioeconomic status using the Student Performance dataset from UCI. Students will apply Autofeat to create new features that capture interactions between different variables, such as study time and attendance. The project will involve building and optimizing a predictive model to analyze how these engineered features impact student outcomes, using techniques such as cross-validation for model evaluation.
+- **Python libs**: pandas, scikit-learn, Autofeat, statsmodels, matplotlib
+- **Is it Free?**: Yes, all data and libraries used in this project are freely accessible.
+- **Relevant tool (Autofeat) related Resource Links**: [Autofeat GitHub Repository](https://github.com/supertux88/autofeat), [Student Performance Dataset](https://archive.ics.uci.edu/ml/datasets/Student+Performance)
 

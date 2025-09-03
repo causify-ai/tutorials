@@ -1,38 +1,35 @@
-**Title**: Evaluating the Impact of Remote Work on Employee Productivity Using Causal Inference
+### Project 1: Evaluating the Impact of Remote Work on Employee Productivity
+- **Difficulty:** 1
+- **Tech Description:** CausalInference will be used to analyze observational data to estimate the causal effect of remote work on productivity metrics.
+- **Project Idea:** This project aims to determine whether remote work has a significant impact on employee productivity compared to traditional in-office work. Using publicly available datasets from platforms like Kaggle that track productivity metrics (e.g., hours worked, project completion rates), the student will apply causal inference methods to control for confounding variables such as industry type and employee experience. The goal is to provide insights that can guide organizational policies on remote work.
+- **Python libs:** CausalInference, Pandas, NumPy, Matplotlib, Statsmodels
+- **Is it Free?** Yes, the CausalInference package and the datasets from Kaggle are freely available.
+- **Relevant tool (CausalInference) related Resource Links:**  
+  - [CausalInference Documentation](https://causalinference.net/)
+  - [Kaggle Datasets](https://www.kaggle.com/datasets)
 
-**Difficulty**: 2
+---
 
-**Tech Description**: CausalInference is utilized to estimate the causal effect of remote work on employee productivity by analyzing observational data and controlling for confounding variables.
+### Project 2: Assessing the Effect of Air Quality on Public Health Outcomes
+- **Difficulty:** 2
+- **Tech Description:** CausalInference will be utilized to estimate the causal relationships between air quality metrics and public health outcomes using observational data.
+- **Project Idea:** This project will explore how variations in air quality impact public health metrics, such as hospital admissions for respiratory conditions. The student will gather air quality data from the EPA and health outcome data from the CDC. By employing causal inference techniques to control for confounding factors (like socioeconomic status and geographical location), the student will quantify the health risks associated with poor air quality, providing actionable insights for policymakers.
+- **Python libs:** CausalInference, Pandas, NumPy, Seaborn, Statsmodels
+- **Is it Free?** Yes, both the CausalInference package and the datasets from the EPA and CDC are publicly available at no cost.
+- **Relevant tool (CausalInference) related Resource Links:**  
+  - [CausalInference Documentation](https://causalinference.net/)
+  - [EPA Air Quality Data](https://www.epa.gov/outdoor-air-quality-data)
+  - [CDC Public Health Data](https://www.cdc.gov/datastatistics/index.html)
 
-**Project Idea**: This project aims to investigate how the shift to remote work during the pandemic has influenced employee productivity across various industries. By leveraging data from online employee surveys and productivity metrics, we will apply causal inference techniques to determine whether remote work has a positive, negative, or neutral impact on productivity levels. The analysis will involve controlling for factors such as job type, work environment, and individual characteristics to isolate the effect of remote work. The findings could provide valuable insights for organizations considering hybrid work models.
+---
 
-**Python libs**: pandas, numpy, statsmodels, CausalInference, seaborn, matplotlib
-
-**Is it Free?**: Yes
-
-**Relevant tool (CausalInference) related Resource Links**: 
-- [CausalInference Documentation](https://causalinference.gitlab.io/)
-- [Causal Inference in Python: A Practical Guide](https://towardsdatascience.com/causal-inference-in-python-a-practical-guide-7c1b0f9b5e8d)
-- [Introduction to Causal Inference](https://www.stat.berkeley.edu/~breiman/Book/Book.html)
-
-######################## END ###############################
-
-**Title**: Evaluating the Impact of Remote Work on Employee Productivity Using Causal Inference
-
-**Difficulty**: 3
-
-**Tech Description**: CausalInference will be used to assess the causal relationship between remote work policies and employee productivity metrics using observational data from surveys and online performance tracking tools.
-
-**Project Idea**: This project aims to evaluate how the shift to remote work during the COVID-19 pandemic has affected employee productivity across various sectors. By utilizing survey data collected from employees regarding their work habits and performance metrics from productivity tracking tools, we will apply causal inference techniques to determine whether remote work has a positive, negative, or neutral impact on productivity. The analysis will involve controlling for confounding variables such as industry, job role, and individual work preferences, allowing for a robust understanding of the causal effects of remote work.
-
-**Python libs**: CausalInference, pandas, statsmodels, seaborn, matplotlib, scikit-learn
-
-**Is it Free?**: Yes
-
-**Relevant tool (CausalInference) related Resource Links**:
-- [CausalInference Documentation](https://causalinference.net/)
-- [Causal Inference with Python - A Practical Guide](https://towardsdatascience.com/causal-inference-with-python-a-practical-guide-9a5c5e75a0f5)
-- [Understanding Causal Inference](https://www.stat.berkeley.edu/~breiman/Book/Book.html)
-
-######################## END ###############################
+### Project 3: The Effect of Marketing Campaigns on Retail Sales
+- **Difficulty:** 3
+- **Tech Description:** CausalInference will be applied to analyze the causal impact of various marketing strategies on retail sales using a quasi-experimental design.
+- **Project Idea:** This advanced project seeks to quantify the effect of different marketing campaigns (e.g., discounts, social media ads) on retail sales using historical sales data from a publicly available retail dataset. The student will employ causal inference methods to address issues of selection bias and confounding variables, allowing for a robust analysis of how each marketing strategy influences sales performance. The findings will help businesses optimize their marketing efforts based on empirical evidence.
+- **Python libs:** CausalInference, Pandas, NumPy, Scikit-learn, Matplotlib
+- **Is it Free?** Yes, the CausalInference package and the retail sales dataset from the UCI Machine Learning Repository are freely accessible.
+- **Relevant tool (CausalInference) related Resource Links:**  
+  - [CausalInference Documentation](https://causalinference.net/)
+  - [UCI Machine Learning Repository - Retail Dataset](https://archive.ics.uci.edu/ml/datasets/Online+Retail)
 

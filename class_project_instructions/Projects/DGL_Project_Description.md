@@ -1,19 +1,34 @@
-**Title**: Graph-Based Recommendation System for Movie Ratings
+### Project 1: Graph-Based Recommendation System  
+- **Difficulty**: 1  
+- **Tech Description**: DGL will be used to construct and manipulate graph structures representing user-item interactions for recommendations.  
+- **Project Idea**: The goal of this project is to build a graph-based recommendation system leveraging user-item interaction data. Using the MovieLens dataset, students will create a bipartite graph where users and movies are nodes, and edges represent interactions (ratings). The project will involve implementing collaborative filtering techniques using DGL to predict user preferences for unseen movies, thereby enhancing user experience on streaming platforms.  
+- **Python libs**: DGL, NetworkX, Pandas, NumPy, Scikit-learn  
+- **Is it Free?**: Yes, DGL is open-source and freely available for use.  
+- **Relevant tool (DGL) related Resource Links**:  
+  - [DGL Documentation](https://docs.dgl.ai/)  
+  - [MovieLens Dataset](https://grouplens.org/datasets/movielens/)  
 
-**Difficulty**: 2
+---
 
-**Tech Description**: DGL (Deep Graph Library) is utilized to create and manipulate graph structures, enabling the implementation of graph neural networks for generating personalized movie recommendations based on user ratings.
+### Project 2: Social Network Analysis for Community Detection  
+- **Difficulty**: 2  
+- **Tech Description**: DGL will be utilized to model social networks and perform community detection using graph neural networks (GNNs).  
+- **Project Idea**: This project aims to analyze a social network (using the Facebook Social Network dataset) to identify communities within the network. Students will construct a graph from the dataset, where nodes represent users and edges represent friendships. By applying GNNs with DGL, the project will explore various community detection algorithms to uncover hidden structures and relationships, providing insights into user behavior and network dynamics.  
+- **Python libs**: DGL, PyTorch, NetworkX, Matplotlib, Pandas  
+- **Is it Free?**: Yes, both DGL and the Facebook Social Network dataset are available for free.  
+- **Relevant tool (DGL) related Resource Links**:  
+  - [DGL Community Detection Tutorial](https://docs.dgl.ai/en/latest/tutorials/models/1_gnn/3_community_detection.html)  
+  - [Facebook Social Network Dataset](https://snap.stanford.edu/data/facebook.html)  
 
-**Project Idea**: The goal of this project is to build a recommendation system that leverages user-movie interaction data to suggest movies to users based on their preferences. By constructing a user-item graph where nodes represent users and movies, and edges represent ratings, we can apply graph neural networks to learn embeddings for users and movies. The model will predict ratings for unrated movies, allowing for personalized recommendations. The dataset will be sourced from the MovieLens dataset, which contains user ratings for a variety of films.
+---
 
-**Python libs**: DGL, PyTorch, Pandas, NumPy, Scikit-learn, NetworkX
-
-**Is it Free?**: Yes
-
-**Relevant tool (DGL) related Resource Links**:
-- [DGL Documentation](https://www.dgl.ai/pages/docs/index.html)
-- [DGL GitHub Repository](https://github.com/dmlc/dgl)
-- [MovieLens Dataset](https://grouplens.org/datasets/movielens/)
-
-######################## END ###############################
+### Project 3: Drug Discovery using Graph Neural Networks  
+- **Difficulty**: 3  
+- **Tech Description**: DGL will be employed to design and train a graph neural network for predicting molecular properties in drug discovery.  
+- **Project Idea**: The objective of this project is to develop a model that predicts the biological activity of molecules using the ChEMBL dataset. Students will represent chemical compounds as graphs, where atoms are nodes and bonds are edges. By leveraging DGL's capabilities for graph convolutional networks, the project will implement a predictive model to assess the potential efficacy of new drug candidates based on their molecular structures. This project has implications for accelerating the drug discovery process in pharmaceutical research.  
+- **Python libs**: DGL, RDKit, PyTorch, NumPy, Pandas  
+- **Is it Free?**: Yes, DGL and the ChEMBL dataset are both freely accessible.  
+- **Relevant tool (DGL) related Resource Links**:  
+  - [DGL Drug Discovery Tutorial](https://docs.dgl.ai/en/latest/tutorials/models/1_gnn/2_drug_discovery.html)  
+  - [ChEMBL Database](https://www.ebi.ac.uk/chembl/)  
 

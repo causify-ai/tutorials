@@ -1,38 +1,28 @@
-- **Title**: Analyzing the Impact of Social Media Campaigns on E-commerce Sales
+### Project 1: Understanding the Impact of Remote Work on Employee Productivity  
+- **Difficulty:** 1  
+- **Tech Description:** CausalPy will be used to estimate causal effects from observational data on productivity metrics.  
+- **Project Idea:** This project aims to analyze the impact of remote work on employee productivity during the COVID-19 pandemic. By leveraging publicly available datasets on employee performance and remote work policies, students will employ CausalPy to identify causal relationships between remote work and productivity levels. The approach will include controlling for confounding variables such as industry and employee demographics. The final deliverable will include visualizations and a report outlining the findings and implications for future workplace policies.  
+- **Python libs:** CausalPy, pandas, numpy, matplotlib, seaborn  
+- **Is it Free?** Yes, CausalPy is an open-source library available on GitHub.  
+- **Relevant tool (CausalPy) related Resource Links:** [CausalPy Documentation](https://causalpy.readthedocs.io/en/latest/) | [GitHub Repository](https://github.com/causalpy/causalpy)
 
-- **Difficulty**: 3
+---
 
-- **Tech Description**: CausalPy will be used to establish causal relationships between social media marketing efforts and e-commerce sales, allowing for the identification of effective strategies.
+### Project 2: Evaluating the Effect of Marketing Strategies on Sales  
+- **Difficulty:** 2  
+- **Tech Description:** CausalPy will be used to analyze the causal impact of different marketing strategies on sales performance using observational sales data.  
+- **Project Idea:** This project investigates how various marketing strategies (e.g., discounts, social media campaigns, and email marketing) affect sales performance in a retail context. By using publicly available sales data from platforms like Kaggle, students will apply CausalPy to model the causal effects of these strategies while controlling for seasonality and other external factors. The outcome will be a comprehensive analysis that includes visualizations and actionable insights for optimizing marketing efforts.  
+- **Python libs:** CausalPy, statsmodels, pandas, matplotlib, seaborn  
+- **Is it Free?** Yes, CausalPy and the datasets from Kaggle are freely accessible.  
+- **Relevant tool (CausalPy) related Resource Links:** [CausalPy Documentation](https://causalpy.readthedocs.io/en/latest/) | [Kaggle Datasets](https://www.kaggle.com/datasets)
 
-- **Project Idea**: This project aims to analyze the causal impact of various social media marketing campaigns on e-commerce sales using data from Twitter and Shopify APIs. By collecting tweets related to specific campaigns and corresponding sales data, we will employ CausalPy to model and infer the causal relationships. The goal is to identify which types of social media posts (e.g., promotional, engagement-focused) lead to significant increases in sales, providing actionable insights for marketing strategies.
+---
 
-- **Python libs**: CausalPy, pandas, requests, statsmodels, matplotlib, seaborn
-
-- **Is it Free?**: Yes, both the Twitter and Shopify APIs offer free tiers for data access.
-
-- **Relevant tool (CausalPy) related Resource Links**:
-  - [CausalPy Documentation](https://causalpy.readthedocs.io/en/latest/)
-  - [Causal Inference with CausalPy](https://towardsdatascience.com/causal-inference-with-causalpy-5e1b5c7e1c8d)
-  - [Understanding Causal Relationships](https://www.analyticsvidhya.com/blog/2021/06/understanding-causal-inference-in-data-science/)
-
-######################## END ###############################
-
-- **Title**: Causal Inference in Public Health: Assessing the Impact of Air Quality on Respiratory Diseases
-
-- **Difficulty**: 3
-
-- **Tech Description**: CausalPy will be utilized to model and infer causal relationships between air quality metrics and the incidence of respiratory diseases using observational data.
-
-- **Project Idea**: The goal of this project is to determine the causal impact of air quality on the incidence of respiratory diseases, such as asthma and chronic obstructive pulmonary disease (COPD). By leveraging publicly available air quality data from the Environmental Protection Agency (EPA) and health data from the Centers for Disease Control and Prevention (CDC), we will construct a causal graph to identify and quantify these relationships. The project will involve data preprocessing, causal graph construction, and the application of causal inference techniques to draw conclusions about the impact of air pollution on public health outcomes.
-
-- **Python libs**: CausalPy, pandas, statsmodels, matplotlib, seaborn
-
-- **Is it Free?**: Yes, both CausalPy and the data sources are free to access.
-
-- **Relevant tool (CausalPy) related Resource Links**:
-  - [CausalPy Documentation](https://causalpy.readthedocs.io/en/latest/)
-  - [EPA Air Quality Data](https://www.epa.gov/airdata)
-  - [CDC Respiratory Disease Statistics](https://www.cdc.gov/respiratory-disease/index.html)
-
-######################## END ###############################
+### Project 3: Assessing the Impact of Air Quality on Public Health Outcomes  
+- **Difficulty:** 3  
+- **Tech Description:** CausalPy will be utilized to conduct causal inference analysis on the relationship between air quality indices and health outcomes using longitudinal data.  
+- **Project Idea:** This advanced project aims to assess how variations in air quality impact public health outcomes, such as asthma rates or hospital admissions. Students will gather data from public health databases and air quality monitoring stations, applying CausalPy to establish causal links while controlling for confounding factors like socioeconomic status and geographical variables. The final product will include a detailed report with causal diagrams, statistical findings, and policy recommendations for improving air quality and public health.  
+- **Python libs:** CausalPy, pandas, numpy, scipy, matplotlib  
+- **Is it Free?** Yes, CausalPy is open-source, and the datasets are available from public health organizations.  
+- **Relevant tool (CausalPy) related Resource Links:** [CausalPy Documentation](https://causalpy.readthedocs.io/en/latest/) | [Air Quality Data from EPA](https://www.epa.gov/outdoor-air-quality-data)
 

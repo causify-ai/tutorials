@@ -1,40 +1,35 @@
-**Title**: Real-time Sentiment Analysis of Social Media Posts on Climate Change
+### Project 1: Predicting Housing Prices Using Spark SQL  
+- **Difficulty:** 1  
+- **Tech Description:** Utilize PySpark's SQL capabilities to analyze large datasets and perform data transformations efficiently.  
+- **Project Idea:** The goal of this project is to predict housing prices based on various features such as location, size, and amenities. Students will use the Ames Housing dataset from Kaggle, which contains detailed information on residential properties. By loading the dataset into a PySpark DataFrame, students will perform exploratory data analysis (EDA), clean the data, and apply linear regression to predict housing prices. The project will also involve visualizing the results using PySpark's built-in capabilities.  
+- **Python libs:** PySpark, Pandas, Matplotlib, Scikit-learn, NumPy  
+- **Is it Free?** Yes, the Ames Housing dataset is freely available on Kaggle.  
+- **Relevant tool (XYZ) related Resource Links:**  
+  - [PySpark Documentation](https://spark.apache.org/docs/latest/api/python/index.html)  
+  - [Ames Housing Dataset on Kaggle](https://www.kaggle.com/datasets/preethamv2000/ames-housing-dataset)  
 
-**Difficulty**: 2
+---
 
-**Tech Description**: PySpark will be used to process and analyze large volumes of real-time social media data for sentiment analysis, leveraging its distributed computing capabilities.
+### Project 2: Anomaly Detection in Credit Card Transactions  
+- **Difficulty:** 2  
+- **Tech Description:** Leverage PySpark's machine learning library (MLlib) to build and evaluate models for detecting anomalies in large datasets.  
+- **Project Idea:** This project aims to identify fraudulent credit card transactions using the Credit Card Fraud Detection dataset from Kaggle. Students will preprocess the data using PySpark, applying feature engineering techniques to enhance model performance. The focus will be on implementing an anomaly detection algorithm, such as Isolation Forest or One-Class SVM, provided by PySpark's MLlib. The project will culminate in evaluating model performance using precision, recall, and F1-score metrics.  
+- **Python libs:** PySpark, Pandas, Scikit-learn, Matplotlib, NumPy  
+- **Is it Free?** Yes, the Credit Card Fraud Detection dataset is publicly available on Kaggle.  
+- **Relevant tool (XYZ) related Resource Links:**  
+  - [PySpark MLlib Documentation](https://spark.apache.org/docs/latest/ml-guide.html)  
+  - [Credit Card Fraud Detection Dataset on Kaggle](https://www.kaggle.com/datasets/dalpozz/creditcard-fraud)  
 
-**Project Idea**: The goal of this project is to analyze social media posts related to climate change in real-time to gauge public sentiment and trends. By utilizing the Twitter API, we will collect tweets containing specific climate-related hashtags. The data will be processed using PySpark to handle the large volume of tweets efficiently. Sentiment analysis will be performed using a pre-trained NLP model, and the results will be visualized to identify trends over time and geographical locations. This project aims to provide insights into how public sentiment shifts in response to climate events and policy announcements.
+---
 
-**Python libs**: PySpark, Tweepy, TextBlob, Matplotlib, Pandas
-
-**Is it Free?**: Yes, both the Twitter API (with rate limits) and the libraries mentioned are free to use.
-
-**Relevant tool (XYZ) related Resource Links**: 
-- [PySpark Documentation](https://spark.apache.org/docs/latest/api/python/index.html)
-- [Twitter API Documentation](https://developer.twitter.com/en/docs/twitter-api)
-- [TextBlob Documentation](https://textblob.readthedocs.io/en/dev/)
-- [Matplotlib Documentation](https://matplotlib.org/stable/contents.html)
-
-######################## END ###############################
-
-**Title**: Analyzing Global Air Quality Trends Using PySpark
-
-**Difficulty**: 3
-
-**Tech Description**: PySpark will be utilized for distributed data processing and analysis of large-scale air quality datasets sourced from public APIs.
-
-**Project Idea**: This project aims to analyze and visualize global air quality trends over the past decade by leveraging data from the OpenWeatherMap Air Pollution API. The unique goal is to identify patterns and anomalies in air pollution levels across different countries and cities, focusing on the correlation between air quality and public health indicators. By employing clustering techniques, we will categorize cities based on their air quality levels and analyze the temporal trends using time-series analysis. The results will provide insights into the effectiveness of environmental policies and public health initiatives.
-
-**Python libs**: PySpark, requests, pandas, matplotlib, seaborn, scikit-learn
-
-**Is it Free?**: Yes, the OpenWeatherMap API offers a free tier for accessing air quality data.
-
-**Relevant tool (XYZ) related Resource Links**:
-- [PySpark Documentation](https://spark.apache.org/docs/latest/api/python/index.html)
-- [OpenWeatherMap Air Pollution API](https://openweathermap.org/api/air-pollution)
-- [PySpark Clustering Techniques](https://spark.apache.org/docs/latest/ml-clustering.html)
-- [Time Series Analysis with PySpark](https://spark.apache.org/docs/latest/ml-time-series.html)
-
-######################## END ###############################
+### Project 3: Analyzing Twitter Sentiment on Climate Change  
+- **Difficulty:** 3  
+- **Tech Description:** Use PySpark's streaming capabilities to process and analyze large volumes of Twitter data for sentiment analysis.  
+- **Project Idea:** The objective of this project is to analyze public sentiment regarding climate change by streaming and processing tweets in real-time. Students will use the Twitter API to collect tweets containing specific keywords related to climate change over a defined period. The project will involve using PySpark's structured streaming to process the incoming data and apply a pre-trained sentiment analysis model (e.g., VADER or TextBlob) to classify the sentiment of each tweet. Finally, students will visualize the sentiment trends over time and correlate them with significant climate events.  
+- **Python libs:** PySpark, Tweepy, VADER, Matplotlib, Pandas  
+- **Is it Free?** Yes, access to the Twitter API is free with a developer account, and the sentiment analysis libraries are open-source.  
+- **Relevant tool (XYZ) related Resource Links:**  
+  - [PySpark Structured Streaming Documentation](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html)  
+  - [Twitter API Documentation](https://developer.twitter.com/en/docs/twitter-api)  
+  - [VADER Sentiment Analysis](https://github.com/cjhutto/vaderSentiment)  
 

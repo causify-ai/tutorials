@@ -1,23 +1,28 @@
-**Title**: Sentiment Analysis of Movie Reviews Using SBert
+### Project 1: Semantic Similarity in Legal Texts  
+- **Difficulty**: 1  
+- **Tech Description**: SBert is used to generate sentence embeddings for legal documents to assess semantic similarity between them.  
+- **Project Idea**: The goal is to analyze a collection of legal documents (e.g., court rulings, contracts) to identify similar cases or clauses. By leveraging SBert, students will create embeddings of sentences from these documents and compute cosine similarity scores to cluster similar sentences. This can help legal professionals quickly find relevant precedents or contract terms. The project will involve data preprocessing, embedding generation, and visualization of results.  
+- **Python libs**: `sentence-transformers`, `numpy`, `pandas`, `matplotlib`  
+- **Is it Free?**: Yes, the SBert library and the legal datasets are freely available online.  
+- **Relevant tool (SBert) related Resource Links**: [SBert GitHub Repository](https://github.com/UKPLab/sentence-transformers), [Legal Text Dataset](https://www.kaggle.com/datasets/akshaybhalekar/legal-text-dataset)  
 
-**Difficulty**: 2
+---
 
-**Tech Description**: SBert (Sentence-BERT) is utilized to generate sentence embeddings for movie reviews, which are then classified into positive, negative, or neutral sentiments using a supervised learning approach.
+### Project 2: Customer Review Sentiment Analysis  
+- **Difficulty**: 2  
+- **Tech Description**: SBert will be utilized to encode customer reviews into embeddings for sentiment classification tasks.  
+- **Project Idea**: The objective is to analyze customer reviews from an e-commerce platform (e.g., Amazon) to classify them as positive, negative, or neutral. By employing SBert for embedding generation, students will apply a pre-trained model to classify sentiments using a logistic regression or SVM classifier. The project will include data cleaning, sentiment labeling, model evaluation, and visualization of sentiment distribution across different product categories.  
+- **Python libs**: `sentence-transformers`, `scikit-learn`, `pandas`, `matplotlib`, `seaborn`  
+- **Is it Free?**: Yes, the datasets and SBert are available for free, making this project accessible.  
+- **Relevant tool (SBert) related Resource Links**: [SBert Documentation](https://www.sbert.net/), [Amazon Customer Reviews Dataset](https://registry.opendata.aws/amazon-reviews/)  
 
-**Project Idea**: The goal of this project is to analyze the sentiment of movie reviews from the IMDB dataset. By leveraging SBert, we will convert the text of the reviews into embeddings and then apply a classification model to predict the sentiment. The project will involve data preprocessing, embedding generation, and model training. Additionally, we will evaluate the model's performance using metrics such as accuracy, precision, and recall. This project aims to provide insights into public sentiment towards movies based on their reviews, which can be valuable for filmmakers and marketers.
+---
 
-**Python libs**: 
-- `transformers` (for SBert)
-- `scikit-learn` (for classification and evaluation)
-- `pandas` (for data manipulation)
-- `numpy` (for numerical operations)
-
-**Is it Free?**: Yes, all libraries and the dataset are free to use.
-
-**Relevant tool (SBert) related Resource Links**:
-- [SBert GitHub Repository](https://github.com/UKPLab/sentence-transformers)
-- [Hugging Face Transformers Documentation](https://huggingface.co/docs/transformers/index)
-- [IMDB Dataset on Kaggle](https://www.kaggle.com/competitions/word2vec-nlp-tutorial/data)
-
-######################## END ###############################
+### Project 3: Topic Modeling for Scientific Papers  
+- **Difficulty**: 3  
+- **Tech Description**: SBert is employed to create embeddings of scientific abstracts for clustering and topic modeling.  
+- **Project Idea**: This project aims to analyze a dataset of scientific papers (e.g., arXiv) to identify prevalent research topics. By using SBert to generate embeddings of abstracts, students will apply clustering algorithms (like K-means or hierarchical clustering) to group similar papers. The project will also involve interpreting clusters, visualizing topics, and discussing trends in research based on the clusters identified.  
+- **Python libs**: `sentence-transformers`, `scikit-learn`, `pandas`, `matplotlib`, `nltk`  
+- **Is it Free?**: Yes, both SBert and the arXiv dataset are freely accessible for academic use.  
+- **Relevant tool (SBert) related Resource Links**: [SBert Research Papers](https://arxiv.org/abs/1908.10084), [arXiv Dataset](https://arxiv.org/help/api/index)  
 

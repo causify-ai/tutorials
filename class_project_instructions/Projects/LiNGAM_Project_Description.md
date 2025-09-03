@@ -1,38 +1,34 @@
-**Title**: Causal Discovery in Social Media Sentiment Analysis Using LiNGAM
+### Project 1: Causal Inference in Economic Indicators
+- **Difficulty**: 1
+- **Tech Description**: LiNGAM will be used to model the causal relationships among various economic indicators from time series data.
+- **Project Idea**: This project aims to analyze the causal relationships between key economic indicators such as GDP, unemployment rate, inflation, and consumer spending. By leveraging LiNGAM, the student will extract the underlying causal structure from historical data, helping to identify which indicators influence others. The project will involve preprocessing economic time series data, applying LiNGAM, and interpreting the causal graph generated. The findings can inform policymakers about critical economic levers.
+- **Python libs**: pandas, numpy, statsmodels, lingam
+- **Is it Free?**: Yes, the datasets are publicly available from sources such as the World Bank and U.S. Bureau of Economic Analysis.
+- **Relevant tool (LiNGAM) related Resource Links**: 
+  - [LiNGAM Documentation](https://github.com/lingam/lingam)
+  - [World Bank Economic Indicators](https://data.worldbank.org/indicator)
 
-**Difficulty**: 3
+---
 
-**Tech Description**: LiNGAM (Linear Non-Gaussian Acyclic Model) is employed to uncover causal relationships between variables in social media sentiment data, allowing for the identification of factors influencing public opinion.
+### Project 2: Identifying Causal Relationships in Healthcare Data
+- **Difficulty**: 2
+- **Tech Description**: LiNGAM will be employed to discover causal relationships among various health metrics from a publicly available healthcare dataset.
+- **Project Idea**: This project focuses on the analysis of healthcare data to identify causal relationships between patient health metrics, such as blood pressure, cholesterol levels, and BMI. The student will utilize the publicly available Framingham Heart Study dataset to apply LiNGAM and uncover the causal structure among these health indicators. The insights gained could help in understanding risk factors for cardiovascular diseases, leading to better prevention strategies.
+- **Python libs**: pandas, numpy, seaborn, lingam
+- **Is it Free?**: Yes, the Framingham Heart Study dataset is available for free from the National Heart, Lung, and Blood Institute.
+- **Relevant tool (LiNGAM) related Resource Links**: 
+  - [Framingham Heart Study Dataset](https://biolincc.nhlbi.nih.gov/studies/framingham/)
+  - [LiNGAM Research Paper](http://www.cs.cmu.edu/~jgm/lingam/)
 
-**Project Idea**: This project aims to analyze sentiment from Twitter data regarding climate change and discover causal relationships between various factors such as media coverage, public events, and sentiment shifts. By utilizing the LiNGAM algorithm, we will model the causal structure of sentiment over time, identifying which external events significantly influence public perception. The project will involve data collection via the Twitter API, sentiment analysis using natural language processing, and causal inference to derive insights on how different factors affect public sentiment on climate change.
+---
 
-**Python libs**: pandas, numpy, tweepy, nltk, LiNGAM, matplotlib, seaborn
-
-**Is it Free?**: Yes, the Twitter API has a free tier, and all mentioned Python libraries are open-source.
-
-**Relevant tool (LiNGAM) related Resource Links**:
-- [LiNGAM GitHub Repository](https://github.com/py-causal/lingam)
-- [LiNGAM Documentation](https://github.com/py-causal/lingam/blob/master/README.md)
-- [Research Paper on LiNGAM](https://www.jmlr.org/papers/volume12/shimizu11a/shimizu11a.pdf)
-
-######################## END ###############################
-
-**Title**: Causal Analysis of Social Media Sentiment on Stock Price Movements
-
-**Difficulty**: 3
-
-**Tech Description**: LiNGAM is utilized to infer causal relationships from observational data, allowing us to understand how social media sentiment influences stock price movements.
-
-**Project Idea**: This project aims to investigate the causal impact of social media sentiment on stock prices using Twitter data and historical stock market prices. By scraping tweets related to specific companies and their stock performance, we will preprocess the text data to extract sentiment scores. Using the LiNGAM algorithm, we will analyze the causal relationships between sentiment and stock price changes, providing insights into how public perception can affect market behavior. The project will also include visualizations of the causal structure and a discussion on the implications for investors.
-
-**Python libs**: pandas, numpy, requests, BeautifulSoup, nltk, matplotlib, LiNGAM, statsmodels
-
-**Is it Free?**: Yes
-
-**Relevant tool (LiNGAM) related Resource Links**:
-- [LiNGAM Documentation](https://github.com/py-causal/liNGAM)
-- [LiNGAM Research Paper](https://www.jmlr.org/papers/volume18/17-116/17-116.pdf)
-- [Causal Inference with LiNGAM](https://www.aaai.org/Papers/AAAI/2018/AAAI-0348.Masumori.pdf)
-
-######################## END ###############################
+### Project 3: Causal Analysis in Social Media Sentiment
+- **Difficulty**: 3
+- **Tech Description**: LiNGAM will be used to analyze the causal relationships among various sentiment metrics derived from social media data.
+- **Project Idea**: This advanced project aims to explore how different sentiment metrics (e.g., positive, negative, neutral) from Twitter data influence public opinion on various topics such as politics or climate change. The student will scrape tweets using the Twitter API, preprocess the text data using a pre-trained sentiment analysis model, and then apply LiNGAM to determine the causal relationships among these sentiment metrics. The project will culminate in a causal graph that provides insights into how social media sentiment drives public discourse.
+- **Python libs**: tweepy, pandas, numpy, lingam, transformers
+- **Is it Free?**: Yes, Twitter offers a free API tier for accessing tweets, and sentiment analysis models can be accessed via Hugging Face's Transformers library.
+- **Relevant tool (LiNGAM) related Resource Links**: 
+  - [Twitter API Documentation](https://developer.twitter.com/en/docs/twitter-api)
+  - [Hugging Face Transformers](https://huggingface.co/transformers/)
 

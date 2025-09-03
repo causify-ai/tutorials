@@ -1,38 +1,28 @@
-- **Title**: Predicting Movie Ratings Using User Reviews
+### Project 1: Data Pipeline for Daily Weather Insights
+- **Difficulty**: 1
+- **Tech Description**: Luigi will be used to create a data pipeline that fetches, processes, and stores daily weather data.
+- **Project Idea**: The goal of this project is to build a simple data pipeline that retrieves daily weather data from the OpenWeatherMap API, processes it to calculate average temperatures, and stores the results in a CSV file. The pipeline will consist of multiple tasks, including data extraction, transformation, and loading (ETL). Students will learn how to manage dependencies and schedule tasks effectively using Luigi.
+- **Python libs**: requests, pandas, Luigi, datetime, numpy
+- **Is it Free?**: Yes, OpenWeatherMap offers a free tier for accessing weather data.
+- **Relevant tool (Luigi) related Resource Links**: [Luigi Documentation](https://luigi.readthedocs.io/en/stable/), [OpenWeatherMap API](https://openweathermap.org/api)
 
+---
+
+### Project 2: Anomaly Detection in E-commerce Transactions
 - **Difficulty**: 2
+- **Tech Description**: Luigi will orchestrate a series of tasks to preprocess transaction data and apply anomaly detection algorithms.
+- **Project Idea**: This project aims to create a robust data pipeline that processes e-commerce transaction data from the Kaggle "E-Commerce Data" dataset. The pipeline will include tasks for data cleaning, feature engineering, and applying Isolation Forest for anomaly detection. The results will be logged and stored for further analysis. Students will gain experience in building pipelines that involve machine learning models and data validation.
+- **Python libs**: pandas, scikit-learn, Luigi, matplotlib, seaborn
+- **Is it Free?**: Yes, the Kaggle dataset is freely available for download.
+- **Relevant tool (Luigi) related Resource Links**: [Luigi Documentation](https://luigi.readthedocs.io/en/stable/), [Kaggle E-Commerce Data](https://www.kaggle.com/datasets/)
 
-- **Tech Description**: Luigi will be utilized to create a robust data pipeline for collecting, processing, and analyzing user reviews from the MovieLens API, ultimately predicting movie ratings through a regression model.
+---
 
-- **Project Idea**: This project aims to predict movie ratings based on user-generated reviews. By leveraging the MovieLens API, we will collect a dataset of user reviews and ratings. The data pipeline built with Luigi will automate the extraction, transformation, and loading (ETL) processes. We will preprocess the text data using natural language processing techniques, such as tokenization and sentiment analysis, and then apply regression algorithms to predict the ratings. The goal is to evaluate the effectiveness of user sentiment in predicting movie ratings, providing insights into audience preferences.
-
-- **Python libs**: Luigi, pandas, numpy, scikit-learn, nltk, requests
-
-- **Is it Free?**: Yes
-
-- **Relevant tool (Luigi) related Resource Links**:
-  - [Luigi Documentation](https://luigi.readthedocs.io/en/stable/)
-  - [MovieLens API](https://grouplens.org/datasets/movielens/)
-  - [NLTK Documentation](https://www.nltk.org/)
-
-######################## END ###############################
-
-**Title**: Predicting Restaurant Success Using Yelp Reviews
-
-**Difficulty**: 2
-
-**Tech Description**: Luigi is used to create a data pipeline that collects, processes, and analyzes Yelp review data to predict restaurant success based on customer sentiment and review metrics.
-
-**Project Idea**: This project aims to predict the success of restaurants based on the analysis of Yelp reviews. By leveraging the Yelp API, we will gather data on various restaurants, including their reviews, ratings, and metadata. The data will be processed using Luigi to streamline the extraction, transformation, and loading (ETL) processes. We will perform sentiment analysis on the reviews to derive sentiment scores, which will then be used in a regression model to predict restaurant success, defined as the number of new customers or increased ratings over time.
-
-**Python libs**: requests, pandas, numpy, scikit-learn, nltk, luigi, matplotlib, seaborn
-
-**Is it Free?**: Yes, both the Yelp API and the Python libraries are free to use.
-
-**Relevant tool (Luigi) related Resource Links**:
-- [Luigi Documentation](https://luigi.readthedocs.io/en/stable/)
-- [Yelp API Documentation](https://www.yelp.com/developers/documentation/v3/getting_started)
-- [Sentiment Analysis with NLTK](https://www.nltk.org/howto/sentiment.html)
-
-######################## END ###############################
+### Project 3: News Article Classification Pipeline
+- **Difficulty**: 3
+- **Tech Description**: Luigi will manage a complex workflow to download, preprocess, and classify news articles using a pre-trained NLP model.
+- **Project Idea**: The objective of this project is to build a comprehensive pipeline that fetches news articles from the News API, preprocesses the text data, and classifies the articles into categories (e.g., Politics, Sports, Technology) using a pre-trained BERT model. The pipeline will include multiple stages, such as data extraction, text cleaning, and model inference, demonstrating advanced use of Luigi for managing complex workflows. Students will learn about integrating NLP models and handling large datasets.
+- **Python libs**: requests, pandas, Luigi, transformers, torch
+- **Is it Free?**: Yes, the News API offers a free tier for accessing news articles.
+- **Relevant tool (Luigi) related Resource Links**: [Luigi Documentation](https://luigi.readthedocs.io/en/stable/), [News API](https://newsapi.org/docs/get-started)
 

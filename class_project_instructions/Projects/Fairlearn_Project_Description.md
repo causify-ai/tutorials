@@ -1,38 +1,34 @@
-**Title**: Fairness in Credit Scoring Models
+### Project 1: Fairness in Credit Scoring Models
+- **Difficulty:** 1
+- **Tech Description:** Fairlearn is used to evaluate and mitigate bias in credit scoring models to ensure equitable treatment across different demographic groups.
+- **Project Idea:** The goal of this project is to assess existing credit scoring models for fairness and to implement Fairlearn to mitigate any identified biases. Students will use a publicly available dataset, such as the "German Credit Data" from UCI Machine Learning Repository, to analyze model predictions across various demographic groups (e.g., gender, age). The project will involve training a baseline model, evaluating fairness metrics, and applying Fairlearn’s mitigation techniques to improve the fairness of the model without significantly sacrificing accuracy.
+- **Python libs:** Fairlearn, Scikit-learn, Pandas, Matplotlib, NumPy
+- **Is it Free?** Yes, Fairlearn and the dataset are freely available for use.
+- **Relevant tool (Fairlearn) related Resource Links:** 
+  - [Fairlearn Documentation](https://fairlearn.org/)
+  - [German Credit Data Dataset](https://archive.ics.uci.edu/ml/datasets/Statlog+(German+Credit+Data))
 
-**Difficulty**: 2
+---
 
-**Tech Description**: Fairlearn is utilized to assess and mitigate bias in credit scoring models, ensuring equitable treatment across different demographic groups.
+### Project 2: Fairness in Hiring Algorithms
+- **Difficulty:** 2
+- **Tech Description:** Fairlearn is utilized to assess and improve the fairness of machine learning models used in hiring processes, focusing on reducing bias against underrepresented groups.
+- **Project Idea:** This project aims to evaluate the fairness of an existing hiring algorithm by analyzing its predictions on a synthetic dataset generated from the "COMPAS" dataset, which includes demographic and recidivism data. Students will implement Fairlearn to measure disparate impact and apply techniques like re-weighting or adversarial debiasing to improve fairness. The final deliverable will include a comprehensive report detailing the fairness metrics before and after applying Fairlearn interventions.
+- **Python libs:** Fairlearn, Scikit-learn, Pandas, Seaborn, NumPy
+- **Is it Free?** Yes, both the Fairlearn library and the COMPAS dataset are available for free.
+- **Relevant tool (Fairlearn) related Resource Links:** 
+  - [Fairlearn GitHub Repository](https://github.com/fairlearn/fairlearn)
+  - [COMPAS Dataset Analysis](https://www.propublica.org/datastore/dataset/compas-recidivism-risk-score-data-and-analysis)
 
-**Project Idea**: The goal of this project is to develop a credit scoring model using a publicly available dataset and evaluate its fairness across various demographic groups, such as race and gender. We will use the UCI Adult Income dataset, which contains demographic information and income levels. The project will involve training a classification model to predict whether an individual's income exceeds $50K/year. After training, we will apply Fairlearn to analyze the model's fairness and implement mitigation strategies to reduce bias in predictions. The final deliverable will include a report detailing the fairness metrics and the effectiveness of the applied strategies.
+---
 
-**Python libs**: Fairlearn, scikit-learn, pandas, numpy, matplotlib, seaborn
-
-**Is it Free?**: Yes
-
-**Relevant tool (Fairlearn) related Resource Links**:
-- [Fairlearn Documentation](https://fairlearn.org/)
-- [UCI Adult Income Dataset](https://archive.ics.uci.edu/ml/datasets/adult)
-- [Fairlearn GitHub Repository](https://github.com/fairlearn/fairlearn)
-
-######################## END ###############################
-
-**Title**: Fairness in Credit Scoring Models
-
-**Difficulty**: 2
-
-**Tech Description**: Fairlearn will be utilized to assess and mitigate bias in credit scoring models, ensuring equitable treatment across different demographic groups.
-
-**Project Idea**: The goal of this project is to develop a credit scoring model using a publicly available dataset while ensuring fairness in predictions. We will leverage the UCI Credit Card Default dataset to train a classification model predicting the likelihood of default. By applying Fairlearn, we will analyze potential biases in the model's predictions based on sensitive attributes such as gender and income. The project will involve implementing techniques like re-weighting and post-processing to mitigate any identified biases, ultimately leading to a fairer credit scoring system.
-
-**Python libs**: Fairlearn, scikit-learn, pandas, NumPy, matplotlib
-
-**Is it Free?**: Yes
-
-**Relevant tool (Fairlearn) related Resource Links**:
-- [Fairlearn Documentation](https://fairlearn.org/)
-- [Fairness in Machine Learning: A Survey](https://arxiv.org/abs/1908.09635)
-- [UCI Credit Card Default Dataset](https://archive.ics.uci.edu/ml/datasets/default+of+credit+card+clients)
-
-######################## END ###############################
+### Project 3: Fairness in Housing Price Predictions
+- **Difficulty:** 3
+- **Tech Description:** Fairlearn is employed to ensure that housing price prediction models are fair and do not exhibit bias against specific neighborhoods or demographic groups.
+- **Project Idea:** In this advanced project, students will develop a housing price prediction model using the "California Housing Prices" dataset from the UCI Machine Learning Repository. The objective is to analyze the model's predictions for fairness across different geographic areas and demographic groups. By using Fairlearn, students will evaluate fairness metrics and apply techniques like equalized odds and demographic parity to reduce any identified biases in the predictions. The project will culminate in a detailed presentation of findings, including visualizations of fairness metrics before and after mitigation.
+- **Python libs:** Fairlearn, Scikit-learn, Pandas, Matplotlib, Statsmodels
+- **Is it Free?** Yes, the Fairlearn library and the California Housing Prices dataset are freely accessible.
+- **Relevant tool (Fairlearn) related Resource Links:** 
+  - [Fairlearn Tutorial](https://fairlearn.org/main/user_guide.html)
+  - [California Housing Prices Dataset](https://www.dcc.fc.up.pt/~ltorgo/Regression/cal_housing.html)
 

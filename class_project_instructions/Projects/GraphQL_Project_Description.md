@@ -1,38 +1,34 @@
-- **Title**: Predicting Movie Ratings Using GraphQL APIs
-
-- **Difficulty**: 2
-
-- **Tech Description**: GraphQL will be used to query a movie database API to retrieve relevant features for building a predictive model for movie ratings.
-
-- **Project Idea**: The goal of this project is to predict movie ratings based on various features such as genre, cast, director, and user reviews. By utilizing a GraphQL API from a movie database, we can efficiently fetch only the necessary data for our analysis. The project will involve data preprocessing, feature engineering, and building a regression model to predict ratings. The model's performance will be evaluated using metrics like RMSE and R², and we will explore the impact of different features on the predicted ratings.
-
-- **Python libs**: requests, pandas, scikit-learn, numpy, matplotlib, seaborn
-
-- **Is it Free?**: Yes, the GraphQL movie database API is free to use.
-
+### Project 1: Real-Time Sports Analytics Dashboard
+- **Difficulty**: 1
+- **Tech Description**: Utilize GraphQL to fetch real-time sports statistics and player performance data from a sports API.
+- **Project Idea**: The goal of this project is to build a simple dashboard that visualizes real-time sports data for a selected league (e.g., NBA or NFL). Students will use GraphQL to query player statistics, team standings, and match results. The dashboard will include interactive elements like filtering by team or player and displaying trends over time. Basic data visualizations will be implemented to enhance user engagement and understanding.
+- **Python libs**: Flask, Graphene, Matplotlib, Pandas, Requests
+- **Is it Free?**: Yes, the sports API provides a free tier for accessing real-time data.
 - **Relevant tool (GraphQL) related Resource Links**: 
   - [GraphQL Official Documentation](https://graphql.org/learn/)
-  - [How to Use GraphQL with Python](https://www.graphql-python.org/)
-  - [Movie Database GraphQL API](https://themoviedb.org/documentation/api)
+  - [Flask-GraphQL Documentation](https://flask-graphql.readthedocs.io/en/latest/)
 
-######################## END ###############################
+---
 
-- **Title**: Analyzing Social Media Sentiment for Brand Management using GraphQL
-
+### Project 2: Movie Recommendation System
 - **Difficulty**: 2
-
-- **Tech Description**: This project utilizes GraphQL to efficiently query social media data from a public API, allowing for tailored data retrieval and analysis.
-
-- **Project Idea**: The goal of this project is to analyze sentiment towards a specific brand on social media platforms, using a GraphQL API to fetch relevant posts and comments. By extracting data such as user comments, likes, and shares, we will perform sentiment analysis using Natural Language Processing (NLP) techniques. The project will involve preprocessing the text data, applying a sentiment classifier, and visualizing trends in sentiment over time. This analysis can help businesses understand public perception and adjust their marketing strategies accordingly.
-
-- **Python libs**: requests, gql, pandas, numpy, nltk, matplotlib, seaborn
-
-- **Is it Free?**: Yes, the data source is a publicly accessible social media API that supports GraphQL queries.
-
+- **Tech Description**: Use GraphQL to access a movie database API to gather user ratings and movie metadata for building a recommendation engine.
+- **Project Idea**: This project aims to create a movie recommendation system that suggests films based on user preferences and ratings. Students will query a movie database (e.g., The Movie Database API) using GraphQL to fetch relevant data, including genres, ratings, and user reviews. A collaborative filtering approach will be implemented to generate personalized recommendations. The final product will be a web application that displays the recommended movies and their details.
+- **Python libs**: Flask, Graphene, Scikit-learn, Pandas, Requests
+- **Is it Free?**: Yes, The Movie Database API offers a free tier for public access to movie data.
 - **Relevant tool (GraphQL) related Resource Links**: 
-  - [GraphQL Official Documentation](https://graphql.org/learn/)
-  - [Python GraphQL Client Library (gql)](https://gql.readthedocs.io/en/latest/)
-  - [Sentiment Analysis with NLTK](https://www.nltk.org/howto/sentiment.html)
+  - [GraphQL API for The Movie Database](https://developers.themoviedb.org/3/getting-started/introduction)
+  - [Graphene Documentation](https://docs.graphene-python.org/en/latest/)
 
-######################## END ###############################
+---
+
+### Project 3: Anomaly Detection in E-commerce Transactions
+- **Difficulty**: 3
+- **Tech Description**: Leverage GraphQL to extract transaction data from an e-commerce API for anomaly detection analysis.
+- **Project Idea**: The objective of this project is to develop an anomaly detection system to identify fraudulent transactions in e-commerce data. Using GraphQL, students will query transaction records from an e-commerce API (e.g., Shopify API) to gather relevant features such as transaction amount, user behavior, and timestamps. They will apply unsupervised learning techniques, such as Isolation Forest or DBSCAN, to detect anomalies in transaction patterns. The results will be visualized in a dashboard to showcase detected anomalies and trends over time.
+- **Python libs**: Flask, Graphene, Scikit-learn, Matplotlib, Pandas
+- **Is it Free?**: Yes, the Shopify API provides a free tier for developers to access transaction data.
+- **Relevant tool (GraphQL) related Resource Links**: 
+  - [Shopify GraphQL API Documentation](https://shopify.dev/api/graphql)
+  - [Anomaly Detection Techniques](https://towardsdatascience.com/anomaly-detection-with-scikit-learn-8c7c1c3c1a4b)
 

@@ -1,38 +1,28 @@
-**Title**: Real-Time Sentiment Analysis of Social Media Posts Using Apache Arrow
+### Project 1: Efficient Data Processing with Apache Arrow  
+- **Difficulty**: 1  
+- **Tech Description**: Utilize Apache Arrow's columnar memory format to efficiently read and process large datasets in Python.  
+- **Project Idea**: The goal of this project is to demonstrate the performance benefits of using Apache Arrow for data manipulation tasks. Students will select a large public dataset (e.g., the NYC Taxi & Limousine Commission Trip Record Data) and perform common data processing tasks such as filtering, aggregating, and joining using both traditional Pandas and PyArrow. The project will compare execution times and memory usage to highlight Arrow's advantages in handling large datasets.  
+- **Python libs**: PyArrow, Pandas, NumPy, Matplotlib  
+- **Is it Free?**: Yes, Apache Arrow is an open-source project and can be freely used.  
+- **Relevant tool related Resource Links**: [Apache Arrow Documentation](https://arrow.apache.org/docs/python/), [NYC Taxi Dataset](https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
 
-**Difficulty**: 2
+---
 
-**Tech Description**: Apache Arrow (PyArrow) is utilized in this project to efficiently handle and process large volumes of streaming social media data, enabling fast data manipulation and analysis.
+### Project 2: Time Series Analysis with Arrow and Pandas  
+- **Difficulty**: 2  
+- **Tech Description**: Leverage Apache Arrow's fast data interchange capabilities to handle time series data efficiently.  
+- **Project Idea**: This project aims to analyze and visualize time series data from the Yahoo Finance API for a selected stock (e.g., Apple Inc.). Students will use PyArrow to read stock price data, perform time series decomposition, and apply seasonal-trend decomposition using LOESS (STL). The project will include visualizations of trends and seasonality, showcasing how Arrow enhances performance when dealing with large time series datasets.  
+- **Python libs**: PyArrow, Pandas, NumPy, Matplotlib, Statsmodels  
+- **Is it Free?**: Yes, both Apache Arrow and the Yahoo Finance API are freely available for use.  
+- **Relevant tool related Resource Links**: [Yahoo Finance API](https://pypi.org/project/yfinance/), [Apache Arrow Time Series](https://arrow.apache.org/docs/python/user_guide/pandas.html)
 
-**Project Idea**: The goal of this project is to perform real-time sentiment analysis on Twitter posts related to trending topics. By leveraging the Twitter API, we will collect tweets in real-time and use PyArrow to manage and process the incoming data efficiently. The sentiment of each tweet will be classified as positive, negative, or neutral using a pre-trained machine learning model. The results will be visualized in a dashboard, showing sentiment trends over time and correlations with specific events or hashtags. This project not only demonstrates the power of Apache Arrow in handling streaming data but also provides insights into public sentiment dynamics.
+---
 
-**Python libs**: PyArrow, Tweepy, pandas, scikit-learn, Matplotlib, Streamlit
-
-**Is it Free?**: Yes, both the Twitter API (with rate limits) and the libraries mentioned are free to use.
-
-**Relevant tool (Apache Arrow) related Resource Links**:
-- [Apache Arrow Documentation](https://arrow.apache.org/docs/)
-- [PyArrow GitHub Repository](https://github.com/apache/arrow/tree/master/python/pyarrow)
-- [Real-Time Data Processing with Apache Arrow](https://towardsdatascience.com/real-time-data-processing-with-apache-arrow-3f9f1c2f1e8e)
-
-######################## END ###############################
-
-**Title**: Real-Time Sports Analytics Dashboard Using Apache Arrow
-
-**Difficulty**: 3
-
-**Tech Description**: Apache Arrow (PyArrow) is utilized for efficient in-memory data processing and serialization, enabling real-time analytics on streaming sports data.
-
-**Project Idea**: This project aims to create a real-time sports analytics dashboard that leverages live data from a sports API (e.g., The Sports DB) to analyze player performance metrics during ongoing games. The goal is to implement a clustering algorithm that groups similar player performance profiles based on various statistics such as goals, assists, and minutes played. By employing Apache Arrow for handling high-velocity data streams, the dashboard will provide insights into player performance trends and help coaches make data-driven decisions during matches.
-
-**Python libs**: PyArrow, Pandas, NumPy, Scikit-learn, Matplotlib, Flask
-
-**Is it Free?**: Yes, the libraries mentioned are free, and The Sports DB API offers free access to certain data.
-
-**Relevant tool (XYZ) related Resource Links**:
-- [Apache Arrow Documentation](https://arrow.apache.org/docs/)
-- [The Sports DB API](https://www.thesportsdb.com/api.php)
-- [PyArrow GitHub Repository](https://github.com/apache/arrow)
-
-######################## END ###############################
+### Project 3: Data Serialization and Interoperability with Arrow  
+- **Difficulty**: 3  
+- **Tech Description**: Use Apache Arrow for efficient data serialization and interoperability between different data processing frameworks.  
+- **Project Idea**: The objective of this project is to create a data pipeline that ingests a public dataset (e.g., the UCI Machine Learning Repository's Iris Dataset), processes it using PyArrow, and then exports it to different formats (e.g., Parquet, Feather). Students will implement a workflow that demonstrates how data can be serialized and deserialized efficiently across different platforms, highlighting the interoperability benefits of Apache Arrow. The project will also include performance benchmarks on read/write speeds across formats.  
+- **Python libs**: PyArrow, Pandas, Dask, Matplotlib  
+- **Is it Free?**: Yes, Apache Arrow is open-source, and the UCI Machine Learning Repository provides free access to datasets.  
+- **Relevant tool related Resource Links**: [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/index.php), [Apache Arrow Serialization](https://arrow.apache.org/docs/python/user_guide/serialization.html)
 

@@ -1,38 +1,44 @@
-**Title**: Hyperparameter Optimization for Time Series Forecasting of Energy Consumption
+**Title**: Optimizing Hyperparameters for Time Series Forecasting of Energy Consumption
 
 **Difficulty**: 2
 
-**Tech Description**: Optuna is used for hyperparameter optimization of machine learning models, while the Optuna Dashboard provides a visual interface to monitor and analyze the optimization process.
+**Tech Description**: Optuna is utilized for hyperparameter optimization in a time series forecasting model, while the Optuna Dashboard provides visualization of the optimization process and results.
 
-**Project Idea**: In this project, we will utilize Optuna to optimize the hyperparameters of a Long Short-Term Memory (LSTM) model for forecasting energy consumption in a residential area. The dataset will be sourced from the UCI Machine Learning Repository, specifically the "Individual household electric power consumption" dataset. The goal is to accurately predict future energy usage based on historical consumption data. By leveraging Optuna's capabilities, we will explore various hyperparameter configurations and visualize the optimization process through the Optuna Dashboard, ultimately aiming to improve the model's forecasting accuracy.
+**Project Idea**: The goal of this project is to predict future energy consumption based on historical data using a time series forecasting model. The student will use the UCI Machine Learning Repository's "Individual household electric power consumption" dataset, which contains measurements of electric power consumption in a household over a period of time. The project will involve selecting a forecasting model (e.g., ARIMA, Prophet) and optimizing its hyperparameters using Optuna. The student will analyze the impact of different hyperparameter settings on the forecasting accuracy and visualize the optimization process using the Optuna Dashboard.
 
-**Python libs**: Optuna, TensorFlow, Pandas, NumPy, Matplotlib, Scikit-learn
+**Python libs**: 
+- pandas
+- numpy
+- statsmodels (for ARIMA)
+- optuna
+- matplotlib (for visualization)
+- plotly (for interactive dashboard)
 
-**Is it Free?**: Yes
+**Is it Free?**: Yes. All libraries mentioned are open-source and can be installed via pip. The dataset is freely available from the UCI Machine Learning Repository.
 
 **Relevant tool (XYZ) related Resource Links**:
 - [Optuna Documentation](https://optuna.readthedocs.io/en/stable/)
-- [Optuna Dashboard](https://optuna.readthedocs.io/en/stable/tutorial/10_key_features/002_dashboard.html)
-- [UCI Machine Learning Repository - Individual household electric power consumption](https://archive.ics.uci.edu/ml/datasets/individual+household+electric+power+consumption)
+- [Optuna Dashboard Documentation](https://optuna.readthedocs.io/en/stable/tutorial/tutorial.html#visualization)
+- [UCI Machine Learning Repository - Individual household electric power consumption dataset](https://archive.ics.uci.edu/ml/datasets/individual+household+electric+power+consumption)
 
 ######################## END ###############################
 
-**Title**: Hyperparameter Optimization for Time Series Forecasting of Energy Consumption
+**Title:** Hyperparameter Optimization for Sentiment Analysis of Movie Reviews
 
-**Difficulty**: 3
+**Difficulty:** 2
 
-**Tech Description**: Optuna is utilized for efficient hyperparameter optimization of machine learning models, while the Optuna Dashboard provides real-time visualization of the optimization process.
+**Tech Description:** Optuna is utilized for hyperparameter optimization of machine learning models, while the Optuna Dashboard provides a visual interface for monitoring and analyzing the optimization process.
 
-**Project Idea**: The goal of this project is to optimize the hyperparameters of a recurrent neural network (RNN) model for forecasting energy consumption based on historical data. Using the UCI Machine Learning Repository's "Individual household electric power consumption" dataset, we will preprocess the time series data and define an RNN architecture. Optuna will be employed to tune hyperparameters such as learning rate, number of layers, and hidden units. The Optuna Dashboard will visualize the optimization process, allowing us to analyze the impact of different hyperparameter configurations on the model's performance.
+**Project Idea:** The goal of this project is to optimize the hyperparameters of a sentiment analysis model using Optuna for predicting the sentiment of movie reviews from the IMDB dataset. The approach will involve selecting a pre-trained model for text classification, such as BERT or DistilBERT, and fine-tuning it on the dataset. The model’s hyperparameters, such as learning rate, batch size, and dropout rate, will be optimized using Optuna. The performance of the model will be evaluated based on accuracy, precision, and recall, and the results will be visualized using the Optuna Dashboard to analyze the optimization process.
 
-**Python libs**: Optuna, TensorFlow/Keras, Pandas, NumPy, Matplotlib
+**Python libs:** Optuna, Transformers, Scikit-learn, Pandas, Matplotlib
 
-**Is it Free?**: Yes
+**Is it Free?** Yes, all tools and libraries used in this project are open-source and freely available, including the IMDB dataset, which can be accessed via the TensorFlow Datasets library.
 
-**Relevant tool (Optuna) related Resource Links**:
+**Relevant tool (XYZ) related Resource Links:**
 - [Optuna Documentation](https://optuna.readthedocs.io/en/stable/)
-- [Optuna GitHub Repository](https://github.com/optuna/optuna)
-- [Optuna Dashboard Documentation](https://optuna.readthedocs.io/en/stable/tutorial/tutorial.html#visualization)
+- [Optuna Dashboard Documentation](https://optuna.readthedocs.io/en/stable/tutorial/10_key_features/002_dashboard.html)
+- [IMDB Dataset on TensorFlow Datasets](https://www.tensorflow.org/datasets/community_catalog/huggingface/imdb)
 
 ######################## END ###############################
 

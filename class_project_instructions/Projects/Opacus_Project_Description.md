@@ -1,19 +1,28 @@
-**Title**: Privacy-Preserving Sentiment Analysis on Social Media Data
+### Project 1: Differentially Private Customer Segmentation
+- **Difficulty**: 1
+- **Tech Description**: Opacus is used to implement differential privacy in clustering algorithms to ensure customer data remains confidential during analysis.
+- **Project Idea**: The goal of this project is to perform customer segmentation on a retail dataset while preserving the privacy of individual customer information. Using the "Online Retail" dataset from the UCI Machine Learning Repository, students will apply k-means clustering with Opacus to ensure that the customer data remains differentially private. The project will involve preprocessing the data, applying the clustering algorithm with privacy guarantees, and evaluating the segmentation results against traditional methods to highlight the trade-offs between privacy and accuracy.
+- **Python libs**: Opacus, Pandas, NumPy, Scikit-learn, Matplotlib
+- **Is it Free?**: Yes, Opacus is an open-source library and the dataset is publicly available.
+- **Relevant tool (Opacus) related Resource Links**: [Opacus Documentation](https://opacus.ai/), [UCI Online Retail Dataset](https://archive.ics.uci.edu/ml/datasets/online+retail)
 
-**Difficulty**: 3
+---
 
-**Tech Description**: Opacus is utilized to implement differential privacy in a sentiment analysis model, ensuring that individual user data remains confidential while still allowing for meaningful insights from aggregated data.
+### Project 2: Privacy-Preserving Sentiment Analysis on Movie Reviews
+- **Difficulty**: 2
+- **Tech Description**: Opacus is utilized to train a sentiment analysis model on movie reviews while ensuring the data's privacy through differential privacy mechanisms.
+- **Project Idea**: In this project, students will analyze the "IMDb Movie Reviews" dataset to build a sentiment analysis model that classifies movie reviews as positive or negative while maintaining the privacy of the review authors. Using pre-trained embeddings like FastText for feature extraction, students will fine-tune a lightweight neural network with Opacus to incorporate differential privacy. The project will involve evaluating the model's performance and privacy trade-offs compared to a standard model trained without privacy considerations.
+- **Python libs**: Opacus, Transformers, Pandas, NumPy, Scikit-learn
+- **Is it Free?**: Yes, both Opacus and the IMDb dataset are freely available for use.
+- **Relevant tool (Opacus) related Resource Links**: [Opacus GitHub Repository](https://github.com/pytorch/opacus), [IMDb Dataset](https://www.imdb.com/interfaces/)
 
-**Project Idea**: The goal of this project is to perform sentiment analysis on tweets related to a specific topic (e.g., climate change) while ensuring the privacy of the users' data. By leveraging the Twitter API, we will collect real-time tweets and preprocess the text data. Using Opacus, we will train a deep learning model (like a LSTM or transformer) with differential privacy techniques to protect user information. The project will evaluate the model's performance in terms of sentiment classification accuracy and privacy guarantees, demonstrating the balance between data utility and user privacy.
+---
 
-**Python libs**: Opacus, Tweepy, PyTorch, Pandas, NLTK, Scikit-learn
-
-**Is it Free?**: Yes, all tools and libraries mentioned are free to use.
-
-**Relevant tool (Opacus) related Resource Links**:
-- [Opacus Documentation](https://opacus.ai/)
-- [Differential Privacy in Machine Learning](https://pytorch.org/tutorials/advanced/dp_tutorial.html)
-- [Tweepy Documentation](https://docs.tweepy.org/en/stable/)
-
-######################## END ###############################
+### Project 3: Differentially Private Time Series Forecasting
+- **Difficulty**: 3
+- **Tech Description**: Opacus is implemented to add differential privacy to a recurrent neural network model for time series forecasting of energy consumption data.
+- **Project Idea**: This advanced project aims to forecast future energy consumption using the "Household Electric Power Consumption" dataset from the UCI Machine Learning Repository while ensuring the privacy of household data. Students will preprocess the dataset and build a recurrent neural network (RNN) model, applying Opacus to integrate differential privacy into the training process. The project will involve analyzing the impact of privacy on forecasting accuracy and comparing results with traditional RNN models that do not use privacy-preserving techniques.
+- **Python libs**: Opacus, TensorFlow, Pandas, NumPy, Matplotlib
+- **Is it Free?**: Yes, both Opacus and the dataset are publicly available without cost.
+- **Relevant tool (Opacus) related Resource Links**: [Opacus Documentation](https://opacus.ai/), [UCI Household Electric Power Consumption Dataset](https://archive.ics.uci.edu/ml/datasets/individual+household+electric+power+consumption)
 

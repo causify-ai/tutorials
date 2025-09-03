@@ -1,38 +1,34 @@
-- **Title**: Predicting Movie Ratings Using Bayesian Hierarchical Models
+### Project 1: Bayesian Analysis of Housing Prices
+- **Difficulty:** 1
+- **Tech Description:** CmdStanPy is used for Bayesian inference to model housing prices based on various features like location, size, and amenities.
+- **Project Idea:** The goal of this project is to build a Bayesian regression model to predict housing prices in a given city. The student will collect data from the Zillow API, focusing on features like square footage, number of bedrooms, and neighborhood ratings. Using CmdStanPy, the student will perform Bayesian inference to estimate the posterior distributions of the model parameters and assess the uncertainty in the predictions. The final output will include visualizations of the predicted prices and credible intervals.
+- **Python libs:** CmdStanPy, Pandas, NumPy, Matplotlib, Seaborn
+- **Is it Free?** Yes, the Zillow API provides free access to housing data with certain limitations.
+- **Relevant tool (CmdStanPy) related Resource Links:**
+  - [CmdStanPy Documentation](https://cmdstanpy.readthedocs.io/en/stable/)
+  - [Zillow API Documentation](https://www.zillow.com/howto/api/APIOverview.htm)
 
-- **Difficulty**: 3
+---
 
-- **Tech Description**: CmdStanPy is utilized to implement Bayesian hierarchical models for predicting movie ratings based on user reviews and movie features.
+### Project 2: Analyzing Customer Churn with Bayesian Networks
+- **Difficulty:** 2
+- **Tech Description:** CmdStanPy is utilized to create a Bayesian network model that identifies factors contributing to customer churn in a subscription service.
+- **Project Idea:** This project aims to analyze customer churn for a fictional subscription-based service by constructing a Bayesian network. The student will use a dataset from Kaggle that contains customer demographics, usage patterns, and subscription details. By employing CmdStanPy, the student will estimate the probabilities of various factors leading to churn and visualize the relationships between these factors. The analysis will provide actionable insights for reducing churn rates.
+- **Python libs:** CmdStanPy, Pandas, NumPy, NetworkX, Matplotlib
+- **Is it Free?** Yes, the dataset is freely available on Kaggle.
+- **Relevant tool (CmdStanPy) related Resource Links:**
+  - [CmdStanPy Documentation](https://cmdstanpy.readthedocs.io/en/stable/)
+  - [Kaggle Customer Churn Dataset](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)
 
-- **Project Idea**: The goal of this project is to predict user ratings for movies using a Bayesian hierarchical model that accounts for both user and movie characteristics. We will scrape movie data and user reviews from the IMDb API, focusing on extracting features such as genre, director, and user sentiment. By employing CmdStanPy, we will fit a hierarchical model that captures the variability in ratings across different users and movies, allowing for improved predictions. This approach not only enhances the accuracy of the predictions but also provides insights into how different factors influence user ratings.
+---
 
-- **Python libs**: CmdStanPy, pandas, numpy, BeautifulSoup, requests, matplotlib, seaborn
-
-- **Is it Free?**: Yes, all the libraries and the IMDb API are free to use.
-
-- **Relevant tool (CmdStanPy) related Resource Links**: 
-  - [CmdStanPy Documentation](https://cmdstanpy.readthedocs.io/en/latest/)
-  - [Bayesian Data Analysis with CmdStanPy](https://mc-stan.org/users/documentation/cmdstanpy.html)
-  - [IMDb API Documentation](https://imdb-api.com/API)
-
-######################## END ###############################
-
-**Title**: Bayesian Inference for Predicting Movie Ratings
-
-**Difficulty**: 3
-
-**Tech Description**: CmdStanPy is utilized for performing Bayesian inference using Stan, allowing for the estimation of complex models and uncertainty quantification in predictions.
-
-**Project Idea**: The goal of this project is to predict movie ratings based on user reviews and metadata using a Bayesian hierarchical model. By scraping data from the MovieLens dataset, which includes user ratings, movie genres, and user demographics, we will apply Bayesian inference to model the uncertainty in ratings. The project will involve preprocessing the data, defining a hierarchical model in Stan, and using CmdStanPy to fit the model and generate predictions. The final output will include posterior distributions of the predicted ratings, providing insights into the uncertainty of the predictions.
-
-**Python libs**: CmdStanPy, Pandas, NumPy, Matplotlib, Scikit-learn, BeautifulSoup
-
-**Is it Free?**: Yes
-
-**Relevant tool (CmdStanPy) related Resource Links**:
-- [CmdStanPy Documentation](https://cmdstanpy.readthedocs.io/en/latest/)
-- [MovieLens Dataset](https://grouplens.org/datasets/movielens/)
-- [Bayesian Data Analysis with CmdStanPy](https://mc-stan.org/users/documentation/cmdstanpy)
-
-######################## END ###############################
+### Project 3: Time Series Forecasting of Retail Sales
+- **Difficulty:** 3
+- **Tech Description:** CmdStanPy is used for hierarchical Bayesian modeling to forecast future retail sales based on historical data.
+- **Project Idea:** The objective of this project is to develop a hierarchical Bayesian model for forecasting retail sales over time. The student will use a publicly available dataset from the UCI Machine Learning Repository that includes historical sales data across various stores. Using CmdStanPy, the student will model seasonal effects and trends in the sales data, allowing for more nuanced forecasts. The project will involve comparing the Bayesian forecasts with traditional time series models and evaluating their accuracy using metrics like MAE and RMSE.
+- **Python libs:** CmdStanPy, Pandas, NumPy, Statsmodels, Matplotlib
+- **Is it Free?** Yes, the UCI Machine Learning Repository provides free access to datasets.
+- **Relevant tool (CmdStanPy) related Resource Links:**
+  - [CmdStanPy Documentation](https://cmdstanpy.readthedocs.io/en/stable/)
+  - [UCI Machine Learning Repository - Retail Sales Dataset](https://archive.ics.uci.edu/ml/datasets/Online+Retail)
 

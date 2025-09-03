@@ -1,38 +1,28 @@
-**Title**: Evaluating the Impact of Social Media Campaigns on Brand Awareness Using Causal Inference
+### Project 1: Evaluating the Impact of Marketing Campaigns on Sales
+- **Difficulty:** 1 
+- **Tech Description:** IBM Causal Inference 360 will be used to analyze the causal effects of marketing campaigns on sales data.
+- **Project Idea:** The goal of this project is to determine whether specific marketing campaigns have a statistically significant impact on product sales. By using historical sales data and campaign exposure data, students will apply causal inference techniques to estimate the treatment effect of different campaigns. The project will involve data cleaning, causal model specification, and interpretation of results to provide actionable insights for marketing strategies.
+- **Python libs:** pandas, numpy, matplotlib, IBM Causal Inference 360
+- **Is it Free?** Yes, IBM Causal Inference 360 is an open-source library available for free use.
+- **Relevant tool (XYZ) related Resource Links:** [IBM Causal Inference 360 Documentation](https://github.com/IBM/Causal-Inference-360)
 
-**Difficulty**: 3
+---
 
-**Tech Description**: IBM Causal Inference 360 will be utilized to assess the causal impact of social media marketing campaigns on brand awareness metrics by analyzing observational data.
+### Project 2: Assessing the Effect of Policy Changes on Public Health Outcomes
+- **Difficulty:** 2
+- **Tech Description:** IBM Causal Inference 360 will be utilized to assess the causal relationship between policy changes and public health metrics.
+- **Project Idea:** This project aims to evaluate the causal impact of specific public health policies (e.g., smoking bans, vaccination drives) on health outcomes such as hospital admissions or disease incidence rates. By leveraging publicly available health data and policy implementation timelines, students will use causal inference methods to analyze the data, control for confounding variables, and draw conclusions about the effectiveness of the policies. The project will culminate in a report detailing the findings and policy recommendations.
+- **Python libs:** pandas, statsmodels, seaborn, IBM Causal Inference 360
+- **Is it Free?** Yes, the library and the datasets used are publicly available for free.
+- **Relevant tool (XYZ) related Resource Links:** [IBM Causal Inference 360 GitHub Repository](https://github.com/IBM/Causal-Inference-360)
 
-**Project Idea**: This project aims to evaluate the effectiveness of various social media marketing campaigns on increasing brand awareness for a specific product. By leveraging data from social media platforms (e.g., Twitter API for engagement metrics) and brand awareness surveys, we will apply causal inference techniques to determine whether the campaigns led to a significant increase in brand recognition. The analysis will involve constructing a causal graph, identifying confounding variables, and applying methods such as propensity score matching to estimate treatment effects. The results will provide actionable insights for optimizing future marketing strategies.
+---
 
-**Python libs**: pandas, numpy, statsmodels, matplotlib, seaborn, IBM Causal Inference 360
-
-**Is it Free?**: Yes, the IBM Causal Inference 360 library is open-source and free to use.
-
-**Relevant tool (XYZ) related Resource Links**:
-- [IBM Causal Inference 360 Documentation](https://github.com/IBM/causal-inference-360)
-- [IBM Causal Inference 360 GitHub Repository](https://github.com/IBM/causal-inference-360)
-- [Causal Inference 360 Tutorials](https://github.com/IBM/causal-inference-360/tree/main/tutorials)
-
-######################## END ###############################
-
-- **Title**: Analyzing the Impact of Social Media Campaigns on Customer Engagement
-
-- **Difficulty**: 2
-
-- **Tech Description**: IBM Causal Inference 360 will be utilized to determine the causal impact of various social media marketing campaigns on customer engagement metrics, such as likes, shares, and comments.
-
-- **Project Idea**: The goal of this project is to analyze the effectiveness of different social media marketing strategies on customer engagement. By collecting data from the Twitter API regarding various marketing campaigns and corresponding engagement metrics, we can use causal inference techniques to identify which campaigns significantly influence customer behavior. The analysis will involve creating treatment and control groups based on campaign exposure and applying causal inference methods to estimate the treatment effects, providing actionable insights for future marketing decisions.
-
-- **Python libs**: pandas, numpy, requests, statsmodels, IBM Causal Inference 360
-
-- **Is it Free?**: Yes, the IBM Causal Inference 360 library is open-source and free to use.
-
-- **Relevant tool (XYZ) related Resource Links**: 
-  - [IBM Causal Inference 360 GitHub Repository](https://github.com/IBM/causal-inference-360)
-  - [IBM Causal Inference 360 Documentation](https://causal-inference-360.readthedocs.io/en/latest/)
-  - [Twitter API Documentation](https://developer.twitter.com/en/docs/twitter-api)
-
-######################## END ###############################
+### Project 3: Understanding the Effects of Educational Interventions on Student Performance
+- **Difficulty:** 3
+- **Tech Description:** IBM Causal Inference 360 will be employed to analyze the causal effects of educational interventions on student performance metrics.
+- **Project Idea:** The objective of this advanced project is to assess the impact of various educational interventions (e.g., tutoring programs, curriculum changes) on student performance, measured through standardized test scores. Students will use longitudinal educational data to identify treatment and control groups, apply causal inference techniques to estimate treatment effects, and perform robustness checks. The project will involve complex causal modeling and will require a comprehensive understanding of educational data analytics.
+- **Python libs:** pandas, scikit-learn, matplotlib, IBM Causal Inference 360
+- **Is it Free?** Yes, both the tool and the educational datasets are freely accessible.
+- **Relevant tool (XYZ) related Resource Links:** [IBM Causal Inference 360 Overview](https://www.ibm.com/watson/ai-causal-inference)
 

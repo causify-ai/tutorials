@@ -1,38 +1,28 @@
-**Title**: Analyzing Customer Sentiment in E-commerce Reviews Using What-If Tool (WIT)
+### Project 1: Exploring Model Bias in Loan Approval Predictions
+- **Difficulty**: 1
+- **Tech Description**: The What-If Tool (WIT) will be used to visualize and analyze the impact of different features on loan approval predictions from a pre-trained model.
+- **Project Idea**: This project aims to investigate potential biases in a loan approval prediction model by analyzing how changes in applicant features (e.g., income, credit score, and employment status) influence the model's predictions. Students will use the What-If Tool to create visualizations that allow them to manipulate input features and observe the resulting changes in predicted outcomes. The goal is to identify any unfair biases against specific demographics and provide insights on model fairness.
+- **Python libs**: TensorFlow, Pandas, Scikit-learn, Matplotlib
+- **Is it Free?**: Yes, the What-If Tool is open-source and can be used without any cost.
+- **Relevant tool (WIT) related Resource Links**: [What-If Tool Documentation](https://github.com/pair-code/what-if-tool), [What-If Tool Tutorial](https://pair-code.github.io/what-if-tool/)
 
-**Difficulty**: 2
+---
 
-**Tech Description**: The What-If Tool (WIT) is utilized to visualize and analyze the impact of different features on the predictions made by a sentiment analysis model trained on e-commerce product reviews.
+### Project 2: Analyzing Customer Segmentation in E-commerce
+- **Difficulty**: 2
+- **Tech Description**: WIT will be used to interactively visualize clustering results from a pre-trained customer segmentation model.
+- **Project Idea**: This project focuses on analyzing customer segmentation in an e-commerce dataset using K-means clustering. Students will utilize a pre-trained clustering model to segment customers based on purchasing behavior and demographic information. The What-If Tool will allow students to visualize how different customer attributes affect their segment assignments and explore the characteristics of each segment. The goal is to provide actionable insights for targeted marketing strategies based on customer profiles.
+- **Python libs**: Scikit-learn, Pandas, Matplotlib, Seaborn
+- **Is it Free?**: Yes, the What-If Tool is freely available and can be integrated into existing Python environments.
+- **Relevant tool (WIT) related Resource Links**: [What-If Tool Documentation](https://github.com/pair-code/what-if-tool), [What-If Tool Tutorial](https://pair-code.github.io/what-if-tool/)
 
-**Project Idea**: This project aims to build a sentiment analysis model that classifies customer reviews as positive, negative, or neutral. By leveraging the What-If Tool, users can interactively explore how changes in review text or product attributes affect sentiment predictions. The model will be trained using a dataset of e-commerce reviews sourced from the Kaggle dataset repository. The goal is to provide insights into which features (e.g., review length, product category) most significantly influence customer sentiment, helping businesses tailor their strategies based on customer feedback.
+---
 
-**Python libs**: pandas, scikit-learn, nltk, WIT, matplotlib, seaborn
-
-**Is it Free?**: Yes, the What-If Tool is free and can be run in a Jupyter notebook environment.
-
-**Relevant tool (WIT) related Resource Links**:
-- [What-If Tool Documentation](https://github.com/pair-code/what-if-tool)
-- [What-If Tool Tutorial](https://pair-code.github.io/what-if-tool/) 
-- [Kaggle E-commerce Reviews Dataset](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews)
-
-######################## END ###############################
-
-**Title:** Evaluating Fairness in Loan Approval Models using What-If Tool (WIT)
-
-**Difficulty:** 3
-
-**Tech Description:** The What-If Tool (WIT) will be utilized to visualize and analyze the fairness of a machine learning model predicting loan approvals based on various demographic features.
-
-**Project Idea:** The goal of this project is to assess the fairness of a loan approval model trained on a publicly available dataset, such as the Home Mortgage Disclosure Act (HMDA) data. By leveraging WIT, we can interactively explore how different demographic factors (like race, gender, and income) influence the model's predictions. The project will involve training a classification model using logistic regression or random forests and then using WIT to conduct a fairness analysis, examining potential bias in the model's decisions. The insights gained will help in understanding the ethical implications of AI in finance and suggest ways to mitigate bias.
-
-**Python libs:** pandas, scikit-learn, What-If Tool (WIT), matplotlib, seaborn
-
-**Is it Free?** Yes, the What-If Tool is free to use.
-
-**Relevant tool (WIT) related Resource Links:**
-- [What-If Tool Documentation](https://pair-code.github.io/what-if-tool/)
-- [GitHub Repository](https://github.com/PairLab/what-if-tool)
-- [Tutorial on Fairness Analysis with WIT](https://pair-code.github.io/what-if-tool/faq.html#how-do-i-use-the-what-if-tool-to-analyze-fairness)
-
-######################## END ###############################
+### Project 3: Understanding Image Classification Decisions
+- **Difficulty**: 3
+- **Tech Description**: The What-If Tool will be employed to analyze and interpret the decisions made by a pre-trained image classification model.
+- **Project Idea**: This advanced project aims to explore the decision-making process of a pre-trained image classification model (e.g., ResNet or Inception) using the CIFAR-10 dataset. Students will use the What-If Tool to visualize the model's predictions and the impact of modifying input images (e.g., altering brightness or adding noise). The goal is to identify potential weaknesses in the model's performance and understand how certain image features influence classification accuracy. This analysis will help in assessing the robustness of the model and suggest areas for improvement.
+- **Python libs**: TensorFlow, Keras, NumPy, Matplotlib, PIL
+- **Is it Free?**: Yes, the What-If Tool is an open-source project, and the CIFAR-10 dataset is publicly available for free.
+- **Relevant tool (WIT) related Resource Links**: [What-If Tool Documentation](https://github.com/pair-code/what-if-tool), [What-If Tool Tutorial](https://pair-code.github.io/what-if-tool/)
 
