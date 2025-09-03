@@ -11,7 +11,6 @@ from typing import Tuple
 
 import helpers.hio as hio
 import pandas as pd
-import tabulate
 
 _LOG = logging.getLogger(__name__)
 
@@ -102,6 +101,7 @@ def write_markdown_table(df: pd.DataFrame, filepath: str) -> None:
         path, function name, line range, and docstring)
     :param filepath: path where the output markdown file will be saved
     """
+    import tabulate
     df_out = df.copy().fillna("")
     df_out = df_out.map(lambda x: str(x).replace("\n", " ").replace("|", r"\|"))
     table_md = tabulate.tabulate(
