@@ -24,6 +24,12 @@ invoke = "*"
 # This is needed in `linters/test/test_isort.py`.
 isort = "*"
 PyYAML = "^6.0"  
+pytest = "*" 
+pytest-cov = "*" 
+pytest-instafail = "*" 
+pytest-rerunfailures = "*" 
+pytest-timeout = "*" 
+pytest-xdist = "*"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3"
