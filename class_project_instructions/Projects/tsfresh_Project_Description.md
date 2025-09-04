@@ -1,69 +1,61 @@
-### Tool Overview
-**tsfresh** is a Python library specifically designed for time series analysis that automates the extraction of relevant features from time series data. It helps in identifying patterns, trends, and anomalies, making it a valuable tool for tasks such as classification and regression on time series datasets. 
-
-**Key Features:**
-- Automatic extraction of a large number of time series features.
-- Efficient handling of large datasets with parallel processing capabilities.
-- Built-in feature selection to identify relevant features for model training.
-- Compatibility with various machine learning libraries for seamless integration.
+**Tech Description:**
+tsfresh is a Python package designed for time series feature extraction, allowing users to automatically extract a large number of time series characteristics from their data. Its key features include:
+- Automated extraction of hundreds of features from time series data.
+- Built-in methods for feature selection to identify the most relevant features.
+- Support for multi-dimensional time series data.
+- Easy integration with machine learning libraries for predictive modeling.
 
 ---
 
-### Project Idea 1: Time Series Classification of Sensor Data (Difficulty: 1)
+### Project 1: Predictive Maintenance of Industrial Equipment
+**Difficulty:** 1 (Easy)  
+**Project Objective:** The goal is to predict the likelihood of equipment failure based on sensor data, optimizing maintenance schedules to reduce downtime.  
 
-**Project Objective:**
-Classify time series data from wearable sensors to detect different physical activities (e.g., walking, running, sitting).
-
-**Dataset Suggestions:**
-- Use publicly available datasets from Kaggle that contain accelerometer data from smart devices.
+**Dataset Suggestions:** Students can use time series data from industrial sensors, available on platforms like Kaggle or open government datasets related to manufacturing or energy sectors.  
 
 **Step-by-Step Plan:**
-1. **Data Collection:** Download a dataset of time series sensor data from Kaggle.
-2. **Feature Engineering:** Use tsfresh to extract features from the time series data.
-3. **Model Training:** Train a simple classification model (e.g., Random Forest) using the extracted features.
-4. **Use of the Tool:** Leverage tsfresh's feature selection capabilities to identify the most relevant features for your model.
-5. **Evaluation Metrics:** Use accuracy and F1-score to evaluate model performance.
-6. **Visualization/Reporting:** Create visualizations of the results, including confusion matrices and feature importance plots.
+1. **Data Collection:** Gather time series data from sensors monitoring equipment (temperature, vibration, etc.) over time.
+2. **Feature Engineering:** Use tsfresh to extract relevant features from the time series data.
+3. **Model Training:** Implement a classification model (e.g., Random Forest) to predict failure events based on the extracted features.
+4. **Use of the Tool:** Leverage tsfresh for feature extraction and selection to identify the most predictive features for the model.
+5. **Evaluation Metrics:** Use accuracy, precision, recall, and F1-score to evaluate model performance.
+6. **Visualization:** Create a report visualizing the feature importance and the predictions against actual failure events.
 
-**Bonus Ideas:** Experiment with different classification models or add more physical activities for a multi-class classification problem.
+**Bonus Ideas:** Extend the project by comparing the predictive performance of different models or integrating additional data sources (e.g., maintenance logs).
 
 ---
 
-### Project Idea 2: Predictive Maintenance for Machinery (Difficulty: 2)
+### Project 2: Anomaly Detection in Financial Transactions
+**Difficulty:** 2 (Medium)  
+**Project Objective:** The goal is to detect fraudulent transactions in a financial dataset, optimizing the identification of anomalies that may indicate fraud.  
 
-**Project Objective:**
-Predict machinery failure by analyzing time series data from equipment sensors to optimize maintenance schedules.
-
-**Dataset Suggestions:**
-- Utilize datasets from open government portals or Kaggle that provide time series data on machinery performance metrics.
+**Dataset Suggestions:** Use publicly available datasets from Kaggle that focus on financial transactions, including time-stamped transaction data.  
 
 **Step-by-Step Plan:**
-1. **Data Collection:** Acquire a dataset containing time series data from industrial machines.
-2. **Feature Engineering:** Use tsfresh to extract a comprehensive set of features from the time series data.
-3. **Model Training:** Implement a regression model (e.g., Gradient Boosting) to predict the remaining useful life (RUL) of machinery based on the extracted features.
-4. **Use of the Tool:** Apply tsfresh for both feature extraction and selection, ensuring the model is trained on the most pertinent features.
-5. **Evaluation Metrics:** Assess model performance using Mean Absolute Error (MAE) and R-squared.
-6. **Visualization/Reporting:** Develop a dashboard or report showcasing the predicted RUL and maintenance recommendations.
+1. **Data Collection:** Obtain time series data of financial transactions, including timestamps, amounts, and transaction types.
+2. **Feature Engineering:** Utilize tsfresh to extract time series features such as mean, variance, and trends from the transaction data.
+3. **Model Training:** Implement an anomaly detection algorithm (e.g., Isolation Forest) to identify unusual patterns in the transaction data.
+4. **Use of the Tool:** Apply tsfresh for feature extraction and selection to focus on the most relevant features for detecting anomalies.
+5. **Evaluation Metrics:** Use precision, recall, and ROC-AUC to evaluate the effectiveness of the anomaly detection model.
+6. **Visualization:** Create visualizations to show detected anomalies against normal transaction patterns and provide insights.
 
-**Bonus Ideas:** Compare the predictive performance of different regression models or implement a clustering analysis to identify groups of similar machinery.
+**Bonus Ideas:** Experiment with different thresholds for anomaly detection or compare the results with traditional rule-based methods.
 
 ---
 
-### Project Idea 3: Anomaly Detection in Financial Transactions (Difficulty: 3)
+### Project 3: Energy Consumption Forecasting
+**Difficulty:** 3 (Hard)  
+**Project Objective:** The goal is to forecast future energy consumption based on historical usage data, optimizing the prediction accuracy for better resource management.  
 
-**Project Objective:**
-Detect fraudulent transactions in financial datasets by analyzing time series data of transaction amounts and timestamps.
-
-**Dataset Suggestions:**
-- Explore open datasets available on Kaggle that contain time series data of financial transactions, such as credit card transactions.
+**Dataset Suggestions:** Students can use time series datasets related to energy consumption available on Kaggle or open government energy statistics portals.  
 
 **Step-by-Step Plan:**
-1. **Data Collection:** Download a dataset with time series financial transaction data from Kaggle.
-2. **Feature Engineering:** Utilize tsfresh to extract features relevant to anomaly detection from the transaction time series.
-3. **Model Training:** Train an anomaly detection model (e.g., Isolation Forest or Autoencoder) using the features extracted by tsfresh.
-4. **Use of the Tool:** Implement tsfresh's feature extraction and selection capabilities to focus on features that effectively highlight anomalies.
-5. **Evaluation Metrics:** Evaluate the model using precision, recall, and the F1-score, focusing on the detection of fraudulent transactions.
-6. **Visualization/Reporting:** Create visualizations to illustrate the detected anomalies and provide insights into transaction patterns.
+1. **Data Collection:** Collect historical energy consumption data, including timestamps and consumption levels.
+2. **Feature Engineering:** Use tsfresh to extract features that capture seasonal trends, cycles, and other relevant patterns in the energy consumption data.
+3. **Model Training:** Implement a regression model (e.g., Gradient Boosting Regressor) to forecast future energy consumption based on the extracted features.
+4. **Use of the Tool:** Utilize tsfresh for comprehensive feature extraction and selection to enhance the forecasting model.
+5. **Evaluation Metrics:** Evaluate model performance using Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE).
+6. **Visualization:** Develop visualizations that compare predicted vs. actual energy consumption over time and illustrate trends.
 
-**Bonus Ideas:** Implement a comparison between different anomaly detection algorithms or analyze the impact of feature selection on model performance.
+**Bonus Ideas:** Enhance the project by incorporating external factors (e.g., weather data) or experimenting with different forecasting models to improve accuracy.
 
