@@ -1,34 +1,65 @@
-### Project 1: Optimizing Image Classification with Keras Tuner
-- **Difficulty:** 1
-- **Tech Description:** Keras Tuner is used to optimize the hyperparameters of a convolutional neural network (CNN) for image classification tasks.
-- **Project Idea:** The goal of this project is to create an image classifier that accurately identifies different species of flowers using the popular "Flowers Recognition" dataset. Students will employ Keras Tuner to experiment with various CNN architectures and hyperparameters, such as learning rates, batch sizes, and the number of layers. The optimized model will be evaluated based on accuracy and loss metrics, ensuring a robust understanding of how hyperparameter tuning impacts model performance.
-- **Python libs:** TensorFlow, Keras, Keras Tuner, NumPy, Matplotlib
-- **Is it Free?** Yes, all libraries and datasets are open-source and freely available.
-- **Relevant tool (Keras Tuner) related Resource Links:** 
-  - [Keras Tuner Documentation](https://keras-team.github.io/keras-tuner/)
-  - [Flowers Recognition Dataset](https://www.kaggle.com/datasets/alxmamaev/flowers-recognition)
+### Project Idea 1: Predicting House Prices (Difficulty: 1)
+
+#### Tool Overview:
+Keras Tuner is a powerful library that helps automate hyperparameter tuning for Keras models, optimizing their performance. It simplifies the search for the best model configurations, improving accuracy and efficiency in machine learning tasks.
+
+#### Project Objective:
+The goal of this project is to predict house prices based on various features of the houses (e.g., size, location, number of bedrooms, etc.). The project will focus on optimizing a regression model using Keras Tuner to achieve the best prediction accuracy.
+
+#### Dataset Suggestions:
+- Use a dataset from Kaggle that includes various features related to housing prices. Look for datasets labeled "house prices" or "real estate".
+
+#### Step-by-Step Plan:
+1. **Data Collection**: Download the dataset from Kaggle and load it into your environment.
+2. **Feature Engineering**: Clean the dataset by handling missing values, encoding categorical variables, and scaling numerical features.
+3. **Model Training**: Create a baseline regression model using Keras and train it on the dataset.
+4. **Use of Keras Tuner**: Implement Keras Tuner to optimize hyperparameters of the model (e.g., number of layers, number of units, learning rate).
+5. **Evaluation Metrics**: Use Mean Absolute Error (MAE) and R-squared as evaluation metrics to assess model performance.
+6. **Visualization**: Create visualizations to compare predicted vs. actual prices and to showcase the importance of different features.
 
 ---
 
-### Project 2: Hyperparameter Tuning for Time Series Forecasting
-- **Difficulty:** 2
-- **Tech Description:** Keras Tuner is utilized to optimize the hyperparameters of recurrent neural networks (RNNs) for time series forecasting.
-- **Project Idea:** In this project, students will focus on predicting stock prices using the "Yahoo Finance" API to retrieve historical stock data. The objective is to build an RNN model that forecasts future stock prices based on historical trends. Keras Tuner will be employed to fine-tune hyperparameters such as the number of LSTM units, dropout rates, and learning rates. Students will analyze the impact of these hyperparameters on the model's forecasting accuracy and performance metrics.
-- **Python libs:** TensorFlow, Keras, Keras Tuner, Pandas, Matplotlib
-- **Is it Free?** Yes, the Yahoo Finance API is freely accessible, and all libraries used are open-source.
-- **Relevant tool (Keras Tuner) related Resource Links:** 
-  - [Keras Tuner Documentation](https://keras-team.github.io/keras-tuner/)
-  - [Yahoo Finance API](https://pypi.org/project/yfinance/)
+### Project Idea 2: Classifying Sentiment in Movie Reviews (Difficulty: 2)
+
+#### Tool Overview:
+Keras Tuner aids in optimizing hyperparameters for Keras models, allowing data scientists to improve model performance for tasks such as classification, regression, and more.
+
+#### Project Objective:
+The objective of this project is to classify the sentiment (positive, negative, neutral) of movie reviews using a deep learning model. Keras Tuner will be utilized to find the best architecture for the model.
+
+#### Dataset Suggestions:
+- Utilize a sentiment analysis dataset available on HuggingFace or Kaggle that contains labeled movie reviews with sentiment ratings.
+
+#### Step-by-Step Plan:
+1. **Data Collection**: Acquire the dataset from HuggingFace or Kaggle and load it into your environment.
+2. **Feature Engineering**: Preprocess the text data by tokenizing the reviews, removing stop words, and padding sequences.
+3. **Model Training**: Build a baseline LSTM or CNN model for text classification using Keras.
+4. **Use of Keras Tuner**: Apply Keras Tuner to experiment with different hyperparameters such as embedding dimensions, number of LSTM units, and dropout rates.
+5. **Evaluation Metrics**: Use accuracy, precision, recall, and F1-score to evaluate the classification model's performance.
+6. **Visualization**: Create confusion matrices and ROC curves to visualize the model's performance and sentiment distribution.
 
 ---
 
-### Project 3: Fine-Tuning Transfer Learning Models for Sentiment Analysis
-- **Difficulty:** 3
-- **Tech Description:** Keras Tuner is leveraged to optimize hyperparameters in a transfer learning model for natural language processing tasks.
-- **Project Idea:** This advanced project aims to perform sentiment analysis on movie reviews using the "IMDb Movie Reviews" dataset. Students will use a pre-trained BERT model and apply Keras Tuner to optimize hyperparameters like learning rates and batch sizes for fine-tuning. The project will involve preprocessing text data, implementing the transfer learning model, and evaluating its performance based on metrics such as accuracy and F1 score. The goal is to demonstrate how hyperparameter tuning can enhance the effectiveness of pre-trained models in NLP tasks.
-- **Python libs:** TensorFlow, Keras, Keras Tuner, Transformers, Pandas
-- **Is it Free?** Yes, the IMDb dataset is publicly available, and all libraries are open-source.
-- **Relevant tool (Keras Tuner) related Resource Links:** 
-  - [Keras Tuner Documentation](https://keras-team.github.io/keras-tuner/)
-  - [IMDb Movie Reviews Dataset](https://ai.stanford.edu/~amaas/data/sentiment/)
+### Project Idea 3: Forecasting Stock Prices Using Time Series Analysis (Difficulty: 3)
+
+#### Tool Overview:
+Keras Tuner provides a framework for optimizing hyperparameters in Keras models, enabling data scientists to enhance model performance for complex tasks such as forecasting and time series analysis.
+
+#### Project Objective:
+The goal of this project is to forecast future stock prices based on historical data using a recurrent neural network (RNN) or Long Short-Term Memory (LSTM) network. Keras Tuner will be used to optimize the model's hyperparameters for better accuracy.
+
+#### Dataset Suggestions:
+- Find a stock price dataset from Kaggle or an open government API that provides historical stock prices for various companies.
+
+#### Step-by-Step Plan:
+1. **Data Collection**: Download the historical stock price dataset from Kaggle or an open API and load it into your environment.
+2. **Feature Engineering**: Process the data by creating time series features such as moving averages, price changes, and lagged variables.
+3. **Model Training**: Build a baseline LSTM model for time series forecasting using Keras.
+4. **Use of Keras Tuner**: Utilize Keras Tuner to optimize hyperparameters like the number of LSTM layers, units per layer, and learning rate.
+5. **Evaluation Metrics**: Use Mean Squared Error (MSE) and Mean Absolute Percentage Error (MAPE) to evaluate the forecasting model's performance.
+6. **Visualization**: Create time series plots to visualize the predicted vs. actual stock prices and analyze the model's forecasting capabilities.
+
+---
+
+These projects not only provide hands-on experience with Keras Tuner but also cover a variety of machine learning tasks, encouraging students to explore different domains and techniques.
 

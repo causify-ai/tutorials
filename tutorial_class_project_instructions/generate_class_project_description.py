@@ -60,40 +60,103 @@ tool_description_cache = defaultdict(list)
 # used for real-time Bitcoin data ingestion in Python.
 
 # - Prefer solutions that can run on a **standard laptop or cloud notebooks with limited resources (e.g., Colab free tier)**.
-GLOBAL_PROMPT = """Act as a graduate data science professor.
-I will give you a tool (XYZ). 
+GLOBAL_PROMPT_OLD = """Act as a graduate data science professor.
+I will give you a tool (XYZ).
 Write **three distinct and realistic graduate-level data science project briefs** using the given tool XYZ.
 Each project should be distinct, creative, and feasible for a graduate student to build over a semester.
 Include:
 - Title
 - Difficulty: 1/2/3 (1 = easy, 2 = medium, 3 = hard; use each level **exactly once**)
-- Tech Description: 1–2 lines about how the tool is used in this project
-- Project Idea: 6-8 lines explaining the goal and approach.
+- Project Idea: 5-6 lines explaining the goal and approach.
 - Python libs - 4–6 packages used in the implementation
 - Is it Free? - Yes/No with explanation.
 - Relevant tool(XYZ) related Resource Links
 
-**Constraints**:
+**Strict Constraints**:
 - Use **different data sources**, **problem domains**, or **ML tasks** across the 3 projects.- DO NOT reuse the same Bitcoin price API data or ML algorithm.
 - Keep each project unique and useful.
 - Do NOT repeat the same dataset or algorithm across projects.
 - Use realistic, popular Python packages—no toy examples.
 - Do not propose projects that require physical sensors or IoT devices or non-public data.
-- Only use **freely available public data** via free APIs (no limited usage), web streams, or downloadable datasets.
+- All data used must be from current, active, **public APIs or open datasets** that are **free to use without paid plans or authentication tokens**.
+- Do NOT use APIs that have been discontinued or are no longer free (e.g., Twitter API, Yahoo Finance API, Google News RSS, COVID19API).
+- Prefer datasets available on Kaggle (active ones only), HuggingFace Datasets, open government APIs, or GitHub repositories.
 - Mention the dataset name or source clearly.
-- Do NOT mention surveys, forms, or custom user data collection.
+- Do NOT mention surveys, forms for custom user data source collection.
+- **Do NOT use A/B testing in ANY project**.
 - Use **pre-trained models** for NLP or vision tasks — do not require training from scratch.
+- If describing "real-time" detection or streaming scenarios, clarify whether the data is truly streamed or simulated using static datasets. Avoid vague claims like "as new data streams in" unless you're using actual real-time APIs or streaming platforms.
+- You may simulate streaming by feeding one row at a time from a static dataset in a loop — but you must clearly state this and explain how it mimics real-time inference.
 - Avoid projects that require **GPUs, multi-node clusters, or expensive cloud compute**.
 - Do NOT propose large-scale deep learning training unless using transfer learning on a small dataset.
 - Avoid real-time claims unless tool supports it.
 - Do **not propose large-scale training of transformer models or deep learning systems** unless pre-trained models are used for lightweight inference or fine-tuning on small datasets.
 - Avoid long texts or steps. Use concise, clear language.
+- Every project MUST involve at least one clear machine learning task (e.g., classification, regression, clustering, anomaly detection, forecasting, topic modeling, summarization, etc.).  
+- Tools that focus on EDA, data cleaning, feature engineering, or visualization MUST still include ML — even if basic.
+- Projects must go beyond just model acceleration or deployment; they must include an actual ML task, with data, training/fine-tuning (if needed), evaluation, and analysis.
+
+**Avoid overuse of common topics**:
+You may use common domains like housing prices, movie sentiment, traffic data. But, do not repeat these aggressively domains/toolkits across tools.
+
+**Examples of overused combinations to avoid repeating**:
+- Housing price prediction (e.g., Ames, Boston)
+- Sentiment analysis on movie or product reviews
+- Accident detection using traffic APIs
+- Titanic or Iris EDA/classification
+- Spam detection or SMS classification
+- Cryptocurrency price alerts
 
 Examples of variation:
 - Different data sources: GraphQL, WebSockets, news APIs, order books
-- Different ML tasks: Forecasting, anomaly detection, clustering
-- Different environments: cloud services, edge computing, streaming pipelines
+- Different ML tasks: Forecasting, anomaly detection, clustering, classification, transfer learning
 Look at the example to get an idea of how it needs to look. 
+"""
+GLOBAL_PROMPT = """
+Act as a graduate-level data science professor.
+I will give you the name of a tool (XYZ).
+Write a Tech Description in 4-6 lines about what the tool is and its features in bullet points. Mention this only once in the output generated.
+You must then generate a **project blueprint** that helps students build a realistic data science project over 4–6 weeks.
+You must write the brief assuming the student only knows the name of the tool — you will decide everything else (domain, dataset type, ML task, etc.) in a technically feasible and pedagogically valuable way.
+
+Your response must include:
+
+1. **Tool Overview**: Brief technical explanation of what the tool does and what problems it helps solve.
+
+2. **Difficulty** : 1/2/3 (1 is easy, 2 is medium, 3 is hard; use each level **exactly once**)
+3. **Project Objective**: Clearly state the goal of the project and what is being optimized, predicted, or detected.
+
+4. **Dataset Suggestions**: Suggest realistic types of datasets students could use, and where to find them (e.g., Kaggle, HuggingFace, government portals, simulated data). But DO NOT provide the exact specific dataset name.
+
+5. **Step-by-Step Plan**: Outline the key phases of the project, including:
+   - Data collection / simulation
+   - Feature engineering
+   - Model training (if applicable)
+   - Use of the tool (e.g., optimization, dashboarding, etc.)
+   - Evaluation metrics
+   - Visualization or reporting or simple UI application
+
+6. **Bonus Ideas (Optional)**: Extensions, baseline comparisons, or challenges students might attempt if they want to go further.
+
+Constraints:
+- Project should run on standard laptops or Google Colab.
+- Do not propose projects that require physical sensors or IoT devices or non-public data.
+- All data used must be from current, active, **public APIs or open datasets** that are **free to use without paid plans or authentication tokens**.
+- Do NOT use APIs that have been discontinued or are no longer free (e.g., Twitter API, Yahoo Finance API, Google News RSS, COVID19API).
+- Prefer datasets available on Kaggle (active ones only), HuggingFace Datasets, open government APIs, or GitHub repositories.
+- Mention the dataset name or source clearly.
+- Do NOT mention surveys, forms for custom user data source collection.
+- Use pre-trained models if deep learning is involved.
+- Avoid overused examples like Titanic or Iris.
+- Avoid vague real-time claims unless well-justified.
+- Every project MUST involve at least one clear machine learning task (e.g., classification, regression, clustering, anomaly detection, forecasting, topic modeling, summarization, etc.).  
+- Tools that focus on EDA, data cleaning, feature engineering, or visualization MUST still include ML — even if basic.
+- Projects must go beyond just model acceleration or deployment; they must include an actual ML task, with data, training/fine-tuning (if needed), evaluation, and analysis.
+- Avoid vague statements like "scrape social media" — be specific and realistic.
+
+
+Write in a way that is **student-friendly**, technically clear, and encourages learning and creativity.
+
 """
 EXAMPLE = """Example using Streamlit (technology XYZ):
 
@@ -236,6 +299,7 @@ def _build_prompt(project_name: str) -> str:
             f"Tool: {project_name}.\n"
             f"Generate three new and distinct graduate-level data science project ideas using this tool.\n"
             f"Each project must have a unique difficulty level (1, 2, 3)."
+            f"Do NOT use A/B testing anywhere in the project."
         )
 
 
@@ -283,34 +347,13 @@ def create_markdown_file(
     rows = df.head(max_projects) if max_projects is not None else df
     # temps = [0.3,0.45,0.6]
     pathlib.Path(markdown_folder_path).mkdir(parents=True, exist_ok=True)
+    rows = rows[rows['Tool'].isin(['BoTorch','Polars','Apache Arrow (PyArrow)','apache-tvm','Keras Tuner','tsfresh','Whisper Large V3','CausalInference','CausalML'])]
+    # rows = rows[rows['Tool'].isin(['accelerate','Airflow'])]
     for _, row in rows.iterrows():
         content = ""
         project_name = row["Tool"]
-        # n_projects = int(row.get("No of Projects", 1))
-        # for i in range(n_projects):
-            # prev_descs = tool_description_cache[project_name][-2:]
         description = _generate_project_description(
                 project_name)
-        # tool_description_cache[project_name].append(description)
-            # Add the project description to the markdown file.
-            # difficulty_match = re.search(r"[Dd]ifficulty\s*[:\-–=]\s*(\d)", description)
-            # if not difficulty_match:
-            #     # Try to find "### Difficulty" followed by a number on the next line
-            #     match_lines = re.findall(r"#+\s*Difficulty\s*\n\s*(\d)", description)
-            #     if match_lines:
-            #         difficulty = match_lines[0]
-            #     else:
-            #         difficulty = "N/A"
-            #         _LOG.warning("Could not extract difficulty from description for tool:\n%s", project_name)
-            # else:
-            #     difficulty = difficulty_match.group(1)
-    
-        
-            # content += f"## {project_name}\n"
-            # content += f"{description}\n\n"
-            # content = f"# {project_name} Project Description\n\n"
-            # content += f"## Difficulty Level: {difficulty}\n\n"
-            # content += f"## Project Description\n"
         content = f"{description}\n\n"
         # content += f"######################## END ###############################\n\n"
         file_name = f"{project_name}_Project_Description.md"

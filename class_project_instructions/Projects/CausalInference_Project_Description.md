@@ -1,35 +1,64 @@
-### Project 1: Evaluating the Impact of Remote Work on Employee Productivity
-- **Difficulty:** 1
-- **Tech Description:** CausalInference will be used to analyze observational data to estimate the causal effect of remote work on productivity metrics.
-- **Project Idea:** This project aims to determine whether remote work has a significant impact on employee productivity compared to traditional in-office work. Using publicly available datasets from platforms like Kaggle that track productivity metrics (e.g., hours worked, project completion rates), the student will apply causal inference methods to control for confounding variables such as industry type and employee experience. The goal is to provide insights that can guide organizational policies on remote work.
-- **Python libs:** CausalInference, Pandas, NumPy, Matplotlib, Statsmodels
-- **Is it Free?** Yes, the CausalInference package and the datasets from Kaggle are freely available.
-- **Relevant tool (CausalInference) related Resource Links:**  
-  - [CausalInference Documentation](https://causalinference.net/)
-  - [Kaggle Datasets](https://www.kaggle.com/datasets)
+### Tool Overview
+CausalInference is a powerful tool designed for estimating causal effects from observational data. It helps researchers and data scientists identify relationships between variables, allowing them to draw conclusions about cause-and-effect relationships without the need for randomized controlled trials. The tool offers features for propensity score matching, regression adjustment, and instrumental variable analysis, making it suitable for various applications in social sciences, healthcare, and economics.
 
 ---
 
-### Project 2: Assessing the Effect of Air Quality on Public Health Outcomes
-- **Difficulty:** 2
-- **Tech Description:** CausalInference will be utilized to estimate the causal relationships between air quality metrics and public health outcomes using observational data.
-- **Project Idea:** This project will explore how variations in air quality impact public health metrics, such as hospital admissions for respiratory conditions. The student will gather air quality data from the EPA and health outcome data from the CDC. By employing causal inference techniques to control for confounding factors (like socioeconomic status and geographical location), the student will quantify the health risks associated with poor air quality, providing actionable insights for policymakers.
-- **Python libs:** CausalInference, Pandas, NumPy, Seaborn, Statsmodels
-- **Is it Free?** Yes, both the CausalInference package and the datasets from the EPA and CDC are publicly available at no cost.
-- **Relevant tool (CausalInference) related Resource Links:**  
-  - [CausalInference Documentation](https://causalinference.net/)
-  - [EPA Air Quality Data](https://www.epa.gov/outdoor-air-quality-data)
-  - [CDC Public Health Data](https://www.cdc.gov/datastatistics/index.html)
+### Project Idea 1: Impact of Education Programs on Student Performance
+**Difficulty**: 1 (Easy)
+
+**Project Objective**: The goal of this project is to estimate the causal effect of a specific educational program (e.g., after-school tutoring) on student performance as measured by standardized test scores.
+
+**Dataset Suggestions**: Utilize datasets available on Kaggle related to student performance, which often include demographic information, school characteristics, and test scores.
+
+**Step-by-Step Plan**:
+1. **Data Collection**: Download a relevant dataset that includes information on student demographics, test scores, and participation in educational programs.
+2. **Feature Engineering**: Create binary features for program participation and relevant covariates (e.g., socioeconomic status, prior test scores).
+3. **Model Training**: Use propensity score matching to create a balanced dataset of participants and non-participants.
+4. **Use of the Tool**: Apply CausalInference to estimate the causal effect of the educational program on test scores.
+5. **Evaluation Metrics**: Use mean differences in test scores between the treatment and control groups.
+6. **Visualization/Reporting**: Create visualizations to show the distribution of scores and report the estimated causal effect.
+
+**Bonus Ideas**: Include additional demographic variables to see how the effect varies across different sub-groups (e.g., by ethnicity or income level).
 
 ---
 
-### Project 3: The Effect of Marketing Campaigns on Retail Sales
-- **Difficulty:** 3
-- **Tech Description:** CausalInference will be applied to analyze the causal impact of various marketing strategies on retail sales using a quasi-experimental design.
-- **Project Idea:** This advanced project seeks to quantify the effect of different marketing campaigns (e.g., discounts, social media ads) on retail sales using historical sales data from a publicly available retail dataset. The student will employ causal inference methods to address issues of selection bias and confounding variables, allowing for a robust analysis of how each marketing strategy influences sales performance. The findings will help businesses optimize their marketing efforts based on empirical evidence.
-- **Python libs:** CausalInference, Pandas, NumPy, Scikit-learn, Matplotlib
-- **Is it Free?** Yes, the CausalInference package and the retail sales dataset from the UCI Machine Learning Repository are freely accessible.
-- **Relevant tool (CausalInference) related Resource Links:**  
-  - [CausalInference Documentation](https://causalinference.net/)
-  - [UCI Machine Learning Repository - Retail Dataset](https://archive.ics.uci.edu/ml/datasets/Online+Retail)
+### Project Idea 2: Evaluating the Effect of Health Interventions on Hospital Readmission Rates
+**Difficulty**: 2 (Medium)
+
+**Project Objective**: This project aims to analyze the causal impact of a health intervention (e.g., a patient education program) on reducing hospital readmission rates for chronic disease patients.
+
+**Dataset Suggestions**: Use publicly available healthcare datasets from government health departments or Kaggle that track patient demographics, treatment plans, and readmission rates.
+
+**Step-by-Step Plan**:
+1. **Data Collection**: Gather a dataset that includes patient demographics, treatment details, and readmission status.
+2. **Feature Engineering**: Construct features to represent the intervention (e.g., education program participation) and relevant covariates (e.g., age, comorbidities).
+3. **Model Training**: Implement regression adjustment to control for confounding variables.
+4. **Use of the Tool**: Utilize CausalInference to estimate the treatment effect on readmission rates.
+5. **Evaluation Metrics**: Analyze the reduction in readmission rates and calculate confidence intervals for the estimates.
+6. **Visualization/Reporting**: Present findings through graphs showing readmission rates before and after the intervention.
+
+**Bonus Ideas**: Explore interactions with other variables, such as the severity of chronic conditions, to see if the intervention is more effective for specific groups.
+
+---
+
+### Project Idea 3: Assessing the Impact of Remote Work on Employee Productivity
+**Difficulty**: 3 (Hard)
+
+**Project Objective**: The objective is to estimate the causal effect of remote work on employee productivity levels, measured through performance metrics such as project completion rates or sales numbers.
+
+**Dataset Suggestions**: Look for datasets available on GitHub or Kaggle that include employee performance metrics, work settings (remote vs. in-office), and demographic information.
+
+**Step-by-Step Plan**:
+1. **Data Collection**: Download a dataset that captures employee performance metrics, work settings, and demographic variables.
+2. **Feature Engineering**: Create variables indicating remote work status and relevant control variables (e.g., years of experience, department).
+3. **Model Training**: Implement instrumental variable analysis to account for potential endogeneity issues (e.g., self-selection into remote work).
+4. **Use of the Tool**: Use CausalInference to estimate the causal impact of remote work on productivity.
+5. **Evaluation Metrics**: Measure productivity changes and assess statistical significance.
+6. **Visualization/Reporting**: Create a dashboard or report summarizing the findings, including visual comparisons of productivity metrics.
+
+**Bonus Ideas**: Investigate long-term effects by analyzing productivity trends over time and comparing them to pre-remote work periods. 
+
+--- 
+
+These projects provide a range of complexities and real-world applicability, allowing students to explore various aspects of causal inference in data science.
 
