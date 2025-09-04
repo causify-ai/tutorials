@@ -344,7 +344,7 @@ def create_markdown_file(
     rows = df.head(max_projects) if max_projects is not None else df
     # temps = [0.3,0.45,0.6]
     pathlib.Path(markdown_folder_path).mkdir(parents=True, exist_ok=True)
-    rows = rows[rows['Tool'].isin(['BoTorch','Polars','Apache Arrow (PyArrow)','apache-tvm','Keras Tuner','tsfresh','Whisper Large V3','CausalInference','CausalML'])]
+    # rows = rows[rows['Tool'].isin(['BoTorch','Polars','Apache Arrow (PyArrow)','apache-tvm','Keras Tuner','tsfresh','Whisper Large V3','CausalInference','CausalML'])]
     # rows = rows[rows['Tool'].isin(['apache-tvm'])]
     for _, row in rows.iterrows():
         content = ""
