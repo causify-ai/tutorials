@@ -1,104 +1,101 @@
 **Description**
 
-Skorch is a high-level library that provides a simple interface to train PyTorch models using the scikit-learn API. It allows users to seamlessly integrate deep learning models with scikit-learn's functionality for preprocessing, model selection, and evaluation. With skorch, students can leverage the power of PyTorch while benefiting from scikit-learn's tools for cross-validation and pipelines.
+In this project, students will leverage Skorch, a high-level wrapper around PyTorch, to simplify the process of training neural networks while integrating seamlessly with scikit-learn. Skorch enables students to utilize the power of PyTorch while maintaining the familiar scikit-learn interface, making it easier to build, train, and evaluate deep learning models. 
 
 Technologies Used
 Skorch
 
-- Simplifies the training of PyTorch models with a scikit-learn-like interface.
-- Provides built-in support for various neural network architectures and optimizers.
-- Facilitates easy integration with scikit-learn tools for preprocessing, evaluation, and hyperparameter tuning.
+- Provides a simple interface for PyTorch models, allowing users to fit, predict, and score models in a scikit-learn style.
+- Supports various neural network architectures and hyperparameter tuning.
+- Facilitates easy integration with scikit-learn utilities such as pipelines and cross-validation.
 
 ---
 
-**Project 1: Image Classification of Handwritten Digits**  
-**Difficulty**: 1 (Easy)  
-**Project Objective**: Build a deep learning model to classify handwritten digits from the MNIST dataset. The goal is to achieve high accuracy in recognizing digits and optimize the model's performance through hyperparameter tuning.
+### Project 1: Image Classification with CNNs (Difficulty: 1)
 
-**Dataset Suggestions**: Access the MNIST dataset through the TensorFlow Datasets or Kaggle.
+**Project Objective:**  
+Create a convolutional neural network (CNN) to classify images from the CIFAR-10 dataset, aiming for high accuracy on the validation set.
 
-**Tasks**:
-- Set Up Skorch Model:
-    - Define a simple neural network architecture using PyTorch.
-    - Wrap the model with skorch to utilize scikit-learn functionalities.
+**Dataset Suggestions:**  
+- CIFAR-10 dataset available on Kaggle: [CIFAR-10 Dataset](https://www.kaggle.com/c/cifar-10)
 
-- Data Preprocessing:
-    - Load and preprocess the MNIST dataset, including normalization and reshaping.
-    - Split the dataset into training and validation sets.
+**Tasks:**
+- **Data Loading and Preprocessing:**  
+  Load the CIFAR-10 dataset using torchvision transforms for normalization and augmentation.
+  
+- **Model Definition:**  
+  Define a simple CNN architecture using PyTorch, including convolutional layers, activation functions, and pooling layers.
 
-- Model Training:
-    - Train the model using skorch's fit method and monitor performance.
+- **Training with Skorch:**  
+  Utilize Skorch to train the CNN model, specifying the criterion, optimizer, and metrics for evaluation.
 
-- Evaluation:
-    - Evaluate the model using accuracy and confusion matrix metrics.
-    - Visualize misclassified examples to understand model weaknesses.
+- **Evaluation:**  
+  Evaluate model performance on the validation set and visualize results using confusion matrices and accuracy scores.
 
-- Hyperparameter Tuning:
-    - Experiment with different learning rates and batch sizes using skorch's built-in capabilities.
+- **Hyperparameter Tuning:**  
+  Experiment with different hyperparameters (learning rate, batch size) to optimize model performance.
 
-**Bonus Ideas (Optional)**:
-- Implement data augmentation techniques to improve model robustness.
-- Compare performance with a traditional machine learning model (e.g., SVM or Random Forest).
-
----
-
-**Project 2: Predicting House Prices with Neural Networks**  
-**Difficulty**: 2 (Medium)  
-**Project Objective**: Create a neural network model to predict house prices based on various features from the housing dataset. The aim is to optimize the model to minimize the mean squared error (MSE).
-
-**Dataset Suggestions**: Find a suitable housing dataset on Kaggle or UCI Machine Learning Repository.
-
-**Tasks**:
-- Data Loading and Exploration:
-    - Load the dataset and perform exploratory data analysis (EDA) to understand feature distributions.
-
-- Data Preprocessing:
-    - Handle missing values and encode categorical variables.
-    - Normalize numerical features for better model performance.
-
-- Build Skorch Model:
-    - Design a multi-layer neural network using PyTorch and wrap it with skorch.
-
-- Model Training:
-    - Train the model and monitor the loss during training.
-
-- Evaluation:
-    - Evaluate the model's performance using MSE and R-squared metrics.
-    - Analyze feature importance to understand the impact of various features on price prediction.
-
-- Hyperparameter Optimization:
-    - Use random search or grid search with skorch to find the best hyperparameters.
-
-**Bonus Ideas (Optional)**:
-- Implement regularization techniques to prevent overfitting.
-- Compare the neural network model's performance with traditional regression techniques.
+**Bonus Ideas (Optional):**  
+- Implement data augmentation techniques to improve model robustness.  
+- Compare performance with a pre-trained model using transfer learning.
 
 ---
 
-**Project 3: Sentiment Analysis on Movie Reviews**  
-**Difficulty**: 3 (Hard)  
-**Project Objective**: Develop a deep learning model to perform sentiment classification on movie reviews, predicting whether the sentiment is positive or negative. The goal is to achieve high accuracy and analyze the model's interpretability.
+### Project 2: Time Series Forecasting with LSTM (Difficulty: 2)
 
-**Dataset Suggestions**: Use the IMDb movie reviews dataset available on Kaggle or HuggingFace Datasets.
+**Project Objective:**  
+Develop an LSTM model to forecast future stock prices based on historical data from the Yahoo Finance API, optimizing for minimal prediction error.
 
-**Tasks**:
-- Data Loading and Preprocessing:
-    - Load the IMDb dataset and preprocess text data (tokenization, padding).
+**Dataset Suggestions:**  
+- Use Yahoo Finance API to obtain historical stock price data for a specific company (e.g., Apple Inc. - AAPL).
 
-- Build Skorch Model:
-    - Construct a recurrent neural network (RNN) or a transformer-based architecture using PyTorch and skorch.
+**Tasks:**
+- **Data Collection:**  
+  Utilize the Yahoo Finance API to gather historical stock price data and preprocess it for LSTM input.
 
-- Model Training:
-    - Train the model using skorch and monitor performance metrics such as accuracy and F1-score.
+- **Data Preparation:**  
+  Create sequences of past stock prices to use as input features for the LSTM model.
 
-- Evaluation:
-    - Evaluate the model on a separate test set and analyze classification reports.
-    - Visualize the confusion matrix to identify areas for improvement.
+- **Model Building:**  
+  Construct an LSTM model using Skorch, defining the architecture with appropriate layers (LSTM, Dense).
 
-- Interpretability:
-    - Use techniques like LIME or SHAP to interpret the model's predictions and understand feature contributions.
+- **Training and Evaluation:**  
+  Train the model using Skorch and evaluate performance with metrics like Mean Absolute Error (MAE) on a test set.
 
-**Bonus Ideas (Optional)**:
-- Experiment with transfer learning by fine-tuning a pre-trained language model (e.g., BERT).
-- Implement a multi-class classification task by expanding the dataset to include more sentiment categories (e.g., neutral).
+- **Forecasting:**  
+  Generate future stock price predictions and visualize the results against actual historical prices.
+
+**Bonus Ideas (Optional):**  
+- Integrate additional features such as trading volume or moving averages.  
+- Implement a more complex architecture with multiple LSTM layers or attention mechanisms.
+
+---
+
+### Project 3: Text Classification with Transformers (Difficulty: 3)
+
+**Project Objective:**  
+Build a text classification model using transformer architectures to classify movie reviews from the IMDb dataset, aiming for high F1-score.
+
+**Dataset Suggestions:**  
+- IMDb Movie Reviews dataset available on Kaggle: [IMDb Dataset](https://www.kaggle.com/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews)
+
+**Tasks:**
+- **Data Loading and Preprocessing:**  
+  Load the IMDb dataset and preprocess text data (tokenization, padding) using Hugging Face's Transformers library.
+
+- **Model Definition:**  
+  Define a transformer-based model (e.g., BERT) using PyTorch, adapting the architecture for classification tasks.
+
+- **Training with Skorch:**  
+  Utilize Skorch to manage the training loop, including loss functions and metrics for evaluation.
+
+- **Evaluation and Analysis:**  
+  Evaluate model performance using F1-score and confusion matrices, analyzing misclassifications.
+
+- **Fine-Tuning:**  
+  Experiment with fine-tuning hyperparameters and model architecture to improve classification performance.
+
+**Bonus Ideas (Optional):**  
+- Implement a multi-class classification approach to categorize reviews into sentiment levels (positive, negative, neutral).  
+- Compare results with traditional machine learning classifiers (e.g., SVM, Random Forest) on the same dataset.
 

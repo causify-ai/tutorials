@@ -1,67 +1,68 @@
 **Description**
 
-Apache Airflow is an open-source platform to programmatically author, schedule, and monitor workflows. It allows users to define complex data pipelines as Directed Acyclic Graphs (DAGs), facilitating the orchestration of data processing tasks. Key features include:
+Apache Airflow is an open-source workflow automation tool designed to programmatically author, schedule, and monitor workflows. It allows users to define complex data pipelines and manage dependencies between tasks efficiently. With its modular architecture, Airflow supports integration with various data sources and systems, making it an ideal choice for orchestrating data workflows.
 
-- **Dynamic Pipeline Generation**: Build complex workflows dynamically using Python.
-- **Rich User Interface**: Monitor and manage workflows through a user-friendly web interface.
-- **Extensible**: Easily integrate with a wide range of data sources, storage solutions, and services.
-- **Task Dependencies**: Define dependencies between tasks to ensure proper execution order.
+Technologies Used
+Apache Airflow
 
----
-
-### Project 1: Data Ingestion Pipeline (Difficulty: 1)
-
-**Project Objective**: Create a data ingestion pipeline that collects weather data from a public API and stores it in a database for further analysis.
-
-**Dataset Suggestions**: Use a public weather API that provides historical and real-time weather data.
-
-**Tasks**:
-- **Set Up Airflow Environment**: Install and configure Airflow on your local machine or Google Colab.
-- **Define DAG**: Create a Directed Acyclic Graph (DAG) that schedules the ingestion tasks.
-- **Fetch Weather Data**: Use an HTTP operator to pull data from the weather API at regular intervals.
-- **Store Data in Database**: Utilize a database operator to save the fetched data into a structured format (e.g., PostgreSQL).
-- **Monitor Pipeline**: Use the Airflow UI to monitor the execution and check for any failures.
-
-**Bonus Ideas (Optional)**: 
-- Implement error handling and retries for failed tasks.
-- Extend the pipeline to include data cleaning steps.
+- Enables the creation of Directed Acyclic Graphs (DAGs) to define workflows.
+- Provides a rich user interface for monitoring and managing workflows.
+- Supports various operators for interacting with databases, APIs, and other services.
+- Offers scheduling capabilities to automate task execution.
 
 ---
 
-### Project 2: ETL Process for E-commerce Sales Data (Difficulty: 2)
+### Project 1: Data Ingestion and Transformation Pipeline
+**Difficulty**: 1 (Easy)
 
-**Project Objective**: Build an Extract, Transform, Load (ETL) pipeline to process e-commerce sales data and generate daily sales reports.
+**Project Objective**: Create an automated pipeline that ingests data from a public API, transforms it, and stores it in a database for further analysis.
 
-**Dataset Suggestions**: Find open datasets related to e-commerce sales on Kaggle or similar repositories.
+**Dataset Suggestions**: Use the OpenWeatherMap API (free tier) to fetch weather data for different cities.
 
 **Tasks**:
-- **Create Airflow DAG**: Define a DAG that orchestrates the ETL process.
-- **Extract Data**: Use a data extraction operator to pull sales data from a CSV file or API.
-- **Transform Data**: Implement transformation tasks to clean and aggregate the data (e.g., calculating total sales per category).
-- **Load Data**: Use a database operator to store the processed data into a data warehouse.
-- **Generate Reports**: Create a task to generate summary reports and store them in a specified format (e.g., PDF, CSV).
-
-**Bonus Ideas (Optional)**: 
-- Add a task to send email notifications with the generated report.
-- Implement version control for the ETL pipeline.
+- **Set Up Airflow Environment**: Install and configure Apache Airflow on your local machine or Google Colab.
+- **Create a DAG**: Define a Directed Acyclic Graph (DAG) for the data ingestion and transformation process.
+- **Fetch Weather Data**: Use the OpenWeatherMap API to retrieve weather data for multiple cities.
+- **Data Transformation**: Clean and transform the data (e.g., convert units, handle missing values) using Python operators.
+- **Store Data**: Save the transformed data into a PostgreSQL or SQLite database.
+- **Schedule the Pipeline**: Set up a schedule to run the pipeline daily to keep the dataset updated.
 
 ---
 
-### Project 3: Machine Learning Model Training and Deployment Pipeline (Difficulty: 3)
+### Project 2: ETL Pipeline for Movie Ratings Analysis
+**Difficulty**: 2 (Medium)
 
-**Project Objective**: Develop a comprehensive pipeline that automates the training, evaluation, and deployment of a machine learning model using historical stock price data.
+**Project Objective**: Build an ETL (Extract, Transform, Load) pipeline that extracts movie ratings from a public dataset, processes the data, and loads it into a data warehouse for analysis.
 
-**Dataset Suggestions**: Use a public financial API to obtain historical stock price data or find datasets on Kaggle.
+**Dataset Suggestions**: Use the MovieLens 20M dataset available on Kaggle.
 
 **Tasks**:
-- **Design Airflow DAG**: Architect a DAG that includes all stages of the machine learning workflow.
-- **Data Ingestion**: Fetch historical stock price data using an HTTP operator and store it in a database.
-- **Data Preprocessing**: Implement tasks for data cleaning, feature engineering, and splitting the dataset into training and testing sets.
-- **Model Training**: Use a Python operator to train a machine learning model (e.g., Random Forest) and save the model to disk.
-- **Model Evaluation**: Create a task to evaluate the model's performance using metrics like RMSE and save the results.
-- **Deployment**: Implement a deployment task that deploys the trained model to a REST API for predictions.
+- **Set Up Airflow Environment**: Install Apache Airflow and necessary libraries for data processing.
+- **Create a DAG**: Define a DAG that outlines the ETL process for the movie ratings data.
+- **Extract Data**: Load the MovieLens dataset into your Airflow environment using a Python operator.
+- **Data Transformation**: Perform necessary transformations (e.g., filtering, aggregating ratings by genre) using Pandas.
+- **Load Data**: Store the transformed data into a data warehouse like Amazon Redshift or Google BigQuery.
+- **Data Quality Checks**: Implement checks to ensure data integrity and quality after loading.
 
-**Bonus Ideas (Optional)**: 
-- Integrate a model monitoring system to track model performance over time.
-- Experiment with hyperparameter tuning and compare model performance before and after tuning.
+---
+
+### Project 3: Real-time Data Processing and Analysis Pipeline
+**Difficulty**: 3 (Hard)
+
+**Project Objective**: Develop a real-time data processing pipeline that ingests streaming data from a public API, performs analytics, and generates reports.
+
+**Dataset Suggestions**: Use the Twitter API (free tier) to stream tweets related to specific hashtags.
+
+**Tasks**:
+- **Set Up Airflow Environment**: Configure Apache Airflow and ensure access to the Twitter API.
+- **Create a DAG**: Design a DAG that orchestrates the real-time data ingestion and processing tasks.
+- **Stream Data**: Use the Twitter API to stream tweets in real-time based on selected hashtags.
+- **Data Transformation**: Clean and preprocess the tweets (e.g., remove URLs, stop words) using Natural Language Processing (NLP) techniques.
+- **Analytics**: Perform sentiment analysis on the tweets using a pre-trained model (e.g., VADER or TextBlob).
+- **Generate Reports**: Create summary reports of sentiment trends over time and store them in a database or visualize them using a dashboard tool like Tableau.
+
+**Bonus Ideas**: 
+- Implement alerting mechanisms to notify users of significant sentiment changes.
+- Compare the sentiment analysis results with historical data to identify trends.
+- Explore the use of additional NLP techniques, such as topic modeling, to enrich the analysis.
 

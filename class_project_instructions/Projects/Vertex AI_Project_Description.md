@@ -1,66 +1,99 @@
 **Description**
 
-Vertex AI is a comprehensive platform by Google Cloud designed for building, deploying, and scaling machine learning models. It provides a unified interface for data scientists to manage the entire ML workflow, from data preparation to model training and deployment. Key features include:
+In this project, students will utilize Vertex AI, a unified machine learning platform by Google Cloud, to build and deploy machine learning models efficiently. Vertex AI provides tools for data preparation, model training, and deployment, making it easier to manage the entire ML lifecycle. 
 
-- **AutoML**: Automates model training and hyperparameter tuning to optimize performance.
-- **Pre-trained Models**: Access to a variety of pre-built models for common tasks like image classification, text analysis, and more.
-- **Managed Pipelines**: Streamlines the workflow for building and deploying ML models with reproducibility and scalability.
-- **Integration**: Seamlessly integrates with other Google Cloud services for data storage, processing, and analytics.
+Technologies Used
+Vertex AI
 
----
-
-### Project 1: Predicting House Prices (Difficulty: 1 - Easy)
-
-**Project Objective**: Build a regression model to predict house prices based on various features such as location, size, and amenities.
-
-**Dataset Suggestions**: Use public datasets available on Kaggle related to house prices or real estate data.
-
-**Tasks**:
-- **Data Ingestion**: Load the dataset into Vertex AI using Google Cloud Storage.
-- **Data Preprocessing**: Clean and preprocess the data, handling missing values and encoding categorical variables.
-- **Model Training**: Utilize Vertex AI's AutoML to train a regression model on the processed dataset.
-- **Model Evaluation**: Evaluate the model using metrics such as RMSE and R-squared.
-- **Deployment**: Deploy the trained model to Vertex AI for predictions on new data.
-
-**Bonus Ideas**:
-- Compare the performance of AutoML with a custom-built regression model.
-- Implement feature importance analysis to identify key predictors of house prices.
+- Offers a fully managed environment for training and deploying ML models.
+- Integrates seamlessly with Google Cloud services for data storage and processing.
+- Provides AutoML capabilities for automated model training and hyperparameter tuning.
+- Supports various ML frameworks, including TensorFlow, PyTorch, and scikit-learn.
 
 ---
 
-### Project 2: Customer Segmentation Using Clustering (Difficulty: 2 - Medium)
+**Project 1: Predicting Housing Prices**  
+**Difficulty**: 1 (Easy)  
+**Project Objective**: The goal is to predict housing prices based on various features such as location, size, and number of bedrooms. The project will optimize the model for accuracy in price predictions.
 
-**Project Objective**: Use unsupervised learning to segment customers based on purchasing behavior and demographics.
-
-**Dataset Suggestions**: Explore datasets on Kaggle that contain customer transaction data or demographic information.
+**Dataset Suggestions**: Use the "California Housing Prices" dataset available on Kaggle: [California Housing Prices](https://www.kaggle.com/c/house-prices-advanced-regression-techniques/data).
 
 **Tasks**:
-- **Data Collection**: Gather customer data and load it into Vertex AI.
-- **Data Preprocessing**: Normalize and scale the features to prepare for clustering.
-- **Clustering Model**: Implement K-means clustering using Vertex AI's managed pipelines to identify distinct customer segments.
-- **Model Evaluation**: Assess clustering results using silhouette scores and visualize clusters with PCA.
-- **Insights Generation**: Analyze the characteristics of each segment to derive actionable business insights.
+- Data Ingestion:
+  - Load the dataset into Google Cloud Storage.
+  - Use Vertex AI to create a dataset resource for model training.
 
-**Bonus Ideas**:
-- Experiment with different clustering algorithms (e.g., DBSCAN, Hierarchical Clustering) and compare their effectiveness.
-- Create a dashboard using Google Data Studio to visualize customer segments and their behaviors.
+- Data Preprocessing:
+  - Clean the data, handle missing values, and perform feature scaling.
+  - Split the data into training and testing sets.
+
+- Model Training:
+  - Use Vertex AI AutoML to train a regression model on the processed dataset.
+  - Evaluate the model's performance using metrics like RMSE.
+
+- Model Deployment:
+  - Deploy the trained model to Vertex AI for predictions.
+  - Create a simple web interface to input features and retrieve predicted prices.
 
 ---
 
-### Project 3: Sentiment Analysis on Product Reviews (Difficulty: 3 - Hard)
+**Project 2: Customer Churn Prediction**  
+**Difficulty**: 2 (Medium)  
+**Project Objective**: The aim is to predict customer churn for a subscription-based service, optimizing the model for recall to identify customers likely to leave.
 
-**Project Objective**: Develop a natural language processing (NLP) model to analyze the sentiment of product reviews and classify them as positive, negative, or neutral.
-
-**Dataset Suggestions**: Use open datasets from HuggingFace or Kaggle that contain labeled product reviews.
+**Dataset Suggestions**: Use the "Telco Customer Churn" dataset available on Kaggle: [Telco Customer Churn](https://www.kaggle.com/datasets/blastchar/telco-customer-churn).
 
 **Tasks**:
-- **Data Ingestion**: Load the text data into Vertex AI from Google Cloud Storage.
-- **Text Preprocessing**: Clean the text data by removing stop words, punctuation, and applying tokenization.
-- **Model Selection**: Fine-tune a pre-trained transformer model (e.g., BERT) available in Vertex AI for sentiment classification.
-- **Model Training**: Train the model on the labeled dataset and validate its performance using a holdout set.
-- **Deployment**: Deploy the sentiment analysis model to Vertex AI for real-time analysis of new reviews.
+- Data Ingestion and Exploration:
+  - Load the dataset into Google Cloud Storage and create a dataset resource in Vertex AI.
+  - Perform exploratory data analysis (EDA) to understand feature distributions and correlations.
 
-**Bonus Ideas**:
-- Implement a visualization tool to display sentiment trends over time based on product reviews.
-- Explore transfer learning techniques by fine-tuning other NLP models and comparing their performance.
+- Feature Engineering:
+  - Create new features based on existing data (e.g., tenure groups, total charges).
+  - Encode categorical variables and scale numerical features.
+
+- Model Training:
+  - Train a classification model (e.g., decision tree, random forest) using Vertex AI.
+  - Optimize the model for recall using hyperparameter tuning.
+
+- Model Evaluation:
+  - Evaluate the model using confusion matrix and ROC-AUC score.
+  - Analyze feature importance to understand key drivers of churn.
+
+- Deployment:
+  - Deploy the model to Vertex AI and create a dashboard for real-time predictions.
+
+---
+
+**Project 3: Real-time Sentiment Analysis on Tweets**  
+**Difficulty**: 3 (Hard)  
+**Project Objective**: The goal is to perform real-time sentiment analysis on tweets related to a trending topic, optimizing the model for accuracy and response time.
+
+**Dataset Suggestions**: Use the "Sentiment140" dataset available on Kaggle: [Sentiment140](https://www.kaggle.com/datasets/kazanova/sentiment140).
+
+**Tasks**:
+- Data Ingestion:
+  - Load the dataset into Google Cloud Storage and create a dataset resource in Vertex AI.
+  - Preprocess the text data (tokenization, stopword removal).
+
+- Model Selection and Training:
+  - Fine-tune a pre-trained transformer model (e.g., BERT) using Vertex AI.
+  - Implement transfer learning techniques to adapt the model for sentiment classification.
+
+- Real-time Data Streaming:
+  - Use Twitter API to stream tweets in real-time related to a specific hashtag.
+  - Implement a pipeline to preprocess incoming tweets and feed them to the model for predictions.
+
+- Model Evaluation:
+  - Assess the model's performance using accuracy and F1-score on a validation set.
+  - Analyze misclassifications to improve the model.
+
+- Visualization and Reporting:
+  - Create a dashboard to visualize sentiment trends over time.
+  - Provide insights on how sentiment correlates with real-world events related to the trending topic.
+
+**Bonus Ideas (Optional)**: 
+- For Project 1, consider implementing a feature importance analysis to better understand which features significantly impact housing prices.
+- For Project 2, explore using ensemble methods to improve model performance and compare against baseline models.
+- For Project 3, extend the dashboard to include geographical sentiment mapping using the location data from tweets.
 

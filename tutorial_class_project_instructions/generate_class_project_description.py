@@ -66,7 +66,7 @@ Write **three distinct and realistic graduate-level data science project briefs*
 Each project should be distinct, creative, and feasible for a graduate student to build over a semester.
 Include:
 - Title
-- Difficulty: 1/2/3 (1 = easy, 2 = medium, 3 = hard; use each level **exactly once**)
+- Difficulty: 1/2/3 (1 = easy (2-3 days to complete), 2 = medium(4-5 days to complete), 3 = hard (6-10 days to complete); use each level **exactly once**)
 - Project Idea: 5-6 lines explaining the goal and approach.
 - Python libs - 4–6 packages used in the implementation
 - Is it Free? - Yes/No with explanation.
@@ -126,7 +126,8 @@ Your response must include:
 1. **Difficulty** : 1/2/3 (1 is easy, 2 is medium, 3 is hard; use each level **exactly once**)
 2. **Project Objective**: Clearly state the goal of the project and what is being optimized, predicted, or detected.
 
-3. **Dataset Suggestions**: Suggest where to find datasets (e.g., Kaggle, HuggingFace, government portals, simulated data). But DO NOT provide the exact specific dataset name.
+3. **Dataset Suggestions**: Suggest what datasets to use and where to find datasets (e.g., Kaggle, HuggingFace, government portals, simulated data, free tier APIs).
+“Prefer specific dataset names (e.g., MovieLens 25M on Kaggle) instead of vague categories like ‘a movie dataset’.”
 
 4. **Tasks**: Outline the key tasks of the project, each tailored to the tool. Describe each task in 1-2 lines high-level description in brief bullet point formats.
 
@@ -141,14 +142,20 @@ Your response must include:
 - Do NOT mention surveys, forms for custom user data source collection.
 - Use pre-trained models if deep learning is involved.
 - Avoid overused examples like Titanic or Iris.
-- Avoid vague real-time claims unless well-justified.
+- If real-time data is used, explicitly name the API (e.g., CoinGecko for crypto prices, OpenWeatherMap free tier) and confirm it is free and active.
 - Every project MUST involve at least one clear machine learning task (e.g., classification, regression, clustering, anomaly detection, forecasting, topic modeling, summarization, etc.).  
 - Tools that focus on EDA, data cleaning, feature engineering, or visualization MUST still include ML — even if basic.
 - Projects must go beyond just model acceleration or deployment; they must include an actual ML task, with data, training/fine-tuning (if needed), evaluation, and analysis.
 - Avoid vague statements like "scrape social media" — be specific and realistic.
+- Projects should escalate naturally in difficulty and, where possible, vary in ML task type.
 
+Guideline for difficulty levels:
+Level 1 (Easy): Should be accessible but not trivial — a project with a real dataset, basic preprocessing, and a complete modeling/evaluation cycle.
+Level 2 (Medium): Broader scope, requiring multiple steps such as feature engineering, optimization, or integration of more complex ideas.
+Level 3 (Hard): Involves higher complexity such as handling large-scale, noisy, or unstructured data, advanced techniques etc.
 
 Write in a way that is **student-friendly**, technically clear, and encourages learning and creativity.
+Do not include any extra commentary or concluding sentences after Project 3. The output should end right after the last project’s “Bonus Ideas.”
 Refer to the example below for some ideas.
 
 
@@ -202,16 +209,6 @@ Tasks
 
     Visualization:
         Visualize correlations between sentiment trends and Bitcoin prices using Matplotlib or Seaborn.
-
-Useful Resources
-
-    [TextBlob Documentation]
-    [NewsAPI Python Client Library]
-
-Cost
-
-    TextBlob: Open-source, free.
-    NewsAPI: Free tier available for educational purposes (usage limits apply).
 
 """
 
@@ -369,8 +366,8 @@ def create_markdown_file(
     rows = df.head(max_projects) if max_projects is not None else df
     # temps = [0.3,0.45,0.6]
     pathlib.Path(markdown_folder_path).mkdir(parents=True, exist_ok=True)
-    # rows = rows[rows['Tool'].isin(['BoTorch','Polars','Apache Arrow (PyArrow)','apache-tvm','Keras Tuner','tsfresh','Whisper Large V3','CausalInference','CausalML'])]
-    # rows = rows[rows['Tool'].isin(['Caffe'])]
+    # rows = rows[rows['Tool'].isin(['accelerate','BoTorch','Polars','Apache Arrow (PyArrow)','apache-tvm','Keras Tuner','tsfresh','Whisper Large V3','CausalInference','CausalML'])]
+    # rows = rows[rows['Tool'].isin(['accelerate'])]
     for _, row in rows.iterrows():
         content = ""
         project_name = row["Tool"]
@@ -452,9 +449,9 @@ def _main(parser: argparse.ArgumentParser) -> None:
     )
     _LOG.info("Done: %s", markdown_folder_path)
     _LOG.info("Adding GitHub links to Project files to Google sheet")
-    # _write_google_sheet(
-        # file_githublinks_df, args.sheet_url, 'MSML610 Project Github Links', secret_path
-    # )
+    _write_google_sheet(
+        file_githublinks_df, args.sheet_url, 'MSML610 - Fall 2025', secret_path
+    )
 
 
 if __name__ == "__main__":

@@ -1,92 +1,66 @@
 **Description**
 
-AutoGluon is an open-source AutoML framework designed to simplify the process of building and deploying machine learning models. It automates tasks such as data preprocessing, feature engineering, model selection, and hyperparameter tuning, allowing users to achieve high-quality results with minimal effort.
+In this project, students will use AutoGluon, an open-source library that automates machine learning tasks, to build and evaluate models with minimal coding effort. AutoGluon supports various data types and tasks, including tabular data, images, and text, allowing users to efficiently tackle machine learning problems. 
 
 Technologies Used
 AutoGluon
 
-- Supports various data types, including tabular, text, and image data.
-- Automatically selects and tunes models using state-of-the-art algorithms.
-- Provides easy-to-use APIs for quick experimentation and deployment.
-- Includes built-in evaluation metrics for assessing model performance.
+- Automates the training and tuning of machine learning models.
+- Supports multiple data types and tasks (classification, regression, object detection, etc.).
+- Provides built-in capabilities for model ensembling and stacking.
+- Offers easy-to-use APIs for quick experimentation and deployment.
 
----
 
-### Project 1: Predicting Housing Prices
-**Difficulty**: 1 (Easy)
+### Project 1: Predicting House Prices (Difficulty: 1)
 
-**Project Objective**: Build a predictive model to estimate housing prices based on various features such as location, size, and amenities.
+**Project Objective**: 
+Develop a model to predict house prices based on various features such as location, size, and amenities. The goal is to optimize the prediction accuracy using AutoGluon.
 
-**Dataset Suggestions**: Search for real estate datasets available on Kaggle or government open data portals.
-
-**Tasks**:
-- Data Ingestion:
-  - Load the dataset containing housing features and prices into a Pandas DataFrame.
-  
-- Data Preprocessing:
-  - Clean the dataset by handling missing values and encoding categorical variables.
-  
-- Model Training:
-  - Use AutoGluon to automatically train multiple regression models and select the best-performing one.
-  
-- Model Evaluation:
-  - Evaluate model performance using metrics such as RMSE and R².
-  
-- Visualization:
-  - Visualize the predicted vs. actual prices using Matplotlib or Seaborn.
-
----
-
-### Project 2: Customer Segmentation for E-commerce
-**Difficulty**: 2 (Medium)
-
-**Project Objective**: Implement clustering algorithms to segment customers based on purchasing behavior to enhance targeted marketing strategies.
-
-**Dataset Suggestions**: Look for e-commerce transaction datasets on Kaggle or open datasets from government sources.
+**Dataset Suggestions**: 
+- **Dataset**: Ames Housing Dataset
+- **Source**: Available on Kaggle [Ames Housing Dataset](https://www.kaggle.com/datasets/prestonvong/ames-housing-data)
 
 **Tasks**:
-- Data Collection:
-  - Import the customer transaction dataset and summarize key features.
+- **Data Preprocessing**: Load the dataset and handle missing values and categorical features using AutoGluon's preprocessing capabilities.
+- **Model Training**: Utilize AutoGluon to train multiple regression models automatically.
+- **Hyperparameter Tuning**: Leverage AutoGluon’s built-in hyperparameter optimization to improve model performance.
+- **Model Evaluation**: Evaluate the models using metrics like RMSE and R-squared.
+- **Visualization**: Visualize the predicted vs. actual prices using Matplotlib.
 
-- Feature Engineering:
-  - Create additional features such as total spending, frequency of purchases, and recency of last purchase.
+### Project 2: Customer Churn Prediction (Difficulty: 2)
 
-- Clustering with AutoGluon:
-  - Utilize AutoGluon to apply clustering algorithms (e.g., K-means, DBSCAN) and determine optimal clusters.
+**Project Objective**: 
+Create a classification model to predict customer churn for a telecom company based on customer demographics and service usage. The goal is to identify at-risk customers to improve retention strategies.
 
-- Cluster Analysis:
-  - Analyze the characteristics of each customer segment and visualize them using scatter plots.
-
-- Insights Generation:
-  - Generate actionable insights based on customer segments for targeted marketing campaigns.
-
----
-
-### Project 3: Sentiment Analysis on Product Reviews
-**Difficulty**: 3 (Hard)
-
-**Project Objective**: Develop a sentiment analysis model to classify product reviews as positive, negative, or neutral using text data from online sources.
-
-**Dataset Suggestions**: Access publicly available product review datasets on platforms like Kaggle or HuggingFace Datasets.
+**Dataset Suggestions**: 
+- **Dataset**: Telco Customer Churn
+- **Source**: Available on Kaggle [Telco Customer Churn](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)
 
 **Tasks**:
-- Data Gathering:
-  - Collect a dataset of product reviews along with their associated ratings.
+- **Data Exploration**: Perform exploratory data analysis to understand feature distributions and relationships.
+- **Feature Engineering**: Create new features and encode categorical variables using AutoGluon’s feature handling capabilities.
+- **Model Training**: Use AutoGluon to train various classification models and compare their performance.
+- **Model Interpretation**: Analyze feature importance to understand which factors contribute most to churn.
+- **Deployment**: Save the best-performing model for future predictions and demonstrate how to use it for new customer data.
 
-- Text Preprocessing:
-  - Clean and preprocess the text data by removing noise, tokenizing, and applying transformations.
+### Project 3: Image Classification for Plant Disease Detection (Difficulty: 3)
 
-- Model Training with AutoGluon:
-  - Leverage AutoGluon to train various NLP models for sentiment classification and choose the best one based on performance.
+**Project Objective**: 
+Develop a deep learning model to classify images of plants and detect diseases. The goal is to achieve high accuracy in identifying healthy vs. diseased plants using AutoGluon.
 
-- Performance Evaluation:
-  - Evaluate the model using classification metrics such as accuracy, precision, recall, and F1-score.
+**Dataset Suggestions**: 
+- **Dataset**: PlantVillage Dataset
+- **Source**: Available on Kaggle [PlantVillage Dataset](https://www.kaggle.com/datasets/emmarex/plantdisease)
 
-- Visualization:
-  - Create visualizations to show sentiment distribution and model performance across different product categories.
+**Tasks**:
+- **Data Preparation**: Load the dataset and preprocess images (resizing, normalization) for model training.
+- **Model Selection**: Utilize AutoGluon’s image classification capabilities to automatically select and train the best models.
+- **Transfer Learning**: Fine-tune pre-trained models on the dataset to improve classification performance.
+- **Performance Evaluation**: Evaluate models using accuracy, precision, recall, and F1-score metrics.
+- **Visualization**: Create visualizations of misclassified images and analyze the model’s performance on different classes.
 
 **Bonus Ideas (Optional)**:
-- Implement additional preprocessing techniques such as stemming or lemmatization.
-- Experiment with ensemble methods to combine predictions from multiple models for improved accuracy.
-- Explore transfer learning by fine-tuning pre-trained NLP models within the AutoGluon framework.
+- For Project 1: Implement cross-validation to ensure robustness in model performance.
+- For Project 2: Compare the AutoGluon model with traditional models (like Logistic Regression) to highlight the advantages of automation.
+- For Project 3: Explore data augmentation techniques to improve the model's ability to generalize on unseen data.
 

@@ -1,104 +1,91 @@
 **Description**
 
-In this project, students will utilize bnlearn, a Python library for Bayesian network learning and inference, to model and analyze probabilistic relationships among variables. This tool allows for both structure learning from data and inference queries, providing insights into dependencies and causal relationships. Students will explore how to build Bayesian networks, perform inference, and visualize the learned structures.
+In this project, students will utilize bnlearn, a Python library designed for learning and inference in Bayesian networks. This tool allows for the construction of probabilistic graphical models that represent a set of variables and their conditional dependencies. Key features include:
 
-Technologies Used
-bnlearn
-
-- Facilitates learning of Bayesian networks from data.
-- Supports structure learning and parameter estimation.
-- Enables probabilistic inference and querying of the network.
-- Provides visualization capabilities for the learned structures.
+- Structure learning from data using various algorithms (e.g., hill climbing, constraint-based).
+- Parameter learning to estimate the conditional probability distributions.
+- Inference capabilities to compute posterior probabilities and make predictions based on evidence.
 
 ---
 
-### Project 1: Disease Prediction using Bayesian Networks (Difficulty: 1)
+### Project 1: Predicting Student Performance (Difficulty: 1)
 
-**Project Objective:**
-Develop a Bayesian network to predict the likelihood of a disease based on various symptoms and risk factors, optimizing for accuracy in predictions.
+**Project Objective**:  
+The goal is to create a Bayesian network to predict student performance based on various factors such as study habits, attendance, and socio-economic status. The model will help in identifying key factors influencing academic success.
 
-**Dataset Suggestions:**
-Find datasets related to health and disease symptoms on Kaggle or open government health databases.
+**Dataset Suggestions**:  
+- Use the "Student Performance Dataset" available on Kaggle: [Student Performance Data](https://www.kaggle.com/datasets/uciml/student-alcohol-consumption).
 
-**Tasks:**
-- **Data Collection:**
-  - Gather a dataset containing symptoms, demographics, and disease outcomes.
+**Tasks**:
+- Data Preprocessing:
+    - Load the dataset and clean the data by handling missing values and encoding categorical variables.
   
-- **Data Preprocessing:**
-  - Clean the dataset, handle missing values, and encode categorical variables.
-  
-- **Bayesian Network Structure Learning:**
-  - Use bnlearn to learn the structure of the Bayesian network from the data.
-  
-- **Parameter Estimation:**
-  - Estimate the conditional probability tables for the variables in the network.
-  
-- **Inference:**
-  - Perform inference on the network to predict the disease given specific symptoms.
-  
-- **Evaluation:**
-  - Validate the model's predictions using cross-validation and assess accuracy.
+- Construct the Bayesian Network:
+    - Use bnlearn to define the structure of the network based on domain knowledge or initial analysis.
+
+- Parameter Learning:
+    - Estimate the conditional probability distributions for the network using the dataset.
+
+- Inference:
+    - Perform inference to predict the likelihood of students achieving a certain grade based on their attributes.
+
+- Evaluation:
+    - Assess the model's predictive accuracy using appropriate metrics like accuracy and confusion matrix.
 
 ---
 
-### Project 2: Customer Churn Analysis (Difficulty: 2)
+### Project 2: Diagnosing Heart Disease (Difficulty: 2)
 
-**Project Objective:**
-Create a Bayesian network to analyze customer churn in a subscription-based service, optimizing for understanding the key factors influencing customer retention.
+**Project Objective**:  
+The objective is to develop a Bayesian network model that can diagnose heart disease based on various medical indicators and patient history, optimizing for sensitivity and specificity in predictions.
 
-**Dataset Suggestions:**
-Utilize datasets from Kaggle related to customer behavior and churn analysis.
+**Dataset Suggestions**:  
+- Utilize the "Heart Disease UCI" dataset available on Kaggle: [Heart Disease Dataset](https://www.kaggle.com/datasets/ronitf/heart-disease-uci).
 
-**Tasks:**
-- **Data Acquisition:**
-  - Obtain a dataset that includes customer demographics, service usage, and churn status.
-  
-- **Exploratory Data Analysis:**
-  - Conduct EDA to understand relationships and distributions among variables.
-  
-- **Bayesian Network Construction:**
-  - Use bnlearn to learn the structure of the network based on the dataset.
-  
-- **Inference and Analysis:**
-  - Perform inference to identify the likelihood of churn given different customer attributes.
-  
-- **Sensitivity Analysis:**
-  - Analyze how changes in certain features affect churn probability.
-  
-- **Visualization:**
-  - Visualize the Bayesian network and the relationships among variables.
+**Tasks**:
+- Data Exploration:
+    - Conduct exploratory data analysis (EDA) to understand the relationships and distributions of variables.
+
+- Bayesian Network Structure Learning:
+    - Apply bnlearn to learn the structure of the Bayesian network from the data using constraint-based methods.
+
+- Parameter Estimation:
+    - Use the dataset to estimate the conditional probabilities associated with the network.
+
+- Model Inference:
+    - Implement inference techniques to predict the probability of heart disease given patient symptoms and history.
+
+- Model Evaluation:
+    - Evaluate the model using ROC curves and calculate AUC to assess diagnostic performance.
 
 ---
 
-### Project 3: Predicting Academic Performance using Bayesian Networks (Difficulty: 3)
+### Project 3: Predicting Customer Churn (Difficulty: 3)
 
-**Project Objective:**
-Build a complex Bayesian network to predict students’ academic performance based on various factors such as socio-economic status, study habits, and attendance, optimizing for predictive accuracy and interpretability.
+**Project Objective**:  
+The goal is to create a complex Bayesian network that predicts customer churn in a subscription-based service, optimizing for actionable insights into customer retention strategies.
 
-**Dataset Suggestions:**
-Access educational datasets from open repositories or Kaggle that include student performance metrics and associated factors.
+**Dataset Suggestions**:  
+- Leverage the "Telco Customer Churn" dataset available on Kaggle: [Telco Customer Churn Dataset](https://www.kaggle.com/datasets/blastchar/telco-customer-churn).
 
-**Tasks:**
-- **Dataset Exploration:**
-  - Identify and gather a dataset with comprehensive features related to student performance.
-  
-- **Data Preprocessing:**
-  - Clean the data, manage missing values, and encode categorical variables appropriately.
-  
-- **Complex Structure Learning:**
-  - Use bnlearn to learn a complex structure that captures intricate dependencies among factors affecting performance.
-  
-- **Parameter Estimation:**
-  - Estimate parameters for the Bayesian network, ensuring robustness in the model.
-  
-- **Inference and Scenario Analysis:**
-  - Use the model to predict performance under various hypothetical scenarios (e.g., changes in study habits).
-  
-- **Model Evaluation:**
-  - Evaluate the model's performance using appropriate metrics and compare with basic predictive models (e.g., regression).
+**Tasks**:
+- Comprehensive Data Preprocessing:
+    - Clean and preprocess the dataset, including feature engineering to create meaningful variables.
 
-**Bonus Ideas (Optional):**
-- Implement a feature selection method to identify the most influential factors in the network.
-- Explore the impact of introducing new variables (e.g., extracurricular activities) on the model's predictions.
-- Conduct a longitudinal study by applying the model to different academic years to assess stability and changes in relationships.
+- Advanced Structure Learning:
+    - Use bnlearn to learn the structure of the network with a focus on capturing complex relationships among variables.
+
+- Parameter Learning:
+    - Estimate the conditional probabilities using Bayesian methods to fit the model.
+
+- Inference and Scenario Analysis:
+    - Perform inference to predict churn probability under various scenarios (e.g., changes in service usage or customer support interactions).
+
+- Sensitivity Analysis:
+    - Conduct sensitivity analysis to determine how changes in input variables affect churn predictions.
+
+**Bonus Ideas (Optional)**:
+- Implement a dynamic Bayesian network to model churn over time.
+- Compare the performance of the Bayesian network with traditional classification models (e.g., logistic regression, random forest).
+- Explore the impact of marketing interventions on churn rates through scenario simulations.
 

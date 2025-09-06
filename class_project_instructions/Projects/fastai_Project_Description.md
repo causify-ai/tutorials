@@ -1,66 +1,70 @@
 **Description**
 
-Fastai is a high-level Python library built on top of PyTorch, designed to simplify training deep learning models. It provides a user-friendly interface for various machine learning tasks, enabling rapid experimentation and prototyping. Fastai is particularly focused on making deep learning accessible, with features that include:
+In this project, students will utilize fastai, a high-level library built on PyTorch, to create and train deep learning models efficiently. It simplifies the process of building neural networks while providing powerful features for various tasks, including image classification, text processing, and tabular data analysis.
 
-- **High-level API**: Simplifies the process of building and training models.
-- **Data Block API**: Facilitates the creation of datasets and data loaders for different tasks.
-- **Transfer Learning**: Enables the use of pre-trained models to enhance performance on specific tasks.
-- **Comprehensive documentation**: Provides extensive tutorials and resources for users to learn and apply deep learning techniques.
+Technologies Used
+fastai
 
----
-
-**Project 1: Image Classification of Plant Species**  
-**Difficulty**: 1 (Easy)  
-**Project Objective**: Build a model to classify images of different plant species using transfer learning to optimize accuracy.  
-
-**Dataset Suggestions**: Explore Kaggle for publicly available datasets of plant images.
-
-**Tasks**:
-- **Data Preparation**: Utilize Fastai's Data Block API to load and preprocess images, ensuring proper labeling and augmentation.
-- **Model Selection**: Choose a pre-trained model (e.g., ResNet) for transfer learning.
-- **Training**: Train the model on the plant species dataset, monitoring the training process and adjusting hyperparameters as needed.
-- **Evaluation**: Assess model performance using accuracy, confusion matrix, and classification report.
-- **Visualization**: Visualize misclassified images and model predictions to identify areas for improvement.
-
-**Bonus Ideas (Optional)**: 
-- Implement additional data augmentation techniques.
-- Compare the performance of different pre-trained models.
+- Facilitates quick model prototyping with built-in data loaders and transforms.
+- Supports transfer learning with pre-trained models for faster convergence.
+- Provides comprehensive tools for model evaluation, visualization, and interpretation.
 
 ---
 
-**Project 2: Sentiment Analysis on Movie Reviews**  
-**Difficulty**: 2 (Medium)  
-**Project Objective**: Develop a sentiment analysis model to classify movie reviews as positive or negative, optimizing for F1-score.  
+### Project 1: Image Classification of Plant Diseases (Difficulty: 1)
 
-**Dataset Suggestions**: Use Hugging Face Datasets to find a collection of movie reviews labeled with sentiments.
+**Project Objective**  
+Develop a model that classifies images of plants to detect various diseases, optimizing for accuracy in classification.
 
-**Tasks**:
-- **Data Acquisition**: Load the dataset using Fastai's data loading capabilities and preprocess the text data (tokenization, cleaning).
-- **Text Data Processing**: Create a text classifier using Fastai's built-in text processing tools.
-- **Model Training**: Train the sentiment analysis model, experimenting with different architectures (e.g., LSTM, Transformer).
-- **Hyperparameter Tuning**: Optimize model performance through hyperparameter tuning and cross-validation.
-- **Evaluation**: Evaluate the model using metrics like accuracy, precision, recall, and F1-score, and visualize results with confusion matrices.
+**Dataset Suggestions**  
+- **PlantVillage Dataset**: Available on Kaggle, containing over 54,000 images of healthy and diseased plant leaves.
+- Link: [PlantVillage Dataset on Kaggle](https://www.kaggle.com/datasets/emmarex/plantdisease)
 
-**Bonus Ideas (Optional)**: 
-- Extend the project to analyze sentiment trends over time.
-- Compare the performance of traditional machine learning models against deep learning models.
+**Tasks**  
+- **Data Preparation**: Load the dataset and perform necessary preprocessing steps like resizing and normalization.
+- **Model Selection**: Use a pre-trained ResNet model for transfer learning to classify plant diseases.
+- **Training**: Fine-tune the model on the PlantVillage dataset and monitor accuracy during training.
+- **Evaluation**: Evaluate model performance using confusion matrices and classification reports.
+- **Visualization**: Visualize misclassified images and model predictions to understand errors.
 
 ---
 
-**Project 3: Anomaly Detection in Credit Card Transactions**  
-**Difficulty**: 3 (Hard)  
-**Project Objective**: Create a deep learning model for detecting fraudulent transactions in credit card data, focusing on minimizing false positives.  
+### Project 2: Sentiment Analysis of Movie Reviews (Difficulty: 2)
 
-**Dataset Suggestions**: Search for open government datasets or Kaggle datasets related to credit card transactions.
+**Project Objective**  
+Create a sentiment analysis model to classify movie reviews as positive or negative, focusing on improving F1 score and precision.
 
-**Tasks**:
-- **Data Preparation**: Load and preprocess the dataset, handling missing values and normalizing features.
-- **Feature Engineering**: Create new features that may help in identifying fraudulent behavior, such as transaction frequency or amount deviations.
-- **Model Development**: Use Fastai to build a deep learning model for anomaly detection (e.g., autoencoder or one-class SVM).
-- **Training and Validation**: Train the model on a balanced dataset, ensuring proper validation techniques to avoid overfitting.
-- **Evaluation**: Use metrics like ROC-AUC and precision-recall curves to evaluate model performance, focusing on minimizing false positives.
+**Dataset Suggestions**  
+- **IMDb Movie Reviews**: Available on Kaggle, containing 50,000 reviews labeled as positive or negative.
+- Link: [IMDb Movie Reviews on Kaggle](https://www.kaggle.com/datasets/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews)
 
-**Bonus Ideas (Optional)**: 
-- Implement ensemble methods to improve detection rates.
-- Explore the use of unsupervised learning techniques for anomaly detection.
+**Tasks**  
+- **Data Loading**: Load the IMDb dataset and perform text preprocessing (tokenization, cleaning).
+- **Text Embedding**: Utilize fastai’s text module to create embeddings for the reviews.
+- **Model Building**: Implement a text classification model using a pre-trained language model (e.g., AWD-LSTM).
+- **Training and Tuning**: Train the model and experiment with hyperparameter tuning to optimize the F1 score.
+- **Evaluation**: Assess model performance using precision, recall, and F1 score metrics.
+
+---
+
+### Project 3: Predicting House Prices using Tabular Data (Difficulty: 3)
+
+**Project Objective**  
+Develop a model to predict house prices based on various features, focusing on reducing mean absolute error (MAE).
+
+**Dataset Suggestions**  
+- **House Prices - Advanced Regression Techniques**: Available on Kaggle, with detailed features for over 1,400 houses.
+- Link: [House Prices Dataset on Kaggle](https://www.kaggle.com/c/house-prices-advanced-regression-techniques/data)
+
+**Tasks**  
+- **Data Exploration**: Perform exploratory data analysis (EDA) to understand the distribution of features and target variable.
+- **Feature Engineering**: Create new features based on existing data (e.g., log transformation, one-hot encoding).
+- **Model Training**: Use fastai’s tabular data module to set up and train a regression model (e.g., TabularModel).
+- **Hyperparameter Optimization**: Implement techniques like learning rate finder and cross-validation to enhance model performance.
+- **Evaluation**: Evaluate the model using metrics like MAE and visualize feature importance to understand contributions to predictions.
+
+**Bonus Ideas (Optional)**  
+- For Project 1, consider implementing a web app using Streamlit to showcase the model's predictions.
+- For Project 2, explore multi-class sentiment classification by expanding the dataset to include neutral reviews.
+- For Project 3, compare the performance of different regression algorithms (e.g., Random Forest, XGBoost) against the fastai model.
 

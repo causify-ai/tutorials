@@ -1,75 +1,63 @@
 **Description**
 
-Lightning Fabric is a lightweight framework designed to simplify the process of building and training deep learning models. It provides a flexible and modular approach to model development, enabling users to easily manage data, models, and training processes. With its focus on performance and scalability, Lightning Fabric is ideal for both research and production settings.
+Lightning-Fabric is a high-level wrapper for PyTorch that simplifies the process of building and training deep learning models. It provides a flexible framework for organizing code, managing distributed training, and handling logging and checkpointing. Key features include:
 
-Technologies Used
-Lightning Fabric
-
-- Facilitates the creation of complex neural networks with minimal boilerplate code.
-- Supports distributed training across multiple GPUs and TPUs.
-- Integrates seamlessly with popular libraries such as PyTorch and TensorFlow.
-- Provides built-in logging and visualization tools for monitoring training progress.
+- **Modular Design**: Facilitates the organization of code into reusable components.
+- **Distributed Training**: Easily scale up training across multiple GPUs or nodes.
+- **Logging and Checkpointing**: Automatically manage experiment logging and model checkpoints.
+- **Integration with PyTorch**: Seamlessly integrates with existing PyTorch codebases.
 
 ---
 
-### Project 1: Image Classification with Transfer Learning (Difficulty: 1)
+### Project 1: Image Classification of Fashion Items
+**Difficulty**: 1 (Easy)  
+**Project Objective**: Build a convolutional neural network (CNN) to classify images of clothing items from the Fashion MNIST dataset, optimizing for accuracy.
 
-**Project Objective**  
-Develop an image classification model using transfer learning to classify images from a public dataset of everyday objects, optimizing for accuracy.
+**Dataset Suggestions**:  
+- Fashion MNIST dataset available on Kaggle: [Fashion MNIST](https://www.kaggle.com/datasets/zalando-research/fashionmnist)
 
-**Dataset Suggestions**  
-Explore Kaggle's image classification datasets or open datasets from government portals.
-
-**Tasks**  
-- **Set Up Lightning Fabric Environment**: Install and configure Lightning Fabric with necessary dependencies.
-- **Data Preprocessing**: Load the dataset, perform necessary augmentations, and split data into training and validation sets.
-- **Model Selection**: Choose a pre-trained model (e.g., ResNet, VGG) and adapt it for the classification task.
-- **Training**: Train the model using Lightning Fabric, monitoring performance metrics like accuracy and loss.
-- **Evaluation**: Assess model performance on the validation set and visualize results with confusion matrices.
-
-**Bonus Ideas (Optional)**  
-- Experiment with different augmentation techniques to improve model robustness.
-- Implement model fine-tuning to enhance performance on the specific dataset.
+**Tasks**:  
+- **Data Preparation**: Load the Fashion MNIST dataset and preprocess images (normalization, resizing).
+- **Model Definition**: Create a CNN architecture using Lightning-Fabric.
+- **Training**: Train the model and monitor performance metrics (accuracy and loss).
+- **Evaluation**: Evaluate the model on a test set and visualize classification results with confusion matrices.
+- **Logging**: Implement logging to track training progress using Lightning-Fabric’s built-in features.
 
 ---
 
-### Project 2: Time Series Forecasting with LSTM (Difficulty: 2)
+### Project 2: Text Classification for Sentiment Analysis
+**Difficulty**: 2 (Medium)  
+**Project Objective**: Develop a text classification model to predict sentiment (positive, negative, neutral) from movie reviews, optimizing for F1-score.
 
-**Project Objective**  
-Create a time series forecasting model using LSTM to predict future values of a public economic indicator (e.g., unemployment rates), optimizing for mean absolute error (MAE).
+**Dataset Suggestions**:  
+- IMDB Movie Reviews dataset available on Kaggle: [IMDB Dataset](https://www.kaggle.com/datasets/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews)
 
-**Dataset Suggestions**  
-Utilize public economic datasets available on Kaggle or government economic data portals.
-
-**Tasks**  
-- **Data Collection**: Gather time series data for the chosen economic indicator.
-- **Preprocessing**: Clean the data, handle missing values, and normalize the dataset for LSTM input.
-- **Model Design**: Build an LSTM model architecture using Lightning Fabric, defining layers and hyperparameters.
-- **Training & Validation**: Train the model while monitoring MAE and adjust hyperparameters as necessary.
-- **Forecasting**: Generate future predictions and visualize them against actual historical data.
-
-**Bonus Ideas (Optional)**  
-- Compare LSTM performance with other forecasting models like ARIMA or Prophet.
-- Implement hyperparameter tuning using grid search or random search techniques.
+**Tasks**:  
+- **Data Loading**: Load the IMDB dataset and preprocess text (tokenization, padding).
+- **Model Architecture**: Construct an LSTM or Transformer-based model using Lightning-Fabric.
+- **Training and Fine-tuning**: Train the model with hyperparameter tuning and regularization techniques.
+- **Evaluation**: Assess model performance using F1-score and confusion matrices.
+- **Logging and Checkpointing**: Use Lightning-Fabric to log metrics and save model checkpoints during training.
 
 ---
 
-### Project 3: Natural Language Processing for Sentiment Analysis (Difficulty: 3)
+### Project 3: Time Series Forecasting of Stock Prices
+**Difficulty**: 3 (Hard)  
+**Project Objective**: Create a forecasting model to predict stock prices using historical data, optimizing for RMSE (Root Mean Square Error).
 
-**Project Objective**  
-Develop a sentiment analysis model that classifies text reviews (e.g., product reviews) into positive, negative, or neutral categories, optimizing for F1 score.
+**Dataset Suggestions**:  
+- Yahoo Finance API for historical stock price data (e.g., Apple Inc.): [Yahoo Finance](https://finance.yahoo.com/quote/AAPL/history?p=AAPL)
 
-**Dataset Suggestions**  
-Access text datasets from Kaggle or HuggingFace Datasets that contain labeled sentiment data.
+**Tasks**:  
+- **Data Acquisition**: Use the Yahoo Finance API to gather historical stock price data.
+- **Data Preprocessing**: Clean and preprocess the data (handling missing values, scaling).
+- **Model Development**: Build a recurrent neural network (RNN) or a hybrid model using Lightning-Fabric.
+- **Training and Validation**: Train the model and validate using a rolling-window approach.
+- **Performance Evaluation**: Evaluate the model's performance using RMSE and visualize predictions against actual prices.
+- **Logging and Experiment Tracking**: Implement logging and experiment tracking with Lightning-Fabric for reproducibility.
 
-**Tasks**  
-- **Data Acquisition**: Download and explore the sentiment analysis dataset.
-- **Text Preprocessing**: Clean the text data, tokenize, and convert text to embeddings (e.g., using pre-trained embeddings like Word2Vec or BERT).
-- **Model Architecture**: Construct a neural network model (e.g., LSTM or Transformer) using Lightning Fabric for text classification.
-- **Training**: Train the model, focusing on optimizing the F1 score while using validation data for performance assessment.
-- **Evaluation**: Analyze model predictions, generate classification reports, and visualize results with ROC curves.
-
-**Bonus Ideas (Optional)**  
-- Experiment with different text embedding techniques and their impact on model performance.
-- Implement a model interpretability approach (e.g., SHAP or LIME) to understand model predictions better.
+**Bonus Ideas (Optional)**:  
+- For Project 1: Experiment with different CNN architectures (ResNet, DenseNet) and compare performance.
+- For Project 2: Explore transfer learning by using pre-trained models like BERT for enhanced performance.
+- For Project 3: Integrate external features like trading volume or economic indicators to improve forecasting accuracy.
 

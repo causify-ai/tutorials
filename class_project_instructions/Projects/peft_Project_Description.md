@@ -1,87 +1,54 @@
 **Description**
 
-In this project, students will utilize PEFT (Parameter-Efficient Fine-Tuning), a library designed to optimize the fine-tuning of pre-trained transformer models for various NLP tasks. It allows for efficient training with fewer parameters while maintaining performance. Students will explore the capabilities of PEFT in different contexts, focusing on specific NLP applications.
+In this project, students will utilize PEFT (Parameter-Efficient Fine-Tuning), a method designed to fine-tune large pre-trained models efficiently. PEFT allows for the adaptation of models with fewer parameters, making it suitable for various NLP tasks without requiring extensive computational resources. This tool is particularly useful for customizing models for specific tasks while minimizing the cost of training.
 
----
+### Project 1: Fine-Tuning a Sentiment Analysis Model (Difficulty: 1)
 
-### Project 1: Sentiment Analysis on Movie Reviews (Difficulty: 1)
+**Project Objective**: Fine-tune a pre-trained BERT model using PEFT to classify movie reviews as positive or negative, optimizing for accuracy and F1 score.
 
-**Project Objective:**
-Develop a sentiment analysis model to classify movie reviews as positive or negative, optimizing the model's accuracy using PEFT.
+**Dataset Suggestions**: 
+- IMDb Movie Reviews Dataset (available on Kaggle: [IMDb Dataset](https://www.kaggle.com/datasets/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews))
 
-**Dataset Suggestions:**
-Explore Kaggle for publicly available movie review datasets or use HuggingFace Datasets for pre-processed sentiment analysis datasets.
+**Tasks**:
+- **Set Up Environment**: Install necessary libraries (Transformers, PEFT, etc.) and prepare the dataset.
+- **Load Pre-trained Model**: Utilize the Hugging Face Transformers library to load a pre-trained BERT model.
+- **Data Preprocessing**: Tokenize the movie reviews and create training and validation sets.
+- **Fine-Tuning**: Apply PEFT to fine-tune the model on the sentiment classification task.
+- **Model Evaluation**: Evaluate the model's performance using accuracy and F1 score metrics.
+- **Visualization**: Visualize the confusion matrix and classification report using Matplotlib.
 
-**Tasks:**
-- **Set Up PEFT Environment:**
-  Install PEFT and necessary libraries, ensuring you have access to a pre-trained transformer model.
-  
-- **Data Preparation:**
-  Load the dataset, preprocess text data (tokenization, normalization), and split it into training and testing sets.
+### Project 2: Topic Modeling with PEFT (Difficulty: 2)
 
-- **Fine-Tuning with PEFT:**
-  Utilize PEFT to fine-tune the pre-trained model on the movie review dataset, adjusting only a small number of parameters.
+**Project Objective**: Use PEFT to adapt a pre-trained GPT-2 model for topic modeling on news articles, optimizing for coherence and diversity of topics.
 
-- **Model Evaluation:**
-  Evaluate the model using accuracy, precision, and recall metrics to assess performance on the testing set.
+**Dataset Suggestions**: 
+- 20 Newsgroups Dataset (available on Hugging Face Datasets: [20 Newsgroups](https://huggingface.co/datasets/20-newsgroups))
 
-- **Visualization:**
-  Create visualizations (e.g., confusion matrix, ROC curve) to represent model performance and identify areas for improvement.
+**Tasks**:
+- **Setup and Data Loading**: Load the 20 Newsgroups dataset using Hugging Face Datasets.
+- **Preprocessing**: Clean and preprocess the text data, removing stop words and irrelevant characters.
+- **Model Selection**: Choose a pre-trained GPT-2 model from Hugging Face Transformers.
+- **Fine-Tuning with PEFT**: Fine-tune the model to identify topics within the news articles.
+- **Topic Coherence Evaluation**: Use coherence scores to evaluate the quality of the identified topics.
+- **Visualization**: Create word clouds for each identified topic to visualize the most significant terms.
 
----
+### Project 3: Named Entity Recognition (NER) with PEFT (Difficulty: 3)
 
-### Project 2: Text Summarization of News Articles (Difficulty: 2)
+**Project Objective**: Implement a Named Entity Recognition (NER) system using PEFT to adapt a large pre-trained model for extracting entities from legal documents, optimizing for precision and recall.
 
-**Project Objective:**
-Create a text summarization tool that condenses news articles into concise summaries, optimizing the summarization quality using PEFT.
+**Dataset Suggestions**:
+- Legal Text Dataset (available on Kaggle: [Legal NLP Dataset](https://www.kaggle.com/datasets/benhamner/legal-nlp))
 
-**Dataset Suggestions:**
-Utilize HuggingFace Datasets or Kaggle to find datasets containing news articles and their corresponding summaries.
+**Tasks**:
+- **Environment Setup**: Install required libraries and load the legal text dataset.
+- **Data Annotation**: Annotate the dataset for named entities (e.g., person, organization, location).
+- **Load Pre-trained Model**: Use a pre-trained BERT or RoBERTa model suitable for NER tasks.
+- **Fine-Tuning with PEFT**: Fine-tune the model using PEFT for the NER task on the annotated dataset.
+- **Model Evaluation**: Evaluate the model using precision, recall, and F1 score metrics on a test set.
+- **Error Analysis**: Perform error analysis to identify common mistakes and potential improvements.
 
-**Tasks:**
-- **Set Up PEFT Environment:**
-  Install PEFT and configure a pre-trained summarization model (e.g., BART or T5).
-
-- **Data Ingestion:**
-  Load and preprocess the news articles dataset, ensuring proper formatting for input to the model.
-
-- **Fine-Tuning Process:**
-  Apply PEFT to fine-tune the summarization model on the dataset, focusing on generating high-quality summaries.
-
-- **Quality Evaluation:**
-  Use ROUGE and BLEU scores to evaluate the quality of generated summaries against reference summaries.
-
-- **User Interface Development:**
-  Create a simple web interface (using Flask or Streamlit) to allow users to input articles and receive summaries.
-
----
-
-### Project 3: Topic Modeling on Research Papers (Difficulty: 3)
-
-**Project Objective:**
-Implement a topic modeling system to identify key themes across a large corpus of research papers, optimizing the model's interpretability and accuracy using PEFT.
-
-**Dataset Suggestions:**
-Access open datasets from platforms like Kaggle or government repositories that host collections of research papers (e.g., arXiv).
-
-**Tasks:**
-- **Set Up PEFT Environment:**
-  Install PEFT and select a pre-trained model suitable for topic modeling (e.g., BERT-based models).
-
-- **Data Collection and Preprocessing:**
-  Gather research papers, clean the text data (removing metadata, normalizing text), and prepare it for modeling.
-
-- **Fine-Tuning for Topic Extraction:**
-  Use PEFT to fine-tune the model for topic extraction, adjusting hyperparameters to enhance performance.
-
-- **Topic Interpretation:**
-  Analyze the output topics, generating representative keywords and visualizing topic distributions across the dataset.
-
-- **Evaluation and Comparison:**
-  Compare the topics generated with existing literature to validate findings, using quantitative metrics and qualitative assessments.
-
-**Bonus Ideas (Optional):**
-- Extend the sentiment analysis project by incorporating multi-class classification for different genres of movies.
-- For the summarization project, implement an option for abstractive versus extractive summarization and compare results.
-- In the topic modeling project, explore dynamic topic modeling to track how topics evolve over time in the research domain.
+**Bonus Ideas**:
+- For Project 1, implement cross-validation to ensure the model's robustness.
+- For Project 2, compare the results with a traditional LDA topic modeling approach.
+- For Project 3, extend the NER model to recognize custom entities specific to the legal domain.
 

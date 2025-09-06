@@ -1,71 +1,117 @@
 **Description**
 
-In this series of projects, students will utilize `torch.distributed`, a package within PyTorch that facilitates distributed training of deep learning models across multiple devices and nodes. This tool allows for efficient scaling of training processes, enabling students to work with larger datasets and more complex models. Key features include:
+In this project, students will utilize `torch.distributed`, a PyTorch library designed for distributed training of deep learning models across multiple GPUs and nodes. This tool facilitates efficient model training and inference by parallelizing computations, thus enhancing performance and scalability. 
 
-- **Multi-process support**: Enables parallel training across multiple GPUs or machines.
-- **Communication backends**: Supports various backends for collective communication, such as NCCL and Gloo.
-- **Flexible architecture**: Facilitates both data parallelism and model parallelism for optimized performance.
+Technologies Used
+torch.distributed
 
----
-
-### Project 1: Image Classification with Distributed Training
-
-**Difficulty**: 1 (Easy)
-
-**Project Objective**: Build a distributed image classification model that can accurately classify images from a well-known dataset, optimizing for speed and accuracy through parallel training.
-
-**Dataset Suggestions**: Use publicly available image datasets from Kaggle or HuggingFace, such as CIFAR-10 or Fashion MNIST.
-
-**Tasks**:
-- **Set Up Distributed Environment**: Configure a local or cloud environment with multiple GPUs for training.
-- **Data Loading**: Implement a distributed data loader to efficiently manage the dataset across multiple processes.
-- **Model Definition**: Create a convolutional neural network (CNN) architecture suitable for the classification task.
-- **Training Loop**: Implement a training loop utilizing `torch.distributed` to synchronize gradients and update model weights.
-- **Evaluation**: Assess model performance using accuracy metrics on a validation set.
-
-**Bonus Ideas (Optional)**:
-- Experiment with different CNN architectures and compare their performance.
-- Implement data augmentation techniques to enhance model robustness.
+- Enables distributed training across multiple GPUs or machines.
+- Supports various communication backends, including NCCL and Gloo.
+- Provides functionalities for data parallelism and model parallelism.
+- Facilitates synchronization of gradients across different nodes.
 
 ---
 
-### Project 2: Text Generation with Distributed RNNs
+### Project 1: Image Classification with Distributed Training (Difficulty: 1)
 
-**Difficulty**: 2 (Medium)
+**Project Objective**  
+The goal is to build an image classification model using a convolutional neural network (CNN) and train it on the CIFAR-10 dataset using distributed training to speed up the process.
 
-**Project Objective**: Develop a distributed recurrent neural network (RNN) for text generation, focusing on optimizing training time and model performance by leveraging multiple GPUs.
+**Dataset Suggestions**  
+- CIFAR-10 dataset: Available on Kaggle [CIFAR-10](https://www.kaggle.com/c/cifar-10).
 
-**Dataset Suggestions**: Utilize large text corpora available on HuggingFace or Kaggle, such as Shakespeare's works or Wikipedia articles.
+**Tasks**  
+- Set Up Distributed Environment:
+  - Configure a multi-GPU setup using `torch.distributed`.
+  - Initialize the process group for communication between GPUs.
 
-**Tasks**:
-- **Setup Distributed Training**: Establish a multi-GPU setup using `torch.distributed` for RNN training.
-- **Data Preprocessing**: Tokenize and prepare the text data for input into the RNN.
-- **Model Architecture**: Design an RNN or LSTM model for generating text sequences.
-- **Distributed Training Loop**: Implement a training loop that uses distributed data parallelism to synchronize model updates.
-- **Text Generation**: Generate new text sequences based on a seed input and evaluate the quality of generated text.
+- Data Preparation:
+  - Load and preprocess the CIFAR-10 dataset.
+  - Use `torch.utils.data.DistributedSampler` to distribute data across GPUs.
 
-**Bonus Ideas (Optional)**:
-- Fine-tune the model on specific genres of text for more targeted generation.
-- Compare the performance of RNNs with transformer-based models.
+- Model Development:
+  - Build a CNN architecture suitable for image classification.
+  - Implement the model using PyTorch.
+
+- Training:
+  - Train the model with distributed data parallelism.
+  - Monitor training metrics (accuracy, loss) across epochs.
+
+- Evaluation:
+  - Evaluate the model on a validation set.
+  - Visualize the classification results using confusion matrix.
+
+**Bonus Ideas (Optional)**  
+- Experiment with different CNN architectures (e.g., ResNet, VGG).
+- Implement data augmentation techniques to improve model performance.
 
 ---
 
-### Project 3: Anomaly Detection in Large-Scale Time Series Data
+### Project 2: Text Classification with Distributed Training (Difficulty: 2)
 
-**Difficulty**: 3 (Hard)
+**Project Objective**  
+The aim is to develop a text classification model using a recurrent neural network (RNN) and train it on the AG News dataset with distributed training to handle larger datasets efficiently.
 
-**Project Objective**: Create a distributed framework for detecting anomalies in large-scale time series data, optimizing for both model accuracy and computational efficiency.
+**Dataset Suggestions**  
+- AG News dataset: Available on Kaggle [AG News Dataset](https://www.kaggle.com/amananandrai/ag-news-classification-dataset).
 
-**Dataset Suggestions**: Access large open datasets for time series analysis from government portals or Kaggle, such as energy consumption data or stock market prices.
+**Tasks**  
+- Set Up Distributed Environment:
+  - Configure a multi-node setup for distributed training with `torch.distributed`.
+  - Initialize the process group for communication.
 
-**Tasks**:
-- **Distributed Data Ingestion**: Set up a system to ingest and preprocess large time series datasets across multiple nodes.
-- **Model Selection**: Choose an appropriate machine learning model for anomaly detection, such as LSTM or Isolation Forest.
-- **Implement Distributed Training**: Utilize `torch.distributed` to parallelize model training across multiple GPUs for efficiency.
-- **Anomaly Detection Pipeline**: Create a complete pipeline that includes model training, prediction, and anomaly detection.
-- **Evaluation and Visualization**: Evaluate the model's performance using precision, recall, and F1-score, and visualize the detected anomalies.
+- Data Processing:
+  - Load and preprocess the AG News dataset.
+  - Tokenize text and create embeddings using `torchtext`.
 
-**Bonus Ideas (Optional)**:
-- Investigate the impact of different hyperparameters on model performance.
-- Integrate real-time anomaly detection capabilities using streaming data sources.
+- Model Development:
+  - Build an RNN architecture (e.g., LSTM or GRU) for text classification.
+  - Implement the model in PyTorch.
+
+- Training:
+  - Train the model using distributed data parallelism.
+  - Optimize the model using techniques like learning rate scheduling.
+
+- Evaluation:
+  - Assess model performance using accuracy and F1-score.
+  - Visualize training and evaluation metrics over epochs.
+
+**Bonus Ideas (Optional)**  
+- Compare model performance with different architectures (e.g., Transformers).
+- Implement hyperparameter tuning using libraries like Optuna.
+
+---
+
+### Project 3: Large-Scale Recommendation System (Difficulty: 3)
+
+**Project Objective**  
+The goal is to create a large-scale recommendation system using collaborative filtering techniques and train it on the MovieLens dataset with distributed training to handle the computational load effectively.
+
+**Dataset Suggestions**  
+- MovieLens 20M dataset: Available on Kaggle [MovieLens 20M](https://www.kaggle.com/grouplens/movielens-20m-dataset).
+
+**Tasks**  
+- Set Up Distributed Environment:
+  - Configure a multi-GPU environment for distributed training using `torch.distributed`.
+  - Initialize the process group and set up communication backends.
+
+- Data Preparation:
+  - Load and preprocess the MovieLens dataset.
+  - Create user-item interaction matrices for collaborative filtering.
+
+- Model Development:
+  - Implement a deep learning-based collaborative filtering model (e.g., Neural Collaborative Filtering).
+  - Use embeddings to represent users and items in a lower-dimensional space.
+
+- Training:
+  - Train the model using distributed data parallelism.
+  - Implement techniques for handling large-scale data, such as mini-batch processing.
+
+- Evaluation:
+  - Evaluate the model using metrics like RMSE and precision at K.
+  - Visualize recommendations for specific users.
+
+**Bonus Ideas (Optional)**  
+- Explore hybrid recommendation techniques combining content-based and collaborative filtering.
+- Implement real-time recommendation updates using streaming data.
 

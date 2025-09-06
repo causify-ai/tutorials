@@ -1,105 +1,58 @@
 **Description**
 
-RLlib is an open-source library for reinforcement learning (RL) built on top of Ray, designed to provide scalable and efficient implementations of various RL algorithms. It offers a high-level API for developing and training RL agents, making it easier for practitioners to implement complex algorithms and leverage distributed computing.
+RLlib is a scalable reinforcement learning library built on top of Ray, designed to enable easy experimentation with various RL algorithms. It provides a unified API for a variety of tasks, making it suitable for both research and production environments. Key features include:
 
-Technologies Used
-RLlib
-
-- Supports a wide range of reinforcement learning algorithms, including DQN, PPO, and A3C.
-- Facilitates easy integration with TensorFlow and PyTorch for model training.
-- Provides tools for distributed training, allowing agents to learn from multiple environments simultaneously.
-- Offers built-in support for custom environments, making it flexible for various applications.
+- **Support for multiple algorithms**: Offers implementations of popular RL algorithms like DQN, PPO, and A3C.
+- **Scalability**: Can efficiently scale training across multiple CPUs and GPUs.
+- **Customizability**: Allows for custom environments and policies to be easily integrated.
+- **Monitoring and visualization**: Built-in support for logging and visualizing training metrics.
 
 ---
 
-**Project 1: Simple Game Agent (Difficulty: 1 - Easy)**
+### Project 1: Simple Game Agent (Difficulty: 1)
 
-**Project Objective:**  
-Develop a reinforcement learning agent that can learn to play a simple grid-based game, optimizing its strategy to maximize rewards.
+**Project Objective**: Build a reinforcement learning agent that learns to play a simple grid-based game (e.g., a maze) using Q-learning.
 
-**Dataset Suggestions:**  
-Use a simulated environment available in OpenAI Gym.
+**Dataset Suggestions**: 
+- Create a simulated environment using OpenAI Gym (e.g., `FrozenLake-v1`).
 
-**Tasks:**
+**Tasks**:
+- **Set Up Environment**: Use OpenAI Gym to create a grid environment where the agent navigates to a goal.
+- **Implement Q-learning**: Use RLlib to implement the Q-learning algorithm for the agent.
+- **Train the Agent**: Train the agent to maximize its rewards by navigating the maze.
+- **Evaluate Performance**: Assess the agent's performance by measuring the average reward over multiple episodes.
+- **Visualize Learning**: Plot the learning curve to visualize the agent's improvement over time.
 
-- Set Up Environment:
-  - Create a grid-based game environment using OpenAI Gym.
-  - Define the state and action space for the agent.
+### Project 2: Stock Trading Strategy (Difficulty: 2)
 
-- Implement RL Agent:
-  - Use RLlib to implement a basic Q-learning agent.
-  - Configure hyperparameters such as learning rate and discount factor.
+**Project Objective**: Develop a reinforcement learning agent to optimize a trading strategy for a specific stock using historical price data.
 
-- Training the Agent:
-  - Train the agent over multiple episodes, allowing it to explore and learn from the environment.
-  - Log rewards and performance metrics during training.
+**Dataset Suggestions**: 
+- Use the `Yahoo Finance API` to gather historical stock price data for a chosen stock (e.g., Apple Inc. (AAPL)).
 
-- Evaluation:
-  - Test the agent’s performance on a fixed number of episodes.
-  - Analyze the learning curve and the effectiveness of the strategy.
+**Tasks**:
+- **Set Up Trading Environment**: Create a custom trading environment using RLlib, where the agent can buy, sell, or hold stocks.
+- **Implement PPO Algorithm**: Utilize the Proximal Policy Optimization (PPO) algorithm from RLlib for training the trading agent.
+- **Feature Engineering**: Create features from historical stock data, such as moving averages and RSI, to inform the agent's decisions.
+- **Train the Agent**: Train the agent on historical price data to learn an effective trading strategy.
+- **Performance Evaluation**: Evaluate the strategy's performance based on cumulative returns and Sharpe ratio.
 
-**Bonus Ideas (Optional):**  
-Explore different algorithms (e.g., DQN or PPO) and compare their performance. Implement a visualization of the agent's path through the grid.
+### Project 3: Autonomous Vehicle Navigation (Difficulty: 3)
 
----
+**Project Objective**: Design a reinforcement learning agent capable of navigating an autonomous vehicle in a simulated environment while avoiding obstacles.
 
-**Project 2: Stock Trading Strategy (Difficulty: 2 - Medium)**
+**Dataset Suggestions**: 
+- Use the `Carla Simulator` for a realistic driving environment, where you can create scenarios for training.
 
-**Project Objective:**  
-Create a reinforcement learning agent that learns to make trading decisions in a stock market environment, optimizing for maximum return on investment.
+**Tasks**:
+- **Set Up Carla Environment**: Install and configure the Carla Simulator to create a driving environment with various obstacles.
+- **Custom RL Environment**: Implement a custom RL environment in RLlib where the agent receives observations (e.g., distance to obstacles) and takes actions (e.g., accelerate, brake, steer).
+- **Implement DQN Algorithm**: Use the Deep Q-Network (DQN) algorithm to train the agent to navigate through the environment.
+- **Train the Agent**: Train the agent over multiple episodes, adjusting hyperparameters as necessary to improve performance.
+- **Testing and Evaluation**: Test the trained agent in various scenarios and evaluate its ability to navigate without collisions.
 
-**Dataset Suggestions:**  
-Utilize historical stock price data available on Kaggle or Yahoo Finance APIs.
-
-**Tasks:**
-
-- Set Up Trading Environment:
-  - Define the trading environment with states representing stock prices and actions for buying, selling, or holding.
-  - Implement reward structures based on profit and loss.
-
-- Implement and Train RL Agent:
-  - Use RLlib to implement a Proximal Policy Optimization (PPO) agent.
-  - Train the agent using historical stock data, allowing it to learn trading strategies.
-
-- Hyperparameter Tuning:
-  - Experiment with different hyperparameters for the PPO agent to optimize performance.
-  - Use techniques such as early stopping to prevent overfitting.
-
-- Performance Evaluation:
-  - Evaluate the trading strategy using metrics such as Sharpe ratio and cumulative returns.
-  - Visualize the agent's trading decisions against actual stock price movements.
-
-**Bonus Ideas (Optional):**  
-Incorporate technical indicators (e.g., moving averages) as additional state features. Compare the RL agent's performance with a baseline strategy (e.g., buy-and-hold).
-
----
-
-**Project 3: Autonomous Drone Navigation (Difficulty: 3 - Hard)**
-
-**Project Objective:**  
-Develop a reinforcement learning agent capable of navigating a drone through a complex environment, optimizing for efficiency and obstacle avoidance.
-
-**Dataset Suggestions:**  
-Simulated environments available through the AirSim or Unity ML-Agents toolkit.
-
-**Tasks:**
-
-- Set Up Simulation Environment:
-  - Create a 3D environment in AirSim or Unity with various obstacles and waypoints.
-  - Define the state space (drone position, velocity) and action space (control inputs).
-
-- Implement RL Agent:
-  - Use RLlib to implement a deep reinforcement learning algorithm, such as DDPG or SAC.
-  - Configure the agent to handle continuous action spaces for smooth control.
-
-- Training the Agent:
-  - Train the agent in the simulated environment, allowing it to learn navigation strategies.
-  - Implement experience replay to improve learning efficiency.
-
-- Evaluation and Analysis:
-  - Evaluate the agent's navigation performance based on metrics like time taken to reach waypoints and collision rates.
-  - Visualize the drone's trajectory and compare it with optimal paths.
-
-**Bonus Ideas (Optional):**  
-Experiment with different reward structures to encourage exploration or penalty for collisions. Implement multi-agent scenarios where multiple drones navigate simultaneously.
+**Bonus Ideas**:
+- For Project 1, challenge students to implement a more complex environment with multiple goals.
+- In Project 2, students could compare the RL agent's performance against traditional trading strategies like moving average crossovers.
+- For Project 3, students might explore multi-agent scenarios where multiple vehicles navigate the same environment, requiring cooperation or competition.
 

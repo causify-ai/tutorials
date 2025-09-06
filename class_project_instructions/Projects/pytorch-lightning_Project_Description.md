@@ -1,63 +1,65 @@
 **Description**
 
-PyTorch Lightning is a lightweight wrapper around PyTorch that simplifies the training of deep learning models while maintaining flexibility and scalability. It provides a structured approach to organizing PyTorch code, enabling researchers and developers to focus more on the model and less on the boilerplate code. Key features include:
+PyTorch Lightning is a lightweight wrapper around PyTorch that helps organize PyTorch code to decouple the science code from the engineering code. It simplifies the training loop, enabling researchers and developers to focus on the model rather than boilerplate code. 
 
-- **Modular Design**: Encourages separation of concerns, making code easier to read and maintain.
-- **Built-in Callbacks**: Allows for easy integration of advanced features like early stopping, learning rate scheduling, and logging.
-- **Multi-GPU Support**: Facilitates distributed training across multiple GPUs without significant changes to the codebase.
-- **Easy Experiment Tracking**: Integrates seamlessly with logging frameworks like TensorBoard and Weights & Biases.
+Key Features:
+- Structured training loops that promote reproducibility.
+- Built-in support for multi-GPU and TPU training.
+- Easy integration with various logging frameworks and visualization tools.
+- Automatic checkpointing and model saving for best practices in model training.
 
 ---
 
-### Project 1: Image Classification of Fashion Items
+### Project 1: Image Classification with CIFAR-10
 **Difficulty**: 1 (Easy)
 
-**Project Objective**: The goal is to build a convolutional neural network (CNN) that classifies images of clothing items into different categories (e.g., shirts, shoes, bags). The model will be optimized for accuracy.
+**Project Objective**: Develop a convolutional neural network (CNN) to classify images from the CIFAR-10 dataset into 10 distinct categories, optimizing for accuracy.
 
-**Dataset Suggestions**: Use the Fashion MNIST dataset available on Kaggle.
+**Dataset Suggestions**: 
+- CIFAR-10 dataset, available on Kaggle: [CIFAR-10](https://www.kaggle.com/c/cifar-10).
 
 **Tasks**:
-- **Data Preparation**: Load the Fashion MNIST dataset and preprocess images (normalization, resizing).
-- **Model Definition**: Create a simple CNN architecture using PyTorch Lightning.
-- **Training**: Implement the training loop with appropriate loss functions and metrics.
-- **Evaluation**: Assess the model's performance on the test set and visualize some predictions.
-- **Logging**: Use TensorBoard to log training metrics and visualize model performance over epochs.
-
-**Bonus Ideas (Optional)**: Experiment with data augmentation techniques to improve model robustness and compare different CNN architectures.
+- **Data Loading**: Use PyTorch's built-in data loaders to fetch and preprocess the CIFAR-10 dataset.
+- **Model Definition**: Build a CNN architecture with PyTorch Lightning, defining layers and activations.
+- **Training Loop**: Implement the training loop with validation checks using PyTorch Lightning's `Trainer`.
+- **Evaluation**: Evaluate the model's performance on the test set and calculate accuracy metrics.
+- **Visualization**: Visualize sample predictions and confusion matrix using Matplotlib.
 
 ---
 
-### Project 2: Time Series Forecasting of Energy Consumption
+### Project 2: Time Series Forecasting with Stock Prices
 **Difficulty**: 2 (Medium)
 
-**Project Objective**: Develop a recurrent neural network (RNN) model to forecast future energy consumption based on historical data. The model will be optimized for Mean Absolute Error (MAE).
+**Project Objective**: Create a recurrent neural network (RNN) to predict future stock prices based on historical data, optimizing for mean squared error (MSE).
 
-**Dataset Suggestions**: Use publicly available energy consumption datasets from government portals or Kaggle.
+**Dataset Suggestions**: 
+- Yahoo Finance API for historical stock prices. Use the `yfinance` library to fetch data for a specific stock (e.g., Apple Inc. - AAPL).
 
 **Tasks**:
-- **Data Collection**: Gather historical energy consumption data and preprocess it (handling missing values, normalization).
-- **Feature Engineering**: Create additional features such as time-based features (day of the week, month) to enhance the model's predictive power.
-- **Model Creation**: Build an RNN or LSTM model using PyTorch Lightning.
-- **Training and Validation**: Train the model, validate it, and tune hyperparameters to minimize MAE.
-- **Forecasting**: Generate future predictions and visualize the forecast against actual consumption data.
-
-**Bonus Ideas (Optional)**: Implement a comparison with traditional forecasting methods (e.g., ARIMA) and analyze the performance differences.
+- **Data Acquisition**: Fetch historical stock prices using the `yfinance` library and preprocess the data for training.
+- **Feature Engineering**: Create features such as moving averages and lagged values to enhance prediction accuracy.
+- **Model Design**: Construct an RNN or LSTM model using PyTorch Lightning, specifying input and output layers.
+- **Training and Validation**: Train the model with a validation set, monitoring MSE as the loss metric.
+- **Forecasting**: Generate forecasts for future stock prices and visualize the results with Matplotlib.
 
 ---
 
 ### Project 3: Natural Language Processing for Sentiment Analysis
 **Difficulty**: 3 (Hard)
 
-**Project Objective**: Create a transformer-based model (e.g., BERT) to classify the sentiment of movie reviews as positive or negative. The model will be optimized for F1-score.
+**Project Objective**: Build a transformer-based model to perform sentiment analysis on movie reviews, optimizing for accuracy and F1 score.
 
-**Dataset Suggestions**: Use sentiment analysis datasets available on HuggingFace Datasets or Kaggle.
+**Dataset Suggestions**: 
+- IMDb Movie Reviews Dataset available on Kaggle: [IMDb Dataset](https://www.kaggle.com/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews).
 
 **Tasks**:
-- **Data Acquisition**: Load the movie reviews dataset and preprocess text data (tokenization, cleaning).
-- **Model Selection**: Implement a transformer model using PyTorch Lightning, leveraging pre-trained weights for fine-tuning.
-- **Training Pipeline**: Set up a training pipeline with appropriate loss functions, metrics, and callbacks for early stopping.
-- **Evaluation**: Evaluate the model using F1-score and confusion matrix to analyze classification results.
-- **Interpretability**: Utilize techniques like SHAP or LIME to interpret model predictions and understand feature importance.
+- **Data Preparation**: Load the IMDb dataset, preprocess the text (tokenization, padding), and split into training and test sets.
+- **Model Implementation**: Implement a transformer model (e.g., BERT) using PyTorch Lightning, fine-tuning it for sentiment classification.
+- **Training Process**: Set up the training loop with appropriate callbacks for early stopping and model checkpointing.
+- **Performance Evaluation**: Evaluate the model using accuracy and F1 score, and generate classification reports.
+- **Error Analysis**: Analyze misclassified reviews and identify patterns or common features among them.
 
-**Bonus Ideas (Optional)**: Explore multi-class sentiment classification or implement a model ensemble to improve overall performance.
+**Bonus Ideas**: 
+- Implement a web app using Flask to deploy the sentiment analysis model.
+- Compare the performance with traditional machine learning models like SVM or Logistic Regression as a baseline.
 

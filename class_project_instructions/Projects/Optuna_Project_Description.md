@@ -1,94 +1,62 @@
 **Description**
 
-Optuna is an open-source hyperparameter optimization framework designed for machine learning and deep learning models. It automates the process of finding optimal hyperparameters by using advanced algorithms like Tree-structured Parzen Estimator (TPE) and multi-armed bandits. Optuna allows users to define their optimization objectives in a flexible way, making it suitable for a variety of machine learning tasks. 
+Optuna is an automatic hyperparameter optimization software framework designed for machine learning. It allows users to define and optimize complex search spaces through a user-friendly interface, enabling efficient and scalable optimization of hyperparameters. Key features include:
 
-Technologies Used
-Optuna
-
-- Provides a simple and intuitive interface for hyperparameter optimization.
-- Supports multi-objective optimization and pruning of unpromising trials.
-- Integrates seamlessly with popular machine learning libraries like Scikit-learn, TensorFlow, and PyTorch.
+- **Define Search Spaces**: Create flexible and complex search spaces for hyperparameters.
+- **Pruning**: Automatically terminate unpromising trials to save computational resources.
+- **Storage**: Save optimization results in various formats, including SQL databases and file systems.
+- **Visualization**: Offers visualizations to understand the optimization process and results.
 
 ---
 
-**Project 1: Predicting House Prices**  
-**Difficulty**: 1 (Easy)  
-**Project Objective**: Optimize a regression model to predict house prices based on various features (e.g., size, location, number of bedrooms). The goal is to minimize the mean squared error (MSE) of predictions.
+### Project 1: Predicting House Prices
+**Difficulty**: 1 (Easy)
 
-**Dataset Suggestions**: Find datasets on Kaggle related to house prices in various cities or regions.
+**Project Objective**: Build a regression model to predict house prices based on various features and optimize the model's hyperparameters for improved accuracy.
+
+**Dataset Suggestions**: Use the "Ames Housing dataset" available on Kaggle, which contains detailed information about houses in Ames, Iowa.
 
 **Tasks**:
-- Data Preparation:
-  - Load the dataset and perform initial exploratory data analysis (EDA) to understand the features.
-  - Clean and preprocess the data, handling missing values and categorical variables.
-
-- Model Selection:
-  - Choose a regression model (e.g., Random Forest, Gradient Boosting) for house price prediction.
-
-- Hyperparameter Optimization:
-  - Use Optuna to define an objective function that optimizes hyperparameters of the selected regression model.
-  - Implement trial runs to find the best hyperparameter configuration.
-
-- Model Evaluation:
-  - Evaluate the model using cross-validation and report the MSE on a test set.
-  - Visualize the results and feature importance.
-
-**Bonus Ideas (Optional)**: 
-- Compare the optimized model's performance with a baseline model using default hyperparameters.
-- Experiment with different regression algorithms and compare their performance.
+- **Data Preprocessing**: Clean and preprocess the dataset to handle missing values and encode categorical variables.
+- **Model Selection**: Choose a regression model (e.g., Random Forest, XGBoost) for predicting house prices.
+- **Hyperparameter Optimization with Optuna**: Define hyperparameters for the chosen model and use Optuna to optimize them.
+- **Model Evaluation**: Evaluate model performance using metrics such as RMSE and R² on a validation set.
+- **Visualization**: Visualize the predicted vs. actual house prices to assess model performance.
 
 ---
 
-**Project 2: Customer Segmentation Using Clustering**  
-**Difficulty**: 2 (Medium)  
-**Project Objective**: Implement a clustering algorithm to segment customers based on purchasing behavior and optimize the number of clusters using Optuna.
+### Project 2: Customer Segmentation using Clustering
+**Difficulty**: 2 (Medium)
 
-**Dataset Suggestions**: Look for datasets on Kaggle that contain customer transaction data or demographic information.
+**Project Objective**: Implement a clustering algorithm to segment customers based on purchasing behavior and optimize the clustering parameters for better group identification.
+
+**Dataset Suggestions**: Use the "Online Retail" dataset available on the UCI Machine Learning Repository, which includes transactional data from a UK-based online retailer.
 
 **Tasks**:
-- Data Exploration:
-  - Load and explore the dataset to identify key features relevant for clustering.
-  - Normalize the data if necessary to ensure fair distance calculations.
-
-- Clustering Model Selection:
-  - Choose a clustering algorithm (e.g., K-Means, DBSCAN) to segment customers.
-
-- Hyperparameter Optimization:
-  - Use Optuna to optimize the number of clusters and other hyperparameters (e.g., initialization method for K-Means).
-  - Define an objective function that uses the silhouette score as a metric for evaluation.
-
-- Visualization:
-  - Visualize the clusters using PCA or t-SNE to reduce dimensionality and understand customer segments.
-
-**Bonus Ideas (Optional)**: 
-- Implement additional clustering algorithms and compare their performances.
-- Analyze the characteristics of each segment and suggest marketing strategies for each group.
+- **Data Preprocessing**: Clean the dataset, handle duplicates, and extract relevant features such as purchase frequency and monetary value.
+- **Feature Engineering**: Create features that can help in clustering, such as RFM (Recency, Frequency, Monetary) metrics.
+- **Clustering Model Selection**: Choose a clustering algorithm (e.g., K-Means, DBSCAN) for customer segmentation.
+- **Hyperparameter Optimization with Optuna**: Use Optuna to optimize clustering parameters, such as the number of clusters for K-Means.
+- **Evaluation of Clusters**: Analyze cluster quality using silhouette scores and visualize the clusters using PCA or t-SNE.
 
 ---
 
-**Project 3: Image Classification with Fine-Tuning**  
-**Difficulty**: 3 (Hard)  
-**Project Objective**: Fine-tune a pre-trained deep learning model for image classification and optimize its hyperparameters using Optuna to achieve the highest accuracy on a test dataset.
+### Project 3: Time Series Forecasting of Stock Prices
+**Difficulty**: 3 (Hard)
 
-**Dataset Suggestions**: Utilize datasets available on HuggingFace Datasets or Kaggle that contain labeled images for classification tasks.
+**Project Objective**: Develop a forecasting model to predict future stock prices based on historical data, utilizing advanced techniques and optimizing model parameters for accuracy.
+
+**Dataset Suggestions**: Utilize the "Yahoo Finance" API to gather historical stock price data for a specific company (e.g., Apple Inc.) over the last five years.
 
 **Tasks**:
-- Data Preparation:
-  - Load the image dataset and perform necessary preprocessing (resizing, normalization).
-  - Split the data into training, validation, and test sets.
+- **Data Collection**: Use the Yahoo Finance API to fetch historical stock price data and preprocess it for analysis.
+- **Feature Engineering**: Create additional features such as moving averages, volatility, and technical indicators.
+- **Model Selection**: Choose a forecasting model (e.g., LSTM, ARIMA) suitable for time series data.
+- **Hyperparameter Optimization with Optuna**: Implement Optuna to optimize the model's hyperparameters, such as the number of LSTM layers, neurons, and learning rate.
+- **Model Evaluation**: Evaluate the forecasting performance using metrics like MAE and RMSE, and visualize the predicted vs. actual stock prices.
 
-- Model Selection:
-  - Choose a pre-trained model (e.g., ResNet, EfficientNet) and set it up for transfer learning.
-
-- Hyperparameter Optimization:
-  - Use Optuna to optimize hyperparameters such as learning rate, batch size, and dropout rate.
-  - Implement an objective function that evaluates model accuracy on the validation set.
-
-- Model Training and Evaluation:
-  - Train the model with the best hyperparameters found by Optuna.
-  - Evaluate the model on the test set and report accuracy, confusion matrix, and other relevant metrics.
-
-**Bonus Ideas (Optional)**: 
-- Experiment with different data augmentation techniques to improve model robustness.
-- Fine-tune multiple pre-trained models and compare their performance based on the optimized hyperparameters.
+**Bonus Ideas**: 
+- Experiment with ensemble methods by combining different models for improved forecasting.
+- Implement a backtesting framework to assess the model's predictive power over time.
+- Explore alternative data sources (e.g., sentiment analysis from news articles) to enhance the forecasting model.
 

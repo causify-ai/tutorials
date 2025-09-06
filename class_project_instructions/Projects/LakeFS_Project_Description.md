@@ -1,66 +1,86 @@
 **Description**
 
-LakeFS is an open-source data lake management tool that enables version control for data. It allows users to treat data lakes like Git repositories, enabling easy branching, merging, and collaboration on data. Key features include:
-
-- **Version Control**: Keep track of data changes, enabling rollback and reproducibility.
-- **Branching and Merging**: Create branches for different experiments or analyses without affecting the main dataset.
-- **Data Lineage**: Trace the origin and evolution of data over time.
-- **Compatibility**: Integrates with existing data lake solutions and tools, facilitating seamless workflows.
-
----
-
-### Project 1: Data Version Control for E-commerce Sales Analysis (Difficulty: 1 - Easy)
-
-**Project Objective**: Develop a version-controlled data analysis pipeline to track changes in e-commerce sales data over time, allowing for reproducible analysis and insights into sales trends.
-
-**Dataset Suggestions**: Use open e-commerce datasets available on Kaggle or government portals.
-
-**Tasks**:
-- **Set Up LakeFS**: Install LakeFS and configure it with your data lake.
-- **Ingest Sales Data**: Load the e-commerce sales dataset into LakeFS.
-- **Create Branches**: Create branches for different time periods (e.g., monthly) to analyze sales trends.
-- **Data Analysis**: Perform exploratory data analysis (EDA) on each branch to understand sales patterns.
-- **Merge Changes**: Merge findings from different branches and document insights using LakeFS.
-
-**Bonus Ideas (Optional)**: 
-- Compare sales trends across different branches and visualize them.
-- Implement a rollback feature to analyze how sales data has changed over time.
+LakeFS is an open-source data versioning tool designed to manage data lakes with Git-like capabilities. It enables data teams to easily create, manage, and collaborate on data versions, making data operations more efficient and reproducible. Key features include:
+- **Data Versioning**: Track changes to datasets over time, enabling rollback and reproducibility.
+- **Branching and Merging**: Create branches for data experiments, allowing for isolated changes and collaborative work.
+- **Data Lake Integration**: Seamlessly integrates with existing data lakes, providing a Git-like interface for data management.
+- **Data Quality and Validation**: Facilitate data validation and quality checks during versioning.
 
 ---
 
-### Project 2: Machine Learning Model Development for Customer Segmentation (Difficulty: 2 - Medium)
+**Project 1: Version Control for a Customer Churn Prediction Model (Difficulty: 1)**
 
-**Project Objective**: Build a machine learning pipeline for customer segmentation using version-controlled data, optimizing the features and model parameters through LakeFS.
+**Project Objective**: The goal is to create a customer churn prediction model using historical customer data. Students will utilize LakeFS to manage and version the datasets used for training and testing the model, ensuring reproducibility and ease of experimentation.
 
-**Dataset Suggestions**: Use customer transaction datasets available on Kaggle or open government datasets.
-
+**Dataset Suggestions**: 
+- **Dataset**: Telco Customer Churn Dataset available on Kaggle ([Telco Customer Churn](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)).
+  
 **Tasks**:
-- **Set Up LakeFS**: Configure LakeFS with a customer transaction dataset.
-- **Data Preprocessing**: Clean and preprocess the dataset for modeling, tracking changes in branches.
-- **Feature Engineering**: Create different feature sets in separate branches to experiment with customer segmentation.
-- **Model Training**: Train clustering models (e.g., K-Means, DBSCAN) on different branches and evaluate their performance.
-- **Merge Results**: Combine the best-performing feature sets and models, documenting the process in LakeFS.
+- Set Up LakeFS: 
+    - Install LakeFS and create a repository for managing the dataset.
+- Data Ingestion: 
+    - Load the Telco dataset into LakeFS and create an initial version.
+- Data Preprocessing: 
+    - Clean and preprocess the data (handle missing values, encode categorical variables).
+- Model Training: 
+    - Train a logistic regression model to predict churn.
+- Version Control: 
+    - Use LakeFS to create branches for different preprocessing techniques and model configurations.
+- Model Evaluation: 
+    - Evaluate model performance using accuracy, precision, and recall metrics.
 
-**Bonus Ideas (Optional)**: 
-- Experiment with advanced clustering techniques or dimensionality reduction.
-- Implement a comparison of model performance across different branches.
+**Bonus Ideas**: 
+- Experiment with different machine learning algorithms (e.g., decision trees, random forests) and compare model performance across branches.
 
 ---
 
-### Project 3: Anomaly Detection in Financial Transactions (Difficulty: 3 - Hard)
+**Project 2: Managing a Real Estate Price Prediction Pipeline (Difficulty: 2)**
 
-**Project Objective**: Create a robust anomaly detection system for financial transactions, leveraging version control to manage data changes and model iterations effectively.
+**Project Objective**: The objective is to build a real estate price prediction model while managing the data lifecycle using LakeFS. Students will explore various features and their impacts on property prices, utilizing version control for dataset modifications.
 
-**Dataset Suggestions**: Utilize publicly available financial transaction datasets from Kaggle or government financial data portals.
-
+**Dataset Suggestions**: 
+- **Dataset**: Ames Housing Dataset available on Kaggle ([Ames Housing Dataset](https://www.kaggle.com/datasets/prestonv78/ames-housing-data)).
+  
 **Tasks**:
-- **Set Up LakeFS**: Install and configure LakeFS to manage the financial transaction dataset.
-- **Data Ingestion**: Load the transaction data into LakeFS and create an initial branch for raw data.
-- **Data Cleaning and Transformation**: Implement data cleaning and transformation steps, tracking changes across branches.
-- **Anomaly Detection Modeling**: Develop and test various anomaly detection algorithms (e.g., Isolation Forest, Autoencoders) across different branches.
-- **Model Evaluation and Merging**: Evaluate model performance using metrics like precision and recall, then merge the best models and document findings.
+- Set Up LakeFS: 
+    - Create a LakeFS repository and initialize a branch for the project.
+- Data Exploration: 
+    - Explore the Ames dataset, identifying relevant features for price prediction.
+- Feature Engineering: 
+    - Create new features based on existing data (e.g., total square footage).
+- Model Development: 
+    - Train a regression model (e.g., Random Forest Regressor) to predict house prices.
+- Version Control: 
+    - Use LakeFS to manage changes in feature engineering and model hyperparameters.
+- Model Evaluation: 
+    - Evaluate the model using RMSE and R-squared metrics.
 
-**Bonus Ideas (Optional)**: 
-- Explore ensemble methods for improved anomaly detection.
-- Implement a visualization dashboard to monitor detected anomalies over time.
+**Bonus Ideas**: 
+- Implement cross-validation techniques and compare results across different branches to optimize model performance.
+
+---
+
+**Project 3: Anomaly Detection in Network Traffic Data (Difficulty: 3)**
+
+**Project Objective**: The goal is to detect anomalies in network traffic data using machine learning techniques while leveraging LakeFS for data versioning and experiment management. This project will involve handling large datasets and complex data transformations.
+
+**Dataset Suggestions**: 
+- **Dataset**: UNSW-NB15 Dataset available on Kaggle ([UNSW-NB15 Dataset](https://www.kaggle.com/datasets/mohammadami/unsw-nb15)).
+  
+**Tasks**:
+- Set Up LakeFS: 
+    - Initialize a LakeFS repository to manage the network traffic dataset.
+- Data Ingestion: 
+    - Load and version the UNSW-NB15 dataset in LakeFS.
+- Data Preprocessing: 
+    - Conduct extensive preprocessing, including normalization and feature selection.
+- Anomaly Detection Model: 
+    - Implement an anomaly detection algorithm (e.g., Isolation Forest or Autoencoders).
+- Experiment Management: 
+    - Use LakeFS to create branches for different preprocessing methods and model architectures.
+- Model Evaluation: 
+    - Evaluate the model using precision, recall, and F1-score metrics, focusing on true positive rates for anomalies.
+
+**Bonus Ideas**: 
+- Implement a comparative analysis of various anomaly detection techniques and visualize the results across different branches to identify the best-performing model.
 

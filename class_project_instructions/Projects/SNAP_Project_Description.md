@@ -1,69 +1,64 @@
 **Description**
 
-SNAP (Stanford Network Analysis Project) is a comprehensive library for the analysis of large networks and graphs. It is designed to handle large-scale network data and provides efficient algorithms for various graph-related tasks. The library supports a variety of features, including:
+SNAP (Stanford Network Analysis Platform) is a C++ and Python-based library designed for the analysis of large networks and graphs. It provides efficient implementations of various algorithms for network analysis, making it suitable for tasks such as graph mining, community detection, and network visualization.
 
-- Efficient data structures for undirected and directed graphs.
-- Algorithms for community detection, clustering, and centrality measures.
-- Tools for network visualization and analysis of dynamic graphs.
-- Integration with Python for ease of use in data science applications.
+Technologies Used
+SNAP
 
----
-
-### Project 1: Social Network Analysis (Difficulty: 1)
-
-**Project Objective**  
-Analyze a social network dataset to identify influential nodes and community structures within the network.
-
-**Dataset Suggestions**  
-Find datasets on social networks from sources like Kaggle or SNAP's own datasets.
-
-**Tasks**  
-- **Load the Network Data**: Use SNAP to read and store the social network graph from the dataset.
-- **Visualize the Network**: Create visual representations of the network using SNAP's visualization tools to explore its structure.
-- **Identify Influential Nodes**: Utilize centrality measures (e.g., degree centrality, betweenness centrality) to identify key influencers in the network.
-- **Community Detection**: Apply clustering algorithms to detect communities within the network and visualize these communities.
-
-**Bonus Ideas (Optional)**  
-- Compare different centrality measures to see which best identifies influencers.
-- Extend the analysis to temporal networks by examining how communities evolve over time.
+- Supports large-scale network analysis with efficient memory usage.
+- Provides a variety of algorithms for graph analysis, including clustering, centrality measures, and community detection.
+- Enables visualization of networks using integrated tools for better understanding of graph structures.
 
 ---
 
-### Project 2: Citation Network Analysis (Difficulty: 2)
+**Project 1: Social Network Analysis of Movie Ratings**  
+**Difficulty**: 1 (Easy)  
+**Project Objective**: Analyze the social connections between users in a movie rating platform to identify influential users and communities within the network.
 
-**Project Objective**  
-Investigate a citation network to understand the influence of academic papers and identify trends in research topics over time.
+**Dataset Suggestions**:  
+- Use the MovieLens 100K dataset available on [Kaggle](https://www.kaggle.com/datasets/grouplens/movielens-100k).
 
-**Dataset Suggestions**  
-Utilize datasets from academic citation databases available on Kaggle or similar repositories.
-
-**Tasks**  
-- **Load the Citation Data**: Import the citation graph into SNAP and represent papers as nodes and citations as edges.
-- **Analyze Paper Influence**: Calculate PageRank scores to determine the most influential papers in the network.
-- **Temporal Analysis**: Group papers by publication year and analyze how citation patterns change over time.
-- **Topic Modeling**: Use text data from the papers to perform topic modeling and relate it to citation patterns using machine learning techniques.
-
-**Bonus Ideas (Optional)**  
-- Compare the influence of papers across different disciplines.
-- Implement a recommendation system to suggest papers based on citation relationships.
+**Tasks**:
+- **Data Preparation**: Load and preprocess the MovieLens dataset to create a user-item interaction graph.
+- **Graph Construction**: Construct a bipartite graph using SNAP to represent users and movies.
+- **Community Detection**: Implement community detection algorithms (e.g., Louvain method) to identify groups of users with similar tastes.
+- **Influential User Identification**: Calculate centrality measures (e.g., degree centrality) to find influential users in the network.
+- **Visualization**: Visualize the constructed graph and detected communities using SNAP’s visualization tools.
 
 ---
 
-### Project 3: Fraud Detection in Financial Transactions (Difficulty: 3)
+**Project 2: Analyzing Co-authorship Networks in Research**  
+**Difficulty**: 2 (Medium)  
+**Project Objective**: Explore the co-authorship network of academic papers to identify collaboration patterns and influential researchers in a specific field.
 
-**Project Objective**  
-Develop a model to detect fraudulent transactions in a financial transaction network using graph-based techniques.
+**Dataset Suggestions**:  
+- Use the arXiv dataset available on [Kaggle](https://www.kaggle.com/datasets/Cornell-University/arxiv) that includes author information for various research papers.
 
-**Dataset Suggestions**  
-Obtain datasets related to financial transactions from public sources or Kaggle that include transaction details and relationships.
+**Tasks**:
+- **Data Extraction**: Extract relevant co-authorship data (authors and their papers) from the arXiv dataset.
+- **Graph Construction**: Create an undirected graph where nodes represent authors and edges represent co-authorship relationships using SNAP.
+- **Network Analysis**: Apply clustering algorithms to identify research communities and analyze their sizes and characteristics.
+- **Influence Measurement**: Use PageRank or other centrality measures to rank authors based on their influence in the network.
+- **Visualization**: Visualize the co-authorship network and highlight communities and influential authors.
 
-**Tasks**  
-- **Construct the Transaction Graph**: Use SNAP to create a directed graph where transactions are edges and accounts are nodes.
-- **Anomaly Detection**: Implement algorithms to identify anomalous patterns in the transaction graph that could indicate fraud.
-- **Feature Engineering**: Extract features from the graph structure, such as transaction frequency and network connectivity, to enhance the fraud detection model.
-- **Model Training and Evaluation**: Train a machine learning model (e.g., Random Forest, SVM) using the engineered features and evaluate its performance using metrics like precision and recall.
+---
 
-**Bonus Ideas (Optional)**  
-- Explore the use of unsupervised learning techniques to identify new fraud patterns.
-- Integrate real-time transaction data to create a dynamic fraud detection system.
+**Project 3: Predicting Disease Spread through Contact Networks**  
+**Difficulty**: 3 (Hard)  
+**Project Objective**: Develop a model to predict the spread of an infectious disease through a contact network based on historical data.
+
+**Dataset Suggestions**:  
+- Use the Contact Networks dataset from the [Stanford Large Network Dataset Collection](http://snap.stanford.edu/data/).
+
+**Tasks**:
+- **Data Preprocessing**: Clean and preprocess the contact network dataset to create a usable graph representation.
+- **Epidemic Simulation**: Implement a SIR (Susceptible-Infectious-Recovered) model on the contact network to simulate disease spread.
+- **Parameter Tuning**: Optimize parameters (transmission rate, recovery rate) using historical outbreak data to improve model accuracy.
+- **Predictive Modeling**: Use machine learning techniques to predict future infection rates based on the network structure and simulation results.
+- **Visualization**: Create visualizations of the network and the simulated spread of the disease over time using SNAP’s visualization capabilities.
+
+**Bonus Ideas**:
+- For Project 1, extend the analysis to include sentiment analysis of user reviews to see how sentiment correlates with community detection.
+- For Project 2, compare the co-authorship network with citation networks to explore the relationship between collaborations and research impact.
+- For Project 3, integrate real-time data from public health APIs to update predictions based on current infection rates and contact patterns.
 

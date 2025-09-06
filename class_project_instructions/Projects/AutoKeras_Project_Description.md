@@ -1,63 +1,61 @@
 **Description**
 
-AutoKeras is an open-source software library that automates the process of applying deep learning to various tasks. It simplifies the model selection and hyperparameter tuning process, making it accessible for users with minimal deep learning expertise. Key features include:
+AutoKeras is an open-source software library designed to automate the process of applying machine learning to real-world problems. It simplifies neural architecture search and hyperparameter tuning, making it accessible for users with varying levels of expertise. 
 
-- **AutoML capabilities**: Automatically selects the best model architecture and hyperparameters.
-- **User-friendly API**: Simplifies the creation and training of deep learning models.
-- **Support for various tasks**: Includes image classification, text classification, and regression tasks.
-- **Transfer learning**: Utilizes pre-trained models to improve performance on specific tasks.
-
----
-
-**Project 1: Image Classification of Handwritten Digits**  
-**Difficulty**: 1
-
-**Project Objective**: Develop a model to classify handwritten digits from images with the aim of achieving high accuracy.
-
-**Dataset Suggestions**: Utilize the MNIST dataset available on Kaggle or other open datasets for handwritten digits.
-
-**Tasks**:
-- **Data Preprocessing**: Load the dataset and normalize the image data for better training performance.
-- **Model Creation**: Use AutoKeras to automatically find the best model for image classification tasks.
-- **Training the Model**: Train the model on the training dataset and validate on the validation set.
-- **Evaluation**: Assess the model's performance using accuracy and confusion matrix.
-- **Visualization**: Visualize some predictions to understand model performance.
-
-**Bonus Ideas (Optional)**: Experiment with different image augmentation techniques to see how they affect model performance.
+Features:
+- **Automated Model Selection**: Automatically finds the best model architecture for the given dataset.
+- **Hyperparameter Optimization**: Fine-tunes model parameters to enhance performance.
+- **User-Friendly Interface**: Simplified APIs for easy integration and experimentation.
+- **Support for Various Tasks**: Handles tasks like image classification, text classification, and regression seamlessly.
 
 ---
 
-**Project 2: Predicting House Prices**  
-**Difficulty**: 2
+### Project 1: Image Classification of Handwritten Digits
+**Difficulty**: 1 (Easy)  
+**Project Objective**: Build a model that classifies handwritten digits from the MNIST dataset, optimizing for accuracy.
 
-**Project Objective**: Build a regression model to predict housing prices based on various features, optimizing for the lowest mean absolute error.
-
-**Dataset Suggestions**: Access the Ames Housing dataset or similar datasets available on Kaggle.
+**Dataset Suggestions**: Use the MNIST dataset, available on Kaggle (Kaggle MNIST Digit Recognizer).
 
 **Tasks**:
-- **Data Cleaning**: Handle missing values and encode categorical features appropriately.
-- **Feature Engineering**: Create new features based on existing data to improve model performance.
-- **Model Training**: Utilize AutoKeras to automatically select the best regression model.
-- **Hyperparameter Tuning**: Leverage AutoKeras' capabilities to fine-tune the model's hyperparameters.
-- **Model Evaluation**: Evaluate the model using metrics such as RMSE and MAE.
+- **Data Loading**: Load the MNIST dataset using Keras's built-in functionality.
+- **Data Preprocessing**: Normalize the images and prepare labels for training.
+- **Model Training with AutoKeras**: Use AutoKeras to automatically search for the best model architecture.
+- **Model Evaluation**: Assess the model's accuracy on the test set and visualize the results.
+- **Prediction**: Implement a function to predict new handwritten digits from user inputs.
 
-**Bonus Ideas (Optional)**: Compare the performance of the AutoKeras model with traditional regression models like Linear Regression or Random Forest.
+**Bonus Ideas**: Experiment with data augmentation techniques to improve model performance.
 
 ---
 
-**Project 3: Sentiment Analysis on Movie Reviews**  
-**Difficulty**: 3
+### Project 2: Predicting House Prices
+**Difficulty**: 2 (Medium)  
+**Project Objective**: Develop a regression model that predicts house prices based on various features, optimizing for mean absolute error.
 
-**Project Objective**: Create a model to classify movie reviews as positive or negative, aiming to maximize the F1 score.
-
-**Dataset Suggestions**: Use the IMDB movie reviews dataset available on Kaggle or HuggingFace Datasets.
+**Dataset Suggestions**: Use the Ames Housing dataset available on Kaggle (Kaggle Ames Housing Dataset).
 
 **Tasks**:
-- **Data Preprocessing**: Clean and preprocess the text data, including tokenization and padding.
-- **Model Selection**: Employ AutoKeras to automatically determine the best architecture for text classification.
-- **Training and Validation**: Train the model on the training dataset and validate its performance on a separate validation set.
-- **Performance Metrics**: Analyze the model's performance using precision, recall, and F1 score.
-- **Error Analysis**: Conduct an error analysis to identify common misclassifications and improve the model.
+- **Data Loading**: Import the Ames Housing dataset and explore its features.
+- **Data Cleaning**: Handle missing values and encode categorical variables.
+- **Feature Engineering**: Create new features based on existing ones to improve model performance.
+- **Model Training with AutoKeras**: Utilize AutoKeras to find the optimal architecture for regression tasks.
+- **Model Evaluation**: Evaluate the model using mean absolute error and visualize feature importance.
 
-**Bonus Ideas (Optional)**: Explore transfer learning by integrating pre-trained embeddings (e.g., BERT) into your AutoKeras model to enhance its performance.
+**Bonus Ideas**: Compare the performance of AutoKeras with traditional machine learning models like Random Forest and Gradient Boosting.
+
+---
+
+### Project 3: Multi-Class Text Classification for News Articles
+**Difficulty**: 3 (Hard)  
+**Project Objective**: Construct a model to classify news articles into multiple categories, optimizing for F1-score.
+
+**Dataset Suggestions**: Use the 20 Newsgroups dataset available through the scikit-learn library or on Kaggle (Kaggle 20 Newsgroups).
+
+**Tasks**:
+- **Data Loading**: Load the 20 Newsgroups dataset and explore its structure.
+- **Text Preprocessing**: Clean and tokenize the text data, removing stop words and using TF-IDF for vectorization.
+- **Model Training with AutoKeras**: Implement AutoKeras to automatically search for the best model for text classification.
+- **Model Evaluation**: Use cross-validation to evaluate the F1-score and confusion matrix to analyze performance across categories.
+- **Error Analysis**: Conduct an error analysis to identify misclassified articles and suggest improvements.
+
+**Bonus Ideas**: Investigate transfer learning by fine-tuning pre-trained models like BERT or GPT-2 in conjunction with AutoKeras for improved performance.
 

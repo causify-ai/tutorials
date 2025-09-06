@@ -1,83 +1,67 @@
 **Description**
 
-In this project, students will utilize igraph, a library for creating and manipulating graphs and analyzing network structures. With its efficient algorithms and versatile visualization capabilities, igraph allows users to explore complex relationships within data. This tool is particularly useful for social network analysis, biological network studies, and any domain where relationships can be represented as graphs.
+In this project, students will utilize igraph, a powerful library for creating and analyzing graphs and networks, to explore various data science problems involving network structures. igraph offers features for graph creation, manipulation, visualization, and analysis, making it suitable for tasks such as community detection, centrality measures, and network dynamics.
 
 Technologies Used
 igraph
 
-- Provides efficient data structures for graph representation.
-- Supports a variety of algorithms for network analysis (e.g., shortest path, community detection).
-- Offers visualization features to create interactive graph representations.
+- Provides a comprehensive set of functions for graph creation and manipulation.
+- Supports various algorithms for network analysis, including community detection and shortest path calculations.
+- Allows for advanced visualization of networks with customizable layouts and styles.
 
 ---
 
-**Project 1: Social Network Analysis of Twitter Users**  
+### Project 1: Social Network Analysis of Movie Ratings
 **Difficulty**: 1 (Easy)  
-**Project Objective**: Analyze the relationships between Twitter users based on their interactions (retweets, mentions) to identify influential users and community structures.
+**Project Objective**: Analyze a social network of movie ratings to identify influential users and communities based on their interactions and ratings, optimizing for community detection.
 
-**Dataset Suggestions**: Use public Twitter datasets available on Kaggle that contain user interactions.
+**Dataset Suggestions**:  
+- Use the "MovieLens 100K" dataset available on Kaggle.  
+- Link: [MovieLens 100K](https://grouplens.org/datasets/movielens/100k/)
 
 **Tasks**:
-- Data Collection:
-  - Gather Twitter interaction data (retweets, mentions) using available public datasets.
-- Graph Construction:
-  - Build a directed graph where nodes represent users and edges represent interactions.
-- Community Detection:
-  - Apply community detection algorithms to identify clusters of users with similar interests.
-- Influence Analysis:
-  - Calculate centrality measures (e.g., degree, betweenness) to identify influential users.
-- Visualization:
-  - Create visual representations of the user interactions and communities using igraph's plotting functions.
-
-**Bonus Ideas (Optional)**:
-- Compare different community detection algorithms and their effectiveness.
-- Explore the temporal dynamics of user interactions over time.
+- **Data Preprocessing**: Load and clean the MovieLens dataset, focusing on user-item interactions.
+- **Graph Construction**: Create a bipartite graph where users and movies are represented as nodes, and ratings as edges.
+- **Community Detection**: Apply algorithms (e.g., Louvain method) to detect communities within the user network based on their ratings.
+- **Centrality Analysis**: Calculate centrality measures (e.g., degree, betweenness) to identify influential users in the network.
+- **Visualization**: Visualize the constructed graph and detected communities using igraph’s plotting capabilities.
 
 ---
 
-**Project 2: Analyzing Protein-Protein Interaction Networks**  
+### Project 2: Analyzing Twitter Interaction Networks
 **Difficulty**: 2 (Medium)  
-**Project Objective**: Investigate the structure and properties of protein-protein interaction networks to identify key proteins and their roles in biological processes.
+**Project Objective**: Investigate the interaction network among Twitter users discussing a specific topic, optimizing for the detection of influential users and topic communities.
 
-**Dataset Suggestions**: Utilize publicly available protein interaction datasets from databases like STRING or BioGRID.
+**Dataset Suggestions**:  
+- Use the "Twitter API" to collect tweets related to a specific hashtag (e.g., #ClimateChange) and build a network based on retweets and mentions.  
+- Ensure to follow Twitter's API guidelines for free access.
 
 **Tasks**:
-- Data Preprocessing:
-  - Clean and format the protein interaction data to create an edge list for the graph.
-- Graph Construction:
-  - Construct an undirected graph where nodes represent proteins and edges represent interactions.
-- Network Analysis:
-  - Analyze the graph using clustering coefficients and path lengths to understand network properties.
-- Key Protein Identification:
-  - Use centrality measures to identify essential proteins within the network.
-- Visualization:
-  - Visualize the protein interaction network, highlighting key proteins and interaction clusters.
-
-**Bonus Ideas (Optional)**:
-- Investigate the correlation between protein centrality and known disease associations.
-- Explore the effect of adding/removing interactions on network properties.
+- **Data Collection**: Use Tweepy to collect tweets and user interactions based on the chosen hashtag.
+- **Graph Construction**: Build a directed graph where nodes are users and edges represent retweets or mentions.
+- **Community Detection**: Use clustering algorithms (e.g., Girvan-Newman) to identify communities discussing the topic.
+- **Influencer Identification**: Analyze the network to find key influencers using centrality measures.
+- **Network Dynamics**: Explore how the network evolves over time by comparing snapshots of the graph at different intervals.
 
 ---
 
-**Project 3: Urban Mobility Analysis using Taxi Trip Data**  
+### Project 3: Anomaly Detection in Network Traffic Data
 **Difficulty**: 3 (Hard)  
-**Project Objective**: Analyze urban mobility patterns by constructing a network of taxi trips in a city to identify hotspots and flow patterns.
+**Project Objective**: Develop a system to detect anomalies in network traffic using graph-based methods, optimizing for the identification of unusual patterns indicating potential security threats.
 
-**Dataset Suggestions**: Access public taxi trip datasets available on platforms like Kaggle or city government open data portals.
+**Dataset Suggestions**:  
+- Utilize the "UNSW-NB15" dataset available on Kaggle, which contains network traffic data with labeled attacks.  
+- Link: [UNSW-NB15](https://www.kaggle.com/datasets/mohammadami/unsw-nb15-dataset)
 
 **Tasks**:
-- Data Collection:
-  - Retrieve and preprocess taxi trip data, including pickup and drop-off locations.
-- Graph Construction:
-  - Create a directed graph where nodes represent locations (pickup/drop-off points) and edges represent trips between them.
-- Flow Analysis:
-  - Analyze the flow of trips to identify popular routes and locations using flow metrics.
-- Hotspot Identification:
-  - Use clustering techniques to identify areas with high taxi trip density.
-- Visualization:
-  - Create a visual representation of the urban mobility network, highlighting hotspots and trip flows.
+- **Data Preprocessing**: Clean and preprocess the UNSW-NB15 dataset to extract relevant features for graph construction.
+- **Graph Construction**: Create a graph where nodes represent devices and edges represent communication sessions, weighted by traffic volume.
+- **Anomaly Detection**: Implement graph-based anomaly detection techniques (e.g., spectral clustering) to identify unusual traffic patterns.
+- **Evaluation**: Assess the performance of the anomaly detection using metrics such as precision, recall, and F1-score.
+- **Visualization**: Visualize the detected anomalies and the underlying network structure to interpret the results effectively.
 
-**Bonus Ideas (Optional)**:
-- Compare weekday vs. weekend mobility patterns.
-- Analyze the impact of events (concerts, sports) on taxi trip patterns.
+**Bonus Ideas (Optional)**: 
+- For Project 1, compare results with traditional clustering methods (e.g., K-means).
+- For Project 2, extend the analysis to include sentiment analysis of tweets to understand community sentiments.
+- For Project 3, explore integrating machine learning models to enhance anomaly detection accuracy.
 

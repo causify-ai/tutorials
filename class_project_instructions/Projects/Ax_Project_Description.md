@@ -1,71 +1,66 @@
 **Description**
 
-Ax is a powerful Python library designed for managing and optimizing experiments, particularly in the context of machine learning. It provides tools for Bayesian optimization, multi-armed bandit strategies, and other advanced techniques to efficiently explore hyperparameter spaces and optimize model performance.
+Ax is a powerful platform designed for optimizing experiments and machine learning models through advanced Bayesian optimization techniques. It provides a flexible framework for defining and managing optimization problems, enabling users to efficiently explore hyperparameter spaces and make data-driven decisions. 
 
-Technologies Used
-Ax
-
-- Facilitates efficient experimentation and optimization of machine learning models.
-- Supports various optimization strategies, including Bayesian optimization.
-- Integrates seamlessly with PyTorch and other ML frameworks for hyperparameter tuning.
+Features:
+- Supports various optimization tasks, including hyperparameter tuning, experimental design, and multi-objective optimization.
+- Integrates seamlessly with popular machine learning libraries like PyTorch and TensorFlow.
+- Provides a user-friendly interface for defining search spaces and constraints.
+- Facilitates tracking and visualization of optimization results.
 
 ---
 
 ### Project 1: Hyperparameter Optimization for a Classification Model
-**Difficulty**: 1 (Easy)
+**Difficulty**: 1
 
-**Project Objective**: The goal is to optimize the hyperparameters of a classification model (e.g., Random Forest or SVM) to achieve the highest accuracy on a public dataset.
+**Project Objective**: Optimize hyperparameters for a Random Forest classifier to improve accuracy on the Adult Income dataset, predicting whether an individual earns more than $50,000 a year.
 
-**Dataset Suggestions**: Search for classification datasets on Kaggle, focusing on those with clear labels and a manageable number of features.
+**Dataset Suggestions**: 
+- Adult Income dataset from UCI Machine Learning Repository ([link](https://archive.ics.uci.edu/ml/datasets/adult))
 
 **Tasks**:
-- **Data Ingestion**: Load the dataset using Pandas and perform initial exploratory data analysis (EDA) to understand feature distributions.
-- **Preprocessing**: Clean and preprocess the data, handling missing values and encoding categorical features as necessary.
-- **Model Selection**: Choose a classification model and define a baseline performance metric.
-- **Hyperparameter Tuning with Ax**: Set up Ax to optimize hyperparameters (e.g., number of trees, max depth for Random Forest).
-- **Evaluation**: Evaluate the model performance using cross-validation and visualize the results to identify the best hyperparameter settings.
-
-**Bonus Ideas (Optional)**:
-- Compare the optimized model with a baseline model to assess performance improvements.
-- Experiment with different classification algorithms and their hyperparameter tuning.
+- **Data Preprocessing**: Load the dataset, handle missing values, and encode categorical features using one-hot encoding.
+- **Define Search Space**: Use Ax to define hyperparameter bounds for the Random Forest model, including the number of trees and maximum depth.
+- **Optimization Process**: Implement Ax to perform Bayesian optimization, iterating through hyperparameter combinations to find the best set.
+- **Model Training**: Train the Random Forest model with the optimized hyperparameters and evaluate its accuracy on a test set.
+- **Results Visualization**: Visualize the optimization process and final model performance using Matplotlib.
 
 ---
 
-### Project 2: Optimizing Neural Network Architecture for Image Classification
-**Difficulty**: 2 (Medium)
+### Project 2: Multi-Objective Optimization for a Regression Model
+**Difficulty**: 2
 
-**Project Objective**: The aim is to optimize the architecture of a convolutional neural network (CNN) for image classification on a public image dataset, maximizing accuracy while minimizing overfitting.
+**Project Objective**: Optimize hyperparameters for a Gradient Boosting Regressor to minimize both the Mean Absolute Error (MAE) and the model complexity (number of estimators).
 
-**Dataset Suggestions**: Utilize image datasets available on Kaggle or HuggingFace, ensuring they are suitable for classification tasks.
+**Dataset Suggestions**: 
+- California Housing Prices dataset from Kaggle ([link](https://www.kaggle.com/c/california-housing-prices/data))
 
 **Tasks**:
-- **Data Loading and Augmentation**: Use libraries like torchvision to load and augment the image dataset.
-- **Baseline Model Creation**: Build a simple CNN architecture and evaluate its performance on the validation set.
-- **Define Search Space**: Specify a search space for hyperparameters (e.g., number of layers, filter sizes, dropout rates) using Ax.
-- **Run Optimization**: Implement Ax to optimize the architecture and hyperparameters, tracking model performance.
-- **Final Evaluation**: After identifying the best architecture, evaluate it on a test set and visualize the results.
-
-**Bonus Ideas (Optional)**:
-- Implement early stopping during training to prevent overfitting.
-- Compare optimized results with transfer learning approaches using pre-trained models.
+- **Data Preparation**: Load the dataset, normalize features, and handle missing values.
+- **Define Multi-Objective Space**: Use Ax to set up a multi-objective optimization problem targeting both MAE and number of estimators.
+- **Run Optimization**: Utilize Ax’s optimization features to explore hyperparameters like learning rate and maximum depth while evaluating both objectives.
+- **Model Evaluation**: Assess the performance of the optimized model on a validation set, ensuring a balance between accuracy and complexity.
+- **Visualize Trade-offs**: Create a Pareto front plot to visualize the trade-offs between the two objectives.
 
 ---
 
-### Project 3: Multi-Objective Optimization for Recommender Systems
-**Difficulty**: 3 (Hard)
+### Project 3: Adaptive Experimentation in Marketing Campaigns
+**Difficulty**: 3
 
-**Project Objective**: The project aims to develop a recommender system that optimizes for multiple objectives, such as accuracy and diversity of recommendations, using Ax for hyperparameter tuning and optimization.
+**Project Objective**: Design an adaptive marketing campaign that optimizes the allocation of budget across different channels to maximize customer engagement while minimizing costs.
 
-**Dataset Suggestions**: Look for collaborative filtering datasets on Kaggle or public datasets available from government sources.
+**Dataset Suggestions**: 
+- Marketing Campaign dataset from Kaggle ([link](https://www.kaggle.com/datasets/rodsaldanha/marketing-campaign))
 
 **Tasks**:
-- **Data Preparation**: Load user-item interaction data and preprocess it to create a user-item matrix.
-- **Model Development**: Implement a baseline collaborative filtering model (e.g., matrix factorization).
-- **Define Multi-Objective Metrics**: Specify metrics for accuracy (e.g., RMSE) and diversity (e.g., novelty).
-- **Optimization with Ax**: Use Ax to optimize hyperparameters of the recommendation model while considering both objectives simultaneously.
-- **Analysis of Results**: Analyze the trade-off between accuracy and diversity, visualizing how changes in hyperparameters affect both metrics.
+- **Data Exploration**: Load and explore the dataset to understand customer demographics and engagement metrics.
+- **Define Optimization Problem**: Use Ax to define an optimization problem where the budget allocation across channels (e.g., email, social media, direct mail) is the variable to optimize.
+- **Simulate Campaign Outcomes**: Create a simulation model to predict customer engagement based on budget allocation and historical data.
+- **Run Adaptive Optimization**: Implement Ax to perform adaptive experimentation, adjusting budget allocations in real-time based on engagement feedback.
+- **Analyze Results**: Evaluate the effectiveness of the campaign through metrics like Return on Investment (ROI) and visualize the optimization results.
 
-**Bonus Ideas (Optional)**:
-- Extend the recommender system to include content-based features for hybrid recommendations.
-- Conduct a user study to evaluate the perceived quality of recommendations based on the optimized model.
+**Bonus Ideas**: 
+- For Project 1: Compare the optimized model against a baseline model using default hyperparameters.
+- For Project 2: Experiment with different regression algorithms (e.g., Support Vector Regression) and compare their optimization results.
+- For Project 3: Introduce additional constraints, such as maximum budget limits for specific channels, and observe the impact on engagement.
 

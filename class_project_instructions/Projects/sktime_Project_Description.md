@@ -1,96 +1,61 @@
 **Description**
 
-sktime is a Python library designed for time series analysis, enabling users to work seamlessly with time series data. It provides a unified framework for various tasks, including forecasting, classification, regression, and clustering of time series. The library is built on top of scikit-learn, making it easy to integrate with existing machine learning workflows.
+In this project, students will utilize sktime, a Python library specifically designed for time series analysis, to build models for forecasting and analyzing temporal data. sktime provides a unified interface for various time series tasks, including classification, regression, and clustering, making it versatile for different applications. 
 
 Technologies Used
 sktime
 
-- Provides a consistent interface for time series data manipulation and modeling.
-- Supports a variety of time series tasks: forecasting, classification, regression, and clustering.
-- Enables feature extraction and transformation specifically designed for time series data.
-- Includes tools for model evaluation and selection tailored for time series contexts.
+- Supports a wide range of time series algorithms for classification, regression, and clustering.
+- Provides tools for preprocessing, feature extraction, and model evaluation tailored for time series data.
+- Facilitates the integration of machine learning libraries like scikit-learn for enhanced modeling capabilities.
 
 ---
 
-**Project 1: Time Series Forecasting for Retail Sales**  
+### Project 1: Sales Forecasting for a Retail Store
 **Difficulty**: 1 (Easy)  
-**Project Objective**: Build a forecasting model to predict future retail sales based on historical sales data, optimizing for accuracy in sales predictions.
+**Project Objective**: The goal is to forecast monthly sales for a retail store using historical sales data to optimize inventory management.
 
-**Dataset Suggestions**: Explore Kaggle for retail sales datasets, or check open government portals for sales data.
+**Dataset Suggestions**: Use the "Retail Sales Forecasting" dataset available on Kaggle. This dataset contains historical sales data for various products in a retail environment.
 
 **Tasks**:
-- Data Collection:
-    - Gather historical retail sales data and preprocess it for analysis.
-  
-- Time Series Decomposition:
-    - Decompose the time series data into seasonal, trend, and residual components to understand underlying patterns.
-
-- Model Selection:
-    - Utilize sktime's forecasting models (e.g., ARIMA, Exponential Smoothing) to predict future sales.
-
-- Model Evaluation:
-    - Compare predictions against actual sales data using metrics like Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE).
-
-- Visualization:
-    - Visualize the forecasts alongside historical sales data using Matplotlib to illustrate trends.
-
-**Bonus Ideas (Optional)**:
-- Implement additional forecasting models like Prophet or Facebook's NeuralProphet for comparison.
-- Analyze the impact of promotional events on sales by incorporating additional features.
+- **Data Preprocessing**: Load the dataset and clean any missing or erroneous values.
+- **Time Series Decomposition**: Decompose the time series into trend, seasonality, and residuals using sktime functions.
+- **Model Selection**: Choose and implement a suitable forecasting model (e.g., ARIMA, Exponential Smoothing).
+- **Model Evaluation**: Evaluate the model's performance using metrics like Mean Absolute Error (MAE) and visualize the forecast against actual sales.
+- **Visualization**: Create plots to visualize sales trends, forecasts, and evaluation metrics using Matplotlib.
 
 ---
 
-**Project 2: Classifying Time Series Data for Human Activity Recognition**  
+### Project 2: Anomaly Detection in Server Load Data
 **Difficulty**: 2 (Medium)  
-**Project Objective**: Develop a classification model to identify different human activities (e.g., walking, sitting, running) based on accelerometer data, optimizing for classification accuracy.
+**Project Objective**: The objective is to detect anomalies in server load data to identify potential issues in system performance.
 
-**Dataset Suggestions**: Look for publicly available datasets on platforms like UCI Machine Learning Repository or Kaggle that contain accelerometer data for activity recognition.
+**Dataset Suggestions**: Use the "Yahoo Webscope S5" dataset available on Kaggle, which contains time series data of server load with labeled anomalies.
 
 **Tasks**:
-- Data Acquisition:
-    - Download and preprocess the human activity dataset, ensuring proper formatting for time series analysis.
-
-- Feature Extraction:
-    - Use sktime's feature extraction capabilities to generate relevant features from the raw time series data.
-
-- Model Training:
-    - Train classification models (e.g., Random Forest, SVM) using sktime's pipeline functionalities to classify activities.
-
-- Model Evaluation:
-    - Evaluate model performance using cross-validation and metrics such as accuracy, precision, and recall.
-
-- Visualization:
-    - Create confusion matrices and classification reports to visualize model performance across different activities.
-
-**Bonus Ideas (Optional)**:
-- Implement ensemble methods to improve classification accuracy.
-- Introduce real-time classification using live accelerometer data from a smartphone app.
+- **Data Ingestion**: Load the server load dataset and preprocess it to handle missing values and outliers.
+- **Feature Engineering**: Extract relevant features from the time series data, such as rolling means and standard deviations.
+- **Anomaly Detection**: Implement anomaly detection algorithms (e.g., Isolation Forest, Seasonal Decomposition) using sktime.
+- **Evaluation**: Assess the effectiveness of the anomaly detection by comparing detected anomalies with the ground truth labels.
+- **Visualization**: Plot the original server load data with detected anomalies highlighted for better interpretation.
 
 ---
 
-**Project 3: Anomaly Detection in Financial Time Series**  
+### Project 3: Multi-step Time Series Forecasting of Air Quality
 **Difficulty**: 3 (Hard)  
-**Project Objective**: Identify anomalies in financial time series data (e.g., stock prices), optimizing for detection of outliers that may indicate fraud or market manipulation.
+**Project Objective**: The goal is to predict future air quality index (AQI) values based on historical data to inform public health decisions.
 
-**Dataset Suggestions**: Utilize financial datasets available on Yahoo Finance or Kaggle that provide historical stock price data.
+**Dataset Suggestions**: Use the "Air Quality Data Set" from the UCI Machine Learning Repository, which contains hourly measurements of various pollutants.
 
 **Tasks**:
-- Data Collection:
-    - Collect historical stock price data and preprocess it for anomaly detection analysis.
+- **Data Preparation**: Load the AQI dataset and preprocess it by handling missing values and normalizing the data.
+- **Feature Extraction**: Use sktime's tools to create lag features and rolling statistics to enhance the predictive power of the model.
+- **Model Development**: Implement a multi-step forecasting approach using advanced models such as Long Short-Term Memory (LSTM) networks or Prophet.
+- **Hyperparameter Tuning**: Optimize model parameters to improve forecast accuracy using cross-validation techniques.
+- **Performance Evaluation**: Assess the model's performance using metrics like RMSE and visualize the predicted vs actual AQI values over time.
 
-- Time Series Analysis:
-    - Apply time series decomposition to identify trends and seasonality in the stock prices.
-
-- Anomaly Detection:
-    - Implement anomaly detection algorithms (e.g., Isolation Forest, One-Class SVM) using sktime's capabilities to identify outliers.
-
-- Model Evaluation:
-    - Validate the results against known anomalies or through expert evaluation to assess the effectiveness of the detection methods.
-
-- Visualization:
-    - Visualize the detected anomalies on the time series plot to illustrate their context within the data.
-
-**Bonus Ideas (Optional)**:
-- Explore the use of deep learning models for more advanced anomaly detection.
-- Compare the performance of different anomaly detection techniques using a benchmark dataset.
+**Bonus Ideas (Optional)**: 
+- Explore the impact of weather data on AQI predictions by integrating additional datasets.
+- Compare the performance of different forecasting models to identify the best approach for multi-step forecasting.
+- Implement an interactive dashboard using Plotly Dash to visualize real-time AQI forecasts and trends.
 

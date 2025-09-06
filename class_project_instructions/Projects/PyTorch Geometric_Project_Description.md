@@ -1,60 +1,94 @@
 **Description**
 
-PyTorch Geometric is a library built on top of PyTorch that facilitates the implementation of graph neural networks (GNNs). It provides a set of tools for working with graphical data, enabling efficient operations on graphs and the construction of GNN models. Key features include:
+In this project, students will utilize PyTorch Geometric, a library built on PyTorch for deep learning on irregularly structured data such as graphs. It provides a range of functionalities, including graph neural networks (GNNs), message passing, and various pooling layers, which allow for the efficient processing and analysis of graph data.
 
-- **Data Handling**: Efficiently processes graph-structured data with built-in datasets and data loaders.
-- **Layer Implementation**: Offers various GNN layers (e.g., GCN, GAT) for building complex architectures.
-- **Message Passing**: Implements message passing techniques that allow nodes to exchange information.
-- **Support for Sparse Data**: Optimized for handling sparse graphs, making it suitable for large-scale applications.
+Technologies Used
+PyTorch Geometric
+
+- Facilitates the implementation of graph neural networks (GNNs) with intuitive APIs.
+- Supports various types of graph data and operations, including convolutional layers for graphs.
+- Provides a rich set of datasets and benchmark tasks for experimentation.
 
 ---
 
 ### Project 1: Social Network Analysis (Difficulty: 1)
 
-**Project Objective**: Analyze a social network dataset to predict user behaviors based on their connections and interactions, optimizing for accuracy in user classification.
+**Project Objective:**  
+Analyze a social network graph to identify influential nodes (users) using centrality measures and classification techniques.
 
-**Dataset Suggestions**: Use datasets from Kaggle that contain user interaction data from social networks (e.g., user connections, messages, interactions).
+**Dataset Suggestions:**  
+- Use the "Facebook Social Network" dataset available on Kaggle. 
 
-**Tasks**:
-- **Data Preprocessing**: Load the social network dataset and convert it into a graph format compatible with PyTorch Geometric.
-- **Feature Engineering**: Extract features from user interactions, such as the number of connections and interaction frequency.
-- **Model Development**: Implement a Graph Convolutional Network (GCN) to classify users based on their features and connections.
-- **Model Training**: Train the GCN model using a portion of the dataset, ensuring to split data into training and test sets.
-- **Evaluation**: Assess the model's performance using classification metrics (accuracy, precision, recall).
+**Tasks:**
+- **Data Ingestion:**
+  - Load the Facebook social network dataset and construct a graph using PyTorch Geometric.
+  
+- **Graph Preprocessing:**
+  - Normalize the graph and compute node features such as degree centrality and betweenness centrality.
+  
+- **Node Classification:**
+  - Implement a simple Graph Neural Network (GNN) to classify nodes based on their features.
+  
+- **Evaluation:**
+  - Evaluate the model's performance using accuracy and F1-score metrics on a hold-out test set.
 
-**Bonus Ideas**: Explore hyperparameter tuning for the GCN model or compare different GNN architectures (e.g., GAT vs. GCN).
-
----
-
-### Project 2: Fraud Detection in Financial Transactions (Difficulty: 2)
-
-**Project Objective**: Develop a fraud detection system that identifies suspicious transactions in a financial dataset, optimizing for recall to minimize false negatives.
-
-**Dataset Suggestions**: Utilize public datasets available on Kaggle that contain transaction records, including features like transaction amounts, timestamps, and user identifiers.
-
-**Tasks**:
-- **Graph Construction**: Create a transaction graph where nodes represent users and edges represent transactions between them.
-- **Feature Extraction**: Generate features based on transaction patterns, such as transaction frequency and average transaction amount per user.
-- **Model Training**: Implement a GNN model to classify transactions as fraudulent or legitimate, using a supervised learning approach.
-- **Training Optimization**: Experiment with different loss functions and regularization techniques to improve model performance.
-- **Performance Evaluation**: Use ROC-AUC and confusion matrix to evaluate the model, focusing on minimizing false negatives.
-
-**Bonus Ideas**: Integrate an anomaly detection technique to pre-filter transactions before applying the GNN model or explore ensemble methods with other classifiers.
+- **Visualization:**
+  - Visualize the graph and highlight influential nodes using Matplotlib.
 
 ---
 
-### Project 3: Protein-Protein Interaction Prediction (Difficulty: 3)
+### Project 2: Molecular Property Prediction (Difficulty: 2)
 
-**Project Objective**: Predict potential interactions between proteins using their structural and functional properties, optimizing for precision in the predictions.
+**Project Objective:**  
+Develop a model to predict molecular properties (e.g., solubility) based on their chemical structure represented as graphs.
 
-**Dataset Suggestions**: Access protein interaction datasets from public repositories such as the STRING database or similar platforms that provide interaction networks.
+**Dataset Suggestions:**  
+- Use the "Molecular Graphs" dataset from the MoleculeNet benchmark available on GitHub.
 
-**Tasks**:
-- **Graph Representation**: Model proteins as nodes and interactions as edges, incorporating features like sequence similarity and structural information.
-- **Data Augmentation**: Implement techniques to augment the graph data, enhancing the variety of protein interactions.
-- **Model Architecture**: Design a complex GNN architecture that combines multiple layers (e.g., GCN, GAT) for improved feature learning.
-- **Training and Fine-Tuning**: Train the model on a large dataset and fine-tune hyperparameters using cross-validation techniques.
-- **Evaluation and Analysis**: Analyze the model's predictions against known interactions using precision, recall, and F1-score.
+**Tasks:**
+- **Data Preparation:**
+  - Load molecular graphs and their properties using PyTorch Geometric’s dataset utilities.
+  
+- **Feature Engineering:**
+  - Extract relevant features from molecular graphs, including atom types and bond types.
+  
+- **Model Development:**
+  - Build a GNN model that predicts molecular properties based on the graph representation.
+  
+- **Hyperparameter Tuning:**
+  - Optimize model hyperparameters using cross-validation techniques.
+  
+- **Model Evaluation:**
+  - Assess the model's performance using regression metrics like Mean Absolute Error (MAE) and R² score.
 
-**Bonus Ideas**: Investigate the impact of different feature sets on prediction accuracy or explore transfer learning techniques using pre-trained models for protein embeddings.
+---
+
+### Project 3: Traffic Flow Prediction (Difficulty: 3)
+
+**Project Objective:**  
+Create a predictive model for traffic flow in a city using a spatio-temporal graph representation of traffic data.
+
+**Dataset Suggestions:**  
+- Use the "PEMS Traffic Flow" dataset available on Kaggle, which contains traffic flow data at various sensors over time.
+
+**Tasks:**
+- **Graph Construction:**
+  - Construct a dynamic graph where nodes represent traffic sensors and edges represent road connections.
+  
+- **Temporal Feature Integration:**
+  - Incorporate time-series data into the graph structure to capture temporal dependencies.
+  
+- **GNN Architecture:**
+  - Implement a Spatio-Temporal Graph Convolutional Network (ST-GCN) to model traffic flow prediction.
+  
+- **Training and Validation:**
+  - Train the model on historical traffic data and validate its performance on a separate test set.
+  
+- **Performance Metrics:**
+  - Evaluate the model using metrics like Root Mean Square Error (RMSE) and compare against baseline models.
+
+**Bonus Ideas (Optional):**  
+- Implement a real-time traffic prediction system using live traffic data from OpenTraffic API.
+- Compare the performance of different GNN architectures (e.g., GAT, GraphSAGE) on the same dataset.
+- Explore the impact of additional features like weather conditions on traffic flow predictions.
 

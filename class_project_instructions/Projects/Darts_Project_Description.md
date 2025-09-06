@@ -1,77 +1,68 @@
 **Description**
 
-Darts is a Python library designed for easy and efficient forecasting in time-series data. It provides a unified interface for various forecasting models, enabling users to build, evaluate, and compare different forecasting strategies seamlessly. Darts supports both traditional statistical models and modern machine learning approaches, making it versatile for various forecasting tasks.
+Darts is a Python library designed for easy and efficient time series forecasting. It provides a unified interface for various forecasting models and allows users to perform tasks like model evaluation, backtesting, and ensemble forecasting seamlessly. With Darts, students can leverage both classical and machine learning models to make predictions on time series data.
 
 Technologies Used
 Darts
 
-- Offers an intuitive API for time-series forecasting tasks.
-- Supports a wide range of models including ARIMA, Prophet, LSTM, and more.
-- Includes built-in evaluation metrics for forecasting accuracy.
+- Supports multiple forecasting models, including ARIMA, Exponential Smoothing, and Neural Network-based models.
+- Offers a simple API for training and evaluating models, making it easy to experiment with different approaches.
+- Facilitates backtesting and model comparison to identify the best-performing forecasting strategy.
 
 ---
 
-### Project 1: Sales Forecasting for Retail Products (Difficulty: 1)
+### Project 1: Predicting Daily Energy Consumption
+**Difficulty**: 1 (Easy)  
+**Project Objective**: The goal is to predict daily energy consumption for a city based on historical data, optimizing for accuracy in forecasting the next week’s consumption.
 
-**Project Objective**  
-The goal is to build a forecasting model that predicts future sales for a retail product based on historical sales data, aiming to optimize inventory management.
+**Dataset Suggestions**: Use the "Household Electric Power Consumption" dataset available on Kaggle ([link](https://www.kaggle.com/datasets/uciml/electric-power-consumption-data-set)).
 
-**Dataset Suggestions**  
-Look for retail sales datasets on Kaggle or government open data portals that provide historical sales figures.
+**Tasks**:
+- **Data Ingestion**: Load the dataset using Pandas and preprocess it to handle missing values and convert date columns.
+- **Time Series Decomposition**: Decompose the energy consumption time series to analyze trends and seasonality using Darts.
+- **Model Selection**: Train multiple forecasting models (e.g., ARIMA, Exponential Smoothing) using Darts and evaluate their performance.
+- **Forecasting**: Generate forecasts for the next week and visualize the predictions against actual consumption data.
+- **Evaluation**: Calculate accuracy metrics (e.g., MAE, RMSE) to assess model performance.
 
-**Tasks**  
-- **Data Ingestion**: Load historical sales data into a Pandas DataFrame.
-- **Data Preprocessing**: Handle missing values and perform any necessary data cleaning.
-- **Model Selection**: Choose a suitable forecasting model from Darts (e.g., ARIMA or Exponential Smoothing).
-- **Model Training**: Train the model on the historical data.
-- **Forecasting**: Generate sales forecasts for the next 3-6 months.
-- **Evaluation**: Use metrics like MAE or MAPE to evaluate the model's performance.
-
-**Bonus Ideas (Optional)**  
-- Compare the accuracy of multiple models (e.g., ARIMA vs. LSTM).
-- Implement a simple user interface that allows users to input new data and receive updated forecasts.
+**Bonus Ideas**: 
+- Compare the performance of different models using ensemble techniques available in Darts.
+- Implement a feature engineering step to include external factors like weather data.
 
 ---
 
-### Project 2: Electricity Demand Forecasting (Difficulty: 2)
+### Project 2: Stock Price Forecasting
+**Difficulty**: 2 (Medium)  
+**Project Objective**: The goal is to forecast stock prices for a selected company over the next month, optimizing for the lowest prediction error.
 
-**Project Objective**  
-The aim is to predict future electricity demand using historical consumption data, optimizing energy distribution strategies for utility companies.
+**Dataset Suggestions**: Use the "Historical Stock Prices" dataset from Yahoo Finance via the `yfinance` library or Kaggle’s "Stock Market Data" dataset ([link](https://www.kaggle.com/datasets/sbhatti/stock-market-data)).
 
-**Dataset Suggestions**  
-Find electricity consumption datasets on Kaggle or open government energy data portals.
+**Tasks**:
+- **Data Acquisition**: Fetch historical stock prices using the `yfinance` library and preprocess the data for analysis.
+- **Feature Engineering**: Create additional features such as moving averages and volatility indicators to improve forecasting accuracy.
+- **Model Training**: Utilize Darts to train multiple models, including both classical and machine learning approaches (e.g., ARIMA, RNN).
+- **Backtesting**: Implement backtesting to evaluate the robustness of the models over different time periods.
+- **Forecasting and Visualization**: Generate predictions for the upcoming month and visualize the results alongside historical stock prices.
 
-**Tasks**  
-- **Data Collection**: Gather historical electricity demand data.
-- **Feature Engineering**: Create additional features such as time-based variables (day of the week, holidays).
-- **Model Comparison**: Implement and compare multiple forecasting models using Darts (e.g., Prophet, LSTM).
-- **Hyperparameter Tuning**: Optimize model parameters to improve forecasting accuracy.
-- **Visualization**: Plot the actual vs. predicted demand to visualize model performance.
-- **Evaluation**: Assess models using RMSE and R-squared metrics.
-
-**Bonus Ideas (Optional)**  
-- Incorporate weather data to improve forecasting accuracy.
-- Explore anomaly detection for identifying unusual spikes in electricity demand.
+**Bonus Ideas**: 
+- Experiment with hyperparameter tuning for the models to optimize performance.
+- Compare the results with a basic benchmark model like a naive forecast.
 
 ---
 
-### Project 3: Stock Price Forecasting Using News Sentiment (Difficulty: 3)
+### Project 3: Multi-Product Demand Forecasting
+**Difficulty**: 3 (Hard)  
+**Project Objective**: The goal is to forecast future demand for multiple products in a retail setting, optimizing for overall accuracy across all products.
 
-**Project Objective**  
-Develop a forecasting model to predict stock prices based on historical price data and sentiment analysis from financial news articles, optimizing investment strategies.
+**Dataset Suggestions**: Use the "Retail Sales Forecasting" dataset available on Kaggle ([link](https://www.kaggle.com/datasets/c/retail-sales-forecasting)).
 
-**Dataset Suggestions**  
-Utilize stock market datasets from Yahoo Finance API or Kaggle combined with sentiment data from financial news articles available on news APIs.
+**Tasks**:
+- **Data Preprocessing**: Load and preprocess the dataset, handling missing values and ensuring proper time series formatting for multiple products.
+- **Exploratory Data Analysis**: Conduct EDA to understand demand patterns for different products and identify seasonality.
+- **Model Development**: Use Darts to implement a multi-output forecasting model that can predict demand for all products simultaneously.
+- **Ensemble Techniques**: Experiment with ensemble forecasting methods provided by Darts to improve prediction accuracy.
+- **Evaluation and Reporting**: Evaluate the model performance using metrics like MAPE, and create a comprehensive report on the forecasting results.
 
-**Tasks**  
-- **Data Gathering**: Collect historical stock price data and relevant news articles.
-- **Sentiment Analysis**: Use a pre-trained NLP model to analyze the sentiment of news articles related to the stock.
-- **Data Integration**: Merge sentiment scores with historical stock price data to create a comprehensive dataset.
-- **Model Development**: Implement advanced forecasting models using Darts (e.g., LSTM or NBEATS).
-- **Training and Evaluation**: Train the model and evaluate using backtesting techniques.
-- **Performance Metrics**: Use metrics like Sharpe Ratio and annualized returns to assess investment strategy effectiveness.
-
-**Bonus Ideas (Optional)**  
-- Experiment with different sentiment analysis models to see their impact on forecasting accuracy.
-- Create a dashboard to visualize stock price predictions alongside sentiment trends.
+**Bonus Ideas**: 
+- Investigate the impact of promotional events on demand and incorporate that into the forecasting model.
+- Explore advanced techniques like transfer learning or deep learning for better performance.
 

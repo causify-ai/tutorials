@@ -1,82 +1,92 @@
 **Description**
 
-fastText is an open-source library developed by Facebook's AI Research (FAIR) lab, designed for efficient text classification and representation learning. It is particularly useful for tasks involving large datasets and can handle out-of-vocabulary words effectively. 
+fastText is an open-source library developed by Facebook's AI Research (FAIR) lab for efficient text classification and representation learning. It is particularly known for its speed and scalability in handling large datasets while providing high-quality word embeddings and text classification capabilities. 
 
 Features:
-- Fast text classification and word representation.
-- Supports supervised and unsupervised learning.
-- Capable of handling multiple languages with pre-trained word vectors.
-- Provides an easy-to-use interface for training and evaluating models.
+- Fast text classification and representation learning.
+- Supports supervised and unsupervised learning tasks.
+- Generates word embeddings using subword information for improved accuracy.
+- Capable of handling large-scale datasets efficiently.
 
 ---
 
 ### Project 1: Text Classification of News Articles
-**Difficulty**: 1 (Easy)  
-**Project Objective**: Build a text classification model to categorize news articles into predefined topics (e.g., politics, sports, technology) using fastText. The goal is to optimize the accuracy of the model in predicting the correct category based on article content.
+**Difficulty**: 1 (Easy)
 
-**Dataset Suggestions**: Use Kaggle to find a dataset of labeled news articles across various categories.
+**Project Objective**: The goal is to build a text classification model that categorizes news articles into predefined categories (e.g., Politics, Sports, Technology). The project will optimize the model for accuracy and speed of classification.
+
+**Dataset Suggestions**: 
+- Use the "AG News" dataset available on Kaggle, which contains over 120,000 news articles categorized into four classes: World, Sports, Business, and Science/Technology.
 
 **Tasks**:
-- Data Ingestion:
-  - Load the dataset into a Pandas DataFrame and explore its structure.
 - Data Preprocessing:
-  - Clean the text data by removing unnecessary characters and stop words.
+    - Load the AG News dataset and perform necessary cleaning (removing HTML tags, punctuation, etc.).
+    
+- Word Embedding Generation:
+    - Use fastText to create word embeddings for the news articles.
+    
 - Model Training:
-  - Utilize fastText to train a supervised text classification model on the preprocessed data.
+    - Implement a supervised learning model using fastText for text classification.
+    
 - Model Evaluation:
-  - Evaluate the model's performance using metrics such as accuracy and F1-score.
-- Predictions:
-  - Implement the model to predict categories for a set of unseen articles.
+    - Evaluate the model using accuracy, precision, recall, and F1-score metrics.
 
-**Bonus Ideas (Optional)**:
-- Experiment with hyperparameter tuning to improve model performance.
-- Compare the fastText model with traditional machine learning models (e.g., SVM, Random Forest).
+- Visualization:
+    - Present classification results using confusion matrices and classification reports.
 
 ---
 
-### Project 2: Sentiment Analysis on Product Reviews
-**Difficulty**: 2 (Medium)  
-**Project Objective**: Perform sentiment analysis on product reviews to classify them as positive, negative, or neutral using fastText. The goal is to optimize the model to achieve the highest possible accuracy in sentiment prediction.
+### Project 2: Sentiment Analysis on Movie Reviews
+**Difficulty**: 2 (Medium)
 
-**Dataset Suggestions**: Explore Kaggle for datasets containing labeled product reviews, such as those from Amazon or Yelp.
+**Project Objective**: The objective is to create a sentiment analysis model that predicts the sentiment of movie reviews (positive, negative, neutral) based on text data. The project aims to optimize for prediction accuracy and interpretability of results.
+
+**Dataset Suggestions**: 
+- Use the "IMDb Movie Reviews" dataset available on Kaggle, which contains 50,000 movie reviews labeled as positive or negative.
 
 **Tasks**:
-- Data Collection:
-  - Download and load the product review dataset.
-- Text Preprocessing:
-  - Clean the review text, including tokenization and normalization.
-- Feature Engineering:
-  - Use fastText to create word embeddings from the review texts.
-- Model Training:
-  - Train a fastText model to classify sentiments based on the review content.
-- Model Evaluation:
-  - Assess the model's performance using confusion matrix and classification report.
+- Data Preparation:
+    - Load the IMDb dataset and preprocess the reviews (tokenization, lowercasing, etc.).
+    
+- Feature Extraction:
+    - Utilize fastText to generate word embeddings and represent the reviews as vectors.
+    
+- Model Development:
+    - Train a fastText model for binary sentiment classification (positive vs. negative).
+    
+- Hyperparameter Tuning:
+    - Optimize the model's hyperparameters using techniques like grid search.
 
-**Bonus Ideas (Optional)**:
-- Implement a visualization of sentiment distribution across different product categories.
-- Compare results with other sentiment analysis libraries like TextBlob or VADER.
+- Model Evaluation:
+    - Assess the model's performance using ROC-AUC and confusion matrix visualizations.
 
 ---
 
 ### Project 3: Topic Modeling on Research Papers
-**Difficulty**: 3 (Hard)  
-**Project Objective**: Analyze a collection of research papers to identify underlying topics using fastText for unsupervised learning. The goal is to optimize the model to accurately cluster and label the discovered topics.
+**Difficulty**: 3 (Hard)
 
-**Dataset Suggestions**: Use open government APIs or Kaggle for datasets containing research papers or academic articles.
+**Project Objective**: The goal is to implement a topic modeling system that identifies and clusters topics from a large corpus of research papers. The project will focus on optimizing for meaningful topic extraction and interpretability of the results.
+
+**Dataset Suggestions**: 
+- Use the "arXiv Dataset" available on Kaggle, which contains a collection of research papers across various domains.
 
 **Tasks**:
-- Data Acquisition:
-  - Gather a dataset of research papers in a structured format (e.g., JSON or CSV).
-- Text Preprocessing:
-  - Clean and preprocess the text data, including removing citations and references.
-- Vector Representation:
-  - Use fastText to generate word vectors for the research paper abstracts or full texts.
-- Clustering:
-  - Apply clustering algorithms (e.g., K-Means) on the generated vectors to identify topics.
+- Data Ingestion:
+    - Load the arXiv dataset and preprocess the text (removing stop words, stemming, etc.).
+
+- Topic Modeling:
+    - Use fastText to create embeddings for the text and apply clustering algorithms (e.g., K-means) to identify distinct topics.
+
 - Topic Interpretation:
-  - Analyze the clusters to interpret and label the identified topics based on the most frequent words.
+    - Analyze the clusters and extract prominent keywords to interpret the identified topics.
+
+- Visualization:
+    - Visualize the distribution of topics across different research fields using bar plots or word clouds.
+
+- Advanced Analysis:
+    - Explore temporal trends in topics by analyzing how the prevalence of certain topics changes over time.
 
 **Bonus Ideas (Optional)**:
-- Visualize the topic distributions using t-SNE or PCA for better understanding.
-- Extend the project by implementing a recommendation system for related research papers based on identified topics.
+- Implement advanced visualization techniques using t-SNE or PCA to visualize the topic embeddings in a lower-dimensional space.
+- Compare the performance of fastText with other topic modeling techniques like LDA or NMF on the same dataset.
 

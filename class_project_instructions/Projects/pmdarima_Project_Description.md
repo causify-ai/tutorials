@@ -1,96 +1,66 @@
 **Description**
 
-pmdarima is a Python library designed for efficient time series forecasting using the ARIMA (AutoRegressive Integrated Moving Average) model. It simplifies the process of building ARIMA models through automated hyperparameter tuning and model selection. Students can leverage pmdarima to analyze and forecast time series data effectively, making it an excellent tool for projects focused on temporal data analysis.
+pmdarima is a Python library designed to simplify the process of building ARIMA (AutoRegressive Integrated Moving Average) models for time series forecasting. It provides an intuitive interface for model selection and tuning, making it easier for users to create accurate predictive models without extensive statistical knowledge. 
 
-Technologies Used
-pmdarima
-
-- Automates the process of identifying optimal ARIMA parameters (p, d, q).
-- Supports seasonal ARIMA models (SARIMA) for handling seasonal data.
-- Provides convenient functions for model fitting, forecasting, and diagnostics.
-
----
-
-**Project 1: Sales Forecasting for a Retail Store**  
-**Difficulty**: 1 (Easy)  
-**Project Objective**: Predict future sales for a retail store based on historical sales data, optimizing inventory management and sales strategies.
-
-**Dataset Suggestions**: Use open datasets from Kaggle related to retail sales or government datasets on retail performance.
-
-**Tasks**:
-- Data Collection:
-  - Gather historical sales data for the retail store and load it into a Pandas DataFrame.
-  
-- Data Preprocessing:
-  - Clean the dataset by handling missing values and transforming the date column to a datetime format.
-  
-- Exploratory Data Analysis:
-  - Visualize sales trends over time using line plots to identify seasonality and trends.
-  
-- Model Selection:
-  - Utilize pmdarima to automatically identify the optimal ARIMA parameters for the sales data.
-  
-- Forecasting:
-  - Fit the ARIMA model and generate sales forecasts for the next few months.
-  
-- Evaluation:
-  - Assess the model's performance using metrics like Mean Absolute Error (MAE) and visualize the forecast against actual sales.
+Features:
+- Automated ARIMA model selection using the `auto_arima` function.
+- Support for seasonal and non-seasonal time series data.
+- Integration with pandas for easy data manipulation and analysis.
+- Provides diagnostics and residual analysis tools for model evaluation.
 
 ---
 
-**Project 2: Air Quality Index Prediction**  
-**Difficulty**: 2 (Medium)  
-**Project Objective**: Develop a forecasting model to predict the Air Quality Index (AQI) based on historical AQI data, aiming to provide insights for public health advisories.
+### Project 1: Stock Price Prediction Using ARIMA
+**Difficulty**: 1 (Easy)
 
-**Dataset Suggestions**: Find datasets from government environmental agencies or Kaggle that provide historical AQI measurements.
+**Project Objective**: The goal of this project is to forecast the future stock prices of a selected company using historical stock price data. Students will optimize the ARIMA model to achieve the best predictive performance.
+
+**Dataset Suggestions**: Use the Yahoo Finance API to obtain historical stock price data (e.g., Apple Inc. (AAPL) stock prices).
 
 **Tasks**:
-- Data Acquisition:
-  - Download historical AQI data and load it into a DataFrame for analysis.
-  
-- Data Cleaning:
-  - Handle outliers and missing values, ensuring the dataset is suitable for time series analysis.
-  
-- Feature Engineering:
-  - Create additional features such as moving averages or lagged values to enhance model performance.
-  
-- Model Fitting:
-  - Use pmdarima to fit an ARIMA model to the AQI data, optimizing parameters for best results.
-  
-- Forecasting:
-  - Generate forecasts for the AQI over the next few weeks and visualize the predictions.
-  
-- Impact Analysis:
-  - Analyze the predicted AQI levels and discuss potential public health implications based on the findings.
+- **Data Collection**: Fetch historical stock price data using the Yahoo Finance API. Store the data in a pandas DataFrame.
+- **Data Preprocessing**: Clean the dataset by handling missing values and ensuring proper date formatting.
+- **Model Selection**: Use `pmdarima`'s `auto_arima` function to identify the best ARIMA model parameters.
+- **Model Training**: Fit the selected ARIMA model to the training data.
+- **Forecasting**: Generate future stock price forecasts and visualize the results using Matplotlib.
+- **Evaluation**: Compare the model's predictions with actual values using metrics like Mean Absolute Error (MAE).
 
 ---
 
-**Project 3: Stock Price Prediction Using Historical Data**  
-**Difficulty**: 3 (Hard)  
-**Project Objective**: Create a sophisticated forecasting model to predict stock prices using historical stock data, focusing on understanding market trends and volatility.
+### Project 2: Monthly Airline Passenger Forecasting
+**Difficulty**: 2 (Medium)
 
-**Dataset Suggestions**: Access financial stock price data from public APIs like Alpha Vantage or datasets available on Kaggle.
+**Project Objective**: The objective of this project is to predict future monthly airline passenger counts based on historical data, optimizing the ARIMA model for accuracy.
+
+**Dataset Suggestions**: Use the "AirPassengers" dataset available on Kaggle, which contains monthly totals of international airline passengers from 1949 to 1960.
 
 **Tasks**:
-- Data Retrieval:
-  - Collect historical stock price data and format it appropriately for time series analysis.
-  
-- Data Preprocessing:
-  - Conduct thorough data cleaning, including handling missing values and normalizing the data.
-  
-- Time Series Decomposition:
-  - Decompose the time series to analyze seasonal, trend, and residual components.
-  
-- Model Development:
-  - Implement pmdarima to find optimal ARIMA parameters, ensuring the model captures the underlying trends effectively.
-  
-- Forecasting:
-  - Generate future stock price predictions and visualize them alongside historical prices.
-  
-- Risk Assessment:
-  - Evaluate the model's predictions and assess the potential risks involved in stock trading based on the forecasted data.
+- **Data Import**: Load the "AirPassengers" dataset into a pandas DataFrame.
+- **Exploratory Data Analysis**: Visualize passenger trends, seasonality, and anomalies in the dataset.
+- **Stationarity Testing**: Conduct tests (e.g., ADF test) to check for stationarity and apply differencing if necessary.
+- **Model Selection**: Utilize `auto_arima` to determine optimal parameters for the ARIMA model.
+- **Model Fitting**: Train the ARIMA model on the historical data and generate forecasts for the next 12 months.
+- **Visualization and Evaluation**: Plot the forecasted values against actual data and assess model performance using RMSE.
 
-**Bonus Ideas (Optional)**:
-- For Project 2, consider integrating weather data to see how it influences AQI levels.
-- For Project 3, compare the ARIMA model's performance with other forecasting techniques like LSTM or seasonal decomposition models.
+---
+
+### Project 3: Energy Consumption Forecasting
+**Difficulty**: 3 (Hard)
+
+**Project Objective**: This project aims to predict future energy consumption based on historical consumption data, employing advanced ARIMA modeling techniques to handle complex patterns and seasonality.
+
+**Dataset Suggestions**: Use the "Household Electric Power Consumption" dataset available on the UCI Machine Learning Repository, which contains measurements of electric power consumption in a household over a period of time.
+
+**Tasks**:
+- **Data Loading**: Load the dataset and parse the date-time information to create a time series index.
+- **Data Cleaning**: Address missing values and outliers in the dataset, ensuring the data is suitable for modeling.
+- **Feature Engineering**: Create additional features such as moving averages and seasonal indicators to improve model performance.
+- **Model Selection**: Apply `auto_arima` to identify the best ARIMA model parameters, considering both seasonal and non-seasonal components.
+- **Model Evaluation**: Split the dataset into training and testing sets, fit the ARIMA model, and evaluate it using cross-validation techniques.
+- **Forecasting and Analysis**: Generate long-term forecasts, visualize the results, and analyze the impact of seasonal trends on energy consumption.
+
+**Bonus Ideas (Optional)**: 
+- Implement a comparative analysis with other forecasting models (e.g., SARIMA, Prophet).
+- Explore the impact of external factors (e.g., temperature, holidays) on energy consumption forecasts.
+- Create an interactive dashboard using Plotly Dash to visualize forecasts and historical data trends.
 

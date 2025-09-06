@@ -1,96 +1,91 @@
 **Description**
 
-The What-If Tool (WIT) is a powerful visualization tool designed for machine learning model analysis and interpretation. It allows users to explore model performance, understand feature contributions, and visualize predictions without writing code. WIT is particularly useful for debugging models, comparing performance across different datasets, and understanding how changes in input features affect predictions.
+The What-If Tool (WIT) is a visual interface for machine learning model evaluation and interpretation. It allows users to analyze model performance, visualize data distributions, and perform what-if analysis to understand the impact of changes in input features on model predictions. WIT is particularly useful for model debugging, fairness evaluation, and feature importance analysis.
 
 Technologies Used
 What-If Tool (WIT)
 
-- Provides an interactive interface for visualizing and analyzing machine learning models.
-- Supports various data types and allows for easy manipulation of input features.
-- Enables users to visualize model performance metrics, such as accuracy and precision, in real-time.
-- Offers capabilities to generate counterfactual examples to understand model behavior.
+- Provides an interactive interface for visualizing model predictions and data.
+- Supports various model types, including TensorFlow and Scikit-learn models.
+- Enables what-if scenarios to explore how changes in input features affect predictions.
+- Allows users to visualize data distributions and compare model performance metrics.
 
 ---
 
-**Project 1: Customer Churn Prediction**  
-**Difficulty**: 1 (Easy)  
-**Project Objective**: The goal is to predict customer churn for a subscription-based service and identify the key features that influence customer retention. Students will optimize the model to achieve high accuracy and interpret the results using WIT.
+### Project 1: Predicting Housing Prices
+**Difficulty**: 1 (Easy)
 
-**Dataset Suggestions**: Look for customer churn datasets on Kaggle or similar platforms that include features such as customer demographics, subscription details, and usage patterns.
+**Project Objective**: Create a regression model to predict housing prices based on various features such as location, size, and number of bedrooms. The goal is to optimize the model's accuracy and interpret the feature importance using WIT.
+
+**Dataset Suggestions**: Use the "House Prices - Advanced Regression Techniques" dataset available on Kaggle.
 
 **Tasks**:
 - Data Preprocessing:
-  - Load and clean the dataset, handling missing values and categorical variables.
-  
-- Feature Engineering:
-  - Create new features that may influence churn, such as usage frequency or customer engagement metrics.
+  - Clean the dataset and handle missing values.
+  - Normalize numerical features and encode categorical variables.
 
 - Model Training:
-  - Train a classification model (e.g., Random Forest or Logistic Regression) to predict churn.
+  - Train a regression model (e.g., Random Forest or Linear Regression).
+  - Evaluate model performance using metrics like RMSE and R².
 
-- Model Evaluation:
-  - Evaluate the model using metrics like accuracy, precision, and recall.
+- What-If Analysis:
+  - Use WIT to visualize how changes in features (e.g., increasing the number of bedrooms) affect predicted prices.
+  - Analyze feature importance to understand which factors most influence pricing.
 
-- WIT Analysis:
-  - Use the What-If Tool to visualize feature contributions and understand how different features impact churn predictions.
-
-**Bonus Ideas (Optional)**:
-- Compare different models using WIT.
-- Create scenarios to see how changes in features affect churn predictions.
+- Visualization:
+  - Create visualizations for model performance and feature distributions using WIT.
 
 ---
 
-**Project 2: Credit Risk Assessment**  
-**Difficulty**: 2 (Medium)  
-**Project Objective**: The objective is to build a model that assesses the credit risk of loan applicants and to visualize the impact of various factors on the model's predictions using WIT.
+### Project 2: Classifying Customer Churn
+**Difficulty**: 2 (Medium)
 
-**Dataset Suggestions**: Explore open datasets related to credit scoring, such as those found on government portals or Kaggle, which may include features like income, loan amount, credit history, and payment behavior.
+**Project Objective**: Develop a classification model to predict customer churn for a telecommunications company. The aim is to identify key features driving churn and evaluate the model's fairness across different demographic groups using WIT.
+
+**Dataset Suggestions**: Use the "Telco Customer Churn" dataset available on Kaggle.
 
 **Tasks**:
 - Data Exploration:
-  - Analyze the dataset to understand distributions and relationships between features.
+  - Conduct exploratory data analysis (EDA) to understand customer demographics and churn rates.
+  - Visualize data distributions and correlations between features.
 
-- Data Preprocessing:
-  - Normalize and encode categorical variables, and split the dataset into training and testing sets.
+- Model Development:
+  - Train a classification model (e.g., Logistic Regression or Decision Tree).
+  - Evaluate model performance using accuracy, precision, recall, and F1-score.
 
-- Model Training:
-  - Train a classification model (e.g., Gradient Boosting) to predict credit risk.
+- Fairness Evaluation:
+  - Use WIT to assess model fairness across demographic groups (e.g., gender, age).
+  - Perform what-if analysis to see how changes in features affect churn predictions for different groups.
 
-- Model Evaluation:
-  - Evaluate the model's performance using ROC-AUC and confusion matrix.
-
-- WIT Visualization:
-  - Use WIT to analyze the model's predictions and visualize the effect of changing input features on risk assessments.
-
-**Bonus Ideas (Optional)**:
-- Implement a feature importance analysis to identify which features are most predictive of credit risk.
-- Create a dashboard using WIT to present the findings interactively.
+- Reporting:
+  - Generate a report summarizing model performance, key features, and fairness insights.
 
 ---
 
-**Project 3: Image Classification with Interpretability**  
-**Difficulty**: 3 (Hard)  
-**Project Objective**: The goal is to classify images from a public dataset (e.g., CIFAR-10) and leverage WIT to analyze and visualize the model's predictions and feature importance, enhancing interpretability.
+### Project 3: Predicting Disease Outcomes
+**Difficulty**: 3 (Hard)
 
-**Dataset Suggestions**: Use image datasets available on Kaggle or HuggingFace that allow for image classification tasks, focusing on diverse categories.
+**Project Objective**: Build a complex machine learning model to predict disease outcomes based on patient data. The goal is to handle unstructured data, optimize model predictions, and explore the implications of various clinical features using WIT.
+
+**Dataset Suggestions**: Use the "MIMIC-III Clinical Database" available through the PhysioNet platform (requires registration but is free to access).
 
 **Tasks**:
 - Data Preparation:
-  - Load and preprocess the images, including resizing and normalization.
+  - Extract relevant features from structured and unstructured data (e.g., clinical notes).
+  - Preprocess the data, including text processing for unstructured data.
 
-- Model Training:
-  - Train a convolutional neural network (CNN) for image classification using a pre-trained model (e.g., ResNet or MobileNet).
+- Model Selection:
+  - Train a complex model (e.g., Gradient Boosting or a Neural Network).
+  - Evaluate model performance using metrics like AUC-ROC and confusion matrix.
 
-- Model Evaluation:
-  - Assess the model's performance using accuracy, confusion matrix, and classification reports.
+- What-If Scenarios:
+  - Utilize WIT to perform what-if analysis on patient data to see how changes in clinical features (e.g., medication dosage) impact predicted outcomes.
+  - Investigate feature importance and visualize model predictions across different patient profiles.
 
-- WIT Integration:
-  - Utilize the What-If Tool to analyze the model's predictions, create counterfactuals, and visualize how changes in image features affect classification outcomes.
+- Advanced Visualization:
+  - Create comprehensive visualizations to represent model performance and insights using WIT, focusing on the interpretability of complex predictions.
 
-- Interpretation:
-  - Generate saliency maps or other visual aids to highlight important features in images that influence predictions.
-
-**Bonus Ideas (Optional)**:
-- Experiment with different augmentation techniques to improve model robustness.
-- Compare interpretability findings with different model architectures or hyperparameters.
+**Bonus Ideas (Optional)**: 
+- Implement additional fairness metrics to evaluate the model's performance across different patient demographics.
+- Experiment with ensemble methods to improve prediction accuracy and compare results using WIT.
 

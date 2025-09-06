@@ -1,88 +1,89 @@
 **Description**
 
-LiNGAM (Linear Non-Gaussian Acyclic Model) is a statistical method used for causal inference in data. It focuses on identifying causal relationships from observational data, particularly when the underlying variables have non-Gaussian distributions. LiNGAM is particularly useful in fields like economics, epidemiology, and social sciences where understanding the causal structure is essential.
+LiNGAM (Linear Non-Gaussian Acyclic Model) is a statistical method used for causal inference in linear models, particularly effective in identifying causal relationships from observational data. It leverages the non-Gaussianity of data to distinguish between correlation and causation, making it a powerful tool for understanding complex systems.
 
 Technologies Used
 LiNGAM
 
-- Estimates causal relationships using linear models based on non-Gaussian data.
-- Allows for the identification of directed acyclic graphs (DAGs) to represent causal structures.
-- Provides tools for testing the validity of causal assumptions and robustness checks.
+- Identifies causal structures from observational data using linear regression.
+- Utilizes non-Gaussianity to detect causal relationships effectively.
+- Provides algorithms for estimating causal graphs and causal effects.
 
 ---
 
 **Project 1: Causal Analysis of Economic Indicators**  
 **Difficulty**: 1 (Easy)  
-**Project Objective**: The goal is to identify causal relationships among various economic indicators (e.g., GDP, unemployment rate, inflation) and analyze how changes in one indicator affect others over time.
+**Project Objective**: To identify and visualize the causal relationships between key economic indicators (e.g., GDP, unemployment rate, inflation) using LiNGAM.
 
-**Dataset Suggestions**: Use publicly available economic datasets from government portals or Kaggle that include time series data for various economic indicators.
+**Dataset Suggestions**:  
+- U.S. Economic Indicators dataset available on Kaggle: [U.S. Economic Data](https://www.kaggle.com/datasets/zhangluyuan/economic-indicators)
 
 **Tasks**:
-- Data Collection:
-  - Gather time series data for selected economic indicators from public datasets.
-  
 - Data Preprocessing:
-  - Clean and normalize the data, ensuring it is suitable for analysis.
+    - Clean the dataset and handle missing values.
+    - Normalize the economic indicators for analysis.
   
-- Causal Structure Estimation:
-  - Apply LiNGAM to estimate the causal relationships among the economic indicators.
-  
-- Results Interpretation:
-  - Visualize the causal graph and interpret the relationships between the indicators.
-  
-- Reporting:
-  - Prepare a report summarizing findings and implications for economic policy.
+- Apply LiNGAM:
+    - Use the LiNGAM algorithm to identify causal relationships among the indicators.
+    - Construct a causal graph to visualize the relationships.
+
+- Interpretation:
+    - Analyze the results to interpret the causal influences between indicators.
+    - Present findings through visualizations and a brief report.
+
+**Bonus Ideas (Optional)**:
+- Compare results with other causal inference methods (e.g., Granger causality).
+- Investigate the impact of adding more variables, such as consumer sentiment indices.
 
 ---
 
-**Project 2: Understanding Factors Affecting Health Outcomes**  
+**Project 2: Causal Relationships in Health Data**  
 **Difficulty**: 2 (Medium)  
-**Project Objective**: This project aims to uncover the causal factors influencing health outcomes (e.g., obesity, diabetes) using demographic and lifestyle data, optimizing for understanding how different factors interact.
+**Project Objective**: To explore the causal relationships among various health metrics (e.g., exercise, diet, BMI, cholesterol levels) and their impacts on health outcomes using LiNGAM.
 
-**Dataset Suggestions**: Utilize health-related datasets from Kaggle or public health organizations that include demographic, lifestyle, and health outcome variables.
+**Dataset Suggestions**:  
+- Framingham Heart Study dataset available on Kaggle: [Framingham Heart Study](https://www.kaggle.com/datasets/amanajmera1/framingham-heart-study-dataset)
 
 **Tasks**:
-- Data Acquisition:
-  - Collect relevant datasets that include demographic and health-related features.
-  
-- Data Cleaning and Feature Engineering:
-  - Preprocess the data and create new features that may enhance the causal analysis (e.g., BMI from height and weight).
-  
-- Causal Inference with LiNGAM:
-  - Implement the LiNGAM algorithm to identify causal relationships between lifestyle factors and health outcomes.
-  
-- Validation:
-  - Perform robustness checks and validate the causal structure obtained.
-  
-- Visualization and Interpretation:
-  - Create visualizations to communicate the causal relationships effectively.
+- Data Cleaning and Preparation:
+    - Handle missing data and encode categorical variables.
+    - Select relevant features for causal analysis.
+
+- Implement LiNGAM:
+    - Apply the LiNGAM algorithm to detect causal relationships among health metrics.
+    - Generate a causal graph to illustrate the findings.
+
+- Evaluate Causal Effects:
+    - Assess the strength of causal relationships and their implications for health outcomes.
+    - Create visualizations to communicate results effectively.
+
+**Bonus Ideas (Optional)**:
+- Extend the analysis to include additional health metrics like smoking status or medication adherence.
+- Perform sensitivity analysis to evaluate the robustness of causal relationships.
 
 ---
 
-**Project 3: Causal Discovery in Social Media Influence**  
+**Project 3: Causal Discovery in Climate Change Factors**  
 **Difficulty**: 3 (Hard)  
-**Project Objective**: The aim is to explore and identify the causal influences among various social media metrics (likes, shares, comments) and their impact on user engagement, optimizing for understanding the dynamics of social media interactions.
+**Project Objective**: To analyze and uncover the causal relationships between various factors contributing to climate change (e.g., CO2 emissions, deforestation, temperature changes) using LiNGAM.
 
-**Dataset Suggestions**: Access social media datasets from Kaggle or public APIs that provide metrics on user interactions and engagement.
+**Dataset Suggestions**:  
+- Global Climate Change dataset available on Kaggle: [Global Climate Change](https://www.kaggle.com/datasets/smithdavid/climate-change-data)
 
 **Tasks**:
-- Data Collection:
-  - Gather social media interaction data from public datasets or APIs, focusing on metrics like likes, shares, and comments.
-  
-- Data Preparation:
-  - Clean and preprocess the data, ensuring it is structured for causal analysis.
-  
-- Causal Graph Construction:
-  - Use LiNGAM to construct a causal graph representing the relationships among social media metrics.
-  
-- Advanced Analysis:
-  - Investigate potential confounding variables and assess the stability of the causal relationships using sensitivity analysis.
-  
-- Reporting and Insights:
-  - Compile a detailed report with visualizations and insights on how different social media metrics influence user engagement.
+- Data Acquisition and Preprocessing:
+    - Gather data from multiple sources and integrate them into a cohesive dataset.
+    - Normalize and preprocess the data for analysis.
 
-**Bonus Ideas (Optional)**: 
-- For Project 1, consider comparing LiNGAM results with other causal inference methods like Granger causality.
-- For Project 2, explore the impact of different demographic groups on health outcomes and how this varies across populations.
-- For Project 3, investigate the temporal dynamics of social media interactions and how they evolve over time by incorporating time series analysis.
+- Causal Inference with LiNGAM:
+    - Utilize LiNGAM to uncover causal relationships among climate change factors.
+    - Create a comprehensive causal graph to visualize complex interactions.
+
+- Analysis and Interpretation:
+    - Analyze the causal structure to identify key drivers of climate change.
+    - Present findings in a detailed report with visualizations and actionable insights.
+
+**Bonus Ideas (Optional)**:
+- Incorporate machine learning models to predict future climate conditions based on identified causal relationships.
+- Explore temporal dynamics by applying LiNGAM to time-series data for a longitudinal analysis.
 

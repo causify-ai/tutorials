@@ -1,63 +1,89 @@
 **Description**
 
-Koalas is a Python library that provides a pandas-like API on top of Apache Spark, allowing users to leverage the scalability of big data processing while maintaining the simplicity of pandas. It facilitates seamless data manipulation, analysis, and machine learning workflows on large datasets without requiring extensive knowledge of Spark.
+Koalas is a Python library that provides a pandas-like API on top of Apache Spark, enabling users to leverage the scalability of Spark while maintaining the familiar syntax of pandas. It is particularly useful for handling large datasets that cannot fit into memory. 
 
 Technologies Used
 Koalas
 
-- Provides a familiar pandas-like API for data manipulation.
-- Enables distributed computing for large datasets using Apache Spark.
-- Supports various data formats, including CSV, Parquet, and JSON.
-- Integrates with Spark MLlib for scalable machine learning tasks.
+- Combines the ease of pandas with the scalability of Apache Spark.
+- Enables seamless transition from small-scale to large-scale data processing.
+- Supports a wide range of data manipulation and analysis functions.
+- Facilitates distributed computing, allowing for efficient handling of large datasets.
 
 ---
 
-**Project 1: Predicting Housing Prices**  
+### Project 1: Exploratory Data Analysis on NYC Taxi Rides
 **Difficulty**: 1 (Easy)  
-**Project Objective**: Develop a regression model to predict housing prices based on various features such as location, size, and amenities. The goal is to optimize the model to achieve the lowest mean absolute error (MAE).
+**Project Objective**: Analyze the NYC taxi rides dataset to uncover patterns in ride durations, fare amounts, and pick-up/drop-off locations, optimizing for insights into transportation trends.
 
-**Dataset Suggestions**: Use a housing dataset available on Kaggle or public government real estate databases.
+**Dataset Suggestions**: Use the NYC Taxi and Limousine Commission (TLC) dataset available on Kaggle: [NYC Taxi Trip Data](https://www.kaggle.com/datasets/fivethirtyeight/new-york-city-taxi-fare-prediction).
 
 **Tasks**:
-- **Data Ingestion**: Load the housing dataset into a Koalas DataFrame from a CSV file.
-- **Data Cleaning**: Handle missing values and outliers using Koalas functions.
-- **Feature Engineering**: Create new features based on existing ones (e.g., total rooms, age of the house).
-- **Model Training**: Use Koalas to train a linear regression model with Spark MLlib.
-- **Model Evaluation**: Evaluate the model using MAE and visualize results using Koalas plotting functions.
-
-**Bonus Ideas (Optional)**: Experiment with different regression algorithms (e.g., decision trees, random forests) and compare their performance.
+- Load Data with Koalas:
+  - Import the NYC taxi rides dataset using Koalas for efficient handling of large data.
+  
+- Data Cleaning:
+  - Handle missing values and filter out outliers in ride durations and fare amounts.
+  
+- Exploratory Analysis:
+  - Generate descriptive statistics and visualizations to analyze ride durations by time of day and location.
+  
+- Correlation Analysis:
+  - Investigate correlations between fare amounts, distance traveled, and ride duration.
+  
+- Reporting Insights:
+  - Create a summary report of findings, including visualizations using Matplotlib or Seaborn.
 
 ---
 
-**Project 2: Customer Segmentation**  
+### Project 2: Predicting House Prices with Feature Engineering
 **Difficulty**: 2 (Medium)  
-**Project Objective**: Implement a clustering algorithm to segment customers based on purchasing behavior. The aim is to identify distinct customer groups for targeted marketing strategies.
+**Project Objective**: Build a predictive model for house prices using the Ames Housing dataset, focusing on feature engineering and model optimization.
 
-**Dataset Suggestions**: Use a retail transaction dataset from Kaggle or open government datasets related to consumer behavior.
+**Dataset Suggestions**: Use the Ames Housing dataset available on Kaggle: [Ames Housing Dataset](https://www.kaggle.com/datasets/prestonvang/ames-housing-data).
 
 **Tasks**:
-- **Data Ingestion**: Load the customer transaction dataset using Koalas.
-- **Data Preprocessing**: Normalize and encode categorical variables for clustering.
-- **Feature Selection**: Select relevant features such as purchase frequency, average spend, and product categories.
-- **Clustering**: Apply K-means clustering using Koalas and Spark MLlib to segment customers.
-- **Cluster Analysis**: Analyze the characteristics of each cluster and visualize the results using Koalas.
-
-**Bonus Ideas (Optional)**: Try different clustering algorithms (e.g., DBSCAN, hierarchical clustering) and evaluate the effectiveness of each approach.
+- Load and Explore Data:
+  - Utilize Koalas to load the Ames Housing dataset and perform initial exploration.
+  
+- Feature Engineering:
+  - Create new features based on existing data (e.g., total square footage, age of the house) and handle categorical variables.
+  
+- Data Splitting:
+  - Split the dataset into training and testing sets using Koalas.
+  
+- Model Training:
+  - Implement regression models (e.g., Linear Regression, Random Forest) to predict house prices.
+  
+- Model Evaluation:
+  - Evaluate model performance using metrics such as RMSE and R², and visualize the results.
 
 ---
 
-**Project 3: Anomaly Detection in Network Traffic**  
+### Project 3: Anomaly Detection in Credit Card Transactions
 **Difficulty**: 3 (Hard)  
-**Project Objective**: Build an anomaly detection system to identify unusual patterns in network traffic data. The goal is to optimize the detection rate while minimizing false positives.
+**Project Objective**: Develop an anomaly detection system for credit card transactions, optimizing for the detection of fraudulent activities using unsupervised learning techniques.
 
-**Dataset Suggestions**: Utilize a public dataset from Kaggle or open datasets related to network traffic analysis.
+**Dataset Suggestions**: Use the Credit Card Fraud Detection dataset available on Kaggle: [Credit Card Fraud Detection](https://www.kaggle.com/datasets/dalpozz/creditcard-fraud).
 
 **Tasks**:
-- **Data Ingestion**: Load the network traffic dataset into a Koalas DataFrame.
-- **Data Cleaning**: Clean the dataset by removing irrelevant features and handling missing values.
-- **Feature Engineering**: Create time-based features and aggregate data for better analysis.
-- **Anomaly Detection**: Implement Isolation Forest or One-Class SVM using Koalas and Spark MLlib.
-- **Model Evaluation**: Evaluate the model's performance using precision, recall, and F1-score, and visualize the anomalies detected.
+- Load and Preprocess Data:
+  - Load the credit card transactions dataset using Koalas and preprocess the data (normalization, handling class imbalance).
+  
+- Feature Selection:
+  - Analyze and select relevant features for anomaly detection, focusing on transaction amount and time.
+  
+- Anomaly Detection:
+  - Implement unsupervised learning algorithms (e.g., Isolation Forest, DBSCAN) to identify potential fraud cases.
+  
+- Evaluation of Results:
+  - Assess the effectiveness of the anomaly detection model using precision, recall, and F1 score.
+  
+- Visualization:
+  - Visualize the detected anomalies against the original dataset to illustrate findings.
 
-**Bonus Ideas (Optional)**: Explore the impact of different feature sets on anomaly detection performance and compare results across various detection algorithms.
+**Bonus Ideas (Optional)**: 
+- For Project 1, consider integrating additional datasets (e.g., weather data) to analyze their impact on taxi ride durations.
+- For Project 2, explore hyperparameter tuning using techniques like Grid Search or Random Search to optimize model performance.
+- For Project 3, implement a real-time monitoring system using streaming data and evaluate its performance over time.
 

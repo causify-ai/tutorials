@@ -1,63 +1,83 @@
 **Description**
 
-NLTK (Natural Language Toolkit) is a powerful Python library used for working with human language data (text). It provides easy-to-use interfaces to over 50 corpora and lexical resources, along with a suite of text processing libraries for classification, tokenization, stemming, tagging, parsing, and semantic reasoning.
+In this project, students will utilize NLTK (Natural Language Toolkit), a powerful Python library for natural language processing, to analyze and manipulate textual data. NLTK provides easy-to-use interfaces for over 50 corpora and lexical resources, along with a suite of text processing libraries for classification, tokenization, stemming, tagging, parsing, and more.
 
 Technologies Used
 NLTK
 
-- Simplifies text processing tasks with intuitive functions and methods.
-- Offers tools for tokenization, stemming, and lemmatization.
-- Provides access to various corpora and lexical resources for NLP tasks.
-- Supports classification and sentiment analysis with built-in models.
+- Offers tools for text processing and linguistic data analysis.
+- Supports various NLP tasks such as tokenization, stemming, and part-of-speech tagging.
+- Provides access to a wide range of corpora and lexical resources for diverse language tasks.
 
 ---
 
-### Project 1: Text Classification of Movie Reviews  
+**Project 1: Sentiment Analysis of Movie Reviews**  
 **Difficulty**: 1 (Easy)  
-**Project Objective**: The goal is to classify movie reviews as positive or negative based on their sentiment. Students will optimize the accuracy of the classification model using NLTK's text processing capabilities.
+**Project Objective**: Build a sentiment analysis model to classify movie reviews as positive or negative. The goal is to optimize the accuracy of sentiment classification using NLTK for text processing.
 
-**Dataset Suggestions**: Find a dataset of movie reviews on Kaggle or HuggingFace.
+**Dataset Suggestions**: Use the IMDb Movie Reviews dataset available on Kaggle: [IMDb Movie Reviews](https://www.kaggle.com/lakshmi25npathi/imdb-dataset-of-movie-reviews).
 
 **Tasks**:
-- **Data Preparation**: Load the dataset and preprocess text data (cleaning, tokenization).
-- **Feature Extraction**: Use NLTK to convert text into numerical features (e.g., bag-of-words or TF-IDF).
-- **Model Training**: Implement a simple classification algorithm (e.g., Naive Bayes) using NLTK.
-- **Model Evaluation**: Assess model performance using accuracy, precision, and recall metrics.
-- **Visualization**: Create visualizations to represent the distribution of positive and negative reviews.
+- Data Preprocessing:
+  - Load the dataset and clean the text (removing special characters, lowercasing).
+- Tokenization:
+  - Tokenize the reviews into words using NLTK’s word_tokenize function.
+- Feature Extraction:
+  - Create a bag-of-words model to transform tokens into numerical features.
+- Model Training:
+  - Train a simple classifier (e.g., Naive Bayes) using NLTK’s classification module.
+- Model Evaluation:
+  - Evaluate the model using accuracy, precision, and recall metrics.
 
-**Bonus Ideas**: Experiment with different classifiers, such as logistic regression or support vector machines, and compare their performance.
+**Bonus Ideas (Optional)**:
+- Experiment with different classifiers (Logistic Regression, Decision Trees).
+- Implement a simple web app to classify user-submitted reviews.
 
 ---
 
-### Project 2: Topic Modeling of News Articles  
+**Project 2: Topic Modeling on News Articles**  
 **Difficulty**: 2 (Medium)  
-**Project Objective**: The aim is to extract underlying topics from a collection of news articles using NLTK and LDA (Latent Dirichlet Allocation). Students will identify the main themes and how they evolve over time.
+**Project Objective**: Perform topic modeling on a collection of news articles to identify underlying themes. The aim is to optimize the coherence score of the topics generated.
 
-**Dataset Suggestions**: Use a dataset of news articles available on Kaggle or public news APIs.
+**Dataset Suggestions**: Use the 20 Newsgroups dataset available via scikit-learn: [20 Newsgroups](http://qwone.com/~jason/20Newsgroups/).
 
 **Tasks**:
-- **Data Collection**: Gather a dataset of news articles from the specified source.
-- **Text Preprocessing**: Clean and preprocess the text (removal of stop words, stemming).
-- **Topic Modeling**: Apply LDA using NLTK to identify topics from the corpus.
-- **Visualization**: Use word clouds to visualize the most prominent words in each topic.
-- **Trend Analysis**: Analyze how the frequency of topics changes over time.
+- Data Loading:
+  - Load the 20 Newsgroups dataset and preprocess the text data.
+- Text Cleaning:
+  - Remove stop words and perform stemming using NLTK.
+- Vectorization:
+  - Convert the cleaned text into a document-term matrix using TF-IDF.
+- Topic Modeling:
+  - Implement Latent Dirichlet Allocation (LDA) to discover topics in the dataset.
+- Coherence Evaluation:
+  - Calculate and visualize the coherence score for the generated topics.
 
-**Bonus Ideas**: Implement coherence score evaluation to optimize the number of topics and explore the relationships between topics using network graphs.
+**Bonus Ideas (Optional)**:
+- Compare LDA with Non-Negative Matrix Factorization (NMF) for topic modeling.
+- Create visualizations of the topics using pyLDAvis.
 
 ---
 
-### Project 3: Sentiment Analysis on Social Media Posts  
+**Project 3: Named Entity Recognition in Scientific Papers**  
 **Difficulty**: 3 (Hard)  
-**Project Objective**: The project aims to perform sentiment analysis on a large dataset of social media posts to detect sentiments and trends related to a specific event or topic. Students will optimize the model's ability to classify sentiments accurately.
+**Project Objective**: Develop a Named Entity Recognition (NER) system to extract relevant entities (e.g., authors, institutions, chemicals) from a set of scientific papers. The goal is to optimize the F1 score of the NER model.
 
-**Dataset Suggestions**: Utilize datasets from public APIs such as Twitter or Kaggle that provide access to social media posts.
+**Dataset Suggestions**: Use the PubMed Central Open Access Subset available on the NCBI website: [PubMed Central](https://www.ncbi.nlm.nih.gov/pmc/tools/openftlist/).
 
 **Tasks**:
-- **Data Collection**: Use a public API to collect social media posts around a trending topic.
-- **Data Cleaning**: Preprocess the text data, including tokenization, removal of hashtags, mentions, and URLs.
-- **Sentiment Analysis**: Use NLTK to perform sentiment analysis on the posts and classify them into positive, negative, or neutral categories.
-- **Model Refinement**: Experiment with different sentiment analysis techniques, such as VADER or custom classifiers, to improve accuracy.
-- **Trend Visualization**: Visualize sentiment trends over time using line charts or bar graphs.
+- Data Acquisition:
+  - Download and preprocess a subset of scientific papers from PubMed Central.
+- Text Preprocessing:
+  - Clean and tokenize the text, and apply part-of-speech tagging using NLTK.
+- NER Model Development:
+  - Train a NER model using NLTK’s named entity chunking capabilities.
+- Evaluation:
+  - Evaluate the model’s performance using precision, recall, and F1 score.
+- Visualization:
+  - Visualize the extracted entities and their relationships using network graphs.
 
-**Bonus Ideas**: Incorporate advanced NLP techniques like word embeddings or fine-tune a pre-trained model for improved sentiment classification.
+**Bonus Ideas (Optional)**:
+- Fine-tune the NER model using transfer learning with pre-trained models (e.g., BERT).
+- Implement a web interface to allow users to upload papers for entity extraction.
 

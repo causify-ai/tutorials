@@ -1,96 +1,56 @@
 **Description**
 
-OpenRefine is a powerful tool for working with messy data, enabling users to clean, transform, and explore datasets efficiently. It provides a user-friendly interface and a range of features that assist in data wrangling tasks, making it an ideal choice for data preprocessing in various data science projects.
+OpenRefine is a powerful tool for working with messy data, allowing users to clean, transform, and explore datasets with ease. It provides a user-friendly interface for data manipulation and offers features such as:
 
-Technologies Used
-OpenRefine
-
-- Facilitates data cleaning through clustering algorithms for deduplication.
-- Allows for data transformation using expressions and scripting.
-- Supports data exploration with faceting and filtering capabilities.
-- Enables integration with web services and APIs for enrichment.
+- Data cleaning capabilities including clustering, text transformation, and reconciliation with external databases.
+- Support for various data formats (CSV, JSON, XML, etc.) to facilitate diverse data handling.
+- Ability to create custom transformations using GREL (General Refine Expression Language) for advanced data processing tasks.
 
 ---
 
-**Project 1: Data Cleaning and Transformation for Public Health Records**  
-**Difficulty:** 1 (Easy)  
-**Project Objective:** The goal of this project is to clean and standardize a public health dataset containing patient records to ensure consistency and accuracy for further analysis. 
+### Project 1: Data Cleaning and Analysis of Open Street Map Data (Difficulty: 1)
 
-**Dataset Suggestions:** Search for public health datasets on Kaggle or government health department portals.
+**Project Objective**: The goal is to clean and analyze a dataset from Open Street Map (OSM) to identify and visualize the distribution of various amenities (like restaurants, parks, etc.) in a specific city.
 
-**Tasks:**
-- Import Dataset:
-    - Load the dataset into OpenRefine for initial exploration.
-  
-- Identify and Remove Duplicates:
-    - Use clustering algorithms to find and merge duplicate entries.
+**Dataset Suggestions**: Use the "OSM Data Extracts" available at [Geofabrik](http://download.geofabrik.de/) for your selected city.
 
-- Standardize Data Formats:
-    - Transform date formats and standardize categorical variables (e.g., gender, ethnicity).
+**Tasks**:
+- **Import Data**: Load the OSM dataset (in .osm or .csv format) into OpenRefine.
+- **Data Cleaning**: Identify and remove duplicates, standardize naming conventions for amenities, and handle missing values.
+- **Data Transformation**: Create new columns to classify amenities based on type and location.
+- **Data Export**: Export the cleaned dataset for further analysis and visualization in tools like Tableau or Python.
 
-- Validate Data Integrity:
-    - Check for missing values and apply appropriate imputation techniques.
-
-- Export Cleaned Data:
-    - Save the cleaned dataset in a format suitable for analysis (e.g., CSV).
-
-**Bonus Ideas (Optional):**
-- Create visualizations of the cleaned data distributions.
-- Compare the cleaned dataset with the original to highlight improvements.
+**Bonus Ideas**: Explore additional amenities or compare multiple cities to analyze differences in amenity distribution.
 
 ---
 
-**Project 2: Enriching a Movie Dataset with External APIs**  
-**Difficulty:** 2 (Medium)  
-**Project Objective:** The objective is to enhance a movie dataset by integrating additional information, such as ratings and reviews, from public APIs to facilitate a comprehensive analysis of movie performance.
+### Project 2: Analyzing and Cleaning Public Health Data (Difficulty: 2)
 
-**Dataset Suggestions:** Use a movie dataset from Kaggle (e.g., movie ratings) or a public API like TMDb.
+**Project Objective**: The objective is to clean and analyze public health data from the CDC to identify trends in health indicators across different states over time.
 
-**Tasks:**
-- Load Initial Movie Dataset:
-    - Import the dataset containing basic movie information into OpenRefine.
+**Dataset Suggestions**: Utilize the "Behavioral Risk Factor Surveillance System (BRFSS)" dataset available on [CDC's website](https://www.cdc.gov/brfss/index.html).
 
-- Identify Missing Data:
-    - Analyze the dataset for missing ratings and reviews.
+**Tasks**:
+- **Data Import**: Load the BRFSS dataset into OpenRefine.
+- **Data Cleaning**: Use clustering to identify and correct inconsistent entries (e.g., variations in state names or health indicators).
+- **Feature Engineering**: Create new variables to represent health trends over time and categorize responses.
+- **Data Analysis**: Generate summary statistics and visualize trends using the cleaned data.
 
-- Enrich Data Using APIs:
-    - Utilize OpenRefine's ability to call APIs to fetch additional movie details from TMDb.
-
-- Clean and Transform Enriched Data:
-    - Standardize the new data fields and merge them with the existing dataset.
-
-- Analyze Movie Performance:
-    - Prepare the enriched dataset for exploratory data analysis to identify trends.
-
-**Bonus Ideas (Optional):**
-- Perform sentiment analysis on reviews and add the results to the dataset.
-- Create a comparative analysis of movies based on different genres and their ratings.
+**Bonus Ideas**: Compare health indicators between states or implement a time-series analysis to forecast future health trends.
 
 ---
 
-**Project 3: Anomaly Detection in E-commerce Transaction Data**  
-**Difficulty:** 3 (Hard)  
-**Project Objective:** The aim of this project is to preprocess and clean a large e-commerce transaction dataset to prepare it for anomaly detection, focusing on identifying fraudulent transactions.
+### Project 3: Cleaning and Integrating E-commerce Product Reviews (Difficulty: 3)
 
-**Dataset Suggestions:** Look for e-commerce transaction datasets available on Kaggle or open government datasets.
+**Project Objective**: The goal is to clean and integrate product reviews from multiple e-commerce platforms to perform sentiment analysis and identify key factors influencing customer satisfaction.
 
-**Tasks:**
-- Import and Explore Dataset:
-    - Load the e-commerce transaction dataset into OpenRefine for thorough examination.
+**Dataset Suggestions**: Use the "Amazon Product Reviews" dataset available on [Kaggle](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews) and supplement it with reviews from [Yelp's Dataset Challenge](https://www.yelp.com/dataset/challenge).
 
-- Data Cleaning and Standardization:
-    - Identify and correct inconsistencies in transaction amounts and dates.
+**Tasks**:
+- **Data Import**: Load both datasets into OpenRefine for cleaning.
+- **Data Cleaning**: Standardize review formats, handle missing data, and perform entity reconciliation to unify products across platforms.
+- **Sentiment Labeling**: Create new columns for sentiment scores based on review text using GREL functions.
+- **Integration**: Merge the cleaned datasets to create a comprehensive view of product reviews across platforms for further analysis.
 
-- Clustering for Anomaly Detection:
-    - Use OpenRefine's clustering features to identify potential anomalies based on transaction patterns.
-
-- Feature Engineering:
-    - Create new features (e.g., transaction frequency, average transaction value) to enhance the dataset for analysis.
-
-- Export Cleaned Dataset for Modeling:
-    - Save the preprocessed dataset for use in machine learning models that will detect anomalies.
-
-**Bonus Ideas (Optional):**
-- Implement machine learning models for anomaly detection (e.g., Isolation Forest, Autoencoders) using the cleaned dataset.
-- Analyze the impact of cleaned data on the model's performance by comparing results before and after cleaning.
+**Bonus Ideas**: Implement advanced sentiment analysis using pre-trained models on the integrated dataset or explore the impact of review length on sentiment scores.
 

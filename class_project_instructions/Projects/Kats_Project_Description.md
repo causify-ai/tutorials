@@ -1,99 +1,68 @@
 **Description**
 
-Kats is a powerful time series analysis toolkit developed by Facebook, designed for efficient and scalable time series forecasting, anomaly detection, and change point detection. It provides a variety of built-in models and advanced algorithms to handle different time series tasks, making it suitable for both beginners and advanced users.
+Kats is a versatile time series analysis toolkit developed by Facebook that provides a suite of functionalities for forecasting, anomaly detection, and change point detection. It is designed to simplify the process of working with time series data and includes features for model fitting, evaluation, and visualization.
 
 Technologies Used
 Kats
 
-- Offers a comprehensive suite of time series analysis tools including forecasting, anomaly detection, and change point detection.
-- Supports various forecasting models such as ARIMA, Prophet, and LSTM.
-- Provides utilities for preprocessing, visualization, and evaluation of time series data.
+- Offers a wide range of models for time series forecasting, including ARIMA, Prophet, and LSTM.
+- Supports anomaly detection with various statistical tests and machine learning approaches.
+- Provides tools for change point detection to identify shifts in time series data.
+- Includes utilities for data preprocessing, visualization, and evaluation metrics.
 
 ---
 
-### Project 1: Stock Price Anomaly Detection (Difficulty: 1)
+### Project 1: Predicting Energy Consumption (Difficulty: 1)
 
 **Project Objective:**  
-Detect anomalies in stock price movements to identify unusual trading activities that could indicate market manipulation or important news events.
+The goal is to predict future energy consumption based on historical data to help utility companies optimize their resources.
 
 **Dataset Suggestions:**  
-Find stock price data on platforms like Yahoo Finance or Kaggle.
+- Use the "Household Electric Power Consumption" dataset available on Kaggle ([Kaggle Dataset](https://www.kaggle.com/datasets/uciml/electric-power-consumption-data-set)).
 
 **Tasks:**
-
-- **Data Ingestion:**  
-  Collect historical stock price data using APIs or CSV files and load it into a Pandas DataFrame.
-
-- **Preprocessing:**  
-  Clean the data by handling missing values and normalizing the stock prices for analysis.
-
-- **Anomaly Detection:**  
-  Use Kats' anomaly detection functions to identify outliers in the stock price time series.
-
-- **Visualization:**  
-  Plot the stock prices along with detected anomalies using Matplotlib to visually assess the findings.
-
-- **Evaluation:**  
-  Assess the performance of the anomaly detection using metrics like precision and recall.
+- **Data Ingestion:** Load the dataset into a Pandas DataFrame and perform initial exploration.
+- **Preprocessing:** Clean the data by handling missing values and converting timestamps to datetime format.
+- **Feature Engineering:** Create additional features such as day of the week, month, and seasonal indicators.
+- **Model Selection:** Use Kats to apply ARIMA and Prophet models for forecasting.
+- **Evaluation:** Assess the model performance using metrics like RMSE and visualize the predictions against actual consumption.
 
 ---
 
-### Project 2: Forecasting Energy Consumption (Difficulty: 2)
+### Project 2: Anomaly Detection in Stock Prices (Difficulty: 2)
 
 **Project Objective:**  
-Develop a forecasting model to predict future energy consumption based on historical usage data, helping utilities optimize resource allocation.
+To detect anomalies in stock price movements that could indicate unusual market behavior or potential trading opportunities.
 
 **Dataset Suggestions:**  
-Utilize energy consumption datasets available on Kaggle or government energy departments' open data portals.
+- Utilize the "S&P 500 Stock Data" from Yahoo Finance via the `yfinance` library (e.g., `yfinance.download('^GSPC', start='2020-01-01', end='2023-01-01')`).
 
 **Tasks:**
-
-- **Data Collection:**  
-  Gather historical energy consumption data and load it into a DataFrame for analysis.
-
-- **Feature Engineering:**  
-  Create additional features such as day of the week, month, and seasonality to enhance the forecasting model.
-
-- **Model Selection:**  
-  Experiment with different forecasting models available in Kats, such as ARIMA and Prophet, to find the best fit.
-
-- **Model Evaluation:**  
-  Evaluate models using metrics like Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE) to determine accuracy.
-
-- **Visualization:**  
-  Visualize the predicted vs. actual energy consumption using line plots to assess forecasting performance.
+- **Data Acquisition:** Fetch historical stock price data and store it in a DataFrame.
+- **Preprocessing:** Clean the data and convert the date column to datetime format.
+- **Anomaly Detection:** Implement Kats’ anomaly detection methods (e.g., Z-Score or Seasonal Decomposition) to identify outliers in stock prices.
+- **Visualization:** Create plots to highlight detected anomalies over time and their impact on price trends.
+- **Analysis:** Discuss the potential reasons behind detected anomalies and their implications for investors.
 
 ---
 
-### Project 3: Change Point Detection in COVID-19 Cases (Difficulty: 3)
+### Project 3: Change Point Detection in Climate Data (Difficulty: 3)
 
 **Project Objective:**  
-Identify significant change points in the COVID-19 infection rates to understand the impact of interventions and policy changes on the spread of the virus.
+To identify change points in climate data that could signify shifts in temperature trends over time, which may be indicative of climate change.
 
 **Dataset Suggestions:**  
-Access COVID-19 case data from public health repositories or Kaggle datasets.
+- Use the "Global Historical Climatology Network Daily" dataset available from NOAA ([NOAA Dataset](https://www.ncdc.noaa.gov/cdo-web/datasets/GHCND)), focusing on temperature data.
 
 **Tasks:**
+- **Data Collection:** Download and load the climate dataset into a Pandas DataFrame, focusing on temperature readings.
+- **Data Cleaning:** Handle missing values and ensure all temperature readings are in a consistent format.
+- **Change Point Detection:** Utilize Kats to implement change point detection algorithms, such as the Bayesian Change Point Detection.
+- **Analysis of Results:** Analyze the detected change points to understand their significance and potential causes, correlating with historical events (e.g., industrialization).
+- **Visualization:** Create visualizations that display temperature trends with detected change points marked, and interpret the results.
 
-- **Data Acquisition:**  
-  Download and clean COVID-19 case data, ensuring it is structured appropriately for time series analysis.
-
-- **Exploratory Analysis:**  
-  Conduct exploratory data analysis (EDA) to visualize trends and patterns in the infection rates over time.
-
-- **Change Point Detection:**  
-  Apply Kats' change point detection algorithms to identify points in time where the statistical properties of the infection rates change.
-
-- **Impact Analysis:**  
-  Correlate detected change points with key events (e.g., lockdowns, vaccination rollouts) to analyze their impact on infection rates.
-
-- **Reporting:**  
-  Document findings in a report, detailing the change points detected and their implications for public health policy.
-
----
-
-**Bonus Ideas (Optional):**  
-- For Project 1, compare the anomaly detection results with different algorithms to see which performs best.
-- For Project 2, implement seasonal decomposition to analyze seasonal effects on energy consumption.
-- For Project 3, extend the analysis by predicting future change points based on detected trends.
+**Bonus Ideas (Optional):**
+- For Project 1: Compare the performance of different forecasting models (ARIMA vs. Prophet) and analyze which model performs better under different conditions.
+- For Project 2: Extend the anomaly detection to include trading volume and explore the relationship between volume spikes and price anomalies.
+- For Project 3: Investigate the impact of detected change points on extreme weather events and create predictive models to forecast future temperature trends.
 

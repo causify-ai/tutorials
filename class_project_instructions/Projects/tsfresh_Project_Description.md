@@ -1,87 +1,75 @@
 **Description**
 
-In this project, students will utilize tsfresh, a Python package designed for extracting relevant features from time series data. It automates the feature extraction process, making it easier to identify patterns and trends in time series datasets. The tool is particularly useful for machine learning tasks involving temporal data, allowing students to focus on model building and evaluation.
+In this project, students will utilize tsfresh, a Python package designed for time series feature extraction, to analyze and extract meaningful features from time series data. The tool automatically calculates a large number of time-series characteristics, making it easier for data scientists to prepare their data for machine learning tasks. 
 
-Technologies Used
-tsfresh
-
-- Automatically extracts a large number of time series characteristics.
-- Provides feature selection capabilities to filter out irrelevant features.
-- Integrates seamlessly with machine learning libraries like scikit-learn.
+Features:
+- Automates the extraction of a wide range of time series features.
+- Provides functionality to filter features based on relevance to the target variable.
+- Supports multiple time series formats and can handle large datasets efficiently.
 
 ---
 
-**Project 1: Anomaly Detection in IoT Sensor Data**  
-**Difficulty**: 1 (Easy)  
-**Project Objective**: Detect anomalies in time series data collected from IoT sensors in smart homes, focusing on identifying unusual patterns that may indicate device malfunctions.
+### Project 1: Time Series Classification of ECG Signals (Difficulty: 1)
 
-**Dataset Suggestions**: Find time series sensor data from open government datasets related to smart cities or IoT.
+**Project Objective**  
+The goal is to classify different types of ECG signals (normal vs. abnormal) using time series data. Students will optimize the classification accuracy of the model.
 
-**Tasks**:
-- Data Collection:
-  - Gather time series data from IoT sensors, ensuring it includes relevant features like temperature, humidity, and motion.
-  
-- Feature Extraction with tsfresh:
-  - Use tsfresh to automatically extract time series features from the sensor data.
-  
-- Anomaly Detection Model:
-  - Implement a machine learning model (e.g., Isolation Forest) to identify anomalies based on the extracted features.
-  
-- Model Evaluation:
-  - Evaluate the model's performance using metrics like precision, recall, and F1-score.
+**Dataset Suggestions**  
+- **Dataset**: MIT-BIH Arrhythmia Database  
+- **Source**: PhysioNet (https://physionet.org/static/published-project/gbm/)
 
-- Visualization:
-  - Visualize the detected anomalies on the time series plot for better interpretability.
+**Tasks**  
+- **Data Ingestion**: Load ECG signal data from the MIT-BIH database into a Pandas DataFrame.
+- **Feature Extraction**: Use tsfresh to extract relevant time series features from the ECG signals.
+- **Data Preprocessing**: Clean and prepare the extracted features for modeling.
+- **Model Training**: Train a classification model (e.g., Random Forest) on the features to distinguish between normal and abnormal ECG signals.
+- **Model Evaluation**: Evaluate the model using metrics such as accuracy, precision, and recall.
+
+**Bonus Ideas (Optional)**  
+- Explore different classification algorithms (e.g., SVM, Neural Networks) and compare their performance.
+- Implement cross-validation to ensure robust model evaluation.
 
 ---
 
-**Project 2: Predictive Maintenance for Manufacturing Equipment**  
-**Difficulty**: 2 (Medium)  
-**Project Objective**: Build a predictive maintenance model to forecast equipment failures in a manufacturing plant using time series data from machinery.
+### Project 2: Predictive Maintenance of Industrial Machines (Difficulty: 2)
 
-**Dataset Suggestions**: Look for publicly available datasets on Kaggle that provide time series data from manufacturing equipment.
+**Project Objective**  
+The objective is to predict machine failures in an industrial setting based on sensor readings over time, optimizing for the accuracy of failure predictions.
 
-**Tasks**:
-- Data Preparation:
-  - Clean and preprocess time series data, ensuring it includes features such as temperature, vibration, and operational hours.
-  
-- Feature Extraction with tsfresh:
-  - Utilize tsfresh to extract relevant features from the time series data that may indicate equipment health.
+**Dataset Suggestions**  
+- **Dataset**: NASA Turbofan Engine Degradation Simulation Data Set  
+- **Source**: NASA Prognostics Data Repository (https://www.nasa.gov/content/prognostics-center-of-excellence-data-set-repository)
 
-- Predictive Modeling:
-  - Train a regression model (e.g., Random Forest) to predict the remaining useful life (RUL) of the machinery using the extracted features.
+**Tasks**  
+- **Data Ingestion**: Load the sensor data from the NASA repository into a DataFrame.
+- **Feature Extraction**: Utilize tsfresh to extract features from the time series data corresponding to different sensors.
+- **Feature Selection**: Filter the extracted features based on their relevance to the target variable (failure occurrence).
+- **Model Development**: Build a predictive model (e.g., Gradient Boosting) to forecast machine failures based on the selected features.
+- **Model Evaluation**: Assess the model using confusion matrix and ROC-AUC score.
 
-- Model Tuning:
-  - Optimize the model's hyperparameters to improve prediction accuracy.
-
-- Results Interpretation:
-  - Analyze feature importance to understand which characteristics are most indicative of equipment failure.
+**Bonus Ideas (Optional)**  
+- Investigate the impact of feature engineering techniques on model performance.
+- Implement a real-time monitoring dashboard to visualize predictions.
 
 ---
 
-**Project 3: Stock Price Prediction using Historical Trading Data**  
-**Difficulty**: 3 (Hard)  
-**Project Objective**: Develop a model to predict future stock prices based on historical trading data, leveraging time series feature extraction to improve prediction accuracy.
+### Project 3: Anomaly Detection in Network Traffic (Difficulty: 3)
 
-**Dataset Suggestions**: Access historical stock price data from sources like Yahoo Finance or Alpha Vantage, ensuring it includes time-stamped trading data.
+**Project Objective**  
+The goal is to detect anomalies in network traffic data, optimizing for the identification of potential security threats.
 
-**Tasks**:
-- Data Acquisition:
-  - Collect historical stock price data, including features like open, high, low, close prices, and trading volume.
+**Dataset Suggestions**  
+- **Dataset**: UNSW-NB15 Dataset  
+- **Source**: UNSW Cyber Security (https://www.unsw.adfa.edu.au/unsw-canberra-cyber/cybersecurity/unsw-nb15-dataset)
 
-- Feature Engineering with tsfresh:
-  - Use tsfresh to extract a comprehensive set of features from the time series data, focusing on trends, seasonality, and volatility metrics.
+**Tasks**  
+- **Data Ingestion**: Load the network traffic data into a DataFrame.
+- **Feature Extraction**: Apply tsfresh to extract a comprehensive set of features from the time series data of network packets.
+- **Anomaly Detection**: Utilize machine learning techniques (e.g., Isolation Forest, One-Class SVM) to identify anomalies in the extracted features.
+- **Model Training and Evaluation**: Train the anomaly detection model and evaluate its performance using precision, recall, and F1 score.
+- **Analysis of Anomalies**: Analyze detected anomalies to understand their characteristics and potential implications.
 
-- Predictive Modeling:
-  - Implement a time series forecasting model (e.g., LSTM or ARIMA) to predict future stock prices based on the extracted features.
-
-- Model Evaluation:
-  - Evaluate the model's performance using metrics like Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE).
-
-- Backtesting:
-  - Conduct a backtest to assess the model's performance over historical data and simulate trading strategies based on the predictions.
-
-**Bonus Ideas (Optional)**:
-- Explore ensemble methods to combine predictions from multiple models for improved accuracy.
-- Investigate the impact of external factors (e.g., economic indicators) on stock price predictions by integrating additional datasets.
+**Bonus Ideas (Optional)**  
+- Create a visualization tool to display detected anomalies in real-time.
+- Compare the performance of different anomaly detection algorithms on the dataset.
 

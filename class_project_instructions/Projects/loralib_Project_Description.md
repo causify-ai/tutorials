@@ -1,70 +1,58 @@
 **Description**
 
-In this project, students will utilize loralib, a library designed for low-rank adaptation of machine learning models, to enhance the performance of various pre-trained models. loralib allows for efficient fine-tuning of large models with fewer parameters, making it ideal for resource-constrained environments. The goal is to explore how low-rank adaptation can optimize model performance across different tasks while maintaining computational efficiency.
+Loralib is a Python library that simplifies the implementation of low-rank approximation methods for matrices, which is particularly useful in dimensionality reduction and matrix completion tasks. It allows users to efficiently handle large datasets by reducing their dimensions while preserving essential information, making it an excellent tool for various machine learning tasks.
+
+**Project 1: Movie Recommendation System**  
+**Difficulty**: 1 (Easy)  
+**Project Objective**: Build a collaborative filtering-based movie recommendation system that predicts user ratings for unseen movies based on existing user-movie interactions.  
+
+**Dataset Suggestions**:  
+- MovieLens 100K dataset (available on Kaggle)  
+- Source: [MovieLens 100K](https://grouplens.org/datasets/movielens/100k/)  
+
+**Tasks**:  
+- Data Preprocessing: Load the MovieLens dataset and preprocess it to create a user-item interaction matrix.  
+- Low-Rank Approximation: Use Loralib to perform low-rank matrix factorization on the user-item matrix to uncover latent factors.  
+- Prediction: Generate predictions for user ratings on unseen movies based on the learned latent factors.  
+- Evaluation: Assess the recommendation quality using metrics such as RMSE and precision at k.  
+- Visualization: Create visualizations to illustrate the distribution of predicted ratings and compare them with actual ratings.  
 
 ---
 
-### Project 1: Sentiment Analysis on Movie Reviews (Difficulty: 1)
+**Project 2: Image Compression using Low-Rank Approximation**  
+**Difficulty**: 2 (Medium)  
+**Project Objective**: Implement a low-rank approximation approach to compress images while minimizing loss of quality, demonstrating the effectiveness of dimensionality reduction in image processing.  
 
-**Project Objective**  
-The goal is to fine-tune a pre-trained transformer model for sentiment analysis on movie reviews, optimizing for accuracy in classifying reviews as positive or negative.
+**Dataset Suggestions**:  
+- CIFAR-10 dataset (available on Kaggle)  
+- Source: [CIFAR-10](https://www.kaggle.com/c/cifar-10)  
 
-**Dataset Suggestions**  
-Find movie review datasets on Kaggle or HuggingFace, which contain labeled reviews for training and testing.
-
-**Tasks**  
-- **Set Up Environment**: Install loralib and required libraries such as Hugging Face Transformers and PyTorch.
-- **Data Preprocessing**: Load the dataset, clean the text data, and split it into training and testing sets.
-- **Model Selection**: Choose a pre-trained transformer model (e.g., BERT) for sentiment analysis.
-- **Low-Rank Adaptation**: Use loralib to implement low-rank adaptation on the selected model.
-- **Training**: Fine-tune the model with the adapted layers on the training dataset.
-- **Evaluation**: Assess model performance using accuracy, precision, and recall metrics.
-
-**Bonus Ideas (Optional)**  
-- Experiment with different pre-trained models to compare performance.
-- Investigate the effect of varying the rank in low-rank adaptation on model accuracy.
+**Tasks**:  
+- Data Loading: Load images from the CIFAR-10 dataset and preprocess them for analysis.  
+- Matrix Representation: Convert each image into a matrix format suitable for low-rank approximation.  
+- Compression: Apply Loralib to perform low-rank approximation on the image matrices to achieve compression.  
+- Reconstruction: Reconstruct the compressed images and compare them visually with the original images.  
+- Quality Assessment: Use metrics such as PSNR (Peak Signal-to-Noise Ratio) and SSIM (Structural Similarity Index) to evaluate the quality of compressed images.  
 
 ---
 
-### Project 2: Predicting House Prices (Difficulty: 2)
+**Project 3: Anomaly Detection in Network Traffic**  
+**Difficulty**: 3 (Hard)  
+**Project Objective**: Develop an anomaly detection system that identifies unusual patterns in network traffic data using low-rank approximation techniques, providing insights into potential security threats.  
 
-**Project Objective**  
-The aim is to build a regression model that predicts house prices based on various features, optimizing for mean squared error (MSE).
+**Dataset Suggestions**:  
+- UNSW-NB15 dataset (available on the UNSW website)  
+- Source: [UNSW-NB15](https://www.unsw.adfa.edu.au/unsw-cyber-security-attack-datasets)  
 
-**Dataset Suggestions**  
-Utilize publicly available housing datasets from Kaggle that provide features such as size, location, and amenities.
+**Tasks**:  
+- Data Preprocessing: Load the UNSW-NB15 dataset and preprocess it to extract relevant features for network traffic analysis.  
+- Feature Engineering: Create a user-item interaction matrix representing network traffic patterns over time.  
+- Anomaly Detection: Utilize Loralib for low-rank approximation to identify anomalies by analyzing deviations from expected traffic patterns.  
+- Evaluation: Employ metrics such as precision, recall, and F1-score to evaluate the effectiveness of the anomaly detection system.  
+- Visualization: Visualize the identified anomalies and their impact on overall network performance using suitable plots.  
 
-**Tasks**  
-- **Data Collection**: Load the housing dataset and perform exploratory data analysis (EDA) to understand feature distributions.
-- **Feature Engineering**: Create new features based on existing ones (e.g., price per square foot).
-- **Model Selection**: Choose a regression model (e.g., LightGBM or XGBoost) and implement low-rank adaptation using loralib.
-- **Training and Tuning**: Train the model and optimize hyperparameters to minimize MSE.
-- **Evaluation**: Evaluate model performance using MSE and R² score on the test dataset.
-- **Visualization**: Visualize feature importance and predictions against actual prices.
-
-**Bonus Ideas (Optional)**  
-- Compare the performance of models with and without low-rank adaptation.
-- Implement cross-validation to ensure the robustness of the model.
-
----
-
-### Project 3: Anomaly Detection in Network Traffic (Difficulty: 3)
-
-**Project Objective**  
-The project aims to develop a model for detecting anomalies in network traffic data, optimizing for the true positive rate while minimizing false positives.
-
-**Dataset Suggestions**  
-Use publicly available network traffic datasets from Kaggle or government open data portals that include labeled normal and anomalous traffic.
-
-**Tasks**  
-- **Data Acquisition**: Load the network traffic dataset and preprocess the data to handle missing values and normalization.
-- **Feature Extraction**: Extract relevant features from the raw traffic data (e.g., packet size, duration).
-- **Model Selection**: Choose an appropriate model (e.g., Autoencoder or Isolation Forest) and apply low-rank adaptation with loralib.
-- **Training**: Train the model on normal traffic data to learn the baseline patterns.
-- **Anomaly Detection**: Use the trained model to identify anomalies in the test dataset.
-- **Evaluation**: Assess model performance using precision, recall, and F1-score metrics.
-
-**Bonus Ideas (Optional)**  
-- Implement a real-time anomaly detection system using a streaming dataset.
-- Explore the impact of different low-rank adaptation strategies on detection performance.
+**Bonus Ideas**:  
+- For Project 1, extend the recommendation system to include content-based filtering.  
+- For Project 2, experiment with different ranks for low-rank approximation and analyze the trade-off between compression rate and image quality.  
+- For Project 3, implement a real-time monitoring dashboard to visualize network traffic and detected anomalies.
 

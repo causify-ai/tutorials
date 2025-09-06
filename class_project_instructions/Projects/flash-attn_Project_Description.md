@@ -1,83 +1,70 @@
 **Description**
 
-Flash-Attn is a highly efficient library designed for training transformer models with attention mechanisms, specifically optimized for speed and memory usage. It provides a fast implementation of the attention mechanism that is essential for various natural language processing tasks, making it ideal for large-scale applications.
+Flash-Attn is an efficient attention mechanism designed to accelerate the training and inference of transformer models. It leverages optimized memory management and computation strategies to handle large-scale datasets effectively. Key features include:
 
-Technologies Used
-Flash-Attn
-
-- Optimized for both speed and memory efficiency in training transformer models.
-- Provides a seamless interface for integrating attention mechanisms into deep learning frameworks.
-- Supports multi-head attention, enabling complex modeling of relationships in data.
+- **Fast Attention Computation**: Significantly speeds up attention calculations, making it suitable for large models.
+- **Memory Efficiency**: Reduces memory overhead, allowing for training on larger datasets or models.
+- **Support for Various Architectures**: Compatible with popular transformer architectures, enhancing flexibility in application.
 
 ---
 
-**Project 1: Sentiment Analysis on Movie Reviews**  
-**Difficulty**: 1 (Easy)  
-**Project Objective**: Build a sentiment analysis model to classify movie reviews as positive or negative using a transformer architecture with Flash-Attn, optimizing for accuracy and processing speed.
+### Project 1: Sentiment Analysis on Movie Reviews
 
-**Dataset Suggestions**: Use the IMDB movie reviews dataset available on Kaggle.
+**Difficulty**: 1 (Easy)
+
+**Project Objective**: The goal is to classify movie reviews as positive or negative using a transformer-based model enhanced with Flash-Attn, optimizing for accuracy and inference speed.
+
+**Dataset Suggestions**: 
+- Use the IMDb Movie Reviews dataset available on Kaggle: [IMDb Dataset](https://www.kaggle.com/lakshmi25npathi/imdb-dataset-of-movie-reviews) 
 
 **Tasks**:
-- Data Preprocessing:
-    - Clean and preprocess the movie reviews text (tokenization, lowercasing, etc.).
-- Model Setup:
-    - Implement a transformer model using Flash-Attn for the sentiment classification task.
-- Training the Model:
-    - Train the model on the preprocessed dataset, optimizing hyperparameters for better performance.
-- Evaluation:
-    - Evaluate the model using accuracy, precision, and recall metrics on a test set.
-- Visualization:
-    - Visualize the sentiment distribution and model performance using Matplotlib or Seaborn.
-
-**Bonus Ideas (Optional)**: 
-- Experiment with different transformer architectures (e.g., BERT) and compare performance.
-- Implement a user interface to input reviews and display sentiment predictions.
+- **Data Preprocessing**: Clean and tokenize the text data, converting it into a suitable format for input into the transformer model.
+- **Model Setup**: Implement a transformer model using Flash-Attn for efficient attention computation.
+- **Training**: Train the model on the training set and validate it using a separate validation set.
+- **Evaluation**: Evaluate the model's performance using accuracy, precision, recall, and F1-score.
+- **Visualization**: Create visualizations to showcase the distribution of sentiments in the dataset and the model's performance metrics.
 
 ---
 
-**Project 2: Text Summarization for News Articles**  
-**Difficulty**: 2 (Medium)  
-**Project Objective**: Develop a model that summarizes long news articles into concise summaries using Flash-Attn to enhance both speed and quality of the summarization process.
+### Project 2: News Article Topic Classification
 
-**Dataset Suggestions**: Utilize the CNN/Daily Mail dataset available on HuggingFace Datasets.
+**Difficulty**: 2 (Medium)
+
+**Project Objective**: Develop a multi-class classification model that categorizes news articles into different topics (e.g., politics, sports, entertainment) using Flash-Attn to enhance processing speed and model performance.
+
+**Dataset Suggestions**: 
+- Use the 20 Newsgroups dataset available on Kaggle: [20 Newsgroups Dataset](https://www.kaggle.com/datasets/uciml/20-newsgroups)
 
 **Tasks**:
-- Data Preparation:
-    - Download and preprocess the dataset, focusing on text cleaning and formatting.
-- Model Implementation:
-    - Build a summarization model using Flash-Attn to implement the transformer architecture.
-- Fine-tuning:
-    - Fine-tune the model on the summarization task, optimizing for ROUGE scores.
-- Evaluation:
-    - Evaluate the quality of summaries using ROUGE and BLEU metrics.
-- Visualization:
-    - Present examples of original articles and their respective summaries for qualitative assessment.
+- **Data Exploration**: Analyze the dataset to understand the distribution of articles across different topics.
+- **Text Vectorization**: Use techniques like TF-IDF or embeddings to convert text data into numerical format suitable for the model.
+- **Model Implementation**: Build a transformer model with Flash-Attn to efficiently handle the multi-class classification task.
+- **Hyperparameter Tuning**: Optimize model parameters to improve classification accuracy.
+- **Performance Evaluation**: Assess the model using confusion matrices and classification reports to analyze its effectiveness across different topics.
 
-**Bonus Ideas (Optional)**: 
-- Compare the performance of different summarization techniques (extractive vs. abstractive).
-- Implement a feature to allow users to input their own articles for summarization.
+**Bonus Ideas**: 
+- Experiment with different text vectorization techniques (e.g., BERT embeddings).
+- Compare the performance of Flash-Attn with other attention mechanisms.
 
 ---
 
-**Project 3: Anomaly Detection in Network Traffic**  
-**Difficulty**: 3 (Hard)  
-**Project Objective**: Create a system that detects anomalies in network traffic data using Flash-Attn to model complex patterns and identify potential security threats.
+### Project 3: Financial Time-Series Forecasting
 
-**Dataset Suggestions**: Use the UNSW-NB15 dataset available on Kaggle.
+**Difficulty**: 3 (Hard)
+
+**Project Objective**: Create a forecasting model that predicts future stock prices based on historical data using a transformer architecture enhanced with Flash-Attn, focusing on improving prediction accuracy and reducing computation time.
+
+**Dataset Suggestions**: 
+- Use the Yahoo Finance stock price dataset available via the Yahoo Finance API (free tier): [Yahoo Finance API](https://pypi.org/project/yfinance/) 
 
 **Tasks**:
-- Data Acquisition and Preprocessing:
-    - Load and preprocess the network traffic data, handling missing values and normalizing features.
-- Feature Engineering:
-    - Extract relevant features from the raw traffic data to improve model performance.
-- Model Development:
-    - Implement a transformer-based anomaly detection model using Flash-Attn.
-- Training and Evaluation:
-    - Train the model and evaluate its performance using precision, recall, and F1-score on a validation set.
-- Visualization:
-    - Visualize the detected anomalies and their patterns over time using appropriate plots.
+- **Data Collection**: Gather historical stock price data for selected companies over a specified time frame using the Yahoo Finance API.
+- **Feature Engineering**: Create additional features such as moving averages, volatility, and other technical indicators to enrich the dataset.
+- **Model Development**: Implement a transformer model with Flash-Attn for efficient handling of time-series data.
+- **Training and Validation**: Train the model on historical data and validate it using a hold-out test set.
+- **Forecasting**: Generate future stock price predictions and visualize the results against actual prices to evaluate model performance.
 
-**Bonus Ideas (Optional)**: 
-- Integrate additional datasets for a more comprehensive anomaly detection system.
-- Develop a dashboard to visualize real-time network traffic and detected anomalies.
+**Bonus Ideas**: 
+- Investigate the impact of external factors (e.g., economic indicators) on stock prices.
+- Implement ensemble methods to combine predictions from multiple models for improved accuracy.
 

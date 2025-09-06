@@ -1,106 +1,106 @@
 **Description**
 
-mpi4py is a Python package that provides bindings for the Message Passing Interface (MPI), enabling parallel computing in Python. It allows for the distribution of tasks across multiple processors, facilitating the efficient handling of large-scale data processing and computational tasks.
+In this project, students will utilize mpi4py, a Python package that provides bindings for the Message Passing Interface (MPI), to facilitate parallel processing and distributed computing. This tool enables efficient handling of large datasets and complex computations by distributing tasks across multiple processors. Students will learn how to implement parallel algorithms and optimize performance in data science workflows.
 
 Technologies Used
 mpi4py
 
-- Enables parallel execution of Python code, enhancing performance for large datasets.
-- Supports point-to-point and collective communication between processes.
-- Facilitates the development of distributed applications across various computing environments.
+- Enables parallel and distributed computing in Python.
+- Supports various MPI functions for communication between processes.
+- Facilitates scalability in data processing tasks, improving performance significantly.
 
 ---
 
-### Project 1: Predicting Housing Prices Using Parallelized Regression (Difficulty: 1 - Easy)
+### Project 1: Parallel Data Processing with mpi4py
+**Difficulty**: 1 (Easy)
 
-**Project Objective:**
-The goal is to build a regression model to predict housing prices based on various features such as location, size, and amenities, while utilizing mpi4py for parallel processing to speed up model training.
+**Project Objective**: 
+The goal is to implement a parallelized data processing pipeline that can efficiently clean and preprocess a large dataset. The project will optimize the data cleaning process by distributing tasks across multiple processors.
 
-**Dataset Suggestions:**
-Look for housing datasets on Kaggle that include features like price, square footage, number of bedrooms, and location.
+**Dataset Suggestions**: 
+- Use the "New York City Taxi Trip Duration" dataset available on Kaggle: [NYC Taxi Trip Duration](https://www.kaggle.com/c/nyc-taxi-trip-duration/data).
 
-**Tasks:**
-- **Set Up mpi4py Environment:**
-    - Install mpi4py and set up a basic MPI environment to run parallel processes.
+**Tasks**:
+- **Set Up mpi4py Environment**: 
+  - Install mpi4py and configure the MPI environment on your local machine or Google Colab.
   
-- **Data Ingestion:**
-    - Load the housing dataset into a distributed format using Pandas and mpi4py.
-
-- **Data Preprocessing:**
-    - Clean and preprocess the data, handling missing values and encoding categorical variables, distributed across multiple processes.
-
-- **Model Training:**
-    - Implement a regression model (e.g., Linear Regression) and train it in parallel using mpi4py to optimize the training time.
-
-- **Model Evaluation:**
-    - Evaluate the model’s performance using metrics like RMSE and R², aggregating results from different processes.
-
-- **Visualization:**
-    - Visualize the predicted vs actual prices using Matplotlib.
-
----
-
-### Project 2: Parallelized Image Classification with CNNs (Difficulty: 2 - Medium)
-
-**Project Objective:**
-Develop a Convolutional Neural Network (CNN) for classifying images from a publicly available dataset while leveraging mpi4py to distribute the training workload across multiple processors.
-
-**Dataset Suggestions:**
-Utilize image datasets available on Kaggle, such as CIFAR-10 or Fashion MNIST, which contain labeled images for classification tasks.
-
-**Tasks:**
-- **Set Up mpi4py and TensorFlow:**
-    - Install necessary libraries and configure mpi4py with TensorFlow for distributed training.
-
-- **Data Loading:**
-    - Load the image dataset and preprocess images (resizing, normalization) using parallel data loading techniques.
-
-- **Model Architecture:**
-    - Build a CNN architecture suitable for the classification task, ensuring it can be trained in a distributed manner.
-
-- **Distributed Training:**
-    - Implement model training using mpi4py to distribute the training process across multiple GPUs or CPU cores.
-
-- **Model Evaluation:**
-    - Evaluate the classification accuracy and loss metrics, aggregating results from different processes.
-
-- **Visualization:**
-    - Visualize model performance through confusion matrices and accuracy plots.
+- **Load Dataset**: 
+  - Load the NYC Taxi dataset into a Pandas DataFrame for processing.
+  
+- **Implement Cleaning Functions**: 
+  - Create functions to handle missing values, outliers, and data type conversions.
+  
+- **Distribute Tasks**: 
+  - Use mpi4py to distribute the cleaning tasks across multiple processes.
+  
+- **Merge Results**: 
+  - Collect and merge cleaned data from all processes into a single DataFrame for analysis.
+  
+- **Performance Evaluation**: 
+  - Compare processing time between serial and parallel execution to demonstrate efficiency gains.
 
 ---
 
-### Project 3: Real-Time Anomaly Detection in Network Traffic (Difficulty: 3 - Hard)
+### Project 2: Parallel Machine Learning Model Training
+**Difficulty**: 2 (Medium)
 
-**Project Objective:**
-Create a system for real-time anomaly detection in network traffic data using unsupervised learning techniques, employing mpi4py to handle large volumes of streaming data in a distributed manner.
+**Project Objective**: 
+The aim is to train multiple machine learning models in parallel to predict housing prices. The project will optimize training time and model selection through parallel execution.
 
-**Dataset Suggestions:**
-Access network traffic datasets from government open data portals or Kaggle that provide logs of network activity, including normal and anomalous behavior.
+**Dataset Suggestions**: 
+- Use the "California Housing Prices" dataset available on Kaggle: [California Housing Prices](https://www.kaggle.com/c/house-prices-advanced-regression-techniques/data).
 
-**Tasks:**
-- **Set Up mpi4py for Streaming Data:**
-    - Configure mpi4py to handle streaming data and set up a distributed computing environment.
+**Tasks**:
+- **Set Up mpi4py Environment**: 
+  - Install mpi4py and configure the MPI environment.
+  
+- **Load Dataset**: 
+  - Load the California housing dataset into a Pandas DataFrame.
+  
+- **Feature Engineering**: 
+  - Implement feature engineering techniques to enhance model performance.
+  
+- **Define Models**: 
+  - Select multiple regression models (e.g., Linear Regression, Random Forest, Gradient Boosting).
+  
+- **Parallel Model Training**: 
+  - Use mpi4py to train the models in parallel, distributing the training data across processes.
+  
+- **Evaluate Models**: 
+  - Collect results and evaluate model performance using metrics such as RMSE and R².
 
-- **Data Ingestion:**
-    - Stream network traffic data into the system, ensuring efficient data handling across multiple processes.
+---
 
-- **Feature Engineering:**
-    - Extract relevant features from raw network traffic data, parallelizing the process to handle large volumes efficiently.
+### Project 3: Scalable Anomaly Detection in Large Datasets
+**Difficulty**: 3 (Hard)
 
-- **Anomaly Detection Model:**
-    - Implement an unsupervised learning model (e.g., Isolation Forest or DBSCAN) for detecting anomalies in the network traffic.
+**Project Objective**: 
+This project focuses on implementing a scalable anomaly detection system using parallel processing to identify fraudulent transactions in a large financial dataset.
 
-- **Real-Time Processing:**
-    - Use mpi4py to enable real-time processing and anomaly detection, aggregating results from distributed computations.
+**Dataset Suggestions**: 
+- Use the "Credit Card Fraud Detection" dataset available on Kaggle: [Credit Card Fraud Detection](https://www.kaggle.com/dalpozz/creditcard-fraud).
 
-- **Evaluation and Reporting:**
-    - Evaluate the model's performance using precision, recall, and F1-score, and generate reports on detected anomalies.
+**Tasks**:
+- **Set Up mpi4py Environment**: 
+  - Install mpi4py and configure the MPI environment.
+  
+- **Load Dataset**: 
+  - Load the credit card transactions dataset into a Pandas DataFrame.
+  
+- **Data Preprocessing**: 
+  - Implement preprocessing steps, including normalization and handling class imbalance.
+  
+- **Define Anomaly Detection Algorithm**: 
+  - Choose an anomaly detection algorithm (e.g., Isolation Forest, One-Class SVM).
+  
+- **Parallelize Anomaly Detection**: 
+  - Use mpi4py to parallelize the training and prediction phases of the anomaly detection model.
+  
+- **Evaluate and Visualize Results**: 
+  - Assess the model's performance using precision, recall, and F1-score. Visualize the detected anomalies against the original dataset.
 
-- **Visualization:**
-    - Create visualizations of network traffic patterns and detected anomalies using Seaborn or Matplotlib.
-
-**Bonus Ideas (Optional):**
-- Implement a dashboard for real-time monitoring of network traffic and anomalies.
-- Compare the performance of different anomaly detection algorithms in a distributed setting.
-- Explore the use of deep learning methods for more complex anomaly detection tasks.
+**Bonus Ideas**:
+- Implement a real-time anomaly detection system using streaming data from a public API like the OpenBanking API.
+- Compare the performance of different anomaly detection algorithms in a parallelized setting.
+- Explore hyperparameter tuning in parallel for the selected anomaly detection model to further optimize performance.
 

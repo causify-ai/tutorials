@@ -1,72 +1,62 @@
 **Description**
 
-Prefect is a modern data workflow orchestration tool that enables data scientists and engineers to build, schedule, and monitor data pipelines with ease. It provides a user-friendly interface and robust features for managing complex workflows, ensuring data reliability and reproducibility.
+In this project, students will utilize Prefect, a powerful data workflow orchestration tool, to automate and manage data pipelines efficiently. Prefect allows for easy monitoring, scheduling, and error handling of data workflows, making it a great choice for building robust data science projects. Its features include:
 
-Technologies Used
-Prefect
-
-- Allows users to define workflows as code using Python.
-- Supports task dependencies and scheduling, enabling complex pipeline management.
-- Provides a cloud-based UI for monitoring and managing workflows in real-time.
-- Offers built-in retries and error handling to ensure data pipeline robustness.
+- **Task Orchestration**: Define and manage tasks as Python functions, allowing for easy integration with existing code.
+- **Flow Management**: Create complex workflows with conditional logic and dependencies between tasks.
+- **Real-time Monitoring**: Track the execution status of tasks and flows with a web-based UI for seamless debugging.
+- **Scalability**: Run workflows locally or on cloud environments, enabling flexibility in resource management.
 
 ---
 
-**Project 1: Weather Data Analysis and Forecasting**  
-**Difficulty**: 1 (Easy)  
-**Project Objective**: Build a pipeline that ingests historical weather data, performs exploratory analysis, and forecasts future weather conditions using machine learning models.
+### Project 1: Movie Recommendation System (Difficulty: 1 - Easy)
 
-**Dataset Suggestions**: Find weather datasets on Kaggle or government meteorological data portals.
+**Project Objective**: Build a movie recommendation system that suggests movies to users based on their viewing history and preferences using collaborative filtering.
+
+**Dataset Suggestions**: 
+- Use the MovieLens 100K dataset available on Kaggle: [MovieLens 100K](https://www.kaggle.com/grouplens/movielens-100k).
 
 **Tasks**:
-- **Set Up Prefect Environment**: Install Prefect and set up a local or cloud-based Prefect server.
-- **Ingest Weather Data**: Create a task to fetch historical weather data from a public API or dataset.
-- **Data Preprocessing**: Implement a task for cleaning and preprocessing the data, including handling missing values and outliers.
-- **Exploratory Data Analysis (EDA)**: Create visualizations to understand trends and patterns in the weather data.
-- **Model Training**: Train a regression model (e.g., Linear Regression) to forecast future weather conditions based on historical data.
-- **Pipeline Monitoring**: Use Prefect’s UI to monitor the execution of the pipeline and visualize task performance.
-
-**Bonus Ideas**: 
-- Compare different regression models (e.g., Random Forest, XGBoost) for forecasting accuracy.
-- Implement a feature engineering step to include additional variables such as humidity or wind speed.
+- **Data Ingestion**: Load the MovieLens dataset into a Pandas DataFrame using Prefect tasks.
+- **Data Preprocessing**: Clean and preprocess the data to handle missing values and format it for analysis.
+- **Model Training**: Implement collaborative filtering using a simple user-item matrix factorization approach.
+- **Recommendation Generation**: Create a Prefect task to generate movie recommendations for a user based on the trained model.
+- **Deployment**: Schedule the recommendation pipeline to run daily and update recommendations for users.
 
 ---
 
-**Project 2: E-commerce Sales Prediction**  
-**Difficulty**: 2 (Medium)  
-**Project Objective**: Create a data pipeline that ingests e-commerce transaction data, performs feature engineering, and builds a predictive model to forecast sales for the next month.
+### Project 2: Predictive Maintenance for Manufacturing (Difficulty: 2 - Medium)
 
-**Dataset Suggestions**: Look for e-commerce transaction datasets on Kaggle or open data portals.
+**Project Objective**: Develop a predictive maintenance model that forecasts when machinery is likely to fail, optimizing maintenance schedules and reducing downtime.
+
+**Dataset Suggestions**: 
+- Use the NASA Turbofan Engine Degradation Simulation dataset available on Kaggle: [NASA Turbofan Engine](https://www.kaggle.com/datasets/behnamf/engine-degradation-simulation-data).
 
 **Tasks**:
-- **Set Up Prefect Flow**: Define a Prefect flow to orchestrate the entire pipeline.
-- **Data Ingestion**: Create a task to pull e-commerce transaction data from a public dataset and load it into a DataFrame.
-- **Feature Engineering**: Develop tasks to create new features such as customer segmentation, seasonal trends, and promotional effects.
-- **Model Selection**: Implement a task to train multiple models (e.g., Decision Trees, Neural Networks) and evaluate their performance.
-- **Sales Forecasting**: Use the best-performing model to predict sales for the upcoming month.
-- **Deployment**: Schedule the pipeline to run regularly, ensuring continuous sales predictions.
-
-**Bonus Ideas**: 
-- Implement a model interpretability step to understand which features are driving sales predictions.
-- Create a dashboard to visualize sales forecasts and trends over time.
+- **Data Ingestion**: Create a Prefect flow to ingest the engine degradation dataset and store it in a data warehouse.
+- **Feature Engineering**: Implement tasks for feature extraction and transformation to create relevant features for the predictive model.
+- **Model Training**: Train a regression model (e.g., Random Forest) to predict the remaining useful life (RUL) of the engines.
+- **Model Evaluation**: Develop a task to evaluate model performance using metrics such as RMSE and R².
+- **Automation**: Set up a Prefect schedule to retrain the model regularly based on new data collected.
 
 ---
 
-**Project 3: Social Media Sentiment Analysis**  
-**Difficulty**: 3 (Hard)  
-**Project Objective**: Develop a robust data pipeline that collects social media posts, performs sentiment analysis, and analyzes trends over time to understand public sentiment about a specific topic.
+### Project 3: Real-Time Twitter Sentiment Analysis (Difficulty: 3 - Hard)
 
-**Dataset Suggestions**: Use public APIs from social media platforms (e.g., Twitter API) or datasets available on Kaggle.
+**Project Objective**: Create a real-time sentiment analysis pipeline that analyzes tweets about a specific topic and visualizes sentiment trends over time.
+
+**Dataset Suggestions**: 
+- Use the Twitter API to collect tweets in real-time. Follow the guidelines on Twitter Developer Portal for accessing the API.
 
 **Tasks**:
-- **Set Up Prefect with API Integration**: Configure Prefect to handle API calls to collect social media data.
-- **Data Collection**: Create a task to fetch recent posts related to a specific topic using the social media API, ensuring to handle rate limits and pagination.
-- **Data Cleaning and Preprocessing**: Implement tasks for cleaning the text data, including tokenization, removing stop words, and handling emojis.
-- **Sentiment Analysis**: Use a pre-trained sentiment analysis model (e.g., VADER or TextBlob) to analyze the sentiment of each post.
-- **Trend Analysis**: Create a task to aggregate sentiment scores over time and visualize the sentiment trend using Matplotlib or Seaborn.
-- **Error Handling and Monitoring**: Utilize Prefect’s built-in error handling to manage API failures and monitor the health of the pipeline through the Prefect UI.
+- **API Integration**: Use Prefect to orchestrate the collection of tweets via the Twitter API, filtering by keywords.
+- **Data Storage**: Store the incoming tweets in a database (e.g., PostgreSQL) using Prefect tasks.
+- **Sentiment Analysis**: Implement a task using a pre-trained sentiment analysis model (e.g., VADER or TextBlob) to analyze the sentiment of each tweet.
+- **Data Visualization**: Create a flow to visualize sentiment trends over time using libraries like Matplotlib or Plotly.
+- **Real-Time Monitoring**: Set up Prefect to monitor the pipeline and alert on any failures in the workflow.
 
-**Bonus Ideas**: 
-- Extend the analysis to include topic modeling to identify emerging themes in the posts.
-- Compare sentiment trends across different demographics or geographical locations.
+**Bonus Ideas (Optional)**:
+- Extend the recommendation system with user feedback loops to refine suggestions.
+- Implement hyperparameter tuning for the predictive maintenance model.
+- Add a dashboard to visualize real-time sentiment trends using a web framework (e.g., Dash or Flask).
 

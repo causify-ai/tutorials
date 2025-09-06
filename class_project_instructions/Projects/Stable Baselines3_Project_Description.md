@@ -1,83 +1,101 @@
 **Description**
 
-Stable Baselines3 is a set of reliable implementations of reinforcement learning algorithms in Python, built on top of PyTorch. It provides a user-friendly interface for training and evaluating RL agents, with a focus on performance and simplicity. The library supports various algorithms, including PPO, DDPG, and A2C, allowing users to experiment with different approaches to solve complex decision-making tasks.
+Stable Baselines3 is a set of reliable implementations of reinforcement learning algorithms in Python, built on top of PyTorch. It provides a user-friendly interface for training and evaluating various RL models, making it easier to apply reinforcement learning in practical scenarios.
 
 Technologies Used
 Stable Baselines3
 
-- Provides implementations of popular reinforcement learning algorithms.
-- Integrates seamlessly with OpenAI Gym for environment simulation.
-- Offers utilities for logging, evaluation, and hyperparameter tuning.
+- Offers implementations of popular RL algorithms like PPO, DDPG, A2C, and more.
+- Supports vectorized environments for efficient training.
+- Integrates seamlessly with OpenAI Gym for standard RL environments and custom environments.
 
 ---
 
-### Project 1: Difficulty 1 (Easy)
+### Project 1: Simple CartPole Balancing
+**Difficulty**: 1 (Easy)
 
-**Project Objective**  
-Create a reinforcement learning agent to navigate a simple grid world environment, optimizing for the shortest path to a goal.
+**Project Objective**: The goal is to train an agent to balance a pole on a moving cart using reinforcement learning, optimizing for the maximum number of time steps the pole remains upright.
 
-**Dataset Suggestions**  
-Use a simulated grid world environment from OpenAI Gym.
+**Dataset Suggestions**: Use the OpenAI Gym's built-in CartPole environment, which is readily available and requires no additional datasets.
 
-**Tasks**  
-- Set Up Environment:  
-  Create a custom grid world environment using OpenAI Gym with defined states, actions, and rewards.  
-- Implement RL Agent:  
-  Use Stable Baselines3 to implement a PPO agent to learn the optimal policy for navigating the grid.  
-- Training:  
-  Train the agent in the environment and visualize the learning progress over episodes.  
-- Evaluation:  
-  Evaluate the agent's performance by measuring the average steps taken to reach the goal over multiple episodes.  
+**Tasks**:
+- Set Up the Environment:
+    - Install OpenAI Gym and Stable Baselines3.
+    - Create the CartPole environment using `gym.make('CartPole-v1')`.
 
-**Bonus Ideas (Optional)**  
-- Experiment with different grid sizes and obstacles.  
-- Compare the performance of different algorithms available in Stable Baselines3.  
+- Implement the RL Agent:
+    - Choose the PPO algorithm from Stable Baselines3.
+    - Initialize the model with the CartPole environment.
 
----
+- Train the Agent:
+    - Run the training loop to allow the agent to learn from interactions with the environment.
+    - Monitor and visualize the training process using TensorBoard.
 
-### Project 2: Difficulty 2 (Medium)
+- Evaluate Performance:
+    - Test the trained agent in the environment and measure the average reward over multiple episodes.
+    - Plot the results to visualize performance improvements.
 
-**Project Objective**  
-Develop a reinforcement learning agent to play a simplified version of the classic game "CartPole," optimizing for maximum reward over time.
-
-**Dataset Suggestions**  
-Utilize the CartPole environment available in OpenAI Gym.
-
-**Tasks**  
-- Environment Setup:  
-  Load the CartPole environment using OpenAI Gym and understand its state and action space.  
-- Implement RL Algorithm:  
-  Choose an algorithm (e.g., DDPG or A2C) from Stable Baselines3 to train the agent.  
-- Hyperparameter Tuning:  
-  Experiment with different hyperparameters (learning rate, batch size) to optimize the agent's performance.  
-- Performance Evaluation:  
-  Evaluate the agent's performance by plotting the reward over time and analyzing its stability in balancing the pole.  
-
-**Bonus Ideas (Optional)**  
-- Implement a visualization of the agent's performance in real-time during training.  
-- Add noise to the environment to simulate real-world disturbances and test the agent's robustness.  
+**Bonus Ideas (Optional)**:
+- Experiment with different algorithms (e.g., DDPG, A2C) and compare their performance.
+- Implement a reward shaping technique to see if it improves learning efficiency.
 
 ---
 
-### Project 3: Difficulty 3 (Hard)
+### Project 2: Autonomous Driving Simulation
+**Difficulty**: 2 (Medium)
 
-**Project Objective**  
-Create a reinforcement learning agent that learns to play a custom 2D platformer game, optimizing for the highest score by completing levels and collecting items.
+**Project Objective**: Train an RL agent to navigate a simulated autonomous vehicle through a traffic environment, optimizing for safe navigation while minimizing travel time.
 
-**Dataset Suggestions**  
-Develop a custom game environment using Python libraries such as Pygame, or use an existing 2D platformer environment from OpenAI Gym (if available).
+**Dataset Suggestions**: Use the Carla Simulator, which provides a rich environment for autonomous driving scenarios. It can be installed and run on local machines.
 
-**Tasks**  
-- Game Environment Development:  
-  Design and implement a 2D platformer game environment that includes multiple levels, rewards for item collection, and penalties for falling.  
-- Agent Implementation:  
-  Implement a reinforcement learning agent using Stable Baselines3, selecting an appropriate algorithm like PPO or SAC.  
-- Training and Exploration:  
-  Train the agent with exploration strategies (e.g., epsilon-greedy) to improve learning efficiency.  
-- Analysis and Visualization:  
-  Analyze the agent's learning curve, visualize its gameplay, and compare its performance across different levels.  
+**Tasks**:
+- Set Up Carla Environment:
+    - Install Carla and set up the Python API to interact with the simulator.
+    - Create a custom environment that simulates traffic and road conditions.
 
-**Bonus Ideas (Optional)**  
-- Introduce additional game mechanics (e.g., enemies, power-ups) and evaluate the agent's adaptability.  
-- Create a leaderboard system to compare the performance of different agents trained with various strategies.  
+- Define the RL Agent:
+    - Use PPO from Stable Baselines3 to create the agent.
+    - Define the action and observation spaces based on vehicle controls and sensor data.
+
+- Train the Agent:
+    - Implement a training loop where the agent learns to navigate through traffic.
+    - Utilize vectorized environments for efficient training.
+
+- Evaluate and Analyze:
+    - Test the agent's performance in various traffic scenarios.
+    - Analyze the trade-offs between speed and safety in the agent's decisions.
+
+**Bonus Ideas (Optional)**:
+- Incorporate additional sensors (e.g., LIDAR data) to enhance the agent's perception.
+- Experiment with multi-agent scenarios where multiple vehicles interact in the environment.
+
+---
+
+### Project 3: Stock Trading Strategy using Reinforcement Learning
+**Difficulty**: 3 (Hard)
+
+**Project Objective**: Develop a reinforcement learning agent to create a stock trading strategy that maximizes returns while minimizing risks, optimizing for the Sharpe ratio.
+
+**Dataset Suggestions**: Use the Alpha Vantage API to fetch historical stock price data. The free tier allows access to daily stock prices and technical indicators.
+
+**Tasks**:
+- Set Up the Trading Environment:
+    - Create a custom trading environment using OpenAI Gym that simulates stock trading actions (buy, sell, hold).
+    - Integrate Alpha Vantage API to fetch stock data.
+
+- Define the RL Agent:
+    - Implement an RL agent using the PPO algorithm from Stable Baselines3.
+    - Define the state space (e.g., historical prices, technical indicators) and action space (trading actions).
+
+- Train the Agent:
+    - Run simulations over historical data to train the agent, allowing it to learn optimal trading strategies.
+    - Use techniques like experience replay to improve training efficiency.
+
+- Evaluate Performance:
+    - Assess the agent's trading performance using metrics like total return, maximum drawdown, and Sharpe ratio.
+    - Visualize trading decisions and performance over time.
+
+**Bonus Ideas (Optional)**:
+- Compare the RL agent's performance against traditional trading strategies (e.g., moving average crossover).
+- Implement portfolio management techniques to handle multiple stocks simultaneously.
 

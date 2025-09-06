@@ -1,92 +1,86 @@
 **Description**
 
-IBM Causal Inference 360 is an open-source toolkit designed for causal analysis, enabling data scientists to understand and quantify the causal relationships in their datasets. It provides a suite of algorithms to identify and estimate causal effects, allowing users to conduct robust causal inference in various domains.
+IBM Causal Inference 360 is a comprehensive toolkit designed for causal analysis, enabling data scientists to understand the impact of interventions on outcomes. It provides a suite of algorithms and methods to estimate causal effects from observational data, allowing for robust analysis and decision-making.
 
 Technologies Used
 IBM Causal Inference 360
 
-- Offers a variety of causal inference algorithms including propensity score matching, regression discontinuity, and instrumental variable methods.
-- Supports both observational and experimental data for causal analysis.
-- Facilitates the evaluation of treatment effects and causal relationships through comprehensive model diagnostics and visualizations.
+- Implements various causal inference methods, including propensity score matching and instrumental variable analysis.
+- Facilitates the estimation of treatment effects and causal relationships from observational datasets.
+- Supports model diagnostics and validation to ensure robustness of causal conclusions.
 
 ---
 
-**Project 1: Evaluating the Impact of Online Learning on Student Performance**  
+### Project 1: Understanding the Impact of Marketing Campaigns on Sales
 **Difficulty**: 1 (Easy)  
-**Project Objective**: To estimate the causal effect of online learning on student performance in mathematics by analyzing historical academic data.
+**Project Objective**: Estimate the causal effect of a marketing campaign on customer sales, optimizing the understanding of how marketing influences consumer behavior.
 
-**Dataset Suggestions**: Look for public datasets from educational institutions or government portals that track student performance metrics over time.
+**Dataset Suggestions**: Use the "Retail Sales Forecasting" dataset available on Kaggle, which contains sales data along with marketing campaign information.
 
 **Tasks**:
-- Data Collection:
-    - Gather student performance data before and after the implementation of online learning.
-    - Clean and preprocess the dataset to ensure its suitability for analysis.
-  
-- Propensity Score Matching:
-    - Apply propensity score matching to create balanced groups of students (those who experienced online learning vs. those who did not).
-  
-- Causal Effect Estimation:
-    - Use IBM Causal Inference 360 to estimate the treatment effect of online learning on student performance.
-  
-- Model Diagnostics:
-    - Evaluate the robustness of the causal estimates through diagnostic checks and visualizations.
-  
-- Reporting Results:
-    - Present findings in a clear report, including visualizations of the causal impact.
+- Data Preparation:
+    - Clean and preprocess the sales and marketing data for analysis.
+    - Create a treatment variable indicating whether a customer was exposed to the marketing campaign.
 
-**Bonus Ideas**: Extend the analysis by exploring different subjects, or compare the impact of online learning across different demographic groups.
+- Causal Effect Estimation:
+    - Use propensity score matching to estimate the causal effect of the marketing campaign on sales.
+    - Analyze the treatment effect and check for balance in covariates.
+
+- Results Interpretation:
+    - Summarize the findings, including the estimated impact of the campaign on sales.
+    - Visualize the results using bar charts or scatter plots to illustrate the effect.
+
+**Bonus Ideas**:
+- Compare the results with a different marketing strategy to analyze which one yields better sales performance.
+- Extend the analysis to different customer segments to assess varying impacts.
 
 ---
 
-**Project 2: Assessing the Effectiveness of Marketing Campaigns on Sales**  
+### Project 2: Evaluating the Effect of Educational Programs on Student Performance
 **Difficulty**: 2 (Medium)  
-**Project Objective**: To analyze the causal impact of a recent marketing campaign on product sales using historical sales data.
+**Project Objective**: Assess the causal impact of an educational intervention on student performance in standardized tests, optimizing for improved educational outcomes.
 
-**Dataset Suggestions**: Find datasets on sales and marketing campaigns from Kaggle or open government datasets related to retail.
+**Dataset Suggestions**: Utilize the "Student Performance Dataset" from Kaggle, which includes data on student demographics, study time, and performance metrics.
 
 **Tasks**:
-- Data Acquisition:
-    - Collect historical sales data and marketing campaign details.
-    - Clean and preprocess the data for analysis.
+- Data Exploration and Cleaning:
+    - Explore the dataset to understand student demographics and performance metrics.
+    - Clean the data and create a binary variable indicating participation in the educational program.
 
-- Regression Discontinuity Design:
-    - Implement regression discontinuity to analyze the effect of the marketing campaign on sales.
-  
-- Causal Estimation:
-    - Use IBM Causal Inference 360 to estimate the causal effect of the marketing campaign on sales figures.
-  
-- Sensitivity Analysis:
-    - Conduct sensitivity analyses to determine how robust your findings are to potential confounders.
+- Causal Analysis:
+    - Apply instrumental variable analysis to estimate the causal effect of the educational program on test scores.
+    - Validate the assumptions of the instrumental variable used.
 
-- Visualization:
-    - Create visualizations to illustrate the causal relationships and treatment effects.
+- Reporting:
+    - Prepare a report summarizing the causal impact of the educational program on student performance.
+    - Use visualizations to represent the results and highlight key findings.
 
-**Bonus Ideas**: Explore different marketing strategies or segment the analysis by product categories to assess varied impacts.
+**Bonus Ideas**:
+- Investigate the long-term effects of the educational program by analyzing follow-up test scores.
+- Explore additional factors that may influence the effectiveness of the program, such as socioeconomic status.
 
 ---
 
-**Project 3: Understanding the Impact of Air Quality on Public Health Outcomes**  
+### Project 3: Analyzing the Impact of Health Interventions on Patient Outcomes
 **Difficulty**: 3 (Hard)  
-**Project Objective**: To investigate the causal relationship between air quality indices and hospital admission rates for respiratory diseases.
+**Project Objective**: Determine the causal effects of a health intervention (e.g., a new medication) on patient recovery rates, optimizing for healthcare decision-making.
 
-**Dataset Suggestions**: Access public health datasets and air quality data from government portals or health organizations.
+**Dataset Suggestions**: Use the "Heart Disease UCI" dataset from Kaggle, which contains various health metrics and outcomes for patients, including treatment information.
 
 **Tasks**:
-- Data Integration:
-    - Gather air quality data (e.g., PM2.5 levels) and hospital admission records for respiratory diseases.
-    - Clean and merge the datasets based on time and geographical location.
+- Data Preprocessing:
+    - Clean and preprocess the dataset, focusing on relevant health metrics and treatment indicators.
+    - Create a treatment group based on patients receiving the new medication.
 
-- Instrumental Variable Analysis:
-    - Utilize instrumental variable methods to address potential confounding factors affecting the relationship between air quality and health outcomes.
-  
-- Causal Effect Estimation:
-    - Apply IBM Causal Inference 360 to estimate the causal effect of air quality on hospital admissions.
-  
-- Model Validation:
-    - Validate the causal model through diagnostic tests and robustness checks.
+- Causal Inference Techniques:
+    - Implement causal inference methods such as regression discontinuity or difference-in-differences to estimate the treatment effect on recovery rates.
+    - Assess the robustness of the causal estimates through sensitivity analyses.
 
-- Comprehensive Reporting:
-    - Develop a detailed report that includes findings, implications for public health policy, and visualizations of the causal relationships.
+- Interpretation and Visualization:
+    - Analyze the results to determine the effectiveness of the health intervention on patient outcomes.
+    - Visualize findings using survival curves or treatment effect plots to communicate results effectively.
 
-**Bonus Ideas**: Investigate seasonal variations in the impact of air quality on health, or integrate socioeconomic factors into the analysis to explore differential impacts.
+**Bonus Ideas**:
+- Extend the analysis to include cost-effectiveness of the health intervention compared to existing treatments.
+- Investigate potential confounding variables that may affect the treatment outcomes and adjust the analysis accordingly.
 

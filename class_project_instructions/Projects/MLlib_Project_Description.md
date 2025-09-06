@@ -1,96 +1,69 @@
 **Description**
 
-MLlib is Apache Spark's scalable machine learning library that provides a variety of algorithms and utilities for data processing and machine learning tasks. It is designed to handle large-scale data efficiently and offers features such as:
-
-- A wide array of machine learning algorithms for classification, regression, clustering, and collaborative filtering.
-- Support for both batch and streaming data processing.
-- Integration with Spark's DataFrame and RDD APIs for seamless data manipulation.
-- Built-in tools for feature extraction, transformation, and model evaluation.
+In this project, students will utilize MLlib, Apache Spark's scalable machine learning library, to build and deploy machine learning models on large datasets. MLlib provides various algorithms for classification, regression, clustering, and collaborative filtering, along with tools for feature extraction, transformation, and evaluation. It is designed to handle big data efficiently and integrates seamlessly with the Spark ecosystem.
 
 ---
 
-**Project 1: Predicting House Prices**  
-**Difficulty**: 1 (Easy)  
-**Project Objective**: The goal of this project is to build a regression model that predicts house prices based on various features such as size, location, and number of bedrooms. Students will optimize for accuracy in their predictions.
+### Project 1: Customer Segmentation (Difficulty: 1)
 
-**Dataset Suggestions**: Explore public datasets on Kaggle related to housing prices.
+**Project Objective**  
+The goal of this project is to segment customers based on their purchasing behavior using clustering techniques. Students will optimize the clustering model to identify distinct customer groups for targeted marketing strategies.
 
-**Tasks**:
-- Data Ingestion:
-  - Load the dataset into a Spark DataFrame for processing.
-  
-- Data Preprocessing:
-  - Handle missing values and perform data cleaning.
-  - Convert categorical variables into numerical format using one-hot encoding.
-  
-- Feature Engineering:
-  - Create new features based on existing ones, such as price per square foot.
-  
-- Model Training:
-  - Use MLlib's linear regression algorithm to train the model on the dataset.
-  
-- Model Evaluation:
-  - Evaluate the model using metrics like RMSE and R² to assess prediction accuracy.
-  
-- Visualization:
-  - Visualize the predicted vs. actual prices using Matplotlib.
+**Dataset Suggestions**  
+- **Dataset**: Online Retail Dataset  
+- **Source**: [Kaggle - Online Retail](https://www.kaggle.com/datasets/mashlyn/online-retail)  
+
+**Tasks**  
+- Data Ingestion: Load the Online Retail dataset into Spark DataFrame.
+- Data Cleaning: Handle missing values and remove outliers in the dataset.
+- Feature Engineering: Create features such as total purchase amount and frequency of purchases.
+- Clustering: Apply K-means clustering using MLlib to segment customers.
+- Evaluation: Assess clustering performance using silhouette score and visualizations.
+- Reporting: Summarize findings and suggest marketing strategies for each customer segment.
 
 ---
 
-**Project 2: Customer Segmentation**  
-**Difficulty**: 2 (Medium)  
-**Project Objective**: The aim of this project is to segment customers based on their purchasing behavior using clustering techniques. Students will optimize for the number of distinct customer segments identified.
+### Project 2: Predicting Housing Prices (Difficulty: 2)
 
-**Dataset Suggestions**: Utilize datasets from Kaggle that contain transactional data or customer demographics.
+**Project Objective**  
+This project aims to predict housing prices in a metropolitan area using regression techniques. The objective is to build a robust regression model that can accurately predict prices based on various features.
 
-**Tasks**:
-- Data Ingestion:
-  - Load the customer dataset into a Spark DataFrame.
-  
-- Data Preprocessing:
-  - Clean the data and normalize numerical features for clustering.
-  
-- Feature Selection:
-  - Select relevant features such as purchase frequency, average transaction value, and customer demographics.
-  
-- Clustering:
-  - Apply the K-Means algorithm from MLlib to identify distinct customer segments.
-  
-- Evaluation:
-  - Use the silhouette score to evaluate the quality of the clusters formed.
-  
-- Visualization:
-  - Create visualizations (e.g., scatter plots) to illustrate the clusters and their characteristics.
+**Dataset Suggestions**  
+- **Dataset**: Ames Housing Dataset  
+- **Source**: [Kaggle - Ames Housing Dataset](https://www.kaggle.com/datasets/prestonvong/ames-housing-data)  
+
+**Tasks**  
+- Data Ingestion: Load the Ames Housing dataset into Spark DataFrame.
+- Data Cleaning: Address missing values and encode categorical variables.
+- Feature Selection: Identify relevant features that influence housing prices.
+- Regression Modeling: Use linear regression and decision tree regression from MLlib to predict prices.
+- Model Tuning: Optimize model parameters using cross-validation.
+- Evaluation: Compare model performance using RMSE and R² metrics.
+
+**Bonus Ideas**  
+- Implement feature importance analysis to identify key predictors.
+- Compare results with advanced models such as Random Forest or Gradient Boosted Trees.
 
 ---
 
-**Project 3: Sentiment Analysis on Product Reviews**  
-**Difficulty**: 3 (Hard)  
-**Project Objective**: The goal of this project is to perform sentiment analysis on product reviews to classify them as positive, negative, or neutral. Students will optimize for classification accuracy and interpretability.
+### Project 3: Sentiment Analysis on Product Reviews (Difficulty: 3)
 
-**Dataset Suggestions**: Access datasets from HuggingFace or Kaggle that contain labeled product reviews.
+**Project Objective**  
+The goal of this project is to perform sentiment analysis on product reviews to classify them as positive, negative, or neutral. Students will utilize natural language processing techniques to preprocess text data and build a classification model.
 
-**Tasks**:
-- Data Ingestion:
-  - Load the review dataset into a Spark DataFrame and preprocess text data.
-  
-- Text Processing:
-  - Use MLlib's feature extraction tools to convert text data into numerical vectors (e.g., TF-IDF).
-  
-- Model Training:
-  - Train a logistic regression model or decision tree classifier using MLlib for sentiment classification.
-  
-- Model Evaluation:
-  - Evaluate the model performance using confusion matrix, precision, recall, and F1-score.
-  
-- Hyperparameter Tuning:
-  - Optimize model parameters using cross-validation techniques available in MLlib.
-  
-- Visualization:
-  - Visualize the distribution of predicted sentiments and compare them with actual labels.
+**Dataset Suggestions**  
+- **Dataset**: Amazon Product Reviews (Books)  
+- **Source**: [Kaggle - Amazon Product Reviews](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews)  
 
-**Bonus Ideas (Optional)**:
-- For Project 1, attempt to include additional external features such as economic indicators.
-- For Project 2, experiment with different clustering algorithms (e.g., DBSCAN, Hierarchical Clustering) and compare results.
-- For Project 3, explore advanced NLP techniques like word embeddings or fine-tuning pre-trained models for improved sentiment classification.
+**Tasks**  
+- Data Ingestion: Load the Amazon Product Reviews dataset into Spark DataFrame.
+- Text Preprocessing: Clean and preprocess text data (removal of stop words, tokenization).
+- Feature Extraction: Use TF-IDF to transform text data into numerical features.
+- Classification: Implement logistic regression and support vector machines using MLlib for sentiment classification.
+- Model Evaluation: Evaluate model performance using confusion matrix, precision, recall, and F1-score.
+- Visualization: Create visualizations to represent sentiment distribution and model performance.
+
+**Bonus Ideas**  
+- Explore advanced NLP techniques such as Word2Vec for feature extraction.
+- Compare the performance of different classification algorithms and ensemble methods.
 

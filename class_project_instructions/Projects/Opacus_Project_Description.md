@@ -1,98 +1,68 @@
 **Description**
 
-Opacus is a library designed for training PyTorch models with differential privacy. It enables machine learning practitioners to build models that maintain user privacy while still achieving high accuracy. Opacus provides a seamless interface for integrating differential privacy into existing PyTorch workflows, allowing for the optimization of model performance while safeguarding sensitive data.
+Opacus is a Python library designed for training PyTorch models with differential privacy, allowing data scientists to build machine learning models that protect individual privacy while still leveraging sensitive data. It provides a seamless way to implement privacy-preserving techniques during the training process, ensuring that the model learns from the data without compromising individual data points.
 
 Technologies Used
 Opacus
 
-- Integrates smoothly with PyTorch for implementing differential privacy.
-- Offers a variety of privacy-preserving techniques, including gradient clipping and noise addition.
-- Provides tools for evaluating privacy guarantees and model performance.
+- Implements differential privacy in PyTorch models.
+- Allows for easy integration with existing PyTorch training loops.
+- Provides mechanisms to adjust privacy parameters like epsilon and delta to control privacy guarantees.
+- Supports various optimization algorithms while maintaining privacy.
 
 ---
 
-**Project 1: Image Classification with Differential Privacy**  
-**Difficulty**: 1 (Easy)  
-**Project Objective**: Build a convolutional neural network (CNN) for classifying images from a public dataset while ensuring that the training process preserves the privacy of individual images.
+### Project 1: Differentially Private Image Classification
+**Difficulty**: 1 (Easy)
 
-**Dataset Suggestions**: Use an image dataset available on Kaggle, such as CIFAR-10 or Fashion MNIST.
+**Project Objective**: Build a convolutional neural network (CNN) to classify images from the CIFAR-10 dataset while ensuring differential privacy to protect individual training images.
+
+**Dataset Suggestions**: Use the CIFAR-10 dataset, which can be found on Kaggle: [CIFAR-10 Dataset](https://www.kaggle.com/c/cifar-10).
 
 **Tasks**:
-- Set Up Environment:
-  - Install Opacus and PyTorch; prepare the data loading pipeline.
-  
-- Data Preprocessing:
-  - Normalize and augment the dataset for better model performance.
-  
-- Model Development:
-  - Create and compile a CNN architecture for image classification.
-  
-- Implement Differential Privacy:
-  - Integrate Opacus to add differential privacy to the training process.
-  
-- Model Training:
-  - Train the model with differential privacy enabled and monitor performance metrics.
-  
-- Evaluation:
-  - Evaluate model accuracy on a test set and analyze the impact of privacy on performance.
+- **Set Up Environment**: Install Opacus and required libraries, set up a PyTorch environment.
+- **Load CIFAR-10 Dataset**: Use torchvision to load the CIFAR-10 dataset and perform basic preprocessing (normalization, augmentation).
+- **Define CNN Architecture**: Create a simple CNN model for image classification.
+- **Integrate Opacus**: Modify the training loop to include Opacus for differential privacy during training.
+- **Train Model**: Train the model with differential privacy, adjusting privacy parameters (epsilon) for various runs.
+- **Evaluate Performance**: Assess model accuracy and privacy trade-offs using metrics such as accuracy and loss.
 
-**Bonus Ideas (Optional)**: Experiment with different levels of privacy noise and analyze how it affects accuracy and generalization.
+**Bonus Ideas**: Experiment with different CNN architectures or privacy parameters to see their impact on model performance.
 
 ---
 
-**Project 2: Text Classification with Privacy Preservation**  
-**Difficulty**: 2 (Medium)  
-**Project Objective**: Develop a text classification model to categorize news articles while implementing differential privacy to protect the content of individual articles during training.
+### Project 2: Privacy-Preserving Sentiment Analysis on Movie Reviews
+**Difficulty**: 2 (Medium)
 
-**Dataset Suggestions**: Use a text dataset from HuggingFace Datasets, such as AG News or 20 Newsgroups.
+**Project Objective**: Develop a sentiment analysis model using a recurrent neural network (RNN) to classify movie reviews as positive or negative while ensuring the privacy of the review content.
+
+**Dataset Suggestions**: Use the IMDb Movie Reviews dataset available on Kaggle: [IMDb Reviews](https://www.kaggle.com/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews).
 
 **Tasks**:
-- Data Ingestion:
-  - Load the text dataset and preprocess the text (tokenization, normalization).
-  
-- Feature Engineering:
-  - Convert text data into embeddings using pre-trained models (e.g., BERT).
-  
-- Model Selection:
-  - Choose a suitable architecture (e.g., LSTM or Transformer) for text classification.
-  
-- Introduce Differential Privacy:
-  - Use Opacus to apply differential privacy techniques during model training.
-  
-- Hyperparameter Tuning:
-  - Optimize model parameters while maintaining privacy guarantees.
-  
-- Performance Evaluation:
-  - Assess model accuracy and compare results with a non-private baseline.
+- **Data Preparation**: Load the IMDb dataset, perform text preprocessing (tokenization, padding).
+- **Build RNN Model**: Design an RNN or LSTM model for sentiment classification.
+- **Integrate Opacus**: Implement Opacus to ensure differential privacy during the training of the sentiment analysis model.
+- **Train and Evaluate**: Train the model with privacy constraints and evaluate using F1 score, precision, and recall.
+- **Analyze Privacy Impact**: Discuss the trade-offs between model accuracy and privacy guarantees.
 
-**Bonus Ideas (Optional)**: Explore the trade-offs between privacy budget (epsilon) and model performance, and visualize the results.
+**Bonus Ideas**: Compare the performance of models trained with and without differential privacy, or explore other datasets for sentiment analysis.
 
 ---
 
-**Project 3: Anomaly Detection in Time-Series Data with Differential Privacy**  
-**Difficulty**: 3 (Hard)  
-**Project Objective**: Create a model for detecting anomalies in time-series data while ensuring that the sensitive nature of individual data points is preserved through differential privacy.
+### Project 3: Differentially Private Time Series Forecasting
+**Difficulty**: 3 (Hard)
 
-**Dataset Suggestions**: Use a publicly available time-series dataset from Kaggle, such as the NASA Turbofan Engine Degradation Simulation Data Set.
+**Project Objective**: Create a forecasting model for predicting future values in a time series dataset (e.g., stock prices) while maintaining the privacy of historical data points.
+
+**Dataset Suggestions**: Use the Yahoo Finance stock price dataset available through the yfinance library: [Yahoo Finance API](https://pypi.org/project/yfinance/).
 
 **Tasks**:
-- Data Acquisition:
-  - Download and preprocess the time-series dataset for analysis.
-  
-- Feature Extraction:
-  - Generate relevant features from the time-series data (e.g., rolling statistics).
-  
-- Model Development:
-  - Implement an anomaly detection algorithm (e.g., Isolation Forest or Autoencoder).
-  
-- Apply Differential Privacy:
-  - Integrate Opacus to ensure privacy during model training.
-  
-- Model Training and Validation:
-  - Train the anomaly detection model and validate its performance using standard metrics (e.g., precision, recall).
-  
-- Analyze Results:
-  - Investigate the impact of differential privacy on anomaly detection performance and explore the model's ability to detect true anomalies.
+- **Data Collection**: Use the yfinance library to gather historical stock price data for a company (e.g., Apple or Google).
+- **Preprocessing**: Process the time series data, including normalization and creating lag features for forecasting.
+- **Model Selection**: Choose a suitable model (e.g., LSTM or GRU) for time series forecasting.
+- **Apply Opacus**: Modify the training loop to incorporate Opacus for differential privacy during model training.
+- **Train the Model**: Train the model with differential privacy settings and evaluate the forecasting performance using RMSE and MAPE.
+- **Privacy Analysis**: Analyze how different privacy parameters affect the accuracy of the predictions.
 
-**Bonus Ideas (Optional)**: Challenge students to visualize the anomalies detected before and after applying differential privacy, and assess the trade-offs involved.
+**Bonus Ideas**: Explore ensemble methods for improving forecasting accuracy or experiment with different time series datasets to assess the robustness of the model.
 

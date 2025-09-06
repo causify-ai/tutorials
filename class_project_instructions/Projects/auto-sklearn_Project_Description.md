@@ -1,75 +1,61 @@
 **Description**
 
-Auto-sklearn is an automated machine learning (AutoML) toolkit that facilitates the process of model selection and hyperparameter tuning. It is built on top of the popular scikit-learn library and aims to simplify the machine learning workflow for users by automatically finding the best-performing models and their respective hyperparameters.
+Auto-sklearn is an automated machine learning toolkit that optimizes the process of training machine learning models. It is designed to automatically search for the best algorithms and hyperparameters for a given dataset. Key features include:
 
-Technologies Used
-Auto-sklearn
-
-- Automatically selects the best machine learning algorithms for a given dataset.
-- Conducts hyperparameter optimization using Bayesian optimization.
-- Supports ensemble learning, combining multiple models for improved performance.
-- Provides a user-friendly interface for model evaluation and selection.
+- Automated model selection and hyperparameter tuning.
+- Ensemble learning capabilities to improve predictive performance.
+- Built-in support for various classification and regression tasks.
+- Easy integration with scikit-learn pipelines for seamless workflows.
 
 ---
 
-### Project 1: Predicting Housing Prices (Difficulty: 1)
+### Project 1: Predicting Housing Prices
+**Difficulty**: 1 (Easy)  
+**Project Objective**: The goal is to predict housing prices based on various features such as location, size, and number of bedrooms, optimizing the accuracy of the predictions.
 
-**Project Objective**  
-The goal is to build a predictive model that estimates housing prices based on various features such as location, size, and number of bedrooms. The project aims to optimize the model for accuracy.
+**Dataset Suggestions**: 
+- Use the "Ames Housing Dataset" available on Kaggle: [Ames Housing Dataset](https://www.kaggle.com/datasets/prestonvong/ames-housing-data).
 
-**Dataset Suggestions**  
-Find datasets on Kaggle related to housing prices in various cities.
-
-**Tasks**  
-- Data Preprocessing: Load the dataset and handle missing values, encoding categorical variables, and scaling numerical features.
-- Feature Selection: Identify relevant features that contribute to housing prices using correlation analysis.
-- Model Training: Use Auto-sklearn to automatically select and tune the best regression models for predicting housing prices.
-- Model Evaluation: Assess model performance using metrics like RMSE and R² on a validation set.
-- Visualization: Create plots to visualize the relationship between predicted and actual housing prices.
-
-**Bonus Ideas (Optional)**  
-- Compare different regression techniques (e.g., linear regression vs. decision trees).
-- Implement cross-validation to ensure robust model evaluation.
+**Tasks**:
+- **Data Preprocessing**: Clean the dataset by handling missing values and encoding categorical variables.
+- **Feature Selection**: Identify and select relevant features that influence housing prices.
+- **Model Training**: Use Auto-sklearn to automatically select the best regression models and hyperparameters.
+- **Model Evaluation**: Evaluate the model's performance using metrics such as RMSE and R².
+- **Visualization**: Create visualizations to show the relationship between predicted and actual prices.
 
 ---
 
-### Project 2: Customer Churn Prediction (Difficulty: 2)
+### Project 2: Customer Segmentation for Retail
+**Difficulty**: 2 (Medium)  
+**Project Objective**: The goal is to segment customers based on their purchasing behavior, optimizing the clustering accuracy to identify distinct customer groups.
 
-**Project Objective**  
-The objective is to predict customer churn for a subscription-based service, identifying customers likely to cancel their subscriptions. The project aims to optimize classification accuracy.
+**Dataset Suggestions**: 
+- Use the "Online Retail" dataset available on UCI Machine Learning Repository: [Online Retail Dataset](https://archive.ics.uci.edu/ml/datasets/online+retail).
 
-**Dataset Suggestions**  
-Utilize datasets from Kaggle that contain customer information and churn labels for various services.
-
-**Tasks**  
-- Data Exploration: Analyze the dataset to understand customer demographics and churn patterns.
-- Data Cleaning: Handle missing values and outliers, and perform feature engineering to create new relevant features.
-- Model Selection: Use Auto-sklearn to automatically evaluate and select the best classification algorithms for predicting churn.
-- Hyperparameter Tuning: Optimize the selected models’ hyperparameters for improved performance.
-- Performance Metrics: Evaluate model performance using precision, recall, and F1-score to understand the model's effectiveness.
-
-**Bonus Ideas (Optional)**  
-- Implement feature importance analysis to understand which factors contribute most to churn.
-- Explore the impact of different thresholds on classification metrics.
+**Tasks**:
+- **Data Cleaning**: Preprocess the dataset to remove duplicates and irrelevant records.
+- **Feature Engineering**: Create features based on customer purchase history, such as frequency and monetary value.
+- **Clustering with Auto-sklearn**: Apply Auto-sklearn for clustering algorithms to find optimal customer segments.
+- **Evaluate Clusters**: Use silhouette score and Davies-Bouldin index to evaluate the quality of clusters.
+- **Visualization**: Visualize customer segments using scatter plots or dendrograms.
 
 ---
 
-### Project 3: Image Classification of Handwritten Digits (Difficulty: 3)
+### Project 3: Predicting Heart Disease Risk
+**Difficulty**: 3 (Hard)  
+**Project Objective**: The objective is to predict the risk of heart disease in patients based on various health metrics, optimizing the model's classification accuracy.
 
-**Project Objective**  
-The goal is to classify images of handwritten digits (0-9) using Auto-sklearn. The project aims to optimize the model for accuracy while handling image data.
+**Dataset Suggestions**: 
+- Use the "Heart Disease UCI" dataset available on Kaggle: [Heart Disease UCI Dataset](https://www.kaggle.com/datasets/ronitf/heart-disease-uci).
 
-**Dataset Suggestions**  
-Access the MNIST dataset available on Kaggle or HuggingFace, which contains a large collection of handwritten digit images.
+**Tasks**:
+- **Data Exploration**: Conduct exploratory data analysis (EDA) to understand the dataset and visualize health metrics.
+- **Preprocessing**: Handle missing values, normalize data, and encode categorical features.
+- **Model Selection with Auto-sklearn**: Utilize Auto-sklearn to automatically identify the best classification algorithms and hyperparameters for predicting heart disease.
+- **Model Evaluation**: Assess model performance using accuracy, precision, recall, and F1-score.
+- **Feature Importance**: Analyze feature importance to understand key health metrics that contribute to heart disease risk.
 
-**Tasks**  
-- Data Loading: Load the MNIST dataset and preprocess the images (normalization, resizing).
-- Feature Engineering: Flatten the images into a suitable format for model training.
-- Model Training: Utilize Auto-sklearn to automatically select and tune models for image classification.
-- Ensemble Learning: Implement ensemble methods to combine predictions from multiple models for improved accuracy.
-- Model Evaluation: Use confusion matrices and classification reports to evaluate the model's performance on test data.
-
-**Bonus Ideas (Optional)**  
-- Experiment with different image augmentation techniques to improve model robustness.
-- Investigate transfer learning by integrating pre-trained models for better performance.
+**Bonus Ideas**:
+- Implement a web app using Flask to allow users to input their health metrics and receive a risk prediction.
+- Compare the Auto-sklearn model with manually tuned models to assess performance differences.
 

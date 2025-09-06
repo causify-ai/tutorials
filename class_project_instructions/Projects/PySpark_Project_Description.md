@@ -1,74 +1,71 @@
 **Description**
 
-PySpark is an open-source, distributed computing system that provides an interface for programming entire clusters with implicit data parallelism and fault tolerance. It is designed to process large datasets quickly and efficiently, leveraging the power of Apache Spark. 
+In this project, students will utilize PySpark, an open-source distributed computing framework, to process large datasets efficiently. PySpark provides an interface for Apache Spark in Python, enabling large-scale data processing and machine learning. 
 
 Technologies Used
 PySpark
 
-- Offers an easy-to-use API for data manipulation and analysis.
-- Supports SQL queries, DataFrame operations, and machine learning libraries.
-- Provides capabilities for handling big data through distributed computing.
+- Supports distributed data processing using RDDs (Resilient Distributed Datasets) and DataFrames.
+- Integrates with various data sources, including HDFS, S3, and JDBC.
+- Provides MLlib for scalable machine learning algorithms.
 
 ---
 
-### Project 1: Movie Recommendation System (Difficulty: 1 - Easy)
+**Project 1: Movie Recommendation System**  
+**Difficulty**: 1 (Easy)  
+**Project Objective**: Build a collaborative filtering recommendation system that predicts user ratings for movies based on historical ratings data.
 
-**Project Objective**  
-Build a collaborative filtering recommendation system to suggest movies based on user ratings. The goal is to optimize recommendations for users by predicting their ratings for unseen movies.
+**Dataset Suggestions**:  
+- Use the "MovieLens 100K" dataset available on Kaggle: [MovieLens 100K](https://grouplens.org/datasets/movielens/100k/)
 
-**Dataset Suggestions**  
-Utilize datasets available on Kaggle, specifically those related to movie ratings and user preferences.
+**Tasks**:
+- **Data Ingestion**: Load the MovieLens dataset into a PySpark DataFrame.
+- **Data Preprocessing**: Clean and preprocess the data, handling missing values and duplicates.
+- **Model Training**: Implement a collaborative filtering model using PySpark's MLlib.
+- **Model Evaluation**: Evaluate the model using RMSE (Root Mean Square Error) on a validation set.
+- **Recommendation Generation**: Generate movie recommendations for a selected user based on the trained model.
 
-**Tasks**  
-- **Data Ingestion**: Load the movie ratings dataset into a PySpark DataFrame.
-- **Data Preprocessing**: Clean and preprocess the data by handling missing values and converting categorical data.
-- **Model Training**: Use the ALS (Alternating Least Squares) algorithm to build a collaborative filtering model.
-- **Model Evaluation**: Evaluate the model's performance using metrics such as RMSE (Root Mean Square Error).
-- **Recommendation Generation**: Generate movie recommendations for a sample of users based on the trained model.
-
-**Bonus Ideas (Optional)**  
-- Compare the performance of ALS with other collaborative filtering techniques.
-- Implement a content-based filtering approach to enhance recommendations.
-
----
-
-### Project 2: Customer Segmentation Analysis (Difficulty: 2 - Medium)
-
-**Project Objective**  
-Conduct a customer segmentation analysis to identify distinct groups of customers based on purchasing behavior, optimizing marketing strategies.
-
-**Dataset Suggestions**  
-Find datasets on customer transactions from Kaggle or open government data portals that provide retail transaction data.
-
-**Tasks**  
-- **Data Ingestion**: Load the customer transaction dataset into a PySpark DataFrame.
-- **Data Exploration**: Perform exploratory data analysis (EDA) to understand customer demographics and purchasing patterns.
-- **Feature Engineering**: Create new features based on transaction history, such as frequency and monetary value.
-- **Clustering**: Implement K-means clustering to segment customers into distinct groups.
-- **Visualization**: Use PySpark's integration with visualization libraries to visualize clusters and interpret results.
-
-**Bonus Ideas (Optional)**  
-- Analyze the effectiveness of different clustering algorithms (e.g., DBSCAN, Gaussian Mixture Models).
-- Extend the analysis to include predictive modeling for customer churn.
+**Bonus Ideas**:  
+- Experiment with different algorithms, such as ALS (Alternating Least Squares) and user-based collaborative filtering.
+- Compare results with a content-based recommendation system using movie metadata.
 
 ---
 
-### Project 3: Real-Time Twitter Sentiment Analysis (Difficulty: 3 - Hard)
+**Project 2: Twitter Sentiment Analysis**  
+**Difficulty**: 2 (Medium)  
+**Project Objective**: Analyze Twitter data to classify tweets about a specific topic (e.g., climate change) as positive, negative, or neutral using natural language processing techniques.
 
-**Project Objective**  
-Develop a real-time sentiment analysis system for Twitter data to detect public sentiment on trending topics, optimizing responses for businesses.
+**Dataset Suggestions**:  
+- Use the "Sentiment140" dataset available on Kaggle: [Sentiment140](https://www.kaggle.com/kazanova/sentiment140)
 
-**Dataset Suggestions**  
-Utilize the Twitter API to stream tweets related to specific hashtags or keywords in real time.
+**Tasks**:
+- **Data Ingestion**: Load the Sentiment140 dataset into a PySpark DataFrame.
+- **Text Preprocessing**: Clean the text data by removing URLs, mentions, and special characters.
+- **Feature Extraction**: Use TF-IDF or word embeddings to convert text data into numerical features.
+- **Model Training**: Train a classification model (e.g., Logistic Regression or Random Forest) using PySpark's MLlib.
+- **Model Evaluation**: Evaluate model performance using accuracy, precision, and recall metrics.
 
-**Tasks**  
-- **Twitter Streaming**: Set up a PySpark streaming job to collect tweets in real-time using the Twitter API.
-- **Data Preprocessing**: Clean the tweet data by removing URLs, mentions, and special characters.
-- **Sentiment Analysis**: Use pre-trained sentiment analysis models (e.g., VADER or TextBlob) to classify tweets as positive, negative, or neutral.
-- **Aggregation**: Aggregate sentiment scores by time intervals to analyze trends over time.
-- **Visualization**: Create real-time dashboards to visualize sentiment trends using PySpark's integration with visualization tools.
+**Bonus Ideas**:  
+- Explore different feature extraction techniques, such as using pre-trained word embeddings (Word2Vec).
+- Analyze the impact of tweet volume on sentiment over time.
 
-**Bonus Ideas (Optional)**  
-- Implement a topic modeling approach to categorize tweets based on themes.
-- Explore the impact of sentiment on stock prices or brand reputation using historical data.
+---
+
+**Project 3: Predictive Maintenance for Manufacturing**  
+**Difficulty**: 3 (Hard)  
+**Project Objective**: Develop a predictive maintenance model that forecasts equipment failure based on sensor data, aiming to minimize downtime and maintenance costs.
+
+**Dataset Suggestions**:  
+- Use the "NASA Turbofan Engine Degradation Simulation Data Set" available on Kaggle: [NASA Turbofan](https://www.kaggle.com/datasets/behnamf/engine-failure-prediction)
+
+**Tasks**:
+- **Data Ingestion**: Load the NASA dataset into a PySpark DataFrame.
+- **Data Exploration**: Conduct exploratory data analysis (EDA) to understand the relationships between features and failures.
+- **Feature Engineering**: Create new features based on sensor readings (e.g., rolling averages, differences).
+- **Model Training**: Train a regression model (e.g., Gradient Boosted Trees) to predict remaining useful life (RUL) of equipment.
+- **Model Evaluation**: Evaluate the model using metrics such as MAE (Mean Absolute Error) and R-squared.
+
+**Bonus Ideas**:  
+- Implement a time-series analysis approach to predict failures based on historical trends.
+- Compare the predictive performance of different machine learning algorithms, such as LSTM for sequential data.
 
