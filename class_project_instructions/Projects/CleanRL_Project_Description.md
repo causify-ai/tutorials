@@ -1,64 +1,68 @@
-### Tech Description of CleanRL
-CleanRL is a simple and efficient library for Reinforcement Learning (RL) research, designed to streamline the implementation of various RL algorithms. Its key features include:
-- Easy-to-use interfaces for training and evaluating RL agents.
-- Support for various popular RL algorithms like PPO, DDPG, and A2C.
-- Integration with OpenAI Gym for environment simulation.
-- Support for custom environment creation and experimentation.
+**Description**
+
+CleanRL is a library designed for Reinforcement Learning (RL) that simplifies the implementation of various RL algorithms while maintaining high performance. It provides a clean and modular interface for building RL agents and environments, making it easier for users to experiment with different algorithms and hyperparameters.
+
+Key Features:
+- Supports a wide range of RL algorithms, including DQN, PPO, and A2C.
+- Provides a simple API for defining custom environments and agents.
+- Facilitates reproducibility with clear examples and consistent code structure.
+- Includes utilities for logging and monitoring training progress.
 
 ---
 
-### Project 1: Basic CartPole Balancing
-**Difficulty**: 1 (Easy)
+### Project 1: CartPole Balancing Agent (Difficulty: 1 - Easy)
 
-**Project Objective**: The goal is to develop a reinforcement learning agent that can balance a pole on a moving cart. The project will focus on optimizing the agent's policy to maximize the time the pole remains upright.
+**Project Objective**: Develop a reinforcement learning agent that learns to balance a pole on a cart using the CartPole environment. The goal is to maximize the duration the pole remains upright.
 
-**Dataset Suggestions**: Use the OpenAI Gym environment for CartPole, which is built-in and does not require any external datasets.
+**Dataset Suggestions**: Use the OpenAI Gym library, which provides the CartPole environment as a standard benchmark for RL.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Utilize the OpenAI Gym's CartPole environment to simulate episodes.
-2. **Feature Engineering**: Identify state features such as cart position, cart velocity, pole angle, and pole velocity.
-3. **Model Training**: Implement the Proximal Policy Optimization (PPO) algorithm using CleanRL to train the agent.
-4. **Use of the Tool**: Utilize CleanRL for training the agent and managing the training loop.
-5. **Evaluation Metrics**: Measure the average reward per episode and the number of successful episodes.
-6. **Visualization**: Create plots to visualize the agent's performance over time, including reward trends and episode lengths.
+**Tasks**:
+- **Set Up Environment**: Install OpenAI Gym and CleanRL to access the CartPole environment.
+- **Implement DQN Algorithm**: Use CleanRL to implement the Deep Q-Network (DQN) algorithm for training the agent.
+- **Train the Agent**: Train the agent and log its performance over episodes to monitor learning.
+- **Evaluate Performance**: Test the trained agent and visualize the results to show how long it can balance the pole.
 
-**Bonus Ideas**: Challenge students to modify the environment (e.g., changing the pole length) and observe how it affects the agent's performance.
-
----
-
-### Project 2: GridWorld Navigation
-**Difficulty**: 2 (Medium)
-
-**Project Objective**: Design a reinforcement learning agent that can navigate a grid world to reach a target location while avoiding obstacles. The objective is to optimize the agent's pathfinding strategy.
-
-**Dataset Suggestions**: Simulate the GridWorld environment using a custom-built grid setup, where students define the grid size, obstacles, and goal position.
-
-**Step-by-Step Plan**:
-1. **Data Collection**: Create a GridWorld environment with defined states, actions, and rewards.
-2. **Feature Engineering**: Represent the grid layout, agent position, and goal position as state features.
-3. **Model Training**: Implement the Deep Q-Network (DQN) algorithm using CleanRL to train the agent.
-4. **Use of the Tool**: Use CleanRL for managing the training process and evaluating the performance of the DQN agent.
-5. **Evaluation Metrics**: Track the number of steps taken to reach the goal and the success rate.
-6. **Visualization**: Generate a heatmap of the agent's path and display the grid environment with obstacles and the target.
-
-**Bonus Ideas**: Add different types of rewards (e.g., negative rewards for hitting obstacles) and compare the learning outcomes.
+**Bonus Ideas**:
+- Experiment with different hyperparameters (learning rate, exploration strategies) to see their impact on agent performance.
+- Implement a simple reward shaping to encourage different behaviors (e.g., balancing longer).
 
 ---
 
-### Project 3: Autonomous Vehicle Simulation
-**Difficulty**: 3 (Hard)
+### Project 2: LunarLander Landing Optimization (Difficulty: 2 - Medium)
 
-**Project Objective**: Develop a reinforcement learning agent that can control a simulated autonomous vehicle to navigate through a series of checkpoints while obeying traffic rules. The goal is to optimize the vehicle's driving policy for efficiency and safety.
+**Project Objective**: Create a reinforcement learning agent that learns to land a spacecraft on the lunar surface safely. The objective is to minimize the landing speed and maximize the score based on landing accuracy.
 
-**Dataset Suggestions**: Use a simulated driving environment from OpenAI Gym or a similar platform that provides vehicle dynamics and traffic scenarios.
+**Dataset Suggestions**: Utilize the LunarLander environment from OpenAI Gym, which is widely used for RL experiments.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Set up a driving simulation environment with checkpoints and traffic rules.
-2. **Feature Engineering**: Create state representations that include vehicle speed, distance to checkpoints, and distance to other vehicles.
-3. **Model Training**: Implement the Soft Actor-Critic (SAC) algorithm using CleanRL for training the autonomous vehicle agent.
-4. **Use of the Tool**: Utilize CleanRL for training, fine-tuning, and evaluating the agent's performance in the driving simulation.
-5. **Evaluation Metrics**: Measure the average time taken to complete the course, the number of traffic rule violations, and the average speed.
-6. **Visualization**: Create visualizations of the vehicle's trajectory, highlighting checkpoints and any violations.
+**Tasks**:
+- **Environment Setup**: Initialize the LunarLander environment using OpenAI Gym and CleanRL.
+- **Implement PPO Algorithm**: Use the Proximal Policy Optimization (PPO) algorithm from CleanRL to train the landing agent.
+- **Reward Function Design**: Define a custom reward function that encourages safe and controlled landings.
+- **Training and Evaluation**: Train the agent and visualize the landing trajectories to assess performance metrics.
 
-**Bonus Ideas**: Introduce dynamic traffic scenarios or varying weather conditions and analyze their impact on the agent's performance.
+**Bonus Ideas**:
+- Analyze the agent's policy to understand decision-making during landing.
+- Compare the performance of PPO with other algorithms like A2C or DQN on the same task.
+
+---
+
+### Project 3: Multi-Agent Predator-Prey Simulation (Difficulty: 3 - Hard)
+
+**Project Objective**: Implement a multi-agent reinforcement learning environment where predators learn to catch prey while avoiding obstacles. The goal is to optimize the coordination between predator agents to maximize their capture rate.
+
+**Dataset Suggestions**: Create a custom environment using CleanRL that simulates predator-prey interactions, potentially using existing grid-world environments as inspiration.
+
+**Tasks**:
+- **Custom Environment Development**: Design a grid-world environment where multiple predator agents interact with prey and obstacles.
+- **Implement Multi-Agent Algorithms**: Use CleanRL to implement algorithms suitable for multi-agent scenarios, such as Independent Q-Learning or MADDPG.
+- **Training Coordination**: Train the agents in coordination, logging their performance and capturing the dynamics of predator-prey interactions.
+- **Analysis of Agent Strategies**: Evaluate and visualize the strategies of predator agents and their effectiveness in capturing prey.
+
+**Bonus Ideas**:
+- Introduce different types of prey with varying behaviors and analyze how predator strategies adapt.
+- Implement communication between agents to enhance coordination and compare performance with non-communicating agents.
+
+---
+
+These projects provide a comprehensive learning experience with CleanRL, covering various aspects of reinforcement learning, from basic implementations to complex multi-agent systems. Each project encourages creativity and deeper understanding of RL principles while being technically feasible for graduate-level students.
 

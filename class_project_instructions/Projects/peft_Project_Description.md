@@ -1,64 +1,66 @@
-### Tech Description of PEFT
-PEFT (Parameter-Efficient Fine-Tuning) is a machine learning tool designed to optimize the fine-tuning of large pre-trained models while minimizing resource consumption. Its key features include:
-- **Parameter Efficiency**: Focuses on modifying only a small subset of model parameters.
-- **Flexibility**: Can be applied to various architectures like transformers.
-- **Performance**: Achieves competitive results with reduced computational overhead.
-- **Ease of Use**: Simplifies the fine-tuning process for users with pre-trained models.
+**Description**
+
+PEFT (Parameter Efficient Fine-Tuning) is a framework designed to facilitate the fine-tuning of pre-trained language models with minimal parameter adjustments. It enables users to adapt large models to specific tasks efficiently, making it a powerful tool for natural language processing. Key features include:
+
+- **Low-Rank Adaptation**: Allows for efficient tuning by modifying only a small subset of model parameters.
+- **Prompt Tuning**: Focuses on optimizing input prompts to guide model responses effectively.
+- **Adapters**: Supports the integration of lightweight modules that can be added or removed without altering the base model.
 
 ---
 
-### Project Blueprint
+### Project 1: Fine-Tuning a Language Model for Sentiment Analysis
+**Difficulty**: 1 (Easy)
 
-#### Project 1: Sentiment Analysis of Movie Reviews
-- **Difficulty**: 1 (Easy)
-- **Project Objective**: Develop a model that classifies movie reviews as positive or negative, optimizing for accuracy in sentiment detection.
-- **Dataset Suggestions**: Utilize a dataset of movie reviews available on Kaggle or HuggingFace Datasets, focusing on text data with labeled sentiment.
-  
-- **Step-by-Step Plan**:
-  1. **Data Collection**: Download movie reviews dataset from Kaggle or HuggingFace.
-  2. **Feature Engineering**: Pre-process text (tokenization, removing stop words, etc.) and create features using embeddings.
-  3. **Model Training**: Use a pre-trained transformer model and apply PEFT for fine-tuning on the sentiment classification task.
-  4. **Use of the Tool**: Leverage PEFT to efficiently fine-tune the model, minimizing parameter updates.
-  5. **Evaluation Metrics**: Use accuracy, precision, recall, and F1-score to evaluate model performance.
-  6. **Visualization/Reporting**: Create visualizations of model predictions vs. actual sentiments and generate a report summarizing findings.
+**Project Objective**: The goal is to fine-tune a pre-trained language model using PEFT for sentiment analysis on movie reviews. Students will optimize the model to classify reviews as positive, negative, or neutral.
 
-- **Bonus Ideas**: Experiment with multiple pre-trained models to compare performance; explore multi-class sentiment analysis (e.g., neutral, positive, negative).
+**Dataset Suggestions**: Utilize sentiment analysis datasets available on Kaggle, such as movie reviews or product reviews.
 
----
+**Tasks**:
+- **Set Up Environment**: Install PEFT and necessary libraries (e.g., Hugging Face Transformers).
+- **Data Preparation**: Load and preprocess the dataset, including text cleaning and tokenization.
+- **Fine-Tuning**: Use PEFT to apply low-rank adaptation on a pre-trained language model for sentiment classification.
+- **Model Evaluation**: Assess the model's performance using accuracy, precision, recall, and F1-score.
+- **Visualization**: Create visualizations of the model's predictions and performance metrics.
 
-#### Project 2: Predicting Housing Prices
-- **Difficulty**: 2 (Medium)
-- **Project Objective**: Build a regression model to predict housing prices based on various features, optimizing for Mean Absolute Error (MAE).
-- **Dataset Suggestions**: Use a housing dataset available on Kaggle that includes features like location, size, and number of rooms.
-
-- **Step-by-Step Plan**:
-  1. **Data Collection**: Download the housing dataset from Kaggle.
-  2. **Feature Engineering**: Handle missing values, create new features (e.g., price per square foot), and normalize numerical features.
-  3. **Model Training**: Utilize a pre-trained regression model and apply PEFT to fine-tune it for the housing price prediction task.
-  4. **Use of the Tool**: Implement PEFT for efficient model training, focusing on key parameters that influence price prediction.
-  5. **Evaluation Metrics**: Assess model performance using MAE, RMSE, and R-squared.
-  6. **Visualization/Reporting**: Visualize predicted vs. actual prices and create a dashboard to display key insights.
-
-- **Bonus Ideas**: Create a baseline model using simpler regression techniques (e.g., linear regression) for comparison; explore feature importance analysis.
+**Bonus Ideas**: Experiment with different pre-trained models and compare their performance. Consider adding a user interface for real-time sentiment analysis.
 
 ---
 
-#### Project 3: Anomaly Detection in Network Traffic
-- **Difficulty**: 3 (Hard)
-- **Project Objective**: Develop a model to detect anomalies in network traffic data, optimizing for detection rate and minimizing false positives.
-- **Dataset Suggestions**: Use a publicly available network traffic dataset from Kaggle that includes labeled normal and anomalous traffic.
+### Project 2: Topic Modeling with Fine-Tuned Language Models
+**Difficulty**: 2 (Medium)
 
-- **Step-by-Step Plan**:
-  1. **Data Collection**: Obtain network traffic dataset from Kaggle.
-  2. **Feature Engineering**: Extract relevant features such as packet size, duration, and protocol type; apply dimensionality reduction techniques if necessary.
-  3. **Model Training**: Fine-tune a pre-trained anomaly detection model using PEFT to enhance its ability to detect network anomalies.
-  4. **Use of the Tool**: Utilize PEFT for efficient fine-tuning, focusing on critical parameters that affect anomaly detection.
-  5. **Evaluation Metrics**: Evaluate the model using metrics such as precision, recall, and F1-score, along with confusion matrix analysis.
-  6. **Visualization/Reporting**: Create visualizations of detected anomalies and normal traffic patterns; generate a report detailing the methodology and findings.
+**Project Objective**: The objective is to fine-tune a language model for topic modeling on news articles, allowing students to identify and categorize emerging topics over time.
 
-- **Bonus Ideas**: Implement additional anomaly detection techniques (e.g., clustering) for comparison; explore real-time detection capabilities by simulating streaming data.
+**Dataset Suggestions**: Access public news datasets from Kaggle or Hugging Face that include articles from various categories and timeframes.
+
+**Tasks**:
+- **Data Collection**: Gather a dataset of news articles and preprocess the text data.
+- **Fine-Tuning with PEFT**: Apply prompt tuning to a language model to improve its ability to extract topics from the articles.
+- **Topic Extraction**: Utilize the fine-tuned model to extract and categorize topics from the articles.
+- **Trend Analysis**: Analyze how topics evolve over time and visualize the frequency of each topic.
+- **Model Evaluation**: Evaluate the quality of the topics using coherence scores and human evaluation.
+
+**Bonus Ideas**: Create an interactive dashboard to visualize topics and their trends. Compare results with traditional topic modeling techniques like LDA.
 
 ---
 
-These projects provide a diverse range of applications for the PEFT tool, allowing students to engage in practical data science tasks while learning about model fine-tuning and machine learning methodologies.
+### Project 3: Anomaly Detection in Financial Transactions
+**Difficulty**: 3 (Hard)
+
+**Project Objective**: The aim is to leverage PEFT to fine-tune a language model for anomaly detection in financial transaction data, identifying potentially fraudulent activities.
+
+**Dataset Suggestions**: Use open financial transaction datasets available on Kaggle or government open data portals that provide anonymized transaction records.
+
+**Tasks**:
+- **Data Acquisition**: Collect and preprocess the financial transaction dataset, ensuring to handle missing values and outliers.
+- **Feature Engineering**: Create relevant features that may indicate anomalies (e.g., transaction amount, frequency).
+- **Fine-Tuning with PEFT**: Fine-tune a language model to classify transactions as normal or suspicious using low-rank adaptation.
+- **Anomaly Detection**: Implement the model to flag transactions that deviate significantly from the norm.
+- **Model Evaluation**: Assess the model's effectiveness using metrics like ROC-AUC, precision, and recall.
+
+**Bonus Ideas**: Explore unsupervised anomaly detection methods as a baseline. Develop a real-time alert system for flagged transactions.
+
+--- 
+
+These projects provide a structured approach to applying PEFT in various domains, allowing students to deepen their understanding of fine-tuning techniques while working on practical data science problems.
 

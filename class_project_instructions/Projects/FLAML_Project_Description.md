@@ -1,73 +1,62 @@
-**Tech Description of FLAML:**
-FLAML (Fast and Lightweight AutoML) is an open-source library designed for automated machine learning. It optimizes the model selection and hyperparameter tuning process efficiently, allowing users to focus on feature engineering and data preparation. Key features include:
-- Lightweight design that minimizes resource consumption.
-- Fast optimization algorithms for rapid model training.
-- Support for various machine learning tasks, including classification and regression.
-- Easy integration with popular data science libraries such as Scikit-learn and Pandas.
+### Description
 
-### Project Blueprint 1: Predicting House Prices (Difficulty: 1 - Easy)
+FLAML (Fast and Lightweight AutoML) is an efficient library for automated machine learning, designed to optimize the process of model selection and hyperparameter tuning. It allows users to quickly build high-performing models with minimal computational resources. Key features include:
 
-**Project Objective:**  
-The goal of this project is to predict house prices based on various features such as location, size, and amenities. Students will optimize the model to minimize prediction errors.
-
-**Dataset Suggestions:**  
-Students can use a real estate dataset available on Kaggle, which includes features like square footage, number of bedrooms, and location details.
-
-**Step-by-Step Plan:**
-1. **Data Collection:** Download the dataset from Kaggle and load it into the environment.
-2. **Feature Engineering:** Create new features such as price per square foot, and handle missing values or categorical variables.
-3. **Model Training:** Use FLAML to automatically select the best model and tune hyperparameters for regression.
-4. **Use of the Tool:** Leverage FLAML’s capabilities to quickly find the optimal model with minimal manual tuning.
-5. **Evaluation Metrics:** Use metrics like Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE) to evaluate model performance.
-6. **Visualization/Reporting:** Create visualizations of predicted vs. actual prices and generate a report summarizing findings.
-
-**Bonus Ideas:**  
-- Compare the performance of FLAML with traditional model selection methods.
-- Experiment with different feature sets to see how they impact model performance.
+- **Automatic Model Selection**: Quickly identifies the best model for a given dataset.
+- **Hyperparameter Tuning**: Efficiently tunes hyperparameters to improve model performance.
+- **Lightweight and Fast**: Designed to work with limited computational resources, making it suitable for standard laptops and cloud environments.
 
 ---
 
-### Project Blueprint 2: Customer Segmentation (Difficulty: 2 - Medium)
+### Project 1: Predicting Housing Prices (Difficulty: 1 - Easy)
 
-**Project Objective:**  
-The goal of this project is to segment customers based on purchasing behavior using clustering techniques. Students will optimize the clustering algorithm to maximize the distinctiveness of each segment.
+**Project Objective**: Build a regression model to predict housing prices based on various features such as location, size, and number of rooms.
 
-**Dataset Suggestions:**  
-Utilize a retail dataset from Kaggle that contains customer transaction history, including purchase frequency, average transaction value, and product categories.
+**Dataset Suggestions**: Utilize open datasets from Kaggle that contain housing price information, such as those from real estate markets.
 
-**Step-by-Step Plan:**
-1. **Data Collection:** Obtain the retail dataset from Kaggle and load it into the environment.
-2. **Feature Engineering:** Create features such as total spending, frequency of purchases, and recency of purchases.
-3. **Model Training:** Use FLAML to identify the best clustering algorithm (e.g., K-Means, DBSCAN) and optimize its parameters.
-4. **Use of the Tool:** Implement FLAML for clustering to automatically evaluate multiple algorithms and parameters.
-5. **Evaluation Metrics:** Use silhouette score and Davies-Bouldin index to assess the quality of the clusters.
-6. **Visualization/Reporting:** Visualize clusters using PCA or t-SNE and prepare a report highlighting customer segments and their characteristics.
+**Tasks**:
+- **Data Preprocessing**: Clean and prepare the dataset, handling missing values and encoding categorical variables.
+- **Model Selection with FLAML**: Use FLAML to automatically select the best regression model for predicting housing prices.
+- **Hyperparameter Tuning**: Apply FLAML’s tuning capabilities to optimize the selected model’s hyperparameters.
+- **Performance Evaluation**: Assess model performance using metrics like RMSE and R², and visualize the results with scatter plots.
 
-**Bonus Ideas:**  
-- Explore how different clustering algorithms compare in terms of performance.
-- Investigate how customer segments change over time by analyzing temporal data.
+**Bonus Ideas**: Explore feature importance and analyze how different features impact housing prices.
 
 ---
 
-### Project Blueprint 3: Sentiment Analysis on Product Reviews (Difficulty: 3 - Hard)
+### Project 2: Customer Churn Prediction (Difficulty: 2 - Medium)
 
-**Project Objective:**  
-The objective of this project is to classify product reviews as positive, negative, or neutral using natural language processing (NLP) techniques. Students will optimize the model to improve classification accuracy.
+**Project Objective**: Develop a classification model to predict customer churn in a subscription-based business.
 
-**Dataset Suggestions:**  
-Students can use a product review dataset from HuggingFace or Kaggle that contains text reviews and associated sentiment labels.
+**Dataset Suggestions**: Find customer churn datasets on Kaggle, often containing features such as customer demographics, subscription details, and usage statistics.
 
-**Step-by-Step Plan:**
-1. **Data Collection:** Download the product review dataset from HuggingFace or Kaggle and load it into the environment.
-2. **Feature Engineering:** Preprocess the text data by tokenizing, removing stop words, and converting text to numerical representations (e.g., TF-IDF or word embeddings).
-3. **Model Training:** Use FLAML to automatically select the best NLP model (e.g., logistic regression, support vector machines) and fine-tune hyperparameters.
-4. **Use of the Tool:** Leverage FLAML’s automated capabilities to optimize model training with a focus on NLP tasks.
-5. **Evaluation Metrics:** Use accuracy, F1-score, and confusion matrix to evaluate model performance.
-6. **Visualization/Reporting:** Create visualizations of sentiment distribution and generate a report summarizing model performance and insights.
+**Tasks**:
+- **Data Exploration**: Conduct exploratory data analysis (EDA) to understand churn patterns and visualize key features.
+- **Data Preprocessing**: Clean the dataset, encode categorical variables, and perform feature scaling.
+- **Model Selection with FLAML**: Employ FLAML to identify the most suitable classification model for churn prediction.
+- **Hyperparameter Tuning**: Optimize the chosen model's parameters using FLAML to enhance classification accuracy.
+- **Evaluation and Insights**: Evaluate the model using precision, recall, and F1-score, and provide actionable insights for reducing churn.
 
-**Bonus Ideas:**  
-- Experiment with different text preprocessing techniques to see their impact on model performance.
-- Explore the use of pre-trained models (e.g., BERT) and compare their performance against simpler models.
+**Bonus Ideas**: Implement a feature importance analysis to identify the top factors influencing customer churn.
 
-These projects will provide students with hands-on experience in utilizing FLAML for various machine learning tasks, enhancing their understanding of data science concepts and practical applications.
+---
+
+### Project 3: Time Series Forecasting of Stock Prices (Difficulty: 3 - Hard)
+
+**Project Objective**: Create a time series forecasting model to predict future stock prices based on historical data.
+
+**Dataset Suggestions**: Use public stock price datasets available on Kaggle or financial market APIs that provide historical stock data.
+
+**Tasks**:
+- **Data Collection**: Gather historical stock price data and preprocess it for time series analysis.
+- **Feature Engineering**: Create additional features from the time series data, such as moving averages and lagged values.
+- **Model Selection with FLAML**: Utilize FLAML to explore various time series forecasting models and select the best one.
+- **Hyperparameter Tuning**: Apply FLAML’s tuning capabilities to optimize the selected model’s hyperparameters.
+- **Forecasting and Visualization**: Generate forecasts and visualize the predicted stock prices against actual prices, using time series plots.
+
+**Bonus Ideas**: Compare the performance of different models (e.g., ARIMA, LSTM) against FLAML’s best-performing model for a comprehensive analysis.
+
+--- 
+
+These projects will provide students with hands-on experience in leveraging FLAML for various machine learning tasks, fostering skills in model selection, hyperparameter tuning, and practical application of data science techniques.
 

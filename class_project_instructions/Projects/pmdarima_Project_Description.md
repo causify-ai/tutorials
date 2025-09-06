@@ -1,70 +1,75 @@
-**Tech Description of pmdarima:**
-pmdarima is a Python library designed for time series forecasting, built on top of the popular statsmodels library. It provides a simple interface for fitting ARIMA (AutoRegressive Integrated Moving Average) models and automates the process of parameter selection using the Akaike Information Criterion (AIC). Key features include:
-- Automated ARIMA model selection with `auto_arima()`
-- Support for seasonal and non-seasonal data
-- Integration with pandas for easy data manipulation
-- Ability to handle missing values and outliers
+**Description**
+
+pmdarima is a powerful Python library designed for time series forecasting, providing an easy-to-use interface for Auto ARIMA modeling. It automates the process of selecting the best ARIMA model parameters and includes features for seasonal decomposition, model diagnostics, and visualization of forecast results. 
+
+**Key Features:**
+
+- Automated parameter selection for ARIMA models using AIC/BIC criteria.
+- Seasonal decomposition capabilities for handling seasonal time series data.
+- Diagnostics tools for assessing model fit and residual analysis.
+- Visualization of forecasts and confidence intervals for better interpretation.
 
 ---
 
-### Project 1: Sales Forecasting for a Retail Store
-**Difficulty:** 1 (Easy)  
-**Project Objective:** The goal of this project is to predict future sales for a retail store based on historical sales data, optimizing for accuracy in the forecasted values.
+### Project 1: **Sales Forecasting for Retail Products**  
+**Difficulty**: 1 (Easy)  
+**Project Objective**: The goal of this project is to forecast future sales for a retail product based on historical sales data. Students will optimize their model to minimize forecasting error.
 
-**Dataset Suggestions:** 
-- Historical sales data from Kaggle or government open datasets related to retail sales.
+**Dataset Suggestions**: Look for open datasets on Kaggle that contain historical sales data for retail products, or use government open data portals.
 
-**Step-by-Step Plan:**
-1. **Data Collection:** Download historical sales data from a Kaggle dataset or government portal.
-2. **Feature Engineering:** Create new features such as month, day of the week, and holiday indicators.
-3. **Model Training:** Use `pmdarima` to fit an ARIMA model to the sales data.
-4. **Use of the Tool:** Utilize `auto_arima()` to determine the best parameters for the model.
-5. **Evaluation Metrics:** Evaluate the model using metrics like Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE).
-6. **Visualization:** Create time series plots to compare actual vs. predicted sales.
+**Tasks**:
+- **Data Ingestion**: Load the historical sales data into a Pandas DataFrame.
+- **Data Preprocessing**: Handle missing values and ensure proper date formatting.
+- **Exploratory Data Analysis**: Visualize sales trends over time to identify seasonality.
+- **Model Building**: Utilize pmdarima to build an Auto ARIMA model to forecast future sales.
+- **Model Evaluation**: Assess the model's performance using metrics like RMSE or MAE.
+- **Visualization**: Create plots to visualize the forecasted sales and actual sales.
 
-**Bonus Ideas:** 
-- Compare the ARIMA model with a simple moving average model.
-- Explore the impact of promotions on sales through additional feature engineering.
-
----
-
-### Project 2: Energy Consumption Forecasting
-**Difficulty:** 2 (Medium)  
-**Project Objective:** The objective is to forecast the energy consumption of a city over the next month, optimizing for the least error in predictions.
-
-**Dataset Suggestions:** 
-- Use publicly available energy consumption datasets from government energy departments or Kaggle.
-
-**Step-by-Step Plan:**
-1. **Data Collection:** Gather historical energy consumption data from a government energy department or Kaggle.
-2. **Feature Engineering:** Create features like time of day, seasonality, and weather conditions (temperature, humidity).
-3. **Model Training:** Fit an ARIMA model using `pmdarima` to the energy consumption data.
-4. **Use of the Tool:** Leverage `auto_arima()` for parameter selection and model fitting.
-5. **Evaluation Metrics:** Use metrics such as Mean Absolute Percentage Error (MAPE) and Mean Squared Error (MSE) for evaluation.
-6. **Visualization:** Generate line plots to visualize the forecasted energy consumption against actual consumption.
-
-**Bonus Ideas:**
-- Incorporate external factors like significant weather events or holidays to see how they affect consumption.
-- Compare the ARIMA model with a seasonal decomposition approach.
+**Bonus Ideas**: 
+- Compare the Auto ARIMA model's performance with a simple moving average model.
+- Explore the impact of promotional campaigns on sales data.
 
 ---
 
-### Project 3: Stock Price Prediction Using Economic Indicators
-**Difficulty:** 3 (Hard)  
-**Project Objective:** The goal of this project is to predict the future stock prices of a company based on historical stock data and economic indicators, optimizing for prediction accuracy.
+### Project 2: **Energy Consumption Forecasting**  
+**Difficulty**: 2 (Medium)  
+**Project Objective**: The objective of this project is to predict future energy consumption for a city based on historical hourly consumption data, optimizing for accuracy in forecasting peak demand times.
 
-**Dataset Suggestions:** 
-- Use stock price data from an open financial dataset on Kaggle, combined with economic indicators available from government economic databases.
+**Dataset Suggestions**: Access public datasets from government energy departments or Kaggle that provide hourly energy consumption data.
 
-**Step-by-Step Plan:**
-1. **Data Collection:** Collect historical stock prices for a specific company and relevant economic indicators (e.g., interest rates, inflation) from Kaggle and government portals.
-2. **Feature Engineering:** Create lagged features for stock prices and normalize economic indicators.
-3. **Model Training:** Fit an ARIMA model using `pmdarima`, ensuring to account for seasonality in stock prices.
-4. **Use of the Tool:** Implement `auto_arima()` for optimal parameter selection and model fitting.
-5. **Evaluation Metrics:** Assess model performance using R-squared and adjusted R-squared metrics.
-6. **Visualization:** Create a dashboard or a reporting tool to visualize stock price predictions alongside actual prices and economic indicators.
+**Tasks**:
+- **Data Ingestion**: Import hourly energy consumption data into a Pandas DataFrame.
+- **Data Preprocessing**: Resample the data if necessary and handle outliers.
+- **Seasonal Decomposition**: Use pmdarima to decompose the time series into trend, seasonal, and residual components.
+- **Model Training**: Implement Auto ARIMA to forecast energy consumption for the next week.
+- **Model Evaluation**: Evaluate the model’s accuracy using cross-validation and error metrics.
+- **Visualization**: Plot the forecasted energy consumption against actual consumption to highlight discrepancies.
 
-**Bonus Ideas:**
-- Compare the ARIMA model with other forecasting techniques like LSTM or SARIMA.
-- Explore the impact of major economic events (e.g., financial crises) on stock prices by segmenting the data.
+**Bonus Ideas**: 
+- Investigate the effect of weather data on energy consumption predictions.
+- Create a dashboard using Plotly or Dash to visualize real-time energy consumption forecasts.
+
+---
+
+### Project 3: **Stock Price Prediction Using Historical Data**  
+**Difficulty**: 3 (Hard)  
+**Project Objective**: This project aims to forecast future stock prices based on historical stock price data, focusing on optimizing the model for high accuracy in predicting price movements.
+
+**Dataset Suggestions**: Utilize financial market data available on Kaggle or public APIs that provide historical stock prices.
+
+**Tasks**:
+- **Data Ingestion**: Fetch historical stock price data and load it into a Pandas DataFrame.
+- **Data Preprocessing**: Clean the data by handling missing values and filtering for relevant columns (e.g., close prices).
+- **Exploratory Data Analysis**: Analyze trends and volatility in stock prices over time.
+- **Model Development**: Use pmdarima to create an Auto ARIMA model for stock price forecasting.
+- **Model Evaluation**: Assess the model’s performance using metrics like MAPE (Mean Absolute Percentage Error) and visualize confidence intervals.
+- **Backtesting**: Implement a backtesting framework to evaluate the model on unseen data.
+
+**Bonus Ideas**: 
+- Compare the performance of the Auto ARIMA model with other forecasting methods, such as LSTM or Prophet.
+- Explore feature engineering by incorporating external factors like trading volume or market sentiment indicators.
+
+--- 
+
+These projects will provide students with a comprehensive understanding of time series forecasting using pmdarima, while also encouraging creativity and exploration in data science.
 

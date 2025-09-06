@@ -1,70 +1,64 @@
-### Tech Description: DoWhy
-DoWhy is a Python library designed for causal inference, enabling users to understand the causal relationships in their data. It provides a framework for modeling causal graphs and conducting causal analyses through various methods. Key features include:
-- Causal graph creation and visualization
-- Estimation of causal effects using different methods (e.g., propensity score matching, regression adjustment)
-- Robustness checks for causal assumptions
-- Integration with popular data science libraries like Pandas and Statsmodels
+**Description**
 
-### Project Blueprint
+DoWhy is a Python library designed for causal inference, allowing users to estimate the causal effect of interventions on outcomes. It provides a simple interface to create causal graphs, perform identification, estimation, and refutation of causal effects. With DoWhy, users can leverage observational data to draw meaningful conclusions about cause-and-effect relationships.
+
+**Project Blueprint**
 
 ---
 
-#### Project 1: Analyzing the Impact of Education on Income
-**Difficulty**: 1 (Easy)
+### Project 1: Understanding the Impact of Education on Earnings
+- **Difficulty**: 1 (Easy)
+- **Project Objective**: To estimate the causal effect of educational attainment on individual earnings using observational data. The goal is to determine how much additional income can be attributed to higher education levels.
 
-**Project Objective**: Determine the causal effect of education level on annual income, optimizing for a clearer understanding of how educational attainment influences earnings.
+- **Dataset Suggestions**: Explore datasets available on Kaggle related to income and education, or use public datasets from government labor statistics.
 
-**Dataset Suggestions**: Use open datasets from government labor statistics or Kaggle that include demographic information, education levels, and income data.
+- **Tasks**:
+  - **Define the Causal Graph**: Create a causal diagram representing the relationship between education level and earnings, including confounding variables such as experience and location.
+  - **Estimation of Causal Effect**: Utilize DoWhy to estimate the causal effect of education on earnings using regression analysis.
+  - **Refutation Tests**: Conduct sensitivity analyses to assess the robustness of the causal estimates, checking for hidden biases or confounders.
+  - **Visualization**: Present the findings using visualizations that illustrate the causal relationships and estimated effects.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download the dataset from a public source like Kaggle or government labor statistics.
-2. **Feature Engineering**: Clean the dataset, create categorical variables for education level, and normalize income data.
-3. **Model Training**: Use DoWhy to create a causal graph representing the relationship between education and income.
-4. **Use of the Tool**: Apply DoWhy's estimation methods (e.g., regression adjustment) to estimate the causal effect of education on income.
-5. **Evaluation Metrics**: Analyze the estimated effect size and confidence intervals.
-6. **Visualization**: Create visualizations of the causal graph and the estimated effects using Matplotlib or Seaborn.
-
-**Bonus Ideas**: Explore additional variables such as geographic location or industry to see how they might moderate the effect of education on income.
-
----
-
-#### Project 2: Evaluating the Effect of Marketing Campaigns on Sales
-**Difficulty**: 2 (Medium)
-
-**Project Objective**: Assess the causal impact of different marketing campaigns on product sales, optimizing for marketing resource allocation.
-
-**Dataset Suggestions**: Look for datasets on Kaggle that include sales data along with details of marketing campaigns, such as social media ads or email marketing.
-
-**Step-by-Step Plan**:
-1. **Data Collection**: Gather data from Kaggle, ensuring it includes sales figures and detailed marketing campaign information.
-2. **Feature Engineering**: Create features for campaign types, timings, and customer demographics.
-3. **Model Training**: Construct a causal graph to represent the relationship between marketing efforts and sales outcomes.
-4. **Use of the Tool**: Use DoWhy to estimate the causal effect of marketing campaigns on sales, employing methods like propensity score matching.
-5. **Evaluation Metrics**: Evaluate using metrics such as the Average Treatment Effect (ATE) and check for robustness.
-6. **Visualization**: Present findings through dashboards or reports that highlight the effectiveness of each campaign.
-
-**Bonus Ideas**: Compare the results across different product categories or geographic regions to identify which campaigns are most effective.
+- **Bonus Ideas**: 
+  - Compare the estimated effects across different demographics (e.g., gender, age).
+  - Explore alternative methods of estimation (e.g., matching techniques).
 
 ---
 
-#### Project 3: Investigating the Causal Factors of Air Quality on Public Health
-**Difficulty**: 3 (Hard)
+### Project 2: Evaluating the Effect of Marketing Campaigns on Sales
+- **Difficulty**: 2 (Medium)
+- **Project Objective**: To assess the causal impact of a marketing campaign on product sales, aiming to quantify how much sales increase can be attributed to specific marketing efforts.
 
-**Project Objective**: Explore the causal relationships between air quality indices and public health outcomes, optimizing for policy recommendations.
+- **Dataset Suggestions**: Look for datasets on Kaggle that include sales data and marketing campaign details, or utilize open datasets from retail analytics.
 
-**Dataset Suggestions**: Utilize open datasets from government environmental agencies or health organizations that provide air quality metrics and health statistics.
+- **Tasks**:
+  - **Construct the Causal Model**: Develop a causal graph that includes marketing efforts, sales, and other influencing factors like seasonality and competitor actions.
+  - **Identification of Causal Effect**: Use DoWhy to identify the causal effect of the marketing campaign on sales using observational data.
+  - **Estimate the Effect**: Apply different estimation methods (e.g., regression, propensity score matching) to derive the causal effect.
+  - **Refutation**: Conduct tests to validate the causal inference, such as checking for confounding variables and performing placebo tests.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Access public datasets that include air quality indices (e.g., PM2.5 levels) and health outcome measures (e.g., hospital admissions for respiratory issues).
-2. **Feature Engineering**: Process the data to create time-series features, normalize health outcomes, and segment by demographic factors.
-3. **Model Training**: Develop a causal graph that represents the hypothesized relationships between air quality and health outcomes.
-4. **Use of the Tool**: Use DoWhy to analyze the causal impact of air quality on health, applying methods such as instrumental variables.
-5. **Evaluation Metrics**: Measure the causal effect size and conduct sensitivity analyses to test the robustness of the findings.
-6. **Visualization**: Create a comprehensive report or dashboard that visualizes the causal relationships and suggests actionable insights for policymakers.
+- **Bonus Ideas**: 
+  - Analyze the effectiveness of different types of marketing strategies (e.g., digital vs. traditional).
+  - Explore the temporal dynamics of the marketing effect over time.
 
-**Bonus Ideas**: Attempt to integrate additional variables like socioeconomic status or pre-existing health conditions to further refine the analysis and recommendations.
+---
 
---- 
+### Project 3: Assessing the Impact of Remote Work on Employee Productivity
+- **Difficulty**: 3 (Hard)
+- **Project Objective**: To evaluate the causal relationship between remote work arrangements and employee productivity levels, aiming to understand how working from home affects output.
 
-These projects are designed to give students a well-rounded experience in causal inference using DoWhy, while allowing them to explore different domains and complexity levels.
+- **Dataset Suggestions**: Utilize public datasets from labor studies or academic research repositories that include remote work arrangements and productivity metrics.
+
+- **Tasks**:
+  - **Develop a Comprehensive Causal Framework**: Create a detailed causal graph that includes remote work, productivity, and various confounding factors such as work environment and employee engagement.
+  - **Identify and Estimate Causal Effects**: Use DoWhy to identify and estimate the causal impact of remote work on productivity, employing advanced techniques like instrumental variables if necessary.
+  - **Conduct Robustness Checks**: Perform thorough refutation tests to assess the validity of the causal claims, including checking for hidden biases and conducting sensitivity analysis.
+  - **Policy Implications**: Discuss the implications of the findings for organizational policies regarding remote work and present actionable insights based on the analysis.
+
+- **Bonus Ideas**: 
+  - Investigate how different demographic factors influence the productivity effects of remote work.
+  - Compare productivity outcomes across different industries or job roles.
+
+---
+
+These projects will not only enhance your understanding of causal inference using DoWhy but also provide practical experience in applying data science techniques to real-world problems. Happy coding!
 

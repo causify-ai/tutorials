@@ -1,75 +1,70 @@
-**Tech Description of Nevergrad:**
-Nevergrad is an open-source optimization library designed for derivative-free optimization. It provides a range of optimization algorithms that can be applied to various problems, particularly in machine learning and data science. Key features include:
-- A wide variety of optimization algorithms (e.g., evolutionary strategies, gradient-free methods).
-- Easy integration with existing Python codebases.
-- Support for multi-objective optimization.
-- Visualization tools for optimization progress and results.
+**Description**
+
+Nevergrad is an open-source Python library designed for optimization and derivative-free optimization, making it particularly useful for hyperparameter tuning and optimization problems in machine learning. It provides a variety of optimization algorithms, including evolutionary algorithms, gradient-free optimizers, and more. Its features include:
+
+- **Multiple Optimization Algorithms**: Supports a wide range of algorithms for different optimization tasks.
+- **Benchmarking**: Comes with a suite of benchmark functions to test optimization algorithms.
+- **Easy Integration**: Can be easily integrated into existing machine learning workflows for hyperparameter tuning.
+- **Visualization**: Provides tools for visualizing optimization processes.
 
 ---
 
-### Project 1: Predicting House Prices (Difficulty: 1 - Easy)
+### Project 1: Hyperparameter Optimization for a Classification Model
+**Difficulty**: 1 (Easy)
 
-**Project Objective:**  
-The goal is to predict house prices based on various features such as location, size, and number of bedrooms. Students will optimize the model to minimize prediction error.
+**Project Objective**: Optimize hyperparameters for a classification model (e.g., Random Forest or SVM) to maximize accuracy on a public dataset.
 
-**Dataset Suggestions:**  
-Students can use datasets from Kaggle that contain housing features and prices. Look for datasets that include both numerical and categorical data.
+**Dataset Suggestions**: Look for classification datasets on Kaggle, such as those related to health, finance, or social issues.
 
-**Step-by-Step Plan:**
-1. **Data Collection:** Download a housing dataset from Kaggle.
-2. **Feature Engineering:** Clean the dataset and create new features (e.g., price per square foot, age of the house).
-3. **Model Training:** Use a regression model (e.g., Random Forest) to predict house prices.
-4. **Use of the Tool:** Utilize Nevergrad to optimize hyperparameters of the regression model for better performance.
-5. **Evaluation Metrics:** Use Mean Absolute Error (MAE) and R² score to evaluate model performance.
-6. **Visualization:** Create a dashboard to visualize predictions against actual prices and error distribution.
+**Tasks**:
+- **Select Dataset**: Choose a classification dataset from Kaggle and load it into a Pandas DataFrame.
+- **Preprocess Data**: Clean and preprocess the dataset (handle missing values, encode categorical variables).
+- **Define Model**: Set up a classification model using Scikit-learn.
+- **Integrate Nevergrad**: Use Nevergrad to optimize hyperparameters (e.g., number of trees, max depth) for the model.
+- **Evaluate Performance**: Train the model with optimized hyperparameters and evaluate its performance using cross-validation.
+- **Visualization**: Plot the optimization process to visualize how the hyperparameters evolve.
 
-**Bonus Ideas:**  
-- Compare the performance of different regression models.
-- Implement feature importance analysis to identify key factors influencing house prices.
+**Bonus Ideas**: Compare the performance of different models (e.g., decision trees vs. SVM) using the same optimization framework.
 
 ---
 
-### Project 2: Customer Segmentation (Difficulty: 2 - Medium)
+### Project 2: Feature Selection and Optimization for Regression
+**Difficulty**: 2 (Medium)
 
-**Project Objective:**  
-The goal is to segment customers based on purchasing behavior to enhance marketing strategies. Students will optimize clustering parameters to improve the separation of customer groups.
+**Project Objective**: Implement a feature selection process using Nevergrad to optimize the selection of features for a regression model, aiming to minimize the mean squared error.
 
-**Dataset Suggestions:**  
-Students can find retail transaction datasets on Kaggle that include customer IDs, purchase amounts, and product categories.
+**Dataset Suggestions**: Use regression datasets available on Hugging Face or Kaggle, such as housing prices or stock market data.
 
-**Step-by-Step Plan:**
-1. **Data Collection:** Obtain a retail transaction dataset from Kaggle.
-2. **Feature Engineering:** Create features such as total spend, frequency of purchases, and product categories bought.
-3. **Model Training:** Apply clustering algorithms (e.g., K-Means) to group customers.
-4. **Use of the Tool:** Use Nevergrad to optimize the number of clusters and initialization methods for the K-Means algorithm.
-5. **Evaluation Metrics:** Use Silhouette Score and Davies-Bouldin Index to evaluate the quality of clusters.
-6. **Visualization:** Create visualizations of the customer segments using PCA or t-SNE for dimensionality reduction.
+**Tasks**:
+- **Select Dataset**: Choose a regression dataset and load it into a DataFrame.
+- **Preprocess Data**: Clean the dataset and perform exploratory data analysis (EDA) to understand feature relationships.
+- **Define Regression Model**: Set up a regression model (e.g., Linear Regression) using Scikit-learn.
+- **Feature Selection with Nevergrad**: Use Nevergrad to optimize the selection of features that minimize mean squared error.
+- **Model Training**: Train the regression model using the optimized set of features and evaluate its performance.
+- **Analysis**: Analyze the importance of selected features and their contribution to the model.
 
-**Bonus Ideas:**  
-- Explore different clustering algorithms (e.g., DBSCAN, Hierarchical Clustering) and compare results.
-- Create marketing strategies based on the identified customer segments.
+**Bonus Ideas**: Experiment with different regression algorithms (e.g., Ridge, Lasso) and compare their performance after feature selection.
 
 ---
 
-### Project 3: Stock Price Forecasting (Difficulty: 3 - Hard)
+### Project 3: Multi-Objective Optimization for Portfolio Management
+**Difficulty**: 3 (Hard)
 
-**Project Objective:**  
-The goal is to forecast stock prices using historical data and optimize the forecasting model to minimize prediction errors. Students will explore time series forecasting techniques.
+**Project Objective**: Use Nevergrad to optimize a portfolio of assets by balancing risk and return, aiming to achieve an optimal Sharpe ratio.
 
-**Dataset Suggestions:**  
-Students can use publicly available stock price datasets from financial APIs or Kaggle that include historical prices, volume, and other relevant indicators.
+**Dataset Suggestions**: Gather historical stock prices from public APIs or datasets available on Kaggle related to stock market performance.
 
-**Step-by-Step Plan:**
-1. **Data Collection:** Gather historical stock price data from a financial API or Kaggle.
-2. **Feature Engineering:** Create features like moving averages, volatility, and lagged price values.
-3. **Model Training:** Implement a time series forecasting model (e.g., ARIMA, LSTM) for stock price prediction.
-4. **Use of the Tool:** Leverage Nevergrad to optimize hyperparameters of the forecasting model (e.g., order parameters for ARIMA).
-5. **Evaluation Metrics:** Use Mean Squared Error (MSE) and Mean Absolute Percentage Error (MAPE) to evaluate model performance.
-6. **Visualization:** Create a visual report showing actual vs. predicted stock prices over time.
+**Tasks**:
+- **Select Dataset**: Collect historical stock price data for a set of assets (e.g., stocks, ETFs) from a public API or Kaggle.
+- **Data Preprocessing**: Clean and preprocess the data, including calculating daily returns and handling missing values.
+- **Define Objectives**: Set up two objectives for optimization: maximizing returns and minimizing risk (standard deviation).
+- **Integrate Nevergrad**: Use Nevergrad to perform multi-objective optimization to find the optimal asset allocation that maximizes the Sharpe ratio.
+- **Performance Evaluation**: Evaluate the optimized portfolio's performance against a benchmark (e.g., S&P 500).
+- **Visualization**: Visualize the trade-off between risk and return using scatter plots.
 
-**Bonus Ideas:**  
-- Compare the effectiveness of different forecasting models.
-- Explore the impact of external factors (e.g., economic indicators) on stock price predictions.
+**Bonus Ideas**: Extend the project to include transaction costs in the optimization or analyze the impact of different market conditions on portfolio performance.
 
-These projects will not only help students gain hands-on experience with Nevergrad but also deepen their understanding of various data science concepts and techniques.
+--- 
+
+These projects are designed to challenge students while providing practical experience with Nevergrad and various machine learning tasks, encouraging both learning and creativity in data science.
 

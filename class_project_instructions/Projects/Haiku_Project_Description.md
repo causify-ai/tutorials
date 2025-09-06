@@ -1,83 +1,74 @@
-### Tech Description of Haiku
-Haiku is a powerful tool designed for building and deploying machine learning models with ease. It provides a streamlined interface for data scientists to develop, train, and visualize their models without the complexity of traditional coding environments. Key features include:
+**Description**
 
-- Model training and fine-tuning capabilities.
-- Built-in visualization tools for data exploration and model performance.
-- Support for various machine learning algorithms, including regression, classification, and clustering.
-- Easy integration with popular datasets and APIs.
+Haiku is a powerful Python library designed for building and training deep learning models with a focus on simplicity and flexibility. It provides a high-level API for defining neural networks and supports various machine learning tasks, making it an excellent choice for both beginners and advanced practitioners in the field.
 
-### Project Blueprint
-
----
-
-#### Project 1: Predicting House Prices
-**Difficulty:** 1 (Easy)
-
-**Project Objective:** 
-The goal of this project is to predict house prices based on various features such as location, size, and number of rooms. Students will optimize for the most accurate price predictions using regression techniques.
-
-**Dataset Suggestions:** 
-Use datasets from Kaggle that contain housing information, such as square footage, number of bedrooms, and geographical data.
-
-**Step-by-Step Plan:**
-1. **Data Collection:** Download the housing dataset from Kaggle.
-2. **Feature Engineering:** Identify relevant features and preprocess data (e.g., normalize prices, handle missing values).
-3. **Model Training:** Use regression algorithms to train the model on the dataset.
-4. **Use of Haiku:** Utilize Haiku to visualize the data distribution and model performance metrics.
-5. **Evaluation Metrics:** Use RMSE (Root Mean Square Error) to evaluate model performance.
-6. **Visualization:** Create graphs to visualize predicted vs actual prices and feature importance.
-
-**Bonus Ideas:** 
-- Compare performance with different regression algorithms (e.g., linear regression vs. decision trees).
-- Implement hyperparameter tuning to optimize model performance.
+**Features:**
+- Intuitive API for creating and training neural networks.
+- Built-in support for various layers, optimizers, and loss functions.
+- Compatible with TensorFlow and JAX for performance optimization.
+- Facilitates easy experimentation with model architectures.
 
 ---
 
-#### Project 2: Customer Segmentation for Marketing
-**Difficulty:** 2 (Medium)
+### Project 1: Image Classification of Fashion Items (Difficulty: 1 - Easy)
 
-**Project Objective:** 
-The objective is to cluster customers based on purchasing behavior to identify distinct segments for targeted marketing strategies. Students will optimize for the best clustering results using unsupervised learning.
+**Project Objective**: Build a simple convolutional neural network (CNN) to classify images of clothing items into different categories (e.g., shirts, shoes, pants). The goal is to achieve high accuracy in classifying the items based on their visual features.
 
-**Dataset Suggestions:** 
-Utilize datasets from open government APIs or Kaggle that include customer transaction data, such as purchase history, frequency, and spending amount.
+**Dataset Suggestions**: Use the Fashion MNIST dataset available on Kaggle, which contains 70,000 grayscale images of clothing items.
 
-**Step-by-Step Plan:**
-1. **Data Collection:** Gather customer transaction data from Kaggle or an open API.
-2. **Feature Engineering:** Create features that represent customer behavior, such as total spend and purchase frequency.
-3. **Model Training:** Apply clustering algorithms (e.g., K-means) to segment customers based on engineered features.
-4. **Use of Haiku:** Use Haiku for visualizing the clusters and understanding customer demographics.
-5. **Evaluation Metrics:** Use silhouette score to assess the quality of the clustering.
-6. **Visualization:** Generate visual representations of clusters and their characteristics.
+**Tasks**:
+- **Set Up Environment**: Install Haiku and necessary libraries.
+- **Data Preparation**: Load the Fashion MNIST dataset and preprocess images (normalization, resizing).
+- **Model Building**: Design a CNN architecture using Haiku that includes convolutional, pooling, and dense layers.
+- **Training**: Train the model on the training set and validate on the validation set while monitoring performance metrics.
+- **Evaluation**: Test the model on unseen data and calculate accuracy, precision, and recall.
+- **Visualization**: Visualize training/validation loss and accuracy over epochs using Matplotlib.
 
-**Bonus Ideas:** 
-- Experiment with different clustering algorithms (e.g., hierarchical clustering).
-- Analyze the effectiveness of targeted marketing strategies on different customer segments.
+**Bonus Ideas (Optional)**:
+- Experiment with different CNN architectures or hyperparameters.
+- Implement data augmentation techniques to improve model robustness.
 
 ---
 
-#### Project 3: Sentiment Analysis of Product Reviews
-**Difficulty:** 3 (Hard)
+### Project 2: Predicting House Prices with Regression (Difficulty: 2 - Medium)
 
-**Project Objective:** 
-The goal is to perform sentiment analysis on product reviews to classify them as positive, negative, or neutral. Students will optimize for accuracy in sentiment classification using natural language processing techniques.
+**Project Objective**: Develop a regression model to predict house prices based on various features such as size, location, and number of bedrooms. The goal is to minimize the mean absolute error (MAE) of the predictions.
 
-**Dataset Suggestions:** 
-Access datasets from HuggingFace or Kaggle that include product reviews with sentiment labels.
+**Dataset Suggestions**: Use the Ames Housing dataset from Kaggle, which provides a comprehensive set of features for houses sold in Ames, Iowa.
 
-**Step-by-Step Plan:**
-1. **Data Collection:** Download product review datasets from HuggingFace or Kaggle.
-2. **Feature Engineering:** Preprocess text data by tokenizing, removing stop words, and converting text to numerical representations (e.g., TF-IDF).
-3. **Model Training:** Use pre-trained models for sentiment analysis (e.g., BERT) and fine-tune them on the dataset.
-4. **Use of Haiku:** Leverage Haiku to visualize the model's performance and confusion matrix.
-5. **Evaluation Metrics:** Use accuracy and F1-score to evaluate the model's classification performance.
-6. **Visualization:** Create visualizations to depict sentiment trends over time or across different products.
+**Tasks**:
+- **Data Exploration**: Load and explore the dataset to understand feature distributions and relationships.
+- **Data Cleaning**: Handle missing values and encode categorical variables appropriately.
+- **Feature Engineering**: Create new features that may enhance model performance (e.g., total square footage).
+- **Model Building**: Construct a regression model using Haiku, selecting appropriate layers and activation functions.
+- **Training and Validation**: Train the model and validate its performance using k-fold cross-validation.
+- **Evaluation**: Analyze the model's predictions and calculate MAE, R-squared, and feature importance.
 
-**Bonus Ideas:** 
-- Compare the performance of different NLP models.
-- Incorporate additional features such as review length or user ratings into the sentiment analysis.
+**Bonus Ideas (Optional)**:
+- Compare the performance of your model against traditional regression algorithms (e.g., linear regression).
+- Use techniques like Lasso or Ridge regression to improve model generalization.
 
 ---
 
-These projects not only provide hands-on experience with machine learning tasks but also encourage creativity and critical thinking as students explore real-world data science challenges.
+### Project 3: Sentiment Analysis on Movie Reviews (Difficulty: 3 - Hard)
+
+**Project Objective**: Implement a recurrent neural network (RNN) to perform sentiment analysis on movie reviews, classifying them as positive or negative. The goal is to achieve high accuracy in sentiment classification and explore the model's interpretability.
+
+**Dataset Suggestions**: Use the IMDb movie reviews dataset available on Kaggle, which contains 50,000 reviews labeled as positive or negative.
+
+**Tasks**:
+- **Data Preparation**: Load the IMDb dataset, preprocess text data (tokenization, padding), and split into training and testing sets.
+- **Model Architecture**: Build an RNN model using Haiku, possibly incorporating LSTM or GRU layers for improved performance.
+- **Training**: Train the model on the training set while monitoring loss and accuracy metrics.
+- **Evaluation**: Evaluate the model's performance on the test set and generate a confusion matrix.
+- **Interpretability**: Implement techniques such as LIME or SHAP to interpret model predictions and understand feature influences.
+- **Visualization**: Visualize the training process and model performance using appropriate charts.
+
+**Bonus Ideas (Optional)**:
+- Explore transfer learning by fine-tuning a pre-trained model (e.g., BERT) for sentiment classification.
+- Investigate how the model performs on different genres of movies by analyzing sentiment across categories.
+
+--- 
+
+These projects provide a well-rounded experience with Haiku, covering foundational concepts in machine learning and deep learning, while encouraging creativity and exploration.
 

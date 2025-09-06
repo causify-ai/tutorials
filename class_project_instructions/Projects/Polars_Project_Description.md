@@ -1,72 +1,66 @@
-### Tool Description: Polars
-Polars is a fast DataFrame library designed for data manipulation and analysis in Python and Rust. It is optimized for performance with a focus on speed and memory efficiency. Key features of Polars include:
-- Lazy evaluation for optimized query execution.
-- Support for multi-threading to enhance data processing speed.
-- A rich API for data manipulation, including filtering, grouping, and aggregation.
-- Compatibility with various data formats, including CSV, Parquet, and JSON.
+### Description
+
+Polars is a fast DataFrame library implemented in Rust and designed for efficient data manipulation and analysis in Python. It excels in handling large datasets and provides a user-friendly API for data processing tasks. With its parallel execution capabilities, Polars can significantly speed up data operations compared to traditional libraries like Pandas.
+
+**Key Features:**
+
+- **Performance**: Utilizes parallel execution for faster computations on large datasets.
+- **Lazy Evaluation**: Allows optimization of query execution by deferring computation until necessary.
+- **Memory Efficiency**: Designed to use less memory, enabling the handling of larger datasets.
+- **Convenient Syntax**: Offers an intuitive API similar to Pandas, making it easy to learn and use.
 
 ---
 
-### Project 1: Predicting House Prices (Difficulty: 1 - Easy)
+### Project 1: Customer Segmentation Analysis (Difficulty: 1 - Easy)
 
-**Project Objective**: The goal of this project is to predict house prices based on various features such as location, size, and amenities. Students will optimize a regression model to accurately predict prices.
+**Project Objective**: The goal is to segment customers based on their purchasing behavior using clustering techniques. This will help identify distinct customer groups for targeted marketing strategies.
 
-**Dataset Suggestions**: 
-- Use a housing prices dataset available on Kaggle that includes features like square footage, number of bedrooms, and location.
+**Dataset Suggestions**: Find customer transaction datasets on Kaggle or open government datasets related to retail.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download the dataset from Kaggle and load it into Polars.
-2. **Feature Engineering**: Clean the dataset by handling missing values and creating new features (e.g., price per square foot).
-3. **Model Training**: Use a regression model (e.g., Linear Regression) to train on the dataset.
-4. **Use of Polars**: Utilize Polars for efficient data manipulation and preparation before model training.
-5. **Evaluation Metrics**: Evaluate the model using RMSE (Root Mean Squared Error) and R² score.
-6. **Visualization**: Create visualizations to show feature importance and model performance.
+**Tasks**:
+- **Data Ingestion**: Load the customer transaction data into a Polars DataFrame.
+- **Data Cleaning**: Handle missing values and filter out irrelevant records.
+- **Feature Engineering**: Create new features such as total spending, frequency of purchases, and recency of last purchase.
+- **Clustering**: Implement K-means clustering using the engineered features to identify customer segments.
+- **Visualization**: Use visualization libraries like Matplotlib to display the clusters and insights derived from the analysis.
 
-**Bonus Ideas**: 
-- Compare the performance of different regression models (e.g., Decision Trees vs. Linear Regression).
-- Implement cross-validation to improve model robustness.
+**Bonus Ideas**: Extend the project by applying different clustering algorithms (e.g., DBSCAN) and comparing their performance.
 
 ---
 
-### Project 2: Customer Segmentation Analysis (Difficulty: 2 - Medium)
+### Project 2: Real Estate Price Prediction (Difficulty: 2 - Medium)
 
-**Project Objective**: The goal of this project is to segment customers based on purchasing behavior using clustering techniques. Students will optimize clustering to identify distinct customer groups.
+**Project Objective**: Build a regression model to predict real estate prices based on various features such as location, size, and amenities. The aim is to optimize the model for accuracy.
 
-**Dataset Suggestions**: 
-- Use a retail transaction dataset from Kaggle that includes customer purchase history, frequency, and total spend.
+**Dataset Suggestions**: Utilize real estate datasets available on Kaggle or public government portals.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download the retail dataset from Kaggle and load it into Polars.
-2. **Feature Engineering**: Aggregate transaction data to create features like total spend, average purchase frequency, and product categories.
-3. **Model Training**: Apply K-Means clustering to segment customers.
-4. **Use of Polars**: Use Polars for efficient data aggregation and transformation.
-5. **Evaluation Metrics**: Evaluate clustering performance using silhouette score and elbow method for optimal cluster number.
-6. **Visualization**: Visualize the clusters using scatter plots and profile the customer segments.
+**Tasks**:
+- **Data Loading**: Import the real estate dataset into Polars and explore its structure.
+- **Data Preprocessing**: Clean the data by handling missing values and encoding categorical variables.
+- **Feature Selection**: Analyze feature importance and select the most relevant features for the model.
+- **Model Training**: Train a regression model (e.g., Random Forest or Linear Regression) using the selected features.
+- **Model Evaluation**: Evaluate the model's performance using metrics like RMSE and R².
 
-**Bonus Ideas**: 
-- Explore hierarchical clustering as an alternative method.
-- Analyze the impact of marketing strategies on different customer segments.
+**Bonus Ideas**: Experiment with hyperparameter tuning and compare the results with baseline models.
 
 ---
 
-### Project 3: Anomaly Detection in Network Traffic (Difficulty: 3 - Hard)
+### Project 3: COVID-19 Data Analysis and Forecasting (Difficulty: 3 - Hard)
 
-**Project Objective**: The aim of this project is to detect anomalies in network traffic data, which could indicate potential security threats. Students will optimize an anomaly detection model to identify unusual patterns.
+**Project Objective**: Analyze COVID-19 case data and create a forecasting model to predict future cases. The project aims to provide insights into trends and potential future outbreaks.
 
-**Dataset Suggestions**: 
-- Use a publicly available network traffic dataset from Kaggle or an open government dataset that includes features such as packet size, source/destination IP, and timestamps.
+**Dataset Suggestions**: Access COVID-19 datasets available on Kaggle or public health organization repositories.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download the network traffic dataset and load it into Polars.
-2. **Feature Engineering**: Preprocess the data by extracting relevant features and normalizing the data.
-3. **Model Training**: Implement an anomaly detection algorithm (e.g., Isolation Forest or Autoencoder).
-4. **Use of Polars**: Leverage Polars for efficient data preprocessing and feature extraction.
-5. **Evaluation Metrics**: Assess model performance using precision, recall, and F1-score.
-6. **Visualization**: Create visualizations to highlight detected anomalies and their characteristics.
+**Tasks**:
+- **Data Acquisition**: Load the COVID-19 dataset into Polars and perform initial exploratory data analysis (EDA).
+- **Data Transformation**: Clean the dataset by addressing missing values and creating time-series features (e.g., daily new cases).
+- **Trend Analysis**: Conduct time-series analysis to identify trends and seasonal patterns in the data.
+- **Forecasting**: Implement a forecasting model (e.g., ARIMA or Prophet) to predict future COVID-19 cases based on historical data.
+- **Result Visualization**: Visualize the forecasted results and actual cases using line plots to communicate findings effectively.
 
-**Bonus Ideas**: 
-- Compare the performance of different anomaly detection algorithms.
-- Implement a dashboard to visualize real-time traffic and detected anomalies using Polars. 
+**Bonus Ideas**: Compare the forecasting accuracy of different models and explore the impact of vaccination rates on case trends.
 
-These projects will provide students with hands-on experience in using Polars for data manipulation and machine learning while addressing real-world problems.
+--- 
+
+These projects encourage students to explore the capabilities of Polars while engaging with realistic data science tasks that enhance their analytical and modeling skills.
 

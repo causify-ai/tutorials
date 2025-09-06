@@ -112,10 +112,12 @@ Examples of variation:
 - Different ML tasks: Forecasting, anomaly detection, clustering, classification, transfer learning
 Look at the example to get an idea of how it needs to look. 
 """
+
+
 GLOBAL_PROMPT = """
 Act as a graduate-level data science professor.
 I will give you the name of a tool (XYZ).
-Write a Tech Description in 4-6 lines about what the tool is and its features in bullet points. Mention this only once in the output generated.
+Write a Description in 4-6 lines about what the tool is and its features in bullet points. Mention this only once in the output generated.
 You must then generate a **project blueprint** that helps students build three realistic data science projects over a semester.
 You must write the brief assuming the student only knows the name of the tool — you will decide everything else (domain, dataset type, ML task, etc.) in a technically feasible and pedagogically valuable way.
 
@@ -124,15 +126,9 @@ Your response must include:
 1. **Difficulty** : 1/2/3 (1 is easy, 2 is medium, 3 is hard; use each level **exactly once**)
 2. **Project Objective**: Clearly state the goal of the project and what is being optimized, predicted, or detected.
 
-3. **Dataset Suggestions**: Suggest realistic types of datasets students could use, and where to find them (e.g., Kaggle, HuggingFace, government portals, simulated data). But DO NOT provide the exact specific dataset name.
+3. **Dataset Suggestions**: Suggest where to find datasets (e.g., Kaggle, HuggingFace, government portals, simulated data). But DO NOT provide the exact specific dataset name.
 
-4. **Step-by-Step Plan**: Outline the key phases of the project, including:
-   - Data collection / simulation
-   - Feature engineering
-   - Model training (if applicable)
-   - Use of the tool (e.g., optimization, dashboarding, etc.)
-   - Evaluation metrics
-   - Visualization or reporting or simple UI application
+4. **Tasks**: Outline the key tasks of the project, each tailored to the tool. Describe each task in 1-2 lines high-level description in brief bullet point formats.
 
 5. **Bonus Ideas (Optional)**: Extensions, baseline comparisons, or challenges students might attempt if they want to go further.
 
@@ -140,8 +136,8 @@ Your response must include:
 - Project should run on standard laptops or Google Colab.
 - Do not propose projects that require physical sensors or IoT devices or non-public data.
 - All data used must be from current, active, **public APIs or open datasets** that are **free to use without paid plans or authentication tokens**.
-- Do NOT use APIs that have been discontinued or are no longer free (e.g., Yahoo Finance API).
-- Prefer datasets available on Kaggle (active ones only), HuggingFace Datasets, open government APIs, or GitHub repositories.
+- Do NOT use APIs that have been discontinued (e.g., Yahoo Finance API).
+- Prefer datasets available on Kaggle (active ones only), HuggingFace Datasets, open government APIs, or GitHub repositories or APIs with a free tier.
 - Do NOT mention surveys, forms for custom user data source collection.
 - Use pre-trained models if deep learning is involved.
 - Avoid overused examples like Titanic or Iris.
@@ -153,42 +149,71 @@ Your response must include:
 
 
 Write in a way that is **student-friendly**, technically clear, and encourages learning and creativity.
+Refer to the example below for some ideas.
+
+
+EXAMPLE = Description
+
+In this project, students will leverage TextBlob, a Python library for processing textual data, to perform real-time sentiment analysis on news articles related to Bitcoin. By integrating NewsAPI, students can access a wide range of news sources to gather relevant articles. The objective is to understand market sentiments and trends associated with Bitcoin prices and explore how this sentiment data can be utilized in time-series analysis for predictive modeling.
+Technologies Used
+TextBlob
+
+    Simplifies text processing tasks with intuitive functions and methods.
+    Utilizes NLTK and Pattern libraries for comprehensive NLP capabilities.
+    Provides sentiment analysis returning:
+        Polarity (from -1.0 to 1.0)
+        Subjectivity (from 0.0 to 1.0)
+    Supports multiple languages for global data processing.
+
+NewsAPI
+
+    Access to news articles from over 30,000 worldwide sources via HTTP REST API.
+    Filters articles based on keywords, sources, language, and dates.
+    Offers a free tier suitable for educational, non-commercial projects.
+
+Project Objective
+
+Create a pipeline to:
+
+    Ingest real-time Bitcoin news using NewsAPI.
+    Analyze sentiment with TextBlob.
+    Integrate sentiment scores with Bitcoin price data for predictive time-series analysis.
+
+Tasks
+
+    Set Up NewsAPI Client:
+        Register for API key at [NewsAPI.org].
+        Use the newsapi-python client library.
+
+    Ingest News Data:
+        Fetch Bitcoin-related articles.
+        Store articles and metadata (date, source) in a Pandas DataFrame.
+
+    Perform Sentiment Analysis:
+        Calculate polarity and subjectivity scores for each article.
+        Aggregate sentiment scores (daily/hourly) to identify trends.
+
+    Integrate with Bitcoin Price Data:
+        Obtain Bitcoin price data via public APIs (e.g., CoinGecko).
+        Align sentiment scores with price data based on timestamps.
+
+    Time-Series Analysis:
+        Implement forecasting models (ARIMA, LSTM) using sentiment scores.
+
+    Visualization:
+        Visualize correlations between sentiment trends and Bitcoin prices using Matplotlib or Seaborn.
+
+Useful Resources
+
+    [TextBlob Documentation]
+    [NewsAPI Python Client Library]
+
+Cost
+
+    TextBlob: Open-source, free.
+    NewsAPI: Free tier available for educational purposes (usage limits apply).
 
 """
-# EXAMPLE = """Example using Streamlit (technology XYZ):
-
-# ### Project 1  
-# **Title**: Interactive EDA Dashboard for Global Earthquake Data  
-# **Difficulty**: 1  
-# **Tech Description**: Use Streamlit to build an interactive web app for visualizing and filtering earthquake data.  
-# **Project Idea**: Create a simple Streamlit dashboard that loads real-time global earthquake data from the USGS API. Allow users to filter earthquakes by magnitude, date, and region. Add dynamic maps using `pydeck` and graphs with `plotly`. Ideal for learning basic dashboard interactivity and data visualization.  
-# **Python libs**: streamlit, pandas, plotly, requests, pydeck  
-# **Is it Free?**: Yes, Streamlit is open-source and completely free  
-# **Resource Links**: [Streamlit Docs](https://docs.streamlit.io), [USGS API](https://earthquake.usgs.gov/fdsnws/event/1/)
-
-# ---
-
-# ### Project 2  
-# **Title**: Job Salary Estimator App Using Streamlit and NLP  
-# **Difficulty**: 2  
-# **Tech Description**: Use Streamlit to deploy a trained NLP model that predicts job salaries from descriptions.  
-# **Project Idea**: Train an NLP model on the Kaggle “Salary Prediction” dataset that predicts salary based on job descriptions. Deploy the model as an interactive app using Streamlit, where users can input job text and see predicted salaries, confidence intervals, and key phrase highlights.  
-# **Python libs**: streamlit, scikit-learn, nltk, pandas, shap  
-# **Is it Free?**: Yes  
-# **Resource Links**: [Streamlit Docs](https://docs.streamlit.io), [Kaggle Dataset](https://www.kaggle.com/c/job-salary-prediction)
-
-# ---
-
-# ### Project 3  
-# **Title**: Real-Time Traffic Accident Alert System  
-# **Difficulty**: 3  
-# **Tech Description**: Use Streamlit to display live alerts and analytics using a streaming API of traffic incidents.  
-# **Project Idea**: Build a real-time dashboard that pulls traffic accident data from a live API like the MapQuest Traffic Feed or Open511. Use asynchronous requests and queueing to process alerts, show severity-based maps, and send browser notifications. Add clustering of hot zones using unsupervised learning.  
-# **Python libs**: streamlit, aiohttp, folium, scikit-learn, pandas, altair  
-# **Is it Free?**: Streamlit is free; some APIs may require free tokens or rate limits  
-# **Resource Links**: [Streamlit Docs](https://docs.streamlit.io), [Open511 API](https://open511.org/), [MapQuest](https://developer.mapquest.com)
-
-# """
 
 DEFAULT_MARKDOWN_PATH = "./class_project_instructions/Projects"
 # The maximum number of projects.
@@ -345,7 +370,7 @@ def create_markdown_file(
     # temps = [0.3,0.45,0.6]
     pathlib.Path(markdown_folder_path).mkdir(parents=True, exist_ok=True)
     # rows = rows[rows['Tool'].isin(['BoTorch','Polars','Apache Arrow (PyArrow)','apache-tvm','Keras Tuner','tsfresh','Whisper Large V3','CausalInference','CausalML'])]
-    # rows = rows[rows['Tool'].isin(['apache-tvm'])]
+    # rows = rows[rows['Tool'].isin(['Caffe'])]
     for _, row in rows.iterrows():
         content = ""
         project_name = row["Tool"]

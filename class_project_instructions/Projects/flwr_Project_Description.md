@@ -1,65 +1,73 @@
-### Tech Description of flwr
-**Flwr** is a framework for federated learning that enables collaborative machine learning across multiple devices while maintaining data privacy. Its key features include:
-- **Federated Learning**: Allows models to be trained on decentralized data without sharing raw data.
-- **Client-Server Architecture**: Facilitates communication between a central server and multiple clients.
-- **Customizable Training**: Supports various machine learning frameworks and allows for tailored training algorithms.
-- **Privacy-Preserving**: Ensures data remains on local devices, enhancing user privacy and compliance with data protection regulations.
+**Description**
+
+Flwr (Flower) is a framework designed for federated learning, allowing multiple devices or systems to collaboratively learn a shared model while keeping their data decentralized and private. It provides a flexible and easy-to-use interface for implementing federated learning strategies, making it suitable for various applications in machine learning while ensuring data privacy and security.
+
+Key Features:
+- Facilitates federated learning with minimal setup and configuration.
+- Supports various machine learning frameworks like TensorFlow and PyTorch.
+- Enables easy integration with existing data pipelines and workflows.
+- Provides tools for monitoring and evaluating federated learning processes.
 
 ---
 
 ### Project Blueprint
 
-#### Project 1: Sentiment Analysis on Decentralized User Reviews
+#### Project 1: Federated Learning for Handwritten Digit Recognition
 - **Difficulty**: 1 (Easy)
-- **Project Objective**: Build a sentiment analysis model that predicts the sentiment (positive, negative, neutral) of user reviews from decentralized sources while keeping user data private.
+- **Project Objective**: Build a federated learning model to recognize handwritten digits using the MNIST dataset, ensuring that the training data remains decentralized across multiple simulated clients.
+  
+- **Dataset Suggestions**: Use the MNIST dataset available on Kaggle or similar repositories.
 
-- **Dataset Suggestions**: Use publicly available user reviews from platforms like Amazon or Yelp, which can be accessed through Kaggle datasets or web scraping from open APIs.
+- **Tasks**:
+    - **Set Up Federated Learning Environment**: Install Flwr and set up a basic federated learning server and client architecture.
+    - **Data Partitioning**: Simulate multiple clients by partitioning the MNIST dataset into subsets, each representing a different client.
+    - **Model Training**: Implement a simple neural network model (e.g., CNN) using TensorFlow or PyTorch and train it on the local client data.
+    - **Federated Aggregation**: Implement the federated averaging algorithm to combine the local model updates into a global model.
+    - **Model Evaluation**: Evaluate the global model’s performance on a separate test set to assess its accuracy and generalization.
 
-- **Step-by-Step Plan**:
-  1. **Data Collection**: Gather user reviews from chosen platforms, ensuring compliance with their terms of service.
-  2. **Feature Engineering**: Preprocess the text data (tokenization, removing stop words, etc.) and create sentiment labels.
-  3. **Model Training**: Use a pre-trained NLP model (like BERT) fine-tuned for sentiment analysis.
-  4. **Use of flwr**: Implement federated learning to train the sentiment model across multiple simulated clients (e.g., different geographical regions).
-  5. **Evaluation Metrics**: Use accuracy, precision, recall, and F1-score to evaluate model performance.
-  6. **Visualization**: Create a dashboard to visualize sentiment distribution and model performance metrics.
-
-- **Bonus Ideas**: Experiment with different models for sentiment analysis or introduce a comparison with a traditional centralized approach.
+- **Bonus Ideas**:
+    - Experiment with different model architectures and compare their performance.
+    - Implement additional federated learning strategies (e.g., different aggregation methods).
 
 ---
 
-#### Project 2: Federated Learning for Image Classification
+#### Project 2: Federated Learning for Sentiment Analysis on Text Data
 - **Difficulty**: 2 (Medium)
-- **Project Objective**: Develop an image classification model that identifies objects in images while ensuring the training data remains decentralized and private.
+- **Project Objective**: Create a federated learning system to classify sentiments from text data (positive, negative, neutral) while keeping user data private across multiple devices.
+  
+- **Dataset Suggestions**: Use a publicly available sentiment analysis dataset from Kaggle or HuggingFace, such as movie reviews or Twitter sentiment data.
 
-- **Dataset Suggestions**: Utilize a publicly available image dataset like CIFAR-10 or Fashion MNIST, which can be found on platforms like Kaggle or HuggingFace.
+- **Tasks**:
+    - **Set Up Federated Learning Framework**: Install Flwr and set up a federated server-client architecture for text data.
+    - **Data Preparation**: Preprocess the text data (tokenization, vectorization) and simulate multiple clients with different subsets of the data.
+    - **Model Design**: Create a recurrent neural network (RNN) or transformer model for sentiment classification using TensorFlow or PyTorch.
+    - **Local Training**: Train the model on each client’s local dataset and generate model updates.
+    - **Federated Model Aggregation**: Aggregate the model updates from clients to form a global model and evaluate its performance on a held-out test set.
 
-- **Step-by-Step Plan**:
-  1. **Data Collection**: Download the chosen image dataset and simulate decentralized data by splitting it among different clients.
-  2. **Feature Engineering**: Normalize images and augment data (flipping, rotation) to enhance model robustness.
-  3. **Model Training**: Leverage a pre-trained CNN (like ResNet) and fine-tune it on the decentralized data.
-  4. **Use of flwr**: Set up a federated learning environment to train the model across the simulated clients.
-  5. **Evaluation Metrics**: Use accuracy, confusion matrix, and ROC-AUC for model evaluation.
-  6. **Reporting**: Create a report or presentation summarizing the model's performance, challenges faced, and insights gained.
-
-- **Bonus Ideas**: Explore different aggregation techniques for model weights or implement a comparison with a centralized training approach.
+- **Bonus Ideas**:
+    - Compare the performance of different text representation techniques (e.g., TF-IDF vs. word embeddings).
+    - Explore different hyperparameter tuning strategies in a federated setting.
 
 ---
 
-#### Project 3: Predicting Health Outcomes with Federated Learning
+#### Project 3: Federated Learning for Anomaly Detection in IoT Data
 - **Difficulty**: 3 (Hard)
-- **Project Objective**: Create a predictive model to forecast health outcomes (e.g., diabetes risk) using sensitive patient data while maintaining patient privacy through federated learning.
+- **Project Objective**: Develop a federated learning approach to detect anomalies in time-series data collected from simulated IoT devices, ensuring data privacy and security.
+  
+- **Dataset Suggestions**: Simulate time-series data using open datasets available on Kaggle or GitHub that include sensor readings (e.g., temperature, humidity).
 
-- **Dataset Suggestions**: Use publicly available health datasets, such as the UCI Machine Learning Repository's diabetes dataset or similar datasets available on Kaggle.
+- **Tasks**:
+    - **Federated Learning Setup**: Configure Flwr for a federated learning environment with multiple simulated IoT clients.
+    - **Data Simulation**: Create synthetic time-series datasets for each client, introducing anomalies in specific patterns (e.g., sudden spikes).
+    - **Model Development**: Implement an anomaly detection model, such as an LSTM or autoencoder, to identify outliers in the time-series data.
+    - **Local Model Training**: Train the model on each client's local dataset and collect model updates.
+    - **Federated Aggregation and Evaluation**: Aggregate client updates into a global model and evaluate its anomaly detection performance using metrics like precision, recall, and F1-score.
 
-- **Step-by-Step Plan**:
-  1. **Data Collection**: Obtain the health dataset and simulate client data by splitting patient records across multiple clients.
-  2. **Feature Engineering**: Clean the data, handle missing values, and engineer relevant features (e.g., BMI, age).
-  3. **Model Training**: Implement a logistic regression model or a decision tree classifier, using a pre-trained model if applicable.
-  4. **Use of flwr**: Configure a federated learning setup to train the model on decentralized patient data without compromising privacy.
-  5. **Evaluation Metrics**: Assess the model using accuracy, AUC, precision, recall, and F1-score.
-  6. **Visualization**: Develop a web application or dashboard to visualize health outcomes and model predictions.
+- **Bonus Ideas**:
+    - Experiment with different anomaly detection techniques and compare their performance in a federated setting.
+    - Investigate the impact of data heterogeneity on model performance across clients.
 
-- **Bonus Ideas**: Investigate the impact of different client data distributions on model performance or conduct further analysis on feature importance.
+--- 
 
-These projects will help students gain hands-on experience with federated learning, while also exploring various machine learning tasks and methodologies, ensuring a comprehensive learning experience throughout the semester.
+These projects provide a comprehensive learning experience with Flwr, covering various machine learning tasks while emphasizing data privacy and collaboration in a federated learning context.
 

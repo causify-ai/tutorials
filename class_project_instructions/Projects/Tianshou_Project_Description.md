@@ -1,58 +1,104 @@
-### Tech Description: Tianshou
-Tianshou is a powerful reinforcement learning (RL) library designed for building and training RL agents. It provides a flexible and modular framework that supports various algorithms and environments, making it suitable for both research and practical applications. Key features include:
-- Support for multiple RL algorithms (DQN, PPO, etc.)
-- Easy integration with gym environments
-- Customizable training loops and evaluation metrics
-- Extensive documentation and community support
+### Description
+
+Tianshou is a reinforcement learning library for Python that provides flexible and efficient tools for building and training reinforcement learning agents. It supports various algorithms and environments, making it an excellent choice for researchers and practitioners looking to experiment with RL techniques. 
+
+**Features:**
+- Modular design allows easy customization of algorithms and environments.
+- Supports multiple RL algorithms like DQN, PPO, and A2C.
+- Provides tools for efficient training, evaluation, and logging.
+- Compatible with popular frameworks such as PyTorch and TensorFlow.
 
 ---
 
-### Project Blueprint 1: Simple Game Agent (Difficulty: 1 - Easy)
-**Project Objective**: Build a reinforcement learning agent that learns to play a simple game (e.g., CartPole) using Tianshou. The goal is to optimize the agent's performance to keep the pole balanced for the longest time.
+### Project 1: Basic Game Agent (Difficulty: 1)
 
-**Dataset Suggestions**: Use the OpenAI Gym environments, which simulate various games including CartPole. The environment data is available through the OpenAI Gym library.
+**Project Objective:**
+Create a reinforcement learning agent that learns to play a simple game environment, such as CartPole or MountainCar, using Tianshou. The goal is to optimize the agent's performance in terms of score over time.
 
-**Step-by-Step Plan**:
-1. **Data Collection / Simulation**: Set up the CartPole environment using OpenAI Gym.
-2. **Feature Engineering**: Identify relevant states (e.g., pole angle, cart position) from the environment.
-3. **Model Training**: Implement a simple DQN algorithm using Tianshou to train the agent.
-4. **Use of the Tool**: Utilize Tianshou's training loop to optimize the agent's policy.
-5. **Evaluation Metrics**: Track the average reward per episode and the total number of episodes until the agent fails.
-6. **Visualization or Reporting**: Plot the agent's performance over time and visualize the learning curve.
+**Dataset Suggestions:**
+Utilize OpenAI's Gym environments, which are publicly available and provide a variety of simple game scenarios.
 
-**Bonus Ideas**: Experiment with different hyperparameters (learning rate, discount factor) to see their impact on agent performance.
+**Tasks:**
+- Setup Tianshou with Gym:
+  - Install Tianshou and Gym, and configure the environment.
+  
+- Implement DQN Agent:
+  - Create a DQN agent using Tianshou's built-in functionalities for the chosen game environment.
+  
+- Train the Agent:
+  - Train the agent using the Tianshou training loop, logging performance metrics.
+  
+- Evaluate Performance:
+  - Assess the agent's performance by comparing the average score across episodes before and after training.
+  
+- Visualization:
+  - Plot the training progress over time to visualize how the agent's performance improves.
 
----
-
-### Project Blueprint 2: Stock Trading Strategy (Difficulty: 2 - Medium)
-**Project Objective**: Develop a reinforcement learning agent that learns to trade stocks by maximizing cumulative returns over a set period. The goal is to create a strategy that outperforms a buy-and-hold strategy.
-
-**Dataset Suggestions**: Use historical stock price data available on Kaggle or Yahoo Finance (via API). Focus on a specific stock or a set of stocks within a given timeframe.
-
-**Step-by-Step Plan**:
-1. **Data Collection / Simulation**: Gather historical stock price data using a public API or Kaggle datasets.
-2. **Feature Engineering**: Create features such as moving averages, price changes, and technical indicators.
-3. **Model Training**: Implement a reinforcement learning algorithm (e.g., PPO) using Tianshou to train the trading agent.
-4. **Use of the Tool**: Leverage Tianshou for training the trading agent, optimizing the policy based on rewards (profit/loss).
-5. **Evaluation Metrics**: Evaluate performance using metrics like Sharpe Ratio, cumulative returns, and maximum drawdown.
-6. **Visualization or Reporting**: Create visualizations of the trading strategy's performance compared to the buy-and-hold strategy.
-
-**Bonus Ideas**: Test the agent on different stocks or market conditions, or incorporate transaction costs into the model.
+**Bonus Ideas (Optional):**
+- Experiment with different hyperparameters (learning rate, epsilon decay) to see their effects on agent performance.
+- Compare the performance of different algorithms provided by Tianshou (e.g., PPO vs. DQN).
 
 ---
 
-### Project Blueprint 3: Autonomous Vehicle Navigation (Difficulty: 3 - Hard)
-**Project Objective**: Design a reinforcement learning agent that navigates an autonomous vehicle through a simulated environment, optimizing for the shortest path while avoiding obstacles.
+### Project 2: Stock Trading Agent (Difficulty: 2)
 
-**Dataset Suggestions**: Use a simulated environment like the Unity ML-Agents toolkit or OpenAI Gym's CarRacing environment, which provides a rich set of states for training.
+**Project Objective:**
+Develop a reinforcement learning agent that makes trading decisions in a simulated stock market environment. The goal is to maximize returns through an optimized trading strategy using historical stock price data.
 
-**Step-by-Step Plan**:
-1. **Data Collection / Simulation**: Set up the CarRacing environment using OpenAI Gym or Unity ML-Agents.
-2. **Feature Engineering**: Extract relevant features such as vehicle speed, distance to obstacles, and track boundaries.
-3. **Model Training**: Implement a complex RL algorithm (e.g., DDPG or SAC) using Tianshou to train the vehicle's navigation policy.
-4. **Use of the Tool**: Utilize Tianshou's advanced features for continuous action spaces and reward shaping.
-5. **Evaluation Metrics**: Measure success based on average lap time, number of collisions, and successful completion of laps.
-6. **Visualization or Reporting**: Create a dashboard to visualize the vehicle's path, speed, and performance metrics over multiple runs.
+**Dataset Suggestions:**
+Use historical stock price data available on Kaggle or Yahoo Finance APIs, which provide free access to stock market data.
 
-**Bonus Ideas**: Introduce varying levels of difficulty in the environment (e.g., different track layouts or weather conditions) and analyze how the agent adapts to these changes.
+**Tasks:**
+- Create a Custom Trading Environment:
+  - Implement a trading environment using the Tianshou framework that simulates buying, selling, and holding stocks.
+
+- Implement PPO Agent:
+  - Use the Proximal Policy Optimization (PPO) algorithm from Tianshou to create a trading agent.
+
+- Train the Agent:
+  - Train the agent over multiple episodes, adjusting the trading strategy based on rewards received from profitable trades.
+
+- Performance Evaluation:
+  - Analyze the agent's trading performance by calculating cumulative returns and comparing it with a baseline strategy (e.g., buy and hold).
+
+- Visualization:
+  - Visualize trading actions and portfolio value over time using Matplotlib.
+
+**Bonus Ideas (Optional):**
+- Implement a risk management strategy that penalizes excessive losses.
+- Compare the trading agent's performance with traditional trading strategies.
+
+---
+
+### Project 3: Robotic Navigation (Difficulty: 3)
+
+**Project Objective:**
+Design and train a reinforcement learning agent to navigate a robotic simulation environment. The objective is to optimize the agent's pathfinding abilities to reach a target while avoiding obstacles.
+
+**Dataset Suggestions:**
+Utilize a simulated robotic environment available in OpenAI Gym or Unity ML-Agents, which provide free access to various robotic scenarios.
+
+**Tasks:**
+- Setup Robotic Simulation Environment:
+  - Configure a robotic navigation environment using Tianshou and OpenAI Gym or Unity ML-Agents.
+
+- Implement A2C Agent:
+  - Develop an Advantage Actor-Critic (A2C) agent using Tianshou to control the robot’s movements.
+
+- Implement Training Loop:
+  - Train the agent to navigate the environment, optimizing its pathfinding through reinforcement learning.
+
+- Evaluate Navigation Performance:
+  - Measure the efficiency of the agent's navigation by calculating the time taken to reach the target and the number of collisions with obstacles.
+
+- Visualization:
+  - Create visualizations of the agent's path in the environment to illustrate its navigation strategy.
+
+**Bonus Ideas (Optional):**
+- Experiment with different reward structures to see how they affect navigation performance.
+- Implement multi-agent scenarios where multiple robots navigate simultaneously and analyze their interactions.
+
+--- 
+
+These projects are designed to provide a comprehensive understanding of reinforcement learning concepts while utilizing Tianshou effectively. Each project encourages creativity and experimentation, fostering a deeper grasp of the underlying principles of machine learning and reinforcement learning.
 

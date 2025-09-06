@@ -1,61 +1,74 @@
-### Tech Description of bnlearn:
-bnlearn is a powerful R package designed for learning the structure of Bayesian networks from data. It provides tools for creating, visualizing, and analyzing probabilistic graphical models. Key features include:
-- Structure learning from both continuous and discrete data
-- Parameter learning for Bayesian networks
-- Tools for model evaluation and comparison
-- Visualization capabilities for better understanding of model relationships
+### Description
+
+In this project, students will utilize **bnlearn**, a Python library designed for Bayesian network learning and inference. This tool enables users to construct probabilistic graphical models that represent a set of variables and their conditional dependencies through directed acyclic graphs (DAGs). With bnlearn, students can perform structure learning and parameter estimation, making it ideal for tasks that involve uncertainty and probabilistic reasoning.
+
+**Features of bnlearn:**
+- Facilitates learning the structure of Bayesian networks from data.
+- Supports various algorithms for structure learning, including constraint-based and score-based methods.
+- Allows for inference and querying of the learned models to calculate probabilities and make predictions.
 
 ---
 
-### Project Blueprint 1: **Predicting Student Performance (Difficulty: 1 - Easy)**
+### Project 1: Predicting Student Performance (Difficulty: 1 - Easy)
 
-**Project Objective**: The goal is to build a Bayesian network model that predicts student performance based on various factors such as study habits, attendance, and socio-economic background.
+**Project Objective:**  
+The goal of this project is to build a Bayesian network that predicts student performance based on various factors such as study habits, attendance, and socio-economic background. Students will optimize the accuracy of performance predictions.
 
-**Dataset Suggestions**: Use educational datasets available on Kaggle that include student demographics and performance metrics.
+**Dataset Suggestions:**  
+Find datasets on Kaggle related to educational performance or student attributes.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download a relevant educational dataset from Kaggle.
-2. **Feature Engineering**: Identify key features such as attendance rate, hours of study, parental education level, etc.
-3. **Model Training**: Use bnlearn to create a Bayesian network structure based on the dataset.
-4. **Use of the Tool**: Employ bnlearn to visualize the network and understand the dependencies between features.
-5. **Evaluation Metrics**: Use accuracy and confusion matrix to evaluate the model's predictive performance.
-6. **Visualization**: Create visualizations of the Bayesian network and present findings in a report.
+**Tasks:**
+- **Data Preprocessing:** Clean and preprocess the dataset, handling missing values and categorical variables.
+- **Structure Learning:** Use bnlearn to learn the structure of the Bayesian network from the preprocessed data.
+- **Parameter Estimation:** Estimate the parameters of the Bayesian network to quantify relationships between variables.
+- **Inference:** Query the model to predict student performance based on different scenarios (e.g., increased study hours).
+- **Evaluation:** Assess the model's accuracy using metrics such as precision and recall.
 
-**Bonus Ideas**: Experiment with different feature sets or apply the model to predict performance in different subjects.
-
----
-
-### Project Blueprint 2: **Analyzing Health Factors for Disease Prediction (Difficulty: 2 - Medium)**
-
-**Project Objective**: Develop a Bayesian network model to analyze health factors and predict the likelihood of developing a specific disease (e.g., diabetes).
-
-**Dataset Suggestions**: Look for health-related datasets on public health portals or Kaggle that include patient health metrics and disease outcomes.
-
-**Step-by-Step Plan**:
-1. **Data Collection**: Acquire a health dataset from Kaggle or a public health API.
-2. **Feature Engineering**: Select relevant health indicators such as BMI, age, blood pressure, and family history.
-3. **Model Training**: Utilize bnlearn to learn the structure of the Bayesian network from the dataset.
-4. **Use of the Tool**: Implement parameter learning to estimate the probabilities of disease based on the identified features.
-5. **Evaluation Metrics**: Use ROC-AUC and precision-recall curves to evaluate model performance.
-6. **Visualization**: Create a dashboard using R Shiny to visualize the Bayesian network and allow users to input their data for predictions.
-
-**Bonus Ideas**: Compare the Bayesian network predictions with other models like logistic regression or decision trees.
+**Bonus Ideas (Optional):**  
+- Compare the Bayesian network model with a traditional regression model to evaluate performance differences.
+- Visualize the learned Bayesian network structure using graphing libraries.
 
 ---
 
-### Project Blueprint 3: **Market Basket Analysis Using Bayesian Networks (Difficulty: 3 - Hard)**
+### Project 2: Diagnosing Health Conditions (Difficulty: 2 - Medium)
 
-**Project Objective**: Create a Bayesian network model to analyze customer purchasing behavior and identify associations between products in a retail dataset.
+**Project Objective:**  
+The objective is to develop a Bayesian network model to diagnose potential health conditions based on symptoms and patient history. Students will optimize the model to improve diagnostic accuracy.
 
-**Dataset Suggestions**: Use transaction datasets available on Kaggle, focusing on retail sales data that captures customer purchases.
+**Dataset Suggestions:**  
+Explore open datasets related to health conditions and symptoms on platforms like Kaggle or government health portals.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download a retail transaction dataset from Kaggle.
-2. **Feature Engineering**: Transform transaction data into a format suitable for Bayesian networks, focusing on product categories and quantities purchased.
-3. **Model Training**: Use bnlearn to construct a Bayesian network that reflects the relationships between different products.
-4. **Use of the Tool**: Analyze the learned structure to identify strong associations and dependencies among products.
-5. **Evaluation Metrics**: Utilize measures such as lift and support to evaluate the strength of associations.
-6. **Visualization**: Develop an interactive visualization tool that allows users to explore product relationships and make recommendations based on the Bayesian network.
+**Tasks:**
+- **Data Collection:** Gather data on health symptoms and corresponding diagnoses.
+- **Data Preprocessing:** Clean the data, ensuring it is suitable for Bayesian analysis, including encoding categorical variables.
+- **Structure Learning:** Implement bnlearn to discover the underlying structure of the health data.
+- **Parameter Estimation:** Use the dataset to estimate the conditional probabilities associated with each node in the network.
+- **Inference and Diagnosis:** Utilize the model to infer potential health conditions based on input symptoms and patient history.
+- **Model Evaluation:** Validate the model's predictions against a test set and calculate the accuracy.
 
-**Bonus Ideas**: Extend the analysis by incorporating time series data to predict future purchasing trends or seasonal variations in product associations.
+**Bonus Ideas (Optional):**  
+- Integrate additional patient demographic data to enhance the model's predictive capabilities.
+- Explore the impact of different symptoms on diagnosis by visualizing the Bayesian network.
+
+---
+
+### Project 3: Analyzing Economic Indicators (Difficulty: 3 - Hard)
+
+**Project Objective:**  
+This project aims to construct a Bayesian network to analyze the relationships between various economic indicators (like inflation rate, unemployment rate, and GDP growth) and predict economic trends. Students will focus on optimizing the model’s predictive capabilities.
+
+**Dataset Suggestions:**  
+Obtain economic data from open government databases or Kaggle datasets related to economic indicators.
+
+**Tasks:**
+- **Data Acquisition:** Collect historical data on relevant economic indicators from reliable sources.
+- **Data Preprocessing:** Clean and format the data, ensuring it is ready for analysis, including normalization of numerical values.
+- **Structure Learning:** Use bnlearn to learn the Bayesian network structure that captures the dependencies between economic indicators.
+- **Parameter Estimation:** Estimate the conditional probabilities for the network based on the historical data.
+- **Predictive Analysis:** Use the model to forecast future economic trends based on current indicators and analyze the impact of changes in one indicator on others.
+- **Model Validation:** Assess the model's predictive performance using time-series analysis techniques.
+
+**Bonus Ideas (Optional):**  
+- Compare the Bayesian network's predictions with those from traditional econometric models.
+- Investigate the effects of external shocks (like pandemics) on the economic indicators and how they propagate through the network.
 

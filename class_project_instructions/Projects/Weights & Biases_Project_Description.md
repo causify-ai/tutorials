@@ -1,77 +1,76 @@
-### Tech Description: Weights & Biases
-Weights & Biases is a powerful tool designed for tracking experiments, visualizing metrics, and collaborating on machine learning projects. It provides features such as:
-- Experiment tracking with version control for datasets and models.
-- Real-time visualizations of training metrics and performance.
-- Collaborative dashboards for team insights and progress sharing.
-- Hyperparameter optimization and automated reporting.
+### Description
+
+Weights & Biases (W&B) is a powerful tool for tracking experiments, visualizing metrics, and collaborating on machine learning projects. It offers features that help streamline the ML workflow, enabling users to log hyperparameters, visualize performance, and share results seamlessly. 
+
+**Features:**
+- Experiment tracking and comparison with rich visualizations.
+- Hyperparameter optimization and automatic logging.
+- Collaboration tools for teams to share results and insights.
+- Integration with various ML libraries and frameworks.
 
 ---
 
 ### Project 1: Predicting House Prices (Difficulty: 1 - Easy)
 
-**Project Objective:**  
-The goal of this project is to predict house prices based on various features such as size, location, number of bedrooms, etc. Students will optimize the model to achieve the lowest mean absolute error.
+**Project Objective**  
+The goal is to build a regression model that predicts house prices based on various features such as location, size, and number of rooms. Students will optimize the model's performance by tuning hyperparameters.
 
-**Dataset Suggestions:**  
-Students can use datasets from Kaggle that focus on real estate prices, including various features and historical sales data.
+**Dataset Suggestions**  
+Find datasets on Kaggle that contain house pricing information, including features like square footage, number of bedrooms, and neighborhood details.
 
-**Step-by-Step Plan:**
-1. **Data Collection:** Download the housing dataset from Kaggle.
-2. **Feature Engineering:** Clean the data, handle missing values, and create new features (e.g., price per square foot).
-3. **Model Training:** Use linear regression or decision trees to train the model on the dataset.
-4. **Use of the Tool:** Track experiments in Weights & Biases, logging metrics such as MAE and RMSE during training.
-5. **Evaluation Metrics:** Use mean absolute error (MAE) and R-squared for model evaluation.
-6. **Visualization:** Create visualizations of predicted vs. actual prices and log them in Weights & Biases.
+**Tasks**  
+- **Data Ingestion**: Load the dataset into a Pandas DataFrame and perform initial data exploration.
+- **Data Preprocessing**: Clean the data by handling missing values and encoding categorical variables.
+- **Model Selection**: Choose a regression model (e.g., Linear Regression, Random Forest) and implement it using Scikit-learn.
+- **Experiment Tracking**: Use W&B to log model performance metrics (e.g., RMSE) and hyperparameters.
+- **Hyperparameter Tuning**: Optimize the model using GridSearchCV or RandomizedSearchCV, logging the results in W&B.
+- **Visualization**: Create visualizations of model performance over different hyperparameter settings using W&B's dashboard.
 
-**Bonus Ideas:**  
-- Experiment with different regression algorithms and compare their performance.
-- Implement feature importance analysis to identify key predictors of house prices.
+**Bonus Ideas (Optional)**  
+- Implement feature engineering techniques to improve model performance.
+- Compare the performance of different regression algorithms using W&B's comparison features.
 
 ---
 
-### Project 2: Sentiment Analysis of Product Reviews (Difficulty: 2 - Medium)
+### Project 2: Image Classification with Transfer Learning (Difficulty: 2 - Medium)
 
-**Project Objective:**  
-The objective is to classify product reviews as positive, negative, or neutral. Students will optimize the model to achieve the highest accuracy in sentiment classification.
+**Project Objective**  
+The aim is to classify images from a specific domain (e.g., medical images, wildlife) using transfer learning techniques. Students will fine-tune a pre-trained model and evaluate its performance on a test set.
 
-**Dataset Suggestions:**  
-Utilize datasets available on HuggingFace or Kaggle that contain labeled product reviews from e-commerce platforms.
+**Dataset Suggestions**  
+Explore HuggingFace Datasets or Kaggle for publicly available image classification datasets.
 
-**Step-by-Step Plan:**
-1. **Data Collection:** Download the sentiment analysis dataset from HuggingFace or Kaggle.
-2. **Feature Engineering:** Preprocess the text data (tokenization, stopword removal) and create embeddings using pre-trained models like BERT.
-3. **Model Training:** Fine-tune a pre-trained BERT model on the review dataset.
-4. **Use of the Tool:** Track training metrics and visualizations in Weights & Biases, focusing on accuracy and loss curves.
-5. **Evaluation Metrics:** Use accuracy, F1-score, and confusion matrix to evaluate model performance.
-6. **Visualization:** Create visual reports of model performance and log them in Weights & Biases.
+**Tasks**  
+- **Data Loading**: Load the dataset and preprocess images (resizing, normalization) for the model.
+- **Transfer Learning**: Utilize a pre-trained model (e.g., ResNet, VGG) and modify the final layers for the specific classification task.
+- **Model Training**: Train the model on the dataset while logging training metrics (accuracy, loss) with W&B.
+- **Experiment Tracking**: Use W&B to visualize training and validation metrics over epochs, comparing different model configurations.
+- **Evaluation**: Evaluate the model on a test set and log the results in W&B, including confusion matrix and classification report.
+- **Fine-tuning**: Experiment with different learning rates and layer freezing techniques, logging each experiment with W&B.
 
-**Bonus Ideas:**  
-- Compare the performance of different text classification models (e.g., LSTM vs. BERT).
-- Implement a user interface to allow users to input their own reviews for sentiment prediction.
+**Bonus Ideas (Optional)**  
+- Implement data augmentation techniques to enhance model robustness.
+- Create a web application for real-time image classification using the trained model.
 
 ---
 
 ### Project 3: Anomaly Detection in Network Traffic (Difficulty: 3 - Hard)
 
-**Project Objective:**  
-The goal of this project is to detect anomalies in network traffic data, identifying potential security threats. Students will optimize the model to minimize false positives while maximizing true positives.
+**Project Objective**  
+The goal is to develop an anomaly detection system to identify unusual patterns in network traffic data. Students will utilize unsupervised learning techniques and evaluate model performance using various metrics.
 
-**Dataset Suggestions:**  
-Use publicly available datasets from government cybersecurity portals or Kaggle that provide network traffic logs with labeled anomalies.
+**Dataset Suggestions**  
+Access open government datasets or Kaggle datasets related to network traffic logs.
 
-**Step-by-Step Plan:**
-1. **Data Collection:** Download the network traffic dataset from a government cybersecurity portal or Kaggle.
-2. **Feature Engineering:** Preprocess the data to extract relevant features (e.g., packet size, protocol type) and normalize values.
-3. **Model Training:** Implement unsupervised learning algorithms (e.g., Isolation Forest or Autoencoders) to identify anomalies in the traffic data.
-4. **Use of the Tool:** Utilize Weights & Biases to track experiments, logging metrics such as precision, recall, and F1-score.
-5. **Evaluation Metrics:** Use confusion matrix, precision, recall, and area under the ROC curve (AUC) for model evaluation.
-6. **Visualization:** Create visualizations of detected anomalies and performance metrics, logging them in Weights & Biases.
+**Tasks**  
+- **Data Ingestion**: Load the network traffic dataset and perform exploratory data analysis to understand the features.
+- **Feature Engineering**: Create relevant features that may help in identifying anomalies (e.g., packet size, protocol type).
+- **Model Selection**: Implement an unsupervised learning algorithm (e.g., Isolation Forest, Autoencoder) for anomaly detection.
+- **Experiment Tracking**: Use W&B to log model training metrics and visualize the distribution of anomalies detected.
+- **Evaluation**: Evaluate the model's performance using metrics such as precision, recall, and F1-score, logging these in W&B.
+- **Threshold Optimization**: Experiment with different thresholds for anomaly detection and log the results to find the optimal setting.
 
-**Bonus Ideas:**  
-- Explore the use of ensemble methods to improve anomaly detection accuracy.
-- Implement a dashboard to visualize real-time network traffic and detected anomalies.
-
---- 
-
-These projects provide diverse opportunities for students to apply their knowledge of machine learning using Weights & Biases while ensuring a comprehensive learning experience across various difficulty levels.
+**Bonus Ideas (Optional)**  
+- Implement a real-time anomaly detection system using streaming data.
+- Compare the performance of multiple anomaly detection algorithms and visualize the results using W&B's comparison features.
 

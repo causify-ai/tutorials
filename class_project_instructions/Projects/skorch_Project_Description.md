@@ -1,73 +1,71 @@
-### Tech Description of skorch
-Skorch is a high-level library that wraps around PyTorch, providing a scikit-learn-like API for deep learning. It simplifies the integration of PyTorch models into the scikit-learn ecosystem, making it easier to train, evaluate, and deploy neural networks. Key features include:
-- Seamless integration with scikit-learn's tools and workflows.
-- Support for various neural network architectures and custom models.
-- Built-in callbacks for training monitoring and model checkpointing.
-- Easy hyperparameter tuning and model evaluation.
+### Description
+
+Skorch is a high-level library that provides a scikit-learn compatible interface to PyTorch, making it easier to train and evaluate neural networks while leveraging the familiar scikit-learn workflow. This tool allows for seamless integration of deep learning models within traditional machine learning pipelines, enhancing flexibility and usability.
+
+#### Features:
+- Combines the power of PyTorch with the simplicity of scikit-learn.
+- Facilitates easy model training and evaluation through a familiar API.
+- Supports callbacks for advanced training techniques and monitoring.
+- Simplifies hyperparameter tuning using scikit-learn’s GridSearchCV.
 
 ---
 
-### Project Blueprint
+### Project 1: Image Classification of Fashion Items (Difficulty: 1)
 
-#### Project 1: Predicting House Prices (Difficulty: 1 - Easy)
+**Project Objective**: Create a convolutional neural network (CNN) to classify images of fashion items into categories such as shirts, shoes, and bags, optimizing for accuracy.
 
-**Project Objective**: The goal is to predict house prices based on various features such as location, size, and amenities. Students will optimize the model to minimize the mean squared error (MSE) of their predictions.
+**Dataset Suggestions**: Look for datasets on Kaggle that contain labeled images of clothing items.
 
-**Dataset Suggestions**: 
-- Use datasets available on Kaggle that include housing features and prices. Look for datasets that are well-structured with numerical and categorical features.
+**Tasks**:
+- **Set Up Skorch**: Install skorch and set up a basic CNN model using PyTorch.
+- **Data Preprocessing**: Load and preprocess the fashion dataset, including resizing and normalization.
+- **Model Training**: Train the CNN model using skorch, monitoring accuracy and loss.
+- **Evaluation**: Evaluate the model on a validation set and visualize the confusion matrix.
+- **Hyperparameter Tuning**: Use GridSearchCV from scikit-learn to optimize model parameters.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download the housing dataset from Kaggle.
-2. **Feature Engineering**: Handle missing values, encode categorical variables, and scale numerical features.
-3. **Model Training**: Use skorch to create a neural network model with a few hidden layers.
-4. **Use of the Tool**: Train the model using skorch’s API, leveraging its scikit-learn compatibility for easy model fitting.
-5. **Evaluation Metrics**: Evaluate the model using MSE and R² score.
-6. **Visualization**: Create scatter plots of actual vs. predicted prices and visualize feature importance.
-
-**Bonus Ideas**: 
-- Compare the neural network model against traditional regression models like Linear Regression or Random Forest.
+**Bonus Ideas**:
+- Implement data augmentation techniques to improve model robustness.
+- Compare model performance with and without transfer learning using pre-trained models.
 
 ---
 
-#### Project 2: Sentiment Analysis on Movie Reviews (Difficulty: 2 - Medium)
+### Project 2: Predicting House Prices (Difficulty: 2)
 
-**Project Objective**: The goal is to classify movie reviews as positive or negative based on their textual content. Students will optimize the model to improve accuracy and F1 score.
+**Project Objective**: Develop a neural network model to predict house prices based on various features, optimizing for mean squared error (MSE).
 
-**Dataset Suggestions**: 
-- Use publicly available movie review datasets from Kaggle or HuggingFace that contain labeled reviews.
+**Dataset Suggestions**: Access open datasets on Kaggle that provide housing features and corresponding prices.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download the sentiment analysis dataset.
-2. **Feature Engineering**: Preprocess text data by tokenization, removing stop words, and converting to embeddings using pre-trained models (e.g., GloVe).
-3. **Model Training**: Build a recurrent neural network (RNN) or a convolutional neural network (CNN) using skorch for text classification.
-4. **Use of the Tool**: Utilize skorch’s API to handle the training loop and callbacks for model performance monitoring.
-5. **Evaluation Metrics**: Use accuracy, precision, recall, and F1 score for evaluation.
-6. **Visualization**: Create confusion matrices and ROC curves to visualize model performance.
+**Tasks**:
+- **Data Exploration**: Analyze the dataset for missing values and perform exploratory data analysis (EDA) to understand feature distributions.
+- **Data Preprocessing**: Normalize numerical features and encode categorical variables for model input.
+- **Model Definition**: Create a feedforward neural network using skorch and define the loss function and optimizer.
+- **Training the Model**: Train the model while tracking MSE and adjusting learning rates as needed.
+- **Model Evaluation**: Assess model performance using cross-validation and analyze feature importance.
 
-**Bonus Ideas**: 
-- Experiment with different architectures (e.g., LSTM vs. GRU) or hyperparameters to improve performance.
-
----
-
-#### Project 3: Anomaly Detection in Network Traffic (Difficulty: 3 - Hard)
-
-**Project Objective**: The goal is to detect anomalies in network traffic data, which could indicate potential security threats. Students will optimize the model to maximize the detection rate while minimizing false positives.
-
-**Dataset Suggestions**: 
-- Use publicly available datasets from government portals or Kaggle that contain network traffic data, including both normal and anomalous traffic patterns.
-
-**Step-by-Step Plan**:
-1. **Data Collection**: Download the network traffic dataset.
-2. **Feature Engineering**: Extract relevant features such as packet size, duration, and protocol type. Normalize the data for better model performance.
-3. **Model Training**: Implement an autoencoder using skorch to learn the normal patterns in the data and identify anomalies.
-4. **Use of the Tool**: Train the autoencoder with skorch, utilizing its features for model evaluation and training monitoring.
-5. **Evaluation Metrics**: Evaluate the model using precision, recall, and F1 score, focusing on the true positive rate for anomalies.
-6. **Visualization**: Use dimensionality reduction techniques (e.g., PCA) to visualize the distribution of normal vs. anomalous data points.
-
-**Bonus Ideas**: 
-- Explore ensemble methods or hybrid models that combine multiple approaches for improved anomaly detection performance. 
+**Bonus Ideas**:
+- Experiment with different architectures (e.g., adding dropout layers) to see how it affects performance.
+- Incorporate additional features like geographic data or economic indicators for improved predictions.
 
 ---
 
-These projects will not only help students apply their knowledge of machine learning and deep learning but will also familiarize them with the skorch library, enhancing their practical skills in a real-world context.
+### Project 3: Time Series Forecasting of Stock Prices (Difficulty: 3)
+
+**Project Objective**: Build a recurrent neural network (RNN) to forecast future stock prices based on historical data, optimizing for prediction accuracy.
+
+**Dataset Suggestions**: Use financial datasets available on Kaggle or APIs that provide historical stock price data.
+
+**Tasks**:
+- **Data Acquisition**: Fetch historical stock price data and preprocess it for time series analysis.
+- **Feature Engineering**: Create lag features and rolling statistics to enhance the dataset for training.
+- **Model Building**: Design an RNN model using skorch, specifying input shapes for time series data.
+- **Training and Validation**: Train the model while validating on a separate time series split to avoid data leakage.
+- **Performance Metrics**: Evaluate the model using metrics like RMSE and visualize the predicted vs. actual prices.
+
+**Bonus Ideas**:
+- Implement a more complex architecture (e.g., LSTM or GRU) to improve forecasting accuracy.
+- Introduce external factors (e.g., sentiment analysis from financial news) as additional features for prediction.
+
+--- 
+
+These projects will provide students with a hands-on understanding of using skorch in various domains, enhancing their technical skills in machine learning and deep learning.
 

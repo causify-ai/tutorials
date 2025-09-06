@@ -1,64 +1,102 @@
-### Tech Description of Ax
-Ax is a powerful tool designed for adaptive experimentation and optimization, particularly in the context of machine learning and data-driven decision-making. It provides features such as:
-- **Bayesian optimization** for efficient hyperparameter tuning.
-- **Multi-armed bandit** algorithms for optimizing sequential decision-making.
-- **User-friendly interfaces** for defining experiments and visualizing results.
-- **Integration capabilities** with popular machine learning libraries and frameworks.
+**Description**
 
-### Project Blueprint
+Ax is an open-source platform designed for adaptive experimentation and optimization, primarily focusing on Bayesian optimization. It provides a flexible interface for defining experiments, managing configurations, and analyzing results. Ax enables data scientists to efficiently explore complex parameter spaces and optimize models or systems with minimal iterations through its powerful algorithms.
 
----
+**Technologies Used**
+- Ax
 
-#### Project 1: Optimizing a Marketing Campaign (Difficulty: 1 - Easy)
-**Project Objective**: The goal is to optimize the allocation of a marketing budget across different channels (e.g., social media, email, and search ads) to maximize customer engagement (click-through rates).
-
-**Dataset Suggestions**: Use datasets available on Kaggle related to marketing campaign performance, which often include engagement metrics and budget allocation.
-
-**Step-by-Step Plan**:
-1. **Data Collection**: Gather historical marketing campaign data from Kaggle, focusing on budget allocation and performance metrics.
-2. **Feature Engineering**: Create features like channel interaction, seasonality, and customer demographics.
-3. **Model Training**: Use a simple regression model to predict engagement based on budget allocation.
-4. **Use of Ax**: Implement Bayesian optimization to find the optimal budget allocation for each channel.
-5. **Evaluation Metrics**: Measure the effectiveness using click-through rates and ROI.
-6. **Visualization**: Create visualizations to show the optimized budget allocation and projected engagement improvements.
-
-**Bonus Ideas**: Compare the optimized results with a baseline allocation strategy to illustrate improvements.
+    - Facilitates Bayesian optimization for efficient hyperparameter tuning.
+    - Supports multi-objective optimization to balance trade-offs between competing metrics.
+    - Provides a user-friendly API to define experiments and analyze results easily.
 
 ---
 
-#### Project 2: Hyperparameter Tuning for Image Classification (Difficulty: 2 - Medium)
-**Project Objective**: The objective is to improve the accuracy of an image classification model by optimizing its hyperparameters using Ax.
+### Project 1: Hyperparameter Optimization for Machine Learning Models
 
-**Dataset Suggestions**: Use the CIFAR-10 dataset available on Kaggle, which contains a diverse set of images across different classes.
+**Difficulty**: 1 (Easy)
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download the CIFAR-10 dataset from Kaggle.
-2. **Feature Engineering**: Preprocess images (resizing, normalization) and create training/validation splits.
-3. **Model Training**: Use a pre-trained convolutional neural network (CNN) as a base model for transfer learning.
-4. **Use of Ax**: Utilize Ax for hyperparameter tuning of the CNN (e.g., learning rate, batch size, number of epochs).
-5. **Evaluation Metrics**: Evaluate model performance using accuracy and F1-score on the validation set.
-6. **Visualization**: Generate plots to visualize the impact of different hyperparameter settings on model accuracy.
+**Project Objective**: The goal is to optimize the hyperparameters of a machine learning model (e.g., Random Forest or Support Vector Machine) to achieve the best performance on a classification task, such as predicting whether a customer will churn.
 
-**Bonus Ideas**: Explore the effects of data augmentation techniques and compare results with and without augmentation.
+**Dataset Suggestions**: Use datasets available on Kaggle related to customer behavior or churn prediction.
+
+**Tasks**:
+- **Data Preprocessing**:
+    - Load and clean the dataset, handling missing values and encoding categorical variables.
+  
+- **Define the Model**:
+    - Choose a classification model (e.g., Random Forest) and establish baseline performance metrics.
+  
+- **Set Up Ax for Hyperparameter Optimization**:
+    - Define the hyperparameter space (e.g., number of trees, max depth) and create an optimization experiment using Ax.
+  
+- **Run Optimization**:
+    - Execute the optimization process and track performance metrics.
+  
+- **Evaluate Results**:
+    - Analyze the optimal hyperparameters and evaluate the final model performance on a test set.
+
+**Bonus Ideas (Optional)**:
+- Compare the optimized model with a baseline model using different metrics (e.g., F1 score, ROC-AUC).
 
 ---
 
-#### Project 3: Personalized Recommendation System (Difficulty: 3 - Hard)
-**Project Objective**: The goal is to build a personalized recommendation system for movies using collaborative filtering and optimize the recommendations based on user feedback.
+### Project 2: Multi-Objective Optimization for Marketing Campaigns
 
-**Dataset Suggestions**: Access the MovieLens dataset available on Kaggle, which includes user ratings and movie metadata.
+**Difficulty**: 2 (Medium)
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download the MovieLens dataset and preprocess the data to clean any missing values.
-2. **Feature Engineering**: Create user-item interaction matrices and additional features like genre, release year, and user demographics.
-3. **Model Training**: Implement a collaborative filtering model (e.g., matrix factorization) to generate initial recommendations.
-4. **Use of Ax**: Apply Ax to optimize model parameters (e.g., number of latent factors, regularization strength) based on user feedback metrics.
-5. **Evaluation Metrics**: Use metrics such as Mean Absolute Error (MAE) and Precision at K to evaluate the recommendation quality.
-6. **Visualization**: Develop a simple UI application to showcase recommendations and allow users to provide feedback, visualizing how recommendations change based on user input.
+**Project Objective**: The aim is to optimize a marketing campaign by balancing multiple objectives, such as maximizing reach while minimizing costs, using Ax for multi-objective optimization.
 
-**Bonus Ideas**: Experiment with hybrid recommendation techniques that combine collaborative filtering with content-based filtering for improved results.
+**Dataset Suggestions**: Explore open datasets on marketing campaigns available on platforms like Kaggle or government databases related to advertising.
+
+**Tasks**:
+- **Data Exploration**:
+    - Analyze historical marketing campaign data to identify key metrics (e.g., cost, reach, engagement).
+  
+- **Define Multi-Objective Space**:
+    - Establish the objectives for optimization (e.g., maximize reach, minimize cost) and constraints based on available data.
+  
+- **Set Up Ax Experiment**:
+    - Create a multi-objective optimization experiment using Ax to define the parameters of the marketing campaign (e.g., budget allocation, channel selection).
+  
+- **Run Optimization**:
+    - Execute the optimization and collect results for the best-performing campaigns.
+  
+- **Analyze Trade-offs**:
+    - Evaluate and visualize the trade-offs between objectives using Pareto front analysis.
+
+**Bonus Ideas (Optional)**:
+- Implement different optimization strategies (e.g., Gaussian processes) and compare their effectiveness.
+
+---
+
+### Project 3: Adaptive Experimentation for Drug Dosage Optimization
+
+**Difficulty**: 3 (Hard)
+
+**Project Objective**: This project aims to optimize drug dosage levels for a specific treatment by utilizing Ax to adaptively experiment and find the most effective dosage that maximizes efficacy while minimizing side effects.
+
+**Dataset Suggestions**: Use datasets from public health repositories or clinical trial databases that provide information on drug dosages and patient responses.
+
+**Tasks**:
+- **Literature Review**:
+    - Conduct a review of existing studies to understand dosage-response relationships and identify key variables.
+  
+- **Define Experiment Parameters**:
+    - Establish the parameters for optimization (e.g., dosage levels, patient demographics) and the response metrics (efficacy, side effects).
+  
+- **Set Up Ax for Adaptive Experimentation**:
+    - Create an adaptive experiment using Ax, defining the parameter space and response metrics for the drug dosage.
+  
+- **Conduct Experiments**:
+    - Run the adaptive experiments, adjusting dosage levels based on the results from previous trials.
+  
+- **Analyze Results**:
+    - Evaluate the optimal dosage levels and their associated efficacy, using statistical methods to validate findings.
+
+**Bonus Ideas (Optional)**:
+- Explore the use of reinforcement learning techniques to further enhance the adaptive experimentation process.
 
 --- 
 
-These projects provide a structured, engaging way for students to apply their knowledge of data science while utilizing Ax for optimization, fostering both technical skills and critical thinking.
+These projects provide a structured approach to learning how to utilize Ax effectively while engaging with real-world data science challenges across varying levels of complexity.
 

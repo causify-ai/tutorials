@@ -1,68 +1,77 @@
-### Tech Description: CmdStanPy
-CmdStanPy is a Python interface for Stan, a powerful probabilistic programming language. It allows users to perform Bayesian inference using Markov Chain Monte Carlo (MCMC) and variational methods. Key features include:
-- Easy integration with Python for statistical modeling.
-- Support for flexible and complex models.
-- Efficient handling of large datasets.
-- Access to a wide range of built-in functions for Bayesian analysis.
+**Description**
+
+CmdStanPy is a Python interface to Stan, a powerful probabilistic programming language for statistical modeling. It allows users to fit Bayesian models efficiently using Hamiltonian Monte Carlo and variational inference methods. CmdStanPy is designed for ease of use and flexibility, providing robust tools for model fitting, sampling, and diagnostics.
+
+Technologies Used
+CmdStanPy
+
+- Provides a Pythonic interface to Stan, enabling seamless integration with Python data science workflows.
+- Supports a wide range of Bayesian models, from simple linear regressions to complex hierarchical models.
+- Allows for efficient sampling and inference with built-in diagnostics and visualization tools.
 
 ---
 
-### Project Blueprint 1: **Predicting Housing Prices Using Bayesian Regression**
-**Difficulty**: 1 (Easy)
+### Project 1: Predicting Housing Prices (Difficulty: 1 - Easy)
 
-**Project Objective**: The goal is to predict housing prices based on various features such as location, size, and number of bedrooms. Students will optimize the prediction accuracy through Bayesian regression.
+**Project Objective**  
+The goal is to build a Bayesian linear regression model to predict housing prices based on various features such as location, size, and number of bedrooms. Students will optimize the model to minimize prediction error.
 
-**Dataset Suggestions**: Use a public housing dataset available on Kaggle, which includes features like square footage, number of rooms, and location.
+**Dataset Suggestions**  
+Look for housing price datasets on Kaggle or government open data portals that provide real estate information.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download the housing dataset from Kaggle.
-2. **Feature Engineering**: Clean the data, handle missing values, and create new features (e.g., price per square foot).
-3. **Model Training**: Implement a Bayesian linear regression model using CmdStanPy.
-4. **Use of the Tool**: Run MCMC simulations to estimate the posterior distributions of the model parameters.
-5. **Evaluation Metrics**: Use Mean Absolute Error (MAE) and R-squared to evaluate model performance.
-6. **Visualization**: Create plots of predicted vs. actual prices and visualize the posterior distributions of the parameters.
+**Tasks**  
+- **Data Collection**: Gather housing data from selected sources and load it into a Pandas DataFrame.
+- **Data Preprocessing**: Clean the dataset by handling missing values and encoding categorical variables.
+- **Model Specification**: Define a Bayesian linear regression model using CmdStanPy.
+- **Model Fitting**: Fit the model to the training data and assess convergence diagnostics.
+- **Prediction**: Use the model to predict housing prices on a test set and evaluate performance using metrics like RMSE.
+- **Visualization**: Create plots to visualize the relationship between features and predicted prices.
 
-**Bonus Ideas**: Compare the Bayesian model with a traditional linear regression model to discuss differences in interpretation and performance.
-
----
-
-### Project Blueprint 2: **Customer Segmentation Using Bayesian Clustering**
-**Difficulty**: 2 (Medium)
-
-**Project Objective**: The objective is to segment customers based on purchasing behavior using Bayesian clustering techniques, enabling businesses to tailor marketing strategies.
-
-**Dataset Suggestions**: Use a retail transaction dataset available on Kaggle that includes customer IDs, transaction amounts, and product categories.
-
-**Step-by-Step Plan**:
-1. **Data Collection**: Acquire the retail transaction dataset from Kaggle.
-2. **Feature Engineering**: Aggregate transactions to create features such as total spend, frequency of purchases, and recency.
-3. **Model Training**: Implement a Bayesian Gaussian Mixture Model using CmdStanPy to identify clusters in the data.
-4. **Use of the Tool**: Use MCMC to estimate the parameters of the mixture model and assign customers to clusters.
-5. **Evaluation Metrics**: Evaluate clustering performance using silhouette scores and visual inspection of cluster distributions.
-6. **Visualization**: Use 2D plots to visualize clusters and their characteristics.
-
-**Bonus Ideas**: Explore different numbers of clusters and compare the results, or apply dimensionality reduction techniques (like PCA) before clustering.
+**Bonus Ideas (Optional)**  
+- Compare the Bayesian model with a frequentist linear regression model.
+- Extend the model to include interaction terms or polynomial features.
 
 ---
 
-### Project Blueprint 3: **Time Series Forecasting of Retail Sales**
-**Difficulty**: 3 (Hard)
+### Project 2: Customer Churn Prediction (Difficulty: 2 - Medium)
 
-**Project Objective**: The goal is to forecast future retail sales using a Bayesian time series model, allowing businesses to make informed inventory decisions.
+**Project Objective**  
+This project aims to develop a Bayesian logistic regression model to predict customer churn for a subscription service. The objective is to identify the likelihood of a customer leaving based on their usage patterns and demographic information.
 
-**Dataset Suggestions**: Use a public retail sales dataset available on Kaggle or from government open data portals that provide historical sales data.
+**Dataset Suggestions**  
+Find customer churn datasets on Kaggle or open datasets from telecommunications or subscription-based services.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download the retail sales time series dataset from Kaggle.
-2. **Feature Engineering**: Create time-based features such as month, quarter, and seasonality indicators.
-3. **Model Training**: Implement a Bayesian structural time series model using CmdStanPy to capture trends and seasonality.
-4. **Use of the Tool**: Fit the model using MCMC and generate posterior predictive distributions for future sales.
-5. **Evaluation Metrics**: Use Root Mean Squared Error (RMSE) and Mean Absolute Percentage Error (MAPE) to assess forecasting accuracy.
-6. **Visualization**: Create time series plots showing historical sales and forecasted values with credible intervals.
+**Tasks**  
+- **Data Collection**: Acquire the customer churn dataset and load it into a Pandas DataFrame.
+- **Exploratory Data Analysis (EDA)**: Conduct EDA to understand the distribution of features and churn rates.
+- **Model Specification**: Define a Bayesian logistic regression model using CmdStanPy.
+- **Model Fitting**: Fit the model to the training data and analyze the posterior distributions of the coefficients.
+- **Prediction**: Evaluate the model on a validation set by calculating precision, recall, and AUC-ROC.
+- **Interpretation**: Interpret the model coefficients to understand the factors influencing churn.
 
-**Bonus Ideas**: Experiment with incorporating external variables (like promotions or holidays) into the model, or compare the Bayesian approach with classical time series models like ARIMA. 
+**Bonus Ideas (Optional)**  
+- Implement a hierarchical model to account for customer segments.
+- Visualize the posterior distributions of the coefficients to communicate uncertainty.
 
---- 
+---
 
-These projects will provide students with hands-on experience in applying Bayesian methods to real-world data science problems using CmdStanPy, enhancing both their technical and analytical skills.
+### Project 3: Time Series Forecasting of Sales (Difficulty: 3 - Hard)
+
+**Project Objective**  
+The objective is to build a Bayesian state-space model to forecast future sales for a retail store. Students will optimize the model to capture trends and seasonality in the sales data.
+
+**Dataset Suggestions**  
+Look for retail sales datasets available on Kaggle or open government datasets that provide time series data.
+
+**Tasks**  
+- **Data Collection**: Gather historical sales data and preprocess it into a suitable time series format.
+- **Model Specification**: Define a Bayesian state-space model to capture seasonality and trends using CmdStanPy.
+- **Model Fitting**: Fit the model to the sales data and assess convergence diagnostics.
+- **Forecasting**: Generate forecasts for future sales and quantify uncertainty using credible intervals.
+- **Model Evaluation**: Compare the Bayesian forecasts with naive or ARIMA models using metrics like MAPE.
+- **Visualization**: Create plots to visualize the observed vs. predicted sales along with uncertainty intervals.
+
+**Bonus Ideas (Optional)**  
+- Incorporate external factors (e.g., marketing campaigns) into the model.
+- Experiment with different priors to see how they affect the forecasts and uncertainty.
 

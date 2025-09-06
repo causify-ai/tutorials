@@ -1,71 +1,69 @@
-### Tech Description of AutoGluon
-AutoGluon is an open-source AutoML library designed to simplify the process of training and deploying machine learning models. It automates the selection, training, and hyperparameter tuning of models, allowing users to focus on their data rather than the intricacies of model building. 
+**Description**
 
-**Features:**
-- Automated model selection and hyperparameter tuning
-- Support for both tabular and image data
-- Easy integration with popular libraries like Pandas and NumPy
-- Ability to generate ensemble models for improved accuracy
-- User-friendly API for quick implementation
+AutoGluon is an open-source AutoML toolkit designed to simplify the process of building machine learning models. It automates the selection of algorithms, hyperparameter tuning, and model evaluation, making it accessible for users with varying levels of expertise. Key features include:
+
+- **Automatic Model Selection**: Quickly identifies the best algorithms for your dataset.
+- **Hyperparameter Optimization**: Fine-tunes model parameters to enhance performance.
+- **Ensemble Learning**: Combines multiple models to improve accuracy and robustness.
+- **Support for Various Data Types**: Works with structured data, text, and images.
 
 ---
 
 ### Project 1: Predicting Housing Prices
 **Difficulty**: 1 (Easy)
 
-**Project Objective**: The goal of this project is to predict housing prices based on various features such as location, size, number of bedrooms, and amenities. The optimization target is to minimize the prediction error.
+**Project Objective**: The goal of this project is to predict housing prices based on various features such as location, size, and amenities. Students will optimize the model to achieve the highest possible accuracy.
 
-**Dataset Suggestions**: Use datasets available on Kaggle that contain housing features and prices, or explore public datasets from government housing departments.
+**Dataset Suggestions**: Look for housing datasets on Kaggle or open government portals that provide historical housing prices and features.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download a housing dataset from Kaggle or a government portal.
-2. **Feature Engineering**: Identify and create new features that may affect housing prices, such as proximity to schools or public transport.
-3. **Model Training**: Use AutoGluon to automatically train multiple regression models on the dataset.
-4. **Use of the Tool**: Implement AutoGluon to optimize model selection and hyperparameter tuning.
-5. **Evaluation Metrics**: Evaluate model performance using RMSE (Root Mean Squared Error) and R² score.
-6. **Visualization/Reporting**: Create visualizations to show the relationship between features and predicted prices, and compile a report of findings.
+**Tasks**:
+- **Data Ingestion**: Load the dataset into a DataFrame using Pandas.
+- **Data Preprocessing**: Clean the data by handling missing values and encoding categorical features.
+- **Model Training with AutoGluon**: Utilize AutoGluon to automatically train multiple regression models and select the best one.
+- **Model Evaluation**: Assess model performance using metrics such as RMSE and R-squared.
+- **Visualization**: Create visualizations to show the relationship between features and predicted prices.
 
-**Bonus Ideas**: Compare the performance of AutoGluon models against a simple linear regression model as a baseline.
+**Bonus Ideas (Optional)**:
+- Experiment with feature engineering to enhance model performance.
+- Compare AutoGluon’s results against a manually tuned model to analyze differences.
 
 ---
 
-### Project 2: Customer Segmentation for E-commerce
+### Project 2: Customer Churn Prediction
 **Difficulty**: 2 (Medium)
 
-**Project Objective**: The objective is to segment customers based on their purchasing behavior using clustering techniques, optimizing for distinct customer profiles that can inform marketing strategies.
+**Project Objective**: This project aims to predict customer churn for a subscription-based service. Students will optimize the model to minimize false negatives, ensuring that at-risk customers are identified.
 
-**Dataset Suggestions**: Utilize datasets from Kaggle that contain e-commerce transaction data, or explore open datasets from marketing research firms.
+**Dataset Suggestions**: Find customer churn datasets on Kaggle or open datasets related to telecommunications or subscription services.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Acquire an e-commerce transaction dataset from Kaggle.
-2. **Feature Engineering**: Create features such as total spend, frequency of purchases, and product categories purchased.
-3. **Model Training**: Use AutoGluon to apply clustering algorithms (like K-Means) to identify customer segments.
-4. **Use of the Tool**: Leverage AutoGluon’s capabilities to evaluate different clustering techniques and select the best-performing one.
-5. **Evaluation Metrics**: Assess clustering quality using silhouette score and Davies-Bouldin index.
-6. **Visualization/Reporting**: Visualize customer segments using scatter plots or heatmaps and summarize insights in a report.
+**Tasks**:
+- **Data Loading**: Import the customer churn dataset into a Pandas DataFrame.
+- **Exploratory Data Analysis (EDA)**: Conduct EDA to understand the distribution of features and identify patterns.
+- **Model Training with AutoGluon**: Use AutoGluon to train classification models and identify the best-performing one for predicting churn.
+- **Feature Importance Analysis**: Analyze which features are most influential in predicting churn.
+- **Model Evaluation**: Evaluate the model using precision, recall, and F1-score, focusing on minimizing false negatives.
 
-**Bonus Ideas**: Explore the impact of adding demographic data to improve segmentation and compare results.
+**Bonus Ideas (Optional)**:
+- Implement a cost-benefit analysis to quantify the impact of reducing churn.
+- Explore the effect of different sampling techniques on model performance.
 
 ---
 
-### Project 3: Sentiment Analysis of Product Reviews
+### Project 3: Image Classification of Plant Species
 **Difficulty**: 3 (Hard)
 
-**Project Objective**: The aim is to classify product reviews as positive, negative, or neutral, optimizing for accuracy in sentiment prediction.
+**Project Objective**: The objective is to classify images of various plant species based on their features. Students will optimize the model for accuracy while dealing with a diverse dataset with multiple classes.
 
-**Dataset Suggestions**: Use datasets from HuggingFace containing labeled product reviews or explore public datasets available on Kaggle.
+**Dataset Suggestions**: Use image datasets available on Kaggle or HuggingFace that contain labeled images of different plant species.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download a sentiment analysis dataset from HuggingFace or Kaggle.
-2. **Feature Engineering**: Preprocess text data by tokenizing reviews, removing stop words, and creating embeddings (use pre-trained models if needed).
-3. **Model Training**: Utilize AutoGluon for training various text classification models to categorize reviews.
-4. **Use of the Tool**: Apply AutoGluon’s capabilities to automate model selection and fine-tuning for better performance.
-5. **Evaluation Metrics**: Use accuracy, precision, recall, and F1-score to evaluate model performance.
-6. **Visualization/Reporting**: Create a dashboard to visualize sentiment distribution and compile a report detailing findings and model performance.
+**Tasks**:
+- **Data Collection**: Download and organize the image dataset into training and validation sets.
+- **Data Augmentation**: Apply techniques such as rotation, flipping, and scaling to enhance dataset diversity.
+- **Model Training with AutoGluon**: Leverage AutoGluon to train deep learning models for image classification.
+- **Transfer Learning**: Utilize pre-trained models and fine-tune them using AutoGluon for improved performance.
+- **Model Evaluation**: Assess classification accuracy using confusion matrices and classification reports.
 
-**Bonus Ideas**: Experiment with ensemble methods using AutoGluon to combine different models for improved sentiment classification accuracy. 
-
---- 
-
-These projects are designed to provide a comprehensive learning experience, leveraging AutoGluon's capabilities while engaging with real-world datasets and machine learning tasks.
+**Bonus Ideas (Optional)**:
+- Implement a web application for real-time plant species classification using the trained model.
+- Experiment with different architectures and compare their performance against the AutoGluon results.
 

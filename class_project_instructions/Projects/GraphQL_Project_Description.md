@@ -1,76 +1,103 @@
-**Tech Description of GraphQL:**
+### Description
 
-GraphQL is a query language for APIs and a runtime for executing those queries by using a type system you define for your data. It allows clients to request only the data they need, making it more efficient than traditional REST APIs. 
+GraphQL is a query language for APIs and a runtime for executing those queries with existing data. It allows clients to request exactly the data they need, making data retrieval more efficient and flexible. 
 
-- **Features:**
-  - Flexible data retrieval: Clients can specify exactly what data they need.
-  - Strongly typed schema: Ensures data consistency and validation.
-  - Single endpoint: Reduces the complexity of managing multiple API endpoints.
-  - Real-time updates: Supports subscriptions for real-time data updates.
+**Key Features:**
+- Enables precise data fetching with a single request, minimizing over-fetching or under-fetching.
+- Provides a strongly typed schema that allows for better validation and introspection.
+- Supports real-time data updates through subscriptions for dynamic applications.
 
 ---
 
 ### Project 1: Movie Recommendation System (Difficulty: 1 - Easy)
 
 **Project Objective:**  
-The goal of this project is to build a simple movie recommendation system that predicts user preferences based on their viewing history and ratings.
+Build a simple movie recommendation system that predicts user preferences based on their viewing history and ratings. The goal is to optimize recommendations using collaborative filtering techniques.
 
 **Dataset Suggestions:**  
-Utilize datasets available on platforms like Kaggle that contain user ratings and movie metadata. Look for datasets that include user IDs, movie IDs, ratings, and genres.
+Find datasets on movie ratings and user preferences on platforms like Kaggle or MovieLens.
 
-**Step-by-Step Plan:**
-1. **Data Collection:** Use GraphQL APIs to fetch movie datasets and user ratings.
-2. **Feature Engineering:** Create features such as average ratings, genre popularity, and user profiles based on historical ratings.
-3. **Model Training:** Implement a collaborative filtering algorithm to predict ratings for unseen movies.
-4. **Use of GraphQL:** Use GraphQL queries to fetch specific data needed for model training and predictions.
-5. **Evaluation Metrics:** Utilize RMSE (Root Mean Square Error) to evaluate the recommendation accuracy.
-6. **Visualization/Reporting:** Create visualizations to show the distribution of ratings and the top recommended movies for users.
+**Tasks:**
+- **Set Up GraphQL API:**  
+  Create a GraphQL API to query movie data, user ratings, and preferences.
+  
+- **Data Ingestion:**  
+  Fetch user and movie data, storing it in a structured format using Pandas.
+  
+- **Collaborative Filtering:**  
+  Implement a basic collaborative filtering algorithm to generate recommendations based on user similarity.
+  
+- **User Interface:**  
+  Create a simple interface to allow users to input their ratings and receive movie recommendations.
+  
+- **Evaluate Recommendations:**  
+  Use metrics like Mean Absolute Error (MAE) to evaluate the accuracy of recommendations.
 
 **Bonus Ideas:**  
-- Compare the collaborative filtering model with content-based filtering.
-- Extend the project to include a simple web interface where users can input their preferences and receive movie recommendations.
+- Experiment with different recommendation algorithms (e.g., content-based filtering).
+- Implement a feature that allows users to see trending movies based on their preferences.
 
 ---
 
-### Project 2: Twitter Sentiment Analysis (Difficulty: 2 - Medium)
+### Project 2: COVID-19 Data Dashboard (Difficulty: 2 - Medium)
 
 **Project Objective:**  
-The objective is to analyze tweets related to a specific topic and classify the sentiment (positive, negative, neutral) expressed in those tweets.
+Develop an interactive dashboard that visualizes COVID-19 statistics over time, focusing on trends and predictions. The goal is to optimize the presentation of critical health data for public awareness.
 
 **Dataset Suggestions:**  
-Access real-time tweets using the Twitter API (which supports GraphQL) to gather tweets based on specific keywords or hashtags.
+Utilize publicly available COVID-19 datasets from government health portals or Kaggle.
 
-**Step-by-Step Plan:**
-1. **Data Collection:** Use GraphQL to collect tweets in real-time related to a trending topic or event.
-2. **Feature Engineering:** Extract features such as tweet text, user engagement metrics (likes, retweets), and sentiment scores.
-3. **Model Training:** Implement a pre-trained NLP model (like BERT) for sentiment classification.
-4. **Use of GraphQL:** Use GraphQL queries to filter and retrieve tweets based on sentiment scores and engagement metrics.
-5. **Evaluation Metrics:** Use accuracy and F1-score to evaluate the model's performance.
-6. **Visualization/Reporting:** Create visualizations to display sentiment trends over time and the distribution of sentiments.
+**Tasks:**
+- **Set Up GraphQL API:**  
+  Create a GraphQL API to fetch COVID-19 data from reliable sources.
+  
+- **Data Visualization:**  
+  Use libraries like Plotly or Matplotlib to create interactive graphs for visualizing trends in COVID-19 cases, recoveries, and vaccinations.
+  
+- **Time Series Forecasting:**  
+  Implement time series forecasting methods (e.g., ARIMA) to predict future COVID-19 case trends.
+  
+- **User Interaction:**  
+  Enable users to filter data by country, state, or date range through the GraphQL API.
+  
+- **Dashboard Creation:**  
+  Build a web-based dashboard using Dash or Streamlit to display visualizations and predictions.
 
 **Bonus Ideas:**  
-- Compare the sentiment analysis results with historical data to identify trends.
-- Implement a dashboard that updates in real-time to reflect the latest sentiment analysis results.
+- Integrate real-time data updates using GraphQL subscriptions for live statistics.
+- Add a feature to compare trends between different countries or regions.
 
 ---
 
-### Project 3: COVID-19 Data Visualization and Forecasting (Difficulty: 3 - Hard)
+### Project 3: E-commerce Price Optimization (Difficulty: 3 - Hard)
 
 **Project Objective:**  
-The goal is to analyze COVID-19 case data, visualize trends, and forecast future cases using machine learning techniques.
+Develop a predictive model to optimize pricing strategies for an e-commerce platform. The goal is to predict optimal prices based on various features like demand, seasonality, and competitor pricing.
 
 **Dataset Suggestions:**  
-Utilize publicly available datasets from government health organizations or Kaggle that provide daily COVID-19 case numbers, vaccination rates, and demographic information.
+Search for open datasets related to e-commerce sales, pricing, and product features on Kaggle or GitHub.
 
-**Step-by-Step Plan:**
-1. **Data Collection:** Use GraphQL APIs to gather COVID-19 data from reliable sources.
-2. **Feature Engineering:** Create features such as daily new cases, recovery rates, and vaccination coverage.
-3. **Model Training:** Train a time series model (like ARIMA or LSTM) to forecast future COVID-19 cases based on historical data.
-4. **Use of GraphQL:** Use GraphQL queries to fetch specific data for analysis and model training.
-5. **Evaluation Metrics:** Evaluate forecasts using MAE (Mean Absolute Error) and MAPE (Mean Absolute Percentage Error).
-6. **Visualization/Reporting:** Develop interactive visualizations to display trends and forecasts, along with a simple UI to explore different scenarios.
+**Tasks:**
+- **Set Up GraphQL API:**  
+  Create a GraphQL API to retrieve product data, sales history, and competitor pricing information.
+  
+- **Data Preprocessing:**  
+  Clean and preprocess the data to handle missing values and categorical variables.
+  
+- **Feature Engineering:**  
+  Create new features that may influence pricing, such as seasonal trends and competitor price indices.
+  
+- **Model Development:**  
+  Implement regression models (e.g., Linear Regression, Random Forest) to predict optimal prices based on the features.
+  
+- **Model Evaluation:**  
+  Assess model performance using metrics like R-squared and Mean Squared Error (MSE).
 
 **Bonus Ideas:**  
-- Compare different forecasting models to determine which performs best.
-- Extend the project to include analysis of the impact of vaccination rates on case numbers, visualized through GraphQL queries.
+- Implement a dynamic pricing strategy that adjusts prices in real-time based on demand forecasts.
+- Explore the impact of promotional discounts on sales volume and profitability.
+
+--- 
+
+These projects will help students gain hands-on experience with GraphQL while applying machine learning techniques to real-world problems.
 

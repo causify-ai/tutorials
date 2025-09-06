@@ -1,63 +1,106 @@
-### Tech Description of TPOT
-TPOT (Tree-based Pipeline Optimization Tool) is an automated machine learning library that optimizes machine learning pipelines using genetic programming. It helps users find the best models and preprocessing methods for their data with minimal manual intervention. Key features include:
-- Automated model selection and hyperparameter tuning
-- Genetic programming for pipeline optimization
-- Support for various machine learning algorithms
-- Integration with scikit-learn for seamless model deployment
+### Description
+
+TPOT (Tree-based Pipeline Optimization Tool) is an automated machine learning library in Python that optimizes machine learning pipelines using genetic programming. It helps users discover the best models and preprocessing steps for their datasets without extensive manual tuning. 
+
+**Features:**
+- Automates the process of selecting the best machine learning model and hyperparameters.
+- Utilizes genetic programming to evolve pipelines over generations.
+- Supports various classifiers and regressors, along with preprocessing techniques.
+- Provides visualizations for understanding the pipeline structure.
 
 ---
 
-### Project Blueprint
+### Project 1: Predicting Housing Prices (Difficulty: 1 - Easy)
 
-#### Project 1: Customer Churn Prediction
-- **Difficulty**: 1 (Easy)
-- **Project Objective**: The goal is to predict which customers are likely to leave a subscription service based on their usage patterns and demographics. The project aims to optimize the predictive accuracy of the model to identify at-risk customers.
+**Project Objective:**
+The goal is to develop a predictive model that estimates housing prices based on various features, optimizing for the lowest mean absolute error.
+
+**Dataset Suggestions:**
+Look for housing datasets on Kaggle, which typically include features such as square footage, number of bedrooms, location, and year built.
+
+**Tasks:**
+- **Data Ingestion:**
+  - Load the housing dataset into a Pandas DataFrame and perform initial data exploration.
   
-- **Dataset Suggestions**: Look for customer churn datasets on Kaggle, focusing on telecommunication or subscription services. Alternatively, government open datasets related to consumer behavior can also be useful.
+- **Data Cleaning:**
+  - Handle missing values and outliers in the dataset.
+  
+- **TPOT Setup:**
+  - Initialize TPOT and set it up for regression tasks.
+  
+- **Model Training:**
+  - Train the TPOT model on the dataset to identify the best pipeline for predicting housing prices.
+  
+- **Evaluation:**
+  - Evaluate model performance using cross-validation and report the mean absolute error.
 
-- **Step-by-Step Plan**:
-  1. **Data Collection**: Download the dataset from Kaggle or a government portal.
-  2. **Feature Engineering**: Create features such as usage frequency, customer tenure, and service type. Consider encoding categorical variables.
-  3. **Model Training**: Use TPOT to automatically select and train models on the dataset.
-  4. **Use of the Tool**: Leverage TPOT’s genetic programming to optimize the model pipeline, including preprocessing steps.
-  5. **Evaluation Metrics**: Use accuracy, precision, recall, and F1-score to evaluate model performance.
-  6. **Visualization/Reporting**: Create visualizations to show feature importance and churn predictions. Prepare a report summarizing findings.
+- **Visualization:**
+  - Visualize the predicted vs. actual prices using Matplotlib.
 
-- **Bonus Ideas**: Explore different churn prevention strategies based on model predictions, or compare TPOT results with a manually tuned model.
-
----
-
-#### Project 2: House Price Prediction
-- **Difficulty**: 2 (Medium)
-- **Project Objective**: The aim is to predict house prices based on various features such as location, size, and amenities. The project focuses on optimizing the model to minimize prediction error.
-
-- **Dataset Suggestions**: Use housing price datasets available on Kaggle, focusing on real estate markets. Alternatively, check open government datasets that provide housing statistics.
-
-- **Step-by-Step Plan**:
-  1. **Data Collection**: Obtain the dataset from Kaggle or an open government site.
-  2. **Feature Engineering**: Generate features like square footage, number of bedrooms, and proximity to schools. Normalize and scale features as necessary.
-  3. **Model Training**: Utilize TPOT to identify the best regression models and preprocessing techniques for predicting house prices.
-  4. **Use of the Tool**: Allow TPOT to optimize the entire machine learning pipeline, including feature selection and model tuning.
-  5. **Evaluation Metrics**: Evaluate the model using RMSE (Root Mean Squared Error) and R-squared values.
-  6. **Visualization/Reporting**: Create visualizations to compare predicted vs. actual prices. Prepare a presentation to explain the model’s performance and insights.
-
-- **Bonus Ideas**: Experiment with adding more features, such as economic indicators or neighborhood crime rates, and analyze their impact on predictions.
+**Bonus Ideas (Optional):**
+- Extend the project by adding additional features (e.g., neighborhood crime rate) and comparing the performance of your TPOT model against a manually tuned model.
 
 ---
 
-#### Project 3: Sentiment Analysis on Movie Reviews
-- **Difficulty**: 3 (Hard)
-- **Project Objective**: The goal is to classify movie reviews as positive or negative based on textual content. The project aims to achieve high classification accuracy while optimizing the text preprocessing steps.
+### Project 2: Customer Segmentation (Difficulty: 2 - Medium)
 
-- **Dataset Suggestions**: Utilize movie review datasets available on Kaggle or HuggingFace Datasets. Look for datasets that include labeled text data for sentiment analysis.
+**Project Objective:**
+The objective is to group customers based on purchasing behavior using clustering techniques, optimizing for distinct segments that can inform marketing strategies.
 
-- **Step-by-Step Plan**:
-  1. **Data Collection**: Download a sentiment analysis dataset from Kaggle or HuggingFace.
-  2. **Feature Engineering**: Preprocess the text data by tokenizing, removing stop words, and converting text to numerical features using TF-IDF or word embeddings.
-  3. **Model Training**: Apply TPOT to automatically discover the best pipelines for text classification, including feature extraction and model selection.
-  4. **Use of the Tool**: Utilize TPOT’s capabilities to optimize both the text preprocessing and classification model.
-  5. **Evaluation Metrics**: Measure model performance using accuracy, F1-score, and confusion matrix.
-  6. **Visualization/Reporting**: Create visualizations to illustrate the distribution of sentiments and model performance. Prepare a detailed report discussing the insights gained from the analysis.
+**Dataset Suggestions:**
+Utilize datasets from Kaggle that include customer transaction history, demographic information, and purchase frequency.
 
-- **Bonus Ideas**: Experiment with different text preprocessing techniques or compare the performance of TPOT with traditional machine learning approaches using manual tuning.
+**Tasks:**
+- **Data Ingestion:**
+  - Load the customer dataset into a Pandas DataFrame and perform exploratory data analysis (EDA) to understand the features.
+  
+- **Preprocessing:**
+  - Normalize and encode categorical variables to prepare for clustering.
+  
+- **TPOT Setup:**
+  - Configure TPOT to automate the clustering pipeline, focusing on algorithms suitable for segmentation.
+  
+- **Model Training:**
+  - Use TPOT to discover the best clustering model and parameters for customer segmentation.
+  
+- **Evaluation:**
+  - Evaluate the effectiveness of the clusters using silhouette scores and interpret the results.
+
+- **Visualization:**
+  - Visualize the clusters using scatter plots and highlight the characteristics of each segment.
+
+**Bonus Ideas (Optional):**
+- Integrate additional demographic data to enhance segmentation and compare results with traditional clustering methods like K-Means.
+
+---
+
+### Project 3: Predicting Heart Disease (Difficulty: 3 - Hard)
+
+**Project Objective:**
+The goal is to build a model that predicts the presence of heart disease in patients based on various health metrics, optimizing for high accuracy and recall.
+
+**Dataset Suggestions:**
+Search for publicly available heart disease datasets on sources like Kaggle, which often include features such as age, cholesterol levels, blood pressure, and other health indicators.
+
+**Tasks:**
+- **Data Ingestion:**
+  - Load the heart disease dataset into a Pandas DataFrame and conduct a thorough exploratory data analysis.
+  
+- **Feature Engineering:**
+  - Create new features based on existing ones (e.g., BMI from weight and height) and assess feature importance.
+  
+- **TPOT Setup:**
+  - Initialize TPOT for classification tasks and configure it to optimize for recall to minimize false negatives.
+  
+- **Model Training:**
+  - Train the TPOT pipeline on the dataset to identify the best model for predicting heart disease.
+  
+- **Evaluation:**
+  - Evaluate the model using confusion matrix and classification report, focusing on precision, recall, and F1-score.
+
+- **Visualization:**
+  - Visualize the model's predictions against actual outcomes, using ROC curves to assess performance.
+
+**Bonus Ideas (Optional):**
+- Experiment with ensemble methods or stacking different models discovered by TPOT to improve performance further and compare the results.
 

@@ -1,76 +1,77 @@
-### Tech Description of Pyro
-Pyro is a probabilistic programming library built on PyTorch that enables users to define complex probabilistic models and perform inference using modern techniques. Its features include:
-- **Flexible Modeling**: Allows for easy definition of probabilistic models using Python syntax.
-- **Variational Inference**: Supports advanced inference methods to approximate complex distributions.
-- **Bayesian Inference**: Facilitates the implementation of Bayesian methods for uncertainty quantification.
-- **Integration with PyTorch**: Leverages the power of PyTorch for automatic differentiation and GPU acceleration.
+### Description
+
+Pyro is a flexible, scalable deep probabilistic programming library built on PyTorch. It allows users to define complex probabilistic models using a simple syntax and provides tools for variational inference and Markov Chain Monte Carlo (MCMC) methods. Pyro is particularly useful for Bayesian inference and enables the modeling of uncertainty in machine learning tasks.
+
+**Features:**
+- Supports deep probabilistic modeling with a focus on Bayesian inference.
+- Integrates seamlessly with PyTorch for deep learning applications.
+- Provides a range of inference algorithms, including MCMC and variational methods.
+- Enables the construction of complex models with ease using a simple API.
 
 ---
 
-### Project Blueprint
+### Project 1: Predicting House Prices with Bayesian Regression (Difficulty: 1 - Easy)
 
-#### Project 1: **Predicting Housing Prices Using Bayesian Inference**
-- **Difficulty**: 1 (Easy)
-- **Project Objective**: The goal is to predict housing prices based on various features (e.g., size, location, number of bedrooms) using Bayesian linear regression, optimizing for accurate price predictions.
+**Project Objective:**  
+Develop a Bayesian regression model to predict house prices based on various features such as size, location, and number of bedrooms. The goal is to optimize predictions while quantifying uncertainty in the estimates.
 
-- **Dataset Suggestions**: 
-  - Use publicly available housing datasets from Kaggle or open government portals that contain features like square footage, number of rooms, and neighborhood characteristics.
+**Dataset Suggestions:**  
+Look for publicly available housing price datasets on platforms like Kaggle or government real estate data portals.
 
-- **Step-by-Step Plan**:
-  1. **Data Collection**: Download the housing dataset from Kaggle or a government portal.
-  2. **Feature Engineering**: Clean the dataset, handle missing values, and create new features (e.g., price per square foot).
-  3. **Model Training**: Implement a Bayesian linear regression model using Pyro.
-  4. **Use of the Tool**: Use Pyro for defining the probabilistic model and performing inference.
-  5. **Evaluation Metrics**: Evaluate the model using RMSE (Root Mean Square Error) and R² score.
-  6. **Visualization**: Create visualizations comparing predicted vs. actual prices and feature importance.
+**Tasks:**
+- **Data Preparation:** Load and preprocess the housing dataset, including handling missing values and encoding categorical variables.
+- **Define the Model:** Use Pyro to create a Bayesian linear regression model to predict house prices.
+- **Inference:** Implement variational inference to estimate the model parameters and quantify uncertainty.
+- **Model Evaluation:** Evaluate the model performance using metrics such as RMSE and visualize the uncertainty in predictions.
+- **Visualization:** Create plots to compare predicted prices against actual prices and visualize the uncertainty intervals.
 
-- **Bonus Ideas**: 
-  - Compare the Bayesian model's performance with a traditional linear regression model.
-  - Experiment with different priors to see their effects on predictions.
+**Bonus Ideas (Optional):**
+- Compare the Bayesian model's predictions with a traditional linear regression model.
+- Experiment with adding more features or interactions to the model and analyze the impact on predictions and uncertainty.
 
 ---
 
-#### Project 2: **Customer Segmentation Using Gaussian Mixture Models**
-- **Difficulty**: 2 (Medium)
-- **Project Objective**: The aim is to segment customers based on their purchasing behavior using Gaussian Mixture Models (GMMs), optimizing for distinct customer groups.
+### Project 2: Anomaly Detection in Network Traffic (Difficulty: 2 - Medium)
 
-- **Dataset Suggestions**: 
-  - Utilize transaction data from Kaggle that includes customer IDs, purchase amounts, and frequency of purchases.
+**Project Objective:**  
+Build a probabilistic model to detect anomalies in network traffic data, optimizing for high precision and recall in identifying unusual patterns that may indicate security threats.
 
-- **Step-by-Step Plan**:
-  1. **Data Collection**: Obtain transaction data from a Kaggle dataset.
-  2. **Feature Engineering**: Aggregate transaction data to create features like total spend, average purchase value, and purchase frequency.
-  3. **Model Training**: Implement a GMM using Pyro to identify customer segments.
-  4. **Use of the Tool**: Use Pyro to define the GMM and perform inference to identify clusters.
-  5. **Evaluation Metrics**: Use silhouette score and log-likelihood to evaluate the quality of the clusters.
-  6. **Visualization**: Visualize customer segments using scatter plots and cluster centroids.
+**Dataset Suggestions:**  
+Utilize publicly available network traffic datasets from sources like Kaggle or the UCI Machine Learning Repository.
 
-- **Bonus Ideas**: 
-  - Analyze the characteristics of each segment and propose targeted marketing strategies.
-  - Compare the GMM results with K-means clustering for a baseline comparison.
+**Tasks:**
+- **Data Acquisition:** Load the network traffic dataset and preprocess it by normalizing and aggregating the data.
+- **Model Specification:** Define a probabilistic model using Pyro that captures the normal behavior of network traffic.
+- **Anomaly Detection:** Use MCMC methods to infer the parameters of the model and identify anomalies based on posterior probabilities.
+- **Evaluation:** Assess the model's performance using precision-recall metrics and visualize detected anomalies in the traffic data.
+- **Documentation:** Document findings and potential implications for cybersecurity based on the detected anomalies.
 
----
-
-#### Project 3: **Time Series Forecasting with Bayesian Structural Time Series**
-- **Difficulty**: 3 (Hard)
-- **Project Objective**: The project aims to forecast future sales data using a Bayesian Structural Time Series (BSTS) model, optimizing for accurate sales predictions.
-
-- **Dataset Suggestions**: 
-  - Use sales data from Kaggle that includes historical sales figures over time, ideally with seasonal trends.
-
-- **Step-by-Step Plan**:
-  1. **Data Collection**: Download historical sales data from a Kaggle dataset.
-  2. **Feature Engineering**: Create time-related features such as day of the week, month, and holidays.
-  3. **Model Training**: Implement a BSTS model using Pyro for forecasting future sales.
-  4. **Use of the Tool**: Use Pyro to define the BSTS model and perform inference to predict future values.
-  5. **Evaluation Metrics**: Evaluate the model using MAE (Mean Absolute Error) and MAPE (Mean Absolute Percentage Error).
-  6. **Visualization**: Plot the forecasted sales against actual sales, including confidence intervals.
-
-- **Bonus Ideas**: 
-  - Extend the model to include external regressors (like marketing spend) to see their effects on sales.
-  - Implement a comparison with traditional time series models like ARIMA for performance evaluation. 
+**Bonus Ideas (Optional):**
+- Implement a comparison of the probabilistic model with traditional anomaly detection techniques such as clustering.
+- Extend the model by incorporating temporal aspects of the data to improve detection accuracy.
 
 ---
 
-These projects will not only enhance your understanding of Pyro but also provide hands-on experience with probabilistic modeling and machine learning tasks across various domains. Enjoy your learning journey!
+### Project 3: Topic Modeling with Bayesian Hierarchical Models (Difficulty: 3 - Hard)
+
+**Project Objective:**  
+Implement a Bayesian hierarchical model for topic modeling on a large corpus of text data, aiming to uncover latent topics and their distributions across documents while quantifying uncertainty in topic assignments.
+
+**Dataset Suggestions:**  
+Access large text corpora available on HuggingFace Datasets or Kaggle, such as news articles, research papers, or social media posts.
+
+**Tasks:**
+- **Data Collection:** Gather and preprocess the text data, including tokenization and removing stop words.
+- **Model Development:** Create a hierarchical Bayesian model using Pyro to identify topics and their distributions across documents.
+- **Inference Techniques:** Employ variational inference to estimate the topic distributions and document-topic assignments.
+- **Analysis:** Analyze the identified topics and their prevalence across the corpus, and visualize topic distributions.
+- **Interpretation:** Interpret the results and discuss the implications of the identified topics in the context of the dataset.
+
+**Bonus Ideas (Optional):**
+- Compare the results of the Bayesian model with non-Bayesian topic modeling approaches like LDA.
+- Experiment with different priors and hyperparameters to observe their effects on topic coherence and distribution.
+
+--- 
+
+These projects aim to provide students with hands-on experience in applying Pyro for various machine learning tasks while enhancing their understanding of probabilistic modeling and inference techniques.
 

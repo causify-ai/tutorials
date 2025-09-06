@@ -1,68 +1,76 @@
-### Tech Description of BoTorch
-BoTorch is a library built on PyTorch for Bayesian optimization, allowing users to efficiently optimize expensive-to-evaluate functions. Its key features include:
-- **Flexible Acquisition Functions**: Supports various acquisition functions for optimization tasks.
-- **Multi-fidelity Optimization**: Capable of optimizing functions with different levels of fidelity.
-- **Integration with PyTorch**: Seamlessly integrates with PyTorch for leveraging deep learning models.
-- **User-friendly API**: Simplifies the process of setting up and running optimization tasks.
+**Description of BoTorch**
+
+BoTorch is a PyTorch-based library designed for Bayesian optimization, providing tools for efficient optimization of expensive-to-evaluate functions. It allows users to create and manipulate probabilistic models, facilitating the search for optimal solutions in various domains. Key features include:
+
+- **Flexible Model Specification**: Supports Gaussian processes and other probabilistic models for function approximation.
+- **Acquisition Functions**: Implements various acquisition functions for balancing exploration and exploitation.
+- **Integration with PyTorch**: Leverages the power of PyTorch for automatic differentiation and GPU acceleration.
+- **Multi-Objective Optimization**: Capable of handling multiple objectives, allowing for Pareto front exploration.
 
 ---
 
-### Project Blueprint 1: Hyperparameter Tuning for Machine Learning Models
-**Difficulty**: 1 (Easy)
+### Project 1: Hyperparameter Optimization for Machine Learning Models (Difficulty: 1)
 
-**Project Objective**: The goal is to optimize hyperparameters of a machine learning model (e.g., Random Forest or SVM) to achieve the best possible performance on a given dataset.
+**Project Objective**:  
+Optimize hyperparameters for a machine learning model (e.g., Random Forest or XGBoost) to achieve the best validation accuracy on a given dataset.
 
-**Dataset Suggestions**: Use publicly available datasets from Kaggle, such as those related to classification tasks (e.g., customer segmentation or image classification).
+**Dataset Suggestions**:  
+Find datasets on Kaggle that are suitable for supervised learning tasks, such as classification or regression.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download a classification dataset from Kaggle.
-2. **Feature Engineering**: Preprocess the data (handle missing values, normalize features, etc.).
-3. **Model Training**: Train a baseline model with default hyperparameters.
-4. **Use of the Tool**: Implement BoTorch to optimize hyperparameters (e.g., number of trees, max depth for Random Forest).
-5. **Evaluation Metrics**: Use accuracy, F1-score, or ROC-AUC as evaluation metrics.
-6. **Visualization/Reporting**: Visualize the optimization process and report the best hyperparameters and corresponding model performance.
+**Tasks**:
+- **Define the Model**: Choose a machine learning model and define its hyperparameters for optimization.
+- **Set Up BoTorch**: Install BoTorch and set up a Gaussian process model to approximate the validation accuracy based on hyperparameters.
+- **Implement Acquisition Function**: Use an acquisition function (e.g., Expected Improvement) to guide the search for optimal hyperparameters.
+- **Run Optimization Loop**: Execute the optimization loop to iteratively refine hyperparameters based on model performance.
+- **Evaluate Results**: Analyze the best hyperparameters found and compare model performance against a baseline.
 
-**Bonus Ideas**: Compare the performance of the optimized model with other models or explore the impact of feature selection on model performance.
-
----
-
-### Project Blueprint 2: Optimizing Marketing Campaigns
-**Difficulty**: 2 (Medium)
-
-**Project Objective**: The aim is to optimize the allocation of budget across different marketing channels (e.g., social media, email, and PPC) to maximize customer engagement or conversion rates.
-
-**Dataset Suggestions**: Utilize datasets available on open government portals or Kaggle that track marketing performance metrics across different channels.
-
-**Step-by-Step Plan**:
-1. **Data Collection**: Gather a dataset that includes marketing spend and corresponding engagement metrics.
-2. **Feature Engineering**: Create features representing the effectiveness of each marketing channel.
-3. **Model Training**: Use a regression model to predict engagement based on marketing spend.
-4. **Use of the Tool**: Employ BoTorch to optimize the budget allocation across channels using an acquisition function that maximizes predicted engagement.
-5. **Evaluation Metrics**: Measure the increase in engagement or conversion rates as a result of the optimized budget allocation.
-6. **Visualization/Reporting**: Create visualizations showing the optimal budget distribution and the expected impact on engagement.
-
-**Bonus Ideas**: Experiment with different marketing strategies, such as seasonal campaigns, or compare the results with traditional optimization techniques.
+**Bonus Ideas**:  
+- Explore the impact of different acquisition functions on optimization efficiency.
+- Compare performance with other hyperparameter optimization libraries like Optuna or Hyperopt.
 
 ---
 
-### Project Blueprint 3: Design Optimization for Product Development
-**Difficulty**: 3 (Hard)
+### Project 2: Optimal Sensor Placement in Environmental Monitoring (Difficulty: 2)
 
-**Project Objective**: The objective is to optimize product design parameters (e.g., dimensions, materials) to minimize production costs while maximizing quality and customer satisfaction.
+**Project Objective**:  
+Determine the optimal placement of environmental sensors in a geographical area to maximize data coverage and minimize cost.
 
-**Dataset Suggestions**: Use datasets from open-source repositories that provide information on product specifications and their corresponding performance metrics.
+**Dataset Suggestions**:  
+Utilize open government datasets related to environmental monitoring, such as air quality or temperature data across different regions.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Collect a dataset that includes various product designs with their associated costs and quality ratings.
-2. **Feature Engineering**: Identify and create features that impact production costs and quality (e.g., material type, size).
-3. **Model Training**: Train a surrogate model (e.g., Gaussian Process) to predict cost and quality based on design parameters.
-4. **Use of the Tool**: Leverage BoTorch to perform multi-objective optimization, balancing cost and quality.
-5. **Evaluation Metrics**: Use Pareto efficiency to evaluate trade-offs between cost and quality.
-6. **Visualization/Reporting**: Visualize the Pareto front and report optimal design configurations.
+**Tasks**:
+- **Define the Problem**: Formulate the sensor placement problem as a Bayesian optimization task, defining the cost and coverage metrics.
+- **Model the Objective Function**: Use BoTorch to create a surrogate model that predicts the expected coverage based on sensor locations.
+- **Implement Optimization**: Utilize BoTorch to optimize sensor locations using an acquisition function that balances coverage and cost.
+- **Simulate and Validate**: Simulate sensor placements and validate the results using historical data to assess coverage effectiveness.
+- **Visualize Results**: Create visualizations to show optimal sensor placements on a map with coverage metrics.
 
-**Bonus Ideas**: Investigate the sensitivity of design parameters on production costs or explore the impact of using different materials on product performance.
+**Bonus Ideas**:  
+- Extend the project to include dynamic sensor placement based on changing environmental conditions.
+- Compare the optimization results with a heuristic approach to sensor placement.
+
+---
+
+### Project 3: Multi-Objective Drug Discovery Optimization (Difficulty: 3)
+
+**Project Objective**:  
+Optimize the discovery of new drug candidates by balancing multiple objectives, such as efficacy and safety profiles, using a multi-objective Bayesian optimization approach.
+
+**Dataset Suggestions**:  
+Leverage public datasets from sources like ChEMBL or PubChem that provide information on drug compounds, their efficacy, and safety profiles.
+
+**Tasks**:
+- **Define Objectives**: Identify key objectives for drug candidates, such as IC50 values (efficacy) and toxicity scores (safety).
+- **Model the Objectives**: Use BoTorch to create a multi-objective Gaussian process model to predict the performance of drug candidates.
+- **Optimize with BoTorch**: Implement a multi-objective acquisition function (e.g., Pareto front exploration) to guide the search for optimal drug candidates.
+- **Evaluate Candidate Performance**: Validate and analyze the selected candidates against existing drugs to assess improvements in both efficacy and safety.
+- **Present Findings**: Create a comprehensive report and visualizations of the Pareto front, highlighting trade-offs between objectives.
+
+**Bonus Ideas**:  
+- Investigate the impact of different chemical descriptors on the optimization process.
+- Incorporate domain knowledge to refine the model and improve predictions.
 
 --- 
 
-These projects provide a structured approach to applying BoTorch in real-world scenarios while enhancing students' understanding of Bayesian optimization and its practical applications in data science.
+These projects will provide students with hands-on experience in applying BoTorch for real-world optimization tasks, enhancing their understanding of Bayesian methods in data science.
 

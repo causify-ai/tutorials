@@ -1,63 +1,73 @@
-### Tech Description of Orbit
-Orbit is a powerful tool designed for analyzing and modeling time series data, particularly in the context of Bayesian forecasting. It provides features that enable users to seamlessly create, fit, and visualize time series models, making it easier to derive insights and predictions from temporal data. Key features include:
-- User-friendly interface for model specification and fitting.
-- Support for Bayesian inference and uncertainty quantification.
-- Advanced visualization tools for interpreting model results.
-- Integration capabilities with popular data science libraries like Pandas and Matplotlib.
+### Description
+
+Orbit is a powerful Python library designed for Bayesian analysis of time series data, particularly for understanding customer behavior and churn. It allows users to model, visualize, and interpret customer journeys and retention metrics. Orbit is particularly useful for predictive modeling and offers features such as:
+
+- **Bayesian Modeling**: Utilizes probabilistic models for time series forecasting and customer behavior analysis.
+- **Flexible Framework**: Supports various types of time series data, including univariate and multivariate.
+- **Visualization Tools**: Provides built-in functions to visualize model results and customer journeys.
+- **Customizable**: Allows users to define their own models and priors for more tailored analyses.
 
 ---
 
-### Project Blueprint
+### Project 1: Customer Churn Prediction (Difficulty: 1)
 
-#### **Project 1: Sales Forecasting for a Retail Store**
-- **Difficulty**: 1 (Easy)
-- **Project Objective**: Predict future sales for a retail store based on historical sales data, optimizing inventory management and resource allocation.
+**Project Objective**  
+The goal of this project is to predict customer churn for a subscription-based service using historical customer engagement data. The focus will be on identifying factors that lead to churn and optimizing retention strategies.
 
-- **Dataset Suggestions**: Use publicly available sales datasets from Kaggle or government open data portals that provide historical sales records of retail businesses.
+**Dataset Suggestions**  
+- Look for datasets on Kaggle that include customer subscription history, engagement metrics, and demographic information.
 
-- **Step-by-Step Plan**:
-  1. **Data Collection**: Download the sales dataset and load it into your environment.
-  2. **Feature Engineering**: Create features such as day of the week, month, promotions, and holidays.
-  3. **Model Training**: Fit a time series model using Orbit to predict future sales.
-  4. **Use of the Tool**: Utilize Orbit for model fitting and forecasting, visualizing the results with uncertainty intervals.
-  5. **Evaluation Metrics**: Use metrics such as Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE) to evaluate the model's performance.
-  6. **Visualization**: Create plots to compare actual vs. predicted sales and highlight forecast uncertainty.
+**Tasks**  
+- **Data Collection**: Import and preprocess the dataset to focus on relevant features (e.g., subscription length, usage frequency).
+- **Exploratory Data Analysis**: Visualize customer engagement trends and churn rates using Orbit's visualization tools.
+- **Model Development**: Use Orbit to create a Bayesian model that predicts churn based on customer engagement metrics.
+- **Model Evaluation**: Assess the model’s performance using metrics like accuracy, precision, and recall.
+- **Insights Generation**: Identify key factors contributing to churn and suggest actionable strategies for retention.
 
-- **Bonus Ideas**: Explore seasonal trends or create a dashboard that allows users to input different promotional strategies to see potential impacts on sales.
-
----
-
-#### **Project 2: Predicting Website Traffic**
-- **Difficulty**: 2 (Medium)
-- **Project Objective**: Model and predict daily website traffic to optimize marketing efforts and server resources.
-
-- **Dataset Suggestions**: Use open datasets on web traffic from platforms like Kaggle or public APIs that provide historical web traffic data.
-
-- **Step-by-Step Plan**:
-  1. **Data Collection**: Gather historical website traffic data, ensuring it includes daily visitor counts.
-  2. **Feature Engineering**: Include features such as seasonality, marketing campaigns, and external events (e.g., holidays).
-  3. **Model Training**: Apply Orbit to build a time series model that captures traffic patterns and seasonality.
-  4. **Use of the Tool**: Leverage Orbit for forecasting and to generate insights on traffic trends.
-  5. **Evaluation Metrics**: Assess model performance using metrics like Mean Absolute Percentage Error (MAPE) and R-squared.
-  6. **Visualization**: Create time series visualizations that display actual vs. forecasted traffic, emphasizing trends and anomalies.
-
-- **Bonus Ideas**: Implement comparative analysis by fitting a simple linear regression model to highlight the differences in performance between the two approaches.
+**Bonus Ideas (Optional)**  
+- Implement a feature importance analysis to understand which factors are most influential in predicting churn.
 
 ---
 
-#### **Project 3: Anomaly Detection in Financial Transactions**
-- **Difficulty**: 3 (Hard)
-- **Project Objective**: Detect anomalies in financial transaction data to identify potential fraudulent activities, optimizing security measures.
+### Project 2: Sales Forecasting for E-commerce (Difficulty: 2)
 
-- **Dataset Suggestions**: Utilize publicly available financial transaction datasets from Kaggle or government portals that provide anonymized transaction data.
+**Project Objective**  
+This project aims to forecast future sales for an e-commerce platform based on historical sales data and promotional activities. The focus will be on improving inventory management and marketing strategies.
 
-- **Step-by-Step Plan**:
-  1. **Data Collection**: Acquire a dataset of financial transactions, ensuring it contains timestamps and transaction amounts.
-  2. **Feature Engineering**: Generate features such as transaction frequency, average transaction amount, and user behavior patterns.
-  3. **Model Training**: Use Orbit to fit a time series model that can identify outliers in transaction patterns.
-  4. **Use of the Tool**: Leverage Orbit to analyze the fitted model and visualize anomalies in the transaction data.
-  5. **Evaluation Metrics**: Evaluate the model using precision, recall, and F1-score to quantify the effectiveness of anomaly detection.
-  6. **Visualization**: Create visual reports that highlight detected anomalies and provide insights into their nature and frequency.
+**Dataset Suggestions**  
+- Explore open datasets on Kaggle that include historical sales data, promotional events, and seasonal trends.
 
-- **Bonus Ideas**: Extend the project by implementing a real-time alert system that triggers notifications for detected anomalies or comparing with other anomaly detection algorithms to assess performance improvements.
+**Tasks**  
+- **Data Preparation**: Clean and preprocess the sales data, ensuring to account for seasonality and trends.
+- **Modeling with Orbit**: Build a Bayesian time series model to forecast future sales, incorporating promotional events as covariates.
+- **Model Validation**: Validate the model using cross-validation techniques and assess its forecasting accuracy.
+- **Visualization**: Create visualizations to compare predicted sales against actual sales and highlight trends or anomalies.
+- **Scenario Analysis**: Run simulations to see how different promotional strategies might impact future sales.
+
+**Bonus Ideas (Optional)**  
+- Compare the performance of the Bayesian model against traditional forecasting methods like ARIMA.
+
+---
+
+### Project 3: Customer Lifetime Value (CLV) Estimation (Difficulty: 3)
+
+**Project Objective**  
+The objective of this project is to estimate the Customer Lifetime Value (CLV) for an online subscription service using historical transaction data. This will help in making informed decisions about customer acquisition and retention strategies.
+
+**Dataset Suggestions**  
+- Search for datasets on public repositories like Kaggle that contain transaction history, customer demographics, and engagement metrics.
+
+**Tasks**  
+- **Data Preprocessing**: Prepare the dataset by cleaning and transforming transaction data into a suitable format for analysis.
+- **Bayesian Modeling**: Utilize Orbit to develop a model that estimates CLV based on customer transaction history and engagement patterns.
+- **Parameter Estimation**: Analyze the model to derive key parameters influencing CLV and understand customer segments.
+- **Validation and Testing**: Evaluate the model's accuracy using historical data, comparing predicted CLV against actual values.
+- **Strategic Recommendations**: Generate insights and recommendations for optimizing marketing spend based on predicted CLV.
+
+**Bonus Ideas (Optional)**  
+- Explore the impact of different customer acquisition strategies on CLV and simulate scenarios to assess potential outcomes.
+
+---
+
+These projects will provide students with hands-on experience using Orbit while engaging with real-world data science problems. Each project builds on the previous one, gradually increasing in complexity and encouraging deeper learning and creativity.
 

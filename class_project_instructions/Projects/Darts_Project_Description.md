@@ -1,68 +1,66 @@
-**Tech Description for Darts:**
-Darts is a powerful Python library designed for time series forecasting. It provides a range of forecasting models, including statistical, machine learning, and deep learning approaches. Key features include:
-- Support for multiple forecasting models, including ARIMA, Exponential Smoothing, and neural networks.
-- Easy handling of time series data with built-in utilities for data preprocessing.
-- Model selection and evaluation capabilities to optimize forecasting performance.
-- Integration with popular data science libraries like Pandas and Numpy for seamless workflows.
+**Description**
+
+Darts is a Python library designed for easy and efficient time series forecasting. It provides a unified interface to a variety of forecasting models, from classical statistical approaches to modern machine learning techniques. Darts allows users to work with univariate and multivariate time series data, and it includes capabilities for forecasting, model evaluation, and even backtesting.
+
+**Project Blueprint**
+
+### Project 1: Sales Forecasting for Retail Products
+**Difficulty**: 1 (Easy)  
+**Project Objective**: The goal is to predict future sales for a retail product based on historical sales data, optimizing for accuracy in forecasting future demand.
+
+**Dataset Suggestions**: Look for datasets on Kaggle that contain historical sales data for retail products, or use open government datasets that track retail sales statistics.
+
+**Tasks**:
+- **Data Ingestion**: Load the historical sales data into a Pandas DataFrame.
+- **Preprocessing**: Handle missing values and perform any necessary data cleaning.
+- **Model Selection**: Use Darts to choose and implement a basic forecasting model (e.g., ARIMA or Exponential Smoothing).
+- **Training and Forecasting**: Train the model on historical data and generate forecasts for the next few months.
+- **Evaluation**: Use metrics like Mean Absolute Error (MAE) to evaluate model performance.
+- **Visualization**: Plot the historical sales data along with the predicted sales to visualize the forecast.
+
+**Bonus Ideas (Optional)**:
+- Compare the performance of different forecasting models (e.g., ARIMA vs. Exponential Smoothing).
+- Implement a seasonal decomposition of the time series to understand seasonal trends.
 
 ---
 
-### Project 1: Sales Forecasting for a Retail Store  
-**Difficulty**: 1 (Easy)
+### Project 2: Energy Consumption Forecasting
+**Difficulty**: 2 (Medium)  
+**Project Objective**: The aim is to forecast energy consumption for a city based on historical energy usage data, optimizing for prediction accuracy while considering seasonal effects.
 
-**Project Objective**: The goal is to predict future sales for a retail store based on historical sales data, optimizing inventory management and improving sales strategies.
+**Dataset Suggestions**: Utilize open datasets from government energy departments or Kaggle datasets that provide historical energy consumption data.
 
-**Dataset Suggestions**: Use publicly available retail sales datasets from Kaggle, which may include daily or weekly sales records along with relevant features like promotions and holidays.
+**Tasks**:
+- **Data Collection**: Access and load the energy consumption data into a DataFrame.
+- **Exploratory Data Analysis**: Analyze seasonal patterns and trends in the data.
+- **Feature Engineering**: Create additional features such as day of the week, month, or holidays to improve model performance.
+- **Model Implementation**: Use Darts to implement advanced forecasting models (e.g., Seasonal Decomposition of Time Series or Prophet).
+- **Training and Validation**: Train the model and validate it using a time series split.
+- **Performance Metrics**: Evaluate the model using metrics like Root Mean Squared Error (RMSE) and visualize the results.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download historical sales data from Kaggle.
-2. **Feature Engineering**: Extract features like month, day of the week, and promotions from the date column.
-3. **Model Training**: Use Darts to implement basic forecasting models like ARIMA and Exponential Smoothing.
-4. **Use of the Tool**: Apply Darts for model selection and evaluation, comparing different forecasting models.
-5. **Evaluation Metrics**: Use Mean Absolute Error (MAE) and Mean Absolute Percentage Error (MAPE) to assess model performance.
-6. **Visualization/Reporting**: Create visualizations of actual vs. predicted sales using Matplotlib or Seaborn and prepare a report summarizing findings.
-
-**Bonus Ideas**: Explore seasonal decomposition of the sales data or introduce additional features like weather data to improve predictions.
-
----
-
-### Project 2: Energy Consumption Forecasting  
-**Difficulty**: 2 (Medium)
-
-**Project Objective**: The aim is to forecast energy consumption for a city based on historical usage data, optimizing energy distribution and planning for peak demand.
-
-**Dataset Suggestions**: Use open government datasets available on platforms like Kaggle or government portals that provide historical energy consumption data, possibly including weather data.
-
-**Step-by-Step Plan**:
-1. **Data Collection**: Gather historical energy consumption data and relevant weather data from Kaggle or government sources.
-2. **Feature Engineering**: Create features such as temperature, humidity, and time of year, which may influence energy consumption.
-3. **Model Training**: Use Darts to implement a combination of statistical and machine learning models, such as Seasonal Decomposition of Time Series (STL) and LSTM.
-4. **Use of the Tool**: Utilize Darts for model evaluation and selection, comparing performance across different models.
-5. **Evaluation Metrics**: Evaluate models using RMSE (Root Mean Squared Error) and R-squared.
-6. **Visualization/Reporting**: Generate visualizations of forecasted vs. actual energy consumption and prepare a presentation of the results.
-
-**Bonus Ideas**: Investigate the impact of specific events (e.g., holidays) on energy consumption patterns or incorporate external datasets like economic indicators.
+**Bonus Ideas (Optional)**:
+- Explore the impact of significant events (e.g., holidays, weather) on energy consumption.
+- Implement a model ensemble approach to combine multiple forecasting models for improved accuracy.
 
 ---
 
-### Project 3: Stock Price Prediction Using Sentiment Analysis  
-**Difficulty**: 3 (Hard)
+### Project 3: Stock Price Prediction using Economic Indicators
+**Difficulty**: 3 (Hard)  
+**Project Objective**: The goal is to predict future stock prices based on historical stock data and relevant economic indicators, optimizing for precision in forecasting.
 
-**Project Objective**: The goal is to predict stock prices based on historical price data and sentiment analysis of news articles, optimizing investment strategies.
+**Dataset Suggestions**: Use datasets available on Kaggle that contain historical stock prices and economic indicators such as interest rates, inflation rates, and unemployment figures.
 
-**Dataset Suggestions**: Use historical stock price data available on Kaggle alongside a dataset of news articles (which can also be found on Kaggle or through open APIs) related to the stocks of interest.
+**Tasks**:
+- **Data Acquisition**: Gather historical stock prices and economic indicators from public APIs or Kaggle datasets.
+- **Data Integration**: Merge the stock price data with economic indicators into a single DataFrame.
+- **Feature Engineering**: Create lagged features and rolling averages for stock prices and economic indicators.
+- **Model Selection**: Utilize Darts to implement complex forecasting models (e.g., LSTM or other deep learning models).
+- **Training and Hyperparameter Tuning**: Train the model and fine-tune hyperparameters for optimal performance.
+- **Evaluation and Analysis**: Evaluate the model using metrics like Mean Absolute Percentage Error (MAPE) and conduct a backtesting analysis to validate predictions.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Collect historical stock price data and corresponding news articles from Kaggle.
-2. **Feature Engineering**: Perform sentiment analysis on news articles to create sentiment scores as features, along with technical indicators from stock prices.
-3. **Model Training**: Use Darts to implement forecasting models, leveraging both time series data and sentiment scores with models like ARIMA and LSTM.
-4. **Use of the Tool**: Apply Darts for model evaluation, comparing traditional time series models with those that incorporate sentiment analysis.
-5. **Evaluation Metrics**: Utilize metrics like MAE and MAPE to assess prediction accuracy.
-6. **Visualization/Reporting**: Create a dashboard to visualize stock price predictions vs. actual prices, including sentiment trends over time.
+**Bonus Ideas (Optional)**:
+- Investigate the relationships between different economic indicators and stock prices.
+- Consider using additional machine learning techniques (e.g., Random Forest) to compare performance with Darts' time series models. 
 
-**Bonus Ideas**: Extend the project by comparing the effectiveness of different sentiment analysis techniques or exploring the impact of specific events on stock price movements. 
-
---- 
-
-These projects are designed to provide a comprehensive learning experience, allowing students to engage with real-world data and apply machine learning techniques using the Darts library effectively.
+Each of these projects not only utilizes Darts for forecasting but also encourages students to engage with real-world datasets, enhancing their understanding of time series analysis and machine learning.
 

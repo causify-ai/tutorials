@@ -1,64 +1,73 @@
-### Tech Description of Stumpy
-Stumpy is a powerful Python library designed for time series analysis, particularly for computing matrix profile, which allows for efficient similarity search and anomaly detection in time series data. Its key features include:
-- Fast computation of matrix profiles for time series data.
-- Anomaly detection capabilities to identify unusual patterns.
-- Visualization tools to aid in understanding time series relationships.
-- Support for various distance metrics to tailor analyses.
+### Description
+
+Stumpy is a powerful Python library designed for time series analysis, particularly for computing matrix profile, which is used for motif discovery, anomaly detection, and similarity joins in time series data. It provides efficient algorithms that allow for fast and scalable analysis of large time series datasets.
+
+**Features:**
+- Computes the matrix profile for time series data, enabling efficient motif discovery.
+- Supports various distance functions for flexible similarity analysis.
+- Offers tools for anomaly detection and time series segmentation.
+- Provides optimized implementations for performance on large datasets.
 
 ---
 
-### Project Blueprint 1: Anomaly Detection in Financial Time Series
+### Project 1: Anomaly Detection in Energy Consumption Data
 **Difficulty**: 1 (Easy)
 
-**Project Objective**: The goal of this project is to detect anomalies in historical stock prices, optimizing for the identification of unusual price movements that could indicate market manipulation or significant events.
+**Project Objective**: The goal is to detect anomalies in energy consumption data from household appliances. Students will optimize the identification of unusual consumption patterns that could indicate faulty devices or unexpected usage.
 
-**Dataset Suggestions**: Use historical stock price data available from public financial APIs or platforms like Kaggle. Look for datasets that include daily open, high, low, and close prices for various stocks.
+**Dataset Suggestions**: Look for public datasets related to energy consumption on platforms like Kaggle or government energy databases.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Gather historical stock price data from a public financial dataset on Kaggle.
-2. **Feature Engineering**: Create features such as moving averages, volatility measures, and daily returns.
-3. **Model Training**: Use Stumpy to compute the matrix profile for the time series data.
-4. **Use of the Tool**: Apply Stumpy’s anomaly detection algorithms to identify points in the time series that deviate significantly from expected behavior.
-5. **Evaluation Metrics**: Evaluate the performance of the anomaly detection using precision, recall, and F1-score.
-6. **Visualization**: Create visualizations to highlight detected anomalies against the original time series data.
+**Tasks**:
+- **Data Collection**: Gather household energy consumption data and preprocess it to ensure consistency.
+- **Matrix Profile Calculation**: Use Stumpy to compute the matrix profile of the time series data to identify normal patterns.
+- **Anomaly Detection**: Set thresholds based on matrix profile values to flag potential anomalies.
+- **Visualization**: Create visualizations to show detected anomalies against the original data for interpretation.
 
-**Bonus Ideas**: Compare results with traditional statistical anomaly detection methods, or apply the model to different stocks to see how the results vary.
+**Bonus Ideas (Optional)**: 
+- Compare results against traditional statistical methods for anomaly detection.
+- Implement user-defined thresholds for anomaly detection based on domain knowledge.
 
 ---
 
-### Project Blueprint 2: Predictive Maintenance Using Sensor Data
+### Project 2: Motif Discovery in Stock Price Time Series
 **Difficulty**: 2 (Medium)
 
-**Project Objective**: The aim of this project is to predict equipment failures in industrial machinery by analyzing sensor data, optimizing for the early detection of potential issues.
+**Project Objective**: The aim is to identify recurring patterns (motifs) in stock price time series data. This can help in predicting future price movements based on historical patterns.
 
-**Dataset Suggestions**: Utilize publicly available datasets that contain time series data from industrial sensors, such as vibration or temperature readings, found on Kaggle or open government data portals.
+**Dataset Suggestions**: Access historical stock price data from public financial APIs or platforms like Yahoo Finance or Kaggle.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download time series sensor data related to machinery from an open dataset repository.
-2. **Feature Engineering**: Extract features such as rolling averages, peaks, and trends from the raw sensor data.
-3. **Model Training**: Compute the matrix profile using Stumpy to identify patterns and potential anomalies that precede equipment failures.
-4. **Use of the Tool**: Leverage Stumpy to visualize the matrix profile and identify critical time points for maintenance.
-5. **Evaluation Metrics**: Assess the model's predictive power using metrics like accuracy, ROC-AUC, and confusion matrix.
-6. **Visualization**: Develop visual reports to communicate findings, including time series plots and matrix profile visualizations.
+**Tasks**:
+- **Data Acquisition**: Collect stock price data for selected companies over a significant time period.
+- **Preprocessing**: Clean and normalize the data to ensure it is ready for analysis.
+- **Matrix Profile Computation**: Utilize Stumpy to calculate the matrix profile and identify motifs in the stock price data.
+- **Pattern Analysis**: Analyze the identified motifs to understand their implications on future price movements.
+- **Visualization**: Visualize motifs on the stock price time series to illustrate the findings.
 
-**Bonus Ideas**: Implement additional predictive models (e.g., regression or classification) to compare with the results obtained from Stumpy, or explore different sensor types to enhance the analysis.
+**Bonus Ideas (Optional)**: 
+- Create a predictive model using identified motifs to forecast future stock prices.
+- Explore the impact of external events (e.g., earnings reports) on the identified motifs.
 
 ---
 
-### Project Blueprint 3: Climate Change Impact Analysis
+### Project 3: Time Series Segmentation for Climate Data Analysis
 **Difficulty**: 3 (Hard)
 
-**Project Objective**: This project aims to analyze the impact of climate change on temperature anomalies over time, optimizing for the detection of significant deviations from historical temperature patterns.
+**Project Objective**: The project focuses on segmenting climate data time series to identify distinct climatic periods or trends. The goal is to optimize the segmentation process to better understand climate change impacts.
 
-**Dataset Suggestions**: Use publicly available climate data sets that include historical temperature records from government environmental agencies or platforms like Kaggle.
+**Dataset Suggestions**: Obtain climate data from open government databases or platforms like NOAA (National Oceanic and Atmospheric Administration).
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Acquire historical temperature data from open climate datasets available on government portals or Kaggle.
-2. **Feature Engineering**: Generate features such as seasonal averages, temperature trends, and anomalies over different time frames (e.g., monthly, yearly).
-3. **Model Training**: Utilize Stumpy to compute the matrix profile for the temperature time series data to identify anomalies.
-4. **Use of the Tool**: Analyze the matrix profile to detect periods of significant temperature deviation, indicating climate change effects.
-5. **Evaluation Metrics**: Use statistical tests to validate the significance of detected anomalies and assess the model's effectiveness.
-6. **Visualization**: Create comprehensive reports and visualizations, including time series plots, matrix profiles, and geographical plots of temperature anomalies.
+**Tasks**:
+- **Data Collection**: Gather climate data (temperature, precipitation, etc.) over several years.
+- **Data Preprocessing**: Clean and preprocess the data to handle missing values and outliers.
+- **Matrix Profile Analysis**: Use Stumpy to compute the matrix profile for time series segmentation.
+- **Segment Identification**: Analyze the matrix profile to identify significant changes in climate patterns and segment the data accordingly.
+- **Trend Analysis**: Evaluate the implications of identified segments in the context of climate change and visualize the segmented data.
 
-**Bonus Ideas**: Extend the analysis to include other climate variables (e.g., precipitation) and compare the results, or implement machine learning models to predict future temperature trends based on historical anomalies.
+**Bonus Ideas (Optional)**: 
+- Compare the results with traditional segmentation techniques (e.g., k-means clustering).
+- Investigate the effects of specific climatic events (e.g., El Niño) on the identified segments.
+
+--- 
+
+These projects encourage students to engage with time series data while applying Stumpy for practical machine learning tasks. Each project is designed to enhance their understanding of anomaly detection, motif discovery, and segmentation in real-world datasets.
 

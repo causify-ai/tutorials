@@ -1,61 +1,85 @@
-### Tech Description of Fairlearn
-Fairlearn is an open-source toolkit designed to help data scientists assess and mitigate unfairness in machine learning models. It provides a suite of algorithms and metrics to ensure that models make fair predictions across different demographic groups. Key features include:
-- **Fairness Metrics**: Evaluate model performance across various groups to identify bias.
-- **Mitigation Algorithms**: Implement techniques to reduce unfairness in model predictions.
-- **Integration**: Works seamlessly with popular machine learning libraries like Scikit-learn.
-- **Visualization Tools**: Offers visual aids to understand fairness trade-offs.
+### Description
+
+Fairlearn is a Python library designed to help data scientists assess and mitigate unfairness in machine learning models. It provides tools to evaluate and improve model fairness, allowing practitioners to create models that are not only accurate but also equitable across different demographic groups. 
+
+**Key Features:**
+- Implements fairness metrics and visualizations to assess model performance.
+- Provides algorithms for fairness-aware modeling, including post-processing techniques.
+- Supports integration with popular machine learning libraries like scikit-learn.
 
 ---
 
-### Project Blueprint 1: **Fairness in Credit Scoring**  
-**Difficulty**: 1 (Easy)  
-**Project Objective**: The goal is to develop a credit scoring model that predicts the likelihood of loan default while ensuring fairness across gender and racial demographics.
+### Project 1: Fair Classification of Loan Applications (Difficulty: 1 - Easy)
 
-**Dataset Suggestions**: Look for datasets related to credit scoring on Kaggle or open government portals that provide financial data, ideally with demographic features.
+**Project Objective**: The goal of this project is to build a classifier that predicts loan approval while ensuring fairness across different demographic groups (e.g., gender, ethnicity). Students will optimize for both accuracy and fairness metrics.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download a credit scoring dataset that includes demographic information.
-2. **Feature Engineering**: Clean the dataset, handle missing values, and create relevant features (e.g., credit history, income).
-3. **Model Training**: Use a basic classification algorithm (e.g., logistic regression) to predict loan default.
-4. **Use of Fairlearn**: Implement fairness metrics to evaluate the model's predictions across different demographic groups and apply mitigation techniques to reduce bias.
-5. **Evaluation Metrics**: Use accuracy, precision, recall, and fairness metrics (e.g., demographic parity).
-6. **Visualization/Reporting**: Create visualizations to show model performance and fairness trade-offs using libraries like Matplotlib or Seaborn.
+**Dataset Suggestions**: Use a financial dataset from Kaggle that includes demographic information alongside loan application details.
 
-**Bonus Ideas**: Compare the baseline model's performance with and without fairness mitigation techniques. Explore different fairness metrics and their implications.
+**Tasks**:
+- Data Preprocessing:
+  - Clean and preprocess the dataset, handling missing values and encoding categorical variables.
+- Build Initial Classifier:
+  - Train a baseline classification model (e.g., Logistic Regression) to predict loan approval.
+- Evaluate Fairness:
+  - Use Fairlearn to assess the fairness of the model using metrics like demographic parity and equal opportunity.
+- Mitigate Bias:
+  - Apply Fairlearn's post-processing techniques to adjust the model predictions for fairness.
+- Analyze Results:
+  - Compare model performance and fairness metrics before and after applying fairness adjustments.
 
----
-
-### Project Blueprint 2: **Fairness in Employee Attrition Prediction**  
-**Difficulty**: 2 (Medium)  
-**Project Objective**: The aim is to develop a predictive model for employee attrition, ensuring that the model does not discriminate based on gender or ethnicity.
-
-**Dataset Suggestions**: Search for HR datasets on Kaggle or GitHub that include employee demographic data alongside attrition status.
-
-**Step-by-Step Plan**:
-1. **Data Collection**: Obtain an employee attrition dataset with demographic features.
-2. **Feature Engineering**: Process the data to create relevant features such as job role, tenure, and performance ratings.
-3. **Model Training**: Train a classification model (e.g., Random Forest) to predict attrition.
-4. **Use of Fairlearn**: Assess the model's fairness using Fairlearn's metrics and apply appropriate mitigation strategies to ensure equitable outcomes.
-5. **Evaluation Metrics**: Evaluate using accuracy, F1 score, and fairness metrics (e.g., equal opportunity).
-6. **Visualization/Reporting**: Use dashboards (e.g., Streamlit) to present model results and fairness assessments interactively.
-
-**Bonus Ideas**: Investigate the impact of different features on model fairness. Experiment with ensemble methods to improve overall model performance while maintaining fairness.
+**Bonus Ideas (Optional)**:
+- Experiment with different classification algorithms and fairness mitigation techniques to see which combination yields the best results.
+- Conduct a sensitivity analysis on the fairness metrics by varying the demographic groups.
 
 ---
 
-### Project Blueprint 3: **Fairness in Housing Price Prediction**  
-**Difficulty**: 3 (Hard)  
-**Project Objective**: The goal is to create a housing price prediction model that ensures fair pricing predictions across different neighborhoods and socioeconomic statuses.
+### Project 2: Fairness in Predictive Policing (Difficulty: 2 - Medium)
 
-**Dataset Suggestions**: Utilize housing datasets available on Kaggle or open government data that include features like location, price, and demographic information about neighborhoods.
+**Project Objective**: This project aims to build a predictive policing model that forecasts crime hotspots while ensuring that the model does not disproportionately target specific racial or socioeconomic groups.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Gather a comprehensive housing dataset that includes pricing and demographic information.
-2. **Feature Engineering**: Process the dataset to extract features like square footage, number of bedrooms, and neighborhood demographics.
-3. **Model Training**: Implement a regression model (e.g., Gradient Boosting) to predict housing prices.
-4. **Use of Fairlearn**: Evaluate the model's fairness across different neighborhoods and apply mitigation techniques to ensure fair predictions.
-5. **Evaluation Metrics**: Assess model performance using RMSE and fairness metrics (e.g., average odds difference).
-6. **Visualization/Reporting**: Create an interactive dashboard to visualize the predictions and fairness assessments, highlighting areas where the model may be biased.
+**Dataset Suggestions**: Utilize publicly available crime datasets from government portals that include crime reports along with demographic data of neighborhoods.
 
-**Bonus Ideas**: Explore the impact of additional features like seasonal trends or economic indicators on pricing fairness. Conduct a sensitivity analysis to understand how different demographic factors influence predictions.
+**Tasks**:
+- Data Exploration:
+  - Conduct exploratory data analysis (EDA) to understand crime patterns and demographic distributions.
+- Model Development:
+  - Train a predictive model (e.g., Random Forest) to identify potential crime hotspots based on historical data.
+- Fairness Assessment:
+  - Use Fairlearn to evaluate the fairness of the predictions across different demographic groups.
+- Fairness Enhancement:
+  - Implement Fairlearn's fairness-aware algorithms to adjust the model's predictions.
+- Results Visualization:
+  - Visualize the impact of fairness adjustments on the model's predictions and performance metrics.
+
+**Bonus Ideas (Optional)**:
+- Compare the effectiveness of different machine learning algorithms in maintaining fairness.
+- Investigate the trade-offs between model accuracy and fairness, presenting findings through visualizations.
+
+---
+
+### Project 3: Fairness in Employee Performance Prediction (Difficulty: 3 - Hard)
+
+**Project Objective**: The aim of this project is to develop a machine learning model that predicts employee performance ratings while ensuring fairness across different gender and ethnic groups, thereby preventing bias in performance evaluations.
+
+**Dataset Suggestions**: Access a synthetic dataset or a real-world dataset from Kaggle that includes employee demographics, performance metrics, and other relevant features.
+
+**Tasks**:
+- Data Preparation:
+  - Clean and preprocess the dataset, ensuring proper handling of categorical variables and normalization of continuous features.
+- Initial Model Training:
+  - Train a complex model (e.g., Gradient Boosting) to predict employee performance ratings.
+- Fairness Evaluation:
+  - Use Fairlearn to evaluate the model’s fairness and identify any biases present in the predictions.
+- Implement Fairness Constraints:
+  - Apply Fairlearn's fairness constraints during model training to ensure equitable predictions across demographic groups.
+- Comprehensive Analysis:
+  - Conduct a detailed analysis of the model's performance and fairness, including visualizations of fairness metrics.
+
+**Bonus Ideas (Optional)**:
+- Explore the implications of fairness adjustments on employee retention and promotion rates.
+- Conduct a thorough literature review on fairness in performance evaluation to support your findings and methodologies.
+
+--- 
+
+These projects are designed to not only enhance students' technical skills in machine learning but also to instill an understanding of the ethical implications of their work, preparing them for responsible data science practices in real-world scenarios.
 

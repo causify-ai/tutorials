@@ -1,62 +1,90 @@
-### Tech Description of mpi4py
-mpi4py is a Python package that provides bindings for the Message Passing Interface (MPI), allowing for parallel and distributed computing. This tool enables developers to write parallel applications in Python, facilitating efficient data processing and computation across multiple processors. Key features include:
+### Description
 
-- Support for point-to-point and collective communication.
-- Ability to handle large datasets efficiently by distributing tasks.
-- Integration with NumPy for array operations.
-- Compatibility with various MPI implementations (e.g., MPICH, OpenMPI).
+**mpi4py** is a Python package that provides bindings for the Message Passing Interface (MPI), allowing for parallel programming in Python. It is particularly useful for high-performance computing and can handle large-scale data processing tasks efficiently.
 
----
-
-### Project Blueprint 1: **Predicting Housing Prices using Parallel Processing**
-**Difficulty**: 1 (Easy)  
-**Project Objective**: The goal of this project is to predict housing prices based on various features such as location, size, and amenities. The students will optimize a regression model to achieve the best prediction accuracy.
-
-**Dataset Suggestions**: Students can utilize housing price datasets available on Kaggle or government open data portals that include features relevant to real estate.
-
-**Step-by-Step Plan**:
-1. **Data Collection**: Download a housing dataset from Kaggle or a government portal.
-2. **Feature Engineering**: Clean the dataset, handle missing values, and create new features (e.g., price per square foot).
-3. **Model Training**: Use linear regression as the baseline model.
-4. **Use of the Tool**: Implement mpi4py to parallelize the training process across multiple cores, speeding up the model fitting.
-5. **Evaluation Metrics**: Use RMSE (Root Mean Squared Error) and R² score to evaluate model performance.
-6. **Visualization/Reporting**: Create visualizations of predicted vs. actual prices and generate a report summarizing findings.
-
-**Bonus Ideas**: Explore different regression models (e.g., Decision Trees, Random Forests) and compare their performance using parallel processing.
+**Features:**
+- Facilitates communication between processes in a distributed environment.
+- Supports point-to-point communication and collective operations.
+- Enables efficient data exchange and synchronization among multiple processes.
 
 ---
 
-### Project Blueprint 2: **Clustering Customer Segments in Retail Data**
-**Difficulty**: 2 (Medium)  
-**Project Objective**: This project aims to identify distinct customer segments in a retail dataset using clustering techniques. The objective is to optimize customer targeting strategies based on these segments.
+### Project Blueprint
 
-**Dataset Suggestions**: Utilize customer transaction datasets available on Kaggle that include features like purchase history, demographics, and transaction amounts.
+#### Project 1: Parallel Data Processing with mpi4py
+- **Difficulty**: 1 (Easy)
+- **Project Objective**: The goal is to parallelize a simple data processing task, such as calculating the mean of a large dataset, to optimize performance and reduce computation time.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Acquire a retail customer dataset from Kaggle.
-2. **Feature Engineering**: Preprocess the data by scaling features and encoding categorical variables.
-3. **Model Training**: Implement K-means clustering to identify customer segments.
-4. **Use of the Tool**: Leverage mpi4py to parallelize the clustering algorithm across multiple processors, allowing for faster convergence.
-5. **Evaluation Metrics**: Use Silhouette Score and Davies-Bouldin Index to evaluate cluster quality.
-6. **Visualization/Reporting**: Create visualizations of clusters and generate a report detailing customer profiles for each segment.
+- **Dataset Suggestions**: Use a large synthetic dataset generated via NumPy or find a public dataset on Kaggle that contains numerical data.
 
-**Bonus Ideas**: Experiment with different clustering algorithms (e.g., DBSCAN, Hierarchical Clustering) and compare the results.
+- **Tasks**:
+  - **Set Up mpi4py**:
+    - Install mpi4py and ensure MPI is configured on your system.
+  - **Data Generation**:
+    - Create a large synthetic dataset using NumPy.
+    - Split the dataset into smaller chunks for parallel processing.
+  - **Implement Parallel Mean Calculation**:
+    - Utilize mpi4py to distribute data chunks across multiple processes.
+    - Each process calculates the mean of its assigned chunk.
+  - **Aggregate Results**:
+    - Use mpi4py's collective operations to gather and compute the overall mean from individual results.
+  - **Performance Comparison**:
+    - Measure and compare execution time with a single-threaded approach.
+
+- **Bonus Ideas (Optional)**:
+  - Explore the impact of different chunk sizes on performance.
+  - Implement additional statistical calculations (e.g., median, standard deviation) using the same parallel framework.
 
 ---
 
-### Project Blueprint 3: **Sentiment Analysis on Social Media Data**
-**Difficulty**: 3 (Hard)  
-**Project Objective**: The goal of this project is to analyze sentiments from a large corpus of social media posts and classify them into positive, negative, or neutral. The objective is to optimize the classification accuracy using a pre-trained model.
+#### Project 2: Distributed Machine Learning with mpi4py
+- **Difficulty**: 2 (Medium)
+- **Project Objective**: Implement a distributed version of a linear regression model using mpi4py to handle large datasets efficiently and optimize model training time.
 
-**Dataset Suggestions**: Use datasets from HuggingFace Datasets that contain labeled social media posts or tweets.
+- **Dataset Suggestions**: Find a large regression dataset on Kaggle that includes various features and a continuous target variable.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Access a sentiment analysis dataset from HuggingFace.
-2. **Feature Engineering**: Clean the text data, tokenize it, and prepare it for input into a pre-trained model.
-3. **Model Training**: Fine-tune a pre-trained transformer model (e.g., BERT) for sentiment classification.
-4. **Use of the Tool**: Utilize mpi4py to distribute the training process across multiple GPUs or CPUs, enhancing training efficiency.
-5. **Evaluation Metrics**: Use accuracy, precision, recall, and F1-score to evaluate model performance.
-6. **Visualization/Reporting**: Generate visualizations of sentiment distributions and produce a report summarizing the analysis.
+- **Tasks**:
+  - **Set Up Data Pipeline**:
+    - Load the dataset and preprocess it (handle missing values, normalize features).
+  - **Distribute Data**:
+    - Split the dataset into training and testing sets, then further divide the training set among multiple processes.
+  - **Implement Distributed Linear Regression**:
+    - Each process computes partial gradients of the cost function.
+    - Use mpi4py to gather gradients and update model parameters collectively.
+  - **Model Evaluation**:
+    - Evaluate the model's performance on the testing set using metrics like RMSE or R-squared.
+  - **Performance Analysis**:
+    - Compare the training time and accuracy with a standard single-threaded implementation.
 
-**Bonus Ideas**: Explore transfer learning with different pre-trained models and compare their performance on the sentiment classification task. Additionally, consider extending the analysis to detect trends over time.
+- **Bonus Ideas (Optional)**:
+  - Experiment with different optimization algorithms (e.g., SGD, Adam) in the distributed setting.
+  - Implement cross-validation in a distributed manner to assess model robustness.
+
+---
+
+#### Project 3: Parallel Image Processing with mpi4py
+- **Difficulty**: 3 (Hard)
+- **Project Objective**: Develop a parallel image processing pipeline using mpi4py to apply transformations (e.g., filtering, edge detection) on a large dataset of images.
+
+- **Dataset Suggestions**: Use a publicly available dataset of images from Kaggle or HuggingFace, such as CIFAR-10 or MNIST.
+
+- **Tasks**:
+  - **Set Up Image Processing Environment**:
+    - Install necessary libraries (e.g., OpenCV, PIL) along with mpi4py.
+  - **Load and Distribute Images**:
+    - Load a batch of images and distribute them across multiple processes for parallel processing.
+  - **Implement Image Transformations**:
+    - Each process applies specific transformations (e.g., Gaussian blur, Sobel filter) to its assigned images.
+  - **Collect and Save Processed Images**:
+    - Use mpi4py to gather processed images from all processes and save them to a specified directory.
+  - **Performance Benchmarking**:
+    - Measure the time taken to process images in parallel versus sequentially.
+
+- **Bonus Ideas (Optional)**:
+  - Implement more complex image processing techniques (e.g., convolutional neural networks for image classification) in a distributed manner.
+  - Explore the effects of varying the number of processes on performance and image quality.
+
+---
+
+These projects will allow students to gain hands-on experience with parallel computing concepts, enhance their understanding of distributed systems, and apply machine learning techniques effectively using mpi4py.
 

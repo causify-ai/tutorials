@@ -1,65 +1,71 @@
-### Tech Description: EconML
-EconML is a Python library designed for estimating causal effects from observational data using machine learning techniques. It provides tools for estimating treatment effects, handling high-dimensional features, and performing inference on causal estimates. Key features include:
-- Support for various machine learning models to estimate treatment effects.
-- Functions for estimating heterogeneous treatment effects.
-- Integration with popular ML libraries like scikit-learn and TensorFlow.
-- Tools for causal inference, including double machine learning and orthogonalization techniques.
+### Description
+
+EconML is a Python library designed for estimating causal effects from observational data using machine learning techniques. It provides a suite of tools for causal inference, including methods for estimating treatment effects, handling heterogeneous treatment effects, and performing counterfactual analysis. The library is particularly useful for researchers and practitioners looking to understand the impact of interventions in various fields such as economics, healthcare, and marketing.
+
+**Key Features of EconML:**
+- Implements state-of-the-art machine learning algorithms for causal inference.
+- Supports heterogeneous treatment effect estimation through methods like the Double Machine Learning.
+- Allows for the integration of machine learning models with causal estimation techniques.
+- Facilitates counterfactual predictions to understand potential outcomes under different treatment scenarios.
 
 ---
 
-### Project Blueprint 1: **Customer Retention Analysis**  
-**Difficulty**: 1 (Easy)  
-**Project Objective**: The goal of this project is to analyze the impact of different marketing strategies on customer retention rates, optimizing the marketing budget allocation to maximize retention.
+### Project 1: Estimating the Effect of Advertising on Sales
 
-**Dataset Suggestions**: Use a publicly available dataset from Kaggle that contains customer transaction data, including features like demographics, purchase history, and marketing campaign exposure.
+**Difficulty**: 1 (Easy)
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download a customer transaction dataset from Kaggle.
-2. **Feature Engineering**: Create features that represent customer demographics, transaction frequency, and exposure to different marketing strategies.
-3. **Model Training**: Use EconML to estimate the treatment effects of various marketing strategies on customer retention.
-4. **Use of the Tool**: Implement double machine learning to control for confounding variables while estimating treatment effects.
-5. **Evaluation Metrics**: Measure retention rates before and after strategy implementation, using metrics like the retention rate percentage and cost per retained customer.
-6. **Visualization/Reporting**: Create visualizations comparing retention rates across different strategies and compile a report summarizing findings.
+**Project Objective**: The goal of this project is to estimate the causal effect of advertising spending on product sales using observational data. Students will optimize their estimation of the treatment effect of advertising campaigns.
 
-**Bonus Ideas**: Explore the impact of seasonal campaigns versus year-round strategies, or compare retention rates across different customer segments.
+**Dataset Suggestions**: Look for datasets on Kaggle related to retail sales and advertising expenditures, or explore open government datasets on marketing and sales.
 
----
+**Tasks**:
+- **Data Collection**: Gather data on sales and advertising expenditures over time.
+- **Data Preprocessing**: Clean and prepare the dataset for analysis, ensuring proper formatting and handling of missing values.
+- **Model Selection**: Use EconML to select an appropriate machine learning model for estimating treatment effects.
+- **Causal Estimation**: Implement the Double Machine Learning method to estimate the causal effect of advertising on sales.
+- **Result Interpretation**: Analyze and interpret the results, discussing the implications of the findings.
 
-### Project Blueprint 2: **Healthcare Intervention Effectiveness**  
-**Difficulty**: 2 (Medium)  
-**Project Objective**: This project aims to assess the effectiveness of various healthcare interventions on patient recovery times, optimizing the intervention allocation based on patient characteristics.
-
-**Dataset Suggestions**: Utilize open government health data or datasets from health-focused repositories that include patient demographics, intervention types, and recovery outcomes.
-
-**Step-by-Step Plan**:
-1. **Data Collection**: Access a public health dataset that includes information on patient demographics and treatment outcomes.
-2. **Feature Engineering**: Develop features representing patient characteristics (age, comorbidities) and types of interventions received.
-3. **Model Training**: Apply EconML to estimate the causal impact of different healthcare interventions on recovery times.
-4. **Use of the Tool**: Use the library's capabilities to estimate heterogeneous treatment effects based on patient characteristics.
-5. **Evaluation Metrics**: Evaluate the average treatment effect on recovery time, as well as standard deviation to assess variability.
-6. **Visualization/Reporting**: Present findings through graphs showing recovery times across different interventions and prepare a detailed report.
-
-**Bonus Ideas**: Investigate the long-term effects of interventions on patient health outcomes or compare the effectiveness of interventions across different demographic groups.
+**Bonus Ideas**: Explore the effects of different types of advertising (e.g., digital vs. traditional) or perform a sensitivity analysis on the treatment effect estimates.
 
 ---
 
-### Project Blueprint 3: **Economic Policy Impact Evaluation**  
-**Difficulty**: 3 (Hard)  
-**Project Objective**: The objective is to evaluate the impact of a specific economic policy (e.g., tax incentives) on employment rates, optimizing policy recommendations based on the estimated effects.
+### Project 2: Analyzing the Impact of Educational Interventions on Student Performance
 
-**Dataset Suggestions**: Use economic datasets from open government portals or Kaggle that include employment statistics, economic indicators, and policy implementation dates.
+**Difficulty**: 2 (Medium)
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Gather economic data from government databases or Kaggle that tracks employment rates and economic policies over time.
-2. **Feature Engineering**: Create features that capture economic indicators (GDP, inflation rates) and policy changes (dates and types of tax incentives).
-3. **Model Training**: Utilize EconML to estimate the causal effects of the economic policy on employment rates using machine learning models.
-4. **Use of the Tool**: Implement techniques like orthogonalization to control for confounding variables and accurately estimate treatment effects.
-5. **Evaluation Metrics**: Assess the impact on employment rates using metrics such as the percentage change in employment and confidence intervals for estimates.
-6. **Visualization/Reporting**: Develop visualizations that illustrate the trends in employment rates before and after policy implementation and compile a comprehensive report.
+**Project Objective**: This project aims to analyze the impact of various educational interventions (like tutoring or online resources) on student performance in standardized tests. The objective is to identify which interventions yield the most significant improvement in scores.
 
-**Bonus Ideas**: Consider comparing the effects of different economic policies on various sectors or regions, or explore the interplay between economic indicators and policy effectiveness.
+**Dataset Suggestions**: Utilize datasets from educational institutions or Kaggle that provide data on student performance and intervention types.
+
+**Tasks**:
+- **Data Acquisition**: Obtain a dataset that includes student performance metrics and details about interventions.
+- **Feature Engineering**: Create features that represent different interventions and control for confounders such as socioeconomic status.
+- **Causal Analysis**: Use EconML to model heterogeneous treatment effects and estimate the impact of each intervention on test scores.
+- **Evaluation**: Assess the robustness of the causal estimates using cross-validation and other model evaluation techniques.
+- **Visualization**: Visualize the treatment effects and their significance using appropriate plots.
+
+**Bonus Ideas**: Compare the effectiveness of interventions by demographic groups or perform a cost-effectiveness analysis of the interventions.
+
+---
+
+### Project 3: Evaluating the Effect of Policy Changes on Economic Outcomes
+
+**Difficulty**: 3 (Hard)
+
+**Project Objective**: The project focuses on evaluating the causal effects of a specific policy change (like a tax reform or minimum wage increase) on economic indicators such as employment rates or GDP growth. The objective is to provide evidence-based insights into the policy's effectiveness.
+
+**Dataset Suggestions**: Access economic datasets from open government portals or Kaggle that contain economic indicators before and after the policy change.
+
+**Tasks**:
+- **Policy Context Analysis**: Conduct a thorough literature review to understand the policy change and its expected impacts.
+- **Data Gathering**: Collect relevant economic indicators before and after the policy implementation.
+- **Model Development**: Utilize EconML to apply causal inference techniques, including the use of machine learning models to estimate treatment effects.
+- **Counterfactual Analysis**: Generate counterfactual predictions to assess what the economic indicators would have looked like without the policy change.
+- **Policy Recommendation**: Analyze the results and provide recommendations based on the findings, discussing potential limitations and biases in the analysis.
+
+**Bonus Ideas**: Explore additional economic indicators that may have been influenced by the policy change or compare different regions/countries that implemented similar policies.
 
 --- 
 
-These projects are designed to provide hands-on experience with causal inference using EconML, fostering both technical skills and critical thinking in data science.
+These projects will not only deepen your understanding of causal inference and machine learning but also provide practical experience in applying EconML to real-world scenarios.
 

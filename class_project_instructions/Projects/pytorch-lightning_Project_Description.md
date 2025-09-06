@@ -1,65 +1,104 @@
-### Tech Description: PyTorch Lightning
-PyTorch Lightning is a lightweight wrapper around PyTorch that simplifies the process of training and deploying deep learning models. It provides a structured approach to building models by organizing code into reusable components, making it easier to manage complex experiments. Key features include:
-- Built-in support for multi-GPU and TPU training.
-- Automatic logging and checkpointing for reproducibility.
-- Modular design that separates model logic from training code.
-- Easy integration with various logging frameworks and visualization tools.
+### Description
+
+PyTorch Lightning is a lightweight wrapper for PyTorch that simplifies the process of training deep learning models by organizing code and providing best practices. It abstracts away much of the boilerplate code while allowing users to focus on model architecture and training logic. 
+
+**Key Features:**
+- Simplifies model training and validation loops with a clear structure.
+- Supports multi-GPU training and TPU support out of the box.
+- Integrates easily with logging frameworks like TensorBoard and Weights & Biases.
+- Provides built-in support for mixed-precision training for faster computations.
 
 ---
 
-### Project 1: Predicting Housing Prices (Difficulty: 1 - Easy)
+### Project 1: Image Classification with Transfer Learning (Difficulty: 1)
 
-**Project Objective**: The goal of this project is to predict housing prices based on various features such as location, size, and amenities. Students will optimize a regression model to minimize prediction error.
+**Project Objective:**
+Build a model to classify images from a publicly available dataset (e.g., CIFAR-10) using transfer learning techniques to optimize for accuracy.
 
-**Dataset Suggestions**: Students can use housing price datasets available on Kaggle or open government portals, focusing on features like square footage, number of bedrooms, and neighborhood ratings.
+**Dataset Suggestions:**
+Find datasets on Kaggle or HuggingFace, particularly those focused on image classification.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download the dataset from Kaggle or government websites.
-2. **Feature Engineering**: Clean the data, create new features (e.g., price per square foot), and handle missing values.
-3. **Model Training**: Use PyTorch Lightning to define a regression model with appropriate layers and activation functions.
-4. **Use of the Tool**: Implement training loops, logging metrics, and model checkpoints using PyTorch Lightning's built-in functionalities.
-5. **Evaluation Metrics**: Evaluate the model using Mean Absolute Error (MAE) and R-squared.
-6. **Visualization**: Create visualizations of predicted vs. actual prices using Matplotlib or Seaborn.
+**Tasks:**
+- **Set Up Environment:**
+  - Install PyTorch Lightning and required libraries.
+  
+- **Load Dataset:**
+  - Use PyTorch's `torchvision` to load and preprocess the CIFAR-10 dataset.
+  
+- **Model Selection:**
+  - Choose a pre-trained model (e.g., ResNet or VGG) and modify the final layers for classification.
 
-**Bonus Ideas**: Experiment with different regression algorithms (e.g., Random Forest, Gradient Boosting) to compare performance.
+- **Training Loop:**
+  - Implement a training loop using PyTorch Lightning's `Trainer` class to handle epochs and validation.
 
----
+- **Evaluation:**
+  - Evaluate model performance using accuracy metrics and confusion matrices.
 
-### Project 2: Sentiment Analysis of Product Reviews (Difficulty: 2 - Medium)
-
-**Project Objective**: The objective of this project is to classify product reviews as positive, negative, or neutral using a natural language processing (NLP) model. Students will optimize a text classification model to improve accuracy.
-
-**Dataset Suggestions**: Use datasets from Kaggle that contain labeled product reviews, focusing on sentiment analysis tasks. Alternatively, explore datasets from HuggingFace Datasets.
-
-**Step-by-Step Plan**:
-1. **Data Collection**: Acquire a dataset of product reviews with sentiment labels from Kaggle or HuggingFace.
-2. **Feature Engineering**: Preprocess the text data (tokenization, removing stop words, etc.) and convert text to numerical representations using techniques like TF-IDF or word embeddings.
-3. **Model Training**: Define a text classification model using pre-trained transformers (e.g., BERT) in PyTorch Lightning.
-4. **Use of the Tool**: Utilize PyTorch Lightning for managing training, validation, and logging metrics for model performance.
-5. **Evaluation Metrics**: Use accuracy, F1 score, and confusion matrix to evaluate the model.
-6. **Visualization**: Create visualizations of model performance and word clouds of frequent terms in positive and negative reviews.
-
-**Bonus Ideas**: Fine-tune the model on a domain-specific dataset or explore transfer learning techniques.
+- **Visualization:**
+  - Visualize some of the predictions and the training history using Matplotlib.
 
 ---
 
-### Project 3: Anomaly Detection in Credit Card Transactions (Difficulty: 3 - Hard)
+### Project 2: Time Series Forecasting with LSTM (Difficulty: 2)
 
-**Project Objective**: The goal of this project is to develop an anomaly detection system to identify fraudulent transactions in a credit card dataset. Students will optimize a model to minimize false positives while maximizing detection rates.
+**Project Objective:**
+Develop a model to forecast future values in a time series dataset (e.g., stock prices) using LSTM networks to optimize for prediction accuracy.
 
-**Dataset Suggestions**: Utilize publicly available datasets from Kaggle that include credit card transaction information, focusing on features like transaction amount, location, and time.
+**Dataset Suggestions:**
+Utilize publicly available financial datasets from sources like Yahoo Finance or Kaggle.
 
-**Step-by-Step Plan**:
-1. **Data Collection**: Download a credit card transaction dataset from Kaggle, ensuring it contains labeled anomalies.
-2. **Feature Engineering**: Clean the dataset, create new features (e.g., transaction frequency), and apply normalization techniques.
-3. **Model Training**: Implement a neural network for anomaly detection using PyTorch Lightning, possibly leveraging autoencoders or recurrent neural networks (RNNs).
-4. **Use of the Tool**: Manage the training process, logging, and evaluation with PyTorch Lightning's features for efficient experimentation.
-5. **Evaluation Metrics**: Evaluate using precision, recall, and the area under the ROC curve (AUC-ROC).
-6. **Visualization**: Visualize the distribution of transaction amounts and highlight detected anomalies using plots.
+**Tasks:**
+- **Data Ingestion:**
+  - Load the time series data and perform necessary preprocessing (e.g., normalization).
 
-**Bonus Ideas**: Investigate the impact of different architectures or hyperparameter tuning on model performance, or implement a real-time prediction system using a simple UI.
+- **Feature Engineering:**
+  - Create lag features and rolling statistics to enhance the dataset.
 
---- 
+- **Model Architecture:**
+  - Define an LSTM model using PyTorch Lightning, including dropout for regularization.
 
-These projects are designed to provide students with hands-on experience in data science and machine learning using PyTorch Lightning, while also encouraging exploration and creativity in their approaches.
+- **Training Process:**
+  - Implement the training process with validation, leveraging PyTorch Lightning's callbacks for early stopping.
+
+- **Prediction and Evaluation:**
+  - Generate predictions and evaluate using metrics like RMSE and MAE.
+
+- **Visualization:**
+  - Plot the actual vs. predicted values to assess the model's performance.
+
+---
+
+### Project 3: Text Classification with BERT (Difficulty: 3)
+
+**Project Objective:**
+Create a text classification model using a pre-trained BERT model to classify sentiments in movie reviews, optimizing for F1 score.
+
+**Dataset Suggestions:**
+Access sentiment analysis datasets from Kaggle or HuggingFace, such as the IMDb movie reviews dataset.
+
+**Tasks:**
+- **Data Preparation:**
+  - Load the dataset and preprocess text (tokenization, padding).
+
+- **Model Setup:**
+  - Utilize a pre-trained BERT model from HuggingFace's Transformers library and fine-tune it with PyTorch Lightning.
+
+- **Training Configuration:**
+  - Set up the training configuration with appropriate hyperparameters, including batch size and learning rate.
+
+- **Regularization Techniques:**
+  - Implement techniques such as dropout and weight decay to prevent overfitting.
+
+- **Model Evaluation:**
+  - Evaluate the model on a validation set using the F1 score and confusion matrix.
+
+- **Interpretation:**
+  - Analyze misclassified examples and visualize the attention weights to understand model decisions.
+
+---
+
+### Bonus Ideas (Optional)
+- For **Project 1**, consider experimenting with different augmentation techniques to improve model robustness.
+- For **Project 2**, challenge yourself by implementing a multi-step forecasting approach instead of single-step.
+- For **Project 3**, extend the project by implementing a multi-class classification task or exploring adversarial training techniques.
 
