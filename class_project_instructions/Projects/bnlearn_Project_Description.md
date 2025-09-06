@@ -1,74 +1,104 @@
-### Description
+**Description**
 
-In this project, students will utilize **bnlearn**, a Python library designed for Bayesian network learning and inference. This tool enables users to construct probabilistic graphical models that represent a set of variables and their conditional dependencies through directed acyclic graphs (DAGs). With bnlearn, students can perform structure learning and parameter estimation, making it ideal for tasks that involve uncertainty and probabilistic reasoning.
+In this project, students will utilize bnlearn, a Python library for Bayesian network learning and inference, to model and analyze probabilistic relationships among variables. This tool allows for both structure learning from data and inference queries, providing insights into dependencies and causal relationships. Students will explore how to build Bayesian networks, perform inference, and visualize the learned structures.
 
-**Features of bnlearn:**
-- Facilitates learning the structure of Bayesian networks from data.
-- Supports various algorithms for structure learning, including constraint-based and score-based methods.
-- Allows for inference and querying of the learned models to calculate probabilities and make predictions.
+Technologies Used
+bnlearn
 
----
-
-### Project 1: Predicting Student Performance (Difficulty: 1 - Easy)
-
-**Project Objective:**  
-The goal of this project is to build a Bayesian network that predicts student performance based on various factors such as study habits, attendance, and socio-economic background. Students will optimize the accuracy of performance predictions.
-
-**Dataset Suggestions:**  
-Find datasets on Kaggle related to educational performance or student attributes.
-
-**Tasks:**
-- **Data Preprocessing:** Clean and preprocess the dataset, handling missing values and categorical variables.
-- **Structure Learning:** Use bnlearn to learn the structure of the Bayesian network from the preprocessed data.
-- **Parameter Estimation:** Estimate the parameters of the Bayesian network to quantify relationships between variables.
-- **Inference:** Query the model to predict student performance based on different scenarios (e.g., increased study hours).
-- **Evaluation:** Assess the model's accuracy using metrics such as precision and recall.
-
-**Bonus Ideas (Optional):**  
-- Compare the Bayesian network model with a traditional regression model to evaluate performance differences.
-- Visualize the learned Bayesian network structure using graphing libraries.
+- Facilitates learning of Bayesian networks from data.
+- Supports structure learning and parameter estimation.
+- Enables probabilistic inference and querying of the network.
+- Provides visualization capabilities for the learned structures.
 
 ---
 
-### Project 2: Diagnosing Health Conditions (Difficulty: 2 - Medium)
+### Project 1: Disease Prediction using Bayesian Networks (Difficulty: 1)
 
-**Project Objective:**  
-The objective is to develop a Bayesian network model to diagnose potential health conditions based on symptoms and patient history. Students will optimize the model to improve diagnostic accuracy.
+**Project Objective:**
+Develop a Bayesian network to predict the likelihood of a disease based on various symptoms and risk factors, optimizing for accuracy in predictions.
 
-**Dataset Suggestions:**  
-Explore open datasets related to health conditions and symptoms on platforms like Kaggle or government health portals.
+**Dataset Suggestions:**
+Find datasets related to health and disease symptoms on Kaggle or open government health databases.
 
 **Tasks:**
-- **Data Collection:** Gather data on health symptoms and corresponding diagnoses.
-- **Data Preprocessing:** Clean the data, ensuring it is suitable for Bayesian analysis, including encoding categorical variables.
-- **Structure Learning:** Implement bnlearn to discover the underlying structure of the health data.
-- **Parameter Estimation:** Use the dataset to estimate the conditional probabilities associated with each node in the network.
-- **Inference and Diagnosis:** Utilize the model to infer potential health conditions based on input symptoms and patient history.
-- **Model Evaluation:** Validate the model's predictions against a test set and calculate the accuracy.
-
-**Bonus Ideas (Optional):**  
-- Integrate additional patient demographic data to enhance the model's predictive capabilities.
-- Explore the impact of different symptoms on diagnosis by visualizing the Bayesian network.
+- **Data Collection:**
+  - Gather a dataset containing symptoms, demographics, and disease outcomes.
+  
+- **Data Preprocessing:**
+  - Clean the dataset, handle missing values, and encode categorical variables.
+  
+- **Bayesian Network Structure Learning:**
+  - Use bnlearn to learn the structure of the Bayesian network from the data.
+  
+- **Parameter Estimation:**
+  - Estimate the conditional probability tables for the variables in the network.
+  
+- **Inference:**
+  - Perform inference on the network to predict the disease given specific symptoms.
+  
+- **Evaluation:**
+  - Validate the model's predictions using cross-validation and assess accuracy.
 
 ---
 
-### Project 3: Analyzing Economic Indicators (Difficulty: 3 - Hard)
+### Project 2: Customer Churn Analysis (Difficulty: 2)
 
-**Project Objective:**  
-This project aims to construct a Bayesian network to analyze the relationships between various economic indicators (like inflation rate, unemployment rate, and GDP growth) and predict economic trends. Students will focus on optimizing the model’s predictive capabilities.
+**Project Objective:**
+Create a Bayesian network to analyze customer churn in a subscription-based service, optimizing for understanding the key factors influencing customer retention.
 
-**Dataset Suggestions:**  
-Obtain economic data from open government databases or Kaggle datasets related to economic indicators.
+**Dataset Suggestions:**
+Utilize datasets from Kaggle related to customer behavior and churn analysis.
 
 **Tasks:**
-- **Data Acquisition:** Collect historical data on relevant economic indicators from reliable sources.
-- **Data Preprocessing:** Clean and format the data, ensuring it is ready for analysis, including normalization of numerical values.
-- **Structure Learning:** Use bnlearn to learn the Bayesian network structure that captures the dependencies between economic indicators.
-- **Parameter Estimation:** Estimate the conditional probabilities for the network based on the historical data.
-- **Predictive Analysis:** Use the model to forecast future economic trends based on current indicators and analyze the impact of changes in one indicator on others.
-- **Model Validation:** Assess the model's predictive performance using time-series analysis techniques.
+- **Data Acquisition:**
+  - Obtain a dataset that includes customer demographics, service usage, and churn status.
+  
+- **Exploratory Data Analysis:**
+  - Conduct EDA to understand relationships and distributions among variables.
+  
+- **Bayesian Network Construction:**
+  - Use bnlearn to learn the structure of the network based on the dataset.
+  
+- **Inference and Analysis:**
+  - Perform inference to identify the likelihood of churn given different customer attributes.
+  
+- **Sensitivity Analysis:**
+  - Analyze how changes in certain features affect churn probability.
+  
+- **Visualization:**
+  - Visualize the Bayesian network and the relationships among variables.
 
-**Bonus Ideas (Optional):**  
-- Compare the Bayesian network's predictions with those from traditional econometric models.
-- Investigate the effects of external shocks (like pandemics) on the economic indicators and how they propagate through the network.
+---
+
+### Project 3: Predicting Academic Performance using Bayesian Networks (Difficulty: 3)
+
+**Project Objective:**
+Build a complex Bayesian network to predict students’ academic performance based on various factors such as socio-economic status, study habits, and attendance, optimizing for predictive accuracy and interpretability.
+
+**Dataset Suggestions:**
+Access educational datasets from open repositories or Kaggle that include student performance metrics and associated factors.
+
+**Tasks:**
+- **Dataset Exploration:**
+  - Identify and gather a dataset with comprehensive features related to student performance.
+  
+- **Data Preprocessing:**
+  - Clean the data, manage missing values, and encode categorical variables appropriately.
+  
+- **Complex Structure Learning:**
+  - Use bnlearn to learn a complex structure that captures intricate dependencies among factors affecting performance.
+  
+- **Parameter Estimation:**
+  - Estimate parameters for the Bayesian network, ensuring robustness in the model.
+  
+- **Inference and Scenario Analysis:**
+  - Use the model to predict performance under various hypothetical scenarios (e.g., changes in study habits).
+  
+- **Model Evaluation:**
+  - Evaluate the model's performance using appropriate metrics and compare with basic predictive models (e.g., regression).
+
+**Bonus Ideas (Optional):**
+- Implement a feature selection method to identify the most influential factors in the network.
+- Explore the impact of introducing new variables (e.g., extracurricular activities) on the model's predictions.
+- Conduct a longitudinal study by applying the model to different academic years to assess stability and changes in relationships.
 

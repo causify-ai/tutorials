@@ -1,77 +1,63 @@
 **Description**
 
-AutoKeras is an open-source software library for automated machine learning (AutoML) that simplifies the process of building deep learning models. It provides a user-friendly interface for model selection and hyperparameter tuning, enabling users to focus on their data rather than the intricacies of model building. 
+AutoKeras is an open-source software library that automates the process of applying deep learning to various tasks. It simplifies the model selection and hyperparameter tuning process, making it accessible for users with minimal deep learning expertise. Key features include:
 
-**Key Features:**
-- **Neural Architecture Search:** Automatically finds the best neural network architecture for the given dataset.
-- **Hyperparameter Optimization:** Uses efficient search algorithms to optimize model parameters.
-- **Easy Integration:** Works seamlessly with TensorFlow and Keras, making it easy to build and deploy models.
-- **Support for Various Tasks:** Handles tasks such as image classification, text classification, and regression.
-
----
-
-### Project 1: Image Classification of Handwritten Digits (Difficulty: 1)
-
-**Project Objective:**
-Build a model that accurately classifies images of handwritten digits (0-9) from a dataset. The goal is to optimize accuracy while minimizing misclassifications.
-
-**Dataset Suggestions:**
-- Use the MNIST dataset available on Kaggle or directly from TensorFlow Datasets.
-
-**Tasks:**
-- **Set Up AutoKeras Environment:** Install AutoKeras and necessary libraries.
-- **Load Dataset:** Import the MNIST dataset and preprocess the images (normalization, reshaping).
-- **Model Training:** Utilize AutoKeras to automatically search for the best model architecture for digit classification.
-- **Evaluate Model Performance:** Assess the model using accuracy metrics and visualize confusion matrices.
-- **Fine-Tuning:** Experiment with different training epochs and batch sizes to optimize performance.
-
-**Bonus Ideas (Optional):**
-- Compare AutoKeras results with traditional CNN models built using Keras.
-- Implement data augmentation techniques to improve model robustness.
+- **AutoML capabilities**: Automatically selects the best model architecture and hyperparameters.
+- **User-friendly API**: Simplifies the creation and training of deep learning models.
+- **Support for various tasks**: Includes image classification, text classification, and regression tasks.
+- **Transfer learning**: Utilizes pre-trained models to improve performance on specific tasks.
 
 ---
 
-### Project 2: Predicting Housing Prices (Difficulty: 2)
+**Project 1: Image Classification of Handwritten Digits**  
+**Difficulty**: 1
 
-**Project Objective:**
-Develop a regression model to predict housing prices based on features such as size, location, and amenities. The goal is to minimize prediction error.
+**Project Objective**: Develop a model to classify handwritten digits from images with the aim of achieving high accuracy.
 
-**Dataset Suggestions:**
-- Use the California housing dataset available on Kaggle or from open government datasets.
+**Dataset Suggestions**: Utilize the MNIST dataset available on Kaggle or other open datasets for handwritten digits.
 
-**Tasks:**
-- **Data Preparation:** Load the dataset, handle missing values, and perform feature engineering (e.g., encoding categorical variables).
-- **Model Selection:** Use AutoKeras to automatically identify the best regression model for predicting housing prices.
-- **Training and Validation:** Split the dataset into training and validation sets, and train the model using AutoKeras.
-- **Evaluate Performance:** Calculate metrics such as Mean Absolute Error (MAE) and R-squared to evaluate model performance.
-- **Feature Importance Analysis:** Analyze which features contributed most to the predictions.
+**Tasks**:
+- **Data Preprocessing**: Load the dataset and normalize the image data for better training performance.
+- **Model Creation**: Use AutoKeras to automatically find the best model for image classification tasks.
+- **Training the Model**: Train the model on the training dataset and validate on the validation set.
+- **Evaluation**: Assess the model's performance using accuracy and confusion matrix.
+- **Visualization**: Visualize some predictions to understand model performance.
 
-**Bonus Ideas (Optional):**
-- Implement a baseline linear regression model for comparison.
-- Explore the impact of adding more features or using polynomial regression.
+**Bonus Ideas (Optional)**: Experiment with different image augmentation techniques to see how they affect model performance.
 
 ---
 
-### Project 3: Movie Genre Classification (Difficulty: 3)
+**Project 2: Predicting House Prices**  
+**Difficulty**: 2
 
-**Project Objective:**
-Create a multi-class classification model to predict movie genres based on plot summaries. The goal is to achieve high accuracy in genre classification.
+**Project Objective**: Build a regression model to predict housing prices based on various features, optimizing for the lowest mean absolute error.
 
-**Dataset Suggestions:**
-- Use the MovieLens dataset or datasets from Kaggle that include movie plot summaries and genres.
+**Dataset Suggestions**: Access the Ames Housing dataset or similar datasets available on Kaggle.
 
-**Tasks:**
-- **Text Preprocessing:** Load the dataset and preprocess text data (tokenization, stop-word removal, and vectorization).
-- **Model Building:** Leverage AutoKeras to automatically search for the best architecture for text classification.
-- **Training Process:** Train the model on the plot summaries and evaluate it using cross-validation.
-- **Performance Metrics:** Use accuracy, F1-score, and confusion matrices to assess the model's performance.
-- **Model Interpretation:** Utilize techniques such as SHAP or LIME to interpret the model's predictions and understand feature importance.
+**Tasks**:
+- **Data Cleaning**: Handle missing values and encode categorical features appropriately.
+- **Feature Engineering**: Create new features based on existing data to improve model performance.
+- **Model Training**: Utilize AutoKeras to automatically select the best regression model.
+- **Hyperparameter Tuning**: Leverage AutoKeras' capabilities to fine-tune the model's hyperparameters.
+- **Model Evaluation**: Evaluate the model using metrics such as RMSE and MAE.
 
-**Bonus Ideas (Optional):**
-- Experiment with ensemble methods or stack models to improve accuracy.
-- Create a web application to showcase the model's predictions on new movie summaries.
+**Bonus Ideas (Optional)**: Compare the performance of the AutoKeras model with traditional regression models like Linear Regression or Random Forest.
 
---- 
+---
 
-These projects will provide students with hands-on experience in using AutoKeras for a variety of machine learning tasks while reinforcing their understanding of essential data science concepts.
+**Project 3: Sentiment Analysis on Movie Reviews**  
+**Difficulty**: 3
+
+**Project Objective**: Create a model to classify movie reviews as positive or negative, aiming to maximize the F1 score.
+
+**Dataset Suggestions**: Use the IMDB movie reviews dataset available on Kaggle or HuggingFace Datasets.
+
+**Tasks**:
+- **Data Preprocessing**: Clean and preprocess the text data, including tokenization and padding.
+- **Model Selection**: Employ AutoKeras to automatically determine the best architecture for text classification.
+- **Training and Validation**: Train the model on the training dataset and validate its performance on a separate validation set.
+- **Performance Metrics**: Analyze the model's performance using precision, recall, and F1 score.
+- **Error Analysis**: Conduct an error analysis to identify common misclassifications and improve the model.
+
+**Bonus Ideas (Optional)**: Explore transfer learning by integrating pre-trained embeddings (e.g., BERT) into your AutoKeras model to enhance its performance.
 

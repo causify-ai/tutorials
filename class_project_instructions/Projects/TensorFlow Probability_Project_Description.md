@@ -1,70 +1,63 @@
 **Description**
 
-TensorFlow Probability is a library for probabilistic reasoning and statistical analysis in TensorFlow. It extends TensorFlow's capabilities by providing tools for building probabilistic models, performing Bayesian inference, and conducting statistical computations. Key features include:
+TensorFlow Probability (TFP) is a library for probabilistic reasoning and statistical analysis built on TensorFlow. It provides tools for building probabilistic models, performing Bayesian inference, and working with distributions. Key features include:
 
-- **Probabilistic Layers**: Create complex probabilistic models with ease using built-in layers.
-- **Distributions**: Access a wide range of probability distributions for modeling uncertainty.
-- **Markov Chain Monte Carlo (MCMC)**: Utilize advanced sampling techniques for Bayesian inference.
-- **Variational Inference**: Implement efficient optimization algorithms for approximating posterior distributions.
-
----
-
-### Project 1: Predicting House Prices Using Bayesian Regression (Difficulty: 1)
-
-**Project Objective**: The goal is to develop a Bayesian regression model to predict house prices based on various features such as size, location, and number of bedrooms. The project will focus on estimating the uncertainty in predictions.
-
-**Dataset Suggestions**: Utilize open datasets from Kaggle related to housing prices or government datasets on real estate.
-
-**Tasks**:
-- **Data Exploration**: Load and explore the dataset to understand the features and their relationships.
-- **Preprocessing**: Clean the data and handle missing values or outliers.
-- **Bayesian Linear Regression**: Implement a Bayesian linear regression model using TensorFlow Probability.
-- **Posterior Estimation**: Use MCMC methods to estimate the posterior distributions of model parameters.
-- **Prediction and Uncertainty Analysis**: Make predictions and visualize the uncertainty intervals for the price estimates.
-
-**Bonus Ideas**: 
-- Compare the Bayesian regression model with a traditional linear regression model.
-- Experiment with adding more features or using polynomial regression.
+- **Flexible Distributions**: A wide range of probability distributions, both continuous and discrete, for modeling uncertainty.
+- **Probabilistic Layers**: Layers for building neural networks that incorporate uncertainty into their predictions.
+- **Markov Chain Monte Carlo (MCMC)**: Efficient algorithms for sampling from complex distributions.
+- **Variational Inference**: Techniques for approximating posterior distributions in Bayesian models.
 
 ---
 
-### Project 2: Time Series Forecasting with Probabilistic Models (Difficulty: 2)
+### Project 1: Predicting House Prices with Bayesian Linear Regression
+**Difficulty**: 1 (Easy)
 
-**Project Objective**: Build a probabilistic model to forecast future values of a time series dataset, such as stock prices or weather data, while quantifying the uncertainty of predictions.
+**Project Objective**: Utilize Bayesian linear regression to predict house prices based on various features such as square footage, number of bedrooms, and location. The goal is to optimize predictions by quantifying uncertainty in the estimates.
 
-**Dataset Suggestions**: Access time series datasets from Kaggle or public APIs that provide historical stock price or weather data.
+**Dataset Suggestions**: Find a real estate dataset on Kaggle or government open data portals.
 
 **Tasks**:
-- **Data Acquisition**: Fetch and preprocess the time series data for analysis.
-- **Exploratory Data Analysis**: Visualize trends, seasonality, and stationarity in the data.
-- **Probabilistic Model Selection**: Choose an appropriate probabilistic model (e.g., Gaussian Process) for forecasting.
-- **Model Training**: Implement the model using TensorFlow Probability and train it on historical data.
-- **Forecasting and Evaluation**: Make forecasts and evaluate model performance using metrics like MAPE or RMSE, while also visualizing prediction intervals.
+- **Data Preprocessing**: Clean and preprocess the dataset, handling missing values and encoding categorical variables.
+- **Define Bayesian Model**: Construct a Bayesian linear regression model using TensorFlow Probability.
+- **Train Model**: Fit the model to the training data and obtain posterior distributions for the coefficients.
+- **Predict and Evaluate**: Make predictions on a test set and evaluate the model using metrics like Mean Absolute Error (MAE) and R-squared.
+- **Uncertainty Visualization**: Visualize the predicted prices along with uncertainty intervals using Matplotlib.
 
-**Bonus Ideas**: 
-- Compare the probabilistic forecasting model with classical time series models (e.g., ARIMA).
-- Incorporate external factors (e.g., economic indicators) into the model for improved forecasting.
+**Bonus Ideas (Optional)**: Experiment with adding polynomial features to the regression model or compare results with a standard linear regression model.
 
 ---
 
-### Project 3: Anomaly Detection in Network Traffic (Difficulty: 3)
+### Project 2: Time-Series Forecasting with Probabilistic Models
+**Difficulty**: 2 (Medium)
 
-**Project Objective**: Develop a probabilistic model to detect anomalies in network traffic data, identifying unusual patterns that may indicate security threats or system failures.
+**Project Objective**: Develop a probabilistic model to forecast future values in a time-series dataset, such as daily stock prices or weather data. The aim is to provide not only point forecasts but also confidence intervals for the predictions.
 
-**Dataset Suggestions**: Use publicly available datasets from Kaggle or UCI Machine Learning Repository related to network traffic or cybersecurity.
+**Dataset Suggestions**: Use publicly available time-series datasets from Kaggle or financial data APIs.
 
 **Tasks**:
-- **Data Collection and Preprocessing**: Gather network traffic data, clean it, and prepare it for analysis.
-- **Feature Engineering**: Create relevant features that capture the characteristics of normal and anomalous traffic.
-- **Probabilistic Model Building**: Construct a probabilistic model (e.g., Variational Autoencoder) to learn the distribution of normal traffic patterns.
-- **Anomaly Detection**: Implement a detection mechanism to identify data points that deviate significantly from the learned distribution.
-- **Evaluation and Visualization**: Assess the model's performance using precision, recall, and F1-score, and visualize detected anomalies.
+- **Data Collection and Cleaning**: Gather time-series data and preprocess it, ensuring it is stationary if necessary.
+- **Model Selection**: Choose an appropriate probabilistic model (e.g., Gaussian Processes or ARIMA) using TensorFlow Probability.
+- **Training and Validation**: Train the model and validate it using cross-validation techniques to assess performance.
+- **Forecasting**: Generate future predictions along with uncertainty estimates for the next few time steps.
+- **Visualization**: Plot the forecasted values and confidence intervals to visualize the uncertainty.
 
-**Bonus Ideas**: 
-- Explore different probabilistic models and compare their performance in anomaly detection.
-- Investigate the impact of feature selection on the model's accuracy.
+**Bonus Ideas (Optional)**: Compare the probabilistic model's performance against traditional time-series models like ARIMA or Exponential Smoothing.
 
---- 
+---
 
-These projects provide a structured approach to learning TensorFlow Probability while applying it to real-world data science challenges. Each project encourages exploration and creativity, fostering a deeper understanding of probabilistic modeling and its applications.
+### Project 3: Anomaly Detection in Network Traffic
+**Difficulty**: 3 (Hard)
+
+**Project Objective**: Implement a probabilistic model to detect anomalies in network traffic data, identifying unusual patterns that may indicate security threats. The goal is to optimize the model for high precision and recall in anomaly detection.
+
+**Dataset Suggestions**: Use open datasets from Kaggle or public repositories that provide network traffic data.
+
+**Tasks**:
+- **Data Acquisition and Preprocessing**: Acquire network traffic data and preprocess it, including feature extraction and normalization.
+- **Define Probabilistic Model**: Build a probabilistic model using TensorFlow Probability, such as a mixture model or a variational autoencoder, to model normal traffic behavior.
+- **Train the Model**: Fit the model to the training data, learning the distribution of normal traffic.
+- **Anomaly Detection**: Use the model to classify traffic as normal or anomalous based on likelihood scores.
+- **Evaluation**: Assess the performance of the model using precision, recall, and F1-score metrics.
+
+**Bonus Ideas (Optional)**: Implement an ensemble of probabilistic models and compare their performance or explore unsupervised learning techniques to identify clusters of anomalies.
 

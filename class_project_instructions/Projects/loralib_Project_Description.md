@@ -1,70 +1,70 @@
-### Description
+**Description**
 
-Loralib is a library designed for efficient low-rank adaptation of pre-trained models, enabling users to fine-tune large models with fewer parameters while maintaining performance. This tool is particularly useful for optimizing machine learning workflows, especially in natural language processing and computer vision tasks.
-
-**Features:**
-- Facilitates low-rank adaptation (LoRA) for model fine-tuning.
-- Reduces the number of trainable parameters, improving training efficiency.
-- Compatible with various pre-trained models across different domains.
-- Supports integration with popular deep learning frameworks like PyTorch.
+In this project, students will utilize loralib, a library designed for low-rank adaptation of machine learning models, to enhance the performance of various pre-trained models. loralib allows for efficient fine-tuning of large models with fewer parameters, making it ideal for resource-constrained environments. The goal is to explore how low-rank adaptation can optimize model performance across different tasks while maintaining computational efficiency.
 
 ---
 
-### Project Blueprint
+### Project 1: Sentiment Analysis on Movie Reviews (Difficulty: 1)
 
-#### Project 1: Sentiment Analysis on Movie Reviews
-**Difficulty**: 1 (Easy)  
-**Project Objective**: The goal is to build a sentiment analysis model that classifies movie reviews as positive or negative using low-rank adaptation to fine-tune a pre-trained language model.
+**Project Objective**  
+The goal is to fine-tune a pre-trained transformer model for sentiment analysis on movie reviews, optimizing for accuracy in classifying reviews as positive or negative.
 
-**Dataset Suggestions**: Use datasets from Kaggle, specifically those related to movie reviews or sentiment analysis.
+**Dataset Suggestions**  
+Find movie review datasets on Kaggle or HuggingFace, which contain labeled reviews for training and testing.
 
-**Tasks**:
-- **Set Up Environment**: Install Loralib and necessary libraries for NLP tasks (e.g., Hugging Face Transformers).
-- **Data Ingestion**: Load the movie reviews dataset and preprocess the text (tokenization, normalization).
-- **Model Selection**: Choose a pre-trained language model (e.g., BERT) for sentiment analysis.
-- **Fine-Tuning with Loralib**: Implement low-rank adaptation to fine-tune the model on the movie reviews dataset.
-- **Model Evaluation**: Evaluate the model's performance using metrics like accuracy, precision, and recall.
-- **Visualization**: Create visualizations to showcase the distribution of sentiments in the dataset.
+**Tasks**  
+- **Set Up Environment**: Install loralib and required libraries such as Hugging Face Transformers and PyTorch.
+- **Data Preprocessing**: Load the dataset, clean the text data, and split it into training and testing sets.
+- **Model Selection**: Choose a pre-trained transformer model (e.g., BERT) for sentiment analysis.
+- **Low-Rank Adaptation**: Use loralib to implement low-rank adaptation on the selected model.
+- **Training**: Fine-tune the model with the adapted layers on the training dataset.
+- **Evaluation**: Assess model performance using accuracy, precision, and recall metrics.
 
-**Bonus Ideas**: Experiment with different pre-trained models and compare their performance using Loralib.
-
----
-
-#### Project 2: Image Classification of Fashion Items
-**Difficulty**: 2 (Medium)  
-**Project Objective**: The objective is to classify images of fashion items into different categories (e.g., shirts, shoes, accessories) using low-rank adaptation for efficient model training.
-
-**Dataset Suggestions**: Utilize the Fashion MNIST dataset available on Kaggle, which contains labeled images of clothing items.
-
-**Tasks**:
-- **Set Up Environment**: Install Loralib and relevant libraries for computer vision (e.g., PyTorch).
-- **Data Preparation**: Load the Fashion MNIST dataset and preprocess images (resizing, normalization).
-- **Model Selection**: Select a pre-trained convolutional neural network (CNN) model (e.g., ResNet).
-- **Fine-Tuning with Loralib**: Apply low-rank adaptation to fine-tune the CNN model on the fashion dataset.
-- **Model Evaluation**: Assess the model's classification performance using confusion matrices and F1 scores.
-- **Visualization**: Visualize misclassified images and their predicted labels to analyze model behavior.
-
-**Bonus Ideas**: Implement data augmentation techniques to improve model robustness and compare results.
+**Bonus Ideas (Optional)**  
+- Experiment with different pre-trained models to compare performance.
+- Investigate the effect of varying the rank in low-rank adaptation on model accuracy.
 
 ---
 
-#### Project 3: Time Series Forecasting of Stock Prices
-**Difficulty**: 3 (Hard)  
-**Project Objective**: The goal is to forecast future stock prices using historical data, leveraging low-rank adaptation to fine-tune a transformer model for time-series analysis.
+### Project 2: Predicting House Prices (Difficulty: 2)
 
-**Dataset Suggestions**: Access financial datasets from public APIs (e.g., Alpha Vantage or Yahoo Finance) that provide historical stock price data.
+**Project Objective**  
+The aim is to build a regression model that predicts house prices based on various features, optimizing for mean squared error (MSE).
 
-**Tasks**:
-- **Set Up Environment**: Install Loralib and libraries for time-series analysis (e.g., Pandas, NumPy).
-- **Data Collection**: Fetch historical stock price data and preprocess it (handling missing values, normalization).
-- **Model Selection**: Choose a pre-trained transformer model (e.g., GPT) suitable for time-series forecasting.
-- **Fine-Tuning with Loralib**: Use low-rank adaptation to fine-tune the transformer model on stock price data.
-- **Model Evaluation**: Evaluate forecasting accuracy using metrics like Mean Absolute Error (MAE) and Root Mean Square Error (RMSE).
-- **Visualization**: Plot actual vs. predicted stock prices over time to visualize model performance.
+**Dataset Suggestions**  
+Utilize publicly available housing datasets from Kaggle that provide features such as size, location, and amenities.
 
-**Bonus Ideas**: Experiment with different forecasting horizons (short-term vs. long-term) and compare the results of fine-tuned models with traditional time-series models (e.g., ARIMA).
+**Tasks**  
+- **Data Collection**: Load the housing dataset and perform exploratory data analysis (EDA) to understand feature distributions.
+- **Feature Engineering**: Create new features based on existing ones (e.g., price per square foot).
+- **Model Selection**: Choose a regression model (e.g., LightGBM or XGBoost) and implement low-rank adaptation using loralib.
+- **Training and Tuning**: Train the model and optimize hyperparameters to minimize MSE.
+- **Evaluation**: Evaluate model performance using MSE and R² score on the test dataset.
+- **Visualization**: Visualize feature importance and predictions against actual prices.
 
---- 
+**Bonus Ideas (Optional)**  
+- Compare the performance of models with and without low-rank adaptation.
+- Implement cross-validation to ensure the robustness of the model.
 
-These projects will provide students with hands-on experience using Loralib while exploring various domains and machine learning tasks, enhancing their data science skills.
+---
+
+### Project 3: Anomaly Detection in Network Traffic (Difficulty: 3)
+
+**Project Objective**  
+The project aims to develop a model for detecting anomalies in network traffic data, optimizing for the true positive rate while minimizing false positives.
+
+**Dataset Suggestions**  
+Use publicly available network traffic datasets from Kaggle or government open data portals that include labeled normal and anomalous traffic.
+
+**Tasks**  
+- **Data Acquisition**: Load the network traffic dataset and preprocess the data to handle missing values and normalization.
+- **Feature Extraction**: Extract relevant features from the raw traffic data (e.g., packet size, duration).
+- **Model Selection**: Choose an appropriate model (e.g., Autoencoder or Isolation Forest) and apply low-rank adaptation with loralib.
+- **Training**: Train the model on normal traffic data to learn the baseline patterns.
+- **Anomaly Detection**: Use the trained model to identify anomalies in the test dataset.
+- **Evaluation**: Assess model performance using precision, recall, and F1-score metrics.
+
+**Bonus Ideas (Optional)**  
+- Implement a real-time anomaly detection system using a streaming dataset.
+- Explore the impact of different low-rank adaptation strategies on detection performance.
 

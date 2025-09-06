@@ -1,73 +1,67 @@
 **Description**
 
-CausalML is a Python library designed for causal inference and analysis, providing tools to estimate treatment effects and understand the impact of interventions in various domains. The library offers features such as:
-
-- **Propensity Score Matching**: Helps in estimating the probability of treatment assignment based on observed covariates.
-- **Causal Forests**: A machine learning approach to estimate heterogeneous treatment effects.
-- **Double Machine Learning**: Combines machine learning with causal inference to control for confounding variables.
-- **Easy Integration**: Works seamlessly with popular libraries like scikit-learn and pandas for data manipulation and modeling.
+CausalML is a Python library designed for causal inference and machine learning, allowing users to estimate the causal effect of treatments or interventions in observational data. It provides various algorithms for estimating treatment effects, including uplift modeling and meta-learners. CausalML helps in understanding how different variables influence outcomes, making it a powerful tool for decision-making in various domains.
 
 ---
 
-### Project 1: Evaluating the Impact of Online Advertising on Sales
-**Difficulty**: 1 (Easy)
+### Project 1: Customer Retention Analysis (Difficulty: 1 - Easy)
 
-**Project Objective**: The goal is to estimate the causal effect of an online advertising campaign on product sales. Students will analyze how varying levels of ad exposure influence sales figures, optimizing for increased revenue.
+**Project Objective**  
+The goal of this project is to identify the causal impact of a promotional campaign on customer retention rates for an e-commerce platform.
 
-**Dataset Suggestions**: Look for datasets related to e-commerce sales and advertising spend on platforms like Kaggle.
+**Dataset Suggestions**  
+Utilize datasets from Kaggle related to e-commerce transactions or customer behavior.
 
-**Tasks**:
-- **Data Collection**: Gather data on sales, advertising spend, and customer demographics.
-- **Preprocess Data**: Clean and prepare the dataset for analysis, ensuring proper handling of missing values.
-- **Propensity Score Estimation**: Use CausalML to estimate propensity scores for customers exposed to the ad campaign.
-- **Treatment Effect Estimation**: Apply techniques to estimate the average treatment effect on sales.
-- **Results Interpretation**: Analyze and visualize the results to interpret the impact of advertising on sales.
+**Tasks**  
+- **Data Preparation**: Clean and preprocess the dataset, focusing on customer demographics and transaction history.
+- **Treatment Definition**: Define the treatment variable as participation in the promotional campaign.
+- **Causal Effect Estimation**: Use CausalML to apply a suitable uplift modeling technique to estimate the impact of the campaign on retention rates.
+- **Analysis**: Interpret the results to understand which customer segments benefited the most from the campaign.
+- **Visualization**: Create visualizations to present the causal effects and segment-specific results.
 
-**Bonus Ideas (Optional)**:
-- Explore different customer segments to analyze heterogeneous treatment effects.
-- Compare results with a traditional regression analysis to highlight differences in findings.
-
----
-
-### Project 2: Analyzing the Effects of a Health Intervention Program
-**Difficulty**: 2 (Medium)
-
-**Project Objective**: Students will assess the effectiveness of a health intervention program aimed at improving physical activity levels among participants. The objective is to quantify the impact of the intervention on health outcomes, such as weight loss or fitness levels.
-
-**Dataset Suggestions**: Utilize datasets available from open government health portals or health-related Kaggle datasets.
-
-**Tasks**:
-- **Data Acquisition**: Obtain data on participants, including baseline health metrics and program participation.
-- **Feature Engineering**: Create features indicating participation levels and control for confounding variables.
-- **Causal Forest Implementation**: Use CausalML’s causal forests to estimate heterogeneous treatment effects across different demographics.
-- **Effect Analysis**: Analyze the results to determine the average treatment effect and its significance.
-- **Visualization**: Create visualizations to depict the treatment effects across different subgroups.
-
-**Bonus Ideas (Optional)**:
-- Investigate the long-term effects of the intervention by analyzing follow-up data.
-- Implement a sensitivity analysis to assess the robustness of the treatment effect estimates.
+**Bonus Ideas (Optional)**  
+- Compare the results with traditional marketing metrics to understand the added value of causal inference.
+- Extend the analysis to include additional treatments such as discounts or loyalty programs.
 
 ---
 
-### Project 3: Understanding the Impact of Educational Programs on Student Performance
-**Difficulty**: 3 (Hard)
+### Project 2: Healthcare Treatment Effectiveness (Difficulty: 2 - Medium)
 
-**Project Objective**: This project aims to evaluate the causal impact of a new educational program on student performance metrics, such as test scores. The objective is to determine how the program influences learning outcomes and identify factors contributing to its effectiveness.
+**Project Objective**  
+The objective is to evaluate the causal effect of a new medication on patient recovery rates compared to standard treatment in a healthcare dataset.
 
-**Dataset Suggestions**: Seek educational datasets from open educational resources or Kaggle, focusing on student performance and program participation.
+**Dataset Suggestions**  
+Look for public health datasets on platforms like Kaggle or government health portals that include patient treatment and recovery information.
 
-**Tasks**:
-- **Data Gathering**: Collect data on student demographics, prior performance, and details of the educational program.
-- **Data Cleaning and Preparation**: Preprocess the data, addressing any missing values and ensuring consistency.
-- **Double Machine Learning Application**: Utilize CausalML’s double machine learning framework to control for confounding variables while estimating treatment effects.
-- **Causal Effect Estimation**: Estimate the causal impact of the educational program on student performance using advanced causal inference techniques.
-- **Reporting and Visualization**: Generate detailed reports and visualizations to present findings, emphasizing the program's effectiveness.
+**Tasks**  
+- **Data Collection**: Gather and preprocess a dataset containing patient demographics, treatment types, and recovery outcomes.
+- **Define Treatments**: Identify the new medication as one treatment and the standard treatment as another.
+- **Causal Inference**: Implement CausalML methods such as the Propensity Score Matching or Doubly Robust Estimator to estimate treatment effects.
+- **Model Evaluation**: Assess the robustness of the causal estimates using sensitivity analysis.
+- **Reporting**: Summarize findings and create a report that discusses the implications for clinical practice.
 
-**Bonus Ideas (Optional)**:
-- Analyze the effects of the program across different subjects or grade levels to identify specific areas of impact.
-- Conduct a comparative analysis with other educational programs to evaluate relative effectiveness.
+**Bonus Ideas (Optional)**  
+- Explore subgroup analyses based on patient demographics to identify differential treatment effects.
+- Implement additional causal models to compare results and validate findings.
 
 ---
 
-These projects will provide hands-on experience with causal inference techniques using CausalML, enhancing students' understanding of causal analysis in real-world scenarios.
+### Project 3: Marketing Campaign Optimization (Difficulty: 3 - Hard)
+
+**Project Objective**  
+The goal is to optimize marketing strategies by estimating the causal effects of various marketing channels on sales performance over time.
+
+**Dataset Suggestions**  
+Utilize datasets from Kaggle that include marketing campaign data, sales figures, and customer engagement metrics.
+
+**Tasks**  
+- **Data Acquisition**: Collect and preprocess a comprehensive dataset that includes multiple marketing channels (e.g., email, social media, TV).
+- **Treatment Assignment**: Define multiple treatments corresponding to different marketing channels.
+- **Causal Analysis**: Use advanced CausalML techniques such as Meta-Learners (e.g., X-learner, T-learner) to estimate the causal impact of each channel on sales.
+- **Optimization Strategy**: Develop a strategy to allocate resources across channels based on estimated causal effects to maximize sales.
+- **Validation**: Validate the findings using cross-validation techniques or out-of-sample testing.
+
+**Bonus Ideas (Optional)**  
+- Implement a simulation study to assess the stability of the causal estimates under varying conditions.
+- Compare the results with traditional marketing ROI calculations to highlight the advantages of causal inference approaches.
 

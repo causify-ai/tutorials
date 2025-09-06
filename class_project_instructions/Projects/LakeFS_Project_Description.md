@@ -1,80 +1,66 @@
 **Description**
 
-LakeFS is an open-source data lake management tool that enables users to manage data versioning and branching for data lakes, similar to Git for code. It allows data scientists and engineers to create reproducible data workflows, collaborate efficiently, and manage data with ease. 
+LakeFS is an open-source data lake management tool that enables version control for data. It allows users to treat data lakes like Git repositories, enabling easy branching, merging, and collaboration on data. Key features include:
 
-**Key Features:**
-- **Version Control**: Enables tracking of changes to datasets over time.
-- **Branching and Merging**: Facilitates experimentation with data without affecting the main dataset.
-- **Data Lineage**: Provides insights into the history and transformations of datasets.
-- **Integration**: Works seamlessly with existing data lakes and tools, supporting various data formats.
-
----
-
-### Project 1: Customer Segmentation for E-commerce (Difficulty: 1)
-
-**Project Objective**: 
-The goal is to segment e-commerce customers based on their purchasing behavior using clustering techniques, optimizing for meaningful customer profiles.
-
-**Dataset Suggestions**: 
-Find datasets on Kaggle related to e-commerce transactions or customer behavior.
-
-**Tasks**:
-- **Set Up LakeFS Environment**: Install and configure LakeFS to manage your dataset versions.
-- **Data Ingestion**: Load customer transaction data into LakeFS and create an initial version.
-- **Data Preprocessing**: Clean the dataset, handle missing values, and transform categorical variables.
-- **Feature Engineering**: Create features such as total spend, frequency of purchases, and recency of last purchase.
-- **Clustering**: Apply K-Means or DBSCAN clustering algorithms to segment customers.
-- **Visualization**: Use Matplotlib or Seaborn to visualize customer segments and characteristics.
-
-**Bonus Ideas (Optional)**:
-- Experiment with different clustering algorithms and compare results.
-- Implement a dashboard to visualize customer segments interactively.
+- **Version Control**: Keep track of data changes, enabling rollback and reproducibility.
+- **Branching and Merging**: Create branches for different experiments or analyses without affecting the main dataset.
+- **Data Lineage**: Trace the origin and evolution of data over time.
+- **Compatibility**: Integrates with existing data lake solutions and tools, facilitating seamless workflows.
 
 ---
 
-### Project 2: Predictive Maintenance for Manufacturing Equipment (Difficulty: 2)
+### Project 1: Data Version Control for E-commerce Sales Analysis (Difficulty: 1 - Easy)
 
-**Project Objective**: 
-Develop a predictive maintenance model to forecast equipment failures based on historical operational data, optimizing for reduced downtime and maintenance costs.
+**Project Objective**: Develop a version-controlled data analysis pipeline to track changes in e-commerce sales data over time, allowing for reproducible analysis and insights into sales trends.
 
-**Dataset Suggestions**: 
-Explore public datasets on manufacturing equipment failures available on Kaggle or government portals.
+**Dataset Suggestions**: Use open e-commerce datasets available on Kaggle or government portals.
 
 **Tasks**:
-- **Set Up LakeFS for Data Management**: Create a new branch in LakeFS for your predictive maintenance project.
-- **Data Ingestion and Versioning**: Import historical operational data and version the dataset.
-- **Data Cleaning**: Identify and address outliers, missing values, and erroneous entries in the dataset.
-- **Feature Engineering**: Create features like operating hours, temperature, and vibration metrics.
-- **Model Training**: Use regression models or classification algorithms (e.g., Random Forest) to predict equipment failures.
-- **Evaluation**: Assess model performance using metrics such as precision, recall, and F1-score.
+- **Set Up LakeFS**: Install LakeFS and configure it with your data lake.
+- **Ingest Sales Data**: Load the e-commerce sales dataset into LakeFS.
+- **Create Branches**: Create branches for different time periods (e.g., monthly) to analyze sales trends.
+- **Data Analysis**: Perform exploratory data analysis (EDA) on each branch to understand sales patterns.
+- **Merge Changes**: Merge findings from different branches and document insights using LakeFS.
 
-**Bonus Ideas (Optional)**:
-- Implement a real-time monitoring system to trigger alerts based on model predictions.
-- Compare model performance with different algorithms and hyperparameters.
+**Bonus Ideas (Optional)**: 
+- Compare sales trends across different branches and visualize them.
+- Implement a rollback feature to analyze how sales data has changed over time.
 
 ---
 
-### Project 3: Time-Series Forecasting of Energy Consumption (Difficulty: 3)
+### Project 2: Machine Learning Model Development for Customer Segmentation (Difficulty: 2 - Medium)
 
-**Project Objective**: 
-Create a time-series forecasting model to predict future energy consumption based on historical consumption data, optimizing for accuracy in forecasting.
+**Project Objective**: Build a machine learning pipeline for customer segmentation using version-controlled data, optimizing the features and model parameters through LakeFS.
 
-**Dataset Suggestions**: 
-Utilize open datasets from government energy departments or Kaggle that provide historical energy consumption data.
+**Dataset Suggestions**: Use customer transaction datasets available on Kaggle or open government datasets.
 
 **Tasks**:
-- **LakeFS Setup and Branching**: Establish a LakeFS branch for your energy forecasting project, enabling version control for your datasets.
-- **Data Ingestion**: Load historical energy consumption data into LakeFS and create an initial version.
-- **Exploratory Data Analysis**: Analyze trends, seasonal patterns, and anomalies in the time-series data.
-- **Data Preparation**: Resample the data if necessary and create lag features for modeling.
-- **Model Development**: Implement ARIMA, Prophet, or LSTM models for time-series forecasting.
-- **Model Evaluation**: Use metrics like Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE) to evaluate forecasting accuracy.
+- **Set Up LakeFS**: Configure LakeFS with a customer transaction dataset.
+- **Data Preprocessing**: Clean and preprocess the dataset for modeling, tracking changes in branches.
+- **Feature Engineering**: Create different feature sets in separate branches to experiment with customer segmentation.
+- **Model Training**: Train clustering models (e.g., K-Means, DBSCAN) on different branches and evaluate their performance.
+- **Merge Results**: Combine the best-performing feature sets and models, documenting the process in LakeFS.
 
-**Bonus Ideas (Optional)**:
-- Compare the performance of traditional time-series models with deep learning models.
-- Explore the impact of external factors (like weather data) on energy consumption forecasting.
+**Bonus Ideas (Optional)**: 
+- Experiment with advanced clustering techniques or dimensionality reduction.
+- Implement a comparison of model performance across different branches.
 
---- 
+---
 
-These projects not only utilize LakeFS for effective data management but also encompass essential data science practices, from data ingestion to model evaluation, ensuring a comprehensive learning experience for students.
+### Project 3: Anomaly Detection in Financial Transactions (Difficulty: 3 - Hard)
+
+**Project Objective**: Create a robust anomaly detection system for financial transactions, leveraging version control to manage data changes and model iterations effectively.
+
+**Dataset Suggestions**: Utilize publicly available financial transaction datasets from Kaggle or government financial data portals.
+
+**Tasks**:
+- **Set Up LakeFS**: Install and configure LakeFS to manage the financial transaction dataset.
+- **Data Ingestion**: Load the transaction data into LakeFS and create an initial branch for raw data.
+- **Data Cleaning and Transformation**: Implement data cleaning and transformation steps, tracking changes across branches.
+- **Anomaly Detection Modeling**: Develop and test various anomaly detection algorithms (e.g., Isolation Forest, Autoencoders) across different branches.
+- **Model Evaluation and Merging**: Evaluate model performance using metrics like precision and recall, then merge the best models and document findings.
+
+**Bonus Ideas (Optional)**: 
+- Explore ensemble methods for improved anomaly detection.
+- Implement a visualization dashboard to monitor detected anomalies over time.
 

@@ -1,90 +1,106 @@
-### Description
+**Description**
 
-**mpi4py** is a Python package that provides bindings for the Message Passing Interface (MPI), allowing for parallel programming in Python. It is particularly useful for high-performance computing and can handle large-scale data processing tasks efficiently.
+mpi4py is a Python package that provides bindings for the Message Passing Interface (MPI), enabling parallel computing in Python. It allows for the distribution of tasks across multiple processors, facilitating the efficient handling of large-scale data processing and computational tasks.
 
-**Features:**
-- Facilitates communication between processes in a distributed environment.
-- Supports point-to-point communication and collective operations.
-- Enables efficient data exchange and synchronization among multiple processes.
+Technologies Used
+mpi4py
 
----
-
-### Project Blueprint
-
-#### Project 1: Parallel Data Processing with mpi4py
-- **Difficulty**: 1 (Easy)
-- **Project Objective**: The goal is to parallelize a simple data processing task, such as calculating the mean of a large dataset, to optimize performance and reduce computation time.
-
-- **Dataset Suggestions**: Use a large synthetic dataset generated via NumPy or find a public dataset on Kaggle that contains numerical data.
-
-- **Tasks**:
-  - **Set Up mpi4py**:
-    - Install mpi4py and ensure MPI is configured on your system.
-  - **Data Generation**:
-    - Create a large synthetic dataset using NumPy.
-    - Split the dataset into smaller chunks for parallel processing.
-  - **Implement Parallel Mean Calculation**:
-    - Utilize mpi4py to distribute data chunks across multiple processes.
-    - Each process calculates the mean of its assigned chunk.
-  - **Aggregate Results**:
-    - Use mpi4py's collective operations to gather and compute the overall mean from individual results.
-  - **Performance Comparison**:
-    - Measure and compare execution time with a single-threaded approach.
-
-- **Bonus Ideas (Optional)**:
-  - Explore the impact of different chunk sizes on performance.
-  - Implement additional statistical calculations (e.g., median, standard deviation) using the same parallel framework.
+- Enables parallel execution of Python code, enhancing performance for large datasets.
+- Supports point-to-point and collective communication between processes.
+- Facilitates the development of distributed applications across various computing environments.
 
 ---
 
-#### Project 2: Distributed Machine Learning with mpi4py
-- **Difficulty**: 2 (Medium)
-- **Project Objective**: Implement a distributed version of a linear regression model using mpi4py to handle large datasets efficiently and optimize model training time.
+### Project 1: Predicting Housing Prices Using Parallelized Regression (Difficulty: 1 - Easy)
 
-- **Dataset Suggestions**: Find a large regression dataset on Kaggle that includes various features and a continuous target variable.
+**Project Objective:**
+The goal is to build a regression model to predict housing prices based on various features such as location, size, and amenities, while utilizing mpi4py for parallel processing to speed up model training.
 
-- **Tasks**:
-  - **Set Up Data Pipeline**:
-    - Load the dataset and preprocess it (handle missing values, normalize features).
-  - **Distribute Data**:
-    - Split the dataset into training and testing sets, then further divide the training set among multiple processes.
-  - **Implement Distributed Linear Regression**:
-    - Each process computes partial gradients of the cost function.
-    - Use mpi4py to gather gradients and update model parameters collectively.
-  - **Model Evaluation**:
-    - Evaluate the model's performance on the testing set using metrics like RMSE or R-squared.
-  - **Performance Analysis**:
-    - Compare the training time and accuracy with a standard single-threaded implementation.
+**Dataset Suggestions:**
+Look for housing datasets on Kaggle that include features like price, square footage, number of bedrooms, and location.
 
-- **Bonus Ideas (Optional)**:
-  - Experiment with different optimization algorithms (e.g., SGD, Adam) in the distributed setting.
-  - Implement cross-validation in a distributed manner to assess model robustness.
+**Tasks:**
+- **Set Up mpi4py Environment:**
+    - Install mpi4py and set up a basic MPI environment to run parallel processes.
+  
+- **Data Ingestion:**
+    - Load the housing dataset into a distributed format using Pandas and mpi4py.
 
----
+- **Data Preprocessing:**
+    - Clean and preprocess the data, handling missing values and encoding categorical variables, distributed across multiple processes.
 
-#### Project 3: Parallel Image Processing with mpi4py
-- **Difficulty**: 3 (Hard)
-- **Project Objective**: Develop a parallel image processing pipeline using mpi4py to apply transformations (e.g., filtering, edge detection) on a large dataset of images.
+- **Model Training:**
+    - Implement a regression model (e.g., Linear Regression) and train it in parallel using mpi4py to optimize the training time.
 
-- **Dataset Suggestions**: Use a publicly available dataset of images from Kaggle or HuggingFace, such as CIFAR-10 or MNIST.
+- **Model Evaluation:**
+    - Evaluate the model’s performance using metrics like RMSE and R², aggregating results from different processes.
 
-- **Tasks**:
-  - **Set Up Image Processing Environment**:
-    - Install necessary libraries (e.g., OpenCV, PIL) along with mpi4py.
-  - **Load and Distribute Images**:
-    - Load a batch of images and distribute them across multiple processes for parallel processing.
-  - **Implement Image Transformations**:
-    - Each process applies specific transformations (e.g., Gaussian blur, Sobel filter) to its assigned images.
-  - **Collect and Save Processed Images**:
-    - Use mpi4py to gather processed images from all processes and save them to a specified directory.
-  - **Performance Benchmarking**:
-    - Measure the time taken to process images in parallel versus sequentially.
-
-- **Bonus Ideas (Optional)**:
-  - Implement more complex image processing techniques (e.g., convolutional neural networks for image classification) in a distributed manner.
-  - Explore the effects of varying the number of processes on performance and image quality.
+- **Visualization:**
+    - Visualize the predicted vs actual prices using Matplotlib.
 
 ---
 
-These projects will allow students to gain hands-on experience with parallel computing concepts, enhance their understanding of distributed systems, and apply machine learning techniques effectively using mpi4py.
+### Project 2: Parallelized Image Classification with CNNs (Difficulty: 2 - Medium)
+
+**Project Objective:**
+Develop a Convolutional Neural Network (CNN) for classifying images from a publicly available dataset while leveraging mpi4py to distribute the training workload across multiple processors.
+
+**Dataset Suggestions:**
+Utilize image datasets available on Kaggle, such as CIFAR-10 or Fashion MNIST, which contain labeled images for classification tasks.
+
+**Tasks:**
+- **Set Up mpi4py and TensorFlow:**
+    - Install necessary libraries and configure mpi4py with TensorFlow for distributed training.
+
+- **Data Loading:**
+    - Load the image dataset and preprocess images (resizing, normalization) using parallel data loading techniques.
+
+- **Model Architecture:**
+    - Build a CNN architecture suitable for the classification task, ensuring it can be trained in a distributed manner.
+
+- **Distributed Training:**
+    - Implement model training using mpi4py to distribute the training process across multiple GPUs or CPU cores.
+
+- **Model Evaluation:**
+    - Evaluate the classification accuracy and loss metrics, aggregating results from different processes.
+
+- **Visualization:**
+    - Visualize model performance through confusion matrices and accuracy plots.
+
+---
+
+### Project 3: Real-Time Anomaly Detection in Network Traffic (Difficulty: 3 - Hard)
+
+**Project Objective:**
+Create a system for real-time anomaly detection in network traffic data using unsupervised learning techniques, employing mpi4py to handle large volumes of streaming data in a distributed manner.
+
+**Dataset Suggestions:**
+Access network traffic datasets from government open data portals or Kaggle that provide logs of network activity, including normal and anomalous behavior.
+
+**Tasks:**
+- **Set Up mpi4py for Streaming Data:**
+    - Configure mpi4py to handle streaming data and set up a distributed computing environment.
+
+- **Data Ingestion:**
+    - Stream network traffic data into the system, ensuring efficient data handling across multiple processes.
+
+- **Feature Engineering:**
+    - Extract relevant features from raw network traffic data, parallelizing the process to handle large volumes efficiently.
+
+- **Anomaly Detection Model:**
+    - Implement an unsupervised learning model (e.g., Isolation Forest or DBSCAN) for detecting anomalies in the network traffic.
+
+- **Real-Time Processing:**
+    - Use mpi4py to enable real-time processing and anomaly detection, aggregating results from distributed computations.
+
+- **Evaluation and Reporting:**
+    - Evaluate the model's performance using precision, recall, and F1-score, and generate reports on detected anomalies.
+
+- **Visualization:**
+    - Create visualizations of network traffic patterns and detected anomalies using Seaborn or Matplotlib.
+
+**Bonus Ideas (Optional):**
+- Implement a dashboard for real-time monitoring of network traffic and anomalies.
+- Compare the performance of different anomaly detection algorithms in a distributed setting.
+- Explore the use of deep learning methods for more complex anomaly detection tasks.
 

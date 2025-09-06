@@ -1,74 +1,103 @@
-### Description
+**Description**
 
-DGL (Deep Graph Library) is a Python package designed for deep learning on graph-structured data. It simplifies the process of building and training graph neural networks (GNNs) and provides efficient implementations for various graph-based tasks. 
+DGL (Deep Graph Library) is a Python library designed for deep learning on graph-structured data. It provides high-performance, easy-to-use APIs to build and train graph neural networks (GNNs) efficiently. DGL supports various graph-based tasks, including node classification, link prediction, and graph classification, and seamlessly integrates with popular deep learning frameworks like PyTorch and TensorFlow.
 
-**Features:**
-- Offers a flexible and scalable framework for GNNs.
-- Supports various types of graph data, including heterogeneous and dynamic graphs.
-- Integrates with popular deep learning frameworks like PyTorch and TensorFlow.
-- Provides built-in datasets and models for quick experimentation.
+Technologies Used
+DGL
 
----
-
-### Project 1: Social Network Community Detection
-**Difficulty**: 1 (Easy)
-
-**Project Objective**: The goal of this project is to identify communities within a social network graph using GNNs. Students will optimize for community detection accuracy while exploring the structure of social interactions.
-
-**Dataset Suggestions**: Use publicly available social network datasets from platforms like SNAP or Kaggle.
-
-**Tasks**:
-- **Load and Preprocess Data**: Import the social network dataset and convert it into a graph format compatible with DGL.
-- **Build Graph Neural Network**: Create a simple GNN model to learn node embeddings.
-- **Train the Model**: Use semi-supervised learning to train the model on a portion of the graph with known community labels.
-- **Evaluate Community Detection**: Assess the model's performance using metrics like Modularity and Normalized Mutual Information (NMI).
-- **Visualize Communities**: Use visualization tools to display detected communities within the graph.
-
-**Bonus Ideas**: 
-- Experiment with different GNN architectures (e.g., GCN, GAT).
-- Compare the results with traditional community detection algorithms (e.g., Louvain method).
+- Facilitates building GNNs with intuitive APIs for various graph tasks.
+- Supports heterogeneous graphs, enabling the modeling of complex relationships.
+- Integrates with PyTorch and TensorFlow for deep learning capabilities.
 
 ---
 
-### Project 2: Fraud Detection in Financial Transactions
-**Difficulty**: 2 (Medium)
+### Project 1: Node Classification in Social Networks
+**Difficulty:** 1 (Easy)
 
-**Project Objective**: This project aims to detect fraudulent transactions in a financial network by analyzing transaction graphs. Students will optimize for the accuracy and recall of fraud detection.
+**Project Objective:**
+Develop a model to classify users in a social network based on their connections and interactions, optimizing for accuracy in predicting user categories.
 
-**Dataset Suggestions**: Seek out financial transaction datasets available on Kaggle or government financial data portals.
+**Dataset Suggestions:**
+Find datasets on social network interactions from platforms like Kaggle or GitHub repositories that offer open datasets.
 
-**Tasks**:
-- **Graph Construction**: Create a directed graph from transaction data where nodes represent accounts and edges represent transactions.
-- **Feature Engineering**: Extract meaningful features from the graph to improve model performance.
-- **Design GNN Model**: Implement a GNN for anomaly detection in the transaction graph.
-- **Model Training**: Train the model using labeled data, focusing on detecting fraudulent transactions.
-- **Performance Evaluation**: Use precision, recall, and F1-score to evaluate the model's effectiveness.
+**Tasks:**
+- **Data Preparation:**
+  - Load and preprocess the social network graph data, converting it into a DGL-compatible format.
+  
+- **Graph Construction:**
+  - Construct the graph using DGL, representing users as nodes and interactions as edges.
 
-**Bonus Ideas**: 
-- Explore unsupervised learning techniques for fraud detection.
-- Compare performance with traditional machine learning classifiers (e.g., Random Forest, SVM).
+- **Model Building:**
+  - Implement a simple Graph Convolutional Network (GCN) to classify nodes based on their features and neighbors.
+
+- **Training and Evaluation:**
+  - Train the model and evaluate its performance using metrics like accuracy and F1-score.
+
+- **Visualization:**
+  - Visualize the classified nodes and their relationships using network visualization libraries.
 
 ---
 
-### Project 3: Drug Discovery through Molecular Graphs
-**Difficulty**: 3 (Hard)
+### Project 2: Link Prediction for Recommendation Systems
+**Difficulty:** 2 (Medium)
 
-**Project Objective**: The goal of this project is to predict the biological activity of drug-like compounds using their molecular graphs. Students will optimize for the accuracy of activity prediction based on molecular structure.
+**Project Objective:**
+Create a link prediction model to recommend potential friendships in a social network by predicting missing connections, optimizing for precision and recall.
 
-**Dataset Suggestions**: Utilize molecular datasets available from sources like the ChEMBL database or Kaggle's drug discovery datasets.
+**Dataset Suggestions:**
+Utilize open datasets from Kaggle related to social networks or collaborative filtering datasets available on HuggingFace.
 
-**Tasks**:
-- **Molecular Graph Representation**: Convert molecular structures into graph representations where atoms are nodes and bonds are edges.
-- **Graph Neural Network Architecture**: Design a more complex GNN model tailored for regression tasks to predict biological activity.
-- **Data Augmentation**: Implement techniques to enhance the training dataset, such as SMILES augmentation or generative models.
-- **Training and Validation**: Train the GNN on a subset of compounds and validate on a separate test set.
-- **Analyze Results**: Evaluate the predictions against known biological activities and visualize important features using attention mechanisms.
+**Tasks:**
+- **Data Exploration:**
+  - Analyze the dataset to understand the structure and distribution of existing links.
 
-**Bonus Ideas**: 
-- Investigate the interpretability of the GNN model to understand which molecular features contribute to activity predictions.
-- Explore transfer learning by fine-tuning models on different but related datasets.
+- **Graph Construction:**
+  - Create a graph representation of the social network using DGL, incorporating user interactions as edges.
 
---- 
+- **Feature Engineering:**
+  - Generate features for nodes and edges, including common neighbors and Jaccard coefficients.
 
-These projects offer a comprehensive exploration of GNNs using DGL, allowing students to engage with real-world data while developing their skills in graph-based machine learning.
+- **Model Development:**
+  - Implement a link prediction model using GraphSAGE or GAT (Graph Attention Networks) to predict missing links.
+
+- **Model Evaluation:**
+  - Evaluate the model using metrics such as AUC-ROC and precision-recall curves.
+
+- **Recommendation Generation:**
+  - Generate and visualize top recommendations for potential friendships.
+
+---
+
+### Project 3: Community Detection in Large-scale Graphs
+**Difficulty:** 3 (Hard)
+
+**Project Objective:**
+Implement a community detection algorithm to identify clusters within a large-scale graph, optimizing for modularity and cluster coherence.
+
+**Dataset Suggestions:**
+Access large graph datasets from sources like the SNAP (Stanford Network Analysis Project) repository or Kaggle.
+
+**Tasks:**
+- **Data Acquisition:**
+  - Download and preprocess large graph datasets, ensuring they are compatible with DGL.
+
+- **Graph Construction:**
+  - Construct the graph using DGL, ensuring efficient memory management for large datasets.
+
+- **Community Detection Algorithm:**
+  - Implement a state-of-the-art community detection algorithm (e.g., DeepWalk or Node2Vec) using DGL.
+
+- **Performance Optimization:**
+  - Optimize the algorithm for speed and scalability, leveraging DGL's parallel processing capabilities.
+
+- **Evaluation:**
+  - Evaluate the detected communities using metrics like modularity and conductance.
+
+- **Visualization:**
+  - Visualize the graph and the identified communities using graph visualization tools.
+
+**Bonus Ideas (Optional):**
+- Experiment with different community detection algorithms and compare their performance.
+- Integrate external data sources to enrich node features and improve community detection results.
+- Challenge: Scale the project to handle real-time graph updates and community detection.
 

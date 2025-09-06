@@ -1,104 +1,63 @@
-### Description
+**Description**
 
-PyTorch Lightning is a lightweight wrapper for PyTorch that simplifies the process of training deep learning models by organizing code and providing best practices. It abstracts away much of the boilerplate code while allowing users to focus on model architecture and training logic. 
+PyTorch Lightning is a lightweight wrapper around PyTorch that simplifies the training of deep learning models while maintaining flexibility and scalability. It provides a structured approach to organizing PyTorch code, enabling researchers and developers to focus more on the model and less on the boilerplate code. Key features include:
 
-**Key Features:**
-- Simplifies model training and validation loops with a clear structure.
-- Supports multi-GPU training and TPU support out of the box.
-- Integrates easily with logging frameworks like TensorBoard and Weights & Biases.
-- Provides built-in support for mixed-precision training for faster computations.
-
----
-
-### Project 1: Image Classification with Transfer Learning (Difficulty: 1)
-
-**Project Objective:**
-Build a model to classify images from a publicly available dataset (e.g., CIFAR-10) using transfer learning techniques to optimize for accuracy.
-
-**Dataset Suggestions:**
-Find datasets on Kaggle or HuggingFace, particularly those focused on image classification.
-
-**Tasks:**
-- **Set Up Environment:**
-  - Install PyTorch Lightning and required libraries.
-  
-- **Load Dataset:**
-  - Use PyTorch's `torchvision` to load and preprocess the CIFAR-10 dataset.
-  
-- **Model Selection:**
-  - Choose a pre-trained model (e.g., ResNet or VGG) and modify the final layers for classification.
-
-- **Training Loop:**
-  - Implement a training loop using PyTorch Lightning's `Trainer` class to handle epochs and validation.
-
-- **Evaluation:**
-  - Evaluate model performance using accuracy metrics and confusion matrices.
-
-- **Visualization:**
-  - Visualize some of the predictions and the training history using Matplotlib.
+- **Modular Design**: Encourages separation of concerns, making code easier to read and maintain.
+- **Built-in Callbacks**: Allows for easy integration of advanced features like early stopping, learning rate scheduling, and logging.
+- **Multi-GPU Support**: Facilitates distributed training across multiple GPUs without significant changes to the codebase.
+- **Easy Experiment Tracking**: Integrates seamlessly with logging frameworks like TensorBoard and Weights & Biases.
 
 ---
 
-### Project 2: Time Series Forecasting with LSTM (Difficulty: 2)
+### Project 1: Image Classification of Fashion Items
+**Difficulty**: 1 (Easy)
 
-**Project Objective:**
-Develop a model to forecast future values in a time series dataset (e.g., stock prices) using LSTM networks to optimize for prediction accuracy.
+**Project Objective**: The goal is to build a convolutional neural network (CNN) that classifies images of clothing items into different categories (e.g., shirts, shoes, bags). The model will be optimized for accuracy.
 
-**Dataset Suggestions:**
-Utilize publicly available financial datasets from sources like Yahoo Finance or Kaggle.
+**Dataset Suggestions**: Use the Fashion MNIST dataset available on Kaggle.
 
-**Tasks:**
-- **Data Ingestion:**
-  - Load the time series data and perform necessary preprocessing (e.g., normalization).
+**Tasks**:
+- **Data Preparation**: Load the Fashion MNIST dataset and preprocess images (normalization, resizing).
+- **Model Definition**: Create a simple CNN architecture using PyTorch Lightning.
+- **Training**: Implement the training loop with appropriate loss functions and metrics.
+- **Evaluation**: Assess the model's performance on the test set and visualize some predictions.
+- **Logging**: Use TensorBoard to log training metrics and visualize model performance over epochs.
 
-- **Feature Engineering:**
-  - Create lag features and rolling statistics to enhance the dataset.
-
-- **Model Architecture:**
-  - Define an LSTM model using PyTorch Lightning, including dropout for regularization.
-
-- **Training Process:**
-  - Implement the training process with validation, leveraging PyTorch Lightning's callbacks for early stopping.
-
-- **Prediction and Evaluation:**
-  - Generate predictions and evaluate using metrics like RMSE and MAE.
-
-- **Visualization:**
-  - Plot the actual vs. predicted values to assess the model's performance.
+**Bonus Ideas (Optional)**: Experiment with data augmentation techniques to improve model robustness and compare different CNN architectures.
 
 ---
 
-### Project 3: Text Classification with BERT (Difficulty: 3)
+### Project 2: Time Series Forecasting of Energy Consumption
+**Difficulty**: 2 (Medium)
 
-**Project Objective:**
-Create a text classification model using a pre-trained BERT model to classify sentiments in movie reviews, optimizing for F1 score.
+**Project Objective**: Develop a recurrent neural network (RNN) model to forecast future energy consumption based on historical data. The model will be optimized for Mean Absolute Error (MAE).
 
-**Dataset Suggestions:**
-Access sentiment analysis datasets from Kaggle or HuggingFace, such as the IMDb movie reviews dataset.
+**Dataset Suggestions**: Use publicly available energy consumption datasets from government portals or Kaggle.
 
-**Tasks:**
-- **Data Preparation:**
-  - Load the dataset and preprocess text (tokenization, padding).
+**Tasks**:
+- **Data Collection**: Gather historical energy consumption data and preprocess it (handling missing values, normalization).
+- **Feature Engineering**: Create additional features such as time-based features (day of the week, month) to enhance the model's predictive power.
+- **Model Creation**: Build an RNN or LSTM model using PyTorch Lightning.
+- **Training and Validation**: Train the model, validate it, and tune hyperparameters to minimize MAE.
+- **Forecasting**: Generate future predictions and visualize the forecast against actual consumption data.
 
-- **Model Setup:**
-  - Utilize a pre-trained BERT model from HuggingFace's Transformers library and fine-tune it with PyTorch Lightning.
-
-- **Training Configuration:**
-  - Set up the training configuration with appropriate hyperparameters, including batch size and learning rate.
-
-- **Regularization Techniques:**
-  - Implement techniques such as dropout and weight decay to prevent overfitting.
-
-- **Model Evaluation:**
-  - Evaluate the model on a validation set using the F1 score and confusion matrix.
-
-- **Interpretation:**
-  - Analyze misclassified examples and visualize the attention weights to understand model decisions.
+**Bonus Ideas (Optional)**: Implement a comparison with traditional forecasting methods (e.g., ARIMA) and analyze the performance differences.
 
 ---
 
-### Bonus Ideas (Optional)
-- For **Project 1**, consider experimenting with different augmentation techniques to improve model robustness.
-- For **Project 2**, challenge yourself by implementing a multi-step forecasting approach instead of single-step.
-- For **Project 3**, extend the project by implementing a multi-class classification task or exploring adversarial training techniques.
+### Project 3: Natural Language Processing for Sentiment Analysis
+**Difficulty**: 3 (Hard)
+
+**Project Objective**: Create a transformer-based model (e.g., BERT) to classify the sentiment of movie reviews as positive or negative. The model will be optimized for F1-score.
+
+**Dataset Suggestions**: Use sentiment analysis datasets available on HuggingFace Datasets or Kaggle.
+
+**Tasks**:
+- **Data Acquisition**: Load the movie reviews dataset and preprocess text data (tokenization, cleaning).
+- **Model Selection**: Implement a transformer model using PyTorch Lightning, leveraging pre-trained weights for fine-tuning.
+- **Training Pipeline**: Set up a training pipeline with appropriate loss functions, metrics, and callbacks for early stopping.
+- **Evaluation**: Evaluate the model using F1-score and confusion matrix to analyze classification results.
+- **Interpretability**: Utilize techniques like SHAP or LIME to interpret model predictions and understand feature importance.
+
+**Bonus Ideas (Optional)**: Explore multi-class sentiment classification or implement a model ensemble to improve overall performance.
 

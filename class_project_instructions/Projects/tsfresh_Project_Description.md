@@ -1,70 +1,87 @@
-### Description
+**Description**
 
-**tsfresh** is a Python library designed for time series feature extraction, enabling users to automatically extract hundreds of features from time series data. It simplifies the process of transforming raw time series data into a structured format suitable for machine learning tasks. 
+In this project, students will utilize tsfresh, a Python package designed for extracting relevant features from time series data. It automates the feature extraction process, making it easier to identify patterns and trends in time series datasets. The tool is particularly useful for machine learning tasks involving temporal data, allowing students to focus on model building and evaluation.
 
-**Key Features:**
-- Automatically extracts a wide range of time series characteristics including statistical, temporal, and frequency domain features.
-- Provides a simple interface to filter and select relevant features based on their significance for a given target variable.
-- Integrates seamlessly with popular machine learning libraries for model training and evaluation.
+Technologies Used
+tsfresh
+
+- Automatically extracts a large number of time series characteristics.
+- Provides feature selection capabilities to filter out irrelevant features.
+- Integrates seamlessly with machine learning libraries like scikit-learn.
 
 ---
 
-### Project 1: Anomaly Detection in Sensor Data
-
+**Project 1: Anomaly Detection in IoT Sensor Data**  
 **Difficulty**: 1 (Easy)  
-**Project Objective**: Detect anomalies in time series data collected from temperature sensors in a smart home environment. The goal is to identify unusual patterns that may indicate sensor malfunctions or environmental issues.
+**Project Objective**: Detect anomalies in time series data collected from IoT sensors in smart homes, focusing on identifying unusual patterns that may indicate device malfunctions.
 
-**Dataset Suggestions**: Look for publicly available sensor data on Kaggle or open government datasets related to environmental monitoring.
+**Dataset Suggestions**: Find time series sensor data from open government datasets related to smart cities or IoT.
 
 **Tasks**:
-- **Data Collection**: Gather time series data from temperature sensors and organize it into a structured format.
-- **Feature Extraction with tsfresh**: Use tsfresh to extract relevant features from the time series data.
-- **Anomaly Detection**: Implement a simple machine learning model (e.g., Isolation Forest) to classify normal vs. anomalous readings based on the extracted features.
-- **Evaluation**: Assess model performance using metrics like precision, recall, and F1-score on a labeled test set.
+- Data Collection:
+  - Gather time series data from IoT sensors, ensuring it includes relevant features like temperature, humidity, and motion.
+  
+- Feature Extraction with tsfresh:
+  - Use tsfresh to automatically extract time series features from the sensor data.
+  
+- Anomaly Detection Model:
+  - Implement a machine learning model (e.g., Isolation Forest) to identify anomalies based on the extracted features.
+  
+- Model Evaluation:
+  - Evaluate the model's performance using metrics like precision, recall, and F1-score.
 
-**Bonus Ideas (Optional)**:
-- Explore different anomaly detection algorithms and compare their performance.
-- Visualize the detected anomalies on a time series plot for better interpretation.
+- Visualization:
+  - Visualize the detected anomalies on the time series plot for better interpretability.
 
 ---
 
-### Project 2: Predicting Stock Prices with Time Series Features
-
+**Project 2: Predictive Maintenance for Manufacturing Equipment**  
 **Difficulty**: 2 (Medium)  
-**Project Objective**: Predict future stock prices based on historical price data and extracted time series features. The goal is to develop a predictive model that can forecast stock movements.
+**Project Objective**: Build a predictive maintenance model to forecast equipment failures in a manufacturing plant using time series data from machinery.
 
-**Dataset Suggestions**: Access historical stock price data from public APIs like Alpha Vantage or Yahoo Finance.
+**Dataset Suggestions**: Look for publicly available datasets on Kaggle that provide time series data from manufacturing equipment.
 
 **Tasks**:
-- **Data Acquisition**: Fetch historical stock price data and preprocess it for analysis.
-- **Feature Extraction**: Utilize tsfresh to extract features such as trends, seasonality, and volatility from the stock price time series.
-- **Model Development**: Train a regression model (e.g., Random Forest Regressor) using the extracted features to predict future stock prices.
-- **Model Evaluation**: Evaluate the model's performance using metrics like Mean Absolute Error (MAE) and R-squared.
+- Data Preparation:
+  - Clean and preprocess time series data, ensuring it includes features such as temperature, vibration, and operational hours.
+  
+- Feature Extraction with tsfresh:
+  - Utilize tsfresh to extract relevant features from the time series data that may indicate equipment health.
 
-**Bonus Ideas (Optional)**:
-- Experiment with different time windows for feature extraction and assess the impact on prediction accuracy.
-- Implement a comparison with traditional time series forecasting models like ARIMA.
+- Predictive Modeling:
+  - Train a regression model (e.g., Random Forest) to predict the remaining useful life (RUL) of the machinery using the extracted features.
+
+- Model Tuning:
+  - Optimize the model's hyperparameters to improve prediction accuracy.
+
+- Results Interpretation:
+  - Analyze feature importance to understand which characteristics are most indicative of equipment failure.
 
 ---
 
-### Project 3: Human Activity Recognition Using Wearable Sensor Data
-
+**Project 3: Stock Price Prediction using Historical Trading Data**  
 **Difficulty**: 3 (Hard)  
-**Project Objective**: Classify human activities (e.g., walking, running, sitting) based on time series data collected from wearable sensors. The goal is to create a robust model that can accurately recognize activities in real-time.
+**Project Objective**: Develop a model to predict future stock prices based on historical trading data, leveraging time series feature extraction to improve prediction accuracy.
 
-**Dataset Suggestions**: Utilize publicly available datasets from UCI Machine Learning Repository or Kaggle, focusing on wearable sensor data for human activity recognition.
+**Dataset Suggestions**: Access historical stock price data from sources like Yahoo Finance or Alpha Vantage, ensuring it includes time-stamped trading data.
 
 **Tasks**:
-- **Data Preparation**: Load and preprocess the wearable sensor time series data, ensuring it is clean and structured.
-- **Feature Extraction**: Apply tsfresh to extract a comprehensive set of features from the sensor data, capturing various aspects of human movement.
-- **Model Training**: Develop a classification model (e.g., Support Vector Machine or Neural Network) to categorize the activities based on the extracted features.
-- **Performance Evaluation**: Use cross-validation and metrics like accuracy, confusion matrix, and ROC-AUC to evaluate the model's effectiveness.
+- Data Acquisition:
+  - Collect historical stock price data, including features like open, high, low, close prices, and trading volume.
+
+- Feature Engineering with tsfresh:
+  - Use tsfresh to extract a comprehensive set of features from the time series data, focusing on trends, seasonality, and volatility metrics.
+
+- Predictive Modeling:
+  - Implement a time series forecasting model (e.g., LSTM or ARIMA) to predict future stock prices based on the extracted features.
+
+- Model Evaluation:
+  - Evaluate the model's performance using metrics like Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE).
+
+- Backtesting:
+  - Conduct a backtest to assess the model's performance over historical data and simulate trading strategies based on the predictions.
 
 **Bonus Ideas (Optional)**:
-- Investigate the impact of feature selection on model performance by comparing results with and without filtering features.
-- Extend the project to include real-time activity recognition using a streaming data approach.
-
----
-
-These projects aim to enhance your understanding of time series analysis, feature extraction, and machine learning, while providing hands-on experience with the tsfresh library. Happy coding!
+- Explore ensemble methods to combine predictions from multiple models for improved accuracy.
+- Investigate the impact of external factors (e.g., economic indicators) on stock price predictions by integrating additional datasets.
 

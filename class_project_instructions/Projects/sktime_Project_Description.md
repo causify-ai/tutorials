@@ -1,64 +1,96 @@
-### Description
+**Description**
 
-sktime is a Python library specifically designed for time series analysis, providing a unified framework for various tasks such as forecasting, classification, and regression. It supports a wide range of time series models, including traditional statistical models and machine learning algorithms. Key features include:
+sktime is a Python library designed for time series analysis, enabling users to work seamlessly with time series data. It provides a unified framework for various tasks, including forecasting, classification, regression, and clustering of time series. The library is built on top of scikit-learn, making it easy to integrate with existing machine learning workflows.
 
-- **Unified API**: Streamlined interface for different time series tasks, making it easy to switch between models.
-- **Extensive Model Support**: Includes various algorithms for forecasting, classification, and regression.
-- **Time Series Preprocessing**: Built-in utilities for transforming and preparing time series data.
-- **Evaluation Metrics**: Tools for assessing model performance on time series data.
+Technologies Used
+sktime
 
----
-
-### Project 1: Seasonal Demand Forecasting (Difficulty: 1)
-
-**Project Objective**: Develop a forecasting model to predict future demand for a retail product based on historical sales data, optimizing for accuracy in seasonal trends.
-
-**Dataset Suggestions**: Use publicly available retail sales datasets from Kaggle or government retail statistics databases.
-
-**Tasks**:
-- **Data Ingestion**: Load historical sales data into a Pandas DataFrame.
-- **Data Preprocessing**: Handle missing values, outliers, and convert data into a time series format.
-- **Exploratory Data Analysis**: Visualize sales trends and seasonality using matplotlib.
-- **Model Selection**: Implement basic forecasting models (e.g., ARIMA, Exponential Smoothing) using sktime.
-- **Model Evaluation**: Assess model performance using Mean Absolute Error (MAE) and visualize forecasts against actual sales.
-
-**Bonus Ideas**: Explore additional features such as promotions and holidays to enhance forecasting accuracy.
+- Provides a consistent interface for time series data manipulation and modeling.
+- Supports a variety of time series tasks: forecasting, classification, regression, and clustering.
+- Enables feature extraction and transformation specifically designed for time series data.
+- Includes tools for model evaluation and selection tailored for time series contexts.
 
 ---
 
-### Project 2: Time Series Classification of Weather Patterns (Difficulty: 2)
+**Project 1: Time Series Forecasting for Retail Sales**  
+**Difficulty**: 1 (Easy)  
+**Project Objective**: Build a forecasting model to predict future retail sales based on historical sales data, optimizing for accuracy in sales predictions.
 
-**Project Objective**: Classify different weather patterns (e.g., sunny, rainy, snowy) based on historical weather data, optimizing for classification accuracy.
-
-**Dataset Suggestions**: Access weather datasets from open government APIs or Kaggle that provide historical weather data.
+**Dataset Suggestions**: Explore Kaggle for retail sales datasets, or check open government portals for sales data.
 
 **Tasks**:
-- **Data Ingestion**: Gather historical weather data, including temperature, humidity, and wind speed.
-- **Feature Engineering**: Create time-based features (e.g., day of the week, month) and aggregate data to a suitable frequency.
-- **Data Preprocessing**: Normalize and reshape the data for classification tasks using sktime.
-- **Model Training**: Train classification models (e.g., Random Forest, Time Series Forest) using sktime's classification framework.
-- **Model Evaluation**: Evaluate model performance using cross-validation and classification metrics (accuracy, F1-score).
+- Data Collection:
+    - Gather historical retail sales data and preprocess it for analysis.
+  
+- Time Series Decomposition:
+    - Decompose the time series data into seasonal, trend, and residual components to understand underlying patterns.
 
-**Bonus Ideas**: Implement ensemble methods or explore deep learning approaches for classification if time permits.
+- Model Selection:
+    - Utilize sktime's forecasting models (e.g., ARIMA, Exponential Smoothing) to predict future sales.
+
+- Model Evaluation:
+    - Compare predictions against actual sales data using metrics like Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE).
+
+- Visualization:
+    - Visualize the forecasts alongside historical sales data using Matplotlib to illustrate trends.
+
+**Bonus Ideas (Optional)**:
+- Implement additional forecasting models like Prophet or Facebook's NeuralProphet for comparison.
+- Analyze the impact of promotional events on sales by incorporating additional features.
 
 ---
 
-### Project 3: Anomaly Detection in Financial Transactions (Difficulty: 3)
+**Project 2: Classifying Time Series Data for Human Activity Recognition**  
+**Difficulty**: 2 (Medium)  
+**Project Objective**: Develop a classification model to identify different human activities (e.g., walking, sitting, running) based on accelerometer data, optimizing for classification accuracy.
 
-**Project Objective**: Detect anomalies in financial transaction data to identify potential fraud, optimizing for precision and recall in anomaly detection.
-
-**Dataset Suggestions**: Utilize publicly available financial datasets from Kaggle or open banking datasets that include transaction records.
+**Dataset Suggestions**: Look for publicly available datasets on platforms like UCI Machine Learning Repository or Kaggle that contain accelerometer data for activity recognition.
 
 **Tasks**:
-- **Data Ingestion**: Load transaction data, including timestamps, amounts, and transaction types into a DataFrame.
-- **Data Preprocessing**: Clean the dataset, handle missing values, and convert timestamps into a time series format.
-- **Feature Engineering**: Create features such as transaction frequency and rolling averages to enhance anomaly detection.
-- **Anomaly Detection Modeling**: Implement anomaly detection algorithms (e.g., Isolation Forest, LSTM Autoencoders) using sktime.
-- **Model Evaluation**: Assess model performance using confusion matrices, precision, and recall metrics.
+- Data Acquisition:
+    - Download and preprocess the human activity dataset, ensuring proper formatting for time series analysis.
 
-**Bonus Ideas**: Explore visualizing anomalies on time series plots or compare the effectiveness of different anomaly detection models.
+- Feature Extraction:
+    - Use sktime's feature extraction capabilities to generate relevant features from the raw time series data.
 
---- 
+- Model Training:
+    - Train classification models (e.g., Random Forest, SVM) using sktime's pipeline functionalities to classify activities.
 
-These projects are designed to enhance your understanding of time series analysis using sktime while providing hands-on experience with real-world datasets and machine learning techniques. Enjoy your journey into the world of time series data science!
+- Model Evaluation:
+    - Evaluate model performance using cross-validation and metrics such as accuracy, precision, and recall.
+
+- Visualization:
+    - Create confusion matrices and classification reports to visualize model performance across different activities.
+
+**Bonus Ideas (Optional)**:
+- Implement ensemble methods to improve classification accuracy.
+- Introduce real-time classification using live accelerometer data from a smartphone app.
+
+---
+
+**Project 3: Anomaly Detection in Financial Time Series**  
+**Difficulty**: 3 (Hard)  
+**Project Objective**: Identify anomalies in financial time series data (e.g., stock prices), optimizing for detection of outliers that may indicate fraud or market manipulation.
+
+**Dataset Suggestions**: Utilize financial datasets available on Yahoo Finance or Kaggle that provide historical stock price data.
+
+**Tasks**:
+- Data Collection:
+    - Collect historical stock price data and preprocess it for anomaly detection analysis.
+
+- Time Series Analysis:
+    - Apply time series decomposition to identify trends and seasonality in the stock prices.
+
+- Anomaly Detection:
+    - Implement anomaly detection algorithms (e.g., Isolation Forest, One-Class SVM) using sktime's capabilities to identify outliers.
+
+- Model Evaluation:
+    - Validate the results against known anomalies or through expert evaluation to assess the effectiveness of the detection methods.
+
+- Visualization:
+    - Visualize the detected anomalies on the time series plot to illustrate their context within the data.
+
+**Bonus Ideas (Optional)**:
+- Explore the use of deep learning models for more advanced anomaly detection.
+- Compare the performance of different anomaly detection techniques using a benchmark dataset.
 

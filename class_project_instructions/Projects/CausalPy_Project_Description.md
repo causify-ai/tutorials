@@ -1,67 +1,63 @@
 **Description**
 
-CausalPy is a Python library designed for causal inference and analysis, allowing users to identify and estimate causal relationships from observational data. It provides tools for modeling, testing, and visualizing causal effects, making it an essential resource for data scientists looking to understand the impact of interventions and confounding variables.
-
-**Project Blueprint**
+CausalPy is a Python library designed for causal inference, enabling users to estimate causal effects from observational data. It provides tools for identifying and estimating causal relationships using methods such as propensity score matching, regression discontinuity, and instrumental variables. CausalPy aids in understanding how changes in one variable can influence another, making it an essential tool for data scientists focused on causal analysis.
 
 ---
 
-### Project 1: Causal Impact of Study Hours on Academic Performance
-- **Difficulty**: 1 (Easy)
-- **Project Objective**: To determine the causal effect of study hours on students' academic performance by analyzing observational data from a university dataset. The goal is to optimize study strategies for better performance.
+### Project 1: Analyzing the Impact of Educational Programs on Student Performance
 
-- **Dataset Suggestions**: Look for datasets on Kaggle or educational platforms that provide data on students' study habits and grades.
+**Difficulty**: 1 (Easy)
 
-- **Tasks**:
-  - **Data Collection**: Gather data on students’ study hours, grades, and demographic information.
-  - **Data Cleaning**: Preprocess the dataset to handle missing values and outliers.
-  - **Causal Model Specification**: Utilize CausalPy to define a causal graph representing the relationships between study hours and academic performance.
-  - **Estimate Causal Effects**: Use CausalPy to estimate the causal effect of study hours on grades using techniques like propensity score matching.
-  - **Results Interpretation**: Analyze the results to provide actionable insights for improving study habits.
+**Project Objective**: The goal is to evaluate the effect of a specific educational intervention (e.g., tutoring programs) on student performance in standardized tests.
 
-- **Bonus Ideas (Optional)**: 
-  - Compare the causal effects of study hours across different demographics (e.g., major, year of study).
-  - Explore the impact of additional factors like tutoring or extracurricular activities on grades.
+**Dataset Suggestions**: Look for datasets on educational performance available on Kaggle, or check out open government education portals.
 
----
-
-### Project 2: Analyzing the Effect of Marketing Campaigns on Sales
-- **Difficulty**: 2 (Medium)
-- **Project Objective**: To analyze the causal effect of different marketing campaigns on product sales, optimizing marketing strategies based on empirical evidence.
-
-- **Dataset Suggestions**: Find datasets on Kaggle that include sales data along with marketing campaign details (e.g., online ads, promotions).
-
-- **Tasks**:
-  - **Data Acquisition**: Collect sales data and marketing campaign details over a defined period.
-  - **Exploratory Data Analysis**: Conduct EDA to understand trends, seasonality, and correlations.
-  - **Causal Inference Framework**: Use CausalPy to set up a causal framework, identifying potential confounders like seasonality or economic conditions.
-  - **Causal Effect Estimation**: Implement causal inference techniques to estimate the impact of each marketing campaign on sales.
-  - **Visualization**: Create visualizations to illustrate the causal relationships and effects identified.
-
-- **Bonus Ideas (Optional)**: 
-  - Analyze the effectiveness of different marketing channels (e.g., social media vs. email).
-  - Conduct a sensitivity analysis to assess the robustness of the causal estimates.
+**Tasks**:
+- **Data Collection**: Gather data on student performance, demographic information, and details about the educational program.
+- **Preprocessing**: Clean the dataset, handle missing values, and ensure the data is suitable for analysis.
+- **Exploratory Data Analysis (EDA)**: Perform EDA to understand the distributions and relationships in the data.
+- **Causal Inference Setup**: Use CausalPy to identify the treatment group (students who participated in the program) and the control group (students who did not).
+- **Estimate Causal Effect**: Apply propensity score matching to estimate the causal effect of the program on student performance.
+- **Interpret Results**: Analyze the results and visualize the causal effect using appropriate plots.
 
 ---
 
-### Project 3: Understanding the Impact of Remote Work on Employee Productivity
-- **Difficulty**: 3 (Hard)
-- **Project Objective**: To investigate the causal impact of remote work arrangements on employee productivity, providing insights for organizational policy-making.
+### Project 2: Evaluating the Effect of Marketing Campaigns on Sales Performance
 
-- **Dataset Suggestions**: Explore open government datasets or Kaggle datasets that include information on employee productivity metrics and work arrangements.
+**Difficulty**: 2 (Medium)
 
-- **Tasks**:
-  - **Data Gathering**: Compile a dataset containing productivity metrics, work arrangements (remote, hybrid, in-office), and employee demographics.
-  - **Data Preprocessing**: Clean and preprocess the dataset to ensure quality and consistency.
-  - **Causal Graph Development**: Create a causal graph using CausalPy to represent the relationships among remote work, productivity, and potential confounders.
-  - **Causal Inference Analysis**: Apply CausalPy methods to estimate the causal effect of remote work on productivity, controlling for confounding variables.
-  - **Policy Recommendations**: Analyze the findings and provide recommendations for organizational policies regarding remote work.
+**Project Objective**: The project aims to measure the causal impact of various marketing campaigns on product sales over a defined period.
 
-- **Bonus Ideas (Optional)**:
-  - Investigate the role of additional factors such as team collaboration tools or work-life balance in moderating the effect of remote work on productivity.
-  - Conduct a longitudinal analysis to see how the impact of remote work evolves over time.
+**Dataset Suggestions**: Search for sales and marketing campaign datasets on Kaggle or utilize public datasets from marketing research organizations.
+
+**Tasks**:
+- **Data Acquisition**: Collect sales data and marketing campaign data, including details like campaign type, duration, and expenditure.
+- **Data Cleaning and Preparation**: Clean the dataset and create relevant features to enhance the analysis.
+- **Exploratory Analysis**: Conduct EDA to visualize sales trends and marketing campaign effectiveness.
+- **Causal Model Specification**: Use CausalPy to specify a causal model, identifying potential confounders and control variables.
+- **Causal Estimation**: Implement regression discontinuity or instrumental variable methods to estimate the causal effect of campaigns on sales.
+- **Evaluate and Present Findings**: Summarize the findings, providing insights into which campaigns were most effective and visualizing the causal impacts.
 
 ---
 
-These projects will provide students with hands-on experience in causal inference, utilizing CausalPy to derive meaningful insights from data while developing their analytical skills.
+### Project 3: Analyzing the Effect of Remote Work on Employee Productivity
+
+**Difficulty**: 3 (Hard)
+
+**Project Objective**: The aim is to investigate the causal relationship between the shift to remote work and employee productivity levels across different sectors.
+
+**Dataset Suggestions**: Utilize datasets from public labor statistics or research organizations that track productivity metrics pre- and post-remote work policies.
+
+**Tasks**:
+- **Data Gathering**: Collect data on employee productivity metrics, work environment changes, and demographic information.
+- **Data Wrangling**: Process the data, ensuring that it is clean and structured for causal analysis.
+- **In-depth EDA**: Conduct a thorough exploratory analysis to identify trends in productivity before and after the remote work transition.
+- **Causal Inference Framework**: Use CausalPy to set up a causal framework, identifying treatment and control groups based on remote work adoption.
+- **Advanced Causal Estimation**: Apply advanced causal inference techniques such as difference-in-differences or synthetic control methods to analyze the impact on productivity.
+- **Interpretation and Visualization**: Present the findings, emphasizing the causal relationships and visualizing the changes in productivity across different sectors.
+
+**Bonus Ideas (Optional)**: 
+- For Project 1, consider comparing the effects of different types of educational interventions.
+- For Project 2, analyze the long-term effects of marketing campaigns on customer retention and lifetime value.
+- For Project 3, explore the impact of remote work on employee well-being and job satisfaction as additional metrics.
 

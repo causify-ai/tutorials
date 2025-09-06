@@ -1,91 +1,83 @@
-### Description
+**Description**
 
-Igraph is a powerful library for creating and manipulating graphs and networks in Python. It is designed to handle complex network analysis and visualization, making it an excellent tool for exploring relationships and structures within data. 
+In this project, students will utilize igraph, a library for creating and manipulating graphs and analyzing network structures. With its efficient algorithms and versatile visualization capabilities, igraph allows users to explore complex relationships within data. This tool is particularly useful for social network analysis, biological network studies, and any domain where relationships can be represented as graphs.
 
-**Key Features:**
-- Supports large-scale graph processing and analysis.
-- Provides various algorithms for network metrics, community detection, and graph visualization.
-- Allows for the integration of network data with machine learning tasks.
+Technologies Used
+igraph
 
----
-
-### Project 1: Social Network Analysis (Difficulty: 1 - Easy)
-
-**Project Objective:**
-Analyze a social network dataset to uncover key metrics such as centrality, clustering coefficients, and community structures, optimizing the understanding of user interactions.
-
-**Dataset Suggestions:**
-- Public social network datasets available on Kaggle or GitHub repositories.
-
-**Tasks:**
-- **Data Ingestion:**
-  - Load the social network dataset into a Pandas DataFrame.
-- **Graph Creation:**
-  - Construct a graph using igraph based on user interactions (edges) and users (nodes).
-- **Calculate Network Metrics:**
-  - Compute centrality measures (degree, closeness, betweenness) to identify influential users.
-- **Community Detection:**
-  - Apply community detection algorithms to uncover groups within the network.
-- **Visualization:**
-  - Visualize the network using igraph’s plotting capabilities to illustrate user connections and communities.
-
-**Bonus Ideas (Optional):**
-- Compare metrics across different social networks.
-- Implement a basic recommendation system based on user connections.
+- Provides efficient data structures for graph representation.
+- Supports a variety of algorithms for network analysis (e.g., shortest path, community detection).
+- Offers visualization features to create interactive graph representations.
 
 ---
 
-### Project 2: Fraud Detection in Financial Transactions (Difficulty: 2 - Medium)
+**Project 1: Social Network Analysis of Twitter Users**  
+**Difficulty**: 1 (Easy)  
+**Project Objective**: Analyze the relationships between Twitter users based on their interactions (retweets, mentions) to identify influential users and community structures.
 
-**Project Objective:**
-Utilize graph analysis to detect fraudulent transactions in a financial dataset, optimizing the identification of unusual patterns and relationships.
+**Dataset Suggestions**: Use public Twitter datasets available on Kaggle that contain user interactions.
 
-**Dataset Suggestions:**
-- Financial transaction datasets available on Kaggle or open government data portals.
+**Tasks**:
+- Data Collection:
+  - Gather Twitter interaction data (retweets, mentions) using available public datasets.
+- Graph Construction:
+  - Build a directed graph where nodes represent users and edges represent interactions.
+- Community Detection:
+  - Apply community detection algorithms to identify clusters of users with similar interests.
+- Influence Analysis:
+  - Calculate centrality measures (e.g., degree, betweenness) to identify influential users.
+- Visualization:
+  - Create visual representations of the user interactions and communities using igraph's plotting functions.
 
-**Tasks:**
-- **Data Preparation:**
-  - Clean and preprocess the financial transaction data.
-- **Graph Construction:**
-  - Create a graph where nodes represent accounts and edges represent transactions.
-- **Anomaly Detection:**
-  - Implement algorithms to identify outlier transactions based on graph properties (e.g., degree distribution, clustering).
-- **Visualization:**
-  - Use igraph to visualize transaction flows and highlight potential fraud cases.
-- **Model Evaluation:**
-  - Evaluate the effectiveness of the detection methods using metrics like precision, recall, and F1-score.
-
-**Bonus Ideas (Optional):**
-- Explore temporal patterns in transactions to enhance fraud detection.
-- Compare results with traditional machine learning methods for classification.
+**Bonus Ideas (Optional)**:
+- Compare different community detection algorithms and their effectiveness.
+- Explore the temporal dynamics of user interactions over time.
 
 ---
 
-### Project 3: Protein-Protein Interaction Network Analysis (Difficulty: 3 - Hard)
+**Project 2: Analyzing Protein-Protein Interaction Networks**  
+**Difficulty**: 2 (Medium)  
+**Project Objective**: Investigate the structure and properties of protein-protein interaction networks to identify key proteins and their roles in biological processes.
 
-**Project Objective:**
-Investigate a protein-protein interaction (PPI) network to identify potential biomarkers for disease, optimizing the understanding of molecular interactions.
+**Dataset Suggestions**: Utilize publicly available protein interaction datasets from databases like STRING or BioGRID.
 
-**Dataset Suggestions:**
-- Protein interaction datasets available on databases such as STRING or BioGRID.
+**Tasks**:
+- Data Preprocessing:
+  - Clean and format the protein interaction data to create an edge list for the graph.
+- Graph Construction:
+  - Construct an undirected graph where nodes represent proteins and edges represent interactions.
+- Network Analysis:
+  - Analyze the graph using clustering coefficients and path lengths to understand network properties.
+- Key Protein Identification:
+  - Use centrality measures to identify essential proteins within the network.
+- Visualization:
+  - Visualize the protein interaction network, highlighting key proteins and interaction clusters.
 
-**Tasks:**
-- **Data Acquisition:**
-  - Download and preprocess the PPI dataset for analysis.
-- **Graph Representation:**
-  - Construct a graph where nodes represent proteins and edges represent interactions.
-- **Network Analysis:**
-  - Perform advanced analyses such as motif discovery, network robustness, and topology metrics (e.g., clustering coefficient, average path length).
-- **Biomarker Identification:**
-  - Utilize community detection to identify clusters of proteins that may serve as biomarkers for specific diseases.
-- **Visualization:**
-  - Create detailed visualizations of the PPI network to illustrate significant interactions and clusters.
+**Bonus Ideas (Optional)**:
+- Investigate the correlation between protein centrality and known disease associations.
+- Explore the effect of adding/removing interactions on network properties.
 
-**Bonus Ideas (Optional):**
-- Integrate gene expression data to correlate with identified biomarkers.
-- Explore the impact of specific proteins on network dynamics through simulations.
+---
 
---- 
+**Project 3: Urban Mobility Analysis using Taxi Trip Data**  
+**Difficulty**: 3 (Hard)  
+**Project Objective**: Analyze urban mobility patterns by constructing a network of taxi trips in a city to identify hotspots and flow patterns.
 
-These projects leverage igraph's capabilities to provide meaningful insights into complex data relationships while fostering students' analytical and programming skills.
+**Dataset Suggestions**: Access public taxi trip datasets available on platforms like Kaggle or city government open data portals.
+
+**Tasks**:
+- Data Collection:
+  - Retrieve and preprocess taxi trip data, including pickup and drop-off locations.
+- Graph Construction:
+  - Create a directed graph where nodes represent locations (pickup/drop-off points) and edges represent trips between them.
+- Flow Analysis:
+  - Analyze the flow of trips to identify popular routes and locations using flow metrics.
+- Hotspot Identification:
+  - Use clustering techniques to identify areas with high taxi trip density.
+- Visualization:
+  - Create a visual representation of the urban mobility network, highlighting hotspots and trip flows.
+
+**Bonus Ideas (Optional)**:
+- Compare weekday vs. weekend mobility patterns.
+- Analyze the impact of events (concerts, sports) on taxi trip patterns.
 

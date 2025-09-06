@@ -1,107 +1,69 @@
 **Description**
 
-Prophet is an open-source forecasting tool designed by Facebook that enables users to make accurate time-series predictions. It is particularly effective for handling seasonal trends and missing data. With its intuitive interface and ability to incorporate holidays and events, Prophet allows data scientists to create robust forecasting models with minimal tuning.
+Prophet is an open-source forecasting tool developed by Facebook, designed to handle time series data that may have missing values and outliers. It is particularly effective for daily observations that exhibit seasonal trends. The tool allows users to create robust forecasts with minimal parameter tuning and provides intuitive visualizations for better understanding of predictions.
 
-**Features:**
+Technologies Used
+Prophet
 
-- User-friendly interface for time-series forecasting.
 - Handles missing data and outliers effectively.
-- Supports seasonal trends and custom holidays.
-- Provides uncertainty intervals for predictions.
+- Automatically detects seasonal trends and holidays.
+- Provides intuitive visualization of forecast components (trend, seasonality).
 
 ---
 
-### Project Blueprint
+### Project 1: Sales Forecasting for a Retail Store
+**Difficulty**: 1 (Easy)  
+**Project Objective**: Predict future sales for a retail store to optimize inventory management and staffing. The goal is to generate accurate sales forecasts for the next three months.
 
-#### Project 1: Sales Forecasting for a Retail Store (Difficulty: 1 - Easy)
+**Dataset Suggestions**: Look for retail sales datasets on Kaggle or government open data portals.
 
-**Project Objective:**  
-The goal is to forecast future sales for a retail store using historical sales data. The project aims to optimize inventory management by predicting sales trends.
+**Tasks**:
+- **Data Collection**: Gather historical sales data, including daily sales figures and relevant features (e.g., holidays, promotions).
+- **Data Preprocessing**: Clean the dataset by handling missing values and outliers.
+- **Model Training**: Use Prophet to build a forecasting model based on historical sales data.
+- **Forecasting**: Generate sales forecasts for the next three months and visualize the results.
+- **Evaluation**: Compare predictions against actual sales data to evaluate model performance using metrics like MAE or RMSE.
 
-**Dataset Suggestions:**  
-Look for retail sales datasets on Kaggle or government open data portals.
-
-**Tasks:**
-- **Data Collection:**  
-  Gather historical sales data and preprocess it to ensure it's clean and structured.
-  
-- **Exploratory Data Analysis (EDA):**  
-  Visualize sales trends over time to identify seasonality and patterns.
-
-- **Model Training with Prophet:**  
-  Train a Prophet model on the historical sales data to generate forecasts.
-
-- **Evaluate Forecast Accuracy:**  
-  Use metrics like Mean Absolute Error (MAE) and Mean Absolute Percentage Error (MAPE) to assess the model's performance.
-
-- **Visualization of Results:**  
-  Plot the forecasted sales against actual sales to visualize performance.
-
-**Bonus Ideas:**  
-- Compare Prophet's predictions with a simple moving average model.
-- Explore the impact of promotional events on sales predictions.
+**Bonus Ideas (Optional)**:
+- Incorporate promotional events as additional regressors to see their impact on sales.
+- Experiment with different seasonalities (weekly, yearly) to improve forecast accuracy.
 
 ---
 
-#### Project 2: Energy Consumption Forecasting (Difficulty: 2 - Medium)
+### Project 2: Web Traffic Forecasting for a Blog
+**Difficulty**: 2 (Medium)  
+**Project Objective**: Forecast daily web traffic for a blog to help in content planning and marketing strategies. The aim is to understand traffic patterns and optimize content publishing schedules.
 
-**Project Objective:**  
-This project aims to forecast energy consumption for a specific region using historical energy usage data. The objective is to help utility companies optimize energy distribution and planning.
+**Dataset Suggestions**: Use web traffic datasets available on Kaggle or web analytics platforms that provide public datasets.
 
-**Dataset Suggestions:**  
-Find energy consumption datasets on Kaggle or government energy agencies' open data portals.
+**Tasks**:
+- **Data Collection**: Extract historical web traffic data (daily visits, unique visitors) and identify potential seasonal patterns.
+- **Feature Engineering**: Create additional features such as day of the week, month, and special events (e.g., holidays).
+- **Model Training**: Train a Prophet model on the historical traffic data, incorporating seasonal effects.
+- **Forecasting**: Generate forecasts for the next two months and visualize trends and seasonal patterns.
+- **Performance Analysis**: Evaluate the model's accuracy by comparing forecasted traffic with actual traffic data.
 
-**Tasks:**
-- **Data Acquisition:**  
-  Collect historical energy consumption data and perform necessary preprocessing.
-
-- **Seasonality Analysis:**  
-  Analyze seasonal patterns in energy consumption (daily, weekly, and yearly).
-
-- **Prophet Model Implementation:**  
-  Fit a Prophet model to the data, incorporating seasonal effects and holidays.
-
-- **Forecasting and Evaluation:**  
-  Generate forecasts and evaluate model performance using RMSE and R-squared metrics.
-
-- **Scenario Analysis:**  
-  Simulate how energy consumption might change with different holiday or event scenarios.
-
-**Bonus Ideas:**  
-- Experiment with adding external regressors, such as temperature data, to see their impact on forecasts.
-- Create a dashboard to visualize real-time energy consumption against forecasts.
+**Bonus Ideas (Optional)**:
+- Analyze the impact of specific blog posts or campaigns on traffic and adjust the model accordingly.
+- Implement cross-validation to validate the model’s robustness over different time periods.
 
 ---
 
-#### Project 3: COVID-19 Case Prediction (Difficulty: 3 - Hard)
+### Project 3: Energy Consumption Forecasting for a City
+**Difficulty**: 3 (Hard)  
+**Project Objective**: Develop a forecasting model to predict hourly energy consumption for a city. The goal is to assist in energy management and resource allocation.
 
-**Project Objective:**  
-The goal is to forecast future COVID-19 cases in a specific region based on historical case data. This project aims to assist public health officials in planning and resource allocation.
+**Dataset Suggestions**: Search for public datasets on energy consumption from government websites or Kaggle.
 
-**Dataset Suggestions:**  
-Utilize publicly available COVID-19 datasets from sources like Kaggle or government health departments.
+**Tasks**:
+- **Data Collection**: Gather historical hourly energy consumption data, including external factors like temperature, holidays, and events.
+- **Data Preprocessing**: Handle missing data and outliers, and transform the dataset to a suitable format for Prophet.
+- **Feature Engineering**: Create features related to time (hour of the day, day of the week) and external factors (weather conditions).
+- **Model Training**: Train the Prophet model on the prepared dataset, allowing it to learn from daily and hourly seasonal patterns.
+- **Forecasting**: Generate forecasts for the next week and visualize the predicted consumption alongside historical data.
+- **Evaluation**: Assess the model's performance using metrics like MAPE and compare it with a simple baseline model (e.g., moving average).
 
-**Tasks:**
-- **Data Gathering:**  
-  Collect daily COVID-19 case data and preprocess it, ensuring it's clean and complete.
-
-- **Trend and Seasonality Analysis:**  
-  Analyze the data for trends, seasonality, and any potential anomalies.
-
-- **Prophet Modeling:**  
-  Train a Prophet model to forecast future cases, accounting for holiday effects and other relevant events.
-
-- **Uncertainty Intervals:**  
-  Analyze the uncertainty intervals provided by Prophet to understand the range of possible future cases.
-
-- **Comparison with Other Models:**  
-  Compare the Prophet model's forecasts with those from other time-series forecasting methods (e.g., ARIMA).
-
-**Bonus Ideas:**  
-- Investigate the impact of vaccination rates as an external regressor.
-- Create a visualization dashboard that updates forecasts as new data comes in.
-
---- 
-
-By engaging with these projects, students will gain hands-on experience with time-series forecasting, data analysis, and model evaluation while utilizing Prophet effectively in real-world scenarios.
+**Bonus Ideas (Optional)**:
+- Integrate real-time weather data to enhance forecast accuracy.
+- Explore the impact of major events (e.g., sports events, festivals) on energy consumption patterns.
 

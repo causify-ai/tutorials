@@ -1,76 +1,64 @@
-**Description of BoTorch**
+**Description**
 
-BoTorch is a PyTorch-based library designed for Bayesian optimization, providing tools for efficient optimization of expensive-to-evaluate functions. It allows users to create and manipulate probabilistic models, facilitating the search for optimal solutions in various domains. Key features include:
+BoTorch is a library designed for Bayesian optimization in PyTorch, providing a flexible and efficient framework for optimizing expensive-to-evaluate functions. It enables users to leverage probabilistic models to make informed decisions about where to sample next in the search space. Its features include:
 
-- **Flexible Model Specification**: Supports Gaussian processes and other probabilistic models for function approximation.
-- **Acquisition Functions**: Implements various acquisition functions for balancing exploration and exploitation.
-- **Integration with PyTorch**: Leverages the power of PyTorch for automatic differentiation and GPU acceleration.
-- **Multi-Objective Optimization**: Capable of handling multiple objectives, allowing for Pareto front exploration.
-
----
-
-### Project 1: Hyperparameter Optimization for Machine Learning Models (Difficulty: 1)
-
-**Project Objective**:  
-Optimize hyperparameters for a machine learning model (e.g., Random Forest or XGBoost) to achieve the best validation accuracy on a given dataset.
-
-**Dataset Suggestions**:  
-Find datasets on Kaggle that are suitable for supervised learning tasks, such as classification or regression.
-
-**Tasks**:
-- **Define the Model**: Choose a machine learning model and define its hyperparameters for optimization.
-- **Set Up BoTorch**: Install BoTorch and set up a Gaussian process model to approximate the validation accuracy based on hyperparameters.
-- **Implement Acquisition Function**: Use an acquisition function (e.g., Expected Improvement) to guide the search for optimal hyperparameters.
-- **Run Optimization Loop**: Execute the optimization loop to iteratively refine hyperparameters based on model performance.
-- **Evaluate Results**: Analyze the best hyperparameters found and compare model performance against a baseline.
-
-**Bonus Ideas**:  
-- Explore the impact of different acquisition functions on optimization efficiency.
-- Compare performance with other hyperparameter optimization libraries like Optuna or Hyperopt.
+- **Flexible Model Selection**: Supports various surrogate models for optimization tasks.
+- **Acquisition Functions**: Implements multiple acquisition functions to balance exploration and exploitation.
+- **Integration with PyTorch**: Seamlessly integrates with PyTorch, allowing for advanced customization and scalability.
 
 ---
 
-### Project 2: Optimal Sensor Placement in Environmental Monitoring (Difficulty: 2)
+### Project 1: Hyperparameter Optimization for Machine Learning Models
+**Difficulty**: 1 (Easy)
 
-**Project Objective**:  
-Determine the optimal placement of environmental sensors in a geographical area to maximize data coverage and minimize cost.
+**Project Objective**: Optimize hyperparameters of a machine learning model (e.g., Random Forest or SVM) to achieve the best predictive performance on a classification task.
 
-**Dataset Suggestions**:  
-Utilize open government datasets related to environmental monitoring, such as air quality or temperature data across different regions.
+**Dataset Suggestions**: Use datasets available on Kaggle related to classification tasks (e.g., customer churn, health outcomes).
 
 **Tasks**:
-- **Define the Problem**: Formulate the sensor placement problem as a Bayesian optimization task, defining the cost and coverage metrics.
-- **Model the Objective Function**: Use BoTorch to create a surrogate model that predicts the expected coverage based on sensor locations.
-- **Implement Optimization**: Utilize BoTorch to optimize sensor locations using an acquisition function that balances coverage and cost.
-- **Simulate and Validate**: Simulate sensor placements and validate the results using historical data to assess coverage effectiveness.
-- **Visualize Results**: Create visualizations to show optimal sensor placements on a map with coverage metrics.
-
-**Bonus Ideas**:  
-- Extend the project to include dynamic sensor placement based on changing environmental conditions.
-- Compare the optimization results with a heuristic approach to sensor placement.
+- **Select Dataset**: Choose a classification dataset from Kaggle and load it using Pandas.
+- **Preprocess Data**: Clean and preprocess the dataset (handling missing values, encoding categorical features).
+- **Define Model**: Implement a machine learning model (e.g., Random Forest) using scikit-learn.
+- **Set Up BoTorch**: Integrate BoTorch to define the hyperparameter search space for the model.
+- **Run Optimization**: Use BoTorch to optimize hyperparameters and evaluate model performance on validation data.
+- **Analyze Results**: Compare optimized results against baseline performance and visualize the findings.
 
 ---
 
-### Project 3: Multi-Objective Drug Discovery Optimization (Difficulty: 3)
+### Project 2: Resource Allocation in Cloud Computing
+**Difficulty**: 2 (Medium)
 
-**Project Objective**:  
-Optimize the discovery of new drug candidates by balancing multiple objectives, such as efficacy and safety profiles, using a multi-objective Bayesian optimization approach.
+**Project Objective**: Optimize resource allocation (CPU, memory) for cloud computing services to minimize costs while meeting performance requirements.
 
-**Dataset Suggestions**:  
-Leverage public datasets from sources like ChEMBL or PubChem that provide information on drug compounds, their efficacy, and safety profiles.
+**Dataset Suggestions**: Utilize open government datasets on cloud service performance metrics and costs (e.g., AWS or Azure pricing models).
 
 **Tasks**:
-- **Define Objectives**: Identify key objectives for drug candidates, such as IC50 values (efficacy) and toxicity scores (safety).
-- **Model the Objectives**: Use BoTorch to create a multi-objective Gaussian process model to predict the performance of drug candidates.
-- **Optimize with BoTorch**: Implement a multi-objective acquisition function (e.g., Pareto front exploration) to guide the search for optimal drug candidates.
-- **Evaluate Candidate Performance**: Validate and analyze the selected candidates against existing drugs to assess improvements in both efficacy and safety.
-- **Present Findings**: Create a comprehensive report and visualizations of the Pareto front, highlighting trade-offs between objectives.
+- **Gather Data**: Collect cloud service performance and pricing data from open government portals.
+- **Define Performance Metrics**: Establish key performance indicators (KPIs) relevant to resource allocation (e.g., response time, throughput).
+- **Model Resource Usage**: Create a surrogate model using BoTorch that predicts performance based on resource allocation.
+- **Set Up Optimization Problem**: Define the optimization problem, including constraints and objectives.
+- **Run Bayesian Optimization**: Use BoTorch to find the optimal resource allocation that minimizes cost while satisfying performance constraints.
+- **Evaluate and Visualize**: Analyze the optimized resource allocation and visualize the trade-offs between cost and performance.
 
-**Bonus Ideas**:  
-- Investigate the impact of different chemical descriptors on the optimization process.
-- Incorporate domain knowledge to refine the model and improve predictions.
+---
 
---- 
+### Project 3: Optimizing Drug Dosage in Clinical Trials
+**Difficulty**: 3 (Hard)
 
-These projects will provide students with hands-on experience in applying BoTorch for real-world optimization tasks, enhancing their understanding of Bayesian methods in data science.
+**Project Objective**: Use Bayesian optimization to determine the optimal drug dosage that maximizes efficacy while minimizing side effects in clinical trial data.
+
+**Dataset Suggestions**: Use publicly available clinical trial datasets from sources like clinicaltrials.gov or Kaggle.
+
+**Tasks**:
+- **Select Clinical Dataset**: Identify and download a relevant clinical trial dataset focusing on drug dosages and outcomes.
+- **Data Preprocessing**: Clean and preprocess the dataset to handle missing values and standardize dosage levels.
+- **Define Efficacy and Side Effects**: Establish a model that predicts the relationship between dosage, efficacy, and side effects.
+- **Implement BoTorch**: Set up BoTorch to model the efficacy and side effects based on drug dosage.
+- **Optimize Dosage**: Execute Bayesian optimization to find the dosage that maximizes efficacy while keeping side effects below a threshold.
+- **Analyze Results**: Evaluate the optimized dosage against other dosages and visualize the results to illustrate the trade-offs.
+
+**Bonus Ideas (Optional)**: 
+- For Project 1, compare optimization results with grid search or random search methods.
+- For Project 2, explore the impact of varying user demand on resource allocation strategies.
+- For Project 3, extend the analysis to include multiple drugs or treatment combinations for a more complex optimization problem.
 

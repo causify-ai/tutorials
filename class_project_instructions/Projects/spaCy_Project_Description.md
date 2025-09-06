@@ -1,101 +1,69 @@
-### Description
+**Description**
 
-spaCy is an advanced natural language processing (NLP) library in Python designed for processing and analyzing large volumes of text. It provides a fast and efficient framework for various NLP tasks, including tokenization, part-of-speech tagging, named entity recognition, and dependency parsing. spaCy is particularly known for its ease of use and integration with other data science tools, making it a popular choice for building NLP applications.
+In this project, students will utilize spaCy, a powerful and efficient library for Natural Language Processing (NLP) in Python, to analyze and process textual data. spaCy offers features like tokenization, part-of-speech tagging, named entity recognition, and dependency parsing, making it suitable for a variety of NLP tasks. Students will leverage spaCy's pre-trained models and capabilities to build practical applications in text analysis and understanding.
 
-**Key Features:**
-- High-performance NLP processing with pre-trained models.
-- Supports multiple languages for diverse text analysis.
-- Built-in capabilities for named entity recognition and part-of-speech tagging.
-- Integration with deep learning frameworks for advanced tasks.
+### Project 1: Text Classification of News Articles
+**Difficulty**: 1 (Easy)
 
----
+**Project Objective**: The goal is to classify news articles into predefined categories (e.g., sports, politics, technology) using spaCy's text processing capabilities.
 
-### Project 1: Sentiment Analysis of Movie Reviews
-**Difficulty:** 1 (Easy)
+**Dataset Suggestions**: Utilize open datasets from Kaggle that contain labeled news articles across various categories.
 
-**Project Objective:**
-Create a sentiment analysis model to classify movie reviews as positive, negative, or neutral based on their textual content.
+**Tasks**:
+- Data Preprocessing:
+  - Load the dataset and clean the text data (removing HTML tags, stop words, etc.).
+- Text Vectorization:
+  - Use spaCy to create document vectors for each article using word embeddings.
+- Model Training:
+  - Implement a simple classifier (e.g., Logistic Regression) to assign categories to articles based on their vectors.
+- Model Evaluation:
+  - Evaluate the model's performance using metrics like accuracy, precision, and recall.
+- Visualization:
+  - Visualize the distribution of articles across categories and model performance metrics using Matplotlib.
 
-**Dataset Suggestions:**
-Utilize datasets from Kaggle that contain movie reviews labeled with sentiment scores.
+### Project 2: Named Entity Recognition in Scientific Papers
+**Difficulty**: 2 (Medium)
 
-**Tasks:**
-- **Data Collection:**
-  - Load the movie reviews dataset into a Pandas DataFrame.
-  
-- **Text Preprocessing:**
-  - Use spaCy to tokenize the text, remove stop words, and lemmatize the words for uniformity.
-  
-- **Sentiment Classification:**
-  - Implement a simple logistic regression model or a Naive Bayes classifier using the preprocessed text features to predict sentiment.
-  
-- **Evaluation:**
-  - Evaluate the model using accuracy, precision, recall, and F1-score metrics.
+**Project Objective**: The objective is to extract named entities (such as authors, institutions, and publication dates) from a collection of scientific papers to facilitate literature review.
 
-- **Visualization:**
-  - Create visualizations to show the distribution of sentiments across the dataset.
+**Dataset Suggestions**: Access a public dataset of scientific papers available on repositories like arXiv or Kaggle, focusing on a specific field.
 
----
+**Tasks**:
+- Data Collection:
+  - Download and preprocess the dataset, extracting relevant text from PDFs or XML formats.
+- Entity Recognition:
+  - Use spaCy's named entity recognition capabilities to identify and categorize entities in the text.
+- Custom Model Training:
+  - Fine-tune spaCy's pre-trained NER model on your specific dataset to improve accuracy.
+- Evaluation:
+  - Measure the performance of the NER model using F1-score and confusion matrix.
+- Data Visualization:
+  - Create visual representations of the most common entities and their relationships using network graphs.
 
-### Project 2: Named Entity Recognition for News Articles
-**Difficulty:** 2 (Medium)
+**Bonus Ideas**:
+- Extend the project by integrating a search functionality that allows users to find papers related to specific entities.
+- Compare the performance of spaCy's NER model with other libraries such as Hugging Face's Transformers.
 
-**Project Objective:**
-Develop a named entity recognition (NER) system to identify and classify entities (e.g., persons, organizations, locations) in news articles.
+### Project 3: Sentiment Analysis on Social Media Posts
+**Difficulty**: 3 (Hard)
 
-**Dataset Suggestions:**
-Access news articles from open government sources or Kaggle datasets that provide labeled text for entity recognition.
+**Project Objective**: The goal is to perform sentiment analysis on a large dataset of social media posts to detect public sentiment trends over time related to a specific topic (e.g., climate change).
 
-**Tasks:**
-- **Data Ingestion:**
-  - Collect news articles and load them into a suitable data structure.
+**Dataset Suggestions**: Use public datasets from Kaggle or GitHub that contain labeled social media posts, or access Twitter's API for real-time data collection (ensuring compliance with their terms).
 
-- **Entity Recognition:**
-  - Employ spaCy's pre-trained NER model to extract named entities from the text.
+**Tasks**:
+- Data Collection:
+  - Collect social media posts using the Twitter API or download a pre-existing dataset.
+- Text Preprocessing:
+  - Clean the text data, including tokenization, lemmatization, and removal of irrelevant characters.
+- Sentiment Analysis:
+  - Utilize spaCy along with a pre-trained sentiment analysis model to classify posts as positive, negative, or neutral.
+- Temporal Analysis:
+  - Aggregate sentiment scores over time to identify trends and patterns associated with key events.
+- Visualization:
+  - Create time-series plots to visualize sentiment trends and significant spikes or drops in public sentiment.
 
-- **Custom Entity Training:**
-  - Fine-tune the NER model using a small set of labeled data to improve accuracy on specific entities relevant to your dataset.
-
-- **Analysis:**
-  - Analyze the frequency and distribution of different entity types across articles.
-
-- **Visualization:**
-  - Visualize the results using word clouds or bar charts to represent the most common entities.
-
----
-
-### Project 3: Topic Modeling for Scientific Papers
-**Difficulty:** 3 (Hard)
-
-**Project Objective:**
-Implement a topic modeling system to discover hidden themes in a corpus of scientific papers using spaCy for text processing.
-
-**Dataset Suggestions:**
-Utilize datasets available on platforms like HuggingFace or Kaggle that provide scientific papers in text format.
-
-**Tasks:**
-- **Data Preparation:**
-  - Load the corpus of scientific papers and preprocess the text using spaCy (tokenization, stop word removal, lemmatization).
-
-- **Vectorization:**
-  - Convert the preprocessed text into a vector representation using techniques such as TF-IDF or word embeddings.
-
-- **Topic Modeling:**
-  - Apply Latent Dirichlet Allocation (LDA) or Non-Negative Matrix Factorization (NMF) to identify topics within the documents.
-
-- **Model Evaluation:**
-  - Evaluate the coherence of the identified topics using metrics like coherence score and perplexity.
-
-- **Interpretation:**
-  - Analyze the topics and identify key terms associated with each topic, creating a summary of findings.
-
-- **Visualization:**
-  - Use visualizations such as pyLDAvis to present the topics and their relationships effectively.
-
----
-
-### Bonus Ideas (Optional)
-- For Project 1: Experiment with more complex models such as LSTM or BERT for sentiment analysis.
-- For Project 2: Explore the integration of spaCy with other NLP libraries like HuggingFace's Transformers for enhanced entity recognition.
-- For Project 3: Investigate the potential of combining topic modeling with sentiment analysis to gain insights into the sentiment associated with different topics in scientific literature.
+**Bonus Ideas**:
+- Incorporate topic modeling to identify the main themes discussed in the posts and how they correlate with sentiment changes.
+- Develop a dashboard using Dash or Streamlit to present the sentiment analysis results interactively.
 

@@ -1,80 +1,69 @@
-### Description
+**Description**
 
-MLflow is an open-source platform designed to manage the end-to-end machine learning lifecycle. It provides tools for tracking experiments, packaging code into reproducible runs, and sharing and deploying models. With its modular components, MLflow allows data scientists to streamline their workflows and improve collaboration.
+MLflow is an open-source platform designed to manage the end-to-end machine learning lifecycle. It allows users to track experiments, package code into reproducible runs, and share and deploy models. Key features include:
 
-**Key Features:**
-- **Experiment Tracking:** Log and query experiments with metrics, parameters, and artifacts.
-- **Model Management:** Store and manage models in a centralized repository.
-- **Project Packaging:** Package code for reproducibility and sharing.
-- **Deployment:** Simplify the deployment of models to various environments.
-
----
-
-### Project 1: Predicting Housing Prices (Difficulty: 1 - Easy)
-
-**Project Objective:**  
-Build a predictive model to estimate housing prices based on various features such as location, size, and amenities. The goal is to optimize the model for accuracy and interpretability.
-
-**Dataset Suggestions:**  
-Utilize datasets from Kaggle related to housing prices or open government real estate data.
-
-**Tasks:**
-- **Data Collection:** Load the housing dataset into a Pandas DataFrame.
-- **Data Preprocessing:** Clean the data by handling missing values and encoding categorical variables.
-- **Model Training:** Train a regression model (e.g., Linear Regression or Random Forest) to predict housing prices.
-- **Experiment Tracking with MLflow:** Log parameters, metrics (e.g., RMSE), and model artifacts in MLflow.
-- **Model Evaluation:** Evaluate the model performance and visualize results using Matplotlib or Seaborn.
-- **Deployment:** Use MLflow to deploy the model as a REST API for easy access.
-
-**Bonus Ideas:**  
-- Experiment with different regression algorithms and compare their performance.
-- Implement feature importance analysis to understand key drivers of housing prices.
+- **Experiment Tracking**: Log and query parameters, metrics, and artifacts.
+- **Project Packaging**: Organize code and dependencies for reproducibility.
+- **Model Registry**: Store, annotate, and manage models in a central repository.
+- **Deployment**: Deploy models to various environments, including cloud and on-premises.
 
 ---
 
-### Project 2: Customer Segmentation using Clustering (Difficulty: 2 - Medium)
+**Project 1: Predicting Housing Prices**  
+**Difficulty**: 1 (Easy)  
+**Project Objective**: The goal is to build a regression model that predicts housing prices based on various features such as square footage, number of bedrooms, and location. The project will optimize for the lowest mean squared error (MSE).
 
-**Project Objective:**  
-Segment customers based on purchasing behavior to identify distinct groups for targeted marketing strategies. The goal is to optimize the clustering process for better insights and actionable results.
+**Dataset Suggestions**: Public datasets on housing prices can be found on Kaggle or government open data portals.
 
-**Dataset Suggestions:**  
-Find datasets on customer transactions from Kaggle or use open datasets related to retail or e-commerce.
+**Tasks**:
+- **Set Up MLflow Tracking**: Initialize MLflow to track parameters and metrics.
+- **Data Ingestion**: Load the dataset and perform basic data cleaning and preprocessing.
+- **Feature Engineering**: Create relevant features that might influence housing prices.
+- **Model Training**: Train multiple regression models (e.g., Linear Regression, Random Forest) and log results with MLflow.
+- **Model Evaluation**: Compare models using MSE and visualize results with MLflow's UI.
+- **Model Deployment**: Deploy the best-performing model using MLflow's deployment features.
 
-**Tasks:**
-- **Data Ingestion:** Load customer transaction data and explore the dataset for insights.
-- **Feature Engineering:** Create relevant features such as purchase frequency, average spend, and product categories.
-- **Clustering Analysis:** Implement clustering algorithms (e.g., K-means or DBSCAN) to segment customers.
-- **Experiment Tracking with MLflow:** Log different clustering configurations, metrics (e.g., silhouette score), and visualizations.
-- **Visualization:** Visualize clusters using PCA or t-SNE to provide insights into customer segments.
-- **Model Management:** Store the clustering model and its parameters in MLflow for future reference.
-
-**Bonus Ideas:**  
-- Compare different clustering algorithms and visualize their effectiveness.
-- Create profiles for each customer segment and suggest targeted marketing strategies.
+**Bonus Ideas**: 
+- Compare the performance of different regression algorithms.
+- Implement hyperparameter tuning using MLflow's capabilities.
 
 ---
 
-### Project 3: Sentiment Analysis on Product Reviews (Difficulty: 3 - Hard)
+**Project 2: Customer Segmentation using Clustering**  
+**Difficulty**: 2 (Medium)  
+**Project Objective**: The aim is to segment customers based on purchasing behavior using clustering techniques, optimizing for distinct customer groups to enhance targeted marketing strategies.
 
-**Project Objective:**  
-Develop a sentiment analysis model to classify product reviews as positive, negative, or neutral. The goal is to optimize the model for accuracy and interpretability while managing the entire ML lifecycle with MLflow.
+**Dataset Suggestions**: Datasets for customer transactions can be sourced from Kaggle or open datasets available on GitHub.
 
-**Dataset Suggestions:**  
-Use datasets from Kaggle containing product reviews or scrape reviews from open e-commerce platforms.
+**Tasks**:
+- **Initialize MLflow**: Set up MLflow to track experiments and parameters.
+- **Data Preprocessing**: Clean the dataset, handle missing values, and normalize features.
+- **Exploratory Data Analysis**: Visualize customer behavior using plots and charts.
+- **Clustering**: Implement clustering algorithms (e.g., K-Means, DBSCAN) and log metrics for each run.
+- **Evaluate Clusters**: Use silhouette scores and visualizations to assess cluster quality.
+- **Model Registry**: Register the best clustering model and document the findings in MLflow.
 
-**Tasks:**
-- **Data Collection:** Gather product review data and preprocess it (cleaning, tokenization).
-- **Model Selection:** Choose a pre-trained model (e.g., BERT) for fine-tuning on the sentiment classification task.
-- **Training and Evaluation:** Train the model and evaluate its performance using metrics like accuracy and F1-score.
-- **Experiment Tracking with MLflow:** Log experiments, parameters, and evaluation metrics in MLflow.
-- **Hyperparameter Tuning:** Implement hyperparameter tuning to optimize model performance.
-- **Deployment:** Use MLflow to deploy the trained model as a web service for real-time sentiment analysis.
+**Bonus Ideas**: 
+- Experiment with different distance metrics for clustering.
+- Incorporate demographic data to enhance segmentation.
 
-**Bonus Ideas:**  
-- Explore the impact of different preprocessing techniques on model performance.
-- Create a dashboard to visualize sentiment trends over time based on incoming reviews.
+---
 
---- 
+**Project 3: Time-Series Forecasting for Stock Prices**  
+**Difficulty**: 3 (Hard)  
+**Project Objective**: Develop a time-series forecasting model to predict future stock prices based on historical data, optimizing for accuracy and minimizing forecasting error.
 
-These projects provide a comprehensive learning experience, allowing students to engage with MLflow while applying machine learning techniques in various domains.
+**Dataset Suggestions**: Historical stock price data can be obtained from public APIs like Alpha Vantage or Yahoo Finance.
+
+**Tasks**:
+- **Set Up MLflow**: Initialize MLflow for tracking experiments and metrics.
+- **Data Collection**: Fetch stock price data using a public API and preprocess it for analysis.
+- **Feature Engineering**: Create time-based features (e.g., moving averages, lag features).
+- **Model Development**: Train various forecasting models (e.g., ARIMA, LSTM) and log each experiment with MLflow.
+- **Model Evaluation**: Assess model performance using metrics like RMSE and visualize predictions against actual prices.
+- **Deployment**: Deploy the best model for real-time predictions and track its performance over time using MLflow.
+
+**Bonus Ideas**: 
+- Implement ensemble methods to improve forecasting accuracy.
+- Explore the impact of external factors (e.g., economic indicators) on stock prices.
 

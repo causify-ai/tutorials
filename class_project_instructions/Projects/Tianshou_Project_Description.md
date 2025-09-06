@@ -1,104 +1,93 @@
-### Description
+**Description**
 
-Tianshou is a reinforcement learning library for Python that provides flexible and efficient tools for building and training reinforcement learning agents. It supports various algorithms and environments, making it an excellent choice for researchers and practitioners looking to experiment with RL techniques. 
+Tianshou is a reinforcement learning (RL) library designed for efficient and flexible training of RL agents. It provides a modular architecture that allows for easy integration of various algorithms and environments, making it suitable for both research and practical applications. Key features include:
 
-**Features:**
-- Modular design allows easy customization of algorithms and environments.
-- Supports multiple RL algorithms like DQN, PPO, and A2C.
-- Provides tools for efficient training, evaluation, and logging.
-- Compatible with popular frameworks such as PyTorch and TensorFlow.
-
----
-
-### Project 1: Basic Game Agent (Difficulty: 1)
-
-**Project Objective:**
-Create a reinforcement learning agent that learns to play a simple game environment, such as CartPole or MountainCar, using Tianshou. The goal is to optimize the agent's performance in terms of score over time.
-
-**Dataset Suggestions:**
-Utilize OpenAI's Gym environments, which are publicly available and provide a variety of simple game scenarios.
-
-**Tasks:**
-- Setup Tianshou with Gym:
-  - Install Tianshou and Gym, and configure the environment.
-  
-- Implement DQN Agent:
-  - Create a DQN agent using Tianshou's built-in functionalities for the chosen game environment.
-  
-- Train the Agent:
-  - Train the agent using the Tianshou training loop, logging performance metrics.
-  
-- Evaluate Performance:
-  - Assess the agent's performance by comparing the average score across episodes before and after training.
-  
-- Visualization:
-  - Plot the training progress over time to visualize how the agent's performance improves.
-
-**Bonus Ideas (Optional):**
-- Experiment with different hyperparameters (learning rate, epsilon decay) to see their effects on agent performance.
-- Compare the performance of different algorithms provided by Tianshou (e.g., PPO vs. DQN).
+- **Modular Design**: Supports multiple RL algorithms (e.g., DQN, PPO, A2C) and customizable environments.
+- **Support for Gym and Custom Environments**: Integrates seamlessly with OpenAI Gym and allows for the creation of custom environments.
+- **Efficient Data Collection**: Implements efficient experience replay and data collection mechanisms for faster training.
+- **Flexible Configuration**: Easily configure training parameters and hyperparameters for different RL tasks.
 
 ---
 
-### Project 2: Stock Trading Agent (Difficulty: 2)
+**Project 1: Difficulty Level 1 (Easy)**
 
-**Project Objective:**
-Develop a reinforcement learning agent that makes trading decisions in a simulated stock market environment. The goal is to maximize returns through an optimized trading strategy using historical stock price data.
+**Project Objective**: Create a simple reinforcement learning agent that learns to play a classic game like CartPole using Tianshou, optimizing for the highest score over episodes.
 
-**Dataset Suggestions:**
-Use historical stock price data available on Kaggle or Yahoo Finance APIs, which provide free access to stock market data.
+**Dataset Suggestions**: Use OpenAI Gym’s built-in CartPole environment, which is readily available.
 
-**Tasks:**
-- Create a Custom Trading Environment:
-  - Implement a trading environment using the Tianshou framework that simulates buying, selling, and holding stocks.
+**Tasks**:
+- **Set Up Environment**:
+    - Initialize the CartPole environment using OpenAI Gym.
+  
+- **Define the RL Agent**:
+    - Implement a basic DQN agent using Tianshou to handle the action selection and learning process.
 
-- Implement PPO Agent:
-  - Use the Proximal Policy Optimization (PPO) algorithm from Tianshou to create a trading agent.
+- **Training the Agent**:
+    - Train the agent for a specified number of episodes and log the performance metrics (average score).
 
-- Train the Agent:
-  - Train the agent over multiple episodes, adjusting the trading strategy based on rewards received from profitable trades.
+- **Evaluate the Agent**:
+    - Test the trained agent on the environment and visualize the scores over episodes.
 
-- Performance Evaluation:
-  - Analyze the agent's trading performance by calculating cumulative returns and comparing it with a baseline strategy (e.g., buy and hold).
+- **Visualization**:
+    - Plot the performance metrics to illustrate the learning curve of the agent.
 
-- Visualization:
-  - Visualize trading actions and portfolio value over time using Matplotlib.
-
-**Bonus Ideas (Optional):**
-- Implement a risk management strategy that penalizes excessive losses.
-- Compare the trading agent's performance with traditional trading strategies.
+**Bonus Ideas**:
+- Experiment with different hyperparameters (learning rate, exploration strategy) to see their effects on performance.
+- Compare the performance of DQN with a simple policy gradient method.
 
 ---
 
-### Project 3: Robotic Navigation (Difficulty: 3)
+**Project 2: Difficulty Level 2 (Medium)**
 
-**Project Objective:**
-Design and train a reinforcement learning agent to navigate a robotic simulation environment. The objective is to optimize the agent's pathfinding abilities to reach a target while avoiding obstacles.
+**Project Objective**: Develop a reinforcement learning agent that can navigate a maze environment, optimizing for the shortest path to the goal.
 
-**Dataset Suggestions:**
-Utilize a simulated robotic environment available in OpenAI Gym or Unity ML-Agents, which provide free access to various robotic scenarios.
+**Dataset Suggestions**: Use a custom maze environment created using OpenAI Gym or a predefined maze environment available in the Gym repository.
 
-**Tasks:**
-- Setup Robotic Simulation Environment:
-  - Configure a robotic navigation environment using Tianshou and OpenAI Gym or Unity ML-Agents.
+**Tasks**:
+- **Create or Configure Maze Environment**:
+    - Design a maze environment with obstacles using OpenAI Gym or customize an existing one.
 
-- Implement A2C Agent:
-  - Develop an Advantage Actor-Critic (A2C) agent using Tianshou to control the robot’s movements.
+- **Implement the RL Agent**:
+    - Use Tianshou to implement a Proximal Policy Optimization (PPO) agent.
 
-- Implement Training Loop:
-  - Train the agent to navigate the environment, optimizing its pathfinding through reinforcement learning.
+- **Train the Agent**:
+    - Train the agent to navigate the maze, focusing on minimizing the number of steps taken to reach the goal.
 
-- Evaluate Navigation Performance:
-  - Measure the efficiency of the agent's navigation by calculating the time taken to reach the target and the number of collisions with obstacles.
+- **Evaluate and Analyze Performance**:
+    - Assess the agent's performance by tracking the average steps taken per episode and visualize the agent's path through the maze.
 
-- Visualization:
-  - Create visualizations of the agent's path in the environment to illustrate its navigation strategy.
+- **Hyperparameter Tuning**:
+    - Experiment with different hyperparameters to optimize the agent's learning speed and efficiency.
 
-**Bonus Ideas (Optional):**
-- Experiment with different reward structures to see how they affect navigation performance.
-- Implement multi-agent scenarios where multiple robots navigate simultaneously and analyze their interactions.
+**Bonus Ideas**:
+- Introduce dynamic obstacles in the maze and see how the agent adapts its strategy.
+- Compare the performance of PPO with another algorithm like A2C in the same environment.
 
---- 
+---
 
-These projects are designed to provide a comprehensive understanding of reinforcement learning concepts while utilizing Tianshou effectively. Each project encourages creativity and experimentation, fostering a deeper grasp of the underlying principles of machine learning and reinforcement learning.
+**Project 3: Difficulty Level 3 (Hard)**
+
+**Project Objective**: Build a reinforcement learning agent that can manage resource allocation in a simulated cloud environment, optimizing for cost efficiency and performance.
+
+**Dataset Suggestions**: Use a custom environment that simulates cloud resource management scenarios, such as those available in the RLlib library or create a custom Gym environment.
+
+**Tasks**:
+- **Develop Cloud Resource Management Environment**:
+    - Create a custom environment that simulates resource allocation scenarios, including virtual machines and workload demands.
+
+- **Implement a Complex RL Algorithm**:
+    - Utilize Tianshou to implement a more complex algorithm like Soft Actor-Critic (SAC) for continuous action spaces.
+
+- **Training the Agent**:
+    - Train the agent over multiple episodes, focusing on optimizing resource allocation to minimize costs while meeting performance targets.
+
+- **Evaluate Performance**:
+    - Analyze the agent's decisions by tracking resource usage, costs, and performance metrics over episodes.
+
+- **Visualization and Reporting**:
+    - Visualize the trade-offs between cost and performance, and generate reports on the agent's decision-making process.
+
+**Bonus Ideas**:
+- Introduce varying workloads and test the agent's adaptability to sudden changes in demand.
+- Implement a multi-agent setup where multiple agents compete or collaborate for resources in the same environment.
 

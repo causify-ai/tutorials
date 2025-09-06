@@ -1,73 +1,66 @@
-### Description
+**Description**
 
-Orbit is a powerful Python library designed for Bayesian analysis of time series data, particularly for understanding customer behavior and churn. It allows users to model, visualize, and interpret customer journeys and retention metrics. Orbit is particularly useful for predictive modeling and offers features such as:
+Orbit is a Python library designed for analyzing and modeling customer behavior over time, particularly in the context of recurring events. It focuses on providing tools for Bayesian modeling of customer lifetimes, enabling businesses to understand customer retention and churn. Key features include:
 
-- **Bayesian Modeling**: Utilizes probabilistic models for time series forecasting and customer behavior analysis.
-- **Flexible Framework**: Supports various types of time series data, including univariate and multivariate.
-- **Visualization Tools**: Provides built-in functions to visualize model results and customer journeys.
-- **Customizable**: Allows users to define their own models and priors for more tailored analyses.
-
----
-
-### Project 1: Customer Churn Prediction (Difficulty: 1)
-
-**Project Objective**  
-The goal of this project is to predict customer churn for a subscription-based service using historical customer engagement data. The focus will be on identifying factors that lead to churn and optimizing retention strategies.
-
-**Dataset Suggestions**  
-- Look for datasets on Kaggle that include customer subscription history, engagement metrics, and demographic information.
-
-**Tasks**  
-- **Data Collection**: Import and preprocess the dataset to focus on relevant features (e.g., subscription length, usage frequency).
-- **Exploratory Data Analysis**: Visualize customer engagement trends and churn rates using Orbit's visualization tools.
-- **Model Development**: Use Orbit to create a Bayesian model that predicts churn based on customer engagement metrics.
-- **Model Evaluation**: Assess the model’s performance using metrics like accuracy, precision, and recall.
-- **Insights Generation**: Identify key factors contributing to churn and suggest actionable strategies for retention.
-
-**Bonus Ideas (Optional)**  
-- Implement a feature importance analysis to understand which factors are most influential in predicting churn.
+- **Bayesian Modeling**: Provides probabilistic models to estimate customer lifetime value and churn rates.
+- **Flexible Data Input**: Supports various data formats and allows integration with different data sources.
+- **Visualization**: Offers built-in plotting functions to visualize customer behavior and model predictions.
+- **Predictive Analytics**: Enables forecasting of future customer behavior based on historical data.
 
 ---
 
-### Project 2: Sales Forecasting for E-commerce (Difficulty: 2)
+**Project 1: Customer Churn Prediction**  
+**Difficulty**: 1 (Easy)  
+**Project Objective**: The goal is to predict which customers are likely to churn based on their historical behavior, optimizing for reducing churn rates.
 
-**Project Objective**  
-This project aims to forecast future sales for an e-commerce platform based on historical sales data and promotional activities. The focus will be on improving inventory management and marketing strategies.
+**Dataset Suggestions**: Find datasets on customer behavior and churn from Kaggle or government portals that provide retail or service industry data.
 
-**Dataset Suggestions**  
-- Explore open datasets on Kaggle that include historical sales data, promotional events, and seasonal trends.
+**Tasks**:
+- **Data Collection**: Gather customer transaction and engagement data from the chosen dataset.
+- **Data Preprocessing**: Clean and preprocess the data, handling missing values and categorical variables.
+- **Modeling with Orbit**: Use Orbit to build a Bayesian model to predict customer churn based on historical behavior.
+- **Evaluation**: Assess model performance using metrics such as accuracy, precision, and recall.
+- **Visualization**: Create visualizations to illustrate churn predictions and customer segments.
 
-**Tasks**  
-- **Data Preparation**: Clean and preprocess the sales data, ensuring to account for seasonality and trends.
-- **Modeling with Orbit**: Build a Bayesian time series model to forecast future sales, incorporating promotional events as covariates.
-- **Model Validation**: Validate the model using cross-validation techniques and assess its forecasting accuracy.
-- **Visualization**: Create visualizations to compare predicted sales against actual sales and highlight trends or anomalies.
-- **Scenario Analysis**: Run simulations to see how different promotional strategies might impact future sales.
-
-**Bonus Ideas (Optional)**  
-- Compare the performance of the Bayesian model against traditional forecasting methods like ARIMA.
-
----
-
-### Project 3: Customer Lifetime Value (CLV) Estimation (Difficulty: 3)
-
-**Project Objective**  
-The objective of this project is to estimate the Customer Lifetime Value (CLV) for an online subscription service using historical transaction data. This will help in making informed decisions about customer acquisition and retention strategies.
-
-**Dataset Suggestions**  
-- Search for datasets on public repositories like Kaggle that contain transaction history, customer demographics, and engagement metrics.
-
-**Tasks**  
-- **Data Preprocessing**: Prepare the dataset by cleaning and transforming transaction data into a suitable format for analysis.
-- **Bayesian Modeling**: Utilize Orbit to develop a model that estimates CLV based on customer transaction history and engagement patterns.
-- **Parameter Estimation**: Analyze the model to derive key parameters influencing CLV and understand customer segments.
-- **Validation and Testing**: Evaluate the model's accuracy using historical data, comparing predicted CLV against actual values.
-- **Strategic Recommendations**: Generate insights and recommendations for optimizing marketing spend based on predicted CLV.
-
-**Bonus Ideas (Optional)**  
-- Explore the impact of different customer acquisition strategies on CLV and simulate scenarios to assess potential outcomes.
+**Bonus Ideas**: 
+- Compare predictions with a traditional logistic regression model.
+- Explore the impact of different customer engagement strategies on churn rates.
 
 ---
 
-These projects will provide students with hands-on experience using Orbit while engaging with real-world data science problems. Each project builds on the previous one, gradually increasing in complexity and encouraging deeper learning and creativity.
+**Project 2: Customer Lifetime Value Estimation**  
+**Difficulty**: 2 (Medium)  
+**Project Objective**: Estimate the Customer Lifetime Value (CLV) for different segments of customers, optimizing marketing strategies based on these insights.
+
+**Dataset Suggestions**: Use datasets from Kaggle that contain customer transaction histories and demographic information.
+
+**Tasks**:
+- **Data Acquisition**: Collect customer transaction data and relevant features from the dataset.
+- **Feature Engineering**: Create features that capture customer behavior, such as frequency of purchases and average purchase value.
+- **Bayesian Modeling**: Implement Orbit to model customer lifetime value, incorporating uncertainty in the estimates.
+- **Segmentation**: Segment customers based on CLV estimates and identify high-value customer groups.
+- **Visualization**: Visualize CLV distributions and segment characteristics to inform marketing strategies.
+
+**Bonus Ideas**: 
+- Analyze how different marketing campaigns affected CLV in specific segments.
+- Implement a cohort analysis to track CLV changes over time.
+
+---
+
+**Project 3: Predicting Purchase Behavior Over Time**  
+**Difficulty**: 3 (Hard)  
+**Project Objective**: Develop a model to predict future purchase behavior of customers over time, optimizing for accurate forecasting of sales.
+
+**Dataset Suggestions**: Utilize open datasets from Kaggle that provide time-stamped transaction data for e-commerce or subscription services.
+
+**Tasks**:
+- **Data Preparation**: Collect and preprocess time-series transaction data, ensuring proper date formatting and handling of missing entries.
+- **Exploratory Data Analysis**: Conduct EDA to identify trends, seasonality, and patterns in purchase behavior.
+- **Model Development**: Use Orbit to create a time-series model that predicts future purchases based on historical data.
+- **Forecasting**: Implement forecasting techniques to project future sales and analyze the model's performance against actual sales data.
+- **Visualization**: Generate plots to visualize the predicted purchase behavior alongside actual purchase trends.
+
+**Bonus Ideas**: 
+- Test the robustness of the model by incorporating external factors (e.g., economic indicators).
+- Explore the effect of seasonality on purchase behavior and adjust the model accordingly.
 

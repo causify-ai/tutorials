@@ -1,81 +1,72 @@
 **Description**
 
-ONNX (Open Neural Network Exchange) is an open-source format designed for deep learning models that allows for interoperability between various machine learning frameworks. It provides a way to convert models from one framework to another, enabling developers to leverage the strengths of different tools. 
+ONNX (Open Neural Network Exchange) is an open-source format designed to facilitate the interoperability of AI models across different frameworks. It allows developers to convert models from various libraries (like PyTorch, TensorFlow, etc.) into a unified format, enabling seamless deployment across platforms. Key features include:
 
-Technologies Used
-ONNX
-
-- Supports a wide variety of machine learning frameworks, including PyTorch, TensorFlow, and Scikit-learn.
-- Facilitates model conversion and optimization for deployment across different platforms.
-- Provides tools for model inference, enabling efficient execution of deep learning models.
+- **Interoperability**: Supports model conversion between different deep learning frameworks.
+- **Optimization**: Provides tools to optimize models for performance on various hardware.
+- **Extensive Operator Support**: Includes a broad range of operators for building complex models.
+- **Ecosystem Compatibility**: Works with popular frameworks and tools, enhancing flexibility in model deployment.
 
 ---
 
-### Project 1: Image Classification with ONNX (Difficulty: 1 - Easy)
+### Project 1: Image Classification with ONNX (Difficulty: 1)
 
-**Project Objective**  
-The goal of this project is to build a simple image classification model using a pre-trained ONNX model and fine-tune it on a custom dataset. Students will optimize the model's accuracy while learning how to work with ONNX's model conversion capabilities.
+**Project Objective**: 
+Develop a simple image classification model using a pre-trained ONNX model to classify images from a public dataset, optimizing for accuracy.
 
-**Dataset Suggestions**  
-Explore open datasets on platforms like Kaggle, focusing on image classification datasets (e.g., CIFAR-10 or Fashion-MNIST).
+**Dataset Suggestions**: 
+Utilize a public image dataset available on Kaggle or HuggingFace, such as CIFAR-10 or Fashion-MNIST.
 
-**Tasks**
-- **Set Up Environment**: Install necessary libraries, including ONNX and ONNX Runtime, to facilitate model loading and inference.
-- **Load Pre-trained Model**: Utilize a pre-trained ONNX model (e.g., MobileNet) and load it into the environment.
-- **Data Preparation**: Download the dataset, preprocess images (resizing, normalization), and split into training and testing sets.
-- **Fine-tuning**: Implement transfer learning by retraining the last few layers of the ONNX model with the new dataset.
-- **Model Evaluation**: Evaluate the model's performance using accuracy, confusion matrix, and classification report.
-- **Inference**: Use the trained model to classify new images and visualize the results.
+**Tasks**:
+- **Model Selection**: Choose a pre-trained ONNX model suitable for image classification (e.g., MobileNet).
+- **Data Loading**: Load and preprocess the dataset using libraries like OpenCV or PIL.
+- **Model Inference**: Use ONNX Runtime to perform inference on the images and obtain predictions.
+- **Evaluation**: Calculate accuracy and confusion matrix to evaluate model performance.
+- **Visualization**: Visualize results by plotting sample images alongside their predicted labels.
 
-**Bonus Ideas (Optional)**  
-- Experiment with different pre-trained models to see which yields the best performance.
+**Bonus Ideas (Optional)**: 
+- Experiment with different pre-trained models and compare their performance.
 - Implement data augmentation techniques to improve model robustness.
 
 ---
 
-### Project 2: Time Series Forecasting with ONNX (Difficulty: 2 - Medium)
+### Project 2: Text Sentiment Analysis with ONNX (Difficulty: 2)
 
-**Project Objective**  
-This project aims to build a time series forecasting model using ONNX to predict future values based on historical data. Students will convert an existing LSTM model to ONNX format and evaluate its performance on a specific forecasting task.
+**Project Objective**: 
+Build a sentiment analysis pipeline utilizing an ONNX model to classify text reviews from a public dataset, optimizing for precision and recall.
 
-**Dataset Suggestions**  
-Utilize publicly available time series datasets from sources like Kaggle, focusing on stock prices or weather data.
+**Dataset Suggestions**: 
+Access a sentiment analysis dataset from Kaggle, such as IMDb movie reviews or Twitter sentiment data.
 
-**Tasks**
-- **Model Selection**: Choose an LSTM model from a popular library (e.g., Keras) and train it on the historical dataset.
-- **Convert to ONNX**: Use the ONNX conversion tools to convert the trained LSTM model into ONNX format.
-- **Load ONNX Model**: Load the converted model using ONNX Runtime for inference.
-- **Forecasting**: Implement a forecasting pipeline that takes the last few time steps as input and predicts future values.
-- **Performance Evaluation**: Assess the model's forecasting accuracy using metrics such as RMSE or MAE.
-- **Visualization**: Plot the predicted values against the actual values to visualize the model's performance.
+**Tasks**:
+- **Model Conversion**: Convert a pre-trained NLP model (e.g., BERT) to ONNX format.
+- **Data Preprocessing**: Tokenize and encode text data using libraries like HuggingFace Transformers.
+- **Inference with ONNX**: Load the ONNX model and perform inference on the text data to predict sentiments.
+- **Performance Metrics**: Evaluate the model using precision, recall, and F1-score.
+- **Visualization**: Create visualizations (e.g., ROC curve) to illustrate model performance.
 
-**Bonus Ideas (Optional)**  
-- Compare the performance of the ONNX model with the original LSTM model to assess any differences.
-- Implement hyperparameter tuning to optimize the model further.
-
----
-
-### Project 3: Anomaly Detection in Network Traffic with ONNX (Difficulty: 3 - Hard)
-
-**Project Objective**  
-The objective of this project is to develop an anomaly detection system for network traffic data using ONNX. Students will build a model to identify unusual patterns indicative of potential security threats.
-
-**Dataset Suggestions**  
-Access network traffic datasets from sources like Kaggle or the UCI Machine Learning Repository, focusing on datasets labeled for anomaly detection.
-
-**Tasks**
-- **Data Acquisition**: Download and preprocess the network traffic dataset, focusing on feature selection and normalization.
-- **Model Training**: Train an anomaly detection model (e.g., Autoencoder) using a framework like TensorFlow, then convert it to ONNX format.
-- **Model Inference**: Load the ONNX model and implement a pipeline to process incoming network traffic data for anomaly detection.
-- **Threshold Setting**: Develop a method to determine the threshold for classifying anomalies based on reconstruction error.
-- **Evaluation Metrics**: Evaluate the model's performance using metrics such as precision, recall, and F1-score.
-- **Reporting**: Create a report summarizing the findings, including detected anomalies and potential security implications.
-
-**Bonus Ideas (Optional)**  
-- Implement a real-time detection system that continuously monitors network traffic.
-- Explore the effectiveness of different anomaly detection algorithms by comparing their performance using ONNX.
+**Bonus Ideas (Optional)**: 
+- Fine-tune the ONNX model on a smaller labeled dataset to improve performance.
+- Compare the performance of the ONNX model with its original framework version.
 
 ---
 
-These projects are designed to provide hands-on experience with ONNX, enabling students to explore various machine learning tasks while developing critical skills in model training, evaluation, and deployment.
+### Project 3: Time Series Forecasting with ONNX (Difficulty: 3)
+
+**Project Objective**: 
+Implement a time series forecasting model using ONNX to predict future values based on historical data, focusing on minimizing forecasting error.
+
+**Dataset Suggestions**: 
+Utilize a time series dataset available on Kaggle or government open data portals, such as stock prices or weather data.
+
+**Tasks**:
+- **Model Development**: Train a time series forecasting model (e.g., LSTM) in a framework like TensorFlow or PyTorch and convert it to ONNX format.
+- **Data Preparation**: Preprocess the time series data, including normalization and sequence creation for training.
+- **Model Inference**: Load the ONNX model and perform predictions on the test set.
+- **Error Analysis**: Calculate forecasting errors (e.g., MAE, RMSE) to evaluate model performance.
+- **Visualization**: Plot actual vs. predicted values to visualize forecasting accuracy.
+
+**Bonus Ideas (Optional)**: 
+- Implement ensemble methods by combining predictions from multiple models.
+- Explore hyperparameter tuning techniques to enhance the forecasting model's accuracy.
 
