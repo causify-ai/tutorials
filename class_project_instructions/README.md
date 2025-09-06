@@ -174,7 +174,7 @@
 - **Create a Pull Request (PR)**:
   - [ ] Always create a **Pull Request (PR)** from your branch.
   - [ ] Name the PR the same as your project branch, and reference the issue number your branch is based on.
-  - [ ] Add your TAs (e.g., `@tkpratardan`, `@Prahar08modi`) and `@gpsaggese` as reviewers.
+  - [ ] Add your TAs (e.g., `@aver81`, `@indrayudd`) and `@gpsaggese` as reviewers.
   - [ ] Assign the PR to yourself.
   - [ ] Do **not** push directly to the `master` branch. Only push commits to **your project branch**.
 
