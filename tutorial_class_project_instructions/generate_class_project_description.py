@@ -362,7 +362,7 @@ def create_markdown_file(
     :param max_projects: limit to the rows processed
     :param sleep_sec: amount of time to sleep between rows
     """
-    file_githublinks_df = pd.DataFrame(columns=["Tool","URL"])
+    file_githublinks_df = pd.DataFrame(columns=["URL"])
     rows = df.head(max_projects) if max_projects is not None else df
     # temps = [0.3,0.45,0.6]
     pathlib.Path(markdown_folder_path).mkdir(parents=True, exist_ok=True)
@@ -386,7 +386,7 @@ def create_markdown_file(
         hio.to_file(str(markdown_path), content)
         _LOG.info("Generated Markdown File: %s", file_name)
         github_url = f"{DEFAULT_FILE_GITHUB_LINK}{file_name}"
-        file_githublinks_df.loc[len(file_githublinks_df)] = [project_name,github_url]
+        file_githublinks_df.loc[len(file_githublinks_df)] = [github_url]
             # Letting it wait for a while before triggering another request
         time.sleep(sleep_sec)
     return file_githublinks_df
