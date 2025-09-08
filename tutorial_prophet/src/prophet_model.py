@@ -60,8 +60,13 @@ class ProphetForecastModel:
         """
         if not self.fitted:
             raise RuntimeError("Model must be fitted before prediction.")
-        future = self.model.make_future_dataframe(periods=30)
-        return self.model.predict(future)
+        # future = self.model.make_future_dataframe(periods=30)
+        # return self.model.predict(future) 
+        missing = [r for r in self.model.extra_regressors if r not in df.columns]
+        if missing:
+            raise ValueError(f"Missing required regressors in test data: {missing}")
+
+        return self.model.predict(df)
 
     def evaluate(self, df: pd.DataFrame) -> Dict[str, float]:
         """

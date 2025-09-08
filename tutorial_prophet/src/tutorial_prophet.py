@@ -6,9 +6,9 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.17.1
+#       jupytext_version: 1.17.3
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---
@@ -229,7 +229,7 @@ holidays_df = pd.DataFrame(
 _LOG.info(hpandas.df_to_str(holidays_df, log_level=logging.INFO))
 
 # %%
-forecaster = tpsrprmo.ProphetForecastModel(config["model"], holidays_df)
+forecaster = tpsrprmo.ProphetForecastModel(config["model"], holidays=holidays_df)
 forecaster.fit(df_train)
 model = forecaster.get_model()
 
@@ -302,7 +302,7 @@ _LOG.info(hpandas.df_to_str(coefficients_df, log_level=logging.INFO))
 
 # %% [markdown]
 # <a name='predict'></a>
-# # Predict
+# # Predict for Historical Dates
 
 # %%
 start_date_filter = df["ds"] >= config["test_start_date"]
