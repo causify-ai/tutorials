@@ -65,9 +65,9 @@ class ProphetForecastModel:
         # The idea here is to forecast for historical dates (i.e., in-sample or test period)
         # and compare the predictions to actual observed values.
 
-        # In contrast, forecasting for future dates (using make_future_dataframe)
+        # On the other hand, forecasting for future dates (using make_future_dataframe)
         # fails because prophet requires all regressors used during training (y.lag1)
-        # to be present during prediction also.
+        # to be present during prediction also. Which is why the above code failed. 
 
         # But, since we don't have actual future values of 'y.lag1', we would need to manually
         # create or estimate it using some logic.
