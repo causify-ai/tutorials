@@ -8,25 +8,26 @@
       
       
       
-        <link rel="canonical" href="https://mydomain.org/mysite/guidelines_for_developers/">
+      
+        <link rel="prev" href="causal_ai.html">
       
       
-        <link rel="prev" href="../coding-tools/">
+        <link rel="next" href="../archive/2025.html">
       
       
-        <link rel="next" href="../writing-style/">
-      
-      
-      <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+      <link rel="icon" href="../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.19">
     
     
       
-        <title>Guidelines for developers - My Docs</title>
+        <title>Devops - Causify Blog</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -45,6 +46,8 @@
       
     
     
+      <link rel="stylesheet" href="../styles/styles.css">
+    
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -55,7 +58,12 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="cyan">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -64,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#how_to_use_coding_ai" class="md-skip">
+        <a href="#devops" class="md-skip">
           Skip to content
         </a>
       
@@ -80,10 +88,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="My Docs" class="md-header__button md-logo" aria-label="My Docs" data-md-component="logo">
+    <a href=".." title="Causify Blog" class="md-header__button md-logo" aria-label="Causify Blog" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+  <img src="../assets/logo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -94,21 +101,21 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            My Docs
+            Causify Blog
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Guidelines for developers
+              Devops
             
           </span>
         </div>
       </div>
     </div>
     
+      
     
-      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
     
     
@@ -178,13 +185,12 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="My Docs" class="md-nav__button md-logo" aria-label="My Docs" data-md-component="logo">
+    <a href=".." title="Causify Blog" class="md-nav__button md-logo" aria-label="Causify Blog" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+  <img src="../assets/logo.png" alt="logo">
 
     </a>
-    My Docs
+    Causify Blog
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -193,15 +199,116 @@
       
   
   
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_2" id="__nav_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Archive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../archive/2025.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Home
+    2025
     
   </span>
   
@@ -210,20 +317,75 @@
     </li>
   
 
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
     
       
+        
       
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_1_3" id="__nav_1_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Categories
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_1_3">
+            <span class="md-nav__icon md-icon"></span>
+            Categories
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
   
   
   
   
     <li class="md-nav__item">
-      <a href="../automate/" class="md-nav__link">
+      <a href="causal_ai.html" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Automate
+    Causal ai
     
   </span>
   
@@ -232,75 +394,10 @@
     </li>
   
 
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../coding-benchmark/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Coding benchmark
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../coding-models/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Coding models
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../coding-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Coding tools
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
+              
+            
+              
+                
   
   
     
@@ -318,7 +415,7 @@
   
   
   <span class="md-ellipsis">
-    Guidelines for developers
+    Devops
     
   </span>
   
@@ -326,12 +423,12 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <a href="./" class="md-nav__link md-nav__link--active">
+      <a href="devops.html" class="md-nav__link md-nav__link--active">
         
   
   
   <span class="md-ellipsis">
-    Guidelines for developers
+    Devops
     
   </span>
   
@@ -352,28 +449,19 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#how_to_use_coding_ai" class="md-nav__link">
+  <a href="#devops" class="md-nav__link">
     <span class="md-ellipsis">
-      How to use coding AI
+      DevOps
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="How to use coding AI">
+    <nav class="md-nav" aria-label="DevOps">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#our_golden_rule" class="md-nav__link">
+  <a href="#docker_executables_no_more_install_guides" class="md-nav__link">
     <span class="md-ellipsis">
-      Our golden rule
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#guidelines" class="md-nav__link">
-    <span class="md-ellipsis">
-      Guidelines:
+      Docker Executables: No More Install Guides
     </span>
   </a>
   
@@ -391,25 +479,19 @@
     </li>
   
 
-    
+              
+            
+          </ul>
+        </nav>
       
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../writing-style/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Writing style
-    
-  </span>
+    </li>
   
 
-      </a>
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -439,28 +521,19 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#how_to_use_coding_ai" class="md-nav__link">
+  <a href="#devops" class="md-nav__link">
     <span class="md-ellipsis">
-      How to use coding AI
+      DevOps
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="How to use coding AI">
+    <nav class="md-nav" aria-label="DevOps">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#our_golden_rule" class="md-nav__link">
+  <a href="#docker_executables_no_more_install_guides" class="md-nav__link">
     <span class="md-ellipsis">
-      Our golden rule
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#guidelines" class="md-nav__link">
-    <span class="md-ellipsis">
-      Guidelines:
+      Docker Executables: No More Install Guides
     </span>
   </a>
   
@@ -480,88 +553,68 @@
             
           
           
-            <div class="md-content" data-md-component="content">
-              <article class="md-content__inner md-typeset">
-                
-                  
+  <div class="md-content" data-md-component="content">
+    <div class="md-content__inner">
+      <header class="md-typeset">
+        <h2 id="devops">DevOps<a class="headerlink" href="#devops" title="Permanent link">#</a></h2>
+      </header>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2025-09-10 00:00:00+00:00">Wednesday, September 10, 2025</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="devops.html" class="md-meta__link">Devops</a></li>
+        
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="docker_executables_no_more_install_guides"><a class="toclink" href="../2025/09/10/docker-executables-no-more-install-guides.html">Docker Executables: No More Install Guides</a></h2>
+<p>Have you ever spent hours trying to install a tool, only to hit version
+conflicts or mysterious errors? Do you need to run the same tool on different
+computers (e.g., Mac vs Linux laptops vs AWS dev servers vs CI servers), having
+problems maintaining the tools aligned, or even just building?</p>
+<p>At Causify, we face this problem repeatedly with different developer utilities.
+To solve it, we introduced a toolchain pattern we call <strong>Dockerized Executables</strong>.</p>
+<p>Instead of baking every utility into one "kitchen-sink" dev image, we <strong>package
+each tool in its own slim image</strong> and run it on demand. That keeps the base dev
+environment lean, avoids cross-tool dependency conflicts, and lets us
+version/upgrade/rollback tools independently without rebuilding the whole stack.
+CI and local caches pull only what’s needed, which speeds builds and reduces
+churn, and the smaller, purpose-built images also shrink the security surface.
+In short: per-tool containers give us cleaner isolation and faster iteration
+than a single all-in-one image. Developers call the familiar tool name, but
+behind the scenes, it runs inside a container with all its dependencies
+pre-packaged and controlled.</p>
+<p>The container image includes everything required to run the tool. A thin Python
+wrapper handles mounting the repository and path conversions across Docker and
+user space, and the output lands directly back in the workspace. From the
+developer’s perspective, a Dockerized Executable behaves the same as a local
+install, just <strong>without</strong> the setup pains or environment drift.</p>
 
+    
+      <nav class="md-post__action">
+        <a href="../2025/09/10/docker-executables-no-more-install-guides.html">
+          Continue reading
+        </a>
+      </nav>
+    
+  </div>
+</article>
+      
+      
+    </div>
+  </div>
 
-
-  <h1>Guidelines for developers</h1>
-
-<h2 id="how_to_use_coding_ai">How to use coding AI<a class="headerlink" href="#how_to_use_coding_ai" title="Permanent link">#</a></h2>
-<p>The best applications for AI coding are:
-- Generate boilerplate code (like 80-90%) of an entire task<br />
-- Perform deterministic transformations (e.g., apply a certain style, add
-    documentation to an existing piece of code)<br />
-- Generate unit tests (at least the boilerplate)<br />
-- Improve documentation of existing code<br />
-- Explain code that you are not familiar with<br />
-- Look up documentation (instead of Googling)<br />
-- Infer type hints in existing code<br />
-- Fix small localized bugs</p>
-<p>What AI coding is not good (yet) for:</p>
-<ul>
-<li>Generate end-to-end applications (unless it's a throw-away prototype)  <ul>
-<li>The problem is that AI can generate 90% of the application, but the last 10%
-    requires a lot of work and it's more difficult to explain than just doing it  </li>
-</ul>
-</li>
-<li>Fix bugs due to the interactions of multiple complex components in the code</li>
-</ul>
-<p>Our goal is:</p>
-<ul>
-<li>Not to replace our work with AI  </li>
-<li>Automate the repetitive tasks so that we can move fast  </li>
-<li>Have more fun by removing the boring part</li>
-</ul>
-<h3 id="our_golden_rule">Our golden rule<a class="headerlink" href="#our_golden_rule" title="Permanent link">#</a></h3>
-<ul>
-<li>After using AI, you should be able to explain and understand the code as if it
-    was entirely written by you  </li>
-<li>You need to understand the code line-by-line  </li>
-<li>If one asks you "what happens if I change this line", you should know the
-    answer</li>
-</ul>
-<h3 id="guidelines">Guidelines:<a class="headerlink" href="#guidelines" title="Permanent link">#</a></h3>
-<ul>
-<li>Start with clear intent: define the problem and what you want the AI to do
-    (e.g., generate boilerplate, suggest optimizations).  </li>
-<li>Use AI for scaffolding, not final code: Let AI create the first draft, then
-    review and refactor manually for readability, performance, and idiomatic style.  </li>
-<li>Demand explicit explanations: Ask the AI to explain its choices and logic,
-    especially for unfamiliar patterns or complex implementations.  </li>
-<li>Integrate tests early: Auto-generate or manually write unit tests alongside AI
-    code to validate correctness and edge cases.  </li>
-<li>Apply consistent style: Use linters, formatters, and enforce style guides
-    (PEP8) to keep code human-readable.  </li>
-<li>Iterate in small pieces: Break down tasks into small, verifiable chunks so that
-    each AI-generated block is easy to understand and debug.  </li>
-<li>Document while coding: Add meaningful docstrings and comments to bridge any
-    AI-human comprehension gap.  </li>
-<li>Avoid over-reliance: Use AI as a pair programmer, not a replacement; regularly
-    write code without it to stay sharp.  </li>
-<li>Focus on the architecture, write the interfaces first, and then use AI to fill
-    up the code  </li>
-<li>Use a lot of OOP / classes to encapsulate components with clear and separate
-    responsibilities</li>
-</ul>
-
-
-
-
-
-
-
-
-
-
-
-
-                
-              </article>
-            </div>
-          
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
@@ -594,10 +647,10 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.indexes"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      <script src="../assets/javascripts/bundle.92b07e13.min.js"></script>
       
     
   </body>
