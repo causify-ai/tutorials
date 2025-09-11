@@ -121,25 +121,23 @@ jobs:
           git commit -am "Update helpers repo"
           git push
 
-    # TODO(Heanh): We need to set GH Actions secrets and variables in the repo
-    # setting first.
-    #   - name: Send Slack notification on failure
-    #     # Need to use ref_name as it contains the branch that triggered the
-    #     # workflow run.
-    #     # Alternative, head_ref is only available when the event that triggers a
-    #     # workflow run is either pull_request or pull_request_target.
-    #     if: ${{ failure() && github.ref_name == 'master' }}
-    #     uses: slackapi/slack-github-action@v1.27.0
-    #     with:
-    #       # You can pass in multiple channels to post to by providing a
-    #       # comma-delimited list of channel IDs: 'CHANNEL_ID,ANOTHER_CHANNEL_ID'
-    #       channel-id: ${{ vars.SLACK_BUILD_NOTIF_CHANNEL_ID }}
-    #       slack-message: |
-    #         Unable to update `helpers` repo reference
-    #         Build failure '${{ github.workflow }}'
-    #         Repo: '${{ github.repository }}'
-    #         Branch: '${{ github.ref_name }}'
-    #         Event: '${{ github.event_name }}'
-    #         https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-    #     env:
-    #       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      - name: Send Slack notification on failure
+        # Need to use ref_name as it contains the branch that triggered the
+        # workflow run.
+        # Alternative, head_ref is only available when the event that triggers a
+        # workflow run is either pull_request or pull_request_target.
+        if: ${{ failure() && github.ref_name == 'master' }}
+        uses: slackapi/slack-github-action@v1.27.0
+        with:
+          # You can pass in multiple channels to post to by providing a
+          # comma-delimited list of channel IDs: 'CHANNEL_ID,ANOTHER_CHANNEL_ID'
+          channel-id: ${{ vars.SLACK_BUILD_NOTIF_CHANNEL_ID }}
+          slack-message: |
+            Unable to update `helpers` repo reference
+            Build failure '${{ github.workflow }}'
+            Repo: '${{ github.repository }}'
+            Branch: '${{ github.ref_name }}'
+            Event: '${{ github.event_name }}'
+            https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
