@@ -3,6 +3,11 @@ title: "Docker Executables: No More Install Guides"
 # authors:
 #   - Shaunak Dhande
 #   - Gpsaggese
+#   - Heanh Sok
+#   - Vlad
+#   - Paul Smith
+#   - Shayan Ghasemnezhad
+#   - Samarth KaPatel
 date: 2025-09-10
 description:
   "How Causify runs developer tools in lightweight, per-tool containers to
@@ -90,26 +95,26 @@ behavior across macOS/Linux/CI, and version-controlled tooling.
 
 1. **Formatting Docs/Code** 
 
-    - Script: `dev_scripts_helpers/documentation/dockerized_prettier.py` 
+    - **Script:** [dockerized_prettier.py](https://github.com/causify-ai/helpers/blob/master/dev_scripts_helpers/documentation/dockerized_prettier.py)  
     - Use: Apply consistent formatting across Markdown and source files.
 
 2. **Diagram Rendering (Mermaid / Graphviz / Tikz)** 
 
     - Scripts: 
-        - `dev_scripts_helpers/documentation/dockerized_mermaid.py`
-        - `dev_scripts_helpers/documentation/dockerized_graphviz.py`
-        - `dev_scripts_helpers/documentation/dockerized_tikz_to_bitmap.py` 
+        - [dockerized_mermaid.py](https://github.com/causify-ai/helpers/blob/master/dev_scripts_helpers/documentation/dockerized_mermaid.py)  
+        - [dockerized_graphviz.py](https://github.com/causify-ai/helpers/blob/master/dev_scripts_helpers/documentation/dockerized_graphviz.py)  
+        - [dockerized_tikz_to_bitmap.py](https://github.com/causify-ai/helpers/blob/master/dev_scripts_helpers/documentation/dockerized_tikz_to_bitmap.py) 
     - Use: Render architecture/flow diagrams and convert vector sources to 
         bitmaps inside containers (no local installs).
 
 3. **Latex PDF Builds** 
 
-    - Script: `dev_scripts_helpers/documentation/dockerized_latex.py`
+    - **Script:** [dockerized_latex.py](https://github.com/causify-ai/helpers/blob/master/dev_scripts_helpers/documentation/dockerized_latex.py)  
     - Use: Build PDFs reproducibly without installing LaTeX on the host/dev container.
 
 4. **Llm-Powered Markdown Transforms** 
 
-    - Script: `dev_scripts_helpers/llms/llm_transform.py` 
+    - **Script:** [llm_transform.py](https://github.com/causify-ai/helpers/blob/master/dev_scripts_helpers/llms/llm_transform.py)
     - Use: Structured content rewrites (e.g., polishing notes to Markdown).
 
 ## Technical Guide: Building a Dockerized Executable
@@ -333,8 +338,8 @@ fills the gap.
 
 ## Technical References
 
-- `helpers_root/docs/tools/documentation_toolchain/all.notes_toolchain.how_to_guide.md`
-- `helpers_root/docs/tools/docker/all.dockerized_flow.explanation.md`
+- [all.notes_toolchain.how_to_guide.md](https://github.com/causify-ai/helpers/blob/master/docs/tools/documentation_toolchain/all.notes_toolchain.how_to_guide.md)
+- [all.dockerized_flow.explanation.md](https://github.com/causify-ai/helpers/blob/master/docs/tools/docker/all.dockerized_flow.explanation.md)
 
 ## Closing Thoughts
 
