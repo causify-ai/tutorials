@@ -787,11 +787,11 @@ install, just <strong>without</strong> the setup pains or environment drift.</p>
 <h3 id="why_we_built_this">Why We Built This<a class="headerlink" href="#why_we_built_this" title="Permanent link">#</a></h3>
 <ul>
 <li><strong>Installation struggles:</strong> Some tools require long setup guides, heavy
-    dependencies, or fragile environment configs.</li>
+  dependencies, or fragile environment configs.</li>
 <li><strong>Inconsistent environments:</strong> A tool might behave differently across macOS,
-    Linux, and CI pipelines.</li>
+  Linux, and CI pipelines.</li>
 <li><strong>Recurring time sink:</strong> Installing and configuring utilities often leads to
-    wasted time debugging setups before real work can begin.</li>
+  wasted time debugging setups before real work can begin.</li>
 </ul>
 <h3 id="how_it_works">How It Works<a class="headerlink" href="#how_it_works" title="Permanent link">#</a></h3>
 <p>When a developer runs a command, our wrapper script:</p>
@@ -807,20 +807,20 @@ install, just <strong>without</strong> the setup pains or environment drift.</p>
 <h3 id="example_document_conversion_via_a_dockerized_executable">Example: Document Conversion Via a Dockerized Executable<a class="headerlink" href="#example_document_conversion_via_a_dockerized_executable" title="Permanent link">#</a></h3>
 <p><strong>Goal:</strong> Convert a <code>.docx</code> file to Markdown without installing the converter
 locally.</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>dev_scripts_helpers/documentation/convert_docx_to_markdown.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-i<span class="w"> </span>docs/weekly_update.docx<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-o<span class="w"> </span>docs/weekly_update.md
-</code></pre></div>
+<pre><code class="language-bash">python dev_scripts_helpers/documentation/convert_docx_to_markdown.py \
+  -i docs/weekly_update.docx \
+  -o docs/weekly_update.md
+</code></pre>
 <p><strong>What happens under the hood (aligned with our flow):</strong></p>
 <ul>
 <li>The Wrapper Ensures the Converter’S Docker Image Is Available (Pull/Build
-    if needed). </li>
+  if needed). </li>
 <li>The Repository (And the <code>docs/</code> Files) Is Mounted Into the Container
-    (e.g., at <code>/src</code>).</li>
+  (e.g., at <code>/src</code>).</li>
 <li>Paths Are Mapped Automatically (E.G., <code>docs/weekly_update.docx</code> →
-    <code>/src/docs/weekly_update.docx</code>).</li>
+  <code>/src/docs/weekly_update.docx</code>).</li>
 <li>The Tool Runs Inside the Container; the Generated <code>docs/weekly_update.md</code>
-    is written back to your workspace.</li>
+  is written back to your workspace.</li>
 </ul>
 <p><strong>Outcome:</strong> Same result as a local install, but with no host setup, consistent
 behavior across macOS/Linux/CI, and version-controlled tooling.</p>
@@ -828,31 +828,37 @@ behavior across macOS/Linux/CI, and version-controlled tooling.</p>
 <ol>
 <li>
 <p><strong>Formatting Docs/Code</strong> </p>
-<pre><code>- Script: `dev_scripts_helpers/documentation/dockerized_prettier.py` 
-- Use: Apply consistent formatting across Markdown and source files.
-</code></pre>
+<ul>
+<li><strong>Script:</strong> <a href="https://github.com/causify-ai/helpers/blob/master/dev_scripts_helpers/documentation/dockerized_prettier.py">dockerized_prettier.py</a>  </li>
+<li>Use: Apply consistent formatting across Markdown and source files.</li>
+</ul>
 </li>
 <li>
 <p><strong>Diagram Rendering (Mermaid / Graphviz / Tikz)</strong> </p>
-<pre><code>- Scripts: 
-        - `dev_scripts_helpers/documentation/dockerized_mermaid.py`
-        - `dev_scripts_helpers/documentation/dockerized_graphviz.py`
-        - `dev_scripts_helpers/documentation/dockerized_tikz_to_bitmap.py` 
-- Use: Render architecture/flow diagrams and convert vector sources to 
-        bitmaps inside containers (no local installs).
-</code></pre>
+<ul>
+<li>Scripts: <ul>
+<li><a href="https://github.com/causify-ai/helpers/blob/master/dev_scripts_helpers/documentation/dockerized_mermaid.py">dockerized_mermaid.py</a>  </li>
+<li><a href="https://github.com/causify-ai/helpers/blob/master/dev_scripts_helpers/documentation/dockerized_graphviz.py">dockerized_graphviz.py</a>  </li>
+<li><a href="https://github.com/causify-ai/helpers/blob/master/dev_scripts_helpers/documentation/dockerized_tikz_to_bitmap.py">dockerized_tikz_to_bitmap.py</a> </li>
+</ul>
+</li>
+<li>Use: Render architecture/flow diagrams and convert vector sources to 
+    bitmaps inside containers (no local installs).</li>
+</ul>
 </li>
 <li>
 <p><strong>Latex PDF Builds</strong> </p>
-<pre><code>- Script: `dev_scripts_helpers/documentation/dockerized_latex.py`
-- Use: Build PDFs reproducibly without installing LaTeX on the host/dev container.
-</code></pre>
+<ul>
+<li><strong>Script:</strong> <a href="https://github.com/causify-ai/helpers/blob/master/dev_scripts_helpers/documentation/dockerized_latex.py">dockerized_latex.py</a>  </li>
+<li>Use: Build PDFs reproducibly without installing LaTeX on the host/dev container.</li>
+</ul>
 </li>
 <li>
 <p><strong>Llm-Powered Markdown Transforms</strong> </p>
-<pre><code>- Script: `dev_scripts_helpers/llms/llm_transform.py` 
-- Use: Structured content rewrites (e.g., polishing notes to Markdown).
-</code></pre>
+<ul>
+<li><strong>Script:</strong> <a href="https://github.com/causify-ai/helpers/blob/master/dev_scripts_helpers/llms/llm_transform.py">llm_transform.py</a></li>
+<li>Use: Structured content rewrites (e.g., polishing notes to Markdown).</li>
+</ul>
 </li>
 </ol>
 <h3 id="technical_guide_building_a_dockerized_executable">Technical Guide: Building a Dockerized Executable<a class="headerlink" href="#technical_guide_building_a_dockerized_executable" title="Permanent link">#</a></h3>
@@ -887,22 +893,22 @@ behavior across macOS/Linux/CI, and version-controlled tooling.</p>
 </li>
 </ul>
 <h4 id="minimal_image_illustrative">Minimal Image (Illustrative)<a class="headerlink" href="#minimal_image_illustrative" title="Permanent link">#</a></h4>
-<div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">debian:stable-slim</span>
-<span class="c"># Install Your Toolchain and Runtime Here</span>
-<span class="c"># RUN Apt-Get Update \</span>
-<span class="c"># &amp;&amp; Apt-Get Install -Y &lt;Your-Tool&gt; &lt;Dependencies&gt; \</span>
-<span class="c"># &amp;&amp; Rm -Rf /Var/Lib/Apt/Lists/*</span>
+<pre><code class="language-dockerfile">FROM debian:stable-slim
+# Install Your Toolchain and Runtime Here
+# RUN Apt-Get Update \
+# &amp;&amp; Apt-Get Install -Y &lt;Your-Tool&gt; &lt;Dependencies&gt; \
+# &amp;&amp; Rm -Rf /Var/Lib/Apt/Lists/*
 
-<span class="c"># Create a Non-Root User (Recommended)</span>
-<span class="k">RUN</span><span class="w"> </span>useradd<span class="w"> </span>-ms<span class="w"> </span>/bin/bash<span class="w"> </span>appuser
-<span class="k">USER</span><span class="w"> </span><span class="s">appuser</span>
+# Create a Non-Root User (Recommended)
+RUN useradd -ms /bin/bash appuser
+USER appuser
 
-<span class="c"># Work Inside the Mounted Repository Path</span>
-<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/src</span>
+# Work Inside the Mounted Repository Path
+WORKDIR /src
 
-<span class="c"># Use a Simple Shell Entrypoint; the Wrapper Supplies the Command</span>
-<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/bin/sh&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-lc&quot;</span><span class="p">]</span>
-</code></pre></div>
+# Use a Simple Shell Entrypoint; the Wrapper Supplies the Command
+ENTRYPOINT [&quot;/bin/sh&quot;, &quot;-lc&quot;]
+</code></pre>
 <h4 id="wrapper_cli_responsibilities_summary">Wrapper CLI Responsibilities (Summary)<a class="headerlink" href="#wrapper_cli_responsibilities_summary" title="Permanent link">#</a></h4>
 <ul>
 <li>Discover the <strong>Repo Root</strong>.</li>
@@ -918,28 +924,28 @@ mean the same thing on the host, in a dev container, and inside the tool
 container. We use the <strong>repository root</strong> as that anchor:</p>
 <ul>
 <li><strong>Consistent Path Mapping:</strong> Inputs Like <code>docs/notes.md</code> Are Resolved
-    relative to the repo root and then rewritten to the container path (e.g.,
-    <code>/src/docs/notes.md</code>). This avoids "file not found" errors from
-    absolute/host-specific paths.</li>
+  relative to the repo root and then rewritten to the container path (e.g.,
+  <code>/src/docs/notes.md</code>). This avoids "file not found" errors from
+  absolute/host-specific paths.</li>
 <li><strong>Works From Any Subdirectory:</strong> Developers Often Run Commands From
-    <code>docs/</code> or <code>scripts/</code>. Resolving paths against the repo root means the same
-    command works no matter where it’s launched.</li>
+  <code>docs/</code> or <code>scripts/</code>. Resolving paths against the repo root means the same
+  command works no matter where it’s launched.</li>
 <li><strong>Children Vs. Sibling Containers:</strong> with Sibling Containers (Dev
-    container → host Docker → tool container), the mount must reference a
-    <strong>host-visible path</strong>. Using the repo root ensures the right directory is
-    mounted across both patterns.</li>
+  container → host Docker → tool container), the mount must reference a
+  <strong>host-visible path</strong>. Using the repo root ensures the right directory is
+  mounted across both patterns.</li>
 <li><strong>Minimal, Predictable Mount:</strong> Mounting Only the Repo Root Keeps the
-    environment lean and avoids exposing unrelated host directories.</li>
+  environment lean and avoids exposing unrelated host directories.</li>
 <li><strong>CI Parity:</strong> CI Checks Out the Repo Into Different Paths. A
-    repo-root–based mount keeps commands stable across laptops, dev containers,
-    and CI runners.</li>
+  repo-root–based mount keeps commands stable across laptops, dev containers,
+  and CI runners.</li>
 </ul>
 <h4 id="illustrative_container_invocation">Illustrative Container Invocation<a class="headerlink" href="#illustrative_container_invocation" title="Permanent link">#</a></h4>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span><span class="s2">:</span><span class="k">$(</span>id<span class="w"> </span>-g<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-v<span class="w"> </span><span class="s2">&quot;&lt;repo_root&gt;:/src&quot;</span><span class="w"> </span>-w<span class="w"> </span>/src<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>&lt;image:tag&gt;<span class="w"> </span>&lt;entrypoint-or-cmd&gt;<span class="w"> </span>&lt;args...&gt;
-</code></pre></div>
+<pre><code class="language-bash">docker run --rm \
+  -u &quot;$(id -u):$(id -g)&quot; \
+  -v &quot;&lt;repo_root&gt;:/src&quot; -w /src \
+  &lt;image:tag&gt; &lt;entrypoint-or-cmd&gt; &lt;args...&gt;
+</code></pre>
 <h4 id="path-mapping_algorithm_portable">Path-Mapping Algorithm (Portable)<a class="headerlink" href="#path-mapping_algorithm_portable" title="Permanent link">#</a></h4>
 <ol>
 <li>Normalize the caller’s path (host or dev container).</li>
@@ -947,53 +953,25 @@ container. We use the <strong>repository root</strong> as that anchor:</p>
 <li>Rewrite to container path: <code>/src/${rel_path}</code>.</li>
 </ol>
 <h3 id="sequence_diagram_build_run">Sequence Diagram (Build + Run)<a class="headerlink" href="#sequence_diagram_build_run" title="Permanent link">#</a></h3>
-<pre class="mermaid"><code>sequenceDiagram
-        participant Dev as Developer
-        participant CLI as Wrapper CLI
-        participant Eng as Docker Engine
-        participant C as Tool Container
-
-        Dev-&gt;&gt;CLI: run utility with options
-        CLI-&gt;&gt;Eng: pull/build &lt;image:tag&gt;
-        Eng--&gt;&gt;CLI: image ready (cached if unchanged)
-        CLI-&gt;&gt;Eng: run with mount /src, UID:GID, env
-        Eng-&gt;&gt;C: start container
-        C-&gt;&gt;C: execute utility
-        C--&gt;&gt;Eng: exit code + outputs on /src
-        Eng--&gt;&gt;CLI: container finished
-        CLI--&gt;&gt;Dev: exit code + logs</code></pre>
+<p><img alt="" src="../../../figs/blog4.1.png" /></p>
 <h3 id="workflow_diagram">Workflow Diagram<a class="headerlink" href="#workflow_diagram" title="Permanent link">#</a></h3>
-<pre class="mermaid"><code>graph TD
-        A[Developer Command] --&gt; B[Wrapper Script]
-        B --&gt;|Mounts repo + maps paths| C[Docker Container]
-        C --&gt;|Runs tool with correct deps| D[Outputs to Repo]
-
-        %% Optional styling
-        classDef cmd fill:#E3F2FD,stroke:#2196F3,color:#0D47A1,stroke-width:1px;
-        classDef wrap fill:#FFF8E1,stroke:#FFC107,color:#674100,stroke-width:1px;
-        classDef cont fill:#E8F5E9,stroke:#4CAF50,color:#1B5E20,stroke-width:1px;
-        classDef out fill:#F3E5F5,stroke:#9C27B0,color:#4A148C,stroke-width:1px;
-
-        class A cmd;
-        class B wrap;
-        class C cont;
-        class D out;</code></pre>
+<p><img alt="" src="../../../figs/blog4.2.png" /></p>
 <h3 id="running_inside_containers">Running Inside Containers<a class="headerlink" href="#running_inside_containers" title="Permanent link">#</a></h3>
 <p>Many of our developers already work inside dev containers. Running a
 containerized tool inside another container requires careful handling. There are
 two approaches:</p>
 <ul>
 <li><strong>Children Containers (Docker-In-Docker):</strong> One Container Launches
-    another. Flexible but requires elevated privileges.</li>
+  another. Flexible but requires elevated privileges.</li>
 <li><strong>Sibling Containers:</strong> the Dev Container Communicates with the Host’S
-    Docker engine to launch another container. Safer and more efficient, but
-    requires thoughtful mount management.</li>
+  Docker engine to launch another container. Safer and more efficient, but
+  requires thoughtful mount management.</li>
 </ul>
 <p>At Causify, we <strong>prefer the sibling approach</strong> for most workflows.</p>
 <h3 id="testing_the_flow">Testing the Flow<a class="headerlink" href="#testing_the_flow" title="Permanent link">#</a></h3>
 <ul>
 <li>Simulate Real Usage by Invoking the <strong>Same Wrapper</strong> a Developer Would
-    use.</li>
+  use.</li>
 <li>Containers Run with Their <strong>Normal Entry Points</strong> and Configurations.</li>
 <li>Assertions Check <strong>Outputs, Logs, or File Changes</strong>.</li>
 <li>This Avoids Contrived Test Setups and Ensures Reliability.</li>
@@ -1013,7 +991,7 @@ two approaches:</p>
 <li><strong>Clean Environments:</strong> No More Cluttered Local Installs.</li>
 <li><strong>Controlled Upgrades:</strong> Images Are Version-Pinned and Reviewed.</li>
 <li><strong>Cross-Platform Stability:</strong> Works Seamlessly Across Macos, Linux, and
-    CI.</li>
+  CI.</li>
 </ul>
 <h3 id="related_work">Related Work<a class="headerlink" href="#related_work" title="Permanent link">#</a></h3>
 <p>When thinking about reproducible tooling, our Dockerized Executable flow is not
@@ -1023,26 +1001,26 @@ focused way.</p>
 <h4 id="uv_for_python_packages">Uv for Python Packages<a class="headerlink" href="#uv_for_python_packages" title="Permanent link">#</a></h4>
 <ul>
 <li><strong>What It Does:</strong> <code>uv</code> Is a Rust-Based Package Manager for Python. It
-    installs both Python itself and project dependencies into isolated, cached
-    environments.</li>
+  installs both Python itself and project dependencies into isolated, cached
+  environments.</li>
 <li><strong>Philosophy:</strong> Prevent "dependency hell" by Guaranteeing That Everyone on
-    a team resolves to the same versions, without polluting the global
-    environment.</li>
+  a team resolves to the same versions, without polluting the global
+  environment.</li>
 <li><strong>Strengths:</strong> Extremely Fast Installs, Lightweight, and Tailored
-    specifically to Python workflows.</li>
+  specifically to Python workflows.</li>
 <li><strong>Limitations:</strong> Scope Is Narrow, It Only Solves Problems Within the Python
-    ecosystem.</li>
+  ecosystem.</li>
 </ul>
 <h4 id="dockerized_executables_at_causify">Dockerized Executables at Causify<a class="headerlink" href="#dockerized_executables_at_causify" title="Permanent link">#</a></h4>
 <ul>
 <li><strong>What We Do:</strong> Instead of Targeting One Language, We Containerize Any
-    developer utility—from formatters to document converters to diagram renderers.</li>
+  developer utility—from formatters to document converters to diagram renderers.</li>
 <li><strong>Philosophy:</strong> Eliminate Setup Headaches by Running Tools in Docker
-    images that include all their dependencies.</li>
+  images that include all their dependencies.</li>
 <li><strong>Strengths:</strong> Works Across Languages and Ecosystems, Consistent Behavior
-    across laptops, dev containers, and CI.</li>
+  across laptops, dev containers, and CI.</li>
 <li><strong>Limitations:</strong> Requires Docker, and Images Are Heavier Than Python
-    wheels. There is also a small first-run latency to pull/build the image.</li>
+  wheels. There is also a small first-run latency to pull/build the image.</li>
 </ul>
 <h4 id="comparison">Comparison<a class="headerlink" href="#comparison" title="Permanent link">#</a></h4>
 <p>Both approaches are rooted in the same principle: tools should be easy to run,
@@ -1058,8 +1036,8 @@ boundaries or have system-level dependencies, our Dockerized Executable flow
 fills the gap.</p>
 <h3 id="technical_references">Technical References<a class="headerlink" href="#technical_references" title="Permanent link">#</a></h3>
 <ul>
-<li><code>helpers_root/docs/tools/documentation_toolchain/all.notes_toolchain.how_to_guide.md</code></li>
-<li><code>helpers_root/docs/tools/docker/all.dockerized_flow.explanation.md</code></li>
+<li><a href="https://github.com/causify-ai/helpers/blob/master/docs/tools/documentation_toolchain/all.notes_toolchain.how_to_guide.md">all.notes_toolchain.how_to_guide.md</a></li>
+<li><a href="https://github.com/causify-ai/helpers/blob/master/docs/tools/docker/all.dockerized_flow.explanation.md">all.dockerized_flow.explanation.md</a></li>
 </ul>
 <h3 id="closing_thoughts">Closing Thoughts<a class="headerlink" href="#closing_thoughts" title="Permanent link">#</a></h3>
 <p>If you’ve ever lost hours to installation issues, you know the frustration. With
