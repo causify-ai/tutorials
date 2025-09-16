@@ -1,5 +1,0 @@
-jupyterlab
-matplotlib
-pandas
-requests
-pyspark

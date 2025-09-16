@@ -1,2 +1,0 @@
-# Allow jupyter user passwordless sudo access
-jupyter ALL=(ALL) NOPASSWD:ALL

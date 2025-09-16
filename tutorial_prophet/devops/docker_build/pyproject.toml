@@ -8,6 +8,7 @@ authors = ["GP Saggese <gp@kaizen-tech.io>"]
 invoke = "*"
 jupyter = "*"
 jupytext = "*"
+boto3 = "*"
 matplotlib = "*"
 numpy = "*"
 pandas = ">= 2.1.1"

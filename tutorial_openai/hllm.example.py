@@ -7,24 +7,14 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.17.2
 #   kernelspec:
-#     display_name: Python (client_venv.helpers)
+#     display_name: client_venv.helpers
 #     language: python
-#     name: client_venv_helpers
+#     name: python3
 # ---
 
 # %% [markdown]
 # ## 0. Setup and Initialization
 # Before diving into use cases, we should initialize the notebook with the required setup:
-
-# %%
-# Put the helpers_root directory itself on sys.path.
-import sys
-from pathlib import Path
-
-HELPERS_ROOT = Path("/Users/indro/src/tutorials1/helpers_root")
-if str(HELPERS_ROOT) not in sys.path:
-    sys.path.insert(0, str(HELPERS_ROOT))
-
 
 # %%
 # Import the helper script.
@@ -85,9 +75,9 @@ print(trip_plan)
 # Upload files to a vector store.
 vector_store_name = "batch_vector_store"
 file_paths = [
-    "/Users/indro/src/tutorials1/helpers_root/docs/tools/all.imports_and_packages.how_to_guide.md", 
-    "/Users/indro/src/tutorials1/helpers_root/docs/tools/unit_test/all.write_unit_tests.how_to_guide.md",
-             "/Users/indro/src/tutorials1/helpers_root/docs/code_guidelines/all.coding_style.how_to_guide.md"]  # Example paths
+    "../helpers_root/docs/tools/all.imports_and_packages.how_to_guide.md", 
+    "../helpers_root/docs/tools/unit_test/all.write_unit_tests.how_to_guide.md",
+             "../helpers_root/docs/code_guidelines/all.coding_style.how_to_guide.md"]  # Example paths
 
 question = "Is `from pathlib import Path` a correct import according to the coding guidelines?"
 

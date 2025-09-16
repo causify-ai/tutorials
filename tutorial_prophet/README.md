@@ -7,10 +7,6 @@
 
 <!-- tocstop -->
 
-# Project files
-
-- Author: Krishna Pratardan Taduri <kptaduri@umd.edu> and Indrayudd Roy Chowdhury <indro@umd.edu>
-- Date: 2025-09-05
 
 This project contains the following files
 
@@ -25,15 +21,11 @@ This project contains the following files
   - `tasks.py`
 
 - `README.md`: This file
-- `hllm.example.ipynb`: a notebook implementing example use-cases using `hllm.py`
-- `hllm.example.md`: a description of using `hllm.py`
-- `hllm.example.py`: code with example use-cases using `hllm.py`
-- `openai.example.ipynb`: a notebook implementing example use-cases using the native API of OpenAI
-- `openai.example.md`: a description of using the native API of OpenAI
-- `openai.example.py`: code using the native API of OpenAI
+- `tutorial_prophet.ipynb`: a notebook implementing a project using Prophet
+- `tutorial_prophet.py`: Python version of the Jupyter notebook
+- `prophet_model.py`: code implementing the native packages of Prophet
 
-
-- `dev_scripts_tutorial_openai` boilerplate files
+- `dev_scripts_tutorial_prophet` boilerplate files
 - `devops` mostly boilerplate files
   - `devops/docker_build/pyproject.toml`: contains the dependency of the package
     in Poetry format
@@ -52,11 +44,11 @@ This project contains the following files
   ```
 - Go to the project dir
   ```
-  > cd tutorial_openai
+  > cd tutorial_prophet
   ```
 - Activate virtual environment:
   ```bash
-  > source dev_scripts_tutorial_openai/thin_client/setenv.sh
+  > source dev_scripts_tutorial_prophet/thin_client/setenv.sh
   ```
 - Build Docker Image:
   ```bash
@@ -71,11 +63,3 @@ This project contains the following files
   > i docker_jupyter --skip-pull --stage local --version 1.1.0 -d
   ```
 
-### Environment Setup
-
-Set the `OPENAI_API_KEY` environment variable for API access:
-
-```python
-import os
-os.environ["OPENAI_API_KEY"] = "<your_openai_api_key>"
-```

@@ -1,4 +1,0 @@
-pyspark==3.4.1
-requests
-pandas
-matplotlib

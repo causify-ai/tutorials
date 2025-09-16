@@ -53,15 +53,29 @@ class ProphetForecastModel:
 
     def predict(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        Predict future values using the fitted model.
+        Predict historical values using the fitted model.
 
         :param df: data of future timestamps
         :return: forecasted data
         """
         if not self.fitted:
             raise RuntimeError("Model must be fitted before prediction.")
-        future = self.model.make_future_dataframe(periods=30)
-        return self.model.predict(future)
+        # future = self.model.make_future_dataframe(periods=30)
+        # return self.model.predict(future) 
+        # The idea here is to forecast for historical dates (i.e., in-sample or test period)
+        # and compare the predictions to actual observed values.
+
+        # On the other hand, forecasting for future dates (using make_future_dataframe)
+        # fails because prophet requires all regressors used during training (y.lag1)
+        # to be present during prediction also. Which is why the above code failed. 
+
+        # But, since we don't have actual future values of 'y.lag1', we would need to manually
+        # create or estimate it using some logic.
+
+        # So for now, the current approach limits forecasting to historical dates
+        # where y.lag1 is available — allowing us to make accurate predictions
+        # and directly compare them against actuals. 
+        return self.model.predict(df)
 
     def evaluate(self, df: pd.DataFrame) -> Dict[str, float]:
         """
