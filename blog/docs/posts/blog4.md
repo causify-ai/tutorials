@@ -1,13 +1,13 @@
 ---
 title: "Docker Executables: No More Install Guides"
-# authors:
-#   - Shaunak Dhande
-#   - Gpsaggese
-#   - Heanh Sok
-#   - Vlad
-#   - Paul Smith
-#   - Shayan Ghasemnezhad
-#   - Samarth KaPatel
+authors:
+  - Shaunak Dhande
+  - Gpsaggese
+  - Heanh Sok
+  - Vlad
+  - Paul Smith
+  - Shayan Ghasemnezhad
+  - Samarth KaPatel
 date: 2025-09-10
 description:
   "How Causify runs developer tools in lightweight, per-tool containers to
