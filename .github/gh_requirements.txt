@@ -4,3 +4,7 @@ invoke
 junitparser
 s3fs
 tqdm
+autoflake
+docformatter
+isort==5.12.0
+tabulate
