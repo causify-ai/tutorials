@@ -24,13 +24,3 @@ jobs:
     uses: causify-ai/helpers/.github/workflows/common_run_tests.yml@master
     with:
       test-name: run_fast_tests
-    secrets:
-      # Needed for checkout, GHCR login, manual status posting.
-      GH_ACTION_ACCESS_TOKEN: ${{ secrets.GH_ACTION_ACCESS_TOKEN }}
-      # Needed if your tests report coverage
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      # Needed for AWS assume-role steps.
-      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
