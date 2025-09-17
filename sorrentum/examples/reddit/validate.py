@@ -11,7 +11,7 @@ from typing import Any, List
 import pandas as pd
 
 import helpers.hdbg as hdbg
-import sorrentum_sandbox.common.validate as ssacoval
+import sorrentum.common.validate as ssacoval
 
 
 class EmptyTitleCheck(ssacoval.QaCheck):

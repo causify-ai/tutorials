@@ -18,11 +18,11 @@ import pymongo
 
 import helpers.hdbg as hdbg
 import helpers.hparser as hparser
-import sorrentum_sandbox.common.download as ssacodow
-import sorrentum_sandbox.common.validate as ssacoval
-import sorrentum_sandbox.examples.reddit.db as ssexredb
-import sorrentum_sandbox.examples.reddit.transform as ssexretr
-import sorrentum_sandbox.examples.reddit.validate as ssexreva
+import sorrentum.common.download as ssacodow
+import sorrentum.common.validate as ssacoval
+import sorrentum.examples.reddit.db as ssexredb
+import sorrentum.examples.reddit.transform as ssexretr
+import sorrentum.examples.reddit.validate as ssexreva
 
 _LOG = logging.getLogger(__name__)
 

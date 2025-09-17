@@ -20,9 +20,9 @@ import pandas as pd
 import helpers.hdatetime as hdateti
 import helpers.hdbg as hdbg
 import helpers.hparser as hparser
-import sorrentum_sandbox.common.client as ssacocli
-import sorrentum_sandbox.common.validate as ssacoval
-import sorrentum_sandbox.examples.binance.validate as ssesbiva
+import sorrentum.common.client as ssacocli
+import sorrentum.common.validate as ssacoval
+import sorrentum.examples.binance.validate as ssesbiva
 
 _LOG = logging.getLogger(__name__)
 
