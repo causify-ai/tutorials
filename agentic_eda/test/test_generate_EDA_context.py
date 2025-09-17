@@ -2,6 +2,10 @@ import logging
 import os
 import textwrap
 
+import pytest
+# Skip the whole module if `tabulate` isn't installed.
+pytest.importorskip("tabulate")
+
 import helpers.hio as hio
 import helpers.hunit_test as hunitest
 import pandas as pd
