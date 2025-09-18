@@ -1,4 +1,0 @@
-jupyterlab
-neo4j
-py2neo
-

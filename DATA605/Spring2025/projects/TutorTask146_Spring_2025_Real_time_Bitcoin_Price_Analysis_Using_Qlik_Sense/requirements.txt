@@ -1,4 +1,0 @@
-pandas
-requests
-prophet
-pytz

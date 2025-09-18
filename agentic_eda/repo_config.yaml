@@ -1,0 +1,30 @@
+repo_info:
+  repo_name: tutorials
+  github_repo_account: causify-ai
+  github_host_name: github.com
+  invalid_words:
+  issue_prefix: TutorialsTask
+  enable_git_commit_hook: True
+
+docker_info:
+  # Image base name for this runnable dir.
+  docker_image_name: agentic-eda
+  use_sibling_container_in_unit_tests: True
+
+s3_bucket_info:
+  unit_test_bucket_name: s3://cryptokaizen-unit-test
+  html_bucket_name: s3://cryptokaizen-html
+  html_ip: http://172.30.2.44
+  shared_configs_bucket_name:
+    prod:
+    preprod:
+    test:
+
+container_registry_info:
+  ecr: 623860924167.dkr.ecr.eu-north-1.amazonaws.com
+  ghcr: ghcr.io/causify-ai
+
+runnable_dir_info:
+  use_helpers_as_nested_module: True
+  venv_tag: agentic_eda
+  dir_suffix: agentic_eda

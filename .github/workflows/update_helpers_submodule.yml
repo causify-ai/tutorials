@@ -1,0 +1,143 @@
+name: Update helpers submodule
+
+on:
+  # In order to make this a reusable workflow.
+  workflow_call:
+  # Run manually.
+  workflow_dispatch:
+  # Run once a day at 1:00 am UTC even if there are no commits.
+  schedule:
+    - cron: "0 1 */1 * *"
+
+env:
+  CSFY_CI: true
+# Set up permissions for OIDC authentication.
+permissions:
+  # This is required for requesting the OIDC JWT.
+  id-token: write
+  # This is required for actions/checkout.
+  contents: read
+  # This is required for pulling the Docker image from GHCR.
+  packages: read
+jobs:
+  update_helpers_submodule:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the code from GitHub so that we can run the action inside
+      # the Docker container.
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      # To see the modules in `helpers`, PYTHONPATH needs to include `helpers`
+      # in the same way we do in `setenv.sh`.
+      - name: Update PYTHONPATH
+        run: echo "PYTHONPATH=.:helpers_root" >> $GITHUB_ENV
+
+      # Check whether `helpers` is up to date or not, if it is
+      # there is no need to execute the steps below.
+      # TODO(Grisha): move the code to an invoke target
+      # and identify sub-module name programatically.
+      - name: Check and update helpers if it is not up to date
+        run: |
+          cd helpers_root
+          export HELPERS_HEAD_HASH=$(git rev-parse HEAD)
+          export HELPERS_MASTER_HASH=$(git rev-parse origin/master)
+          # Compare current commit's hash with the one in master.
+          if [[ $HELPERS_HEAD_HASH != $HELPERS_MASTER_HASH ]]; then
+            echo "helpers submodule is not up to date"
+            # Sync the local version of `helpers` with the remote one.
+            git reset --hard origin/master
+            echo "HELPERS_IS_NOT_UP_TO_DATE=yes" >> $GITHUB_ENV
+          else
+            echo "helpers submodule is up to date"
+          fi
+
+      # Configure AWS authentication for this workflow.
+      # This step assumes an AWS IAM role to grant GH Action temporary
+      # credentials necessary to access AWS resources.
+      - name: Configure AWS credentials
+        if: env.HELPERS_IS_NOT_UP_TO_DATE
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ vars.GH_ACTION_AWS_ROLE_ARN }}
+          role-session-name: ${{ vars.GH_ACTION_AWS_SESSION_NAME }}
+          aws-region: ${{ vars.CSFY_AWS_DEFAULT_REGION }}
+
+      # Install packages that are required to run the job via GH.
+      - name: Install dependencies
+        if: env.HELPERS_IS_NOT_UP_TO_DATE
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r .github/gh_requirements.txt
+
+      - name: Login to GitHub Container Registry
+        if: env.HELPERS_IS_NOT_UP_TO_DATE
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull image from GHCR
+        if: env.HELPERS_IS_NOT_UP_TO_DATE
+        run: docker pull ghcr.io/${{ github.repository }}:dev
+
+      # Before pushing any commit, perform a sanity check, i.e. run the
+      # regressions.
+      - name: Run fast tests
+        if: env.HELPERS_IS_NOT_UP_TO_DATE
+        # Pass the relevant env vars via GH secrets.
+        env:
+          CSFY_AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+          CSFY_AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          CSFY_AWS_SESSION_TOKEN: ${{ env.AWS_SESSION_TOKEN }}
+          CSFY_AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+          # CSFY_ECR_BASE_PATH: ${{ vars.CSFY_ECR_BASE_PATH }}
+          # CSFY_ECR_BASE_PATH is the source path for fetching the image.
+          # If you prefer pulling the image from ECR, comment out the following
+          # line and uncomment the one above.
+          # TODO(Vlad): Rename the variable to CSFY_CR_BASE_PATH since it can be
+          # either GHCR or ECR.
+          CSFY_ECR_BASE_PATH: ghcr.io/${{ github.repository_owner }}
+          CSFY_AWS_S3_BUCKET: ${{ vars.CSFY_AWS_S3_BUCKET }}
+          GH_ACTION_ACCESS_TOKEN: ${{ secrets.GH_ACTION_ACCESS_TOKEN }}
+        run: invoke run_fast_tests
+
+      # Solve a problem from #CmTask6820. Reference to the solution:
+      # https://stackoverflow.com/a/48866443.
+      - name: Set ownership of .git/objects to current user
+        run: sudo chown -R "${USER:-$(id -un)}" .git/objects
+
+      # Commit the update and push it to the remote master.
+      - name: Commit update
+        if: env.HELPERS_IS_NOT_UP_TO_DATE
+        run: |
+          git config --global user.name 'CK Bot'
+          git config --global user.email 'ckbot@noreply.github.com'
+          git commit -am "Update helpers repo"
+          git push
+
+      - name: Send Slack notification on failure
+        # Need to use ref_name as it contains the branch that triggered the
+        # workflow run.
+        # Alternative, head_ref is only available when the event that triggers a
+        # workflow run is either pull_request or pull_request_target.
+        if: ${{ failure() && github.ref_name == 'master' }}
+        uses: slackapi/slack-github-action@v1.27.0
+        with:
+          # You can pass in multiple channels to post to by providing a
+          # comma-delimited list of channel IDs: 'CHANNEL_ID,ANOTHER_CHANNEL_ID'
+          channel-id: ${{ vars.SLACK_BUILD_NOTIF_CHANNEL_ID }}
+          slack-message: |
+            Unable to update `helpers` repo reference
+            Build failure '${{ github.workflow }}'
+            Repo: '${{ github.repository }}'
+            Branch: '${{ github.ref_name }}'
+            Event: '${{ github.event_name }}'
+            https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

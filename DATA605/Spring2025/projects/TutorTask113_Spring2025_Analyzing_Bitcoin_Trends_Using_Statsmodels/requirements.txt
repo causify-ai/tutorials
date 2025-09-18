@@ -1,7 +1,0 @@
-pandas
-numpy
-matplotlib
-requests
-statsmodels
-yfinance
-jupyterlab
