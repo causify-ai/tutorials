@@ -1,0 +1,53 @@
+[tool.poetry]
+name = "tutorial"
+version = "0.1.0"
+description = ""
+authors = ["Enrique Bolanos <ebolanos@umd.edu>"]
+
+[tool.poetry.dependencies]
+async_solipsism = ">= 0.3"
+boto3 = "*"
+chromadb = "*"
+crewai = "*"
+crewai-tools = "*"
+duckduckgo-search = "*"
+pydantic = ">=2"
+faiss-cpu = "*"
+invoke = "*"
+joblib = "*"
+jsonpickle = "*"
+jupyter = "*"
+jupytext = "*"
+langchain = "*"
+langchain-core = "*"
+langgraph = "*"
+matplotlib = "*"
+moto = "*"
+networkx = "*"
+numpy = "*"
+openai = "*"
+pandas = ">= 2.1.1"
+psutil = "*"
+psycopg2-binary = "*"
+pyarrow = "*"
+python = ">= 3.12, < 4.0"
+python-dotenv = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-instafail = "*"
+pytest-rerunfailures = "*"
+pytest-timeout = "*"
+pytest-xdist = "*"
+requests = "*"
+s3fs = "*"
+scikit-learn = "*"
+seaborn = "*"
+statsmodels = "*"
+tabulate = "*"
+tqdm = "*"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

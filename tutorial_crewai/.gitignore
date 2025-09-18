@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+*.pot
+*.mo
+*.env
+.env/
+venv/
+ENV/
+*.bak
+*.tmp
+*.swp
+*.swo
+*.coverage
+.coverage.*
+.cache
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+.pyre/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.nbconvert.ipynb
+profile_default/
+ipython_config.py
+
+# VS Code
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Others
+*.~ 
