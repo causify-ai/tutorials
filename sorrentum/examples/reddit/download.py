@@ -15,7 +15,7 @@ from typing import List, Optional, Tuple
 import pandas as pd
 import praw
 
-import sorrentum_sandbox.common.download as ssacodow
+import sorrentum.common.download as ssacodow
 
 _LOG = logging.getLogger(__name__)
 REDDIT_CLIENT_ID = os.environ["REDDIT_CLIENT_ID"]

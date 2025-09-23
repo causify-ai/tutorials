@@ -16,7 +16,7 @@ import tqdm
 
 import helpers.hdatetime as hdateti
 import helpers.hdbg as hdbg
-import sorrentum_sandbox.common.download as ssacodow
+import sorrentum.common.download as ssacodow
 
 _LOG = logging.getLogger(__name__)
 

@@ -24,4 +24,3 @@ jobs:
     uses: causify-ai/helpers/.github/workflows/common_run_tests.yml@master
     with:
       test-name: run_fast_tests
-    secrets: inherit

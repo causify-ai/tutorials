@@ -12,9 +12,9 @@ import pandas as pd
 import pymongo
 
 import helpers.hdbg as hdbg
-import sorrentum_sandbox.common.client as ssacocli
-import sorrentum_sandbox.common.download as ssacodow
-import sorrentum_sandbox.common.save as ssacosav
+import sorrentum.common.client as ssacocli
+import sorrentum.common.download as ssacodow
+import sorrentum.common.save as ssacosav
 
 MONGO_HOST = os.environ["MONGO_HOST"]
 

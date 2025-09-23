@@ -13,7 +13,7 @@ import pandas as pd
 
 import helpers.hdatetime as hdateti
 import helpers.hdbg as hdbg
-import sorrentum_sandbox.common.validate as ssacoval
+import sorrentum.common.validate as ssacoval
 
 
 def find_gaps_in_time_series(
