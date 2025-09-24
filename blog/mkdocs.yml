@@ -13,6 +13,12 @@ theme:
   features:
     - navigation.indexes 
 
+extra:
+  analytics:
+    provider: google
+    property: G-7F6J85DNXT
+
+# Helps render images and other assets correctly.
 use_directory_urls: false
 
 nav:
