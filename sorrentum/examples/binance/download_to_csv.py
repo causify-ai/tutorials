@@ -18,9 +18,9 @@ import pandas as pd
 import helpers.hdbg as hdbg
 import helpers.hio as hio
 import helpers.hparser as hparser
-import sorrentum_sandbox.common.download as sinsadow
-import sorrentum_sandbox.common.save as ssacosav
-import sorrentum_sandbox.examples.binance.download as ssesbido
+import sorrentum.common.download as sinsadow
+import sorrentum.common.save as ssacosav
+import sorrentum.examples.binance.download as ssesbido
 
 _LOG = logging.getLogger(__name__)
 

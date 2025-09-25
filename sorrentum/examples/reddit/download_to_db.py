@@ -16,8 +16,8 @@ import pymongo
 
 import helpers.hdbg as hdbg
 import helpers.hparser as hparser
-import sorrentum_sandbox.examples.reddit.db as ssexredb
-import sorrentum_sandbox.examples.reddit.download as ssexredo
+import sorrentum.examples.reddit.db as ssexredb
+import sorrentum.examples.reddit.download as ssexredo
 
 _LOG = logging.getLogger(__name__)
 

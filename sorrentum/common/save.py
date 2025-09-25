@@ -6,7 +6,7 @@ import sorrentum_sandbox.common.save as ssacosav
 
 import abc
 
-import sorrentum_sandbox.common.download as ssacodow
+import sorrentum.common.download as ssacodow
 
 # #############################################################################
 # DataSaver
