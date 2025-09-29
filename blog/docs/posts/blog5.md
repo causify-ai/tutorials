@@ -1,8 +1,11 @@
 ---
 title: "What’s the ETA?"
+<<<<<<< HEAD
 authors:
   - Gpsaggese
   - Paul Smith
+=======
+>>>>>>> 562edf394 (Resolve)
 date: 2025-09-10
 ---
 
