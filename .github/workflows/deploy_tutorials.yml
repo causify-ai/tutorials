@@ -1,9 +1,11 @@
 name: Build & Deploy Tutorials (Pages)
 
 on:
+  pull_request:
+    branches: 
+      - TutorTask672_Publish_tutorials_books
   push:
     branches: 
-      - TutorTask672_Publish_tutorials_book
       - master
     paths:
       - notes.programming_with_ai/**
