@@ -2,8 +2,7 @@ name: Build & Deploy Tutorials (Pages)
 
 on:
   pull_request:
-    branches: 
-      - TutorTask672_Publish_tutorials_books
+    branches: [ master ]
   push:
     branches: 
       - master
