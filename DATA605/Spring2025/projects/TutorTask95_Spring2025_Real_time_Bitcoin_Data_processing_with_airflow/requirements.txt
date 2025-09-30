@@ -1,4 +1,0 @@
-pandas
-numpy
-requests
-boto3
