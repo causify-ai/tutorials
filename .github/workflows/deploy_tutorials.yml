@@ -1,48 +1,71 @@
-name: Build & Deploy Tutorials (Pages)
+name: Publish Tutorials (Books)
 
 on:
-  push:
-    branches: 
-      - master
+  pull_request:
+    branches: [ master ]
     paths:
-      - notes.programming_with_ai/**
-      - notes.startup_admin_guide/**
-      - .github/workflows/deploy-tutorials.yml
+      - "notes.programming_with_ai/**"
+      - "notes.startup_admin_guide/**"
+      - "blog/docs/styles/**"
+      - "blog/docs/assets/**"
+      - "helpers_root/dev_scripts_helpers/documentation/mkdocs/**"
+      - ".github/workflows/publish_tutorials_books.yml"
+  push:
+    branches: [ master ]
+    paths:
+      - "notes.programming_with_ai/**"
+      - "notes.startup_admin_guide/**"
+      - "blog/docs/styles/**"
+      - "blog/docs/assets/**"
+      - "helpers_root/dev_scripts_helpers/documentation/mkdocs/**"
+      - ".github/workflows/publish_tutorials_books.yml"
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
+  contents: write
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
-        with: { python-version: "3.x" }
-      - name: Install MkDocs + deps
-        run: |
-          pip install mkdocs mkdocs-material
-          # pip install mkdocs-toc-tag-filter  # if used in your mkdocs.yml
-      - name: Build both books
-        run: |
-          mkdocs build -f notes.programming_with_ai/mkdocs.yml --site-dir site/books/notes.programming_with_ai
-          mkdocs build -f notes.startup_admin_guide/mkdocs.yml --site-dir site/book.startup_admin_guide
-          touch site/.nojekyll
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
         with:
-          path: site
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment: { name: github-pages, url: ${{ steps.deployment.outputs.page_url }} }
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          python-version: "3.11"
+
+      - name: Install MkDocs + plugins
+        run: |
+          pip install --upgrade pip
+          pip install mkdocs mkdocs-material pymdown-extensions mkdocs-blogging-plugin
+
+      - name: Build notes.programming_with_ai
+        working-directory: notes.programming_with_ai
+        run: |
+          python ../helpers_root/dev_scripts_helpers/documentation/mkdocs/preprocess_mkdocs.py \
+            --input_dir docs --output_dir tmp.mkdocs -v INFO
+          mkdocs build -f mkdocs.yml --site-dir ../_site/books/notes.programming_with_ai
+
+      - name: Build startup_admin_guide
+        working-directory: notes.startup_admin_guide
+        run: |
+          python ../helpers_root/dev_scripts_helpers/documentation/mkdocs/preprocess_mkdocs.py \
+            --input_dir docs --output_dir tmp.mkdocs -v INFO
+          mkdocs build -f mkdocs.yml --site-dir ../_site/book.startup_admin_guide
+
+      # ✅ On PR: attach the built site as an artifact you can download
+      - name: Upload preview artifact
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tutorials-site-preview
+          path: _site
+
+      # ✅ On push to master: publish to gh-pages (as before)
+      - name: Deploy to GitHub Pages (gh-pages)
+        if: github.event_name == 'push'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }} # gitleaks:allow
+          publish_dir: _site
+          keep_files: true
