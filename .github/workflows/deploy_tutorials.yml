@@ -21,16 +21,22 @@ on:
       - ".github/workflows/publish_tutorials_books.yml"
   workflow_dispatch:
 
+# Needed for Pages deploy (no secrets required)
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -53,19 +59,15 @@ jobs:
             --input_dir docs --output_dir tmp.mkdocs -v INFO
           mkdocs build -f mkdocs.yml --site-dir ../_site/book.startup_admin_guide
 
-      # ✅ On PR: attach the built site as an artifact you can download
-      - name: Upload preview artifact
-        if: github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v4
+      # Package built site for Pages
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: tutorials-site-preview
           path: _site
 
-      # ✅ On push to master: publish to gh-pages (as before)
-      - name: Deploy to GitHub Pages (gh-pages)
-        if: github.event_name == 'push'
-        uses: peaceiris/actions-gh-pages@v3
+      # Deploy: PRs -> Preview, push -> Production
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }} # gitleaks:allow
-          publish_dir: _site
-          keep_files: true
+          preview: ${{ github.event_name == 'pull_request' }}
