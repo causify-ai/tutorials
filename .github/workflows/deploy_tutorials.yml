@@ -1,15 +1,6 @@
 name: Publish Tutorials (Books)
 
 on:
-  pull_request:
-    branches: [ master ]
-    paths:
-      - "notes.programming_with_ai/**"
-      - "notes.startup_admin_guide/**"
-      - "blog/docs/styles/**"
-      - "blog/docs/assets/**"
-      - "helpers_root/dev_scripts_helpers/documentation/mkdocs/**"
-      - ".github/workflows/publish_tutorials_books.yml"
   push:
     branches: [ master ]
     paths:
@@ -19,9 +10,10 @@ on:
       - "blog/docs/assets/**"
       - "helpers_root/dev_scripts_helpers/documentation/mkdocs/**"
       - ".github/workflows/publish_tutorials_books.yml"
+  schedule:
+    - cron: "0 5 * * *"   
   workflow_dispatch:
 
-# Needed for Pages deploy (no secrets required)
 permissions:
   contents: write
   pages: write
@@ -30,7 +22,6 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,6 +36,7 @@ jobs:
           pip install --upgrade pip
           pip install mkdocs mkdocs-material pymdown-extensions mkdocs-blogging-plugin
 
+      # Build both books into the desired subpaths under _site/.
       - name: Build notes.programming_with_ai
         working-directory: notes.programming_with_ai
         run: |
@@ -52,22 +44,21 @@ jobs:
             --input_dir docs --output_dir tmp.mkdocs -v INFO
           mkdocs build -f mkdocs.yml --site-dir ../_site/books/notes.programming_with_ai
 
-      - name: Build startup_admin_guide
+      - name: Build notes.startup_admin_guide
         working-directory: notes.startup_admin_guide
         run: |
           python ../helpers_root/dev_scripts_helpers/documentation/mkdocs/preprocess_mkdocs.py \
             --input_dir docs --output_dir tmp.mkdocs -v INFO
-          mkdocs build -f mkdocs.yml --site-dir ../_site/book.startup_admin_guide
+          mkdocs build -f mkdocs.yml --site-dir ../_site/books/notes.startup_admin_guide
 
-      # Package built site for Pages
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
-      # Deploy: PRs -> Preview, push -> Production
       - name: Deploy GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          preview: ${{ github.event_name == 'pull_request' }}
