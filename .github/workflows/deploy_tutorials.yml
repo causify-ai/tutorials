@@ -1,0 +1,49 @@
+name: Build & Deploy Tutorials (Pages)
+
+on:
+  push:
+    branches: 
+      - TutorTask672_Publish_tutorials_book
+      - master
+    paths:
+      - notes.programming_with_ai/**
+      - notes.startup_admin_guide/**
+      - .github/workflows/deploy-tutorials.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.x" }
+      - name: Install MkDocs + deps
+        run: |
+          pip install mkdocs mkdocs-material
+          # pip install mkdocs-toc-tag-filter  # if used in your mkdocs.yml
+      - name: Build both books
+        run: |
+          mkdocs build -f notes.programming_with_ai/mkdocs.yml --site-dir site/books/notes.programming_with_ai
+          mkdocs build -f notes.startup_admin_guide/mkdocs.yml --site-dir site/book.startup_admin_guide
+          touch site/.nojekyll
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: { name: github-pages, url: ${{ steps.deployment.outputs.page_url }} }
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
