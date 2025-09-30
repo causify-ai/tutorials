@@ -1,0 +1,2203 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="chap04.Customer_Discovery_and_Validation.html">
+      
+      
+        <link rel="next" href="chap06.Startup_Pivots_and_Failures.html">
+      
+      
+      <link rel="icon" href="assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.19">
+    
+    
+      
+        <title>chap05.Business Models and Product Market Fit - Start-up Admin Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="styles/styles.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#business_model_canvas" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Start-up Admin Guide" class="md-header__button md-logo" aria-label="Start-up Admin Guide" data-md-component="logo">
+      
+  <img src="assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Start-up Admin Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              chap05.Business Models and Product Market Fit
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Start-up Admin Guide" class="md-nav__button md-logo" aria-label="Start-up Admin Guide" data-md-component="logo">
+      
+  <img src="assets/logo.png" alt="logo">
+
+    </a>
+    Start-up Admin Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="book_list.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Book list
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap00.Introduction.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap00.Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap01.Introduction_to_Startups.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap01.Introduction to Startups
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap02.Problem_Discovery_and_Opportunity_Identification.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap02.Problem Discovery and Opportunity Identification
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap03.Ideation_and_Value_Proposition_Design.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap03.Ideation and Value Proposition Design
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap04.Customer_Discovery_and_Validation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap04.Customer Discovery and Validation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    chap05.Business Models and Product Market Fit
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="chap05.Business_Models_and_Product-Market_Fit.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap05.Business Models and Product Market Fit
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#business_model_canvas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Business Model Canvas
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Business Model Canvas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#customer_segments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customer Segments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#value_proposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Value Proposition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#channels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Channels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customer_relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customer relationships
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#revenue_streams" class="md-nav__link">
+    <span class="md-ellipsis">
+      Revenue Streams
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Revenue Streams">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pricing_mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pricing mechanisms
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key_resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key_activities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Activities
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key_partnerships" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Partnerships
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost_structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cost Structure
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#different_types_of_business_models_b2b_b2c_saas_marketplace" class="md-nav__link">
+    <span class="md-ellipsis">
+      Different Types of Business Models (B2B, B2C, SaaS, Marketplace)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minimum_viable_product_mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Minimum Viable Product (MVP)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#signs_of_product-market_fit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Signs of Product-Market Fit
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#competitive_analysis_positioning_swot_differentiation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Competitive Analysis &amp; Positioning (SWOT, differentiation)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#refs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Refs
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap06.Startup_Pivots_and_Failures.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap06.Startup Pivots and Failures
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap07.Exit_Strategies.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap07.Exit Strategies
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap08.MVP_Development_and_Prototyping.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap08.MVP Development and Prototyping
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap09.Design_UX_UI.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap09.Design UX UI
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap10.Data_and_Analytics.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap10.Data and Analytics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap11.Engineering_Culture_and_DevOps.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap11.Engineering Culture and DevOps
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap12.Product_Management.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap12.Product Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap13.Go-To-Market_Strategy.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap13.Go To Market Strategy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap14.Scaling_and_Growth.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap14.Scaling and Growth
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap15.User_Research_and_Customer_Development.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap15.User Research and Customer Development
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap16.Marketing_and_Growth.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap16.Marketing and Growth
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap17.Customer_Success_and_Support.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap17.Customer Success and Support
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap18.Fundraising_and_Startup_Finance.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap18.Fundraising and Startup Finance
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap19.Legal_and_Operational_Essentials.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap19.Legal and Operational Essentials
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap20.Legal_and_Compliance.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap20.Legal and Compliance
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap21.Finance_and_Accounting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap21.Finance and Accounting
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap22.Human_Resources_and_Talent.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap22.Human Resources and Talent
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap23.Team_Building_and_Startup_Culture.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap23.Team Building and Startup Culture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap24.Metrics_KPIs_and_Lean_Analytics.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap24.Metrics KPIs and Lean Analytics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap25.Operations.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap25.Operations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap2x.Managing_teams.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap2x.Managing teams
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tools.EOS.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    tools.EOS
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tools.asana.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools.asana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tools.automated_outreach.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools.automated outreach
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tools.github.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools.github
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tools.google_docs.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools.google docs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tools.scrum.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools.scrum
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tools.slack.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools.slack
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tools.to_do_email.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools.to do email
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="topics.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Topics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#business_model_canvas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Business Model Canvas
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Business Model Canvas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#customer_segments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customer Segments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#value_proposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Value Proposition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#channels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Channels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customer_relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customer relationships
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#revenue_streams" class="md-nav__link">
+    <span class="md-ellipsis">
+      Revenue Streams
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Revenue Streams">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pricing_mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pricing mechanisms
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key_resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key_activities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Activities
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key_partnerships" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Partnerships
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost_structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cost Structure
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#different_types_of_business_models_b2b_b2c_saas_marketplace" class="md-nav__link">
+    <span class="md-ellipsis">
+      Different Types of Business Models (B2B, B2C, SaaS, Marketplace)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minimum_viable_product_mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Minimum Viable Product (MVP)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#signs_of_product-market_fit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Signs of Product-Market Fit
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#competitive_analysis_positioning_swot_differentiation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Competitive Analysis &amp; Positioning (SWOT, differentiation)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#refs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Refs
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>chap05.Business Models and Product Market Fit</h1>
+
+<p>// Business Models and Product-Market Fit</p>
+<h2 id="business_model_canvas">Business Model Canvas<a class="headerlink" href="#business_model_canvas" title="Permanent link">#</a></h2>
+<p>// From /Users/saggese/src/notes1/notes/IN_PROGRESS.book.work.2011.Osterwalder.Business_model_generation.txt</p>
+<ul>
+<li>Business model</li>
+<li>A business model describes how an organization creates, delivers, and captures
+  value</li>
+<li>
+<p>A business plan is a shared understanding of what a business model is</p>
+</li>
+<li>
+<p>The Business Model Canvas</p>
+</li>
+<li>There are 9 building blocks showing how a company intends to make money</li>
+</ul>
+<p>1) Customer Segments (CS)
+   - An organization serves one or more Customer Segments (CS)</p>
+<p>2) Value Proposition (VP)
+   - An organization seeks to solve customer problems and satisfy customers with
+     Value Proposition (VP)</p>
+<p>3) Channels (CH)
+   - Value Propositions (VP) are delivered to customers through distribution and
+     sales Channels (CH)</p>
+<p>4) Customer Relationships (CR)
+   - Customer Relationships (CR) are maintained with each Customer Segment (CS)</p>
+<p>5) Revenue Streams (RS)
+   - Revenue Streams result from Value Propositions offered to Customer Segments</p>
+<p>6) Key Resources (KR)
+   - Key Resources are assets required to offer products and services</p>
+<p>7) Key Activities (KA)</p>
+<p>8) Key Partnerships (KP)
+   - Some activities are outsourced and others acquired outside the company</p>
+<p>9) Cost Structure (C$)</p>
+<p>// From /notes1/notes/IN_PROGRESS.book.work.2011.Osterwalder.Business_model_generation.txt</p>
+<ul>
+<li>Business model</li>
+<li>A business model describes how an organization creates, delivers, and captures
+  value</li>
+<li>
+<p>A business plan is a shared understanding of what a business model is</p>
+</li>
+<li>
+<p>The Business Model Canvas</p>
+</li>
+<li>
+<p>Osterwalder, 2010</p>
+</li>
+<li>
+<p>There are 9 building blocks showing how a company intends to make money</p>
+</li>
+</ul>
+<p>1) Customer Segments (CS)
+     - An organization serves one or more Customer Segments (CS)</p>
+<p>2) Value Proposition (VP)
+     - An organization seeks to solve customer problems and satisfy customers with
+       Value Proposition (VP)</p>
+<p>3) Channels (CH)
+     - Value Propositions (VP) are delivered to customers through distribution and
+       sales Channels (CH)</p>
+<p>4) Customer Relationships (CR)
+     - Customer Relationships (CR) are maintained with each Customer Segment (CS)</p>
+<p>5) Revenue Streams (RS)
+     - Revenue Streams result from Value Propositions offered to Customer Segments</p>
+<p>6) Key Resources (KR)
+     - Key Resources are assets required to offer products and services</p>
+<p>7) Key Activities (KA)</p>
+<p>8) Key Partnerships (KP)
+     - Some activities are outsourced and others acquired outside the company</p>
+<p>9) Cost Structure (C$)</p>
+<h3 id="customer_segments">Customer Segments<a class="headerlink" href="#customer_segments" title="Permanent link">#</a></h3>
+<ul>
+<li>Customer Segments</li>
+<li>
+<p>Any company needs customers to survive</p>
+</li>
+<li>
+<p>A company may group customers into distinct segments with common needs and
+  behaviors</p>
+</li>
+<li>
+<p>A business model is designed around a strong understanding of specific customer
+  needs</p>
+</li>
+<li>
+<p>Customer segments:</p>
+</li>
+<li>Justify a distinct offer</li>
+<li>Can be reached through different Distribution Channels</li>
+<li>Require different types of relationships</li>
+<li>
+<p>Have different profitability</p>
+</li>
+<li>
+<p>Mass market</p>
+</li>
+<li>A large group of customers with broadly similar needs and problems</li>
+<li>Typically involves products that are widely used and have universal appeal</li>
+<li>Products are usually standardized rather than customized</li>
+<li>Focuses on high sales volume and low cost per unit</li>
+<li>
+<p>E.g., consumer electronics, household appliances, and fast-moving consumer
+  goods</p>
+</li>
+<li>
+<p>Niche market</p>
+</li>
+<li>A specific, specialized Customer Segment</li>
+<li>
+<p>E.g. car part manufacturers depend on specific automobile manufacturers</p>
+</li>
+<li>
+<p>Segmented Customer Segments</p>
+</li>
+<li>Customer segmented with slightly different needs and problems</li>
+<li>E.g., a bank can distinguish customers worth up $100k and affluent clients
+  worth more than $1M</li>
+<li>
+<p>E.g., a manufacturing solutions company targeting 3 CS, i.e., watch industry,
+  medical industry, industrial automation sectors</p>
+</li>
+<li>
+<p>Diversified Customer Segments</p>
+</li>
+<li>Serve unrelated Customer Segments with very different needs and problems</li>
+<li>
+<p>E.g., Amazon has retail business and cloud computing services (catering to Web
+  companies with a totally different Value Proposition)</p>
+</li>
+<li>
+<p>Multi-sided markets</p>
+</li>
+<li>Serve two or more interdependent Customer Segments</li>
+<li>E.g., a credit card company needs credit card holders and merchants that accept
+  credit cards</li>
+<li>E.g., a company selling newspapers need reader base and advertisers</li>
+</ul>
+<h3 id="value_proposition">Value Proposition<a class="headerlink" href="#value_proposition" title="Permanent link">#</a></h3>
+<ul>
+<li>Value Proposition: Definition</li>
+<li>The Value Proposition is the reason why customers turn to one company over
+  another</li>
+<li>VP solves a customer problem and satisfies a customer need</li>
+<li>
+<p>Product / service catering to a specific Customer Segment</p>
+</li>
+<li>
+<p>Newness</p>
+</li>
+<li>VP can satisfy a new set of needs that customers previously didn't perceive</li>
+<li>E.g., technology related</li>
+<li>
+<p>E.g., cellphones created a new industry around mobile communication</p>
+</li>
+<li>
+<p>Performance</p>
+</li>
+<li>Improving product and service performance is a common way to create value</li>
+<li>
+<p>E.g., PC sector (more powerful machines, more disk storage, better graphics)</p>
+</li>
+<li>
+<p>Customization</p>
+</li>
+<li>Tailor products and services to specific needs of Customer Segments /
+  individual customers</li>
+<li>
+<p>E.g., mass customization</p>
+</li>
+<li>
+<p>Getting the job done</p>
+</li>
+<li>
+<p>E.g., airlines relying on manufacturers of jet engines, so they can focus on
+  running airlines</p>
+</li>
+<li>
+<p>Design</p>
+</li>
+<li>A product may stand out because of superior design</li>
+<li>It might be difficult to measure</li>
+<li>
+<p>E.g., fashion industry, consumer electronics</p>
+</li>
+<li>
+<p>Brand / status</p>
+</li>
+<li>Customers may find value in the act of using and displaying a specific brand</li>
+<li>E.g., wearing a Rolex watch signifies wealth</li>
+<li>
+<p>E.g., skateboarders can wear the latest brands to show that they are "in"</p>
+</li>
+<li>
+<p>Price</p>
+</li>
+<li>Offering similar value at a lower price</li>
+<li>
+<p>E.g., no-frills airline (Southwest) enable low-cost air travel</p>
+</li>
+<li>
+<p>Cost reduction</p>
+</li>
+<li>
+<p>Helping customers reduce costs creates value</p>
+</li>
+<li>
+<p>Risk reduction</p>
+</li>
+<li>Customers value reducing risks when purchasing products or services</li>
+<li>E.g., one-year guarantee</li>
+<li>
+<p>E.g., service-level guarantee in outsourced IT services</p>
+</li>
+<li>
+<p>Accessibility</p>
+</li>
+<li>Make products and services available to customers who previously lacked access
+  to them</li>
+<li>E.g., NetJets popularized fractional private jet ownership</li>
+<li>
+<p>E.g., Mutual Funds allow people with modest wealth to diversify investment
+  portfolios</p>
+</li>
+<li>
+<p>Convenience / usability</p>
+</li>
+<li>E.g., iPod / iTunes offered convenient buying and listening to digital music</li>
+</ul>
+<h3 id="channels">Channels<a class="headerlink" href="#channels" title="Permanent link">#</a></h3>
+<p>*
+- Channels allow companies to communicate with and reach its Customer Segments to
+  deliver a Value Proposition
+- Raise awareness among customers about a company's products and services
+- Allow customers to purchase products and services
+- Deliver Value Proposition to customers
+- Provide post-purchase customer support</p>
+<ul>
+<li>Channel phases</li>
+<li>Awareness</li>
+<li>Raise customers' awareness about company's products and services</li>
+<li>Evaluation</li>
+<li>Help customers evaluate a company's Value Propositions</li>
+<li>Purchase</li>
+<li>Allow customers to purchase products and services</li>
+<li>Delivery</li>
+<li>Deliver value proposition to customers</li>
+<li>After sales</li>
+<li>
+<p>Provide post-purchase customer support</p>
+</li>
+<li>
+<p>Channel types</p>
+</li>
+<li>Owned channels</li>
+<li>E.g., in-house sales force, web site</li>
+<li>Higher margins but costly to put in place</li>
+<li>Indirect</li>
+<li>E.g., retail stores owned or operated by the company</li>
+<li>Partner</li>
+<li>E.g., wholesale distribution, retail</li>
+<li>Lower margins but expand reach through partner strengths</li>
+</ul>
+<h3 id="customer_relationships">Customer relationships<a class="headerlink" href="#customer_relationships" title="Permanent link">#</a></h3>
+<ul>
+<li></li>
+<li>Company establish different types of relationships with Customer Segments</li>
+<li>Customer acquisition</li>
+<li>Customer retention</li>
+<li>
+<p>Boosting sales</p>
+</li>
+<li>
+<p>Personal assistance</p>
+</li>
+<li>Human customer representative during the sales or after the purchase</li>
+<li>
+<p>E.g., point of sale, call centers, emails</p>
+</li>
+<li>
+<p>Dedicated personal assistance</p>
+</li>
+<li>E.g., in private banking services for high net worth individuals</li>
+<li>
+<p>E.g., account managers maintaining personal relationships with important
+  customers</p>
+</li>
+<li>
+<p>Self-service</p>
+</li>
+<li>
+<p>Provide necessary means for customers to hep themselves</p>
+</li>
+<li>
+<p>Automated services</p>
+</li>
+<li>Mix customer self-service with automated processes</li>
+<li>
+<p>E.g., online profile allow to access customized services (e.g.,
+  recommendations)</p>
+</li>
+<li>
+<p>Communities</p>
+</li>
+<li>
+<p>Companies maintain online communities to exchange knowledge and solve users'
+  problems</p>
+</li>
+<li>
+<p>Co-creation</p>
+</li>
+<li>Companies invite customers to write reviews creating value for other customers
+  (e.g., Amazon)</li>
+<li>Engage customers to design new products</li>
+<li>Solicit customers to create content (e.g., YouTube.com)</li>
+</ul>
+<h3 id="revenue_streams">Revenue Streams<a class="headerlink" href="#revenue_streams" title="Permanent link">#</a></h3>
+<p>*
+- For what value a Customer Segment is truly willing to pay?
+- Revenue Streams can have different pricing mechanisms (e.g., fixed list price,
+  bargaining, auctioning, volume dependent, market dependent)
+- One-time payments vs ongoing payments</p>
+<ul>
+<li>Asset sale</li>
+<li>
+<p>Sell ownership of a product</p>
+</li>
+<li>
+<p>Usage fee</p>
+</li>
+<li>The more a service is used, the more the customer pays</li>
+<li>E.g., number of minutes spent on the phone</li>
+<li>
+<p>E.g., a hotel charges by number of nights in a room</p>
+</li>
+<li>
+<p>Subscription fee</p>
+</li>
+<li>Sell continuous access to a service</li>
+<li>
+<p>E.g., monthly subscription to a gym or to a web-based game</p>
+</li>
+<li>
+<p>Lending / renting / leasing</p>
+</li>
+<li>Temporarily granting rights to use an asset for a fixed period</li>
+<li>
+<p>E.g., car rental</p>
+</li>
+<li>
+<p>Licensing</p>
+</li>
+<li>Give customers permission to use intellectual property in exchange for a
+  licensing fees</li>
+<li>
+<p>E.g., patent / copyright in media industry and technology</p>
+</li>
+<li>
+<p>Brokerage fees</p>
+</li>
+<li>Intermediation services performed on behalf of multiple parties</li>
+<li>E.g., credit card providers charge a percentage of transaction value</li>
+<li>
+<p>E.g., real estate agents earn a commission when matching buyers and sellers</p>
+</li>
+<li>
+<p>Advertising</p>
+</li>
+<li>Fees for advertising product, service, or brand</li>
+<li>E.g., media industry</li>
+</ul>
+<h4 id="pricing_mechanisms">Pricing mechanisms<a class="headerlink" href="#pricing_mechanisms" title="Permanent link">#</a></h4>
+<ul>
+<li>List price</li>
+<li>
+<p>Fixed prices for products and services</p>
+</li>
+<li>
+<p>Product feature dependent</p>
+</li>
+<li>
+<p>Price depends on the number or quality of Value Proposition features</p>
+</li>
+<li>
+<p>Customer segment dependent</p>
+</li>
+<li>
+<p>Price depends on the type and characteristics of a Customer Segment</p>
+</li>
+<li>
+<p>Volume dependent</p>
+</li>
+<li>
+<p>Prices is function of the quantity purchased</p>
+</li>
+<li>
+<p>Negotiation / bargaining</p>
+</li>
+<li>
+<p>Price negotiated between partners (with different negotiation power / skills)</p>
+</li>
+<li>
+<p>Yield management</p>
+</li>
+<li>Price depends on inventory</li>
+<li>
+<p>E.g., hotel rooms, airlines seats</p>
+</li>
+<li>
+<p>Real-time market</p>
+</li>
+<li>
+<p>Price is established dynamically based on supply and demand</p>
+</li>
+<li>
+<p>Auctions</p>
+</li>
+<li>Price determined by competitive bidding</li>
+</ul>
+<h3 id="key_resources">Key Resources<a class="headerlink" href="#key_resources" title="Permanent link">#</a></h3>
+<ul>
+<li></li>
+<li>Key Resources are needed to create and offer Value Proposition</li>
+<li>E.g., microchip designer needs human resources</li>
+<li>
+<p>E.g., microchip manufacturer requires capital-intensive production facilities</p>
+</li>
+<li>
+<p>Physical</p>
+</li>
+<li>E.g., manufacturing facilities, buildings, machines, point-of-sales,
+  distribution networks</li>
+<li>E.g., Wal-Mart has a network of stores and logistics infrastructure</li>
+<li>
+<p>E.g., Amazon has It, warehouse, logistics infrastructure</p>
+</li>
+<li>
+<p>Intellectual</p>
+</li>
+<li>E.g., brands, IP, patents, copyrights, customer database</li>
+<li>E.g., Nike has brand</li>
+<li>E.g., Microsoft has IP developed over many years</li>
+<li>
+<p>E.g., Qualcomm has patented microchip designs that yield licensing fees</p>
+</li>
+<li>
+<p>Human</p>
+</li>
+<li>E.g., knowledge-intensive and creative industries</li>
+<li>
+<p>E.g., pharmaceutical companies use experienced scientists and skilled sales
+  force</p>
+</li>
+<li>
+<p>Financial</p>
+</li>
+<li>Some business models need financial resources (e.g., cash, lines of credit,
+  stock option pools for key employees)</li>
+</ul>
+<h3 id="key_activities">Key Activities<a class="headerlink" href="#key_activities" title="Permanent link">#</a></h3>
+<p>*
+- Key Activities are required to create and offer Value Proposition and earn
+  revenues</p>
+<ul>
+<li>Production</li>
+<li>Design, build, and deliver a product</li>
+<li>E.g., manufacturing firms</li>
+<li>E.g., Microsoft does software development</li>
+<li>
+<p>E.g., Dell manages supply chain and builds PCs</p>
+</li>
+<li>
+<p>Problem solving</p>
+</li>
+<li>Come up with solutions to individual customer problems</li>
+<li>Need knowledge management and continuous training</li>
+<li>
+<p>E.g., consultancies, hospitals</p>
+</li>
+<li>
+<p>Platform</p>
+</li>
+<li>E.g., matchmaking platforms</li>
+<li>E.g., eBay, Visa</li>
+</ul>
+<h3 id="key_partnerships">Key Partnerships<a class="headerlink" href="#key_partnerships" title="Permanent link">#</a></h3>
+<ul>
+<li>Different types of partnerships</li>
+<li>Strategic alliances between non-competitors</li>
+<li>Strategic partnerships between competitors</li>
+<li>Joint ventures to develop new businesses</li>
+<li>
+<p>Buyer-supplier relationships to assure reliable supplies</p>
+</li>
+<li>
+<p>Motivations for partnerships</p>
+</li>
+<li>Optimization</li>
+<li>It is illogical for a company to own all resources and perform every activity
+    by itself</li>
+<li>Economy of scale to reduce costs</li>
+<li>Outsourcing</li>
+<li>Reduction of risk</li>
+<li>Competitors can form alliance in one area and compete in another</li>
+<li>E.g., Blu-ray is a disc format developed by consumer electronic
+    manufacturers, which then compute in selling their own Blu-ray products</li>
+<li>Acquisition of particular resources and activities</li>
+<li>Few companies own all the resources or perform all the activities required in
+    their business model</li>
+<li>Rather they rely on other firms to acquire knowledge, licenses, access to
+    customers</li>
+<li>E.g., a phone manufacturer may license an OS</li>
+<li>E.g., an insurer may rely on independent brokers to sell policies rather than
+    develop its own sales force</li>
+</ul>
+<h3 id="cost_structure">Cost Structure<a class="headerlink" href="#cost_structure" title="Permanent link">#</a></h3>
+<ul>
+<li></li>
+<li>Business models incur in costs, e.g.,</li>
+<li>Creating and delivering value</li>
+<li>Maintaining Customer Relationships</li>
+<li>Generating revenues</li>
+<li>Costs should be minimized in every business model</li>
+<li>
+<p>Some business models are more sensitive to costs than others</p>
+</li>
+<li>
+<p>Cost-driven companies</p>
+</li>
+<li>Create the leanest possible Cost Structure, using low-price Value Proposition,
+  maximum automation, outsourcing</li>
+<li>
+<p>E.g., no-frills airlines (e.g., Southwest)</p>
+</li>
+<li>
+<p>Value-driven companies</p>
+</li>
+<li>Some companies are less concerned with cost implication and focus on value
+  creation</li>
+<li>
+<p>E.g., luxury hotels</p>
+</li>
+<li>
+<p>Characteristics of cost structures</p>
+</li>
+<li>Fixed costs</li>
+<li>Costs don't change despite volume of goods / services produced</li>
+<li>E.g., salaries, rents</li>
+<li>Variable costs</li>
+<li>Costs that vary proportionally with the volume of goods / services produced</li>
+<li>E.g., music festivals have high variable costs</li>
+<li>Economies of scale</li>
+<li>Cost advantages that a business enjoys as its output expands</li>
+<li>Economies of scope</li>
+<li>Cost advantages that a business enjoys due to a larger scope of operations</li>
+<li>E.g., the same distribution channels and marketing can support multiple
+    products</li>
+</ul>
+<h2 id="different_types_of_business_models_b2b_b2c_saas_marketplace">Different Types of Business Models (B2B, B2C, SaaS, Marketplace)<a class="headerlink" href="#different_types_of_business_models_b2b_b2c_saas_marketplace" title="Permanent link">#</a></h2>
+<h2 id="minimum_viable_product_mvp">Minimum Viable Product (MVP)<a class="headerlink" href="#minimum_viable_product_mvp" title="Permanent link">#</a></h2>
+<h2 id="signs_of_product-market_fit">Signs of Product-Market Fit<a class="headerlink" href="#signs_of_product-market_fit" title="Permanent link">#</a></h2>
+<h2 id="competitive_analysis_positioning_swot_differentiation">Competitive Analysis &amp; Positioning (SWOT, differentiation)<a class="headerlink" href="#competitive_analysis_positioning_swot_differentiation" title="Permanent link">#</a></h2>
+<ul>
+<li>More on value capture</li>
+<li>You should not stress out value capture in the beginning</li>
+<li>The amount of value you capture is proportional to the amount of value you
+    create</li>
+<li>You need to pass some of the value to your customer</li>
+<li>
+<p>If your product saves people \$100, but it costs \$100 then your customers
+    are indifferent</p>
+</li>
+<li>
+<p>Tokens can capture value in many ways (discussed later)</p>
+</li>
+<li>There are many pricing models:</li>
+<li>Value pricing<ul>
+<li>Best approach</li>
+<li>Estimate how much value your are creating for your customers and charge a
+  part of that (e.g., 50-80%)</li>
+</ul>
+</li>
+<li>Transaction pricing<ul>
+<li>Every time you make a transaction, I get a cut of it</li>
+<li>E.g., financial exchange</li>
+</ul>
+</li>
+<li>Recurring revenues<ul>
+<li>E.g., there is a data service and you get a value out of it so you pay by
+  seat</li>
+<li>Some customers are getting a lot of value, others are getting small value</li>
+<li>You don't know who is making money so you can't charge it</li>
+<li>That's why people have multiple price tiers</li>
+</ul>
+</li>
+<li>
+<p>Services</p>
+<ul>
+<li>Somebody is paying you for doing something</li>
+<li>E.g., a plumber charging for time and materials</li>
+</ul>
+</li>
+<li>
+<p>Commodity pricing</p>
+</li>
+<li>The service becomes "cost + epsilon"</li>
+<li>E.g., consulting</li>
+<li>Price competition brings down the price to raw materials and wages</li>
+<li>Even if you are creating value, you are not capturing it</li>
+<li>
+<p>This is the best situation for customers</p>
+</li>
+<li>
+<p>E.g., the Internet creates tons of value but you almost don't pay for it</p>
+</li>
+<li>
+<p>Internet is a commodity (like water)</p>
+</li>
+<li>
+<p>5 ways to build a $100m business</p>
+</li>
+<li>Hunt for 10,000 flies that pay you $10</li>
+<li>Photoshop charges \$100 and need \$1m</li>
+<li>Greenhouse, Salesforce (enterprise software): $100k people pay $1000</li>
+<li>Big game hunting</li>
+<li>
+<p>Elephant hunting (e.g., Palantir): each customer pays $100,000k</p>
+</li>
+<li>
+<p>More on defensibility</p>
+</li>
+<li>Competitors cannot easily enter the market or overtake your market share</li>
+<li>E.g., network effect</li>
+<li>E.g., Facebook, Ethereum, Binance</li>
+<li>
+<p>The platform that everybody uses is difficult to disrupt</p>
+</li>
+<li>
+<p>Other sources of defensibility</p>
+</li>
+<li>Economy of scale<ul>
+<li>The R&amp;D dept doesn't need to grow if you grow</li>
+</ul>
+</li>
+<li>Pricing power<ul>
+<li>You have the ability to squeeze your supplier, like others can't</li>
+</ul>
+</li>
+<li>First mover advantage<ul>
+<li>You are the first one to do something, so you build the relationships</li>
+</ul>
+</li>
+<li>Access to capital<ul>
+<li>Lots of business need working capital so they need to borrow money</li>
+<li>It's easier for you to raise or borrow money (maybe because you have a
+  great pedigree)</li>
+<li>If you have strong reputation or pedigree</li>
+</ul>
+</li>
+<li>Access to talent</li>
+<li>
+<p>Execution</p>
+<ul>
+<li>It is the weakest</li>
+<li>You can outrun your competitors</li>
+<li>I have ability to build faster, ship faster than my competitors</li>
+</ul>
+</li>
+<li>
+<p>Market structure</p>
+</li>
+<li>In almost all industries there are companies with certain characteristics</li>
+<li>Some companies own the user relationship<ul>
+<li>High value capture</li>
+<li>Network effects</li>
+<li>Brand</li>
+</ul>
+</li>
+<li>Some companies are integrators (they put things together)<ul>
+<li>Low value capture (they get squeezed between the extremes)</li>
+<li>Few moats</li>
+</ul>
+</li>
+<li>
+<p>Some companies own the tech platform</p>
+<ul>
+<li>High value capture</li>
+<li>High switching costs</li>
+<li>Economies of scale</li>
+<li>Technical barriers</li>
+</ul>
+</li>
+<li>
+<p>E.g., mobile</p>
+</li>
+<li>(Facebook, Apple) &lt;-&gt; Motorola &lt;-&gt; ARM</li>
+<li>E.g., auto</li>
+<li>Tesla &lt;-&gt; Modine &lt;-&gt; Mobileye</li>
+<li>E.g., streaming</li>
+<li>Netflix &lt;-&gt; Starz &lt;-&gt; AWS</li>
+<li>E.g., computers</li>
+<li>
+<p>Microsoft &lt;-&gt; Acer &lt;-&gt; Intel</p>
+</li>
+<li>
+<p>Even if you have the best content but you need to go through Netflix to
+  distribute it</p>
+</li>
+<li>Netflix wants to commoditize everyone else</li>
+<li>For this reason Disney started Disney+</li>
+<li>
+<p>AWS copies / adopts open source projects and puts them on their platform</p>
+</li>
+<li>
+<p>Same phenomenon also in crypto</p>
+</li>
+<li>Own user relationship: Coinbase, Binance</li>
+<li>Integrators: protocols (e.g., Uniswap)</li>
+<li>
+<p>Tech platform: Ethereum, Bitcoin</p>
+</li>
+<li>
+<p>Everyone tries to move up the curve</p>
+</li>
+<li>Coinmarketcap and Coingecko start adding the buy button to allow trading</li>
+<li>Polkadot compete with other blockchains to have people build on top of them</li>
+<li>Uniswap builds a web interface to interact with users</li>
+<li>
+<p>Binance builds a BNB chain </p>
+</li>
+<li>
+<p>At the bottom of the curve, your users is who is close to you</p>
+</li>
+</ul>
+<p>/Users/saggese/src/notes1/notes/IN_PROGRESS.book.work.2011.Osterwalder.Business_model_generation.txt
+/Users/saggese/src/notes1/notes/IN_PROGRESS.book.work.2020.Blank.The_Startup_Owner_Manual.txt
+/Users/saggese/src/notes1/notes/IN_PROGRESS.course.cs.entrepreneurship_in_web3.Berkeley.txt
+Lean startup
+/Users/saggese/src/notes1/notes/IN_PROGRESS.tutorial.2023.I_Corps.txt
+/Users/saggese/src/notes1/notes/IN_PROGRESS.tutorial.2023.National_I_Corps.txt</p>
+<h2 id="refs">Refs<a class="headerlink" href="#refs" title="Permanent link">#</a></h2>
+<ul>
+<li>Business Model Generation – Strategyzer</li>
+<li>The Lean Product Playbook – Dan Olsen</li>
+<li>The Startup Guide to Product-Market Fit – Dan Hockenmaier &amp; Julie Supan</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": ".", "features": [], "search": "assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2718 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="chap2x.Managing_teams.html">
+      
+      
+        <link rel="next" href="tools.asana.html">
+      
+      
+      <link rel="icon" href="assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.19">
+    
+    
+      
+        <title>tools.EOS - Start-up Admin Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="styles/styles.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1_what_the_heck_is_eos" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Start-up Admin Guide" class="md-header__button md-logo" aria-label="Start-up Admin Guide" data-md-component="logo">
+      
+  <img src="assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Start-up Admin Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              tools.EOS
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Start-up Admin Guide" class="md-nav__button md-logo" aria-label="Start-up Admin Guide" data-md-component="logo">
+      
+  <img src="assets/logo.png" alt="logo">
+
+    </a>
+    Start-up Admin Guide
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="book_list.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Book list
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap00.Introduction.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap00.Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap01.Introduction_to_Startups.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap01.Introduction to Startups
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap02.Problem_Discovery_and_Opportunity_Identification.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap02.Problem Discovery and Opportunity Identification
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap03.Ideation_and_Value_Proposition_Design.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap03.Ideation and Value Proposition Design
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap04.Customer_Discovery_and_Validation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap04.Customer Discovery and Validation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap05.Business_Models_and_Product-Market_Fit.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap05.Business Models and Product Market Fit
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap06.Startup_Pivots_and_Failures.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap06.Startup Pivots and Failures
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap07.Exit_Strategies.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap07.Exit Strategies
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap08.MVP_Development_and_Prototyping.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap08.MVP Development and Prototyping
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap09.Design_UX_UI.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap09.Design UX UI
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap10.Data_and_Analytics.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap10.Data and Analytics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap11.Engineering_Culture_and_DevOps.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap11.Engineering Culture and DevOps
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap12.Product_Management.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap12.Product Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap13.Go-To-Market_Strategy.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap13.Go To Market Strategy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap14.Scaling_and_Growth.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap14.Scaling and Growth
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap15.User_Research_and_Customer_Development.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap15.User Research and Customer Development
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap16.Marketing_and_Growth.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap16.Marketing and Growth
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap17.Customer_Success_and_Support.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap17.Customer Success and Support
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap18.Fundraising_and_Startup_Finance.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap18.Fundraising and Startup Finance
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap19.Legal_and_Operational_Essentials.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap19.Legal and Operational Essentials
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap20.Legal_and_Compliance.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap20.Legal and Compliance
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap21.Finance_and_Accounting.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap21.Finance and Accounting
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap22.Human_Resources_and_Talent.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap22.Human Resources and Talent
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap23.Team_Building_and_Startup_Culture.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap23.Team Building and Startup Culture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap24.Metrics_KPIs_and_Lean_Analytics.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap24.Metrics KPIs and Lean Analytics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap25.Operations.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap25.Operations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chap2x.Managing_teams.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    chap2x.Managing teams
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    tools.EOS
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="tools.EOS.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    tools.EOS
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1_what_the_heck_is_eos" class="md-nav__link">
+    <span class="md-ellipsis">
+      1, What the Heck Is EOS?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2_how_does_eos_work" class="md-nav__link">
+    <span class="md-ellipsis">
+      2, How Does EOS Work?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3_do_you_see_what_they_are_saying" class="md-nav__link">
+    <span class="md-ellipsis">
+      3, Do You See What They Are Saying?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4_whos_doing_what" class="md-nav__link">
+    <span class="md-ellipsis">
+      4, Who's Doing What?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#organizational_chart_example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Organizational Chart: Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5_what_is_most_important_right_now" class="md-nav__link">
+    <span class="md-ellipsis">
+      5, What Is Most Important Right Now?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6_why_do_we_have_to_have_meetings" class="md-nav__link">
+    <span class="md-ellipsis">
+      6, Why Do We Have to Have Meetings?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7_whats_my_number" class="md-nav__link">
+    <span class="md-ellipsis">
+      7, What's My Number?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8_how_am_i_doing" class="md-nav__link">
+    <span class="md-ellipsis">
+      8, How Am I Doing?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9_what_do_i_do_next" class="md-nav__link">
+    <span class="md-ellipsis">
+      9, What Do I Do Next?
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tools.asana.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools.asana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tools.automated_outreach.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools.automated outreach
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tools.github.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools.github
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tools.google_docs.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools.google docs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tools.scrum.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools.scrum
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tools.slack.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools.slack
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tools.to_do_email.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tools.to do email
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="topics.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Topics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1_what_the_heck_is_eos" class="md-nav__link">
+    <span class="md-ellipsis">
+      1, What the Heck Is EOS?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2_how_does_eos_work" class="md-nav__link">
+    <span class="md-ellipsis">
+      2, How Does EOS Work?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3_do_you_see_what_they_are_saying" class="md-nav__link">
+    <span class="md-ellipsis">
+      3, Do You See What They Are Saying?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4_whos_doing_what" class="md-nav__link">
+    <span class="md-ellipsis">
+      4, Who's Doing What?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#organizational_chart_example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Organizational Chart: Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5_what_is_most_important_right_now" class="md-nav__link">
+    <span class="md-ellipsis">
+      5, What Is Most Important Right Now?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6_why_do_we_have_to_have_meetings" class="md-nav__link">
+    <span class="md-ellipsis">
+      6, Why Do We Have to Have Meetings?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7_whats_my_number" class="md-nav__link">
+    <span class="md-ellipsis">
+      7, What's My Number?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8_how_am_i_doing" class="md-nav__link">
+    <span class="md-ellipsis">
+      8, How Am I Doing?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9_what_do_i_do_next" class="md-nav__link">
+    <span class="md-ellipsis">
+      9, What Do I Do Next?
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>tools.EOS</h1>
+
+<h2 id="1_what_the_heck_is_eos">1, What the Heck Is EOS?<a class="headerlink" href="#1_what_the_heck_is_eos" title="Permanent link">#</a></h2>
+<ul>
+<li>EOS</li>
+<li>Entrepreneurial Operating System</li>
+<li>= the way a company organizes all of its human energy to</li>
+<li>Solve problems</li>
+<li>Meet</li>
+<li>Plan</li>
+<li>Prioritize</li>
+<li>Communicate</li>
+<li>Clarify roles</li>
+<li>Lead</li>
+<li>
+<p>Manage</p>
+</li>
+<li>
+<p>Inconsistency in company operating systems leads to</p>
+</li>
+<li>Poor communication</li>
+<li>Dysfunction</li>
+<li>Employees feeling frustrated and confused about the priorities</li>
+<li>
+<p>The company not realizing its full potential</p>
+</li>
+<li>
+<p>If everyone does things in their own way the organization can't work</p>
+</li>
+<li>Meet when they want</li>
+<li>Set their priorities</li>
+<li>
+<p>Use different terminology</p>
+</li>
+<li>
+<p>When people move from project to project</p>
+</li>
+<li>A new system needs to be learned</li>
+<li>Different way of reporting status updates</li>
+<li>
+<p>New way to run meetings</p>
+</li>
+<li>
+<p>Why EOS?</p>
+</li>
+<li>Designed for 10-250 person companies</li>
+<li>Need to be open-minded and growth-oriented</li>
+<li>More than 50k companies run on EOS</li>
+<li>EOS is simple and complete and helps companies grow and achieve goals / vision</li>
+<li>Everybody is rowing in the same direction</li>
+<li>Eliminate time-wasting actives due to miscommunication</li>
+<li>
+<p>EOS saves time</p>
+</li>
+<li>
+<p>What's in It for Me?</p>
+</li>
+<li>EOS helps you</li>
+<li>Work more effectively</li>
+<li>Less frustration</li>
+<li>Clear understanding of connection between your efforts and success of the
+    company</li>
+</ul>
+<h2 id="2_how_does_eos_work">2, How Does EOS Work?<a class="headerlink" href="#2_how_does_eos_work" title="Permanent link">#</a></h2>
+<ul>
+<li>6 Key Components of a Company on EOS</li>
+<li>Every company is comprised of 6 key components</li>
+<li>Vision</li>
+<li>People</li>
+<li>Data</li>
+<li>Issues</li>
+<li>Process</li>
+<li>
+<p>Traction</p>
+</li>
+<li>
+<p>EOS requires open and honest communication</p>
+</li>
+<li>
+<p>The Vision Component</p>
+</li>
+<li>Goal is to have everyone move in the same direction so that energy is not
+  wasted</li>
+<li>Avoid running around in circles, make the same mistakes over and over</li>
+<li>More gets done in less time</li>
+<li>
+<p>Work is more fun</p>
+</li>
+<li>
+<p>Tools for Vision Component</p>
+</li>
+<li>Vision/Tracker Organizer (VTO) is the tool to keep everyone in the company
+  aligned on the same short / long term goals</li>
+<li>It requires to answer 8 questions</li>
+<li>
+<p>Make sure the company agrees and buys in to the answers of the 8 questions</p>
+</li>
+<li>
+<p>The People Component</p>
+</li>
+<li>You need to put "the right people in the right seats"</li>
+<li>Persons who consistently excels at a clearly defined, necessary job in the
+    organization</li>
+<li>When the company has 100% of the Right people in the Right seats</li>
+<li>Work is done more efficiently</li>
+<li>There are fewer fires to put out</li>
+<li>Mistakes are rare</li>
+<li>Communication is better</li>
+<li>
+<p>The Company is truly a great place to work</p>
+</li>
+<li>
+<p>The Right People</p>
+</li>
+<li>The "right people" are:</li>
+<li>The ones who just fit</li>
+<li>People you like to work with</li>
+<li>People who want to accomplish something every day</li>
+<li>They sacrifice so that the team</li>
+<li>
+<p>They act according to the company's core values</p>
+</li>
+<li>
+<p>The Right Seats</p>
+</li>
+<li>
+<p>The "right seats" are the roles needed to best contribute to the organization</p>
+</li>
+<li>
+<p>Tools for People Component</p>
+</li>
+<li>Accountability Chart</li>
+<li>
+<p>People Analyzer</p>
+</li>
+<li>
+<p>To answer the questions</p>
+</li>
+<li>Am I right person for this Company?</li>
+<li>Do I fit?</li>
+<li>Am I in the right seat?</li>
+<li>
+<p>Can I do my job really well?</p>
+</li>
+<li>
+<p>The Data Component</p>
+</li>
+<li>
+<p>Many companies fly blind all the time, like a plane with no gauges and no
+  radar</p>
+</li>
+<li>
+<p>Tools for Data Component</p>
+</li>
+<li>Scorecards</li>
+<li>Handful of numbers (i.e., Measurables) that tell you how you are doing and
+    where you are going</li>
+<li>Each department and team should have a Scorecard</li>
+<li>Measurables</li>
+<li>One person should be accountable for each of it</li>
+<li>E.g.,<ul>
+<li>Customer sale meetings</li>
+<li>Units produced</li>
+</ul>
+</li>
+<li>Each person should have a Measurable and a goal for that number</li>
+<li>Pros</li>
+<li>You know how you are doing</li>
+<li>Your manager knows what you have accomplished</li>
+<li>The team can see if you are on track</li>
+<li>
+<p>You can find problems become a crisis</p>
+</li>
+<li>
+<p>The Issue Component</p>
+</li>
+<li>Issues are things that can be improved, fixed, or changed to make your company
+  better, e.g.,</li>
+<li>Anything unresolved that needs to be discussed</li>
+<li>Problems</li>
+<li>Opportunities</li>
+<li>New and better ways of doing things</li>
+<li>E.g.,</li>
+<li>Sell more</li>
+<li>Reduce rework</li>
+<li>
+<p>Fix inventory problems</p>
+</li>
+<li>
+<p>Seeing problems but not solving them leads to finger-pointing, dysfunction,
+  frustration on both managers and employees</p>
+</li>
+<li>
+<p>Everybody role is to bring up issues as they see them and help solve them</p>
+</li>
+<li>
+<p>Tools for Issue Component</p>
+</li>
+<li>Issues list</li>
+<li>Allow everyone to openly and honestly list all unresolved issues</li>
+<li>Issues solving track</li>
+<li>
+<p>Disciplined way to help prioritize and solve issues</p>
+</li>
+<li>
+<p>The Process Component</p>
+</li>
+<li>Create at a high level a consistent way of doing all the company's operations,
+  e.g.,</li>
+<li>All the projects are managed in the same way</li>
+<li>How you make your product or service</li>
+<li>How salespeople sell your product (from generating leads to closing the
+    deals)</li>
+<li>How to serve your customers so that they are always satisfied</li>
+<li>
+<p>How the Company bills and collects money</p>
+</li>
+<li>
+<p>Following the same process:</p>
+</li>
+<li>Saves an incredible amount of time</li>
+<li>Eliminates frustration</li>
+<li>
+<p>Help to perform the job with fewer mistakes and delays</p>
+</li>
+<li>
+<p>Everyone follows the processes, creating consistency and efficiency</p>
+</li>
+<li>
+<p>Using processes the company can grow and scale in a manageable way</p>
+</li>
+<li>
+<p>Once all processes for repetitious tasks are uniform, energy can be put to
+  creative tasks and solve the unexpected</p>
+</li>
+<li>
+<p>The Traction Component</p>
+</li>
+<li>
+<p>In a company with no traction</p>
+</li>
+<li>People in your company are not accountable</li>
+<li>Things don't get done on time</li>
+<li>Due dates are constantly missed</li>
+<li>
+<p>Your Company takes on too much</p>
+</li>
+<li>
+<p>The goal of the Traction component is to:</p>
+</li>
+<li>Get projects completed on time</li>
+<li>People who commit to a deadline hit it</li>
+<li>People put the extra effort needed and don't want to let one another down</li>
+<li>People can't make excuses for being unproductive and so leave</li>
+<li>
+<p>Everyone focuses on only a few priorities for the next 90 days (which are
+    tied to the company's overall goals)</p>
+</li>
+<li>
+<p>Tools for the Traction Component</p>
+</li>
+<li>Rocks</li>
+<li>Most important things that need to get done in the next 90 days</li>
+<li>Level 10 meetings</li>
+<li>Have an agenda</li>
+<li>Solve issues</li>
+<li>
+<p>Allow the team to stay connected</p>
+</li>
+<li>
+<p>Summary</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>What's it all about</th>
+<th>Tool(s)</th>
+<th>Your Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Vision</strong></td>
+<td>Getting everyone aligned and focused on the same vision</td>
+<td>V/TO</td>
+<td>Understand and buy into the answers to the 8 V/TO questions</td>
+</tr>
+<tr>
+<td><strong>People</strong></td>
+<td>Getting the Right People in the Right Seats</td>
+<td>Accountability Chart, People Analyzer</td>
+<td>Ask yourself if you are the Right Person in the Right Seat</td>
+</tr>
+<tr>
+<td><strong>Data</strong></td>
+<td>Measuring performance and having a pulse</td>
+<td>Scorecard, Measurables</td>
+<td>Establish and achieve your Measurables</td>
+</tr>
+<tr>
+<td><strong>Issues</strong></td>
+<td>Identifying and solving issues</td>
+<td>Issues List, Issues Solving Track</td>
+<td>Bring up and help solve issues</td>
+</tr>
+<tr>
+<td><strong>Process</strong></td>
+<td>Documenting the way you do things and being consistent</td>
+<td>Documented Core Process</td>
+<td>Learn, follow, and help improve the Core Processes</td>
+</tr>
+<tr>
+<td><strong>Traction</strong></td>
+<td>Accountability, discipline, and execution</td>
+<td>Meeting Pulse, Rocks</td>
+<td>Complete your Rocks and engage in meetings</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3_do_you_see_what_they_are_saying">3, Do You See What They Are Saying?<a class="headerlink" href="#3_do_you_see_what_they_are_saying" title="Permanent link">#</a></h2>
+<ul>
+<li>The Vision</li>
+<li>Every Company should have a crystal clear vision, which is written down and
+  shared with everyone</li>
+<li>Only in this way every one rows in the same direction</li>
+<li>
+<p>Otherwise there is poor communication, confusion, wasted effort</p>
+</li>
+<li>
+<p>Sometimes</p>
+</li>
+<li>Leaders carry the vision in their heads</li>
+<li>
+<p>Leaders believe everyone agree on the same vision, and they really don't</p>
+</li>
+<li>
+<p>V/TO</p>
+</li>
+<li>Vision/Traction Organizer</li>
+<li>The goal is have a shared map the for where the Company has been, is, and is
+  going</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>V/TO Question</th>
+<th>What it answers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Core Values</td>
+<td>Who you are</td>
+</tr>
+<tr>
+<td>Core Focus</td>
+<td>What you are</td>
+</tr>
+<tr>
+<td>10-Year Target</td>
+<td>Where you are going</td>
+</tr>
+<tr>
+<td>Marketing Strategy</td>
+<td>Which potential customers you are targeting with what message</td>
+</tr>
+<tr>
+<td>3-Year Picture</td>
+<td>What you will look like in 3 years</td>
+</tr>
+<tr>
+<td>1-Year Plan</td>
+<td>What your goals are for the next 12 months</td>
+</tr>
+<tr>
+<td>Rocks</td>
+<td>What your priorities are for the next 90 days</td>
+</tr>
+<tr>
+<td>Issues</td>
+<td>What will stop you or get you there faster</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>V/TO 1: What Are Your Core Values?</li>
+<li>Core values</li>
+<li>Are a timeless set of guiding principles</li>
+<li>Define the culture, who fits and who doesn't</li>
+<li>
+<p>Define what makes the Company different and unique</p>
+</li>
+<li>
+<p>In a Company, culture wins in the long term</p>
+</li>
+<li>
+<p>A Company needs to know who it is</p>
+</li>
+<li>
+<p>If people share the core values</p>
+</li>
+<li>
+<p>Core Values: Examples</p>
+</li>
+<li>Be humble but confident</li>
+<li>Grow or die</li>
+<li>Help first</li>
+<li>Do what you say</li>
+<li>E.g., if you commit to a date, you hit it</li>
+<li>You fully deliver and finish what you start: no half-assed things</li>
+<li>If you can't do it, don't commit</li>
+<li>
+<p>Do the right thing</p>
+</li>
+<li>
+<p>V/TO 2: What Is Your Core Focus?</p>
+</li>
+<li>Core Focus is about:</li>
+<li>Keeping your company focused on the areas where your business excels</li>
+<li>
+<p>Not getting distracted by the "shiny stuff"</p>
+</li>
+<li>
+<p>You can't be everything to everyone</p>
+</li>
+<li>
+<p>You need to have a Niche: something you do better than anyone else</p>
+</li>
+<li>
+<p>V/TO 3: What Is Your 10-Year Target?</p>
+</li>
+<li>10-Year Target</li>
+<li>Is your long-term, larger-than-life goal</li>
+<li>
+<p>Unites everyone around one common objective</p>
+</li>
+<li>
+<p>V/TO 4: What Is Your Marketing Strategy?</p>
+</li>
+<li>Clarify</li>
+<li>Who your ideal customer is</li>
+<li>
+<p>The most appealing message to them</p>
+</li>
+<li>
+<p>Then laser-focus on it and do now waste money and effort</p>
+</li>
+<li>Trying to be everting to everyone</li>
+<li>With inconsistent marketing message</li>
+<li>Taking trips to prospective customers who are not a good fit for the company
+    or are not going to say yes</li>
+<li>
+<p>Committing to projects in which they don't have expertise</p>
+</li>
+<li>
+<p>Marketing Strategy</p>
+</li>
+<li>It has 4 key elements</li>
+<li>Target market<ul>
+<li>Characteristics of your best customers</li>
+<li>E.g., who they are, where they are, how they think</li>
+<li>Focus on customers who is best to do business with</li>
+<li>E.g.,</li>
+<li>$5-50M in revenue</li>
+<li>20-250 employees</li>
+<li>Southeastern US</li>
+<li>Growth-oriented</li>
+<li>Seeking a partner, not a commodity provider</li>
+</ul>
+</li>
+<li>3 Uniques<ul>
+<li>Things that make you better than the competition and why your customers
+  should buy from you</li>
+<li>Consistent messaging market for sales and marketing efforts</li>
+<li>E.g.,</li>
+<li>99% on-time delivery</li>
+<li>Local technicians</li>
+<li>24hr response time</li>
+</ul>
+</li>
+<li>Proven process<ul>
+<li>A visual of what you do to deliver value to your customers</li>
+<li>What your customers will experience working with you</li>
+</ul>
+</li>
+<li>
+<p>Guarantee</p>
+<ul>
+<li>It says you stand behind your product or service</li>
+<li>Put your clients at ease</li>
+<li>E.g.,</li>
+<li>"We will hit our ship date, or will pay for shipping"</li>
+<li>"If we don't add value, you don't pay"</li>
+<li>"We will show up on time, or the first hour is free"</li>
+</ul>
+</li>
+<li>
+<p>V/TO 5: What Is Your 3-Year Picture?</p>
+</li>
+<li>Paint a picture of what your company will look like in 3 years</li>
+<li>Revenue</li>
+<li>Profit</li>
+<li>A Measurable</li>
+<li>
+<p>5-10 bullets to paint a vivid image of what your Company will look like,
+    feel like, be like in 3 years</p>
+</li>
+<li>
+<p>E.g.,</p>
+</li>
+<li>Revenue: $15m</li>
+<li>Profit: $2m</li>
+<li>Measurable: 300 customers</li>
+<li>
+<p>What does it look like?</p>
+<ul>
+<li>80 employees</li>
+<li>3 new product lines</li>
+<li>100% Right people in the Right seats</li>
+<li>Strong culture</li>
+<li>Largest customer accounts for &lt;10% of revenue</li>
+<li>All Core processes documented and followed by all</li>
+</ul>
+</li>
+<li>
+<p>It needs to be written down and shared with everyone</p>
+</li>
+<li>
+<p>V/TO 6: What Is Your 1-Year Plan?</p>
+</li>
+<li>Revenue target</li>
+<li>Profit target</li>
+<li>Measurable</li>
+<li>Top 3-7 goals for the year</li>
+<li>Fewer is better</li>
+<li>
+<p>With too many things to do, people lose focus and accomplish very few of
+    them</p>
+</li>
+<li>
+<p>This will put you on a path to reach the 3-year picture and the 10-year target</p>
+</li>
+<li>
+<p>V/TO 7: What Are Your Rocks?</p>
+</li>
+<li>
+<p>Rocks are the 3-7 most important objectives the company must get done in the
+  next 90 days (i.e., one quarter) to achieve the 1-year plan</p>
+</li>
+<li>
+<p>The 90 days is to keep people focused and energetic on the priorities</p>
+</li>
+<li>There are always unplanned emergencies, day-to-day distractions</li>
+<li>Then plans start to unravel</li>
+<li>
+<p>You need to break the overall goals into smaller and manageable chunks</p>
+</li>
+<li>
+<p>After 90 days, you start losing focus and new set of Rocks will refocus the
+  Company</p>
+</li>
+<li>
+<p>V/TO 8: What Are Your Company's Issues?</p>
+</li>
+<li>
+<p>To achieve the vision you need to admit all of your company's obstacles,
+  everything that can prevent the company from reaching your vision</p>
+</li>
+<li>
+<p>Every company has issues</p>
+</li>
+<li>No one admits them</li>
+<li>Everyone might talk about it but does nothing</li>
+</ul>
+<h2 id="4_whos_doing_what">4, Who's Doing What?<a class="headerlink" href="#4_whos_doing_what" title="Permanent link">#</a></h2>
+<ul>
+<li>Without Roles and Responsibilities</li>
+<li>In an organization where roles and responsibilities are unclear</li>
+<li>People trip over each other</li>
+<li>Everyone is working hard but running in circles</li>
+<li>Accomplish very little</li>
+<li>
+<p>Finger-pointing</p>
+</li>
+<li>
+<p>The right structure will:</p>
+</li>
+<li>Clarify roles and responsibilities</li>
+<li>Create clear reporting lines</li>
+<li>Facilitate efficient decision making</li>
+<li>Help people get things done</li>
+<li>Enable communication</li>
+<li>
+<p>Identity all the available seats in the organization</p>
+</li>
+<li>
+<p>Accountability</p>
+</li>
+<li>All-for-one-and-for-all approach works only for small (&lt; 10 people) startups</li>
+<li>
+<p>People wear many hats to keep the company survive</p>
+</li>
+<li>
+<p>As a Company mature, the all-for-one approach becomes a roadblock to growth</p>
+</li>
+<li>People trip over each other</li>
+<li>Everyone is still trying to do everything</li>
+<li>Company stalls</li>
+<li>Pressure and stress increase</li>
+<li>
+<p>The blame game starts</p>
+</li>
+<li>
+<p>No one knows who is responsible for what</p>
+</li>
+<li>No one is held accountable for anything</li>
+<li>
+<p>There are too many cooks in the kitchen</p>
+</li>
+<li>
+<p>You miss a customer deadline</p>
+</li>
+<li>
+<p>Everyone points fingers</p>
+</li>
+<li>
+<p>You lose a major customer</p>
+</li>
+<li>
+<p>4 different people have 4 different explanations of what happened</p>
+</li>
+<li>
+<p>When everyone is accountable, no one is</p>
+</li>
+<li>
+<p>The Accountability chart</p>
+</li>
+<li>It is an organizational chart that</li>
+<li>Shows structure</li>
+<li>Clarifies the roles and responsibilities (the "seat")<ul>
+<li>Five bullet points explaining</li>
+</ul>
+</li>
+<li>No confusing reporting lines from an employee to multiple bosses</li>
+<li>
+<p>Establishes clear ownership and accountability for everything</p>
+</li>
+<li>
+<p>There is no "right" accountability chart because every company is different</p>
+</li>
+<li>
+<p>The accountability chart is specific of your company based on size, growth
+    goals, culture, product, or service</p>
+</li>
+<li>
+<p>The Accountability Chart: Example</p>
+</li>
+</ul>
+<h2 id="organizational_chart_example">Organizational Chart: Example<a class="headerlink" href="#organizational_chart_example" title="Permanent link">#</a></h2>
+<ul>
+<li>An example of organizational chart is:
+  ```
+  ## Visionary
+  <strong>Sally M.</strong></li>
+<li>Big Ideas</li>
+<li>Big Relationships</li>
+<li>Culture</li>
+<li>Industry Trends</li>
+</ul>
+<p>## Integrator
+  <strong>Robert D.</strong>
+  - LMA*
+  - Achieve Budget
+  - Legal
+  - Special Projects</p>
+<p>## Finance
+  <strong>John P.</strong>
+  - Reporting
+  - Accounting
+  - Cash</p>
+<p>### HR
+  <strong>Chrissi L.</strong>
+  - HR Process
+  - Finding Candidates
+  - Benefits
+  - Review Process</p>
+<p>### IT
+  <strong>Dana G.</strong>
+  - Systems
+  - Computers
+  - Internet
+  - Phones</p>
+<p>### Accounting
+  <strong>John L.</strong>
+  - AP
+  - AR
+  - Expenses</p>
+<p>## Operations
+  <strong>James Z.</strong>
+  - LMA*
+  - Client Satisfaction
+  - Manage Resources
+  - Ops Process</p>
+<p>### Field Tech
+  <strong>7 People</strong>
+  - Product Delivery
+  - Solve Client Problems
+  - Customer Service</p>
+<p>### Sales Rep
+  <strong>2 People</strong>
+  - New Biz Dev
+  - Hit Goals
+  - Pipeline</p>
+<p>## Sales
+  <strong>Mary S.</strong>
+  - LMA*
+  - Revenue
+  - Sales Process / Selling
+  - Manage Clients</p>
+<p>## Marketing
+  <strong>David S.</strong>
+  - Branding
+  - Generate Leads
+  - Website</p>
+<ul>
+<li>
+<p>LMA = Leadership, Management, Accountability
+  ```</p>
+</li>
+<li>
+<p>Scalability and Evolution</p>
+</li>
+<li>The same seat can be filled by multiple people performing the same function</li>
+<li>Ability to adjust is critical</li>
+<li>The accountability chart may change every quarter / 90 days</li>
+<li>
+<p>People might change seat or leave</p>
+</li>
+<li>
+<p>Communication</p>
+</li>
+<li>Communication should flow across all lines and departments</li>
+<li>Create an open and honest culture</li>
+<li>Avoid silos</li>
+</ul>
+<h2 id="5_what_is_most_important_right_now">5, What Is Most Important Right Now?<a class="headerlink" href="#5_what_is_most_important_right_now" title="Permanent link">#</a></h2>
+<ul>
+<li>Rocks: Intuition</li>
+<li>You have a small pile of rocks, some pebbles, and some sand</li>
+<li>Your objective is to fit them all in a glass jar</li>
+<li>If you put the sand first and then the pebbles, the rocks don't fit</li>
+<li>
+<p>If you put the rocks first and then the pebbles and the sand (which filters
+  through the bigger things), it fits</p>
+</li>
+<li>
+<p>Rocks</p>
+</li>
+<li>The rocks represent the most important things you must get done</li>
+<li>The pebbles are your day-to-day responsibilities</li>
+<li>
+<p>The sand represents all the interruptions during the day</p>
+</li>
+<li>
+<p>If you don't prioritize your Rocks (the most important things first), you will
+  not get them done</p>
+</li>
+<li>
+<p>The 90-Day World</p>
+</li>
+<li>
+<p>Human mind tends to lose focus</p>
+</li>
+<li>
+<p>Every 90 days</p>
+</li>
+<li>you get together with your team</li>
+<li>review the Rocks that were accomplished</li>
+<li>
+<p>Set the Rocks for the next 90 days</p>
+</li>
+<li>
+<p>Everything else (things you don't have capacity, things that are not as
+  important) is pushed to the next period, minimizing wasted effort,
+  talking too much</p>
+</li>
+<li>
+<p>The problem:</p>
+</li>
+<li>Work on a project for a few weeks</li>
+<li>The manager says that it wasn't a priority any more</li>
+<li>
+<p>Assign a new project</p>
+</li>
+<li>
+<p>Your Rocks</p>
+</li>
+<li>Each individual should have 1-3 Rocks every 90 days</li>
+<li>Rocks should be aligned with your company or your team's Rocks</li>
+<li>E.g.,<ul>
+<li>If your team Rock is "Purchase 4 new trucks"</li>
+<li>Your Rock could be "Find 10 potential trucks to buy that match the needed
+  specification"</li>
+</ul>
+</li>
+<li>Rocks should be tied to your day-to-day responsibilities</li>
+<li>
+<p>E.g., for a salesperson the Rock is "schedule 20 sales appointments"</p>
+</li>
+<li>
+<p>SMART</p>
+</li>
+<li>Each Rock needs to be SMART</li>
+<li>Specific<ul>
+<li>Is it clear enough?</li>
+</ul>
+</li>
+<li>Measurable<ul>
+<li>Can you measure (with a number) the completion of your Rock?</li>
+</ul>
+</li>
+<li>Attainable<ul>
+<li>Can you achieve it?</li>
+</ul>
+</li>
+<li>Realistic<ul>
+<li>Can you complete the Rock in 90 days?</li>
+</ul>
+</li>
+<li>
+<p>Timely</p>
+<ul>
+<li>Is this the right time?</li>
+</ul>
+</li>
+<li>
+<p>SMART vs non-SMART Rocks</p>
+</li>
+<li>Bad: Safety inspection</li>
+<li>
+<p>Good: Pass 100% of safety inspections</p>
+</li>
+<li>
+<p>Bad: Online class</p>
+</li>
+<li>
+<p>Good: Successfully complete an online training class on website marketing</p>
+</li>
+<li>
+<p>Reviewing Rocks Weekly</p>
+</li>
+<li>You need to check on the team during weekly meetings</li>
+<li>Every team needs to report if the team is "on track" or "off track"</li>
+<li>This creates a new language to hold people accountable</li>
+<li>
+<p>People should not take it personally</p>
+</li>
+<li>
+<p>Completing 80% of the Rocks every 90 days is a great job</p>
+</li>
+</ul>
+<h2 id="6_why_do_we_have_to_have_meetings">6, Why Do We Have to Have Meetings?<a class="headerlink" href="#6_why_do_we_have_to_have_meetings" title="Permanent link">#</a></h2>
+<ul>
+<li>Meetings</li>
+<li>Meetings are not a waste of time</li>
+<li>
+<p>It's what you do in meetings that's a waste of time</p>
+</li>
+<li>
+<p>Meeting should start and end on time</p>
+</li>
+<li>Provide input on which issues to tackle</li>
+<li>
+<p>Participate in the decisions and the solutions</p>
+</li>
+<li>
+<p>Meetings are necessary</p>
+</li>
+<li>
+<p>How to End Procrastination</p>
+</li>
+<li>Human beings by nature procrastinate</li>
+<li>
+<p>Wait until the last minute to get things done</p>
+</li>
+<li>
+<p>To solve procrastination you need to give a "pulse" to the organization</p>
+</li>
+<li>
+<p>Weekly Meeting Pulse</p>
+</li>
+<li>EOS recommends a weekly meeting pulse</li>
+<li>
+<p>Since there is a spike of activity more often, there is no time to
+    procrastinate</p>
+</li>
+<li>
+<p>The goal is</p>
+</li>
+<li>Minimize number and length of meetings</li>
+<li>
+<p>Maximize meeting productivity</p>
+</li>
+<li>
+<p>The "right meeting pulse" is to accomplish 4 things</p>
+</li>
+<li>Make sure everything is on track</li>
+<li>Keep the team connected</li>
+<li>Hold each other accountable</li>
+<li>
+<p>Solve issues</p>
+</li>
+<li>
+<p>The meeting</p>
+</li>
+<li>Is always on the same day and same time</li>
+<li>Starts and ends on time</li>
+<li>
+<p>Is 90 mins long</p>
+</li>
+<li>
+<p>Level 10 Meetings</p>
+</li>
+<li>
+<p>Roles in L10 Meetings</p>
+</li>
+<li>Meeting facilitator:</li>
+<li>Runs the meeting</li>
+<li>Move the team through the agenda</li>
+<li>Keep everything on track</li>
+<li>Scribe:</li>
+<li>Bring the list of Rocks, Scorecard, Agenda</li>
+<li>Update the documents</li>
+<li>There should be two different persons</li>
+<li>
+<p>It's difficult to play both roles</p>
+</li>
+<li>
+<p>L10 Agenda</p>
+</li>
+<li>Wins / good news (5 mins)</li>
+<li>Scorecard (5 mins)</li>
+<li>Rocks review (5 mins)</li>
+<li>Customer / employee headlines (5 mins)</li>
+<li>Todo list (5 mins)</li>
+<li>...</li>
+<li>Identity-discuss-solve (60 mins)</li>
+<li>...</li>
+<li>
+<p>Conclusion (5 min)</p>
+</li>
+<li>
+<p>Wins</p>
+</li>
+<li>Each person shares one piece of good news from the past week</li>
+<li>Help humanize the process</li>
+<li>Allow team members to get to know each other</li>
+<li>
+<p>Start the meeting off with a positive vibe</p>
+</li>
+<li>
+<p>Scorecard</p>
+</li>
+<li>Make sure your Measurables (KPIs, metrics) are on track</li>
+<li>You should just review, no questions, no commentary, no excuses</li>
+<li>You either hit the goal for the week or you didn't</li>
+<li>There is no discussion</li>
+<li>Any comment is dropped won to the Issues List</li>
+<li>Simply say "Drop it down"</li>
+<li>
+<p>You want to avoid a painful reporting session of why and how the numbers are
+    bad</p>
+</li>
+<li>
+<p>Rock Review</p>
+</li>
+<li>Make sure that each person's Rocks are on track</li>
+<li>The facilitator reads the list of Rocks one at a time</li>
+<li>
+<p>The Rock owner states if it's on track or not</p>
+<ul>
+<li>No questions, no commentary, now excuses</li>
+<li>Any question needs to get dropped down to the Issues List</li>
+</ul>
+</li>
+<li>
+<p>It takes discipline</p>
+</li>
+<li>
+<p>Customer / Employee Headlines</p>
+</li>
+<li>Everyone can bring up good or bad news about customers, employees, or both</li>
+<li>1-2 sentence headline</li>
+<li>
+<p>If it takes more, drop it down</p>
+</li>
+<li>
+<p>TODOs</p>
+</li>
+<li>These are the commitments made by people in the last L10 meeting</li>
+<li>If something was off-track last week, it was decided to be fixed</li>
+<li>
+<p>Was it done?</p>
+</li>
+<li>
+<p>TODOs are 7 day action items</p>
+</li>
+<li>
+<p>The goal is to complete 90% of them each week</p>
+</li>
+<li>
+<p>IDS</p>
+</li>
+<li>This is were you solve all your key issues</li>
+<li>
+<p>You are going to have 60 mins to solve the issues</p>
+</li>
+<li>
+<p>There are 3 types of issues</p>
+</li>
+<li>Decisions<ul>
+<li>E.g., "customer XYZ is not happy with the level of customer support"</li>
+</ul>
+</li>
+<li>Information to share<ul>
+<li>E.g., "we are having our 2 largest customers into the office this week"</li>
+</ul>
+</li>
+<li>
+<p>Information is needed</p>
+<ul>
+<li>E.g., "Roger needs to know when the next software release will be"</li>
+</ul>
+</li>
+<li>
+<p>The goal is to</p>
+</li>
+<li>solve the most important issues well (so they don't come back!)</li>
+<li>
+<p>not to solve all the issues on your list</p>
+</li>
+<li>
+<p>If you run out of time, the other issues can stay on the list until next week</p>
+</li>
+<li>
+<p>IDS</p>
+</li>
+<li>IDS is the issues solving tracking tool</li>
+<li>Identify</li>
+<li>Discuss</li>
+<li>
+<p>Solve</p>
+</li>
+<li>
+<p>Meetings are a waste of time if teams spend all their time discussing an issue</p>
+</li>
+<li>They just talk and talk and feel productive</li>
+<li>
+<p>You need to clearly identify the issue</p>
+</li>
+<li>
+<p>Who, Who, 1-Sentence</p>
+</li>
+<li>To clearly identify the issue</li>
+<li>Who: is raising the issue</li>
+<li>Who: is accountable for solving the issue</li>
+<li>
+<p>1-sentence: state the issue in one sentence by stating the problem directly
+    to her (short, sweet, no candy-coating)</p>
+</li>
+<li>
+<p>Bob tells Sue "I'm not getting reports from you on time"</p>
+</li>
+<li>
+<p>Then there is a productive conversation about the problem and how to solve it</p>
+</li>
+<li>
+<p>Tangent Alert</p>
+</li>
+<li>People start getting off the subject and going down rabbit holes</li>
+<li>
+<p>Simple say "tangent alert!"</p>
+</li>
+<li>
+<p>Conclusion</p>
+</li>
+<li>
+<p>With 5 mins left in the meeting, even if you are in the middle of an issue,
+  you need to do 3 things to end the meeting on time</p>
+</li>
+<li>
+<p>Recap the todo list</p>
+</li>
+<li>Decide if there are important messages to communicate inside / outside the
+  company based on the decisions you have made</li>
+<li>
+<p>Rate the meting</p>
+</li>
+<li>
+<p>Rate the Meeting</p>
+</li>
+<li>Did it start and end on time?</li>
+<li>Did you follow the L10 agenda?</li>
+<li>Is everyone on the same page?</li>
+<li>Did 90% or more of the todos get done?</li>
+<li>
+<p>Did you solve the most important issues?</p>
+</li>
+<li>
+<p>The minimum average rating should be 8</p>
+</li>
+<li>If somebody ranks the meeting below an 8 you should ask "what would have made
+    the meeting a 10 for you?"</li>
+<li>Collect answers on how to improve</li>
+</ul>
+<h2 id="7_whats_my_number">7, What's My Number?<a class="headerlink" href="#7_whats_my_number" title="Permanent link">#</a></h2>
+<ul>
+<li>Without a Scorecard</li>
+<li>Companies work hard but don't know how they are doing</li>
+<li>People</li>
+<li>Are frustrated</li>
+<li>Are unmotivated</li>
+<li>Perform poorly</li>
+<li>The result is:</li>
+<li>Wasted time</li>
+<li>Poor resource allocation</li>
+<li>Weak overall performance</li>
+<li>
+<p>Terrible results</p>
+</li>
+<li>
+<p>The Scorecard</p>
+</li>
+<li>The Scorecard:</li>
+<li>Is a handful of numbers that how the company or your department are doing</li>
+<li>Tells what is working and what is not</li>
+<li>Solves issues before they become major disasters</li>
+<li>Eliminate assumptions and egos</li>
+<li>
+<p>Creates transparency, accountability</p>
+</li>
+<li>
+<p>Effect of the Scorecard</p>
+</li>
+<li>Everybody knows exactly where they are</li>
+<li>Numbers are reviewed and tracked weekly</li>
+<li>Everybody is constantly striving to hit their target</li>
+<li>If people go off track, within one week the problem is discussed as IDS and
+  fixed</li>
+<li>
+<p>Everybody is accountable</p>
+</li>
+<li>
+<p>"What gets measure gets done"</p>
+</li>
+<li>
+<p>"If you shoot for the moon, you get to where nobody else can reach"</p>
+</li>
+<li>
+<p>A Typical Scorecard</p>
+</li>
+<li>The Company has a scorecard with 5-15 numbers</li>
+<li>
+<p>Each department has a scorecard with 3-5 numbers</p>
+</li>
+<li>
+<p>All scorecards for Company and Departments are reviewed weekly in the L10
+  meeting</p>
+</li>
+<li>
+<p>Usually you want to produce current activity that produces future results,
+  e.g.,</p>
+</li>
+<li>Utilization</li>
+<li>Number of sales meetings</li>
+<li>Average time to resolve complaints</li>
+<li>
+<p>Number of bugs fixed</p>
+</li>
+<li>
+<p>Each activity should be tied to future results, such as revenues, sales, and
+  profits</p>
+</li>
+<li>E.g., achieve $10M in revenue</li>
+<li>5 new clients per week, which is $200,000 in sales per week</li>
+<li>
+<p>You need to schedule 20 sales meetings per week</p>
+</li>
+<li>
+<p>Scorecards: Columns</p>
+</li>
+<li>Each scorecard should have 4 key columns</li>
+<li>Who: person accountable for the number<ul>
+<li>The person who can most influence the number</li>
+<li>Not the one who reports (e.g., a manager)</li>
+</ul>
+</li>
+<li>Measurables: 3-5 numbers</li>
+<li>Goal: the number that must be hit every week</li>
+<li>
+<p>Date: week we are reporting for</p>
+</li>
+<li>
+<p>Everyone's Number</p>
+</li>
+<li>Everyone should have a number</li>
+<li>A number</li>
+<li>Cuts through the subjective communication</li>
+<li>Creates accountability<ul>
+<li>Expectations are clear</li>
+</ul>
+</li>
+<li>Creates commitment</li>
+<li>Creates competition</li>
+<li>Creates the right kind of pressure and peer-pressure</li>
+<li>Produce results</li>
+<li>Solves problem faster<ul>
+<li>If an activity is off track, the problem can be recognized and solved</li>
+</ul>
+</li>
+<li>Right people in the right seats appreciate numbers</li>
+<li>"Wrong people in the wrong seats resist Measurables"</li>
+</ul>
+<h2 id="8_how_am_i_doing">8, How Am I Doing?<a class="headerlink" href="#8_how_am_i_doing" title="Permanent link">#</a></h2>
+<ul>
+<li>Right People in the Right Seats</li>
+<li>
+<p>Great organizations are built by having 100% "the Right people in the Right
+  seats"</p>
+</li>
+<li>
+<p>Right people are the ones who fit in the Company's culture and share the Core
+  Values</p>
+</li>
+<li>
+<p>People should have job where their innate talents and skills are put to the
+    best use</p>
+</li>
+<li>
+<p>Each seat has 5 roles and responsibilities, e.g.,</p>
+</li>
+<li>Solve customer issues</li>
+<li>Document customer interactions</li>
+<li>Escalate when appropriate</li>
+<li>
+<p>...</p>
+</li>
+<li>
+<p>People Analyzer: Step 1</p>
+</li>
+<li>For each person you need to rate how they do with respect to Company's Core
+  Values</li>
+<li>Match the Core Values</li>
+<li><code>+</code>: most of the time</li>
+<li><code>+/-</code>: sometimes</li>
+<li>
+<p><code>-</code>: rarely</p>
+</li>
+<li>
+<p>Then you need to set "the bar", i.e., the minimum acceptable score to accept</p>
+</li>
+<li>
+<p>Recommended 3 <code>+</code> and 2 <code>+/-</code></p>
+</li>
+<li>
+<p>People Analyzer: Step 2</p>
+</li>
+<li>
+<p>You can use 3 criteria called "GWC" to understand if each person is in the
+  Right Seat</p>
+</li>
+<li>
+<p>Do they <em>get</em> the job?</p>
+</li>
+<li>Do they understand all the ins and outs of the position?</li>
+<li>Do they understand how their job relates to the other jobs?</li>
+<li>Are they "wired" for that job?</li>
+<li>
+<p>E.g., a flight attendants who is rude, a salesperson who don't understand the
+    product after months of training</p>
+</li>
+<li>
+<p>Do they <em>want</em> the job?</p>
+</li>
+<li>Do they get up every morning wanting to do the job?</li>
+<li>
+<p>Do they show passion for it?</p>
+</li>
+<li>
+<p>Do they have the <em>capacity</em> to do the job?</p>
+</li>
+<li>Do they have the ability and the time to do the job?</li>
+<li>
+<p>E.g., a pest-control field rep who is scared of bugs</p>
+</li>
+<li>
+<p>For these questions there are only yes or no, no maybes</p>
+</li>
+<li>
+<p>The bar is 3 yeses</p>
+</li>
+<li>
+<p>People Analyzer: Step 3</p>
+</li>
+<li>Apply the People Analyzer to yourself and your seat</li>
+<li>
+<p>You need to be completely honest and open</p>
+</li>
+<li>
+<p>Sometimes the problem is just being in the wrong seat</p>
+</li>
+<li>
+<p>People are often unhappy when in the wrong seat</p>
+</li>
+<li>
+<p>The Quarterly Conversation</p>
+</li>
+<li>Employees often report that they would love more feedback and opportunities to
+  discuss how they are doing</li>
+<li>
+<p>Every manager should have a quarterly conversation with their direct reports</p>
+</li>
+<li>
+<p>You should compare notes</p>
+</li>
+<li>You can use the People Analyzer</li>
+<li>It should not be a blame session</li>
+<li>
+<p>Everybody has things that are not working and can be improved</p>
+</li>
+<li>
+<p>Informal 1-hour one-on-one meeting to</p>
+</li>
+<li>Talk about what's working and what's not</li>
+<li>Clarify expectations</li>
+<li>Communicate well</li>
+<li>
+<p>Make course corrections</p>
+</li>
+<li>
+<p>Questions About What Works</p>
+</li>
+<li>What am I most proud of accomplishing in the last quarter?</li>
+<li>What changes did I make to accomplish my job?</li>
+<li>What did I do well to hit my Rocks and Measurables?</li>
+<li>Am I working on projects and in a role that matters?</li>
+<li>
+<p>Do I demonstrate the Company's Core Values?</p>
+</li>
+<li>
+<p>Questions About What Doesn'T Work</p>
+</li>
+<li>What makes my job more difficult?</li>
+<li>What processes / procedures are broken?</li>
+<li>What could I have done differently?</li>
+<li>How could my manager help me being more successful?</li>
+<li>
+<p>What's not working?</p>
+</li>
+<li>
+<p>A good or bad Annual Performance Review should never be a surprise</p>
+</li>
+</ul>
+<h2 id="9_what_do_i_do_next">9, What Do I Do Next?<a class="headerlink" href="#9_what_do_i_do_next" title="Permanent link">#</a></h2>
+<ul>
+<li>Implementing EOS</li>
+<li>
+<p>Implementing EOS in your Company is a lifelong effort</p>
+</li>
+<li>
+<p>We have a clear vision who is shared by everyone</p>
+</li>
+<li>Our core values are clear</li>
+<li>We use our core values to hire, review, reward, and fire</li>
+<li>Our Core Focus is clear</li>
+<li>Our 10-year target is clear and shared</li>
+<li>Our target market is clear and all marketing and sales efforts</li>
+<li>Our 3 unique differentiators are clear</li>
+<li>We have a proven process for doing business with our customers</li>
+<li>All of the people in the Company are the "right people" (i.e., share our core
+  values)</li>
+<li>Our Accountability Chart is clear, completed, and constantly updated</li>
+<li>Everyone is in the right seat</li>
+<li>Everyone has Rocks and is focused on them</li>
+<li>All meetings are on the same day / time, have the same agenda, start / end on
+  time</li>
+<li>Our Core Processes are documented and followed</li>
+<li>We have systems for receiving regular feedback from customers and employees</li>
+<li>A Scorecard for tracking weekly metrics / measurables is in place</li>
+<li>We have a budget and are monitoring it regularly</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": ".", "features": [], "search": "assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+    
+  </body>
+</html>
