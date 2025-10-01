@@ -1,8 +1,8 @@
 ---
 title: "What’s the ETA?"
 authors:
-  - Gpsaggese
-  - Paul Smith
+  - gpsaggese
+  - psmith
 date: 2025-09-10
 ---
 
