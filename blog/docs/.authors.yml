@@ -26,13 +26,16 @@ authors:
     url: https://github.com/heanhsok
   dremdem:
     name: Vlad Demedetskiy
+    description: Software Engineer
     avatar: https://blog.causify.ai/img/authors/vlad.png
     url: https://github.com/dremdem
   Shayawnn:
     name: Shayan Ghasemnezhad
+    description: Infrastructure & DevOps Lead Engineer
     avatar: https://blog.causify.ai/img/authors/shayan.jpg
     url: https://github.com/Shayawnn
   samarth9008:
     name: Samarth KaPatel
+    description: Python Developer
     avatar: https://blog.causify.ai/img/authors/samarth.png
     url: https://github.com/samarth9008
