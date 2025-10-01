@@ -2,9 +2,9 @@
 
 title: Causal AI vs Correlation AI: Making Decisions That Change Outcomes
 authors:
-
 - Shaunakdhande
-- Gpsaggese date: 2025-10-01 description: Why is Causal AI better than
+- Gpsaggese 
+date: 2025-10-01 description: Why is Causal AI better than
   correlation based ML. How does Causify do it better! categories:
 - Causal_AI
 
