@@ -2,7 +2,6 @@ name: Publish Causify Blog
 on:
   push:
     branches:
-      - TutorTask669_Resolve_Blog_publishing_error_2
       - master
     paths:
       # Trigger the workflow when there are changes in the blog directory.
