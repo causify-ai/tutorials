@@ -1,2 +1,0 @@
-This is a log record to track alerts for expectation failures and provide early warnings for potential data issues.
-

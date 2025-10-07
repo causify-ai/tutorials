@@ -1,3 +1,0 @@
-REPO_NAME=umd_data605
-IMAGE_NAME=bitcoin_rds_project
-FULL_IMAGE_NAME=$REPO_NAME/$IMAGE_NAME

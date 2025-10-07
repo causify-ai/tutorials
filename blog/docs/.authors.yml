@@ -7,10 +7,35 @@ authors:
   jsherlock:
     name: Joel Sherlock
     description: Chief Executive Officer
-    avatar: https://avatars.githubusercontent.com/u
+    avatar: https://blog.causify.ai/img/authors/joel.jpg
     url: 
   psmith:
     name: Paul Smith
     description: Chief Scientist
     avatar: https://avatars.githubusercontent.com/u/7649219?v=4
     url: https://github.com/gitpaulsmith
+  shaunakdhande:
+    name: Shaunak Dhande
+    description: ML Engineer
+    avatar: https://blog.causify.ai/img/authors/shaunak.jpeg
+    url: https://github.com/shaunak01
+  heanhsok:
+    name: Hean Sok
+    description: ML Engineer
+    avatar: https://blog.causify.ai/img/authors/heanhsok.jpg
+    url: https://github.com/heanhsok
+  dremdem:
+    name: Vlad Demedetskiy
+    description: Software Engineer
+    avatar: https://blog.causify.ai/img/authors/vlad.png
+    url: https://github.com/dremdem
+  Shayawnn:
+    name: Shayan Ghasemnezhad
+    description: Infrastructure & DevOps Lead Engineer
+    avatar: https://blog.causify.ai/img/authors/shayan.jpg
+    url: https://github.com/Shayawnn
+  samarth9008:
+    name: Samarth KaPatel
+    description: Python Developer
+    avatar: https://blog.causify.ai/img/authors/samarth.png
+    url: https://github.com/samarth9008

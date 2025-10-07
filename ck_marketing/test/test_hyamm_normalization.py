@@ -1,5 +1,9 @@
 import pandas as pd
 
+import pytest
+# Skip this test suite if `gspread_pandas` is not installed (skips for tutorials).
+pytest.importorskip("gspread_pandas")
+
 import ck_marketing.process_automation.hyamm as cmprauhy
 import helpers.hunit_test as hunitest
 

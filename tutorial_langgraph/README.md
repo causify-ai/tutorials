@@ -23,13 +23,13 @@
   ```
 - Build Docker Image:
   ```bash
-  > i docker_build_local_image --version 1.0.0
+  > i docker_build_local_image --version 1.1.0
   ```
 - Run Container:
   ```bash
-  > i docker_bash --skip-pull --stage local --version 1.0.0
+  > i docker_bash --skip-pull --stage local --version 1.1.0
   ```
 - Launch Jupyter Notebook:
   ```bash
-  > i docker_jupyter --skip-pull --stage local --version 1.0.0 -d
+  > i docker_jupyter --skip-pull --stage local --version 1.1.0 -d
   ```

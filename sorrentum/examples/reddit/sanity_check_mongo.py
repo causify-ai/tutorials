@@ -2,7 +2,7 @@
 
 import pymongo
 import pandas as pd
-import sorrentum_sandbox.examples.reddit.db as ssexredb
+import sorrentum.examples.reddit.db as ssexredb
 
 mongodb_client = pymongo.MongoClient(
     host=ssexredb.MONGO_HOST, port=27017, username="mongo", password="mongo"
