@@ -5,14 +5,14 @@ import tutorial_github_causify_style.github_utils as tgcsgiut
 """
 
 import datetime
+import functools
 import itertools
 import logging
 import os
 import time
-from typing import Any, Dict, List, Literal, Optional, Tuple
+from typing import Any, Callable, Dict, List, Literal, Optional, Tuple
 
 import github
-import helpers.hcache_simple as hcacsimp
 import helpers.hdbg as hdbg
 import IPython
 import matplotlib.pyplot as plt
@@ -20,7 +20,11 @@ import pandas as pd
 import tqdm as td
 from tqdm import tqdm
 
+import tutorial_github_causify_style.githubCache as tgcastgi
+
 _LOG = logging.getLogger(__name__)
+# Create global cache instance.
+_github_cache = tgcastgi.GitHubCache()
 
 
 # #############################################################################
@@ -499,7 +503,36 @@ def days_between(
     return days
 
 
-@hcacsimp.simple_cache(cache_type="json", write_through=True)
+def cached_github_function(func: Callable) -> Callable:
+    """
+    Decorator to cache GitHub API functions, excluding client from key.
+
+    The decorated function must have 'client' as the first parameter.
+    :param func: github API function to be cached
+    :return: wrapped function with caching
+    """
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        # Default result is None.
+        result = None
+        # Try to get from cache first.
+        cached_value = _github_cache.get(func.__name__, args)
+        if cached_value is not None:
+            _LOG.debug(f"Cache hit for {func.__name__}")
+            result = cached_value
+        else:
+            # Call the actual function if not cached.
+            _LOG.debug(f"Cache miss for {func.__name__}, fetching from API")
+            result = func(*args, **kwargs)
+            # Store in cache.
+            _github_cache.set(func.__name__, args, result)
+        return result
+
+    return wrapper
+
+
+@cached_github_function
 def get_commit_datetimes_by_repo_period_intrinsic(
     client,
     org: str,
@@ -520,27 +553,26 @@ def get_commit_datetimes_by_repo_period_intrinsic(
     :return: commit timestamps in ISO format
     """
     timestamps: List[str] = []
-    try:
-        repo_obj = client.get_repo(f"{org}/{repo}")
-        commits = repo_obj.get_commits(since=since, until=until)
-    except github.GithubException as e:
-        _LOG.warning(
-            "Skipping commit fetch for %s/%s user=%s — repo/user invalid or inaccessible: %s",
-            org,
-            repo,
-            username,
-            e,
-        )
-        return []
+    # Fetch the repository object.
+    repo_obj = client.get_repo(f"{org}/{repo}")
+    # Retrieve all commits in the specified time period.
+    commits = repo_obj.get_commits(since=since, until=until)
+    # Iterate through each commit to find ones by the specified user.
     for c in commits:
+        # Skip commits with incomplete metadata.
         if not c.commit or not c.commit.author or not c.commit.author.date:
             continue
+        # Extract author and committer logins.
         author_login = c.author.login if c.author else None
         committer_login = c.committer.login if c.committer else None
+        # Check if this commit belongs to the target user.
         if username in (author_login, committer_login):
+            # Convert commit date to UTC timezone.
             dt = c.commit.author.date
             dt_utc = dt if dt.tzinfo else dt.replace(tzinfo=datetime.timezone.utc)
+            # Add timestamp to results list.
             timestamps.append(dt_utc.isoformat())
+    # Log the results summary.
     if not timestamps:
         _LOG.info(
             "No commits found for %s/%s user=%s in %s to %s — possibly outdated or inactive.",
@@ -550,17 +582,19 @@ def get_commit_datetimes_by_repo_period_intrinsic(
             since.date(),
             until.date(),
         )
-    _LOG.info(
-        "Fetched %d commits for %s/%s user=%s.",
-        len(timestamps),
-        org,
-        repo,
-        username,
-    )
+    else:
+        _LOG.info(
+            "Fetched %d commits for %s/%s user=%s.",
+            len(timestamps),
+            org,
+            repo,
+            username,
+        )
+
     return timestamps
 
 
-@hcacsimp.simple_cache(cache_type="json", write_through=True)
+@cached_github_function
 def get_pr_datetimes_by_repo_period_intrinsic(
     client,
     org: str,
@@ -581,25 +615,21 @@ def get_pr_datetimes_by_repo_period_intrinsic(
     :return: PR created timestamps in ISO format
     """
     timestamps: List[str] = []
+    # Format dates for GitHub search query.
     since_date = since.date().isoformat()
     until_date = until.date().isoformat()
+    # Build search query for PRs authored by the user.
     query = f"repo:{org}/{repo} is:pr author:{username} created:{since_date}..{until_date}"
-    try:
-        results = client.search_issues(query)
-        for issue in results:
-            dt = issue.created_at
-            dt_utc = dt if dt.tzinfo else dt.replace(tzinfo=datetime.timezone.utc)
-            timestamps.append(dt_utc.isoformat())
-    except github.GithubException as e:
-        _LOG.info(
-            "Skipping PR fetch for %s/%s user=%s — invalid, inaccessible, or query failed: %s",
-            org,
-            repo,
-            username,
-            e,
-        )
-        timestamps = []
-        return timestamps
+    # Execute the search query.
+    results = client.search_issues(query)
+    # Process each PR from search results.
+    for issue in results:
+        # Convert PR creation date to UTC timezone.
+        dt = issue.created_at
+        dt_utc = dt if dt.tzinfo else dt.replace(tzinfo=datetime.timezone.utc)
+        # Add timestamp to results list.
+        timestamps.append(dt_utc.isoformat())
+    # Log the results summary.
     if not timestamps:
         _LOG.debug(
             "No PRs found for %s/%s user=%s in %s to %s — possibly inactive or outdated.",
@@ -609,17 +639,19 @@ def get_pr_datetimes_by_repo_period_intrinsic(
             since_date,
             until_date,
         )
-    _LOG.info(
-        "Found %d PRs for %s/%s user=%s.",
-        len(timestamps),
-        org,
-        repo,
-        username,
-    )
+    else:
+        _LOG.info(
+            "Found %d PRs for %s/%s user=%s.",
+            len(timestamps),
+            org,
+            repo,
+            username,
+        )
+
     return timestamps
 
 
-@hcacsimp.simple_cache(cache_type="json", write_through=True)
+@cached_github_function
 def get_issue_datetimes_by_repo_intrinsic(
     client,
     org: str,
@@ -636,42 +668,41 @@ def get_issue_datetimes_by_repo_intrinsic(
     :param repo: repository name
     :param username: GitHub username
     :param period: time window to filter issues
-    :return: 'opened' and 'closed' issues containing ISO timestamps
+    :return: 'assigned' and 'closed' issues containing ISO timestamps
     """
+    # Extract and format the time period.
     since_date = period[0].date().isoformat()
     until_date = period[1].date().isoformat()
+    # Build search query for issues assigned to the user.
     query = (
         f"repo:{org}/{repo} type:issue assignee:{username} "
         f"created:{since_date}..{until_date}"
     )
-    result_dict = {}
-    try:
-        issues = client.search_issues(query)
-    except github.GithubException as e:
-        _LOG.warning(
-            "Skipping issue fetch for %s/%s user=%s — invalid, inaccessible, or query failed: %s",
-            org,
-            repo,
-            username,
-            e,
-        )
-        result_dict = {"assigned": [], "closed": []}
-        return result_dict
+    # Execute the search query.
+    issues = client.search_issues(query)
+    # Initialize lists for assigned and closed issues.
     assigned: List[str] = []
     closed: List[str] = []
+    # Process each issue from search results.
     for issue in issues:
+        # Skip pull requests that appear in issue search.
         if issue.pull_request is not None:
             continue
+        # Add issue creation timestamp to assigned list.
         assigned.append(issue.created_at.isoformat())
+        # Check if issue was closed within the period.
         if issue.closed_at:
+            # Convert closed date to UTC timezone.
             closed_dt = issue.closed_at
             dt_utc = (
                 closed_dt
                 if closed_dt.tzinfo
                 else closed_dt.replace(tzinfo=datetime.timezone.utc)
             )
+            # Add to closed list if within the specified period.
             if period[0] <= dt_utc <= period[1]:
                 closed.append(dt_utc.isoformat())
+    # Log the results summary.
     _LOG.info(
         "Found %d opened and %d closed issues for %s/%s user=%s",
         len(assigned),
@@ -680,11 +711,12 @@ def get_issue_datetimes_by_repo_intrinsic(
         repo,
         username,
     )
+    # Return the results dictionary.
     result_dict = {"assigned": assigned, "closed": closed}
     return result_dict
 
 
-@hcacsimp.simple_cache(cache_type="json", write_through=True)
+@cached_github_function
 def get_loc_stats_by_repo_period_intrinsic(
     client,
     org: str,
@@ -705,35 +737,40 @@ def get_loc_stats_by_repo_period_intrinsic(
     :return: additions, deletions in code
     """
     stats_list: List[Dict[str, int]] = []
-    try:
-        repo_obj = client.get_repo(f"{org}/{repo}")
-        commits = repo_obj.get_commits(since=since, until=until)
-    except github.GithubException as e:
-        _LOG.warning(
-            "Skipping LOC fetch for %s/%s user=%s — repo/user invalid or inaccessible: %s",
-            org,
-            repo,
-            username,
-            e,
-        )
-        stats_list = []
-        return stats_list
+    # Fetch the repository object.
+    repo_obj = client.get_repo(f"{org}/{repo}")
+    # Retrieve all commits in the specified time period.
+    commits = repo_obj.get_commits(since=since, until=until)
+    # Track number of commits processed for safety limit.
+    commit_count = 0
+    # Process each commit to extract LOC statistics.
     for c in commits:
+        # Extract author and committer logins.
         author_login = c.author.login if c.author else None
         committer_login = c.committer.login if c.committer else None
+        # Skip commits not by the target user.
         if username not in (author_login, committer_login):
             continue
-        try:
-            s = c.stats
-        except Exception:
-            _LOG.warning("Could not fetch stats for commit %s.", c.sha)
+        # Fetch commit statistics.
+        s = c.stats
+        # Skip if statistics are not available.
+        if s is None:
+            _LOG.debug("No stats available for commit %s", c.sha)
             continue
+        # Convert commit date to UTC timezone.
         dt = c.commit.author.date
         dt_utc = dt if dt.tzinfo else dt.replace(tzinfo=datetime.timezone.utc)
         iso = dt_utc.date().isoformat()
+        # Add statistics to results list.
         stats_list.append(
             {"date": iso, "additions": s.additions, "deletions": s.deletions}
         )
+        # Increment commit counter and check safety limit.
+        commit_count += 1
+        if commit_count > 1000:
+            _LOG.warning("Processed 1000 commits, stopping to avoid timeout")
+            break
+    # Log the results summary.
     if not stats_list:
         _LOG.info(
             "No LOC stats found for %s/%s user=%s in %s to %s — possibly inactive or outdated.",
@@ -743,14 +780,161 @@ def get_loc_stats_by_repo_period_intrinsic(
             since.date(),
             until.date(),
         )
-    _LOG.info(
-        "Fetched LOC stats for %s/%s user=%s entries=%d.",
-        org,
-        repo,
-        username,
-        len(stats_list),
-    )
+    else:
+        _LOG.info(
+            "Fetched LOC stats for %s/%s user=%s entries=%d.",
+            org,
+            repo,
+            username,
+            len(stats_list),
+        )
+
     return stats_list
+
+
+@cached_github_function
+def get_issue_comment_datetimes_by_repo_period_intrinsic(
+    client,
+    org: str,
+    repo: str,
+    username: str,
+    since: datetime.datetime,
+    until: datetime.datetime,
+) -> List[str]:
+    """
+    Fetch issue comment timestamps for user in repo over period using search
+    API.
+
+    :param client: authenticated PyGithub client
+    :param org: GitHub org name
+    :param repo: repository name
+    :param username: GitHub username
+    :param since: start datetime
+    :param until: end datetime
+    :return: comment timestamps in ISO format
+    """
+    timestamps: List[str] = []
+    # Format dates for GitHub search query.
+    since_date = since.date().isoformat()
+    until_date = until.date().isoformat()
+    # Build search query for issues where user has commented.
+    query = f"repo:{org}/{repo} is:issue commenter:{username} updated:{since_date}..{until_date}"
+    # Execute the search query.
+    results = client.search_issues(query)
+    # Process each issue to find user's comments.
+    for issue in results:
+        # Skip pull requests that appear in issue search.
+        if issue.pull_request:
+            continue
+        # Fetch all comments for this issue.
+        comments = issue.get_comments()
+        # Filter comments by the target user.
+        for comment in comments:
+            # Skip comments by other users.
+            if comment.user.login != username:
+                continue
+            # Convert comment date to UTC timezone.
+            comment_dt = comment.created_at
+            comment_dt_utc = (
+                comment_dt
+                if comment_dt.tzinfo
+                else comment_dt.replace(tzinfo=datetime.timezone.utc)
+            )
+            # Add timestamp if within the specified period.
+            if since <= comment_dt_utc <= until:
+                timestamps.append(comment_dt_utc.isoformat())
+    # Log the results summary.
+    if not timestamps:
+        _LOG.info(
+            "No issue comments found for %s/%s user=%s in %s to %s — possibly inactive or outdated.",
+            org,
+            repo,
+            username,
+            since.date(),
+            until.date(),
+        )
+    else:
+        _LOG.info(
+            "Fetched %d issue comments for %s/%s user=%s.",
+            len(timestamps),
+            org,
+            repo,
+            username,
+        )
+    return timestamps
+
+
+@cached_github_function
+def get_pr_review_datetimes_by_repo_period_intrinsic(
+    client,
+    org: str,
+    repo: str,
+    username: str,
+    since: datetime.datetime,
+    until: datetime.datetime,
+) -> List[str]:
+    """
+    Fetch PR review timestamps for user in repo over period.
+
+    :param client: authenticated PyGithub client
+    :param org: GitHub org name
+    :param repo: repository name
+    :param username: GitHub username
+    :param since: start datetime
+    :param until: end datetime
+    :return: review timestamps in ISO format
+    """
+    timestamps: List[str] = []
+    # Fetch the repository object.
+    repo_obj = client.get_repo(f"{org}/{repo}")
+    # Format dates for GitHub search query.
+    since_date = since.date().isoformat()
+    until_date = until.date().isoformat()
+    # Build search query for PRs reviewed by the user.
+    query = f"repo:{org}/{repo} is:pr reviewed-by:{username} updated:{since_date}..{until_date}"
+    # Execute the search query.
+    results = client.search_issues(query)
+    # Process each PR to find user's reviews.
+    for issue in results:
+        # Fetch the full PR object.
+        pr = repo_obj.get_pull(issue.number)
+        # Fetch all reviews for this PR.
+        reviews = pr.get_reviews()
+        # Filter reviews by the target user.
+        for review in reviews:
+            # Skip reviews by other users.
+            if review.user.login != username:
+                continue
+            # Convert review date to UTC timezone.
+            review_dt = review.submitted_at
+            review_dt_utc = (
+                review_dt
+                if review_dt.tzinfo
+                else review_dt.replace(tzinfo=datetime.timezone.utc)
+            )
+            # Add timestamp if within the specified period.
+            if since <= review_dt_utc <= until:
+                timestamps.append(review_dt_utc.isoformat())
+    # Log the results summary.
+    if not timestamps:
+        _LOG.info(
+            "No PR reviews found for %s/%s user=%s in %s to %s — possibly inactive or outdated.",
+            org,
+            repo,
+            username,
+            since.date(),
+            until.date(),
+        )
+    else:
+        _LOG.info(
+            "Fetched %d PR reviews for %s/%s user=%s.",
+            len(timestamps),
+            org,
+            repo,
+            username,
+        )
+
+    return timestamps
 
 
 def build_daily_commit_df(
@@ -784,6 +968,22 @@ def build_daily_commit_df(
     daily["user"] = username
     _LOG.debug("Built daily commit DataFrame rows=%d.", len(daily))
     return daily
+
+
+def slice_by_date(df, start, end, date_col="date"):
+    """
+    Slice DataFrame by date range.
+
+    :param df: input DataFrame
+    :param start: start date (inclusive)
+    :param end: end date (inclusive)
+    :param date_col: name of the date column in df
+    :return: filtered DataFrame
+    """
+    out = df.copy()
+    out[date_col] = pd.to_datetime(out[date_col], errors="coerce")
+    res = out.loc[(out[date_col] >= start) & (out[date_col] <= end)].copy()
+    return res
 
 
 def build_daily_issue_df(
@@ -971,8 +1171,8 @@ def prefetch_periodic_user_repo_data(
     period: Tuple[datetime.datetime, datetime.datetime],
 ) -> None:
     """
-    Prefetch and cache commits, PRs, and LOC for each user and repo over
-    period.
+    Prefetch and cache commits, PRs, LOC, issues, comments, and reviews for
+    each user and repo over period.
 
     :param client: authenticated PyGithub client
     :param org: GitHub org name
@@ -1006,10 +1206,19 @@ def prefetch_periodic_user_repo_data(
         issues = get_issue_datetimes_by_repo_intrinsic(
             client, org, repo, user, period
         )
+        # issue_comments = get_issue_comment_datetimes_by_repo_period_intrinsic(
+        #     client, org, repo, user, since, until
+        # )
+        # pr_reviews = get_pr_review_datetimes_by_repo_period_intrinsic(
+        #     client, org, repo, user, since, until
+        # )
+        issue_comments = []
+        pr_reviews = []
         td.tqdm.write(
             f"{repo}/{user}: {len(commits)} commits, {len(prs)} PRs, "
             f"{len(locs)} LOC entries, {len(issues['assigned'])} issues assigned, "
-            f"{len(issues['closed'])} closed"
+            f"{len(issues['closed'])} closed, {len(issue_comments)} issue comments, "
+            f"{len(pr_reviews)} PR reviews"
         )
         count += 1
     # Report overall prefetch duration.
@@ -1023,12 +1232,80 @@ def prefetch_periodic_user_repo_data(
     )
 
 
+def build_daily_issue_comment_df(
+    client,
+    org: str,
+    repo: str,
+    username: str,
+    period: Tuple[datetime.datetime, datetime.datetime],
+) -> pd.DataFrame:
+    """
+    Build daily issue comment counts for user and repo over period.
+
+    :param client: authenticated PyGithub client
+    :param org: GitHub org name
+    :param repo: repository name
+    :param username: GitHub username
+    :param period: start and end datetime objects
+    :return: data with date, issue_comments, repo, user
+    """
+    since, until = period
+    timestamps = get_issue_comment_datetimes_by_repo_period_intrinsic(
+        client, org, repo, username, since, until
+    )
+    df = pd.DataFrame({"ts": pd.to_datetime(timestamps)})
+    df["date"] = df.ts.dt.date
+    daily = df.groupby("date").size().reset_index(name="issue_comments")
+    all_days = pd.DataFrame({"date": days_between(period)})
+    daily = all_days.merge(daily, on="date", how="left")
+    daily["issue_comments"] = daily["issue_comments"].fillna(0).astype(int)
+    daily["repo"] = repo
+    daily["user"] = username
+    _LOG.debug("Built daily issue comment DataFrame rows=%d.", len(daily))
+    return daily
+
+
+def build_daily_pr_review_df(
+    client,
+    org: str,
+    repo: str,
+    username: str,
+    period: Tuple[datetime.datetime, datetime.datetime],
+) -> pd.DataFrame:
+    """
+    Build daily PR review counts for user and repo over period.
+
+    :param client: authenticated PyGithub client
+    :param org: GitHub org name
+    :param repo: repository name
+    :param username: GitHub username
+    :param period: start and end datetime objects
+    :return: data with date, pr_reviews, repo, user
+    """
+    since, until = period
+    timestamps = get_pr_review_datetimes_by_repo_period_intrinsic(
+        client, org, repo, username, since, until
+    )
+    df = pd.DataFrame({"ts": pd.to_datetime(timestamps)})
+    df["date"] = df.ts.dt.date
+    daily = df.groupby("date").size().reset_index(name="pr_reviews")
+    all_days = pd.DataFrame({"date": days_between(period)})
+    daily = all_days.merge(daily, on="date", how="left")
+    daily["pr_reviews"] = daily["pr_reviews"].fillna(0).astype(int)
+    daily["repo"] = repo
+    daily["user"] = username
+    _LOG.debug("Built daily PR review DataFrame rows=%d.", len(daily))
+    return daily
+
+
 def collect_all_metrics(
     client,
     org: str,
     repos: List[str],
     users: List[str],
     period: Tuple[datetime.datetime, datetime.datetime],
+    skip_issue_comments: bool = True,
+    skip_pr_reviews: bool = True,
 ) -> pd.DataFrame:
     """
     Collect daily metrics for all user-repo combinations.
@@ -1038,10 +1315,16 @@ def collect_all_metrics(
     :param repos: repository names
     :param users: github usernames
     :param period: start and end datetime
+    :param skip_issue_comments: skip fetching issue comments (for speed)
+    :param skip_pr_reviews: skip fetching PR reviews (for speed)
     :return: concatenated data with date, commits, prs, additions,
-        deletions, repo, user
+        deletions, issues_assigned, issues_closed, issue_comments
+        (optional), pr_reviews (optional), repo, user
     """
     combined_frames: List[pd.DataFrame] = []
+    # Track progress.
+    total_combinations = len(repos) * len(users)
+    current = 0
     for repo in repos:
         # Ensure repo is a string.
         if not isinstance(repo, str):
@@ -1050,17 +1333,35 @@ def collect_all_metrics(
             # Ensure user is a string.
             if not isinstance(user, str):
                 raise ValueError(f"Expected user to be a string but got {user!r}")
+            current += 1
+            _LOG.info(f"Processing {current}/{total_combinations}: {repo}/{user}")
             # Build each metric DataFrame.
             df_c = build_daily_commit_df(client, org, repo, user, period)
             df_p = build_daily_pr_df(client, org, repo, user, period)
             df_l = build_daily_loc_df(client, org, repo, user, period)
             df_i = build_daily_issue_df(client, org, repo, user, period)
-            # Merge on date, repo, and user.
+            # Start merging with required metrics.
             df = (
                 df_c.merge(df_p, on=["date", "repo", "user"], how="inner")
                 .merge(df_l, on=["date", "repo", "user"], how="inner")
                 .merge(df_i, on=["date", "repo", "user"], how="inner")
             )
+            # Optionally add issue comments.
+            if not skip_issue_comments:
+                df_ic = build_daily_issue_comment_df(
+                    client, org, repo, user, period
+                )
+                df = df.merge(df_ic, on=["date", "repo", "user"], how="inner")
+            else:
+                # Add dummy column for consistency.
+                df["issue_comments"] = 0
+            # Optionally add PR reviews.
+            if not skip_pr_reviews:
+                df_pr = build_daily_pr_review_df(client, org, repo, user, period)
+                df = df.merge(df_pr, on=["date", "repo", "user"], how="inner")
+            else:
+                # Add dummy column for consistency.
+                df["pr_reviews"] = 0
             combined_frames.append(df)
     # Concatenate all DataFrames or return empty.
     combined = (
@@ -1068,6 +1369,7 @@ def collect_all_metrics(
         if combined_frames
         else pd.DataFrame()
     )
+    _LOG.info(f"Collected metrics for {len(combined)} daily records")
     return combined
 
 
@@ -1075,19 +1377,21 @@ def summarize_user_metrics_for_repo(
     combined: pd.DataFrame, repo: str
 ) -> pd.DataFrame:
     """
-    Summarize total commits, PRs, LOC, and issues per user in a specific
-    repository.
+    Summarize total commits, PRs, LOC, issues, comments, and reviews per user
+    in a specific repository.
 
     :param combined: data with all metrics
     :param repo: repository name
     :return: data with columns user, commits, prs, additions, deletions,
-        issues_assigned, issues_closed
+        issues_assigned, issues_closed, issue_comments, pr_reviews
     """
     df = combined[combined["repo"] == repo].copy()
     df["additions"] = df["additions"].str.replace("+", "").astype(int)
     df["deletions"] = df["deletions"].str.replace("-", "").astype(int)
     df["issues_assigned"] = df["issues_assigned"].astype(int)
     df["issues_closed"] = df["issues_closed"].astype(int)
+    # df["issue_comments"] = df["issue_comments"].astype(int)
+    # df["pr_reviews"] = df["pr_reviews"].astype(int)
     summary = (
         df.groupby("user")
         .agg(
@@ -1097,6 +1401,8 @@ def summarize_user_metrics_for_repo(
             deletions=pd.NamedAgg(column="deletions", aggfunc="sum"),
             issues_assigned=pd.NamedAgg(column="issues_assigned", aggfunc="sum"),
             issues_closed=pd.NamedAgg(column="issues_closed", aggfunc="sum"),
+            # issue_comments=pd.NamedAgg(column="issue_comments", aggfunc="sum"),
+            # pr_reviews=pd.NamedAgg(column="pr_reviews", aggfunc="sum"),
         )
         .reset_index()
     )
@@ -1107,16 +1413,19 @@ def summarize_repo_metrics_for_user(
     combined: pd.DataFrame, user: str
 ) -> pd.DataFrame:
     """
-    Summarize total commits, PRs, LOC, and issues per repo for a user.
+    Summarize total commits, PRs, LOC, issues, comments, and reviews per repo
+    for a user.
 
     :param combined: data with all metrics
     :param user: GitHub username
     :return: columns repo, commits, prs, additions, deletions,
-        issues_assigned, issues_closed
+        issues_assigned, issues_closed, issue_comments, pr_reviews
     """
     df = combined[combined["user"] == user].copy()
     df["additions"] = df["additions"].str.replace("+", "").astype(int)
     df["deletions"] = df["deletions"].str.replace("-", "").astype(int)
+    df["issue_comments"] = df["issue_comments"].astype(int)
+    df["pr_reviews"] = df["pr_reviews"].astype(int)
     summary = (
         df.groupby("repo")
         .agg(
@@ -1126,6 +1435,8 @@ def summarize_repo_metrics_for_user(
             deletions=pd.NamedAgg(column="deletions", aggfunc="sum"),
             issues_assigned=pd.NamedAgg(column="issues_assigned", aggfunc="sum"),
             issues_closed=pd.NamedAgg(column="issues_closed", aggfunc="sum"),
+            issue_comments=pd.NamedAgg(column="issue_comments", aggfunc="sum"),
+            pr_reviews=pd.NamedAgg(column="pr_reviews", aggfunc="sum"),
         )
         .reset_index()
     )
@@ -1138,12 +1449,14 @@ def summarize_users_across_repos(
     repos: List[str],
 ) -> pd.DataFrame:
     """
-    Aggregate commit / PR / LOC / issue totals per-user across a repo subset.
+    Aggregate commit / PR / LOC / issue / comment / review totals per-user
+    across a repo subset.
 
     :param combined: output of `collect_all_metrics`
     :param users: GitHub usernames
     :param repos: repository names
-    :return: data with columns user, commits, prs, additions, deletions, issues_assigned, issues_closed
+    :return: data with columns user, commits, prs, additions, deletions,
+        issues_assigned, issues_closed, issue_comments, pr_reviews
     """
     # Filter to requested slice.
     df = combined[
@@ -1152,6 +1465,8 @@ def summarize_users_across_repos(
     # Normalise numeric columns.
     df["additions"] = df["additions"].str.replace("+", "").astype(int)
     df["deletions"] = df["deletions"].str.replace("-", "").astype(int)
+    df["issue_comments"] = df["issue_comments"].astype(int)
+    df["pr_reviews"] = df["pr_reviews"].astype(int)
     df.rename(
         columns={
             "issues_assigned": "issues_assigned",
@@ -1170,6 +1485,8 @@ def summarize_users_across_repos(
             deletions=("deletions", "sum"),
             issues_assigned=("issues_assigned", "sum"),
             issues_closed=("issues_closed", "sum"),
+            issue_comments=("issue_comments", "sum"),
+            pr_reviews=("pr_reviews", "sum"),
         )
         .reset_index()
     )
@@ -1224,19 +1541,23 @@ def _plot_grouped_bars(
         "deletions",
         "issues_assigned",
         "issues_closed",
+        "issue_comments",
+        "pr_reviews",
     ]
     to_plot = metrics if metrics else default_metrics
     for m in to_plot:
-        # TODO(*): Use dassert_in
         if m not in default_metrics:
             raise ValueError(f"Unsupported metric '{m}'")
+    # Filter to only metrics that exist in the summary.
+    to_plot = [m for m in to_plot if m in summary.columns]
     # Compute layout parameters.
     categories = summary[index_col].tolist()
     x = range(len(to_plot))
     n_cat = len(categories)
     width = 0.8 / n_cat if n_cat else 0.8
     # Plot bars for each category (user or repo).
-    fig, ax = plt.subplots(figsize=(10, 5))
+    fig_width = max(12, len(to_plot) * 1.5)
+    fig, ax = plt.subplots(figsize=(fig_width, 5))
     for idx, cat in enumerate(categories):
         values = (
             summary.loc[summary[index_col] == cat, to_plot].astype(int).iloc[0]
@@ -1254,7 +1575,9 @@ def _plot_grouped_bars(
             )
     # Finalize plot aesthetics.
     ax.set_xticks([i + width * (n_cat - 1) / 2 for i in x])
-    ax.set_xticklabels([m.replace("_", " ").title() for m in to_plot])
+    ax.set_xticklabels(
+        [m.replace("_", " ").title() for m in to_plot], rotation=45, ha="right"
+    )
     ax.set_ylabel("Count")
     ax.set_title(title)
     ax.legend(title=index_col.replace("_", " ").title())
@@ -1556,3 +1879,42 @@ def visualize_user_metric_comparison(
     plt.tight_layout()
     plt.show()
     stats.drop(columns="__score_avg__", inplace=True)
+
+
+def compute_engagement_score(
+    summary: pd.DataFrame,
+    weights: Optional[Dict[str, float]] = None,
+) -> pd.DataFrame:
+    """
+    Compute a weighted engagement score for each user based on all metrics.
+
+    :param summary: data with user metrics
+    :param weights: optional dictionary of metric weights; if None, uses
+        defaults
+    :return: summary with an added 'engagement_score' column
+    """
+    # Default weights emphasizing collaboration and code quality.
+    default_weights = {
+        "commits": 1.0,
+        "prs": 2.0,
+        "additions": 0.001,
+        "deletions": 0.0005,
+        "issues_assigned": 0.5,
+        "issues_closed": 1.5,
+        "issue_comments": 0.3,
+        "pr_reviews": 2.5,
+    }
+    weights = weights or default_weights
+    summary = summary.copy()
+    summary["engagement_score"] = 0
+    for metric, weight in weights.items():
+        if metric in summary.columns:
+            summary["engagement_score"] += summary[metric] * weight
+    # Normalize to 0-100 scale.
+    max_score = summary["engagement_score"].max()
+    if max_score > 0:
+        summary["engagement_score"] = (
+            summary["engagement_score"] / max_score * 100
+        ).round(2)
+    sum = summary.sort_values("engagement_score", ascending=False)
+    return sum
