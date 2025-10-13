@@ -9,13 +9,14 @@ authors:
   - Shayawnn
   - samarth9008
 date: 2025-09-10
-description:
-  "How Causify runs developer tools in lightweight, per-tool containers to
+description: >-
+  How Causify runs developer tools in lightweight, per-tool containers to
   eliminate install pain, ensure reproducibility, and speed up CI/local
-  workflows."
+  workflows.
 categories:
-  - DevOps
+  - "DevOps"
 ---
+
 
 Have you ever spent hours trying to install a tool, only to hit version
 conflicts or mysterious errors? Do you need to run the same tool on different
