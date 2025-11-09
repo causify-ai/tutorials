@@ -57,7 +57,7 @@ This folder is an attempted reconstruction of the InsightPilot workflow describe
 - Sample `_slice` datasets (`T1_slice.csv`, `FRED_slice.csv`, `PEMS_slice.csv`) are handy for quick verification runs; the tests in `agentic_eda/test/test_insight_engines.py` exercise the same flows.
 
 ## References
-1. QuickInsights-camera-ready-final.pdf  
-2. MetaInsight.pdf  
-3. XInsight-final.pdf  
-4. InsightPilot.pdf
+1. Ding, R., Han, S., Xu, Y., Zhang, H., & Zhang, D. (2019). QuickInsights: Quick and automatic discovery of insights from multi-dimensional data. *Proceedings of the 2019 International Conference on Management of Data (SIGMOD ’19)*. ACM. https://doi.org/10.1145/3299869.3314037  
+2. Ma, P., Ding, R., Han, S., & Zhang, D. (2021). MetaInsight: Automatic discovery of structured knowledge for exploratory data analysis. *Proceedings of the 2021 International Conference on Management of Data (SIGMOD ’21)*. ACM. https://doi.org/10.1145/3448016.3457267  
+3. Ma, P., Ding, R., Wang, S., Han, S., & Zhang, D. (2023). XInsight: eXplainable data analysis through the lens of causality. *Proceedings of the ACM on Management of Data, 1*(2), Article 156. https://doi.org/10.1145/3589301  
+4. Ma, P., Ding, R., Wang, S., Han, S., & Zhang, D. (2023). InsightPilot: An LLM-empowered automated data exploration system. *arXiv preprint arXiv:2304.00477*.
