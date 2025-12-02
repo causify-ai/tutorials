@@ -1,6 +1,3 @@
 [submodule "helpers_root"]
 	path = helpers_root
 	url = git@github.com:kaizen-ai/helpers.git
-[submodule "agentic_eda/agentui"]
-	path = agentic_eda/agentui
-	url = git@github.com:indrayudd/AgenTUI.git
