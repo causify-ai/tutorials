@@ -1,0 +1,4 @@
+[
+  {"title": "Introduction", "code": "print('Notebook demo: introduction')"},
+  {"title": "Generate Data", "code": "import math\nvalues = [math.sin(i/10) for i in range(100)]"}
+]
