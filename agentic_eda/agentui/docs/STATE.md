@@ -18,7 +18,11 @@ _Last updated during Sprint 7 (Composer responsiveness & formatting)._
   - `npm run agent:testfs` – resets `tmp/fs-spec` then runs list/copy/read/glob/delete prompts to ensure the agent sees the real filesystem consistently.
   - `npm run test` – Vitest suite (config, router, mentions, tool summarizer, composer renderer snapshots, etc.).
   - `npm test -- agent/events.test.ts src/ui/transcript.test.tsx` – validates reasoning visibility gating, update/answer separation, and transcript rendering (reasoning/actions/answer layout).
-
+- **Intelligent Model Hot-Swapping**: Implements a "Replace-then-Switch" architecture to balance latency and capability:
+    - **Default State**: Sessions initialize with `gpt-4o-mini` for near-instantaneous text-based EDA and general chat.
+    - **Image-Triggered Replacement**: Upon detecting image attachments in the composer, the app programmatically replaces the active `agentRunner` instance with a `gpt-5` runner.
+    - **Dynamic Re-instantiation**: When a prompt returns to text-only content, the app swaps back to `gpt-4o-mini`. 
+    - **State Continuity**: This is achieved by trashing the old agent and creating a new one using `setAgentRunner(createAgentRunner(nextConfig))`. Because the message history (context) is stored in the UI state and not the agent runner, the handoff between "brains" is seamless to the user.
 ## Outstanding Work
 
 1. **Enhanced notebook analysis** – CSV plotting helpers and richer summarize output (Phase 4 follow-ups) remain open once composer work stabilizes.
