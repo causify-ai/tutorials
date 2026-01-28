@@ -6,25 +6,28 @@ Process and upload markdown documents to a Weaviate vector database using Ollama
 Usage:
 
 Library mode:
-    import dify.weaviate_docs as dweadocs
+    import csk_chat.weaviate_docs as cweadocs
 
     # Default settings
-    result = dweadocs.upload_markdown_docs_to_weaviate()
+    result = cweadocs.upload_markdown_docs_to_weaviate()
 
     # Custom parameters
-    result = dweadocs.upload_markdown_docs_to_weaviate(
+    result = cweadocs.upload_markdown_docs_to_weaviate(
         docs_dir="/path/to/docs",
         collection_name="MyDocs",
-        chunk_size=1000
+        chunk_size=1000,
+        delete_existing=True  # Delete existing collection before upload
     )
 
 Command-line mode:
     python weaviate_docs.py --help
     python weaviate_docs.py --docs_dir /path/to/docs --collection_name MyDocs
+    python weaviate_docs.py --delete_existing  # Delete existing collection first
 
 Options:
     --docs_dir: Source directory for markdown files
     --collection_name: Weaviate collection name
+    --delete_existing: Delete existing collection before creating new one
     --chunk_size: Text chunk size for splitting
     --chunk_overlap: Overlap between chunks
     --batch_size: Upload batch size
@@ -43,7 +46,7 @@ Workflow:
 
 Import as:
 
-import dify.weaviate_docs as dweadocs
+import csk_chat.weaviate_docs as cweadocs
 """
 
 import argparse
@@ -92,17 +95,48 @@ def get_project_root() -> str:
     return project_root
 
 
+def delete_weaviate_collection(
+    client: weaviate.WeaviateClient,
+    collection_name: str = DEFAULT_COLLECTION_NAME,
+) -> bool:
+    """
+    Delete a Weaviate collection if it exists.
+
+    :param client: Weaviate client instance
+    :param collection_name: name of the collection to delete
+    :return: True if collection was deleted, False if it didn't exist
+    """
+    try:
+        if collection_name in client.collections.list_all():
+            _LOG.info("Deleting existing collection: %s", collection_name)
+            client.collections.delete(collection_name)
+            _LOG.info("Successfully deleted collection: %s", collection_name)
+            return True
+        else:
+            _LOG.info("Collection %s does not exist, nothing to delete", collection_name)
+            return False
+    except Exception as e:
+        _LOG.error("Failed to delete collection %s: %s", collection_name, e)
+        raise RuntimeError(f"Failed to delete collection {collection_name}: {e}") from e
+
+
 def create_weaviate_collection(
     client: weaviate.WeaviateClient,
     collection_name: str = DEFAULT_COLLECTION_NAME,
+    *,
+    delete_existing: bool = False,
 ) -> Any:
     """
     Create or get a Weaviate collection for document storage.
 
     :param client: Weaviate client instance
     :param collection_name: name of the collection to create/get
+    :param delete_existing: if True, delete existing collection before creating new one
     :return: the collection object
     """
+    if delete_existing:
+        delete_weaviate_collection(client, collection_name)
+    
     if collection_name not in client.collections.list_all():
         _LOG.info("Creating new collection: %s", collection_name)
         client.collections.create(
@@ -155,7 +189,7 @@ def get_ollama_embedding(
 def process_markdown_file(
     filepath: str,
     docs_dir: str,
-    splitter: RecursiveCharacterTextSplitter,
+    splitter: Any,  # RecursiveCharacterTextSplitter
     batch: Any,
     ollama_url: str = DEFAULT_OLLAMA_EMBED_URL,
     model: str = DEFAULT_OLLAMA_MODEL,
@@ -204,6 +238,7 @@ def upload_markdown_docs_to_weaviate(
     docs_dir: Optional[str] = None,
     *,
     collection_name: str = DEFAULT_COLLECTION_NAME,
+    delete_existing: bool = False,
     allowed_extensions: Optional[List[str]] = None,
     chunk_size: int = DEFAULT_CHUNK_SIZE,
     chunk_overlap: int = DEFAULT_CHUNK_OVERLAP,
@@ -222,6 +257,7 @@ def upload_markdown_docs_to_weaviate(
     :param docs_dir: directory containing markdown files. Defaults to
         PROJECT_ROOT/docs :param *:
     :param collection_name: name of the Weaviate collection
+    :param delete_existing: if True, delete existing collection before creating new one
     :param allowed_extensions: list of file extensions to process
     :param chunk_size: size of text chunks for splitting
     :param chunk_overlap: overlap between consecutive chunks
@@ -249,7 +285,7 @@ def upload_markdown_docs_to_weaviate(
     client = weaviate_client or weaviate.connect_to_local()
     should_close_client = weaviate_client is None
     try:
-        collection = create_weaviate_collection(client, collection_name)
+        collection = create_weaviate_collection(client, collection_name, delete_existing=delete_existing)
 
         splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size, chunk_overlap=chunk_overlap
@@ -314,6 +350,11 @@ def _parse() -> argparse.ArgumentParser:
         help=f"Name of the Weaviate collection (default: {DEFAULT_COLLECTION_NAME})",
     )
     parser.add_argument(
+        "--delete_existing",
+        action="store_true",
+        help="Delete existing collection before creating new one (default: False)",
+    )
+    parser.add_argument(
         "--chunk_size",
         type=int,
         default=DEFAULT_CHUNK_SIZE,
@@ -347,11 +388,12 @@ def _parse() -> argparse.ArgumentParser:
     return parser
 
 
-def _main(parser: argparse.ArgumentParser) -> None:
+def _main(parser: argparse.ArgumentParser) -> dict:
     """
     Run the document upload process with command line arguments.
 
     :param parser: configured argument parser
+    :return: summary of the upload process
     """
     args = parser.parse_args()
     hdbg.init_logger(verbosity=args.log_level, use_exec_path=True)
@@ -360,6 +402,7 @@ def _main(parser: argparse.ArgumentParser) -> None:
         result = upload_markdown_docs_to_weaviate(
             docs_dir=args.docs_dir,
             collection_name=args.collection_name,
+            delete_existing=args.delete_existing,
             chunk_size=args.chunk_size,
             chunk_overlap=args.chunk_overlap,
             batch_size=args.batch_size,

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-Comprehensive Setup Script for Dify Documentation Chatbot with Weaviate
-Integration.
+Comprehensive Setup Script for Documentation Chatbot with Weaviate Integration.
 
 This script automates the entire setup process by combining shell commands and
 Docker Compose orchestration to set up:
@@ -24,13 +23,13 @@ Prerequisites:
 Workflow:
     1. Install dependencies (Python packages, Ollama)
     2. Create configuration files (.env, docker-compose.yml)
-    3. Start services (Weaviate, Ollama)
+    3. Start services (Weaviate, Ollama) and Retrieval API if standalone.
     4. Process documentation files
     5. Start retrieval API
 
 Import as:
 
-import dify.csk_chat_setup as csksetup
+import csk_chat.csk_chat_setup as csksetup
 """
 
 import argparse
@@ -43,7 +42,7 @@ from typing import List, Optional, Union
 
 import requests  # type: ignore
 
-import dify.weaviate_docs as dweadocs
+import csk_chat.weaviate_docs as cchwedoc
 import helpers.hdbg as hdbg
 import helpers.hparser as hparser
 
@@ -93,13 +92,13 @@ volumes:
 
 
 # #############################################################################
-# DifyDocumentationChatbotSetup
+# DocumentationChatbotSetup
 # #############################################################################
 
 
-class DifyDocumentationChatbotSetup:
+class DocumentationChatbotSetup:
     """
-    Main setup orchestrator for the Dify documentation chatbot system.
+    Main setup orchestrator for the documentation chatbot system.
     """
 
     def __init__(self, project_root: Optional[str] = None):
@@ -271,8 +270,13 @@ class DifyDocumentationChatbotSetup:
     def process_documents(self, docs_dir: Optional[str] = None) -> None:
         """
         Process markdown documents and upload to Weaviate.
+
+        Note: This will delete any existing collection before uploading
+        to ensure a clean state.
         """
-        _LOG.info("Processing and uploading documents to Weaviate")
+        _LOG.info(
+            "Processing and uploading documents to Weaviate (deleting existing collection first)"
+        )
         docs_path = pathlib.Path(docs_dir) if docs_dir else self.docs_dir
         if not docs_path.exists():
             raise FileNotFoundError(
@@ -281,18 +285,20 @@ class DifyDocumentationChatbotSetup:
         # Import and use the document processing module.
         try:
             # Process documents.
-            result = dweadocs.upload_markdown_docs_to_weaviate(
-                docs_dir=str(docs_path), collection_name=DEFAULT_COLLECTION_NAME
+            result = cchwedoc.upload_markdown_docs_to_weaviate(
+                docs_dir=str(docs_path),
+                collection_name=DEFAULT_COLLECTION_NAME,
+                delete_existing=True,  # Always delete existing collection before upload
             )
             _LOG.info(
                 "Successfully processed %s files", result.get("total_files", 0)
             )
         except ImportError as e:
             _LOG.error(
-                "Document processing module not found. Ensure dify package is available."
+                "Document processing module not found. Ensure package is available."
             )
             raise ImportError(
-                "Document processing failed - missing dify.weaviate_docs module"
+                "Document processing failed - missing csk_chat.weaviate_docs module"
             ) from e
 
     def start_retrieval_api(self) -> None:
@@ -312,7 +318,7 @@ class DifyDocumentationChatbotSetup:
             command = [
                 sys.executable,
                 "-m",
-                "dify.weaviate_retrieval",
+                "csk_chat.weaviate_retrieval",
                 "--host",
                 self.config["APP_HOST"],
                 "--port",
@@ -330,10 +336,10 @@ class DifyDocumentationChatbotSetup:
             )
         except ImportError as e:
             _LOG.error(
-                "Retrieval API module not found. Ensure dify package is available."
+                "Retrieval API module not found. Ensure csk_chat package is available."
             )
             raise ImportError(
-                "Retrieval API startup failed - missing dify.weaviate_retrieval module"
+                "Retrieval API startup failed - missing csk_chat.weaviate_retrieval module"
             ) from e
 
     def test_system_integration(self) -> None:
@@ -345,26 +351,26 @@ class DifyDocumentationChatbotSetup:
         try:
             response = requests.get(f"{self.weaviate_url}/v1/meta", timeout=10)
             response.raise_for_status()
-            _LOG.info("✓ Weaviate is responding")
+            _LOG.info("Weaviate is responding")
         except requests.RequestException as e:
-            _LOG.error("✗ Weaviate test failed: %s", e)
+            _LOG.error("Weaviate test failed: %s", e)
         # Test Ollama.
         try:
             response = requests.get(f"{self.ollama_url}/api/tags", timeout=10)
             response.raise_for_status()
-            _LOG.info("✓ Ollama is responding")
+            _LOG.info("Ollama is responding")
         except requests.RequestException as e:
-            _LOG.error("✗ Ollama test failed: %s", e)
+            _LOG.error("Ollama test failed: %s", e)
         # Test Retrieval API.
         try:
             response = requests.get(
                 f"{self.retrieval_api_url}/health", timeout=10
             )
             response.raise_for_status()
-            _LOG.info("✓ Retrieval API is responding")
+            _LOG.info("Retrieval API is responding")
         except requests.RequestException as e:
             _LOG.warning(
-                "⚠ Retrieval API test failed (may not be started yet): %s", e
+                "Retrieval API test failed (may not be started yet): %s", e
             )
 
     def run_full_setup(self, docs_dir: Optional[str] = None) -> None:
@@ -501,7 +507,7 @@ def _main(parser: argparse.ArgumentParser) -> None:
     args = parser.parse_args()
     hdbg.init_logger(verbosity=args.log_level, use_exec_path=True)
     # Initialize setup manager.
-    setup = DifyDocumentationChatbotSetup(args.project_root)
+    setup = DocumentationChatbotSetup(args.project_root)
     try:
         if args.install_all:
             setup.run_full_setup(args.docs_dir)
@@ -516,20 +522,12 @@ def _main(parser: argparse.ArgumentParser) -> None:
             if args.start_services:
                 setup.start_weaviate_service()
                 setup.start_ollama_service()
+                setup.start_retrieval_api()
             if args.process_docs:
                 setup.process_documents(args.docs_dir)
             if args.test_integration:
                 setup.test_system_integration()
-        if not any(
-            [
-                args.install_all,
-                args.create_config,
-                args.install_deps,
-                args.start_services,
-                args.process_docs,
-                args.test_integration,
-            ]
-        ):
+        if not any([setup.run_full_setup]):
             parser.print_help()
     except (ImportError, FileNotFoundError) as e:
         _LOG.error("Setup failed: %s", e)

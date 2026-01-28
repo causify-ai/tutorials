@@ -7,10 +7,10 @@ Ollama embeddings. Designed for integration with Dify External Knowledge API.
 Usage:
 
 Library mode:
-    import dify.weaviate_retrieval as dwearetr
+    import csk_chat.weaviate_retrieval as cwearetr
 
     # Configure and start server
-    dwearetr.main()
+    cwearetr.main()
 
 Command-line mode:
     python weaviate_retrieval.py --help
@@ -32,7 +32,7 @@ API Endpoints:
 
 Import as:
 
-import dify.weaviate_retrieval as dwearetr
+import csk_chat.weaviate_retrieval as cwearetr
 """
 
 import argparse
