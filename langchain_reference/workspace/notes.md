@@ -1,0 +1,6 @@
+- Check stationarity of each series (ADF/KPSS) and apply transformations or differencing as needed.
+- Inspect cross-series relationships using cross-correlation functions and Granger-causality tests to capture lead-lag dynamics.
+- Decompose series to inspect shared trend and seasonality; compare seasonal patterns across variables.
+- Assess and align missing data; examine timestamp alignment and consider imputation with caution to preserve dependencies.
+- Visualize multivariate trajectories and joint distributions; look for outliers and regime shifts in the multivariate context.
+- Examine the multivariate dependencies: compute correlation/covariance structure, PCA/Factor analysis for dimensionality reduction, and check for multicollinearity.

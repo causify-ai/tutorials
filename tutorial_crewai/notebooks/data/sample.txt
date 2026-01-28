@@ -1,0 +1,2 @@
+CrewAI lets you define agents with roles, goals, and tools, then assign tasks.
+This demo reads this file and outputs a 3-bullet summary.

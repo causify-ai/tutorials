@@ -1,0 +1,3 @@
+LangChain-style agents can be built without LangChain, too.
+This is a simple local test file.
+The agent will read and summarize it.
