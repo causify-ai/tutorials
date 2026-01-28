@@ -1,0 +1,4 @@
+What is LCEL in LangChain, and why is it useful?
+Explain the difference between invoke() and batch() in Runnables.
+Give me an example of RunnableSequence vs RunnableParallel.
+What does max_concurrency do in Runnable config, and when should I change it?
