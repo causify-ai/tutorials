@@ -31,16 +31,19 @@ import { formatActionSummary } from '../utils/actions.js';
 import { splitReasoningAndAnswer } from '../utils/messages.js';
 import { loadImageAttachments } from '../utils/images.js';
 
+const VISION_MODEL = 'gpt-5'; // or your preferred vision model
+const TEXT_ONLY_MODEL = 'gpt-4o-mini';
 const BRAND_COLOR = 'magenta';
 const SIDEBAR_MIN_WIDTH = 110;
 const PRODUCT_NAME = 'AEDA';
 const PRODUCT_VERSION = '0.0.1';
 const BUSY_MESSAGE = 'Agent is finishing the previous turn. Please wait…';
-const EXPLORER_WIDTH = 32;
+const EXPLORER_WIDTH = 32
 const SIDEBAR_WIDTH = 32;
 const MAX_TREE_DEPTH = 6;
 const EXPLORER_VISIBLE_ROWS = 24;
 const MAX_MENTION_SUGGESTIONS = 10;
+
 
 const stripStructuredNoise = (answer: string) => {
   if (!answer) return '';
@@ -114,7 +117,7 @@ export const App: React.FC<AppProps> = ({ agent, config }) => {
   const { isRawModeSupported } = useStdin();
   const [runtimeConfig, setRuntimeConfig] = useState(config);
   const [agentRunner, setAgentRunner] = useState<AgentRunner>(() => agent);
-  const [effectiveModel, setEffectiveModel] = useState(config.openAIModel);
+  const [effectiveModel, setEffectiveModel] = useState(TEXT_ONLY_MODEL);
   const [modelMenuOpen, setModelMenuOpen] = useState(false);
   const modelOptions = useMemo(() => getKnownModels(), []);
   const workspaceRoot = useMemo(() => process.cwd(), []);
@@ -124,6 +127,8 @@ export const App: React.FC<AppProps> = ({ agent, config }) => {
   const lastToolIntentRef = useRef<PromptIntent | null>(null);
   const notebookTipsShownRef = useRef(false);
 
+  
+  // Start with the text-only model by default
   const ensureModelAvailable = useCallback(
     async (modelId: string): Promise<ModelAvailabilityResult> => {
       const cached = availabilityCache.current.get(modelId);
@@ -172,7 +177,7 @@ export const App: React.FC<AppProps> = ({ agent, config }) => {
   const [activePane, setActivePane] = useState<'composer' | 'explorer'>('composer');
   const composerFocused = activePane === 'composer' && !modelMenuOpen;
   const sidebarWidth = sidebarVisible ? SIDEBAR_WIDTH : 0;
-  const composerWidth = Math.max(20, columns - (filesVisible ? EXPLORER_WIDTH : 0) - sidebarWidth - 6);
+  const composerWidth = columns - 10;
   const mentionOptions = useMemo(() => collectMentionOptions(fileTree, workspaceRoot), [fileTree, workspaceRoot]);
 
   useInput(
@@ -428,9 +433,7 @@ export const App: React.FC<AppProps> = ({ agent, config }) => {
 
   const sendMessage = useCallback(async () => {
     const trimmed = input.trim();
-    if (!trimmed) {
-      return;
-    }
+    if (!trimmed) return;
     if (isThinking) {
       addSystemMessage(BUSY_MESSAGE, 'warning');
       return;
@@ -443,9 +446,8 @@ export const App: React.FC<AppProps> = ({ agent, config }) => {
       }
       return;
     }
-    if (modelMenuOpen) {
-      return;
-    }
+    if (modelMenuOpen) return;
+
     const timestamp = new Date().toLocaleTimeString();
     const userMessage: Message = {
       id: `user-${Date.now()}`,
@@ -474,7 +476,19 @@ export const App: React.FC<AppProps> = ({ agent, config }) => {
       lastIntent: lastToolIntentRef.current,
       notebookTipsShown: notebookTipsShownRef.current
     });
+    // --- AUTO-SWITCH LOGIC ---
+    // Identify if images are present to select the correct model
     const imageAttachments = await loadImageAttachments(workspaceRoot, prepared.mentionedFiles);
+    const hasImages = imageAttachments.length > 0;
+    const targetModel = hasImages ? VISION_MODEL : TEXT_ONLY_MODEL;
+
+    // Replace the agent instance if the current model doesn't match the content
+    if (effectiveModel !== targetModel) {
+      const switchSuccess = await applyModel(targetModel);
+      if (!switchSuccess) return; 
+    }
+    // --- END AUTO-SWITCH ---
+
     const agentMessage: Message = {
       id: `agent-${Date.now()}`,
       speaker: 'agent',
@@ -1130,7 +1144,8 @@ const Footer: React.FC<FooterProps> = ({
           disabled={disabled}
           submitDisabled={submitDisabled}
           placeholder="Ask a question"
-          width={Math.max(4, composerWidth)}
+          // Ensure we subtract the 2 columns for the "❯ " prefix here
+          width={Math.max(4, composerWidth - 2)} 
           highlightMentions
         />
       </Box>
@@ -1836,7 +1851,7 @@ function ComposerInput({
     }
     const portion = renderPortion(line.start, line.end) ?? ' ';
     return (
-      <Text wrap="truncate-end">
+      <Text wrap="end"> {/* Change "truncate-end" to "end" or remove wrap entirely */}
         {portion}
         {padLine(line)}
       </Text>

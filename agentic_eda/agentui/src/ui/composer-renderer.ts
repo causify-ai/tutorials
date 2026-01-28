@@ -140,6 +140,7 @@ const renderAsciiLine = (
 };
 
 const buildDisplayLines = (text: string, width: number): DisplayLine[] => {
+  // Ensure we have a valid width to prevent early wrapping
   const wrapLimit = width > 0 ? width : Number.POSITIVE_INFINITY;
   const lines: DisplayLine[] = [];
   let currentStart = 0;
@@ -156,9 +157,8 @@ const buildDisplayLines = (text: string, width: number): DisplayLine[] => {
 
   while (idx < text.length) {
     const codePoint = text.codePointAt(idx);
-    if (codePoint === undefined) {
-      break;
-    }
+    if (codePoint === undefined) break;
+
     const char = String.fromCodePoint(codePoint);
     const charLen = char.length;
 
@@ -169,10 +169,9 @@ const buildDisplayLines = (text: string, width: number): DisplayLine[] => {
       continue;
     }
 
-    const charWidth = Math.max(1, stringWidth(char));
+    const charWidth = stringWidth(char);
 
     if (
-      Number.isFinite(wrapLimit) &&
       currentWidth + charWidth > wrapLimit &&
       columns.length > 1
     ) {
