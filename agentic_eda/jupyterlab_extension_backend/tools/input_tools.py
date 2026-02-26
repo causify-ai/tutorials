@@ -1,126 +1,120 @@
-from __future__ import annotations
+"""
+Import as:
+
+import tools.input_tools as tinptool
+"""
 
 import json
-from typing_extensions import Annotated
-from langchain.tools import tool
-from langgraph.prebuilt import InjectedState
-import pandas as pd
-from pathlib import Path
+import pathlib
 import re
-# from src.handle_inputs import InputState
 
-# @tool
-# def dataset_brief(
-#     question: str,
-#     dataset_meta: Annotated[dict, InjectedState("dataset_meta")], # (not visible to the LLM)
-# ) -> str:
-#     """
-#     Answer a question using system-provided dataset metadata 
-#     """
-#     # dataset_meta comes from state["dataset_meta"], injected at runtime
-#     payload = {
-#         "question": question,
-#         "n_rows": dataset_meta.get("n_rows"),
-#         "n_cols": dataset_meta.get("n_cols"),
-#         "columns": dataset_meta.get("columns"),
-#         "freq": dataset_meta.get("freq"),
-#     }
-#     return json.dumps(payload)
+import langchain.tools as ltools
+import pandas as pd
+
+_VALID_HEADER_START_RE = re.compile(r"^[A-Za-z_]")
 
 
-def load_dataset(path: Path) -> pd.DataFrame:
-    # Load dataset.
-    
+def load_dataset(path: pathlib.Path) -> pd.DataFrame:
+    """
+    Load a supported dataset from disk.
+
+    :param path: path to dataset file
+    :return: dataset as dataframe
+    """
     ext = path.suffix.lower()
+    if ext == ".csv":
+        dataset = pd.read_csv(path)
+    else:
+        raise ValueError(f"Unsupported file extension='{ext}'")
+    return dataset
 
-    if ext in {'.csv'}:
-        data = pd.read_csv(path)
-    # TODO: Extend to other types of data.
 
-    return data
+def analyze_header(state: dict) -> dict:
+    """
+    Validate dataset headers.
 
-def headerAnalysis(
-    state
-) -> dict:
-    path = Path(state['path'])
-    data = load_dataset(path)
-    cols = list(data.columns)
-    has_header: bool = True
-    error: str = ""
-    _valid_start = re.compile(r"^[A-Za-z_]")
-    if all(isinstance(c, int) for c in cols) and cols == list(range(len(cols))):
+    :param state: graph state containing dataset path
+    :return: updated state fields with header status
+    """
+    path = pathlib.Path(str(state["path"]))
+    dataset = load_dataset(path)
+    cols = list(dataset.columns)
+    has_header = True
+    error = ""
+    if (
+        all(isinstance(col, int) for col in cols)
+        and cols == list(range(len(cols)))
+    ):
         has_header = False
-        error += "No column names;"
+        error = "No column names."
+    else:
+        for col in cols:
+            if col is None:
+                has_header = False
+                error = "One or more column names missing."
+                break
+            col_name = str(col).strip()
+            if col_name == "":
+                has_header = False
+                error = "One or more column names missing."
+                break
+            if (
+                col_name[0].isdigit()
+                or not _VALID_HEADER_START_RE.match(col_name)
+            ):
+                has_header = False
+                error = (
+                    "One or more column names start with invalid characters."
+                )
+                break
+    if has_header:
+        result = {"has_header": has_header, "dataset": dataset}
+    else:
+        result = {"has_header": has_header, "error": error}
+    return result
 
-        return {'has_header': has_header, 'error': error}
-    
-    for i, c in enumerate(cols):
-        if c is None:
-            has_header = False
-            error += "One or more column names missing"
-            return {'has_header': has_header, 'error': error}
-        name = str(c).strip()
-        if name[0].isdigit() or not _valid_start.match(name):
-            has_header = False
-            error += "One or more column names missing (headers are numbers)"
-            return {'has_header': has_header, 'error': error}
-    
 
-
-    return {'has_header': has_header, 'dataset': data}
-
-
-@tool
-def extract_metadata(
-        path: str
-) -> dict:
+@ltools.tool
+def extract_metadata(path: str) -> dict:
     """
     Return minimal dataset metadata.
 
-    Only includes:
-    - number of rows
-    - number of columns
-    - number of unique values per column
-    
-    :param dataset: dataset to process
-    :return: metadata
+    :param path: dataset path
+    :return: metadata with shape and per-column cardinality
     """
-    d_path = Path(path)
-    dataset = load_dataset(d_path)
+    dataset_path = pathlib.Path(path)
+    dataset = load_dataset(dataset_path)
     n_rows, n_cols = dataset.shape
-    nunique = dataset.nunique(dropna=True)
-    nunique_map = {str(col): int(nunique[col]) for col in nunique.index}
-
-    return {
+    n_unique = dataset.nunique(dropna=True)
+    n_unique_map = {str(col): int(n_unique[col]) for col in n_unique.index}
+    metadata = {
         "n_rows": int(n_rows),
         "n_cols": int(n_cols),
-        "n_unique": nunique_map,
+        "n_unique": n_unique_map,
     }
+    return metadata
 
-@tool
-def extract_head(
-    path: str,
-    n: int = 5
-) -> dict:
-    """
-    Return dataset head
-    
-    :param dataset: dataset to process
-    :param n: number of head rows
-    :return: the first n rows
-    """
-    d_path = Path(path)
-    dataset = load_dataset(d_path)
-    n_int = int(n)
-    if n_int <= 0:
-        n_int = 5
-    n_int = min(n_int, 50)
 
-    head = dataset.head(n_int)
-    # Use to_json so datetimes become ISO strings and NaNs become null-ish.
+@ltools.tool
+def extract_head(path: str, *, n: int = 5) -> dict:
+    """
+    Return the first rows from a dataset.
+
+    :param path: dataset path
+    :param n: number of rows to return
+    :return: head rows serialized as JSON-compatible payload
+    """
+    dataset_path = pathlib.Path(path)
+    dataset = load_dataset(dataset_path)
+    n_rows = int(n)
+    if n_rows <= 0:
+        n_rows = 5
+    n_rows = min(n_rows, 50)
+    head = dataset.head(n_rows)
     rows = json.loads(head.to_json(orient="records", date_format="iso"))
-    return {
-        "n": n_int,
-        "columns": [str(c) for c in head.columns.tolist()],
+    payload = {
+        "n": n_rows,
+        "columns": [str(col) for col in head.columns.tolist()],
         "rows": rows,
     }
+    return payload

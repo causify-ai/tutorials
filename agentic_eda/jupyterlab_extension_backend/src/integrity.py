@@ -1,21 +1,35 @@
-import src.handle_inputs as handle_inputs
-import src.format_datetime as format_datetime
-import pandas as pd
-import numpy as np
+"""
+Import as:
+
+import src.integrity as sinteg
+"""
+
+import logging
+import pathlib
 from typing import Literal
-from typing_extensions import TypedDict
-from langgraph.graph import StateGraph, START, END
-from pathlib import Path
-from tools.input_tools import load_dataset
-from config.config import get_chat_model
-from pydantic import BaseModel
-from langchain.agents import create_agent
-from langchain_core.messages import HumanMessage
+from typing import TypedDict
+
+import langchain.agents as lagents
+import langchain_core.messages as lmessages
+import langgraph.graph as lgraph
+import pandas as pd
+import pydantic
+
+import config.config as cconf
+import src.format_datetime as sfordat
+import src.handle_inputs as shainp
+import tools.input_tools as tinptool
+
+_LOG = logging.getLogger(__name__)
 
 
 class IntegrityState(TypedDict):
+    """
+    Store graph state for integrity checks.
+    """
+
     path: str
-    time_col: str
+    time_col: str | None
     winner_formatter: dict
     entity_col: str | None
     numeric_cols: list[str]
@@ -26,199 +40,295 @@ class IntegrityState(TypedDict):
     flag: str
 
 
-class IntegrityJudgeOutput(BaseModel):
+class IntegrityJudgeOutput(pydantic.BaseModel):
+    """
+    Store structured LLM judgment.
+    """
+
     summary: str
     flag: Literal["yes", "no"]
 
 
 def call_date_formatter(state: IntegrityState) -> dict:
-    out: format_datetime.DateFormatterState = format_datetime.graph.invoke(  # type: ignore
-        {"path": state["path"]} #type:ignore
+    """
+    Run the datetime formatter graph.
+
+    :param state: integrity graph state
+    :return: selected time column and formatter
+    """
+    out: sfordat.DateFormatterState = sfordat.graph.invoke(  # type: ignore
+        {"path": state["path"]}
     )
-    return {"time_col": out["time_col"], "winner_formatter": out["winner_formatter"]}
+    payload = {
+        "time_col": out["time_col"],
+        "winner_formatter": out["winner_formatter"],
+    }
+    return payload
+
 
 def _maybe_infer_columns(state: IntegrityState) -> dict:
+    """
+    Infer numeric columns when they are not provided.
+
+    :param state: integrity graph state
+    :return: optional numeric column update
+    """
     if state.get("numeric_cols"):
-        return {}
-    out = handle_inputs.run_input_handler(state["path"])
-    numeric_cols = out.get("numeric_val_cols") or []
-    return {"numeric_cols": numeric_cols}
+        payload = {}
+    else:
+        out = shainp.run_input_handler(state["path"])
+        numeric_cols = out.get("numeric_val_cols") or []
+        payload = {"numeric_cols": numeric_cols}
+    return payload
 
 
 def run_integrity_checks(state: IntegrityState) -> dict:
-    path = Path(state["path"])
-    df = load_dataset(path)
+    """
+    Run deterministic integrity checks on a dataset.
 
+    :param state: integrity graph state
+    :return: report payload
+    """
+    dataset_path = pathlib.Path(state["path"])
+    dataset = tinptool.load_dataset(dataset_path)
     issues: list[dict] = []
     summary: dict = {
-        "n_rows": int(df.shape[0]),
-        "n_cols": int(df.shape[1]),
+        "n_rows": int(dataset.shape[0]),
+        "n_cols": int(dataset.shape[1]),
     }
-
-    if df.shape[0] == 0:
-        issues.append({"type": "empty_dataset", "msg": "Dataset has 0 rows"})
-        return {"report": {"summary": summary, "issues": issues}}
-
+    if dataset.shape[0] == 0:
+        issues.append({"type": "empty_dataset", "msg": "Dataset has 0 rows."})
+        report = {"summary": summary, "issues": issues}
+        payload = {"report": report}
+        return payload
     time_col = state.get("time_col")
-    if not time_col or time_col not in df.columns:
-        issues.append({"type": "missing_time_col", "msg": f"time_col missing: {time_col!r}"})
-        return {"report": {"summary": summary, "issues": issues}}
+    if time_col is None or time_col not in dataset.columns:
+        issues.append(
+            {
+                "type": "missing_time_col",
+                "msg": f"time_col missing: {time_col!r}",
+            }
+        )
+        report = {"summary": summary, "issues": issues}
+        payload = {"report": report}
+        return payload
     format_args = state.get("winner_formatter") or {}
-    format_args = {k: v for k, v in format_args.items() if v is not None}
+    format_args = {
+        key: val
+        for key, val in format_args.items()
+        if val is not None
+    }
     try:
-        ts = pd.to_datetime(df[time_col], errors="coerce", **format_args)
+        timestamp = pd.to_datetime(
+            dataset[time_col],
+            errors="coerce",
+            **format_args,
+        )
     except Exception:
-        ts = pd.to_datetime(df[time_col], errors="coerce")
-    summary["n_nat_time"] = int(ts.isna().sum())
-    summary["min_time"] = None if ts.dropna().empty else str(ts.dropna().min())
-    summary["max_time"] = None if ts.dropna().empty else str(ts.dropna().max())
-
-    dup_ts = int(ts.dropna().duplicated().sum())
-    summary["duplicate_timestamps"] = dup_ts
-    if dup_ts > 0:
-        issues.append({"type": "duplicate_timestamps", "count": dup_ts})
-
-    entity_col = state.get("entity_col") or None
-    if entity_col and entity_col in df.columns:
-        summary["n_entities"] = int(df[entity_col].nunique(dropna=True))
-        tmp = df[[entity_col]].copy()
-        tmp["_ts"] = ts
-        dup_pairs = int(tmp.dropna(subset=[entity_col, "_ts"]).duplicated(subset=[entity_col, "_ts"]).sum())
-        summary["duplicate_entity_timestamp_pairs"] = dup_pairs
-        if dup_pairs > 0:
-            issues.append({"type": "duplicate_entity_timestamp_pairs", "count": dup_pairs})
+        timestamp = pd.to_datetime(dataset[time_col], errors="coerce")
+    summary["n_nat_time"] = int(timestamp.isna().sum())
+    summary["min_time"] = (
+        None if timestamp.dropna().empty else str(timestamp.dropna().min())
+    )
+    summary["max_time"] = (
+        None if timestamp.dropna().empty else str(timestamp.dropna().max())
+    )
+    duplicate_timestamps = int(timestamp.dropna().duplicated().sum())
+    summary["duplicate_timestamps"] = duplicate_timestamps
+    if duplicate_timestamps > 0:
+        issues.append(
+            {"type": "duplicate_timestamps", "count": duplicate_timestamps}
+        )
+    entity_col = state.get("entity_col")
+    if entity_col is not None and entity_col in dataset.columns:
+        summary["n_entities"] = int(dataset[entity_col].nunique(dropna=True))
+        tmp = dataset[[entity_col]].copy()
+        tmp["_ts"] = timestamp
+        duplicate_pairs = int(
+            tmp.dropna(subset=[entity_col, "_ts"])
+            .duplicated(subset=[entity_col, "_ts"])
+            .sum()
+        )
+        summary["duplicate_entity_timestamp_pairs"] = duplicate_pairs
+        if duplicate_pairs > 0:
+            issues.append(
+                {
+                    "type": "duplicate_entity_timestamp_pairs",
+                    "count": duplicate_pairs,
+                }
+            )
     else:
         summary["duplicate_entity_timestamp_pairs"] = None
-
-    numeric_cols = state.get("numeric_cols") or []
-    numeric_cols = [c for c in numeric_cols if c in df.columns]
-
-    nonnegative_cols = state.get("nonnegative_cols") or []
-    neg_report: dict = {}
-    for c in nonnegative_cols:
-        if c not in df.columns:
+    numeric_cols = [col for col in state.get("numeric_cols") or []]
+    numeric_cols = [col for col in numeric_cols if col in dataset.columns]
+    nonnegative_cols = [col for col in state.get("nonnegative_cols") or []]
+    negative_report: dict = {}
+    for col in nonnegative_cols:
+        if col not in dataset.columns:
             continue
-        s = pd.to_numeric(df[c], errors="coerce")
-        nneg = int((s < 0).sum(skipna=True))
-        if nneg > 0:
-            neg_report[c] = nneg
-    summary["negatives_in_nonnegative_cols"] = neg_report
-    if len(neg_report) > 0:
-        issues.append({"type": "negative_values", "details": neg_report})
-
+        series = pd.to_numeric(dataset[col], errors="coerce")
+        n_negative = int((series < 0).sum(skipna=True))
+        if n_negative > 0:
+            negative_report[col] = n_negative
+    summary["negatives_in_nonnegative_cols"] = negative_report
+    if negative_report:
+        issues.append({"type": "negative_values", "details": negative_report})
     jump_mult = float(state.get("jump_mult") or 20.0)
     jumps: dict = {}
     if numeric_cols:
-        tmp = df[[time_col] + ([entity_col] if entity_col and entity_col in df.columns else []) + numeric_cols].copy()
-        tmp["_ts"] = ts
-        sort_cols = ["_ts"] if not (entity_col and entity_col in tmp.columns) else [entity_col, "_ts"]
+        selected_cols = [time_col]
+        if entity_col is not None and entity_col in dataset.columns:
+            selected_cols.append(entity_col)
+        selected_cols.extend(numeric_cols)
+        tmp = dataset[selected_cols].copy()
+        tmp["_ts"] = timestamp
+        if entity_col is None or entity_col not in tmp.columns:
+            sort_cols = ["_ts"]
+        else:
+            sort_cols = [entity_col, "_ts"]
         tmp = tmp.sort_values(sort_cols)
-
-        for c in numeric_cols:
-            tmp[c] = pd.to_numeric(tmp[c], errors="coerce")
-            if entity_col and entity_col in tmp.columns:
-                diff = tmp.groupby(entity_col)[c].diff()
+        for col in numeric_cols:
+            tmp[col] = pd.to_numeric(tmp[col], errors="coerce")
+            if entity_col is None or entity_col not in tmp.columns:
+                diff = tmp[col].diff()
             else:
-                diff = tmp[c].diff()
+                diff = tmp.groupby(entity_col)[col].diff()
             diff_abs = diff.abs()
-
             scale = diff_abs.median()
             if pd.isna(scale) or float(scale) <= 0.0:
                 scale = diff_abs.mean()
             if pd.isna(scale) or float(scale) <= 0.0:
                 continue
-
-            threshold = float(scale) * float(jump_mult)
-            flag = diff_abs > threshold
-            n_flag = int(flag.sum(skipna=True))
-            if n_flag <= 0:
+            threshold = float(scale) * jump_mult
+            flagged = diff_abs > threshold
+            n_flagged = int(flagged.sum(skipna=True))
+            if n_flagged <= 0:
                 continue
-
-            examples = []
-            for i in tmp.index[flag.fillna(False)][:5]:
-                d = diff.loc[i]
-                curr = tmp.loc[i, c]
-                prev = None if pd.isna(d) or pd.isna(curr) else float(curr - d)
-                examples.append(
-                    {
-                        "col": c,
-                        "entity": None if not (entity_col and entity_col in tmp.columns) else tmp.loc[i, entity_col],
-                        "time": None if pd.isna(tmp.loc[i, "_ts"]) else str(tmp.loc[i, "_ts"]),
-                        "prev": prev,
-                        "curr": None if pd.isna(curr) else float(curr), #type:ignore
-                        "diff": None if pd.isna(d) else float(d),
-                        "threshold": float(threshold),
-                    }
-                )
-
-            jumps[c] = {"count": n_flag, "threshold": threshold, "examples": examples}
-            issues.append({"type": "impossible_jumps", "col": c, "count": n_flag})
-
-    summary["jump_mult"] = float(jump_mult)
+            examples: list[dict] = []
+            flagged_idx = tmp.index[flagged.fillna(False)][:5]
+            for idx in flagged_idx:
+                diff_val = diff.loc[idx]
+                curr_val = tmp.loc[idx, col]
+                if pd.isna(diff_val) or pd.isna(curr_val):
+                    prev_val = None
+                else:
+                    prev_val = float(curr_val - diff_val)
+                example = {
+                    "col": col,
+                    "entity": (
+                        None
+                        if entity_col is None or entity_col not in tmp.columns
+                        else tmp.loc[idx, entity_col]
+                    ),
+                    "time": (
+                        None
+                        if pd.isna(tmp.loc[idx, "_ts"])
+                        else str(tmp.loc[idx, "_ts"])
+                    ),
+                    "prev": prev_val,
+                    "curr": None if pd.isna(curr_val) else float(curr_val),
+                    "diff": None if pd.isna(diff_val) else float(diff_val),
+                    "threshold": float(threshold),
+                }
+                examples.append(example)
+            jumps[col] = {
+                "count": n_flagged,
+                "threshold": threshold,
+                "examples": examples,
+            }
+            issues.append(
+                {
+                    "type": "impossible_jumps",
+                    "col": col,
+                    "count": n_flagged,
+                }
+            )
+    summary["jump_mult"] = jump_mult
     summary["jumps"] = jumps
+    report = {"summary": summary, "issues": issues}
+    payload = {"report": report}
+    return payload
 
-    return {"report": {"summary": summary, "issues": issues}}
 
 def integrity_llm_summary(state: IntegrityState) -> dict:
-    llm = get_chat_model(model="gpt-4.1")
-    agent = create_agent(
+    """
+    Summarize integrity report and provide go/no-go flag.
+
+    :param state: integrity graph state
+    :return: summary and decision flag
+    """
+    llm = cconf.get_chat_model(model="gpt-4.1")
+    agent = lagents.create_agent(
         model=llm,
         tools=[],
-        system_prompt="""You are an integrity judge.
-You get an integrity report dict from a dataset.
-Decide if everything looks normal enough to proceed.
-
-Output format:
-{ "summary": "...", "flag": "yes" or "no" }
-
-Rules:
-- flag = "yes" only if the report has no meaningful integrity issues.
-- flag = "no" if there are clear issues (duplicates, impossible jumps, bad timestamps, etc.).
-- Keep summary short and direct.
-""",
+        system_prompt=(
+            "You are an integrity judge. Decide if the dataset can proceed. "
+            "Return JSON with keys summary and flag. Set flag to yes only when "
+            "there are no meaningful integrity issues."
+        ),
         response_format=IntegrityJudgeOutput,
     )
     out = agent.invoke(
         {
             "messages": [
-                HumanMessage(
+                lmessages.HumanMessage(
                     content=f"Here is the integrity report: {state['report']}"
                 )
             ]
         }
     )
-    sr = out["structured_response"].model_dump()
-    return {"summary": sr["summary"], "flag": sr["flag"]}
+    structured_response = out["structured_response"].model_dump()
+    payload = {
+        "summary": structured_response["summary"],
+        "flag": structured_response["flag"],
+    }
+    return payload
 
 
-integrity = StateGraph(IntegrityState)
+integrity = lgraph.StateGraph(IntegrityState)
 integrity.add_node("date_formatter", call_date_formatter)
 integrity.add_node("maybe_infer_columns", _maybe_infer_columns)
-integrity.add_node("integrity", run_integrity_checks)
+integrity.add_node("run_integrity_checks", run_integrity_checks)
 integrity.add_node("integrity_llm_summary", integrity_llm_summary)
-integrity.add_edge(START, "date_formatter")
+integrity.add_edge(lgraph.START, "date_formatter")
 integrity.add_edge("date_formatter", "maybe_infer_columns")
-integrity.add_edge("maybe_infer_columns", "integrity")
-integrity.add_edge("integrity", "integrity_llm_summary")
-integrity.add_edge("integrity_llm_summary", END)
+integrity.add_edge("maybe_infer_columns", "run_integrity_checks")
+integrity.add_edge("run_integrity_checks", "integrity_llm_summary")
+integrity.add_edge("integrity_llm_summary", lgraph.END)
 graph = integrity.compile()
 
 
-def run_integrity(path: str, time_col: str | None = None, entity_col: str | None = None):
-    init: IntegrityState = {  # type: ignore
+def run_integrity(
+    path: str,
+    *,
+    time_col: str | None = None,
+    entity_col: str | None = None,
+) -> dict:
+    """
+    Execute integrity graph end to end.
+
+    :param path: dataset path
+    :param time_col: optional time column override
+    :param entity_col: optional entity column
+    :return: integrity report with summary and flag
+    """
+    init_state: IntegrityState = {
         "path": path,
-        "time_col": time_col, #type:ignore
+        "time_col": time_col,
         "winner_formatter": {},
         "entity_col": entity_col,
         "numeric_cols": [],
         "nonnegative_cols": [],
         "jump_mult": 20.0,
+        "report": {},
+        "summary": "",
+        "flag": "",
     }
-    out = graph.invoke(init)
-    print(out["report"])
-    print({"summary": out["summary"], "flag": out["flag"]})
-    return {"report": out["report"], "summary": out["summary"], "flag": out["flag"]}
-
-
-if __name__ == "__main__":
-    run_integrity("datasets/T1_slice.csv")
+    out = graph.invoke(init_state)
+    payload = {
+        "report": out["report"],
+        "summary": out["summary"],
+        "flag": out["flag"],
+    }
+    _LOG.info("Integrity output: %s", payload)
+    return payload
