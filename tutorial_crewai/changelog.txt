@@ -1,3 +1,0 @@
-# tutorial_crewai-1.0.0
-- 2025-20-08
-- First release

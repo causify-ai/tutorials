@@ -1,3 +1,0 @@
-# tutorial_langgraph-1.0.0
-- 2025-12-08
-- First release
