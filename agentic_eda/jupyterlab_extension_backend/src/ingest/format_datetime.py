@@ -1,7 +1,7 @@
 """
 Import as:
 
-import src.format_datetime as sfordat
+import src.ingest.format_datetime as sfordat
 """
 
 import logging
@@ -16,9 +16,9 @@ import numpy as np
 import pandas as pd
 import pydantic
 
-import config.config as cconf
-import src.handle_inputs as shainp
-import tools.input_tools as tinptool
+import src.config.config as cconf
+import src.ingest.handle_inputs as shainp
+import src.tools.input_tools as tinptool
 
 _LOG = logging.getLogger(__name__)
 

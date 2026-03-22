@@ -1,7 +1,7 @@
 """
 Import as:
 
-import config.config as cconf
+import src.config.config as cconf
 """
 
 import dataclasses

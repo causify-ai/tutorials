@@ -9,9 +9,12 @@ import argparse
 import json
 import logging
 
-import src.format_datetime as sfordat
-import src.handle_inputs as shainp
-import src.integrity as sinteg
+import src.ingest.compute_temporal_stats as sctstats
+import src.ingest.format_datetime as sfordat
+import src.ingest.handle_inputs as shainp
+import src.ingest.infer_structure as sinferstruct
+import src.ingest.infer_type as sinfert
+import src.ingest.integrity as sinteg
 
 _LOG = logging.getLogger(__name__)
 
@@ -26,23 +29,20 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--mode",
         required=True,
-        choices=["input", "format", "integrity"],
+        choices=[
+            "input",
+            "format",
+            "infer_type",
+            "infer_structure",
+            "compute_temporal_stats",
+            "integrity",
+        ],
         help="Pipeline stage to execute.",
     )
     parser.add_argument(
         "--path",
         required=True,
         help="Path to dataset file.",
-    )
-    parser.add_argument(
-        "--time_col",
-        default=None,
-        help="Optional time column override for integrity mode.",
-    )
-    parser.add_argument(
-        "--entity_col",
-        default=None,
-        help="Optional entity column for integrity mode.",
     )
     args = parser.parse_args()
     return args
@@ -61,11 +61,13 @@ def _run_cli(args: argparse.Namespace) -> dict:
     elif mode == "format":
         payload = sfordat.run_date_formatter(args.path)
     elif mode == "integrity":
-        payload = sinteg.run_integrity(
-            args.path,
-            time_col=args.time_col,
-            entity_col=args.entity_col,
-        )
+        payload = sinteg.run_integrity(args.path)
+    elif mode == "infer_type":
+        payload = sinfert.run_infer_type(args.path)
+    elif mode == "infer_structure":
+        payload = sinferstruct.run_infer_structure(args.path)
+    elif mode == "compute_temporal_stats":
+        payload = sctstats.run_compute_temporal_stats(args.path)
     else:
         raise ValueError(f"Unsupported mode='{mode}'")
     return payload
