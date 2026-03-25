@@ -15,6 +15,11 @@ import src.ingest.handle_inputs as shainp
 import src.ingest.infer_structure as sinferstruct
 import src.ingest.infer_type as sinfert
 import src.ingest.integrity as sinteg
+import src.quality_handling.audit_missingness as sauditmiss
+import src.quality_handling.handle_missingness as shandlemiss
+import src.quality_handling.standardize as sstandard
+import src.univariate_analysis.test_transforms as stransforms
+import src.univariate_analysis.univariate_metrics_plotting as sunivar
 
 _LOG = logging.getLogger(__name__)
 
@@ -36,6 +41,11 @@ def _parse_args() -> argparse.Namespace:
             "infer_structure",
             "compute_temporal_stats",
             "integrity",
+            "audit_missingness",
+            "handle_missingness",
+            "standardize",
+            "univariate_metrics_plotting",
+            "test_transforms",
         ],
         help="Pipeline stage to execute.",
     )
@@ -68,6 +78,16 @@ def _run_cli(args: argparse.Namespace) -> dict:
         payload = sinferstruct.run_infer_structure(args.path)
     elif mode == "compute_temporal_stats":
         payload = sctstats.run_compute_temporal_stats(args.path)
+    elif mode == "audit_missingness":
+        payload = sauditmiss.run_audit_missingness(args.path)
+    elif mode == "handle_missingness":
+        payload = shandlemiss.run_handle_missingness(args.path)
+    elif mode == "standardize":
+        payload = sstandard.run_standardize(args.path)
+    elif mode == "univariate_metrics_plotting":
+        payload = sunivar.run_univariate_metrics_plotting(args.path)
+    elif mode == "test_transforms":
+        payload = stransforms.run_test_transforms(args.path)
     else:
         raise ValueError(f"Unsupported mode='{mode}'")
     return payload
