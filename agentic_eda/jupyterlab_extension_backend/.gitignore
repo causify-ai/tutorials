@@ -1,0 +1,20 @@
+# OS files
+.DS_Store
+
+# Python cache/build artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Secrets and local environment files
+.env
+*.env
+config/.env
+*.secret
+*secret*
+*.key
+*.pem
+langchain-reference
+AGENTS.md
+traces/
