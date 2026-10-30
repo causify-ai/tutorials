@@ -1,0 +1,6 @@
+# Real-dataset cache and run outputs are local only.
+data/*
+!data/.gitkeep
+results/*
+!results/.gitkeep
+*.log
